@@ -1,0 +1,29 @@
+name: DEV Deploy - Manual Trigger
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-underwriting-api:
+    uses: ./.github/actions/build-package
+    secrets: inherit
+    with:
+      ENVIRONMENT: DEV
+      MICROSERVICE_NAME: cirras-underwriting-api
+      VERSION_NUMBER: 1.0.0-SNAPSHOT
+
+  build-underwriting-listener-api:
+    uses: ./.github/actions/build-package
+    secrets: inherit
+    with:
+      ENVIRONMENT: DEV
+      MICROSERVICE_NAME: cirras-underwriting-listener-api
+      VERSION_NUMBER: 1.0.0-SNAPSHOT
+
+  build-underwriting-war:
+    uses: ./.github/actions/build-package
+    secrets: inherit
+    with:
+      ENVIRONMENT: DEV
+      MICROSERVICE_NAME: cirras-underwriting-war
+      VERSION_NUMBER: 1.0.0-SNAPSHOT
