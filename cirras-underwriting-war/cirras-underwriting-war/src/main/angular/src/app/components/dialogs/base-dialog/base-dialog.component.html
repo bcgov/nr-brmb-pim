@@ -1,0 +1,20 @@
+<h1 mat-dialog-title *ngIf="!mobile" tabindex="0"
+    [class]="type == DIALOG_TYPE_OBJ.INFO? 'info': 'error'"
+    cdkDrag cdkDragRootElement=".cdk-overlay-pane" [cdkDragDisabled]="disableDrag"
+    cdkDragHandle cdkDragBoundary=".cdk-overlay-container">
+    {{titleLabel}}
+    <div class="spinner-header" *ngIf="isLoading">
+        <mat-spinner [diameter]="25"></mat-spinner>
+    </div>
+</h1>
+<h1 mat-dialog-title *ngIf="mobile"
+    [class]="type == DIALOG_TYPE_OBJ.INFO? 'info': 'error'">
+    {{titleLabel}}
+    <div class="spinner-header" *ngIf="isLoading">
+        <mat-spinner [diameter]="25"></mat-spinner>
+    </div>
+</h1>
+<div [ngClass]="mobile?'mobile':'desktop'" cdkTrapFocus>
+    <cirras-underwriting-base-error-panel [errorState]="errorState" ></cirras-underwriting-base-error-panel>
+    <ng-content></ng-content>
+</div>

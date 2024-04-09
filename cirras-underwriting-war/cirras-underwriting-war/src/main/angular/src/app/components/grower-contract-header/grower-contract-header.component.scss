@@ -1,0 +1,85 @@
+@import '../../../styles/variables';
+  
+.grower-header-label {    
+  padding-right: 60px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 19px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+.grower-info-label {    
+  padding-right: 60px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+  
+.cuw-row-group {
+  padding: 0 10px 0 10px;
+  margin: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+ 
+  .cuw-container {
+      display: grid;
+      grid-auto-rows: minmax( 2em, auto );
+      justify-content: flex-start;
+
+      div {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+      }
+
+      &.cuw-grower-info {
+          grid-template-columns: auto auto auto auto auto auto;
+      }
+  }
+}
+
+// new css
+.tabs-container {
+  display: grid;
+  grid-auto-rows: minmax( 2em, auto );
+  //grid-template-columns:  26px 154px 35px 26px 134px 35px 26px 200px auto; // done with setStyles() function
+  margin: 0px 16px 8px 16px;
+
+  div {
+   &.active{
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: #003366;      
+      //fill: #003366;
+      border-bottom: 2px solid #003366;
+    }
+
+    &.inactive{
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 400;
+      color: #424242;      
+      //fill: #424242;
+      border-bottom: 1px solid #dddddd;
+    }
+
+    &.filler{
+      border-bottom: 1px solid #dddddd;
+    }
+  }
+
+  .svg-active{
+    // fill: #003366;
+    filter: invert(4%) sepia(59%) saturate(500%) hue-rotate(162deg) brightness(83%) contrast(105%); // best so far
+  }
+    
+  .svg-inactive {      
+    //fill: #424242;
+    filter: invert(24%) sepia(15%) saturate(18%) hue-rotate(316deg) brightness(100%) contrast(94%);
+  }
+}

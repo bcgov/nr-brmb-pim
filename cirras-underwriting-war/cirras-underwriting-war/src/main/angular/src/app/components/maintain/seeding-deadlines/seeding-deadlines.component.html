@@ -1,0 +1,213 @@
+
+
+<base-wrapper [errorState]="errorState">
+    <div class="base-container bg-color-lightblue">
+        <div class="base-container flex-y"> 
+            <br />
+            <h2>Maintain Grain Seeding Deadlines</h2>
+
+            <form [formGroup]="getViewModel().formGroup">
+
+                <div class="uw-year-row-group">
+                    <div class="cuw-container cuw-grower-info" >  
+
+                        <div>
+                            <span class="grower-header-label">Crop Year: </span> 
+                        </div>
+                        <div>
+                            <mat-form-field appearance="fill">
+                                <mat-select 
+                                    formControlName="selectedCropYear" 
+                                    (selectionChange)="uwYearsChange($event)">
+                                    <mat-option *ngFor="let option of uwYearOptions" [value]="option.cropYear"
+                                    >{{ option.cropYear }}</mat-option>
+                                </mat-select>
+                                </mat-form-field>
+                            
+                        </div>
+
+                        <div *ngIf="hasDataChanged == true" class="unsaved-changes-warning">
+              
+                            <span #el matTooltip="" style="margin-left: 10px; margin-right: 20px;">
+                                <mat-icon [ngStyle]="{'color':'orangered', 'font-size':'xx-large'}">warning</mat-icon>
+                              </span>
+                             <span style="font-size: large; color:orangered">
+                                There are unsaved changes on the page. 
+                            </span> 
+                
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="cuw-row-group">
+                    <mat-radio-group aria-labelledby="example-radio-group-label" formControlName="rbChoice" style="padding-bottom: 15px;">
+                        
+                        <mat-radio-button value="changeDefault">
+                            Change Policy Wording
+                        </mat-radio-button>
+
+                        <mat-radio-button value="changeCurrentYear"  style="padding-left: 20px;">
+                            Change current year
+                        </mat-radio-button>
+
+                    </mat-radio-group>
+                    
+                    <div class="cuw-container sd-info" >  
+                        
+                        <div class="header border-top border-left border-right border-bottom">Commodity Type</div>
+                        <div class="header border-top border-right border-bottom">Policy Wording <br/> Full Coverage</div>
+                        <div class="header border-top border-right border-bottom">Current Year <br/> Full Coverage</div>
+                        <div class="header border-top border-right border-bottom">Policy Wording <br/>  Final Coverage</div>
+                        <div class="header border-top border-right border-bottom">Current Year <br/> Final Coverage</div>
+                        <div class="header border-top border-right border-bottom"></div>
+                    </div>
+
+                    <div class="table-wrapper flex-y-grow cuw-container sd-info">
+                        
+                        <div *ngFor="let seedingDeadline of getViewModel().formGroup.controls.seedingDeadlines['controls']; index as rowIndex"
+                            [formGroup]="seedingDeadline"        
+                            style="display: contents;">
+
+                            <div *ngIf="!seedingDeadline.value.deletedByUserInd == true" class="sd-info-fill border-right border-bottom border-left">   
+                                
+                                <mat-form-field appearance="fill" *ngIf="seedingDeadline.value.addedByUserInd == true ">
+                                    <mat-select formControlName="commodityTypeCode" >
+                                        <mat-option *ngFor="let option of filteredCommodityTypeCodeList" [value]="option"
+                                        >{{ option }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <span *ngIf="seedingDeadline.value.addedByUserInd == false" style="padding-left: 6px;" >{{ seedingDeadline.value.commodityTypeCode }}</span>
+                            </div>
+
+                            <div *ngIf="!seedingDeadline.value.deletedByUserInd == true" class="sd-info-fill border-right border-bottom" style="width:190px;" >
+                                <mat-form-field *ngIf="getViewModel().formGroup.controls.rbChoice.value == 'changeDefault'" appearance="fill" 
+                                    [ngStyle]="{'background-color': shouldHighlightDate(rowIndex, 1) ? 'yellow' : '' }">
+                                <input matInput 
+                                    [matDatepicker]="pickerfullCoverageDeadlineDateDefault"
+                                    formControlName="fullCoverageDeadlineDateDefault">
+                                
+                                <mat-datepicker-toggle matIconSuffix [for]="pickerfullCoverageDeadlineDateDefault">
+                                    <mat-icon matDatepickerToggleIcon >keyboard_arrow_down</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #pickerfullCoverageDeadlineDateDefault></mat-datepicker>
+                                </mat-form-field>
+
+                                <span *ngIf="getViewModel().formGroup.controls.rbChoice.value == 'changeCurrentYear'" style="padding-left: 6px;">
+                                    {{ seedingDeadline.value.fullCoverageDeadlineDateDefault | date : 'M/d/yyyy' }}
+                                </span>
+                            </div>
+
+                            <div *ngIf="!seedingDeadline.value.deletedByUserInd == true" class="sd-info-fill border-right border-bottom" style="width:190px;" >
+                                <mat-form-field *ngIf="getViewModel().formGroup.controls.rbChoice.value == 'changeCurrentYear'"  appearance="fill"
+                                    [ngStyle]="{'background-color': shouldHighlightDate(rowIndex, 2) ? 'yellow' : '' }">
+                                <input matInput 
+                                    [matDatepicker]="pickerFullCoverageDeadlineDate"
+                                    formControlName="fullCoverageDeadlineDate"
+                                    (dateChange)="onCurrentYearDateEdited(rowIndex, 1)">
+                                
+                                <mat-datepicker-toggle matIconSuffix [for]="pickerFullCoverageDeadlineDate">
+                                    <mat-icon matDatepickerToggleIcon >keyboard_arrow_down</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #pickerFullCoverageDeadlineDate></mat-datepicker>
+                                </mat-form-field>
+
+                                <span *ngIf="getViewModel().formGroup.controls.rbChoice.value == 'changeDefault' 
+                                            && areGridDatesNotEqual(seedingDeadline.value.fullCoverageDeadlineDateDefault, seedingDeadline.value.fullCoverageDeadlineDate)" 
+                                    style="padding-left: 6px;">
+                                    {{ seedingDeadline.value.fullCoverageDeadlineDate | date : 'M/d/yyyy'}}
+                                </span>
+                            </div>
+
+                            <div *ngIf="!seedingDeadline.value.deletedByUserInd == true" class="sd-info-fill border-right border-bottom" style="width:190px;" >
+                                <mat-form-field *ngIf="getViewModel().formGroup.controls.rbChoice.value == 'changeDefault'"  appearance="fill"
+                                    [ngStyle]="{'background-color': shouldHighlightDate(rowIndex, 3) ? 'yellow' : '' }">
+                                <input matInput 
+                                    [matDatepicker]="pickerfinalCoverageDeadlineDateDefault"
+                                    formControlName="finalCoverageDeadlineDateDefault">
+                                
+                                <mat-datepicker-toggle matIconSuffix [for]="pickerfinalCoverageDeadlineDateDefault">
+                                    <mat-icon matDatepickerToggleIcon >keyboard_arrow_down</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #pickerfinalCoverageDeadlineDateDefault></mat-datepicker>
+                                </mat-form-field>
+
+                                <span *ngIf="getViewModel().formGroup.controls.rbChoice.value == 'changeCurrentYear'" style="padding-left: 6px;">
+                                    {{ seedingDeadline.value.finalCoverageDeadlineDateDefault | date : 'M/d/yyyy'}}
+                                </span>
+                            </div>
+
+                            <div *ngIf="!seedingDeadline.value.deletedByUserInd == true" class="sd-info-fill border-right border-bottom" style="width:190px;" >
+                                <mat-form-field *ngIf="getViewModel().formGroup.controls.rbChoice.value == 'changeCurrentYear'"  appearance="fill"
+                                    [ngStyle]="{'background-color': shouldHighlightDate(rowIndex, 4) ? 'yellow' : '' }">
+                                <input matInput 
+                                    [matDatepicker]="pickerFinalCoverageDeadlineDate"
+                                    formControlName="finalCoverageDeadlineDate"
+                                    (dateChange)="onCurrentYearDateEdited(rowIndex, 2)">
+                                
+                                <mat-datepicker-toggle matIconSuffix [for]="pickerFinalCoverageDeadlineDate">
+                                    <mat-icon matDatepickerToggleIcon >keyboard_arrow_down</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #pickerFinalCoverageDeadlineDate></mat-datepicker>
+                                </mat-form-field>
+
+                                <span *ngIf="getViewModel().formGroup.controls.rbChoice.value == 'changeDefault' 
+                                            && areGridDatesNotEqual(seedingDeadline.value.finalCoverageDeadlineDateDefault, seedingDeadline.value.finalCoverageDeadlineDate)" 
+                                    style="padding-left: 6px;">
+                                    {{ seedingDeadline.value.finalCoverageDeadlineDate | date : 'M/d/yyyy' }}
+                                </span>
+
+                            </div>
+                            <div *ngIf="!seedingDeadline.value.deletedByUserInd == true" class="sd-info-fill border-right border-bottom" style="width:30px;" >
+                                <mat-icon 
+                                *ngIf="securityUtilService.canEditSeedingDeadlines()" 
+                                matTooltip="Delete seeding deadline" 
+                                [ngStyle]="{'color':'red'}"
+                                (click)="onDeleteSeedingDeadline(rowIndex)">close</mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div *ngIf="securityUtilService.canEditSeedingDeadlines()" class="button-row flex-y-fixed" style="width: 580px;">
+            
+                    <button *ngIf="seedingDeadlineList && seedingDeadlineList.collection && seedingDeadlineList.collection.length == 0" 
+                        mat-raised-button color="primary" class="button-large-text" (click)="onRollover()">
+                        <mat-icon class="button-mat-icon">refresh</mat-icon>Rollover
+                    </button>
+                    &nbsp;
+
+                    <button mat-raised-button color="primary" class="button-large-text"  (click)="onAddSeedingDeadline()">
+                        <mat-icon class="button-mat-icon">add_box</mat-icon>Add New
+                    </button>
+                    &nbsp;
+
+                    <button mat-raised-button color="primary" class="button-large-text" (click)="onCancel()">
+                        <mat-icon class="button-mat-icon">cancel_presentation</mat-icon>Cancel
+                    </button>
+                    &nbsp;
+                    
+                    <button  
+                        mat-raised-button color="primary" 
+                        class="button-large-text" 
+                        (click)="onSave()"
+                        [disabled]="!hasDataChanged">
+                            <mat-icon class="button-mat-icon">save</mat-icon>Save
+                    </button>
+                    <!-- &nbsp;
+                    <button 
+                        mat-raised-button color="primary" 
+                        class="button-large-text" 
+                        (click)="isMyFormDirty()">
+                            <mat-icon class="button-mat-icon">Check</mat-icon>Check
+                    </button> -->
+                    
+                </div>
+
+            </form>
+            <br />
+        </div>
+    </div>
+</base-wrapper>

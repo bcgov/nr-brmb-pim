@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.ContractedFieldDetailMapper">
+
+	<resultMap id="ContractedFieldDetailDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto">
+		<id property="contractedFieldDetailId" column="contracted_field_detail_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="annualFieldDetailId" column="annual_field_detail_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="growerContractYearId" column="grower_contract_year_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="contractId" column="contract_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="fieldId" column="field_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="legalLandId" column="legal_land_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="fieldLabel" column="field_label" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="otherLegalDescription" column="other_description" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="displayOrder" column="display_order" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="cropYear" column="crop_year" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="insurancePlanId" column="insurance_plan_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+		<result property="insurancePlanName" column="insurance_plan_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	
+    <sql id="selectColumns">
+		select cfd.contracted_field_detail_id, 
+			cfd.annual_field_detail_id, 
+			cfd.grower_contract_year_id, 
+			gcy.contract_id,
+			afd.field_id,
+			afd.legal_land_id,
+			fld.field_label,
+			ll.other_description,
+			cfd.display_order, 
+			gcy.crop_year,
+			gcy.insurance_plan_id,
+			cfd.create_user, 
+			cfd.create_date, 
+			cfd.update_user, 
+			cfd.update_date
+    </sql>
+
+	<sql id="selectAdditionalJoins">
+		join grower_contract_year gcy on gcy.grower_contract_year_id = cfd.grower_contract_year_id
+		join insurance_plan ip on ip.insurance_plan_id = gcy.insurance_plan_id
+		join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+		join field fld on fld.field_id = afd.field_id
+		left join legal_land ll on ll.legal_land_id = afd.legal_land_id
+	</sql>
+	
+    <sql id="selectSimpleColumns">
+		select cfd.contracted_field_detail_id, 
+			cfd.annual_field_detail_id, 
+			cfd.grower_contract_year_id, 
+			cfd.display_order, 
+			cfd.create_user, 
+			cfd.create_date, 
+			cfd.update_user, 
+			cfd.update_date
+	</sql>
+    
+    <select id="fetchSimple" resultMap="ContractedFieldDetailDtoMap">
+		<include refid="selectSimpleColumns"/>
+		from contracted_field_detail cfd
+		where cfd.contracted_field_detail_id = #{contractedFieldDetailId}
+	</select>
+    
+	<select id="fetch" resultMap="ContractedFieldDetailDtoMap">
+		<include refid="selectColumns"/>
+		from contracted_field_detail cfd
+		<include refid="selectAdditionalJoins"/>
+		where cfd.contracted_field_detail_id = #{contractedFieldDetailId}
+	</select>
+	
+	<select id="selectByGcyAndField" resultMap="ContractedFieldDetailDtoMap">
+		<include refid="selectSimpleColumns"/>
+			, afd.crop_year
+		from contracted_field_detail cfd
+		join annual_field_detail afd ON afd.annual_field_detail_id = cfd.annual_field_detail_id
+		where cfd.grower_contract_year_id = #{growerContractYearId}
+		and afd.field_id = #{fieldId}
+	</select>
+
+	<insert id="insert">
+	
+		<selectKey keyProperty="contractedFieldDetailId" resultType="java.lang.Integer" order="BEFORE"> 
+			SELECT nextval('cfd_seq')
+		</selectKey>
+		
+		insert into contracted_field_detail(
+			contracted_field_detail_id, 
+			annual_field_detail_id, 
+			grower_contract_year_id, 
+			display_order, 
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date)
+		values (
+			#{contractedFieldDetailId}, 
+			#{dto.annualFieldDetailId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			#{dto.growerContractYearId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			#{dto.displayOrder, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+	</insert> 
+
+	<insert id="insertDataSync">
+		insert into contracted_field_detail(
+			contracted_field_detail_id, 
+			annual_field_detail_id, 
+			grower_contract_year_id, 
+			display_order, 
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date)
+		values (
+			#{dto.contractedFieldDetailId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			#{dto.annualFieldDetailId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			#{dto.growerContractYearId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			#{dto.displayOrder, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+	</insert> 
+
+	<update id="update">
+		update contracted_field_detail
+		set grower_contract_year_id = #{dto.growerContractYearId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			display_order = #{dto.displayOrder, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where contracted_field_detail_id = #{dto.contractedFieldDetailId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}
+	</update> 
+
+
+	<update id="updateSync">
+		update contracted_field_detail
+		set annual_field_detail_id = #{dto.annualFieldDetailId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			grower_contract_year_id = #{dto.growerContractYearId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			display_order = #{dto.displayOrder, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where contracted_field_detail_id = #{dto.contractedFieldDetailId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}
+	</update> 
+	
+	<update id="updateDisplayOrder">
+		update contracted_field_detail
+		set display_order = #{dto.displayOrder, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where contracted_field_detail_id = #{dto.contractedFieldDetailId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}
+	</update> 
+	
+	<delete id="delete">
+		delete from contracted_field_detail where contracted_field_detail_id = #{contractedFieldDetailId}
+	</delete>
+	
+	<delete id="deleteForField">
+		delete from contracted_field_detail 
+		where annual_field_detail_id in (select afd.annual_field_detail_id from annual_field_detail afd where afd.field_id = #{fieldId})
+	</delete>
+	
+	<sql id="selectWhereClause">
+		where gcy.contract_id = #{contractId}
+		  and gcy.crop_year = #{cropYear}
+	</sql>
+
+	<sql id="selectOrderBy">
+		${orderBy}
+	</sql>
+
+	<select id="selectCount" resultType="int">
+		select count(cfd.contracted_field_detail_id)
+		from contracted_field_detail cfd
+		<include refid="selectAdditionalJoins"/>
+		<include refid="selectWhereClause"/>
+	</select>
+		
+	<select id="select" resultMap="ContractedFieldDetailDtoMap">
+		<include refid="selectColumns"/>
+		, ip.insurance_plan_name
+		from contracted_field_detail cfd
+		<include refid="selectAdditionalJoins"/>
+		<include refid="selectWhereClause"/>
+		<include refid="selectOrderBy"/>
+		<if test="offset != null and pageRowCount != null">
+		    OFFSET #{offset, javaType=java.lang.Integer, jdbcType=INTEGER, mode=IN}
+		    LIMIT #{pageRowCount, javaType=java.lang.Integer, jdbcType=INTEGER, mode=IN}
+		</if>
+	</select> 
+
+	<select id="selectForDeclaredYield" resultMap="ContractedFieldDetailDtoMap">
+		<include refid="selectColumns"/>
+		from contracted_field_detail cfd
+		<include refid="selectAdditionalJoins"/>
+		<include refid="selectWhereClause"/>
+		and 
+		  	(
+			 	(
+					gcy.insurance_plan_id = 4 --Grain
+			 		and exists 
+			 				(
+			 				  select 1
+							  from inventory_field invf
+							  left join inventory_seeded_grain isg on isg.inventory_field_guid = invf.inventory_field_guid
+							  left join declared_yield_field dyf on dyf.inventory_field_guid = invf.inventory_field_guid
+							  where invf.field_id = afd.field_id
+								and invf.crop_year = gcy.crop_year
+								and invf.insurance_plan_id = gcy.insurance_plan_id
+								and ((isg.inventory_seeded_grain_guid is not null
+									 and isg.crop_commodity_id is not null
+									 and isg.seeded_acres <![CDATA[ > ]]> 0
+									 )
+									 or dyf.declared_yield_field_guid is not null
+									)
+							)
+				)
+				or
+			 	(
+					gcy.insurance_plan_id = 5 --Forage
+			 		and exists 
+			 				(
+			 				  select 1
+							  from inventory_field invf
+							  left join inventory_seeded_forage isf on isf.inventory_field_guid = invf.inventory_field_guid
+							  left join declared_yield_field dyf on dyf.inventory_field_guid = invf.inventory_field_guid
+							  where invf.field_id = afd.field_id
+								and invf.crop_year = gcy.crop_year
+								and invf.insurance_plan_id = gcy.insurance_plan_id
+								and (
+										isf.inventory_seeded_forage_guid is not null
+									 	or dyf.declared_yield_field_guid is not null
+									)
+							)
+				)
+			)		  
+		<include refid="selectOrderBy"/>
+	</select> 
+
+	
+	<select id="selectForFieldRollover" resultMap="ContractedFieldDetailDtoMap">
+		select 	afd.annual_field_detail_id,
+				afd.field_id,
+				afd.crop_year,
+				cfd.contracted_field_detail_id,
+				gcy.grower_contract_year_id,
+				ip.insurance_plan_id,
+				ip.insurance_plan_name
+		from annual_field_detail afd
+		left join contracted_field_detail cfd on cfd.annual_field_detail_id = afd.annual_field_detail_id
+		left join grower_contract_year gcy on gcy.grower_contract_year_id = cfd.grower_contract_year_id
+		left join insurance_plan ip on ip.insurance_plan_id = gcy.insurance_plan_id
+		where afd.crop_year = #{cropYear}
+		and afd.field_id = #{fieldId}
+		and (gcy.insurance_plan_id is null or gcy.insurance_plan_id = #{insurancePlanId})
+	</select>	
+	
+	<select id="selectForDisplayOrderUpdate" resultMap="ContractedFieldDetailDtoMap">
+		SELECT contracted_field_detail_id, display_order
+		FROM contracted_field_detail
+		WHERE grower_contract_year_id = #{growerContractYearId}
+		ORDER by display_order ASC
+	</select>
+
+	<select id="selectForYearAndField" resultMap="ContractedFieldDetailDtoMap">
+		<include refid="selectColumns"/>
+		from contracted_field_detail cfd
+		<include refid="selectAdditionalJoins"/>
+		where gcy.crop_year = #{cropYear}
+		  and afd.field_id = #{fieldId}
+		order by cfd.contracted_field_detail_id
+	</select>
+
+	<select id="selectForField" resultMap="ContractedFieldDetailDtoMap">
+		<include refid="selectColumns"/>
+		from contracted_field_detail cfd
+		<include refid="selectAdditionalJoins"/>
+		where afd.field_id = #{fieldId}
+		order by gcy.crop_year, cfd.contracted_field_detail_id
+	</select>
+
+
+</mapper>

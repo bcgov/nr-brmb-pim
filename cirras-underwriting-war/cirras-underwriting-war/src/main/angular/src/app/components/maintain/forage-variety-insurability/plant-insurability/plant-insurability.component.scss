@@ -1,0 +1,117 @@
+@import '../../../../../styles/variables';
+.dialog-form {
+    //font-family: Roboto, 'Helvetica Neue', sans-serif;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+  
+    .title-row.form-row {
+      background-color: rgba(200, 200, 200, .60);
+      padding: .5rem 1rem 0;
+    }
+  
+    .form-row {
+      display: flex;
+      justify-content: center;
+      padding: 0 1rem;
+  
+      .field,
+      .field .mat-form-field {
+        width: 100%;
+  
+        span {
+          font-size: medium;
+        }
+        .uppercase{
+          text-transform: uppercase;
+        }
+      }
+    }
+  
+    .mat-dialog-content {
+      margin: 0;
+      padding: 0.5rem;
+      min-height: 4rem;
+    }
+  
+    .dialog-controls {
+      align-self: center; // flex-end;
+      padding: .5rem 1rem 1rem;
+    }
+
+    .entire {
+      ::ng-deep .mat-form-field-wrapper {
+          padding-bottom: 0;
+      }
+      ::ng-deep .mat-form-field-underline {
+          bottom: 0;
+      }
+      ::ng-deep .mat-form-field {
+          width: 100%;
+      }
+    }
+
+    .button-large-text {
+      font-size: 20px !important;
+    }
+
+  }
+
+  .dialog-drag-handle {
+    position: relative;
+    top: 5px;
+    left: 5px;
+    color: #ccc;
+    cursor: move;
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+  }
+
+  .cuw-row-group {
+    //padding: 30px 10px 10px 10px;
+    margin: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    .cuw-container {
+        display: grid;
+        grid-auto-rows: minmax( 2em, auto );
+        
+        div {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+  
+        .header {
+            font-weight: bold;            
+        }
+
+        .border-right {
+            border-right: 2px solid #ccc;          
+        }
+  
+        .border-top {
+            border-top: 2px solid #ccc;          
+        }
+  
+        .border-left {
+            border-left: 2px solid #ccc;          
+        }
+  
+        .justify-center {
+            justify-content: center;   
+        }
+  
+        .border-bottom {
+            border-bottom: 2px solid #ccc;
+        }
+
+        &.pi-info {
+            grid-template-columns: 30px 150px ;
+        }
+
+    }
+  }

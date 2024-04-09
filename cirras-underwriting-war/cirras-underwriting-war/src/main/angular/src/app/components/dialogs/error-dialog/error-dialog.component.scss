@@ -1,0 +1,13 @@
+@import 'src/styles/variables';
+
+::ng-deep .mat-dialog-container .error-dialog{
+    .mat-radio-button{
+        margin: var(--cirras-underwriting-gutter-space) 0 0 0;
+        font-family: $font-family-main;
+    }
+
+    h1 {
+        background-color: $colour-errors !important;
+    }
+}
+

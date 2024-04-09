@@ -1,0 +1,388 @@
+@import 'variables';
+
+// new css that can get shared between components
+.button-mat-icon {
+    margin-right: 4px;
+  }
+  
+  .button-large-text {
+    font-size: 20px !important;
+  }
+  
+  .border-right {
+    border-right: 1px solid #ccc;
+  }
+  
+  .border-left{
+    border-left: 1px solid #ccc;
+  }
+  
+  
+  .border-top {
+    border-top: 1px solid #ccc;
+  }
+  
+  .border-bottom{
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .center {
+    justify-content: center;
+  }
+
+  .delete-icon {
+    color: #A12622;
+  }
+  
+  // *******************************************
+  // css used mainly in the inventory screens
+  // *******************************************
+  .plcy-inv-cntrct {
+    padding: 10px 0;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  
+    display: grid;
+    grid-auto-rows: minmax( 2em, auto );
+  
+    .question{
+      border-radius: 5px 5px 5px 5px;
+      padding-top: 16px;
+      padding-left: 8px;    
+    }
+
+
+  }
+  
+  .plcy-inv-field-container-green {
+    max-width: 100%;
+    border: solid 1px #ccc;
+    min-height: 54px; 
+    display: block;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .plcy-inv-field-container-green>div:nth-child(2n+1) // this is responsible for the alternating row colors
+  {
+    background: #F1F7F1; // green
+  }
+
+
+  .plcy-inv-cmdty-totals-header {
+    padding-left: 60px;
+    display: grid;
+    grid-auto-rows: minmax( 2em, auto );
+    grid-template-columns: 150px 120px 140px;
+  
+    .header {  
+      color: #0C0C0C;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: left;
+      padding-left:6px;
+    }
+  }
+  
+  .plcy-inv-cmdty-totals-container {
+    padding-left: 60px;
+    display: block;
+  
+    .repeat{
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;  
+      justify-content: flex-start;  
+  
+      div {
+        display: flex;
+        align-items: center;
+  
+        color: #424242;
+        font-size: 15px;
+        font-weight: 500;
+        text-align: left;
+        padding-left:6px;
+      }
+    }
+  
+  }
+  
+  // draggable box, contains one row of the inventory field table
+  .plcy-inv-field-box {
+    // border-bottom: solid 1px #ccc;
+    color: grey; 
+  
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;  
+    justify-content: flex-start;  
+  
+    box-sizing: border-box;
+    position: relative;
+  
+    div {
+      display: flex;
+      align-items: center;
+    }
+  
+    .border-right-exclude-printout {
+      border-right: 1px solid #666666 !important;
+    }
+    
+    .border-left-exclude-printout{
+      border-left: 1px solid #666666;
+    }
+  
+    .inventory-header {
+        min-height: 36px; // 54px; // 62px;
+        font-weight: bold; 
+        justify-content: center; 
+        text-align: center;
+  
+        border-right: 1px solid #DDDDDD;
+        border-top: 1px solid #DDDDDD;
+        border-bottom: 1px solid #DDDDDD;
+  
+        font-size: 14px;
+        font-weight: 500;
+    }
+  
+    .inventory-cell {
+      font-size: 15px;
+      color: #424242;
+      justify-content: center;  
+    }
+  
+    .inventory-border {
+      border-right: 1px solid #DDDDDD;  
+      border-bottom: 1px solid #DDDDDD;
+    }
+  
+    .inventory-border-bottom {
+      border-bottom: 1px solid #DDDDDD;
+    }
+  
+    .inventory-border-exclude-printout {
+      border-right: 1px solid #DDDDDD;
+      border-bottom: 1px solid #666666;
+      border-top: 1px solid #666666;
+    }
+  
+    .inventory-border-bottom-exclude-printout {
+      border-bottom: 1px solid #666666;
+      border-top: 1px solid #666666;
+    }
+  
+    .inventory-fill {
+      justify-content: center;  
+  
+      & > * {
+        flex-grow: 1;
+      }
+  
+      // styling all textbox inputs within this css subclass 
+      .mat-form-field-wrapper {
+        padding-bottom: 0;
+      }
+  
+      .mat-form-field-underline {
+          display: none;
+      }
+  
+      .mat-form-field-infix {
+        width: 100%;
+        padding: 0.5em 0;
+        border-top: 10px solid transparent;
+      }
+  
+      .mat-form-field-appearance-fill .mat-form-field-flex {
+        background-color: transparent;
+      }
+  
+      .mat-form-field-appearance-fill .mat-form-field-infix {
+        padding: 0;
+      }
+  
+      .mat-form-field-appearance-fill .mat-form-field-flex {
+        padding: 0 0.75em 0 0.75em;
+      }
+  
+    }
+  
+    .inventory-date {
+  
+      // styling all textbox inputs within this css subclass 
+      .mat-form-field-wrapper {
+        padding-bottom: 0;
+      }
+  
+      .mat-form-field-underline {
+          display: none;
+      }
+  
+      .mat-form-field-appearance-fill .mat-form-field-flex {
+        background-color: transparent;
+      }
+  
+      .mat-form-field-appearance-fill .mat-form-field-infix {
+        padding: 0;
+      }
+  
+      .mat-form-field-appearance-fill .mat-form-field-flex {
+        padding: 0 0 0 0.75em;
+      }
+  
+      .mat-form-field-infix {
+        width: 100%;
+        border-top: none;
+      }
+  
+      .mat-icon-button {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+      }
+    }
+  
+    .planting-container {
+      display: grid;   
+    
+      div {
+          display: flex;
+          justify-content: center;
+          align-items: stretch; 
+      }
+  
+      .mat-select-arrow{
+        margin: 10px 4px;
+      }
+    }  
+  }
+  
+  .cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+  
+  .cdk-drag-placeholder {
+    opacity: 0;
+  }
+  
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .plcy-inv-field-box:last-child {
+    border: none;
+  }
+  
+  .plcy-inv-field-handle {
+    top: 5px;
+    left: 5px;
+    color: #ccc;
+    cursor: move;
+    width: 24px;
+    height: 24px;
+  }
+  
+  .plcy-inv-fld-tbl-outer-wrapper {
+    max-height: calc(var(--vh, 1vh) * 100 - 20em);
+    width: calc(100% - 2 * var(--cirras-underwriting-gutter-space));
+    margin: 0 var(--cirras-underwriting-gutter-space);
+    overflow-y: auto;
+  }
+  
+  .plcy-inv-fld-tbl-inner-wrapper {
+    max-height: calc(var(--vh, 1vh) * 100 - 20em);
+    margin: 0;
+    overflow-y: auto;
+  }
+
+  .plcy-inv-form-header {
+
+    display: grid;
+    grid-auto-rows: minmax( 2em, auto );
+    grid-template-columns:  auto 180px 140px 150px 12px 190px;
+    //margin-bottom: 10px;
+  
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+  
+    h2 {
+      font-size: 17px;
+      font-weight: 500;
+      margin-left: 20px;
+    }
+  
+    p {
+      font-size: 15px;
+      font-weight: 400;
+      margin-left: 20px;
+      margin-top: 6px;
+      margin-bottom: 6px;
+    }
+  
+    .header-button{
+      border-radius: 5px;
+      border: 1px solid #C2C2C2;
+  
+      font-size: 17px;
+      font-weight: 400;
+      text-align: left;
+      color: #424242 !important;
+    }
+    
+    .header-button-red{
+      border-radius: 5px;
+      border: 1px solid #DBB7B7;
+  
+      font-size: 17px;
+      font-weight: 400;
+      text-align: left;
+      color: #A12622 !important;
+    }
+  
+    .vertical-line {
+      margin-top: 15px;
+      border-left: 2px solid #ccc;
+      height: 26px;
+    }
+  }
+  
+  .message-container {
+    display: grid;
+    grid-auto-rows: minmax( 2em, auto );
+    grid-template-columns:  1fr;
+    //margin-bottom: 10px;
+    margin-left: 16px;
+  
+    div {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+  
+    .has-yield-warning {
+      display: flex; 
+      flex-direction: row; 
+      justify-content:center; 
+      align-items: center; 
+      margin-right: 20px; 
+      border: 2px solid blue; 
+      border-radius: 5px;
+    }
+  }
+
+  

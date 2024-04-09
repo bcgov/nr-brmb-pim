@@ -1,0 +1,172 @@
+@import '../../../../../styles/variables';
+.dialog-form {
+    //font-family: Roboto, 'Helvetica Neue', sans-serif;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+  
+    .title-row.form-row {
+      background-color: rgba(200, 200, 200, .60);
+      padding: .5rem 1rem 0;
+    }
+  
+    .form-row {
+      display: flex;
+      justify-content: center;
+      padding: 0 1rem;
+  
+      .field,
+      .field .mat-form-field {
+        width: 100%;
+  
+        span {
+          font-size: medium;
+        }
+        .uppercase{
+          text-transform: uppercase;
+        }
+      }
+    }
+  
+    .mat-dialog-content {
+      margin: 0;
+      padding: 0.5rem;
+      min-height: 4rem;
+    }
+  
+    .dialog-controls {
+      align-self: center; // flex-end;
+      padding: .5rem 1rem 1rem;
+    }
+
+    .entire {
+      ::ng-deep .mat-form-field-wrapper {
+          padding-bottom: 0;
+      }
+      ::ng-deep .mat-form-field-underline {
+          bottom: 0;
+      }
+      ::ng-deep .mat-form-field {
+          width: 100%;
+      }
+    }
+
+    .button-large-text {
+      font-size: 20px !important;
+    }
+
+  }
+
+  .dialog-drag-handle {
+    position: relative;
+    top: 5px;
+    left: 5px;
+    color: #ccc;
+    cursor: move;
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+  }
+
+  .cuw-row-group {
+    //padding: 30px 10px 10px 10px;
+    margin: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    
+    .cuw-container {
+        display: grid;
+        grid-auto-rows: minmax( 2em, auto );
+        
+        div {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+  
+        .header {
+            font-weight: bold;            
+        }
+
+        .border-right {
+            border-right: 2px solid #ccc;          
+        }
+  
+        .border-top {
+            border-top: 2px solid #ccc;          
+        }
+  
+        .border-left {
+            border-left: 2px solid #ccc;          
+        }
+  
+        .justify-center {
+            justify-content: center;   
+        }
+  
+        .border-bottom {
+            border-bottom: 2px solid #ccc;
+        }
+
+        &.gmt-info {
+            grid-template-columns: 150px 190px 100px 100px 30px;
+        }
+
+        .gmt-info-fill {
+    
+            & > * {
+                  flex-grow: 1;
+              }
+              .mat-form-field{
+                width: 99px;
+                height: 60px;
+                //margin-bottom: -1.4em
+              }
+        
+              .mat-form-field-wrapper {
+                bottom: 0;
+              }
+         
+              ::ng-deep .mat-form-field-underline {
+                display: none;
+              }  
+            
+              ::ng-deep .mat-form-field-infix {
+                display: flex;
+                justify-content: center;
+              }
+              
+              ::ng-deep .mat-form-field-wrapper {
+                padding-bottom: 0;
+              }
+
+              ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+                height: 60px;
+              }
+          }
+
+    }
+  }
+
+  .unsaved-changes-warning {
+    display: flex; 
+    flex-direction: row; 
+    justify-content:center; 
+    align-items: center; 
+    max-width: 400px;
+    margin-left: 90px; 
+    margin-bottom: 10px;
+    border: 2px solid orangered; 
+    border-radius: 5px;
+  }
+
+  .table-wrapper {
+    max-height: calc(var(--vh, 1vh) * 100 - 25em);
+    width: calc(100% - 2 * var(--cirras-underwriting-gutter-space));
+    width: 590px;
+    margin: 0;
+    border-top: 1px solid $colour-light-grey;
+    border-bottom: 1px solid $colour-light-grey;
+    overflow-y: auto;
+  }

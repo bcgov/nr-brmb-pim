@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.YieldMeasUnitTypeCodeMapper">
+
+	<resultMap id="YieldMeasUnitTypeCodeDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.YieldMeasUnitTypeCodeDto">
+	
+		<id property="yieldMeasUnitTypeCode" column="yield_meas_unit_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+
+		<result property="description" column="description" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="decimalPrecision" column="decimal_precision" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="effectiveDate" column="effective_date" javaType="java.util.Date" jdbcType="DATE" />
+		<result property="expiryDate" column="expiry_date" javaType="java.util.Date" jdbcType="DATE" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+
+		<result property="isDefaultYieldUnitInd" column="is_default_yield_unit_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="insurancePlanId" column="insurance_plan_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+
+	</resultMap>
+	
+    <sql id="selectColumns">
+		SELECT  t.yield_meas_unit_type_code,
+				t.description,
+				t.decimal_precision,
+				t.effective_date,
+				t.expiry_date,
+				t.create_user, 
+				t.create_date, 
+				t.update_user, 
+				t.update_date
+    </sql>
+	
+	<select id="fetchAll" resultMap="YieldMeasUnitTypeCodeDtoMap">  
+		<include refid="selectColumns"/>
+		FROM yield_meas_unit_type_code t
+		ORDER BY description
+	</select> 
+
+	
+	<select id="fetch" resultMap="YieldMeasUnitTypeCodeDtoMap">
+		<include refid="selectColumns"/>
+		FROM yield_meas_unit_type_code t
+		WHERE t.yield_meas_unit_type_code = #{yieldMeasUnitTypeCode}
+	</select>
+
+	<select id="selectByPlan" resultMap="YieldMeasUnitTypeCodeDtoMap">
+		<include refid="selectColumns"/>,
+				xref.insurance_plan_id,
+				xref.is_default_yield_unit_ind
+		FROM yield_meas_unit_type_code t
+		JOIN yield_meas_unit_plan_xref xref ON xref.yield_meas_unit_type_code = t.yield_meas_unit_type_code
+		WHERE xref.insurance_plan_id = #{insurancePlanId}
+		ORDER BY xref.is_default_yield_unit_ind DESC, t.description ASC
+	</select>
+	
+	
+	<insert id="insert">
+
+		INSERT INTO yield_meas_unit_type_code (
+			yield_meas_unit_type_code,
+			description,
+			decimal_precision,
+			effective_date,
+			expiry_date,
+			create_user,
+			create_date,
+			update_user,
+			update_date
+		) 
+		VALUES (
+			#{dto.yieldMeasUnitTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.description, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.decimalPrecision, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.effectiveDate, javaType=java.util.Date , jdbcType=DATE, mode=IN},
+			#{dto.expiryDate, javaType=java.util.Date , jdbcType=DATE, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		 )
+	</insert> 
+
+	<update id="update">
+		UPDATE yield_meas_unit_type_code SET
+			description = #{dto.description, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			decimal_precision = #{dto.decimalPrecision, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			effective_date = #{dto.effectiveDate, javaType=java.util.Date , jdbcType=DATE, mode=IN}, 
+			expiry_date = #{dto.expiryDate, javaType=java.util.Date , jdbcType=DATE, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			update_date = now()
+		 WHERE yield_meas_unit_type_code = #{dto.yieldMeasUnitTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN} 
+	</update> 
+
+	<delete id="delete">
+		DELETE FROM yield_meas_unit_type_code t WHERE t.yield_meas_unit_type_code = #{yieldMeasUnitTypeCode}
+	</delete>
+	
+</mapper>

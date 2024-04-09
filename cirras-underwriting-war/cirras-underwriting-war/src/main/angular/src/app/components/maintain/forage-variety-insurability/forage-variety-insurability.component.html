@@ -1,0 +1,183 @@
+
+
+<base-wrapper [errorState]="errorState">
+    <div class="base-container">
+        <div class="base-container flex-y"> 
+            <br />
+            <h2>Maintain Forage Variety Insurability</h2>
+
+            <form [formGroup]="getViewModel().formGroup">
+
+                <div class="cuw-row-group">
+                    <div class="cuw-container top-info" > 
+                        <div>
+                            * Highlighted varieties are new and need review 
+                        </div>
+                        <div *ngIf="hasDataChanged == true" class="unsaved-changes-warning">
+                    
+                            <span #el matTooltip="" style="margin-left: 10px; margin-right: 20px;">
+                                <mat-icon [ngStyle]="{'color':'orangered', 'font-size':'xx-large'}">warning</mat-icon>
+                            </span>
+                            <span style="font-size: large; color:orangered">
+                                There are unsaved changes on the page. 
+                            </span> 
+                
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cuw-row-group">
+                    
+                    <div class="cuw-container fvi-info" >  
+                        
+                        <div class="header border-top border-left border-right border-bottom">Variety</div>
+                        <div class="header border-top border-right border-bottom">Unseeded <br/> Insurable</div>
+                        <div class="header border-top border-right border-bottom">Quantity <br /> Insurable</div>
+                        <div class="header border-top border-right border-bottom">Plant <br/>  Insurable</div>
+                        <div class="header border-top border-right border-bottom" style="grid-column-start:5; grid-column-end: 7;" >Plant Insurability Type</div>
+                        <div class="header border-top border-right border-bottom">AWP <br/> Eligible</div>
+                        <div class="header border-top border-right border-bottom">Underseeded <br /> Eligible</div>
+                        <div class="header border-top border-right border-bottom"></div>
+                        
+                    </div>
+
+                    <div class="table-wrapper flex-y-grow cuw-container fvi-info">
+                        
+                        <div *ngFor="let varietyInsurability of getViewModel().formGroup.controls.varietyInsurability['controls']; index as rowIndex"
+                            [formGroup]="varietyInsurability"        
+                            style="display: contents;" >
+
+                            <div class="border-right border-bottom border-left"
+                            [ngStyle]="{'background-color': !varietyInsurability.value.cropVarietyInsurabilityGuid ? 'lightblue' : '' }">          
+
+                                {{ varietyInsurability.value.varietyName | titlecase }}
+
+                            </div>
+
+                            <div class="border-right border-bottom justify-center"
+                            [ngStyle]="{'background-color': !varietyInsurability.value.cropVarietyInsurabilityGuid ? 'lightblue' : '' }">
+
+                                <span *ngIf="!isInEditMode">{{ ( varietyInsurability.value.isUnseededInsurableInd ) ? "Yes" : "" }}</span> 
+
+                                <mat-checkbox *ngIf="isInEditMode && varietyInsurability.value.plantDurationTypeCode == 'ANNUAL'"
+                                    [disabled]="varietyInsurability.value.isUnseededInsurableEditableInd == false"
+                                    formControlName="isUnseededInsurableInd">
+                                </mat-checkbox>
+
+                            </div>
+
+                            <div class="border-right border-bottom justify-center"
+                            [ngStyle]="{'background-color': !varietyInsurability.value.cropVarietyInsurabilityGuid ? 'lightblue' : '' }">
+
+                                <span *ngIf="!isInEditMode">
+                                    {{ (varietyInsurability.value.isQuantityInsurableInd ) ? "Yes" : "" }}
+                                </span>
+                            
+                                <mat-checkbox  *ngIf="isInEditMode"
+                                    [disabled]="varietyInsurability.value.isQuantityInsurableEditableInd == false"
+                                    formControlName="isQuantityInsurableInd">
+                                </mat-checkbox>
+
+                            </div>
+
+
+                            <div class="border-right border-bottom justify-center" 
+                            [ngStyle]="{'background-color': !varietyInsurability.value.cropVarietyInsurabilityGuid ? 'lightblue' : '' }">
+
+                                <span *ngIf="!isInEditMode">{{ ( varietyInsurability.value.isPlantInsurableInd ) ? "Yes" : "" }}</span> 
+
+                                <mat-checkbox *ngIf="isInEditMode"
+                                    [disabled]="varietyInsurability.value.isPlantInsurableEditableInd == false"
+                                    formControlName="isPlantInsurableInd"
+                                    (change)="changeIsPlantInsurableInd($event, rowIndex)">
+                                </mat-checkbox>
+
+                            </div>
+
+                            <div class=" border-bottom justify-center" 
+                                [ngStyle]="{'background-color': !varietyInsurability.value.cropVarietyInsurabilityGuid ? 'lightblue' : '' }">
+                                {{ getPlantInsurability ( varietyInsurability.value.cropVarietyPlantInsurabilities ) }}
+                            </div>
+
+                            <div class="border-right border-bottom justify-center" >
+                                <mat-icon 
+                                    *ngIf="securityUtilService.canEditForageVarietyInsurability() && isInEditMode && varietyInsurability.value.isPlantInsurableInd"
+                                    style="font-size: 18px;"
+                                    matTooltip="Edit Plant Insurability Type"
+                                    (click)="onEditPlantInsurability(rowIndex)">
+                                    edit
+                                </mat-icon>
+                            </div>
+
+                            <div class="border-right border-bottom justify-center" 
+                                [ngStyle]="{'background-color': !varietyInsurability.value.cropVarietyInsurabilityGuid ? 'lightblue' : '' }">
+                            
+                                <span *ngIf="!isInEditMode">{{ ( varietyInsurability.value.isAwpEligibleInd ) ? "Yes" : "" }}</span> 
+
+                                <mat-checkbox *ngIf="isInEditMode"
+                                    [disabled]="varietyInsurability.value.isAwpEligibleEditableInd == false"
+                                    formControlName="isAwpEligibleInd">
+                                </mat-checkbox>
+
+                            </div>
+
+                            <div class="border-right border-bottom justify-center" 
+                            [ngStyle]="{'background-color': !varietyInsurability.value.cropVarietyInsurabilityGuid ? 'lightblue' : '' }">
+
+                                <span *ngIf="!isInEditMode">{{ ( varietyInsurability.value.isUnderseedingEligibleInd ) ? "Yes" : "" }}</span> 
+
+                                <mat-checkbox *ngIf="isInEditMode"
+                                    [disabled]="varietyInsurability.value.isUnderseedingEligibleEditableInd == false"
+                                    formControlName="isUnderseedingEligibleInd">
+                                </mat-checkbox>
+
+                            </div>                        
+
+                            
+                            <div class="border-right border-bottom justify-center" >
+                                <mat-icon *ngIf="securityUtilService.canEditForageVarietyInsurability() && isInEditMode && isDeletePossible(rowIndex)"
+                                    [ngStyle]="{'color':'red'}"
+                                    matTooltip="Delete Variety Insurability" 
+                                    (click)="onDeleteVarietyInsurability(rowIndex)">
+                                    close
+                                </mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div *ngIf="securityUtilService.canEditForageVarietyInsurability()" class="button-row flex-y-fixed" style="width: 580px;">
+
+                    <button mat-raised-button color="primary" class="button-large-text" (click)="onCancel()">
+                        <mat-icon class="button-mat-icon">cancel_presentation</mat-icon>Cancel
+                    </button>
+                    &nbsp;
+                    <button mat-raised-button color="primary" class="button-large-text" (click)="onEdit()">
+                        <mat-icon class="button-mat-icon">edit</mat-icon>Edit
+                    </button>
+                    &nbsp;
+                    <button  
+                        mat-raised-button color="primary" 
+                        class="button-large-text" 
+                        (click)="onSave()"
+                        [disabled]="!hasDataChanged">
+                            <mat-icon class="button-mat-icon">save</mat-icon>Save
+                    </button>
+                    &nbsp;
+
+                    <!-- &nbsp;
+                    <button 
+                        mat-raised-button color="primary" 
+                        class="button-large-text" 
+                        (click)="isMyFormDirty()">
+                            <mat-icon class="button-mat-icon">Check</mat-icon>Check
+                    </button> -->
+                    
+                </div>
+
+            </form>
+            <br />
+        </div>
+    </div>
+</base-wrapper>

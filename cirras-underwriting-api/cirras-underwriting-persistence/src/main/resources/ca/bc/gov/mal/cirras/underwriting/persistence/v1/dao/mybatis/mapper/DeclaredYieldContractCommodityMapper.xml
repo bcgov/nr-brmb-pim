@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.DeclaredYieldContractCommodityMapper">
+
+	<resultMap id="DeclaredYieldContractCommodityDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto">
+
+		<id property="declaredYieldContractCommodityGuid" column="declared_yield_contract_commodity_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="declaredYieldContractGuid" column="declared_yield_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="cropCommodityId" column="crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="isPedigreeInd" column="is_pedigree_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="harvestedAcres" column="harvested_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="storedYield" column="stored_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="storedYieldDefaultUnit" column="stored_yield_default_unit" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="soldYield" column="sold_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="soldYieldDefaultUnit" column="sold_yield_default_unit" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="gradeModifierTypeCode" column="grade_modifier_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+		<result property="cropCommodityName" column="crop_commodity_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="totalInsuredAcres" column="total_insured_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		
+	</resultMap>
+	
+	
+    <sql id="selectColumns">
+		select t.declared_yield_contract_commodity_guid, 
+			t.declared_yield_contract_guid, 
+			t.crop_commodity_id, 
+			t.is_pedigree_ind, 
+			t.harvested_acres, 
+			t.stored_yield, 
+			t.stored_yield_default_unit, 
+			t.sold_yield, 
+			t.sold_yield_default_unit, 
+			t.grade_modifier_type_code, 
+			t.create_user, 
+			t.create_date, 
+			t.update_user, 
+			t.update_date
+    </sql>
+    
+    
+	<select id="fetch" resultMap="DeclaredYieldContractCommodityDtoMap">
+		<include refid="selectColumns"/>,
+			cc.commodity_name as crop_commodity_name,
+			icc.total_seeded_acres as total_insured_acres
+		from declared_yield_contract_commodity t
+		join crop_commodity cc on cc.crop_commodity_id = t.crop_commodity_id
+		join declared_yield_contract dyc ON dyc.declared_yield_contract_guid = t.declared_yield_contract_guid
+		left join inventory_contract ic on ic.contract_id = dyc.contract_id 
+										and ic.crop_year = dyc.crop_year
+		left join inventory_contract_commodity icc on icc.inventory_contract_guid = ic.inventory_contract_guid 
+												   and icc.crop_commodity_id = t.crop_commodity_id
+												   and icc.is_pedigree_ind = t.is_pedigree_ind
+		where t.declared_yield_contract_commodity_guid = #{declaredYieldContractCommodityGuid}
+	</select>
+
+	<insert id="insert">
+		<selectKey keyProperty="declaredYieldContractCommodityGuid" resultType="java.lang.String" order="BEFORE"> 
+			select replace(cast(gen_random_uuid() as text), '-', '')
+		</selectKey>
+
+		insert into declared_yield_contract_commodity(
+			declared_yield_contract_commodity_guid,
+			declared_yield_contract_guid,
+			crop_commodity_id,
+			is_pedigree_ind,
+			harvested_acres,
+			stored_yield,
+			stored_yield_default_unit,
+			sold_yield,
+			sold_yield_default_unit,
+			grade_modifier_type_code,
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date
+		) values (
+			#{declaredYieldContractCommodityGuid},
+			#{dto.declaredYieldContractGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.isPedigreeInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			#{dto.harvestedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.storedYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.storedYieldDefaultUnit, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.soldYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.soldYieldDefaultUnit, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.gradeModifierTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+	</insert> 
+
+	<update id="update">
+		update declared_yield_contract_commodity
+		set harvested_acres = #{dto.harvestedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			stored_yield = #{dto.storedYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			stored_yield_default_unit = #{dto.storedYieldDefaultUnit, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			sold_yield = #{dto.soldYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			sold_yield_default_unit = #{dto.soldYieldDefaultUnit, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			grade_modifier_type_code = #{dto.gradeModifierTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where declared_yield_contract_commodity_guid = #{dto.declaredYieldContractCommodityGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
+	</update> 
+
+	<delete id="delete">
+		delete from declared_yield_contract_commodity where declared_yield_contract_commodity_guid = #{declaredYieldContractCommodityGuid}
+	</delete>
+	
+	<delete id="deleteForDeclaredYieldContract">
+		delete from declared_yield_contract_commodity where declared_yield_contract_guid = #{declaredYieldContractGuid}
+	</delete>
+			
+	<select id="selectForDeclaredYieldContract" resultMap="DeclaredYieldContractCommodityDtoMap">
+		<include refid="selectColumns"/>,
+			cc.commodity_name as crop_commodity_name,
+			icc.total_seeded_acres as total_insured_acres
+		from declared_yield_contract_commodity t
+		join crop_commodity cc on cc.crop_commodity_id = t.crop_commodity_id
+		join declared_yield_contract dyc ON dyc.declared_yield_contract_guid = t.declared_yield_contract_guid
+		left join inventory_contract ic on ic.contract_id = dyc.contract_id 
+										and ic.crop_year = dyc.crop_year
+		left join inventory_contract_commodity icc on icc.inventory_contract_guid = ic.inventory_contract_guid 
+												   and icc.crop_commodity_id = t.crop_commodity_id
+												   and icc.is_pedigree_ind = t.is_pedigree_ind
+		where t.declared_yield_contract_guid = #{declaredYieldContractGuid}
+		order by cc.commodity_name, t.is_pedigree_ind
+	</select> 
+
+	<select id="selectToRecalculate" resultMap="DeclaredYieldContractCommodityDtoMap">
+		<include refid="selectColumns"/>
+		FROM declared_yield_contract_commodity t
+		JOIN declared_yield_contract dyc ON dyc.declared_yield_contract_guid = t.declared_yield_contract_guid
+		WHERE t.crop_commodity_id = #{cropCommodityId}
+		AND dyc.entered_yield_meas_unit_type_code = #{enteredYieldMeasUnitTypeCode}
+		AND dyc.crop_year BETWEEN #{effectiveCropYear} AND #{expiryCropYear}	
+	</select> 	
+
+</mapper>

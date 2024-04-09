@@ -1,0 +1,160 @@
+@import '../../../../styles/variables';
+
+h2 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-left: 30px;
+    display: inline;
+  }
+
+
+  .example-radio-group {
+    display: flex;
+    flex-direction: row;
+    margin: 15px 0;
+    align-items: flex-start;
+  }
+  
+  .example-radio-button {
+    margin: 5px;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: 130px auto;
+    padding: 10px;
+    //margin-top: 40px; 
+    margin-left: 20px;
+
+  }
+  .grid-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .legal-desc-container {
+    display: grid;
+    grid-template-columns: auto;
+    padding: 10px;
+    margin-left: 20px;
+
+  }
+  .legal-desc-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .active-years-container {
+    display: grid;
+    grid-template-columns: 150px 120px 120px 120px;
+    padding: 0 10px 10px 10px;
+    margin-left: 20px;
+
+  }
+  .active-years-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .risk-areas-container {
+    display: grid;
+    grid-template-columns: 190px 180px 120px ;
+    padding: 10px 10px 10px 10px;
+    //margin-left: 20px;
+    
+    // .div{
+    //   padding:10px;
+    // }
+    .align-center {
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+    }
+
+    .mat-form-field{
+      width: 180px;
+      margin-bottom: -1.4em 
+    }
+
+    .mat-form-field-wrapper {
+      bottom: 0;
+    }
+
+    ::ng-deep .mat-form-field-underline {
+      display: none;
+    } 
+
+  }
+
+  .header {
+    font-weight: bold;   
+    // text-align: center;  
+    padding-bottom: 10px;       
+  }
+  .border-right {
+    border-right: 2px solid #ccc;
+  }
+
+  .border-left{
+    border-left: 2px solid #ccc;
+  }
+
+  .border-top {
+    border-top: 2px solid #ccc;
+  }
+
+  .border-bottom{
+    border-bottom: 2px solid #ccc;
+  }
+
+  .button-row {
+    padding-top: 15px;
+    margin-left: 20px;
+    margin-right: 20px;
+  
+    ::ng-deep .mat-raised-button {
+      padding: 0 10px;
+    }
+  }
+
+  .button-mat-icon {
+    margin-right: 4px;
+  }
+
+  .button-large-text {
+    font-size: 20px !important;
+  }
+  
+  .button-right {
+    float: right;
+  }
+  
+  .red-star {
+    color: red; 
+    padding-left: 4px; 
+  }
+
+  .row-group {
+    padding: 10px;
+    margin: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 500px;
+
+    &.bordered-container {
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      position: relative;
+
+      label {
+          background-color: white;
+          position: absolute;
+          top: -15px;
+          left: 10px;
+          padding: 5px;
+          font-weight: bold;
+      }
+  }
+
+  }

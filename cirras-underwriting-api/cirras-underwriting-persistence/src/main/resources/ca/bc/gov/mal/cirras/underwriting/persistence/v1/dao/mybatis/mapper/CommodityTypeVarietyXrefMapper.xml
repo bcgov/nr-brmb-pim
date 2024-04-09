@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.CommodityTypeVarietyXrefMapper">
+
+	<resultMap id="CommodityTypeVarietyXrefDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CommodityTypeVarietyXrefDto">
+	
+		<id property="commodityTypeCode" column="commodity_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<id property="cropVarietyId" column="crop_variety_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		
+		<result property="dataSyncTransDate" column="data_sync_trans_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+	</resultMap>
+	
+    <sql id="selectColumns">
+		SELECT  commodity_type_code,
+				crop_variety_id,
+				data_sync_trans_date, 
+				create_user, 
+				create_date, 
+				update_user, 
+				update_date
+    </sql>
+	
+	<select id="fetchAll" resultMap="CommodityTypeVarietyXrefDtoMap">  
+		<include refid="selectColumns"/>
+		FROM commodity_type_variety_xref
+		ORDER BY commodity_type_code
+	</select> 
+
+	
+	<select id="fetch" resultMap="CommodityTypeVarietyXrefDtoMap">
+		<include refid="selectColumns"/>
+		FROM commodity_type_variety_xref t
+		WHERE t.commodity_type_code = #{commodityTypeCode}
+		AND t.crop_variety_id = #{cropVarietyId}
+	</select>
+	
+	<insert id="insert">
+
+		INSERT INTO commodity_type_variety_xref (
+			commodity_type_code,
+			crop_variety_id,
+			data_sync_trans_date,
+			create_user,
+			create_date,
+			update_user,
+			update_date
+		) 
+		VALUES (
+			#{dto.commodityTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.cropVarietyId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.dataSyncTransDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		 )
+	</insert> 
+
+	<delete id="delete">
+		DELETE FROM commodity_type_variety_xref t
+		WHERE t.commodity_type_code = #{commodityTypeCode}
+		AND t.crop_variety_id = #{cropVarietyId}
+	</delete>
+	
+</mapper>

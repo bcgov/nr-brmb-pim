@@ -1,0 +1,11 @@
+
+<form [formGroup]="relatedPoliciesForm" class="related-policies">
+    <mat-form-field appearance="fill">
+        <mat-select 
+            formControlName="relatedPolicies"
+            (selectionChange)="relatedPoliciesChange($event)">
+            <mat-option *ngFor="let option of relatedPoliciesOptions" [value]="option.value"
+                >{{ option.description }}</mat-option>
+        </mat-select>
+        </mat-form-field>
+</form>

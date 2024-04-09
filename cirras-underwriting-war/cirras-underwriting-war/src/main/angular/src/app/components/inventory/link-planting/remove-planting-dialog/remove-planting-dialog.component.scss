@@ -1,0 +1,37 @@
+.dialog-form {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+
+    .form-row {
+        display: flex;
+        justify-content: center;
+        padding: 0 1rem;
+      }
+
+    .dialog-controls {
+        align-self: center; // flex-end;
+        padding: .5rem 1rem 1rem;
+      }
+
+    .button-large-text {
+      font-size: 20px !important;
+    }
+  }
+
+  .row-group-left {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.dialog-drag-handle {
+  position: relative;
+  top: 5px;
+  left: 5px;
+  color: #ccc;
+  cursor: move;
+  width: 24px;
+  height: 24px;
+}

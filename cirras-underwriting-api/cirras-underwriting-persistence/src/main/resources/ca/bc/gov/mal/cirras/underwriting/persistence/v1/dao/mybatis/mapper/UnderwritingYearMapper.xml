@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.UnderwritingYearMapper">
+
+	<resultMap id="UnderwritingYearDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingYearDto">
+	
+		<id property="underwritingYearGuid" column="underwriting_year_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="cropYear" column="crop_year" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+
+	</resultMap>
+	
+    <sql id="selectColumns">
+		t.underwriting_year_guid, 
+		t.crop_year, 
+		t.create_user, 
+		t.create_date, 
+		t.update_user, 
+		t.update_date 
+    </sql>
+    
+	<select id="fetch" resultMap="UnderwritingYearDtoMap">
+		SELECT 	
+		<include refid="selectColumns"/>
+		FROM underwriting_year t
+		WHERE t.underwriting_year_guid = #{underwritingYearGuid}
+	</select>
+	
+	<select id="fetchAll" resultMap="UnderwritingYearDtoMap">
+		SELECT  
+		<include refid="selectColumns"/>
+		FROM underwriting_year t
+		ORDER BY t.crop_year DESC
+	</select> 
+	
+	<select id="selectByCropYear" resultMap="UnderwritingYearDtoMap">
+		SELECT 	
+		<include refid="selectColumns"/>
+		FROM underwriting_year t
+		WHERE t.crop_year = #{cropYear}
+	</select>
+	
+	<insert id="insert">
+
+		<selectKey keyProperty="underwritingYearGuid" resultType="java.lang.String" order="BEFORE"> 
+			select replace(cast(gen_random_uuid() as text), '-', '')
+		</selectKey>
+
+		INSERT INTO underwriting_year (
+			underwriting_year_guid,
+			crop_year,
+			create_user,
+			create_date,
+			update_user,
+			update_date
+		) VALUES (
+			#{underwritingYearGuid},
+			#{dto.cropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		 )
+	</insert> 
+
+	<delete id="delete">
+		DELETE FROM underwriting_year WHERE underwriting_year_guid = #{underwritingYearGuid}
+	</delete> 
+
+	<delete id="deleteByCropYear">
+		DELETE FROM underwriting_year WHERE crop_year = #{cropYear}
+	</delete> 
+
+</mapper>

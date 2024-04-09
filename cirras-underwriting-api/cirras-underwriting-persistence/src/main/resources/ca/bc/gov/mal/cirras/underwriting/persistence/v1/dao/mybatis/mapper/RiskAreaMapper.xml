@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.RiskAreaMapper">
+
+	<resultMap id="RiskAreaDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.RiskAreaDto">
+	
+		<id property="riskAreaId" column="risk_area_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="insurancePlanId" column="insurance_plan_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="riskAreaName" column="risk_area_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="description" column="description" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="effectiveDate" column="effective_date" javaType="java.util.Date" jdbcType="DATE" />
+		<result property="expiryDate" column="expiry_date" javaType="java.util.Date" jdbcType="DATE" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+
+		<result property="insurancePlanName" column="insurance_plan_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="legalLandId" column="legal_land_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+
+	</resultMap>
+	
+    <sql id="selectColumns">
+		t.risk_area_id, 
+		t.insurance_plan_id, 
+		t.risk_area_name, 
+		t.description, 
+		t.effective_date, 
+		t.expiry_date, 
+		t.create_user, 
+		t.create_date, 
+		t.update_user, 
+		t.update_date 
+    </sql>
+    
+	<select id="fetch" resultMap="RiskAreaDtoMap">
+		SELECT 	
+		<include refid="selectColumns"/>
+		FROM risk_area t
+		WHERE t.risk_area_id = #{riskAreaId}
+	</select>
+	
+	<select id="fetchAll" resultMap="RiskAreaDtoMap">
+		SELECT  
+		<include refid="selectColumns"/>
+		FROM risk_area t
+		ORDER BY t.risk_area_name
+	</select> 
+	
+	<insert id="insert">
+
+		<selectKey keyProperty="riskAreaId" resultType="java.lang.Integer" order="BEFORE"> 
+			SELECT nextval('ra_seq')
+		</selectKey>
+
+		INSERT INTO risk_area (
+			risk_area_id,
+			insurance_plan_id,
+			risk_area_name,
+			description,
+			effective_date,
+			expiry_date,
+			create_user,
+			create_date,
+			update_user,
+			update_date
+		) VALUES (
+			#{riskAreaId},
+			#{dto.insurancePlanId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.riskAreaName, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.description, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.effectiveDate, javaType=java.util.Date , jdbcType=DATE, mode=IN},
+			#{dto.expiryDate, javaType=java.util.Date , jdbcType=DATE, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		 )
+	</insert> 
+
+	<update id="update">
+		UPDATE risk_area
+		SET 
+			insurance_plan_id = #{dto.insurancePlanId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			risk_area_name = #{dto.riskAreaName, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			description = #{dto.description, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			effective_date = #{dto.effectiveDate, javaType=java.util.Date , jdbcType=DATE, mode=IN}, 
+			expiry_date = #{dto.expiryDate, javaType=java.util.Date , jdbcType=DATE, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		 WHERE risk_area_id = #{dto.riskAreaId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}
+
+	</update> 
+
+	<delete id="delete">
+		DELETE FROM risk_area WHERE risk_area_id = #{riskAreaId}
+	</delete> 
+	
+	<sql id="selectWhereClause">
+	  
+	  <if test="insurancePlanId != null">
+		WHERE t.insurance_plan_id = #{insurancePlanId}
+	  </if>
+
+	</sql>
+
+	
+	<select id="select" resultMap="RiskAreaDtoMap">  
+		SELECT 
+			<include refid="selectColumns"/>
+			, ip.insurance_plan_name
+		FROM risk_area t
+		JOIN insurance_plan ip ON ip.insurance_plan_id = t.insurance_plan_id
+		<include refid="selectWhereClause"/>
+		ORDER BY t.risk_area_name	
+	</select> 
+	
+	<select id="selectByLegalLand" resultMap="RiskAreaDtoMap">
+		SELECT  ra.risk_area_id, 
+				ra.insurance_plan_id, 
+				ra.risk_area_name, 
+				ra.description,
+				ip.insurance_plan_name,
+				xref.legal_land_id
+		FROM risk_area ra
+		JOIN legal_land_risk_area_xref xref ON xref.risk_area_id = ra.risk_area_id
+		JOIN insurance_plan ip ON ip.insurance_plan_id = ra.insurance_plan_id
+		WHERE xref.legal_land_id = #{legalLandId}
+		ORDER BY ip.insurance_plan_name, ra.risk_area_name	  
+	</select>	
+
+</mapper>

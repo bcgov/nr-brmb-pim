@@ -1,0 +1,239 @@
+@import 'variables';
+
+
+#core-interface-container {
+  display: flex;
+}
+//@media screen and (max-width: map_get($grid-breakpoints, sm)) {
+//  input,
+//  select,
+//  button.mat-raised-button{
+//    font-size: $font-size-small;
+//  }
+//}
+
+
+//-------------------------------base-wrapper-----------------------
+@media screen and (max-width: calc(map_get($grid-breakpoints, md) - 1px)) {
+  .user-summary {
+    top: 5px !important;
+  }
+  .user-summary-org {
+    top: 12px !important;
+  }
+
+}
+
+@media screen and (max-width: map_get($grid-breakpoints, md)) {
+  //.user-summary {
+  //  top: 5px !important;
+  //}
+  //.user-summary-org {
+  //  top: 12px !important;
+  //}
+
+  .toolbar-panel {
+    margin: 8px 0 !important;
+
+    button {
+      padding: 0 !important;
+    }
+
+    .nav-menu-button {
+      display: inline-block;
+      position: relative;
+      z-index: 1;
+      padding: 2em !important;
+      margin: -2em;
+    }
+  }
+  mat-toolbar.mat-primary.wf1-public-application-header .action-items {
+    left: unset;
+  }
+}
+
+@media screen and (max-width: map_get($grid-breakpoints, xs)) {
+  span.back-route-label {
+    font-size: small !important;
+  }
+
+  div.summary {
+    font-size: x-small !important;
+  }
+
+  .header-warning{
+    font-size: small !important;
+  }
+}
+
+//-------------------------------initializing app-----------------------
+@media screen and (max-width: map_get($grid-breakpoints, sm)) {
+  .cdk-overlay-container {
+    position: fixed !important;
+  }
+
+  mat-dialog-container.mat-dialog-container {
+    font-size: $font-size;
+  }
+}
+
+//-------------------------------dialog-----------------------
+// @media screen and (max-width: calc(#{map_get($grid-breakpoints, md)} - 1px)) {
+//   .cirras-underwriting-loading-screen {
+//     font-size: 50%;
+//   }
+// }
+
+//-------------------------------header-----------------------
+@media screen and (max-width: map_get($grid-breakpoints, md)) {
+  mat-toolbar.mat-primary.wf1-public-application-header,
+  mat-toolbar.mat-primary.cirras-underwriting-application-header {
+    padding-left: var(--cirras-underwriting-gutter-space);
+    padding-right: var(--cirras-underwriting-gutter-space);
+
+    img[alt="CIRRAS Grain and Forage Underwriting Reports"] {
+      width: 136px;
+      padding-bottom: 3px;
+    }
+
+    #header-title {
+      font-size: $font-size;
+      margin-left: 6px;
+      margin-bottom: 3px;
+    }
+
+    .header-caption-label, .header-caption-text {
+      margin-bottom: 3px;
+    }
+
+    .header-caption-label {
+      margin-right: 8px;
+    }
+
+
+    .app-logo-and-title-div {
+      display: flex;
+      margin: auto;
+    }
+
+  }
+
+  #map {
+    min-height: $wf1-app-map-mobile-height;
+  }
+
+  .svg-inline--fa {
+    height: 0.8em;
+  }
+}
+//---------------table screens----------
+@media screen and (max-width: map_get($grid-breakpoints, xs)) {
+  .sort-dir{
+    .mat-radio-label-content{
+      padding-left: 2px;
+    }
+  }
+}
+
+@media screen and (max-width: map_get($grid-breakpoints, md)) {
+  #core-interface-container{
+    .bottom-summary{
+      flex-direction: column;
+
+      .ngx-pagination{
+        margin-top: var(--cirras-underwriting-gutter-space);
+        margin-bottom: var(--cirras-underwriting-gutter-space);
+      }
+
+      .show-entries-info{
+        padding-bottom: var(--cirras-underwriting-gutter-space);
+      }
+    }
+  }
+
+}
+//-----------forms-------------
+@media screen and (max-width: map_get($grid-breakpoints, md)) {
+  .cdk-overlay-container .mobile,
+  cirras-underwriting-root {
+    .form-flex-wrapper .form-flex {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+
+    .columns{
+      .col{
+        flex-basis: 100%;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: map_get($grid-breakpoints, sm)) {
+  .mat-action-row{
+    align-items: flex-start;
+  }
+
+  .action-row-warning{
+    flex-direction: column;
+    .mat-icon{
+      margin-right: 0;
+    }
+    span{
+      text-align: center;
+    }
+  }
+
+  .mat-tab-group .mat-tab-body{
+    .mat-card:not(.error-panel){
+      border: 1px solid $colour-light-grey;
+      margin: var(--cirras-underwriting-gutter-space);
+      border-radius: $wf1-border-radius;
+      overflow: hidden;
+    }
+  }
+
+
+  cirras-underwriting-root .form-flex-wrapper .form-flex {
+
+    .icon-button {
+      flex: 1;
+    }
+
+
+    .field {
+      &.action,
+      &.selector {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+
+    }
+
+    &.form-flex-thirds {
+      flex-flow: row wrap;
+
+      .field {
+        flex-basis: 100%;
+        &.flex-1 {
+          flex-basis: 40%;
+        }
+        &.flex-2 {
+          flex-basis: 100%;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: map_get($grid-breakpoints, xs)) {
+  .mat-action-row {
+    font-size: $font-size-small;
+
+    button{
+      font-size: $font-size-small;
+      padding: 0 5px;
+      min-width: 50px;  }
+  }
+}

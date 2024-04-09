@@ -1,0 +1,96 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/inventory';
+
+.plcy-inv-field-container-blue {
+    max-width: 100%;
+    border: solid 1px #ccc;
+    min-height: 54px; // 64px;
+    display: block;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .plcy-inv-field-container-blue>div:nth-child(2n+1) // this is responsible for the alternating row colors
+  {
+    background: #EFF5FA; // blue
+  }
+
+
+  .grain-unsdd-inv-cntrct-container {
+    display: grid;
+    grid-auto-rows: minmax( 2em, auto );
+    grid-template-columns: 1fr 1fr 1fr 3fr;
+
+    div {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .comment-fill{
+
+        .mat-form-field-appearance-fill .mat-form-field-underline::before {
+            background-color: black;
+        }
+
+        .mat-form-field-appearance-fill .mat-form-field-flex {
+            background-color: transparent;
+          }
+    }
+  }
+
+  .grain-unsdd-inv-tot-cmdty-container {
+    display: grid; 
+    grid-auto-rows: minmax( 2em, auto );
+    grid-template-columns: 136px 180px 160px;
+    margin-left: 40px;
+  
+    div {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+  
+    .header {
+      color: #0C0C0C;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: left;
+      padding-left: 6px;
+    }
+  
+    .readonly {
+      padding-left: 6px;
+      font-size: 15px;
+    }
+  
+    .fill {
+        // styling all textbox inputs within this css subclass 
+        .mat-form-field-wrapper {
+            padding-bottom: 0;
+        }
+    
+        .mat-form-field-underline {
+            display: none;
+        }
+    
+        .mat-form-field-infix {
+            width: 100%;
+            padding: 0.5em 0;
+            border-top: 10px solid transparent;
+        }
+    
+        .mat-form-field-appearance-fill .mat-form-field-flex {
+            background-color: transparent;
+        }
+    
+        .mat-form-field-appearance-fill .mat-form-field-infix {
+            padding: 0;
+        }
+    
+        .mat-form-field-appearance-fill .mat-form-field-flex {
+            padding: 0 0.75em 0 0.75em;
+        }
+    }
+  }

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.InventoryUnseededMapper">
+
+	<resultMap id="InventoryUnseededDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryUnseededDto">
+		<id property="inventoryUnseededGuid" column="inventory_unseeded_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		
+		<result property="inventoryFieldGuid" column="inventory_field_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="cropCommodityId" column="crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="cropCommodityName" column="crop_commodity_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="isUnseededInsurableInd" column="is_unseeded_insurable_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="acresToBeSeeded" column="acres_to_be_seeded" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+		<result property="totalAcresToBeSeeded" column="total_acres_to_be_seeded" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		
+	</resultMap>
+	
+	
+    <sql id="selectColumns">
+		select iu.inventory_unseeded_guid,
+			iu.inventory_field_guid,
+			iu.crop_commodity_id,
+			cc.commodity_name as crop_commodity_name,
+			iu.is_unseeded_insurable_ind,
+			iu.acres_to_be_seeded,
+			iu.create_user,
+			iu.create_date,
+			iu.update_user,
+			iu.update_date
+    </sql>
+    
+    
+	<select id="fetch" resultMap="InventoryUnseededDtoMap">
+		<include refid="selectColumns"/>
+		from inventory_unseeded iu
+		left join crop_commodity cc on cc.crop_commodity_id = iu.crop_commodity_id
+		where iu.inventory_unseeded_guid = #{inventoryUnseededGuid}
+	</select>
+
+	<insert id="insert">
+		<selectKey keyProperty="inventoryUnseededGuid" resultType="java.lang.String" order="BEFORE"> 
+			select replace(cast(gen_random_uuid() as text), '-', '')
+		</selectKey>
+
+
+		insert into inventory_unseeded(
+			inventory_unseeded_guid,
+			inventory_field_guid,
+			crop_commodity_id,
+			is_unseeded_insurable_ind,
+			acres_to_be_seeded,
+			create_user,
+			create_date,
+			update_user,
+			update_date
+		) values (
+			#{inventoryUnseededGuid},
+			#{dto.inventoryFieldGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.isUnseededInsurableInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			#{dto.acresToBeSeeded, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+	</insert> 
+
+	<update id="update">
+		update inventory_unseeded
+		set crop_commodity_id = #{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+    		is_unseeded_insurable_ind = #{dto.isUnseededInsurableInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			acres_to_be_seeded = #{dto.acresToBeSeeded, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			update_date = now()
+		where inventory_unseeded_guid = #{dto.inventoryUnseededGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
+	</update> 
+
+	<delete id="delete">
+		delete from inventory_unseeded where inventory_unseeded_guid = #{inventoryUnseededGuid}
+	</delete>
+		
+	<delete id="deleteForInventoryField">
+		delete from inventory_unseeded where inventory_field_guid = #{inventoryFieldGuid}
+	</delete>
+	
+	<delete id="deleteForField">
+		delete from inventory_unseeded where inventory_field_guid in
+		(select t.inventory_field_guid from inventory_field t where t.field_id = #{fieldId})
+	</delete>
+
+	<delete id="deleteForInventoryContract">
+		delete from inventory_unseeded t
+		where t.inventory_field_guid in (select invf.inventory_field_guid
+		 								 from inventory_contract inv
+										 join grower_contract_year gcy on gcy.contract_id = inv.contract_id and gcy.crop_year = inv.crop_year
+										 join contracted_field_detail cfd on cfd.grower_contract_year_id = gcy.grower_contract_year_id
+										 join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+										 join inventory_field invf on invf.field_id = afd.field_id 
+					         						              and invf.crop_year = afd.crop_year 
+					                 						      and invf.insurance_plan_id = gcy.insurance_plan_id
+										 where inv.inventory_contract_guid = #{inventoryContractGuid}
+										 )
+	</delete>
+		
+	<select id="select" resultMap="InventoryUnseededDtoMap">  
+		<include refid="selectColumns"/>
+		from inventory_unseeded iu
+		left join crop_commodity cc on cc.crop_commodity_id = iu.crop_commodity_id
+		where iu.inventory_field_guid = #{inventoryFieldGuid}
+		order by iu.inventory_unseeded_guid
+	</select> 
+
+	<select id="selectTotalsForFieldYearPlan" resultMap="InventoryUnseededDtoMap"> 
+		SELECT iu.crop_commodity_id, 
+			COALESCE(SUM(iu.acres_to_be_seeded), 0) AS total_acres_to_be_seeded
+			FROM inventory_field inv
+			JOIN inventory_unseeded iu ON iu.inventory_field_guid = inv.inventory_field_guid
+			WHERE inv.field_id = #{fieldId}
+			AND inv.crop_year = #{cropYear}
+			AND inv.insurance_plan_id = #{insurancePlanId}
+			GROUP BY iu.crop_commodity_id
+	</select>
+		
+</mapper>

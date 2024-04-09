@@ -1,0 +1,37 @@
+<base-wrapper [errorState]="errorState">
+    <div class="base-container bg-color-lightblue">
+        <div class="base-container flex-y"> 
+            <br />
+            <h2>Dashboard</h2>
+
+            <form [formGroup]="getViewModel().formGroup">
+                <div class="uw-year-row-group">
+                    <div class="cuw-container cuw-grower-info" >  
+
+                        <div>
+                            <span class="grower-header-label">Crop Year: </span> 
+                        </div>
+                        <div>
+                            <mat-form-field appearance="fill">
+                                <mat-select 
+                                    formControlName="selectedCropYear">
+                                    <mat-option *ngFor="let option of uwYearOptions" [value]="option.cropYear"
+                                    >{{ option.cropYear }}</mat-option>
+                                </mat-select>
+                                </mat-form-field>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="securityUtilService.canCreateUwYear()" class="button-row flex-y-fixed" style="width: 580px;">
+
+                    <button mat-raised-button color="primary" class="button-large-text"  (click)="onCreateNewUwYear()">
+                        <mat-icon class="button-mat-icon">add_box</mat-icon>Create New Crop Year
+                    </button>
+                    &nbsp;
+
+                </div>
+            </form>
+        </div>
+    </div>
+</base-wrapper>

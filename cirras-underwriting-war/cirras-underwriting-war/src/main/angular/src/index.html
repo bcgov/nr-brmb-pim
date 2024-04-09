@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="/">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta charset="utf-8">
+    <meta name="viewport" id="meta-viewport"  content="width=device-width, initial-scale=1">
+    <noscript>
+        <h1>You don’t have javascript enabled.</h1>
+        <p>Please enable it to get the full experience.</p>
+    </noscript>
+    <script>
+        __Zone_enable_cross_context_check = true;
+        if (!window.history && !window.history.replaceState) {
+            window.history.replaceState = function () {
+                console.log('Replace state not supported - replace with empty function - history.replaceState()')
+            };
+        }
+    </script>
+    <title>CIRRAS Grain and Forage Underwriting Reports</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300..600" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
+    <script type="text/javascript">
+        function browserCheck() {
+            var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+
+            var isIEOrEdge = /msie\s|trident\//i.test(window.navigator.userAgent);
+            var isIEOrEdge = false;
+
+            var cirras_underwriting = document.getElementById('cirrasUnderwritingMain');
+            var browserAlert = document.getElementById('browserIEAlert');
+            if (isIEOrEdge) {
+                cirras_underwriting.style.display = 'none';
+                browserAlert.style.display = 'block';
+                var urlInput = document.getElementById('currentUrl');
+                urlInput.value = window.location.href;
+            } else {
+                cirras_underwriting.style.display = 'block';
+                browserAlert.style.display = 'none';
+            }
+        }
+
+        function copyToClipboard() {
+            var copyText = document.getElementById('currentUrl');
+            copyText.select();
+            document.execCommand("copy");
+        }
+    </script>
+    <style>
+        iframe#login-iframe {
+            position: absolute !important;
+            top: 50% !important;
+            right: 50% !important;
+            transform: translateX(50%) translateY(-50%) !important;
+            background-color: white !important;
+            z-index: 1000 !important;
+        }
+
+        body {
+            background-color: white;
+        }
+
+    </style>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1976d2">
+</head>
+<body onload="browserCheck()">
+<div id="cirrasUnderwritingMain" style="display: block" role="main">
+    <cirras-underwriting-root>
+        <style>
+
+            @keyframes svg-spinner {
+                0% {
+                    transform: rotate(0);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @keyframes spinner {
+                0% {
+                    stroke-dashoffset: 268.60617px;
+                    transform: rotate(0);
+                }
+                12.5% {
+                    stroke-dashoffset: 56.54867px;
+                    transform: rotate(0);
+                }
+                12.5001% {
+                    stroke-dashoffset: 56.54867px;
+                    transform: rotateX(180deg) rotate(72.5deg);
+                }
+                25% {
+                    stroke-dashoffset: 268.60617px;
+                    transform: rotateX(180deg) rotate(72.5deg);
+                }
+                25.0001% {
+                    stroke-dashoffset: 268.60617px;
+                    transform: rotate(270deg);
+                }
+                37.5% {
+                    stroke-dashoffset: 56.54867px;
+                    transform: rotate(270deg);
+                }
+                37.5001% {
+                    stroke-dashoffset: 56.54867px;
+                    transform: rotateX(180deg) rotate(161.5deg);
+                }
+                50% {
+                    stroke-dashoffset: 268.60617px;
+                    transform: rotateX(180deg) rotate(161.5deg);
+                }
+                50.0001% {
+                    stroke-dashoffset: 268.60617px;
+                    transform: rotate(180deg);
+                }
+                62.5% {
+                    stroke-dashoffset: 56.54867px;
+                    transform: rotate(180deg);
+                }
+                62.5001% {
+                    stroke-dashoffset: 56.54867px;
+                    transform: rotateX(180deg) rotate(251.5deg);
+                }
+                75% {
+                    stroke-dashoffset: 268.60617px;
+                    transform: rotateX(180deg) rotate(251.5deg);
+                }
+                75.0001% {
+                    stroke-dashoffset: 268.60617px;
+                    transform: rotate(90deg);
+                }
+                87.5% {
+                    stroke-dashoffset: 56.54867px;
+                    transform: rotate(90deg);
+                }
+                87.5001% {
+                    stroke-dashoffset: 56.54867px;
+                    transform: rotateX(180deg) rotate(341.5deg);
+                }
+                100% {
+                    stroke-dashoffset: 268.60617px;
+                    transform: rotateX(180deg) rotate(341.5deg);
+                }
+            }
+
+            body {
+                padding: 0;
+                margin: 0;
+            }
+
+            div.cirras-underwriting-application-header,
+            div.wf1-public-application-header {
+                height: 96px;
+                padding-left: 16px;
+                padding-right: 16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: rgba(0, 51, 102, 1);
+                color: white;
+                border-bottom: #e69f00;
+                border-bottom-style: solid;
+                border-bottom-width: 2px;
+                height: auto;
+            }
+
+            div.wf1-public-application-header .bc-logo-div,
+            div.wf1-public-application-header .app-logo-and-title-div,
+            div.wf1-public-application-header .action-items,
+            div.wf1-application-header .bc-logo-div,
+            div.wf1-application-header .app-logo-and-title-div,
+            div.wf1-application-header .system-and-user-info {
+                flex: 0 0 auto;
+                font-family: 'Helvetica-Light', 'Helvetica Light', 'Helvetica';
+                height: 70px;
+                padding: 0;
+                left: -20px;
+                position: relative;
+            }
+
+            div.wf1-public-application-header .app-logo-and-title-div,
+            div.cirras-underwriting-application-header .app-logo-and-title-div {
+                display: flex;
+                justify-content: center;
+                align-items: flex-end;
+            }
+
+            div.wf1-public-application-header img,
+            div.cirras-underwriting-application-header img {
+                flex: 0 0 auto;
+                height: 70px;
+            }
+
+            div.wf1-public-application-header span,
+            div.cirras-underwriting-application-header span {
+                flex: 1 1 auto;
+            }
+
+            div.wf1-public-application-header .action-items > div,
+            div.cirras-underwriting-application-header .system-and-user-info > div {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+            }
+
+            div.wf1-public-application-header #header-title,
+            div.cirras-underwriting-application-header #header-title {
+                font-size: 22px;
+                color: #ffffff;
+                white-space: nowrap;
+                margin-left: 6px;
+                margin-bottom: 8px;
+                font-weight: bold;
+            } 
+
+            .cirras-underwriting-loading-screen {
+                height: calc(100vh - (96px));
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                font-family: 'Helvetica-Light', 'Helvetica Light', 'Helvetica';
+            }
+
+            .cirras-underwriting-loading-screen svg {
+                transform: rotate(-90deg);
+                transform-origin: center;
+                animation: svg-spinner 2s linear infinite;
+            }
+
+            .cirras-underwriting-loading-screen svg circle {
+                transition-property: stroke;
+                animation-duration: 4s;
+                animation-timing-function: cubic-bezier(.35, 0, .25, 1);
+                animation-iteration-count: infinite;
+                fill: transparent;
+                stroke: #263238;
+                stroke-width: 10%;
+                transform-origin: center;
+                transition: stroke-dashoffset 225ms linear;
+                animation-name: spinner;
+                stroke-dasharray: 282.743px;
+                stroke-dashoffset: 56.54867px;
+            }
+
+            .error-page h2 {
+                font-size: large;
+                color: red;
+            }
+
+            .error-page {
+                height: 200px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                font-family: 'Helvetica-Light', 'Helvetica Light', 'Helvetica';
+            }
+
+        </style>
+        <div id="core-interface-container">
+            <div class="mat-typography wf1-public-application-header" color="primary">
+                <div class="bc-logo-div">
+                    <img src="assets/images/logo/bcgov-logo.png" class="img-fluid center-block logo" alt="BC Gov">
+                </div>
+                <div class="app-logo-and-title-div">
+                    <h1>Grain and Forage Underwriting</h1>
+                </div>
+                <div class="action-items mat-caption">
+                </div>
+            </div>
+
+            <div class="cirras-underwriting-loading-screen">
+                <h1 style="text-align: center">Initializing Application</h1>
+                <svg focusable="false" preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100"
+                     style="width: 100px; height: 100px;">
+                    <circle cx="50%" cy="50%" r="45"></circle>
+                </svg>
+                <h3 style="text-align: center">Please wait while the application initializes.</h3>
+            </div>
+        </div>
+    </cirras-underwriting-root>
+</div>
+<div class="error-page" id="browserIEAlert" style="display: none">
+    <div class="error-page">
+        <h1>CIRRAS - Error</h1>
+        <h2>IE browser detected. Please use Chrome.</h2>
+        <p><input id="currentUrl" disabled style="font-size: 14px"/>
+            <button style="font-size: 14px" onclick="copyToClipboard()">Copy URL to Clipboard</button>
+        </p>
+    </div>
+</div>
+</body>
+</html>

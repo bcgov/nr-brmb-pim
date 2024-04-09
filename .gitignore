@@ -1,7 +1,2 @@
-cirras-underwriting-api/.git
-cirras-underwriting-db/.git
-cirras-underwriting-listener-api/.git
-cirras-underwriting-ngclient-lib/.git
-cirras-underwriting-reports-jrs/.git
-cirras-underwriting-war/.git
 .vscode
+**/.git.bak

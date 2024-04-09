@@ -1,0 +1,159 @@
+
+
+<base-wrapper [errorState]="errorState">
+    <div class="base-container bg-color-lightblue">
+        <div class="base-container flex-y"> 
+            <br />
+            <h2>Maintain Grain Grade Modifiers</h2>
+
+            <form [formGroup]="getViewModel().formGroup">
+
+                <div class="uw-year-row-group">
+                    <div class="cuw-container cuw-grower-info" >  
+
+                        <div>
+                            <span class="grower-header-label">Crop Year: </span> 
+                        </div>
+                        <div>
+                            <mat-form-field appearance="fill">
+                                <mat-select 
+                                    formControlName="selectedCropYear" 
+                                    (selectionChange)="uwYearsChange($event)">
+                                    <mat-option *ngFor="let option of uwYearOptions" [value]="option.cropYear"
+                                    >{{ option.cropYear }}</mat-option>
+                                </mat-select>
+                                </mat-form-field>
+                            
+                        </div>
+                        <div>
+                            <span class="grower-header-label">Commodity: </span> 
+                        </div>
+                        <div>
+                            <mat-form-field appearance="fill">
+                                <mat-select 
+                                    formControlName="selectedCropCommodityId" 
+                                    (selectionChange)="selectedCropCommodityIdChange($event)">
+                                        <mat-option *ngFor="let option of cropCommodityOptions" [value]="option.cropCommodityId"
+                                        >{{ option.commodityName | titlecase }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div *ngIf="hasDataChanged == true" class="unsaved-changes-warning">
+              
+                            <span #el matTooltip="" style="margin-left: 10px; margin-right: 20px;">
+                                <mat-icon [ngStyle]="{'color':'orangered', 'font-size':'xx-large'}">warning</mat-icon>
+                              </span>
+                             <span style="font-size: large; color:orangered">
+                                There are unsaved changes on the page. 
+                            </span> 
+                
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="cuw-row-group">
+                    
+                    <div class="cuw-container gm-info" >  
+
+                        <div class="header border-top border-left border-right border-bottom">Commodity</div>
+                        <div class="header border-top border-right border-bottom">Grade Modifier Type</div>
+                        <div class="header border-top border-right border-bottom">Grade Modifier Value</div>
+                        <div class="header border-top border-right border-bottom">Actions</div>
+                    </div>
+
+                    <div class="table-wrapper flex-y-grow cuw-container gm-info">
+                        
+                        <div *ngFor="let gradeModifier of getViewModel().formGroup.controls.gradeModifiers['controls']; index as rowIndex"
+                            [formGroup]="gradeModifier"        
+                            style="display: contents;">
+
+                            <div *ngIf="!gradeModifier.value.deletedByUserInd == true" class="gm-info-fill border-right border-bottom border-left">   
+                                
+                                <mat-form-field appearance="fill" *ngIf="gradeModifier.value.addedByUserInd == true && !(getViewModel().formGroup.controls.selectedCropCommodityId.value && getViewModel().formGroup.controls.selectedCropCommodityId.value != '')">
+                                    <mat-select formControlName="cropCommodityId" >
+                                        <mat-option *ngFor="let option of cropCommodityOptions" [value]="option.cropCommodityId"
+                                        >{{ option.commodityName | titlecase }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <span *ngIf="gradeModifier.value.addedByUserInd == false || getViewModel().formGroup.controls.selectedCropCommodityId.value && getViewModel().formGroup.controls.selectedCropCommodityId.value != ''" style="padding-left: 6px;" >
+                                    {{ gradeModifier.value.commodityName | titlecase }}</span>
+                            </div>
+
+                            <div *ngIf="!gradeModifier.value.deletedByUserInd == true" class="gm-info-fill border-right border-bottom">   
+                                
+                                <mat-form-field appearance="fill" *ngIf="gradeModifier.value.addedByUserInd == true">
+                                    <mat-select formControlName="gradeModifierTypeCode" >
+                                        <mat-option *ngFor="let option of gradeModifierTypeOptions" [value]="option.gradeModifierTypeCode"
+                                        >{{ option.gradeModifierTypeCode }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <span *ngIf="gradeModifier.value.addedByUserInd == false" style="padding-left: 6px;" >{{ gradeModifier.value.gradeModifierTypeCode }}</span>
+                            </div>
+
+                            <div *ngIf="!gradeModifier.value.deletedByUserInd == true" class="gm-info-fill number border-right border-bottom" >
+                                <mat-form-field appearance="fill">
+                                    <input matInput 
+                                           formControlName="gradeModifierValue"
+                                           maxlength="5"
+                                           (keypress)="numberOnly($event)" 
+                                           (blur)="validateGradeModifierValue(rowIndex)">
+                                </mat-form-field>
+                            </div>
+
+                            <div *ngIf="!gradeModifier.value.deletedByUserInd == true" class="gm-info-fill border-right border-bottom">
+                                <mat-icon 
+                                *ngIf="securityUtilService.canEditGradeModifiers()" 
+                                matTooltip="Delete grade modifier" 
+                                [ngStyle]="{'color':'red'}"
+                                (click)="onDeleteGradeModifier(rowIndex)">close</mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div class="button-row flex-y-fixed" style="width: 900px;">
+            
+                    <button *ngIf="securityUtilService.canEditGradeModifiers() && gradeModifierList && gradeModifierList.collection && gradeModifierList.collection.length == 0" 
+                        mat-raised-button color="primary" class="button-large-text" (click)="onRollover()">
+                        <mat-icon class="button-mat-icon">refresh</mat-icon>Rollover
+                    </button>
+                    &nbsp;
+
+                    <button *ngIf="securityUtilService.canEditGradeModifiers()" mat-raised-button color="primary" class="button-large-text"  (click)="onAddGradeModifier()">
+                        <mat-icon class="button-mat-icon">add_box</mat-icon>Add New
+                    </button>
+                    &nbsp;
+
+                    <button *ngIf="securityUtilService.canEditGradeModifiers()" mat-raised-button color="primary" class="button-large-text" (click)="onCancel()">
+                        <mat-icon class="button-mat-icon">cancel_presentation</mat-icon>Cancel
+                    </button>
+                    &nbsp;
+                    
+                    <button *ngIf="securityUtilService.canEditGradeModifiers()" 
+                        mat-raised-button color="primary" 
+                        class="button-large-text" 
+                        (click)="onSave()"
+                        [disabled]="!hasDataChanged">
+                            <mat-icon class="button-mat-icon">save</mat-icon>Save
+                    </button>
+                    &nbsp;
+                    
+                    <button
+                        mat-raised-button color="primary" 
+                        class="button-large-text" 
+                        (click)="onMaintainGradeModifierTypes()">
+                            {{ ( securityUtilService.canEditGradeModifiers()) ? "Maintain" : "View" }} Grade Modifier Types
+                    </button>
+                    
+                </div>
+
+            </form>
+            <br />
+        </div>
+    </div>
+</base-wrapper>

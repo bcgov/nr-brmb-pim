@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.PolicyMapper">
+
+	<resultMap id="PolicyDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto">
+	
+		<id property="policyId" column="policy_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+
+		<result property="growerId" column="grower_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="insurancePlanId" column="insurance_plan_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="policyStatusCode" column="policy_status_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="officeId" column="office_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="policyNumber" column="policy_number" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="contractNumber" column="contract_number" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="contractId" column="contract_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="cropYear" column="crop_year" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="dataSyncTransDate" column="data_sync_trans_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+		<result property="growerContractYearId" column="grower_contract_year_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="insurancePlanName" column="insurance_plan_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="policyStatus" column="policy_status" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="growerNumber" column="grower_number" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="growerName" column="grower_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="growerPrimaryEmail" column="grower_primary_email" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="growerPrimaryPhone" column="grower_primary_phone" javaType="java.lang.String" jdbcType="VARCHAR" />
+
+		<result property="inventoryContractGuid" column="inventory_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="declaredYieldContractGuid" column="declared_yield_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="totalDopEligibleInventory" column="total_dop_eligible_inventory" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+
+	</resultMap>
+	
+    <sql id="selectColumns">
+		p.policy_id,
+		p.grower_id, 
+		p.insurance_plan_id, 
+		p.policy_status_code, 
+		p.office_id,
+		p.policy_number, 
+		p.contract_number, 
+		p.contract_id, 
+		p.crop_year, 
+		p.data_sync_trans_date, 
+		p.create_user, 
+		p.create_date, 
+		p.update_user, 
+		p.update_date,
+		psc.description as policy_status,
+		ip.insurance_plan_name,
+		g.grower_number,
+		g.grower_name,
+		ic.inventory_contract_guid,
+		gcy.grower_contract_year_id,
+		dyc.declared_yield_contract_guid
+    </sql>
+
+    <sql id="selectColumnsExtended">
+		, ce.email_address as grower_primary_email
+		, cp.phone_number as grower_primary_phone
+    </sql>
+
+	<sql id="selectCoreJoins">
+		JOIN insurance_plan ip ON ip.insurance_plan_id = p.insurance_plan_id
+		JOIN policy_status_code psc ON psc.policy_status_code = p.policy_status_code
+		JOIN grower g ON g.grower_id = p.grower_id
+		LEFT JOIN grower_contract_year gcy ON gcy.contract_id = p.contract_id 
+								  AND gcy.crop_year = p.crop_year
+		LEFT JOIN inventory_contract ic on ic.contract_id = p.contract_id and ic.crop_year = p.crop_year
+		LEFT JOIN declared_yield_contract dyc on dyc.contract_id = p.contract_id and dyc.crop_year = p.crop_year
+	</sql>
+
+<!-- TODO: Do we need to filter on active contacts, or does the contact table only contain active contacts? -->
+	<sql id="selectJoinsExtended">
+		LEFT JOIN grower_contact gc ON gc.grower_id = g.grower_id 
+								   AND gc.is_primary_contact_ind = 'Y'
+		LEFT JOIN contact c ON c.contact_id = gc.contact_id
+		LEFT JOIN contact_email ce ON ce.contact_id = c.contact_id
+								  AND ce.is_primary_email_ind = 'Y'
+								  AND now() BETWEEN ce.effective_date AND ce.expiry_date
+		LEFT JOIN contact_phone cp ON cp.contact_id = c.contact_id
+								  AND cp.is_primary_phone_ind = 'Y'
+								  AND now() BETWEEN cp.effective_date AND cp.expiry_date
+	</sql>
+    
+	<select id="fetch" resultMap="PolicyDtoMap">
+		SELECT 	
+		<include refid="selectColumns"/>
+		<include refid="selectColumnsExtended"/>
+		, CASE WHEN p.insurance_plan_id = 4 THEN --Grain specific
+			(select count(1)
+				from inventory_seeded_grain isg
+				join inventory_field inv on inv.inventory_field_guid = isg.inventory_field_guid
+				join annual_field_detail afd on afd.field_id = inv.field_id and afd.crop_year = inv.crop_year
+				join contracted_field_detail cfd on cfd.annual_field_detail_id = afd.annual_field_detail_id
+				where gcy.grower_contract_year_id = cfd.grower_contract_year_id
+				  and gcy.insurance_plan_id = inv.insurance_plan_id
+				  and isg.crop_commodity_id is not null
+				  and isg.seeded_acres <![CDATA[ > ]]> 0
+				  and inv.is_hidden_on_printout_ind = 'N'
+			)
+		WHEN p.insurance_plan_id = 5 THEN	--Forage specific
+			(select count(1)
+				from inventory_seeded_forage isf
+				join inventory_field inv on inv.inventory_field_guid = isf.inventory_field_guid
+				join annual_field_detail afd on afd.field_id = inv.field_id and afd.crop_year = inv.crop_year
+				join contracted_field_detail cfd on cfd.annual_field_detail_id = afd.annual_field_detail_id
+				where gcy.grower_contract_year_id = cfd.grower_contract_year_id
+				  and gcy.insurance_plan_id = inv.insurance_plan_id
+				  and isf.crop_commodity_id is not null
+				  and isf.field_acres <![CDATA[ > ]]> 0
+				  and inv.is_hidden_on_printout_ind = 'N'
+			)
+		ELSE 
+			0
+		END AS total_dop_eligible_inventory 		
+		FROM policy p
+		<include refid="selectCoreJoins"/>
+		<include refid="selectJoinsExtended"/>
+		WHERE p.policy_id = #{policyId}
+	</select>
+	
+	
+	<select id="selectByFieldAndYear" resultMap="PolicyDtoMap">
+		SELECT 	p.policy_id, 
+				p.policy_number,
+				p.contract_id,
+				p.crop_year,
+				ip.insurance_plan_id, 
+				ip.insurance_plan_name,
+				gcy.grower_contract_year_id,
+				ic.inventory_contract_guid,
+				g.grower_id,
+				g.grower_number,
+				g.grower_name
+		FROM annual_field_detail afd
+		JOIN contracted_field_detail cfd ON cfd.annual_field_detail_id = afd.annual_field_detail_id
+		JOIN grower_contract_year gcy ON gcy.grower_contract_year_id = cfd.grower_contract_year_id
+		LEFT JOIN inventory_contract ic ON ic.contract_id = gcy.contract_id AND ic.crop_year = gcy.crop_year
+		JOIN policy p ON p.contract_id = gcy.contract_id AND p.crop_year = gcy.crop_year
+		JOIN insurance_plan ip ON ip.insurance_plan_id = p.insurance_plan_id
+		JOIN grower g ON g.grower_id = p.grower_id
+		WHERE afd.field_id = #{fieldId}
+		AND afd.crop_year = #{cropYear}
+		ORDER BY p.policy_number
+	</select>
+	
+	<insert id="insert">
+
+		INSERT INTO policy (
+			policy_id,
+			grower_id,
+			insurance_plan_id,
+			policy_status_code,
+			office_id,
+			policy_number,
+			contract_number,
+			contract_id,
+			crop_year,
+			data_sync_trans_date,
+			create_user,
+			create_date,
+			update_user,
+			update_date
+		) VALUES (
+			#{dto.policyId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.growerId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.insurancePlanId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.policyStatusCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.officeId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.policyNumber, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.contractNumber, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.contractId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.cropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.dataSyncTransDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		 )
+	</insert> 
+
+	<update id="update">
+		UPDATE policy
+		SET 
+			grower_id = #{dto.growerId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			insurance_plan_id = #{dto.insurancePlanId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			policy_status_code = #{dto.policyStatusCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			office_id = #{dto.officeId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			policy_number = #{dto.policyNumber, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			contract_number = #{dto.contractNumber, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			contract_id = #{dto.contractId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			crop_year = #{dto.cropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			data_sync_trans_date = #{dto.dataSyncTransDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			update_date = now()
+		 WHERE policy_id = #{dto.policyId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}
+		 AND data_sync_trans_date <![CDATA[ < ]]> #{dto.dataSyncTransDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN}
+
+	</update> 
+
+	<delete id="delete">
+		DELETE FROM policy WHERE policy_id = #{policyId}
+	</delete> 
+	
+	<sql id="selectWhereClause">
+	  <if test="cropYear != null">
+		AND p.crop_year = #{cropYear}
+	  </if>
+	  <if test="insurancePlanId != null">
+		AND p.insurance_plan_id = #{insurancePlanId}
+	  </if>
+	  <if test="policyStatusCode != null">
+		AND p.policy_status_code = #{policyStatusCode}
+	  </if>
+	  <if test="officeId != null">
+		AND p.office_id = #{officeId}
+	  </if>
+  	  <if test="policyNumber != null">
+		<choose>
+			<when test="datasetLinkedGfPolicies">
+				AND (
+					gcy.grower_contract_year_id in (
+						select dest_cfd.grower_contract_year_id
+						from policy src_p
+						join grower_contract_year src_gcy on src_gcy.contract_id = src_p.contract_id and src_gcy.crop_year = src_p.crop_year
+						join contracted_field_detail src_cfd on src_cfd.grower_contract_year_id = src_gcy.grower_contract_year_id
+						join contracted_field_detail dest_cfd on dest_cfd.annual_field_detail_id = src_cfd.annual_field_detail_id 
+	                                  					     and dest_cfd.contracted_field_detail_id <![CDATA[ <> ]]> src_cfd.contracted_field_detail_id
+						where src_p.policy_number = #{policyNumber}
+					) OR p.policy_id in (
+						select dest_p.policy_id
+						from policy src_p
+						join policy dest_p on dest_p.grower_id = src_p.grower_id and dest_p.crop_year = src_p.crop_year and dest_p.policy_id <![CDATA[ <> ]]> src_p.policy_id
+						join insurance_plan dest_ip on dest_ip.insurance_plan_id = dest_p.insurance_plan_id
+						where src_p.policy_number = #{policyNumber}
+						  and dest_ip.insurance_plan_name in ('GRAIN', 'FORAGE')
+					)
+				)
+			</when>
+
+			<otherwise>
+				AND p.policy_number like #{policyNumber}
+			</otherwise>
+		</choose>
+	  </if>
+  	  <if test="growerInfo != null">
+		AND 
+		(
+			g.grower_number::text like #{growerInfo}
+			OR UPPER(g.grower_name) like #{growerInfo}
+			OR UPPER(ce.email_address) like #{growerInfo}
+			<if test="growerPhoneNumber != null">
+				OR cp.phone_number like #{growerPhoneNumber}
+			</if>
+		)
+	  </if>
+	</sql>
+	
+	<sql id="selectAdditionalJoins">
+	  <!-- Only join contact tables if searched by grower data -->
+  	  <if test="growerInfo != null">
+		JOIN grower_contact gc ON gc.grower_id = g.grower_id
+		JOIN contact c ON c.contact_id = gc.contact_id
+		LEFT JOIN contact_email ce ON ce.contact_id = c.contact_id
+		LEFT JOIN contact_phone cp ON cp.contact_id = c.contact_id
+	  </if>
+	</sql>
+	
+	<sql id="selectOrderBy">
+		${orderBy}
+	</sql>
+	
+	<select id="selectCount" resultType="int">  
+		SELECT COUNT(DISTINCT policy_id)
+		FROM policy p
+		<include refid="selectCoreJoins"/>	
+		<include refid="selectAdditionalJoins"/>	
+		WHERE 1 = 1
+		<include refid="selectWhereClause"/>
+	</select> 
+
+	<select id="select" resultMap="PolicyDtoMap">  
+		SELECT DISTINCT
+			<include refid="selectColumns"/>
+			, CASE WHEN p.insurance_plan_id = 4 THEN --Grain specific
+				(select count(1)
+					from inventory_seeded_grain isg
+					join inventory_field inv on inv.inventory_field_guid = isg.inventory_field_guid
+					join annual_field_detail afd on afd.field_id = inv.field_id and afd.crop_year = inv.crop_year
+					join contracted_field_detail cfd on cfd.annual_field_detail_id = afd.annual_field_detail_id
+					where gcy.grower_contract_year_id = cfd.grower_contract_year_id
+					  and gcy.insurance_plan_id = inv.insurance_plan_id
+					  and isg.crop_commodity_id is not null
+					  and isg.seeded_acres <![CDATA[ > ]]> 0
+					  and inv.is_hidden_on_printout_ind = 'N'
+				)
+			WHEN p.insurance_plan_id = 5 THEN	--Forage specific
+				(select count(1)
+					from inventory_seeded_forage isf
+					join inventory_field inv on inv.inventory_field_guid = isf.inventory_field_guid
+					join annual_field_detail afd on afd.field_id = inv.field_id and afd.crop_year = inv.crop_year
+					join contracted_field_detail cfd on cfd.annual_field_detail_id = afd.annual_field_detail_id
+					where gcy.grower_contract_year_id = cfd.grower_contract_year_id
+					  and gcy.insurance_plan_id = inv.insurance_plan_id
+					  and isf.crop_commodity_id is not null
+					  and isf.field_acres <![CDATA[ > ]]> 0
+					  and inv.is_hidden_on_printout_ind = 'N'
+				)
+			ELSE 
+				0
+			END AS total_dop_eligible_inventory 		
+		FROM policy p
+		<include refid="selectCoreJoins"/>
+		<include refid="selectAdditionalJoins"/>	
+		WHERE 1=1
+		<include refid="selectWhereClause"/>	
+		<include refid="selectOrderBy"/>
+
+		<if test="offset != null and pageRowCount != null">
+		    OFFSET #{offset, javaType=java.lang.Integer, jdbcType=INTEGER, mode=IN}
+		    LIMIT #{pageRowCount, javaType=java.lang.Integer, jdbcType=INTEGER, mode=IN}
+		</if>
+	</select>
+
+</mapper>

@@ -1,0 +1,77 @@
+package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource;
+
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.Field;
+import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
+
+@XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.FIELD_NAME)
+@XmlSeeAlso({ FieldRsrc.class })
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
+public class FieldRsrc extends BaseResource implements Field {
+
+	private static final long serialVersionUID = 1L;
+
+	private Integer fieldId;
+	private String fieldLabel;
+	private Integer activeFromCropYear;
+	private Integer activeToCropYear;
+	private Integer totalLegalLand;
+	private String transactionType;
+
+ 	public Integer getFieldId() {
+		return fieldId;
+	}
+
+	public void setFieldId(Integer fieldId) {
+		this.fieldId = fieldId;
+	}
+ 
+ 	public String getFieldLabel() {
+		return fieldLabel;
+	}
+
+	public void setFieldLabel(String fieldLabel) {
+		this.fieldLabel = fieldLabel;
+	}
+ 
+ 	public Integer getActiveFromCropYear() {
+		return activeFromCropYear;
+	}
+
+	public void setActiveFromCropYear(Integer activeFromCropYear) {
+		this.activeFromCropYear = activeFromCropYear;
+	}
+ 
+ 	public Integer getActiveToCropYear() {
+		return activeToCropYear;
+	}
+
+	public void setActiveToCropYear(Integer activeToCropYear) {
+		this.activeToCropYear = activeToCropYear;
+	}
+	
+	@Override
+	public Integer getTotalLegalLand() {
+		return totalLegalLand;
+	}
+	
+	@Override
+	public void setTotalLegalLand(Integer totalLegalLand) {
+		this.totalLegalLand = totalLegalLand;
+	}
+
+	@Override
+	public String getTransactionType() {
+		return transactionType;
+	}
+
+	@Override
+	public void setTransactionType(String transactionType) {
+		this.transactionType = transactionType;
+	}
+}

@@ -1,0 +1,199 @@
+
+<base-wrapper [errorState]="errorState">
+    <div class="base-container bg-color-lightblue">
+        <div class="base-container flex-y"> 
+            <br />
+            <h2>Add / Edit Legal Land</h2>
+
+            <form [formGroup]="getViewModel().formGroup">
+
+                <div class="grid-container">
+                    <div class="grid-item">Display Source</div>
+                    <div class="grid-item">
+                        <mat-radio-group
+                        aria-labelledby="example-radio-group-label"
+                        class="example-radio-group"
+                        formControlName="primaryReferenceTypeCode">
+                        <mat-radio-button class="example-radio-button" *ngFor="let option of primaryReferenceTypeOptions" [value]="option.code" [disabled]="(option.code == 'SHORT') ? 'true' : 'false' ">
+                            {{option.description}}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                    </div>
+                    <div class="grid-item">Type</div>  
+                    <div class="grid-item">
+                        <mat-radio-group
+                        aria-labelledby="example-radio-group-label"
+                        class="example-radio-group"
+                        formControlName="primaryLandIdentifierTypeCode">
+                        <mat-radio-button 
+                            class="example-radio-button" 
+                            (change)="selectLandIdentifierType($event.value)"
+                            *ngFor="let pidOption of landIdentifierTypeOptions" [value]="pidOption.code">
+                            {{pidOption.code}}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                    </div>
+                    <div class="grid-item">Identifier <span class="red-star">*</span></div>
+                    <div class="grid-item">
+                        <mat-form-field appearance="fill" style="width: 350px;">
+                            <mat-label>{{ pidMaskHint }}</mat-label>
+                            <input matInput type="text"
+                                    formControlName="primaryPropertyIdentifier"                                
+                                    maxlength="13" [mask]="pidMask" [validation]="validateIdentifier" [dropSpecialCharacters]="false">
+                        </mat-form-field>
+                    </div> 
+                </div>
+
+                <div class="legal-desc-container">
+                    <div class="legal-desc-item">Legal Description</div>
+                    <div class="legal-desc-item">
+                        <mat-form-field appearance="fill" style="width: 480px;">
+                            <textarea 
+                              matInput 
+                              formControlName="legalDescription" 
+                              rows="4" 
+                              maxlength="500">
+                            </textarea>
+                        </mat-form-field>
+                    </div>
+                    <div class="legal-desc-item">Other Description / Legal Location <span class="red-star">*</span></div>
+                    <div class="legal-desc-item">
+                        <mat-form-field appearance="fill" style="width: 480px;">
+                            <input matInput type="text"
+                                    formControlName="otherDescription"                                
+                                    maxlength="128">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="active-years-container">
+                    <div class="active-years-item">Active From Year <span class="red-star">*</span></div>
+                    <div class="active-years-item">
+                        <mat-form-field appearance="fill" style="width: 90px;">
+                            <input matInput type="text"
+                              formControlName="activeFromCropYear" 
+                              maxlength="4"
+                              (keypress)="numberOnly($event)" >
+                        </mat-form-field>
+                    </div>
+                    <div class="active-years-item">Active To Year</div>
+                    <div class="active-years-item">
+                        <mat-form-field appearance="fill" style="width: 90px;">
+                            <input matInput type="text"
+                                    formControlName="activeToCropYear"                                
+                                    maxlength="4"
+                                    (keypress)="numberOnly($event)" >
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                
+                
+            <div class="row-group bordered-container" *ngIf=" getViewModel().formGroup.controls.riskAreas['controls'].length > 0">
+                <label>Risk Areas</label>
+                <div class="risk-areas-container"> 
+                    <div class="header">Plan</div>
+                    <div class="header">Risk Area</div>
+                    <div class="header">Actions</div>
+              
+                    <div *ngFor="let riskArea of getViewModel().formGroup.controls.riskAreas['controls']; index as raIndex;"
+                                    [formGroup]="riskArea"          
+                        style="display:contents">
+                    
+                        <div *ngIf="riskArea.value.deletedByUserInd == false">    
+                            <mat-form-field appearance="fill" *ngIf="riskArea.value.isNewRiskArea">
+                                <mat-select formControlName="insurancePlanId"
+                                (selectionChange)="clearRiskAreaOptions(raIndex)">
+                                    <mat-option *ngFor="let option of insurancePlansOptions" [value]="option.code"
+                                    >{{ option.description | titlecase }}</mat-option>
+                                </mat-select>
+                                </mat-form-field>
+                                       
+                            {{ ( riskArea.value.isNewRiskArea == false ? riskArea.value.insurancePlanName : "") | titlecase }}
+                        </div>
+            
+                        <div *ngIf="riskArea.value.deletedByUserInd == false">   
+                            <mat-form-field appearance="fill" *ngIf="riskArea.value.isNewRiskArea">
+                                <mat-select formControlName="riskAreaId"
+                                (focus)="populateRiskAreaOptions(raIndex)">
+                                    <mat-option *ngFor="let option of riskAreaOptions[raIndex]" [value]="option.code"
+                                    >{{ option.description | titlecase }}</mat-option>
+                                </mat-select>
+                                </mat-form-field>
+
+                            {{ ( riskArea.value.isNewRiskArea == false ? riskArea.value.riskAreaName : "" ) | titlecase }}
+                        </div>
+            
+                        <div *ngIf="riskArea.value.deletedByUserInd == false">
+                        <mat-icon
+                            matTooltip="Delete Risk Area" 
+                            [ngStyle]="{'color':'red'}"
+                            (click)="onDeleteRiskArea(raIndex)">close</mat-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-group bordered-container" *ngIf="legalLand && legalLand.fields.length > 0">
+                <label>Associated Fields</label>
+                <div class="risk-areas-container"> 
+                    <div class="header">Field ID</div>
+                    <div class="header">Field Name</div>
+                    <div class="header">Legal Land <br/> Associations</div>
+              
+                    <div *ngFor="let field of legalLand.fields" style="display:contents">
+                    
+                        <div>    
+                            {{ field.fieldId }}
+                        </div>
+            
+                        <div> 
+                            {{ field.fieldLabel }}
+                        </div>
+            
+                        <div>
+                            {{ field.totalLegalLand }} 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+                <div class="button-row flex-y-fixed" style="width: 680px;">
+            
+                    <button mat-raised-button color="primary" class="button-large-text" (click)="onCancel()">
+                        <mat-icon class="button-mat-icon">cancel_presentation</mat-icon>Cancel
+                    </button>
+                    &nbsp;
+                    <button mat-raised-button color="primary" class="button-large-text"  (click)="onAddRiskArea()">
+                        <mat-icon class="button-mat-icon">add_box</mat-icon>Add Risk Area
+                    </button>
+                    &nbsp;
+                    <button *ngIf="securityUtilService.canEditLegalLand()" 
+                        mat-raised-button color="primary" 
+                        class="button-large-text" 
+                        [disabled]="!hasDataChanged" 
+                        (click)="onSave()">
+                            <mat-icon class="button-mat-icon">save</mat-icon>Save
+                    </button>
+                    <!-- &nbsp;
+                    <button 
+                        mat-raised-button color="primary" 
+                        class="button-large-text" 
+                        (click)="isMyFormDirty()">
+                            <mat-icon class="button-mat-icon">Check</mat-icon>Check
+                    </button> -->
+                    &nbsp;  
+                    <button *ngIf="securityUtilService.canDeleteLegalLand() && legalLand && legalLand.legalLandId"
+                        mat-raised-button color="warn" 
+                        class="button-large-text button-right" 
+                        (click)="onDeleteLegalLand()">
+                            <mat-icon class="button-mat-icon">delete</mat-icon>Delete
+                    </button>
+                </div>
+
+            </form>
+            <br />
+        </div>
+    </div>
+</base-wrapper>

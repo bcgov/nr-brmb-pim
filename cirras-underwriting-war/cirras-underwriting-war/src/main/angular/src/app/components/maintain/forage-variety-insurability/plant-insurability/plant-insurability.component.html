@@ -1,0 +1,63 @@
+<div class="dialog-form"
+    cdkDrag
+    cdkDragRootElement=".cdk-overlay-pane"
+    cdkDragBoundary=".cdk-overlay-container">
+
+    <!-- <div class="dialog-drag-handle" cdkDragHandle>
+        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+            <path d="M0 0h24v24H0z" fill="none"></path>
+        </svg>
+    </div> -->
+
+    <form [formGroup]="varietyPlantInsForm">
+
+        <h3 style="padding-left: 10px; font-weight: 600;" cdkDragHandle>
+            
+            <svg width="24px" fill="currentColor" viewBox="0 0 24 24" class="dialog-drag-handle">
+                <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                <path d="M0 0h24v24H0z" fill="none"></path>
+            </svg>
+
+            Edit Plant Insurability for {{ (dataReceived && dataReceived.varietyName ) ? dataReceived.varietyName : "" }}
+        
+        </h3>
+        <hr>
+        
+        <div class="cuw-row-group">
+            <div class="cuw-container pi-info">
+                <div *ngFor="let plantIns of varietyPlantInsForm.controls.plantIns['controls']; index as rowIndex"
+                    [formGroup]="plantIns"        
+                    style="display: contents;">                    
+                    
+                    <div>   
+                        <mat-checkbox [disabled]="plantIns.value.isUsedInd"
+                            formControlName="cb">
+                        </mat-checkbox>
+                    </div>
+
+                    <div>   
+                        {{ plantIns.value.description}}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row dialog-controls">
+            <button mat-raised-button color="primary" (click)="onCancelChanges()" class="button-large-text">
+                <mat-icon style="padding-right: 4px; margin-right: 4px;">cancel_presentation</mat-icon>Cancel
+            </button>
+            
+            &nbsp;
+            <button 
+                mat-raised-button color="primary" 
+                (click)="onProceed()" 
+                class="button-large-text" >
+                    <mat-icon style="padding-right: 4px; margin-right: 4px;">save_alt</mat-icon>Proceed
+            </button>
+        </div>
+
+    </form>
+
+</div>

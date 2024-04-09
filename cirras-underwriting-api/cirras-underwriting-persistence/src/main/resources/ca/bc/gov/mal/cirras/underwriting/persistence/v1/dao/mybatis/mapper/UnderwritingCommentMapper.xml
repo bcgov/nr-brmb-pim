@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.UnderwritingCommentMapper">
+
+	<resultMap id="UnderwritingCommentDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingCommentDto">
+		<id property="underwritingCommentGuid" column="underwriting_comment_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		
+		<result property="annualFieldDetailId" column="annual_field_detail_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		
+		<result property="underwritingCommentTypeCode" column="underwriting_comment_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="underwritingCommentTypeDesc" column="underwriting_comment_type_desc" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="underwritingComment" column="underwriting_comment" javaType="java.lang.String" jdbcType="VARCHAR" />
+
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+		<result property="growerContractYearId" column="grower_contract_year_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="declaredYieldContractGuid" column="declared_yield_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		
+		<result property="growerContractYearId" column="grower_contract_year_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		
+	</resultMap>
+	
+	
+    <sql id="selectColumns">
+	select uc.underwriting_comment_guid, 
+		uc.annual_field_detail_id,
+		uctc.description as underwriting_comment_type_desc, 
+		uc.underwriting_comment_type_code, 
+		uc.underwriting_comment, 
+		uc.create_user, 
+		uc.create_date, 
+		uc.update_user, 
+		uc.update_date,
+		uc.grower_contract_year_id,
+		uc.declared_yield_contract_guid
+    </sql>
+    
+    
+	<select id="fetch" resultMap="UnderwritingCommentDtoMap">
+		<include refid="selectColumns"/>
+		from underwriting_comment uc
+		join underwriting_comment_type_code uctc on uctc.underwriting_comment_type_code = uc.underwriting_comment_type_code
+		where uc.underwriting_comment_guid = #{underwritingCommentGuid}
+	</select>
+
+	<insert id="insert">
+		<selectKey keyProperty="underwritingCommentGuid" resultType="java.lang.String" order="BEFORE"> 
+			select replace(cast(gen_random_uuid() as text), '-', '')
+		</selectKey>
+
+		insert into underwriting_comment(
+			underwriting_comment_guid, 
+			annual_field_detail_id,
+			underwriting_comment_type_code, 
+			underwriting_comment, 
+			grower_contract_year_id,
+			declared_yield_contract_guid,
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date)
+		values (
+			#{underwritingCommentGuid},
+			#{dto.annualFieldDetailId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.underwritingCommentTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.underwritingComment, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.growerContractYearId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.declaredYieldContractGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+
+	</insert> 
+
+	<update id="update">
+		update underwriting_comment
+		set underwriting_comment_type_code = #{dto.underwritingCommentTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			underwriting_comment = #{dto.underwritingComment, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where underwriting_comment_guid = #{dto.underwritingCommentGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
+	</update> 
+
+	<delete id="delete">
+		delete from underwriting_comment where underwriting_comment_guid = #{underwritingCommentGuid}
+	</delete>
+
+	<delete id="deleteForAnnualField">
+		delete from underwriting_comment where annual_field_detail_id = #{annualFieldDetailId}
+	</delete>
+	
+	<delete id="deleteForDeclaredYieldContractGuid">
+		delete from underwriting_comment where declared_yield_contract_guid = #{declaredYieldContractGuid}
+	</delete>
+
+	<delete id="deleteForField">
+		delete from underwriting_comment 
+		where annual_field_detail_id in (select afd.annual_field_detail_id from annual_field_detail afd where afd.field_id = #{fieldId})
+	</delete>
+		
+	<select id="select" resultMap="UnderwritingCommentDtoMap">
+		<include refid="selectColumns"/>
+		from underwriting_comment uc
+		join underwriting_comment_type_code uctc on uctc.underwriting_comment_type_code = uc.underwriting_comment_type_code
+		where uc.annual_field_detail_id = #{annualFieldDetailId}
+		order by uc.create_date desc, uc.underwriting_comment_guid
+	</select> 
+	
+	
+	<select id="selectForDopContract" resultMap="UnderwritingCommentDtoMap">
+		<include refid="selectColumns"/>
+		from underwriting_comment uc
+		join underwriting_comment_type_code uctc on uctc.underwriting_comment_type_code = uc.underwriting_comment_type_code
+		where uc.declared_yield_contract_guid = #{declaredYieldContractGuid}
+		and uc.underwriting_comment_type_code = 'DOP'
+		order by uc.create_date desc, uc.underwriting_comment_guid
+	</select> 
+
+	<select id="selectForField" resultMap="UnderwritingCommentDtoMap">
+		<include refid="selectColumns"/>
+		from underwriting_comment uc
+		join underwriting_comment_type_code uctc on uctc.underwriting_comment_type_code = uc.underwriting_comment_type_code
+		join annual_field_detail afd on afd.annual_field_detail_id = uc.annual_field_detail_id
+		where afd.field_id = #{fieldId}
+		order by afd.crop_year desc, uc.create_date desc, uc.underwriting_comment_guid
+	</select>
+	
+	
+</mapper>

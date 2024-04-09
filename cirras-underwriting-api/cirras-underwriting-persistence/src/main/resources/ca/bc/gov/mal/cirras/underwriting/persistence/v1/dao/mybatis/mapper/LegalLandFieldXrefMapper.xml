@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.LegalLandFieldXrefMapper">
+
+	<resultMap id="LegalLandFieldXrefDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandFieldXrefDto">
+
+		<id property="legalLandId" column="legal_land_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<id property="fieldId" column="field_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+	</resultMap>
+	
+    <sql id="selectColumns">
+		SELECT  legal_land_id,
+				field_id,
+				create_user, 
+				create_date, 
+				update_user, 
+				update_date
+    </sql>
+	
+	<select id="fetchAll" resultMap="LegalLandFieldXrefDtoMap">  
+		<include refid="selectColumns"/>
+		FROM legal_land_field_xref
+		ORDER BY legal_land_id
+	</select> 
+
+	
+	<select id="fetch" resultMap="LegalLandFieldXrefDtoMap">
+		<include refid="selectColumns"/>
+		FROM legal_land_field_xref t
+		WHERE t.legal_land_id = #{legalLandId}
+		AND t.field_id = #{fieldId}
+	</select>
+	
+	<insert id="insert">
+
+		INSERT INTO legal_land_field_xref (
+			legal_land_id,
+			field_id,
+			create_user,
+			create_date,
+			update_user,
+			update_date
+		) 
+		VALUES (
+			#{dto.legalLandId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.fieldId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		 )
+	</insert> 
+
+	<delete id="delete">
+		DELETE FROM legal_land_field_xref t 
+		WHERE t.legal_land_id = #{legalLandId}
+		AND t.field_id = #{fieldId}
+	</delete>
+	
+	<delete id="deleteForField">
+		delete from legal_land_field_xref where field_id = #{fieldId}
+	</delete>
+	
+	
+</mapper>

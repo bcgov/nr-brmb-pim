@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.GrowerContractYearMapper">
+
+	<resultMap id="GrowerContractYearDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerContractYearDto">
+	
+		<id property="growerContractYearId" column="grower_contract_year_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+
+		<result property="contractId" column="contract_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="growerId" column="grower_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="insurancePlanId" column="insurance_plan_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="cropYear" column="crop_year" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="dataSyncTransDate" column="data_sync_trans_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+
+		<result property="inventoryContractGuid" column="inventory_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	
+    <sql id="selectColumns">
+		SELECT  grower_contract_year_id,
+				contract_id,
+				grower_id,
+				insurance_plan_id,
+				crop_year,
+				data_sync_trans_date, 
+				create_user, 
+				create_date, 
+				update_user, 
+				update_date
+    </sql>
+	
+	<select id="fetchAll" resultMap="GrowerContractYearDtoMap">  
+		<include refid="selectColumns"/>
+		FROM grower_contract_year
+		ORDER BY grower_contract_year_id
+	</select> 
+
+	
+	<select id="fetch" resultMap="GrowerContractYearDtoMap">
+		<include refid="selectColumns"/>
+		FROM grower_contract_year t
+		WHERE t.grower_contract_year_id = #{growerContractYearId}
+	</select>
+	
+	<select id="selectInventoryContractForGcy" resultMap="GrowerContractYearDtoMap">
+		select 	gcy.grower_contract_year_id, 
+				gcy.insurance_plan_id, 
+				gcy.crop_year, 
+				ic.inventory_contract_guid
+		from grower_contract_year gcy
+		left join inventory_contract ic on gcy.contract_id = ic.contract_id and gcy.crop_year = ic.crop_year
+		where gcy.grower_contract_year_id = #{growerContractYearId}
+	</select>
+
+	<select id="selectLastYear" resultMap="GrowerContractYearDtoMap">
+		<include refid="selectColumns"/>
+		FROM grower_contract_year gcy
+		WHERE gcy.contract_id = #{contractId}
+		  AND gcy.crop_year <![CDATA[ < ]]> #{currCropYear}
+		ORDER by gcy.crop_year desc
+		LIMIT 1
+	</select>
+	
+	<insert id="insert">
+
+		INSERT INTO grower_contract_year (
+			grower_contract_year_id,
+			contract_id,
+			grower_id,
+			insurance_plan_id,
+			crop_year,
+			data_sync_trans_date,
+			create_user,
+			create_date,
+			update_user,
+			update_date
+		) 
+		VALUES (
+			#{dto.growerContractYearId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.contractId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.growerId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.insurancePlanId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.cropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.dataSyncTransDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		 )
+	</insert> 
+
+	<update id="update">
+		UPDATE grower_contract_year SET
+			contract_id = #{dto.contractId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			grower_id = #{dto.growerId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			insurance_plan_id = #{dto.insurancePlanId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			crop_year = #{dto.cropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			data_sync_trans_date = #{dto.dataSyncTransDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			update_date = now()
+		 WHERE grower_contract_year_id = #{dto.growerContractYearId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}
+		 AND data_sync_trans_date <![CDATA[ < ]]> #{dto.dataSyncTransDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN}
+	</update> 
+
+	<delete id="delete">
+		DELETE FROM grower_contract_year t WHERE t.grower_contract_year_id = #{growerContractYearId}
+	</delete>
+	
+</mapper>

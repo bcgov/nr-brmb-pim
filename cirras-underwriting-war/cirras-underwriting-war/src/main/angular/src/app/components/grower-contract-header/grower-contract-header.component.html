@@ -1,0 +1,95 @@
+
+<!-- tabs -->
+<div class="tabs-container"  [ngStyle]="setStyles()">
+    <div 
+        *ngIf="isUnseededVisible() && userCanAccessInventory()" 
+        (click)="goToLink('unseeded')"
+        [ngClass]="isLinkActive('unseeded') ? 'active' : 'inactive'">
+            <mat-icon 
+                matTooltip="Unseeded Inventory" 
+                svgIcon="unseeded"
+                [ngClass]="isLinkActive('unseeded') ? 'svg-active' : 'svg-inactive'">
+            </mat-icon>
+    </div>
+    <div 
+        *ngIf="isUnseededVisible() && userCanAccessInventory()" 
+        (click)="goToLink('unseeded')"
+        [ngClass]="isLinkActive('unseeded') ? 'active' : 'inactive'">
+            Unseeded Inventory
+    </div>
+    <div *ngIf="isUnseededVisible() && userCanAccessInventory()"  class="filler"><!-- empty div --> </div>
+    <div 
+        *ngIf="userCanAccessInventory()" 
+        (click)="goToLink('seeded')"
+        [ngClass]="isLinkActive('seeded') ? 'active' : 'inactive'">
+            <mat-icon 
+                matTooltip="Seeded Inventory" 
+                svgIcon="seeded" 
+                [ngClass]="isLinkActive('seeded') ? 'svg-active' : 'svg-inactive'">
+            </mat-icon>
+    </div>
+    <div 
+        *ngIf="userCanAccessInventory()" 
+        (click)="goToLink('seeded')"
+        [ngClass]="isLinkActive('seeded') ? 'active' : 'inactive'">
+            Seeded Inventory
+    </div>
+    <div class="filler"><!-- empty div --> </div>
+    <div 
+        *ngIf="userCanAccessDop(); else noDOPLink" 
+        (click)="goToLink('dop')"
+        [ngClass]="isLinkActive('dop') ? 'active' : 'inactive'">
+            <mat-icon 
+                matTooltip="Declaration Of Production" 
+                svgIcon="dop" 
+                [ngClass]="isLinkActive('dop') ? 'svg-active' : 'svg-inactive'">
+            </mat-icon>
+    </div>
+    <div 
+        *ngIf="userCanAccessDop(); else noDOPLink" 
+        (click)="goToLink('dop')"
+        [ngClass]="isLinkActive('dop') ? 'active' : 'inactive'">
+            Declaration of Production
+    </div>
+
+    <ng-template #noDOPLink>
+        <div class="filler"><!-- empty div to account for space when there is no dop link --> </div>
+    </ng-template>
+
+    <div class="filler"></div>
+</div>
+
+<!-- grower info -->
+<div class="cuw-row-group" [ngStyle]="setGrowerStyles()">
+    <div class="cuw-container cuw-grower-info" >             
+
+        <div class="grower-header-label">Grower Name</div>
+        <div class="grower-header-label">Grower Number</div>
+        <div class="grower-header-label">Policy Number</div>
+        <div class="grower-header-label">Crop Year</div>
+        <div class="grower-header-label">Email Address</div>
+        <div class="grower-header-label">Phone Number</div>
+        <!-- second row -->
+        <div class="grower-info-label">
+            {{ (growerContract && growerContract.growerName) ? growerContract.growerName : "" }}
+        </div>
+        <div class="grower-info-label">
+            {{ (growerContract && growerContract.growerNumber) ? growerContract.growerNumber : "" }}
+        </div>
+        <div class="grower-info-label">
+            {{ (growerContract && growerContract.policyNumber) ? growerContract.policyNumber : "" }}            
+        </div>
+        <div class="grower-info-label">
+            {{ (growerContract && growerContract.cropYear) ? growerContract.cropYear : "" }}
+        </div>
+        <div class="grower-info-label">
+            {{ (growerContract && growerContract.growerPrimaryEmail) ? growerContract.growerPrimaryEmail : "" }}
+        </div>
+        <div class="grower-info-label">
+            <span *ngIf="growerContract && growerContract.growerPrimaryPhone">
+                {{growerContract.growerPrimaryPhone | slice:0:3}}-{{growerContract.growerPrimaryPhone | slice:3:6}}-{{growerContract.growerPrimaryPhone | slice:6:10}}
+            </span>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,116 @@
+<div class="dialog-form"
+    cdkDrag
+    cdkDragRootElement=".cdk-overlay-pane"
+    cdkDragBoundary=".cdk-overlay-container">
+
+    <!-- <div class="dialog-drag-handle" cdkDragHandle>
+        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+            <path d="M0 0h24v24H0z" fill="none"></path>
+        </svg>
+    </div> -->
+
+    <form [formGroup]="gradeModifierTypesForm">
+
+        <h3 style="padding-left: 10px; font-weight: 600;" cdkDragHandle>
+            
+            <svg width="24px" fill="currentColor" viewBox="0 0 24 24" class="dialog-drag-handle">
+                <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+                <path d="M0 0h24v24H0z" fill="none"></path>
+            </svg>
+
+            Maintain Grade Modifier Types
+        
+        </h3>
+        <hr>
+        
+        <div class="cuw-row-group">
+
+            <div *ngIf="hasDataChanged == true" class="unsaved-changes-warning">
+              
+                <span #el matTooltip="" style="margin-left: 10px; margin-right: 20px;">
+                    <mat-icon [ngStyle]="{'color':'orangered', 'font-size':'xx-large'}">warning</mat-icon>
+                  </span>
+                 <span style="font-size: large; color:orangered">
+                    There are unsaved changes on the page. 
+                </span> 
+    
+            </div>
+            
+            <div class="cuw-container gmt-info" >  
+                
+                <div class="header border-top border-left border-right border-bottom">Grade Modifier <br /> Type</div>
+                <div class="header border-top border-right border-bottom">Description</div>
+                <div class="header border-top border-right border-bottom">Effective <br/> Year</div>
+                <div class="header border-top border-right border-bottom">Expiry <br/> Year</div>
+                <div class="header border-top border-right border-bottom"></div>
+            </div>
+
+            <div class="table-wrapper flex-y-grow cuw-container gmt-info">
+                
+                <div *ngFor="let gradeModifierType of gradeModifierTypesForm.controls.gradeModifierTypes['controls']; index as rowIndex"
+                    [formGroup]="gradeModifierType"        
+                    style="display: contents;">
+
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true"  class="gmt-info-fill border-right border-bottom border-left">   
+                        <mat-form-field appearance="fill" *ngIf="gradeModifierType.value.addedByUserInd == true">
+                            <input matInput formControlName="gradeModifierTypeCode" maxlength="10">
+                        </mat-form-field>
+                        <span style="padding-left: 6px;">{{ ( gradeModifierType.value.addedByUserInd) ? "" : gradeModifierType.value.gradeModifierTypeCode }}</span>
+                    </div>
+
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="gmt-info-fill border-right border-bottom" style="width:190px;" >
+                        <mat-form-field appearance="fill">
+                            <input matInput formControlName="description" maxlength="100">
+                        </mat-form-field>
+                    </div>
+
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="gmt-info-fill border-right border-bottom" style="width:100px;" >
+                        <mat-form-field appearance="fill" *ngIf="gradeModifierType.value.addedByUserInd == true">
+                            <input matInput formControlName="effectiveYear" maxlength="4" (keypress)="numberOnly($event)">
+                        </mat-form-field>
+                        <span style="padding-left: 6px;">{{  ( gradeModifierType.value.addedByUserInd) ? "" :  gradeModifierType.value.effectiveYear }}</span>
+                    </div>
+
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="gmt-info-fill border-right border-bottom" style="width:100px;" >
+                        <mat-form-field appearance="fill">
+                            <input matInput formControlName="expiryYear"                                                             
+                                    (keypress)="numberOnly($event)" 
+                                    maxlength="4">
+                        </mat-form-field>
+                    </div>
+
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="gmt-info-fill border-right border-bottom" style="width:30px;" >
+                        <mat-icon *ngIf="securityUtilService.canEditGradeModifiers() && gradeModifierType.value.deleteAllowedInd == true"
+                                matTooltip="Delete Grade Modifier Type" 
+                                [ngStyle]="{'color':'red'}"
+                                (click)="onDeleteGradeModifierType(rowIndex)">close</mat-icon>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="form-row dialog-controls">
+            <button mat-raised-button color="primary" (click)="onCancelChanges()" class="button-large-text">
+                <mat-icon style="padding-right: 4px; margin-right: 4px;">cancel_presentation</mat-icon>Cancel
+            </button>
+            &nbsp;
+            <button *ngIf="securityUtilService.canEditGradeModifiers()" 
+                mat-raised-button color="primary" 
+                class="button-large-text"  
+                (click)="onAddGradeModifierType()">
+                    <mat-icon class="button-mat-icon">add_box</mat-icon>Add
+            </button>
+            &nbsp;
+            <button *ngIf="securityUtilService.canEditGradeModifiers()" 
+                mat-raised-button color="primary" 
+                (click)="onSave()" 
+                class="button-large-text" >
+                    <mat-icon style="padding-right: 4px; margin-right: 4px;">save_alt</mat-icon>Save
+            </button>
+        </div>
+
+    </form>
+
+</div>

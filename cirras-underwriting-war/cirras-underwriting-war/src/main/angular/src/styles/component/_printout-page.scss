@@ -1,0 +1,140 @@
+@import url("https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap-grid.min.css");
+.container, .container-fluid {padding: 0;}
+
+@media screen {
+  inventory-printout-grain {
+    display: none !important;
+  }
+}
+
+
+
+/* Template with Header & Footer */
+// @page {
+//   margin: 20mm
+// }
+
+@media print {
+  /* set for entire printout */
+  html, body {
+    font-size: 12px;
+    background-color: white;
+    color: #000000;
+  }
+
+  // body {
+  //   counter-reset: pageNumber;
+  // }
+
+
+  /* remove headers and footers */
+  @page {
+    // margin: 7mm; 
+    margin: 7mm 7mm 15mm 7mm;
+  }
+
+  /* Template with Header & Footer */
+  thead {display: table-header-group;} 
+  #outbox-table tfoot {display: table-footer-group;}
+  #outbox-table tfoot td {border-color:transparent}
+  button {display: none;}
+  body {margin: 0;}  
+
+  /* table left column containing A, B, C presents background color(black) */ 
+  body {
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  /* only Printout is printed in the print preview, and other unnecessary content is hided(e.g left nav menu, top bar etc. */
+  grain-unseeded-inventory {
+    display: none;
+  }
+
+  grain-seeded-inventory {
+    display: none;
+  }
+
+  inventory-printout-grain {
+    display: block !important;
+    // font-family: 'BCSans';
+  }
+
+  base-wrapper {
+    display: none;
+  }
+
+  #core-interface-container mat-sidenav-container mat-sidenav-content {
+    top: 0px !important;
+    font-family: Verdana, Arial, sans-serif;  /* font set for entire printout */ // 'BCSans', 'Noto Sans', 
+  }
+  .user-summary.ng-star-inserted {
+    display: none !important;
+  }
+  mat-sidenav {
+    box-shadow: none !important;
+    visibility: hidden !important;
+    display: none !important;
+  }
+  mat-toolbar {
+    box-shadow: none !important;
+    visibility: hidden !important;
+    display: none !important;
+  }
+  mat-sidenav-content {
+    margin-left: 0px !important;
+  }
+
+
+    /* table */
+    table, td, th {
+      border: 0.6px solid black;
+      padding: 0px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    #outbox-table {
+      border: 0px;
+      padding: 0px;
+      margin-top: 0px;
+    }
+    #outbox-tr {
+      border: 0px;
+      margin-top: 0px; 
+      padding-top: 0px; 
+      padding-bottom: 0px;
+    }
+    #outbox-td {
+      border: 0px;
+      margin-top: 0px; 
+      padding-top: 0px; 
+      padding-bottom: 0px;
+    }
+    
+    .td-abc-label {
+      background-color: #000000; 
+      color: #ffffff; 
+      font-weight: bold; 
+      text-align: center; 
+      width: 18px;    
+    }  
+    
+    /* avoid page break inside  */
+    .print-page-break-inside-avoid {
+      page-break-inside: avoid;
+    }
+    
+    .print-page-break-after {
+      page-break-after: always;
+    }
+
+    .page {
+      page-break-after: always;
+    }
+
+    .mat-snack-bar-container {
+      display: none !important;
+    }
+    
+}

@@ -1,0 +1,159 @@
+@import 'src/styles/variables';
+
+.application-toolbar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 8px;
+  box-sizing: border-box;
+  background-color: $colour-toolbar-background;
+  z-index: 500;
+}
+
+.sticky-header {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+}
+
+div.title {
+  font-size: large;
+  width: inherit;
+}
+
+div.summary {
+  font-size: small;
+  white-space: pre-line;
+  padding-left: 10px;
+}
+
+::ng-deep .action-items-menu {
+  height: fit-content;
+
+  button.mat-menu-item {
+    height: auto;
+    line-height: inherit;
+  }
+
+}
+
+span.back-route-label {
+  font-size: large;
+  padding-left: 10px;
+}
+
+.toolbar-panel {
+  margin: 0px 0 !important;
+  width: 100%;
+  justify-content: space-between;
+  background-color: $colour-header-background;
+
+  button.nav-menu-button {
+    background: transparent;
+    border: none;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .ng-fa-icon {
+    flex: 0 0 8px;
+    font-size: large;
+  }
+
+  .app-logo-and-title-drawer-div2 {
+    width: 75%;
+    padding-left: 10px;
+
+    img {
+      width: 100%;
+      padding-top: calc(10px + env(safe-area-inset-top));
+      padding-bottom: 12px;
+    }
+  }
+
+  .app-logo-and-title-drawer-div {
+    height: 100%;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    img {
+      height: 100%;
+    }
+  }
+
+  .userDataLabelName {
+    color: white;
+    text-align: left;
+    padding-left: 6px;
+    padding-right: var(--cirras-underwriting-gutter-space);
+    padding-bottom: 5px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 13px;
+  }
+
+  .userDataLabel {
+    color: white;
+    text-align: left;
+    padding-left: 6px;
+    padding-right: var(--cirras-underwriting-gutter-space);
+    width: 100%;
+    font-weight: normal;
+    font-size: 10px;
+  }
+}
+
+.sidenav-subheader {
+  margin: 0;
+  padding-bottom: 0;
+  font-weight: normal;
+}
+
+.sidenav-submenu {
+  padding-left: 10px;
+}
+
+.cirras-underwriting-sidenav {
+  mat-icon {
+    width: 35px;
+  }
+}
+
+.user-summary {
+  position: fixed;
+  color: $colour-white;
+  z-index: 3;
+  top: var(--cirras-underwriting-gutter-space);
+  right: var(--cirras-underwriting-gutter-space);
+  font-size: $font-size-small;
+}
+
+.user-summary-org {
+  position: fixed;
+  color: $colour-white;
+  z-index: 3;
+  top: 35px;
+  right: var(--cirras-underwriting-gutter-space);
+  font-size: $font-size-small;
+}
+
+.title {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  color: $colour-white;
+  z-index: 3;
+  top: 25px;
+  font-size: 30px !important;
+}
+
+.app-container {
+  overflow-anchor: none;
+}

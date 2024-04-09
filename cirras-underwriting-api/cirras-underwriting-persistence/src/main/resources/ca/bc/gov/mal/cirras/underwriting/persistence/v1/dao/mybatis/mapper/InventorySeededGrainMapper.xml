@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.InventorySeededGrainMapper">
+
+	<resultMap id="InventorySeededGrainDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto">
+		<id property="inventorySeededGrainGuid" column="inventory_seeded_grain_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		
+		<result property="inventoryFieldGuid" column="inventory_field_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="cropCommodityId" column="crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="cropCommodityName" column="crop_commodity_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="cropVarietyId" column="crop_variety_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="cropVarietyName" column="crop_variety_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="commodityTypeCode" column="commodity_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="commodityTypeDesc" column="commodity_type_desc" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="isQuantityInsurableInd" column="is_quantity_insurable_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="isReplacedInd" column="is_replaced_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="isPedigreeInd" column="is_pedigree_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="isSpotLossInsurableInd" column="is_spot_loss_insurable_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="seededDate" column="seeding_date" javaType="java.util.Date" jdbcType="DATE" />
+		<result property="seededAcres" column="seeded_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+
+		<result property="totalSeededAcres" column="total_seeded_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="totalSpotLossAcres" column="total_spot_loss_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		
+	</resultMap>
+	
+	
+    <sql id="selectColumns">
+	select isg.inventory_seeded_grain_guid, 
+		isg.inventory_field_guid, 
+		isg.crop_commodity_id,
+		cc.commodity_name as crop_commodity_name,
+		isg.crop_variety_id, 
+		cv.variety_name as crop_variety_name,
+		isg.commodity_type_code, 
+		ctc.description as commodity_type_desc,
+		isg.is_quantity_insurable_ind, 
+		isg.is_replaced_ind, 
+		isg.is_pedigree_ind,
+		isg.is_spot_loss_insurable_ind, 
+		isg.seeding_date, 
+		isg.seeded_acres, 
+		isg.create_user, 
+		isg.create_date, 
+		isg.update_user, 
+		isg.update_date
+    </sql>
+    
+    
+	<select id="fetch" resultMap="InventorySeededGrainDtoMap">
+		<include refid="selectColumns"/>
+		from inventory_seeded_grain isg
+		left join crop_commodity cc on cc.crop_commodity_id = isg.crop_commodity_id
+		left join crop_variety cv on cv.crop_variety_id = isg.crop_variety_id
+		left join commodity_type_code ctc on ctc.commodity_type_code = isg.commodity_type_code
+		where isg.inventory_seeded_grain_guid = #{inventorySeededGrainGuid}
+	</select>
+
+	<select id="fetchSimple" resultMap="InventorySeededGrainDtoMap">
+		select t.inventory_seeded_grain_guid, 
+			t.inventory_field_guid, 
+			t.crop_commodity_id, 
+			t.crop_variety_id, 
+			t.commodity_type_code, 
+			t.is_quantity_insurable_ind, 
+			t.is_spot_loss_insurable_ind, 
+			t.is_replaced_ind, 
+			t.is_pedigree_ind, 
+			t.is_spot_loss_insurable_ind, 
+			t.seeding_date, 
+			t.seeded_acres, 
+			t.create_user, 
+			t.create_date, 
+			t.update_user, 
+			t.update_date
+		from inventory_seeded_grain t
+		where t.inventory_seeded_grain_guid = #{inventorySeededGrainGuid}
+	</select>	
+ 
+	
+
+	<insert id="insert">
+		<selectKey keyProperty="inventorySeededGrainGuid" resultType="java.lang.String" order="BEFORE"> 
+			select replace(cast(gen_random_uuid() as text), '-', '')
+		</selectKey>
+
+		insert into inventory_seeded_grain(
+			inventory_seeded_grain_guid, 
+			inventory_field_guid, 
+			crop_commodity_id, 
+			crop_variety_id, 
+			commodity_type_code, 
+			is_quantity_insurable_ind, 
+			is_replaced_ind, 
+			is_pedigree_ind, 
+			is_spot_loss_insurable_ind,
+			seeding_date, 
+			seeded_acres, 
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date)
+		values (
+			#{inventorySeededGrainGuid},
+			#{dto.inventoryFieldGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.cropVarietyId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.commodityTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.isQuantityInsurableInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			#{dto.isReplacedInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			#{dto.isPedigreeInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			#{dto.isSpotLossInsurableInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			#{dto.seededDate, javaType=java.util.Date , jdbcType=DATE, mode=IN},
+			#{dto.seededAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+	</insert> 
+
+	<update id="update">
+		update inventory_seeded_grain
+		set crop_commodity_id = #{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			crop_variety_id = #{dto.cropVarietyId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			commodity_type_code = #{dto.commodityTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			is_quantity_insurable_ind = #{dto.isQuantityInsurableInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN}, 
+			is_replaced_ind = #{dto.isReplacedInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN}, 
+			is_pedigree_ind = #{dto.isPedigreeInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN}, 
+			is_spot_loss_insurable_ind = #{dto.isSpotLossInsurableInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			seeding_date = #{dto.seededDate, javaType=java.util.Date , jdbcType=DATE, mode=IN}, 
+			seeded_acres = #{dto.seededAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where inventory_seeded_grain_guid = #{dto.inventorySeededGrainGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
+	</update> 
+
+	<delete id="delete">
+		delete from inventory_seeded_grain where inventory_seeded_grain_guid = #{inventorySeededGrainGuid}
+	</delete>
+
+	<delete id="deleteForInventoryField">
+		delete from inventory_seeded_grain where inventory_field_guid = #{inventoryFieldGuid}
+	</delete>
+	
+	<delete id="deleteForField">
+		delete from inventory_seeded_grain where inventory_field_guid in
+		(select t.inventory_field_guid from inventory_field t where t.field_id = #{fieldId})
+	</delete>
+
+	<delete id="deleteForInventoryContract">
+		delete from inventory_seeded_grain t
+		where t.inventory_field_guid in (select invf.inventory_field_guid
+		 								 from inventory_contract inv
+										 join grower_contract_year gcy on gcy.contract_id = inv.contract_id and gcy.crop_year = inv.crop_year
+										 join contracted_field_detail cfd on cfd.grower_contract_year_id = gcy.grower_contract_year_id
+										 join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+										 join inventory_field invf on invf.field_id = afd.field_id 
+					         						              and invf.crop_year = afd.crop_year 
+					                 						      and invf.insurance_plan_id = gcy.insurance_plan_id
+										 where inv.inventory_contract_guid = #{inventoryContractGuid}
+										 )
+	</delete>
+		
+	<select id="select" resultMap="InventorySeededGrainDtoMap">
+		<include refid="selectColumns"/>
+		from inventory_seeded_grain isg
+		left join crop_commodity cc on cc.crop_commodity_id = isg.crop_commodity_id
+		left join crop_variety cv on cv.crop_variety_id = isg.crop_variety_id
+		left join commodity_type_code ctc on ctc.commodity_type_code = isg.commodity_type_code
+		where isg.inventory_field_guid = #{inventoryFieldGuid}
+		order by isg.is_replaced_ind desc, isg.seeding_date
+	</select> 
+
+	<select id="selectForDeclaredYield" resultMap="InventorySeededGrainDtoMap">
+		<include refid="selectColumns"/>
+		from inventory_seeded_grain isg
+		join crop_commodity cc on cc.crop_commodity_id = isg.crop_commodity_id   -- Not a left join, because we only want records with a seeded crop.
+		left join crop_variety cv on cv.crop_variety_id = isg.crop_variety_id
+		left join commodity_type_code ctc on ctc.commodity_type_code = isg.commodity_type_code
+		where isg.inventory_field_guid = #{inventoryFieldGuid}
+		  and isg.seeded_acres <![CDATA[ > ]]> 0
+		order by isg.is_replaced_ind desc, isg.seeding_date
+	</select>
+
+	<select id="selectTotalsForFieldYearPlan" resultMap="InventorySeededGrainDtoMap"> 
+		WITH inv_acres AS
+		(
+			SELECT crop_commodity_id, seeded_acres, is_quantity_insurable_ind, is_spot_loss_insurable_ind, is_pedigree_ind
+				FROM inventory_field inv
+				JOIN inventory_seeded_grain isg ON isg.inventory_field_guid = inv.inventory_field_guid
+				WHERE inv.field_id = #{fieldId}
+				AND inv.crop_year = #{cropYear}
+				AND inv.insurance_plan_id = #{insurancePlanId}
+		)
+		SELECT t.crop_commodity_id, is_pedigree_ind,
+			   COALESCE((
+			     SELECT SUM(q.seeded_acres)
+				 FROM inv_acres q
+				 WHERE (q.crop_commodity_id = t.crop_commodity_id or (q.crop_commodity_id is null and t.crop_commodity_id is null))
+				 AND q.is_pedigree_ind = t.is_pedigree_ind
+				 AND q.is_quantity_insurable_ind = 'Y'
+				 GROUP BY q.crop_commodity_id, q.is_pedigree_ind
+			   ), 0) AS total_seeded_acres,
+			   COALESCE((
+			     SELECT SUM(q.seeded_acres)
+				 FROM inv_acres q
+				 WHERE (q.crop_commodity_id = t.crop_commodity_id or (q.crop_commodity_id is null and t.crop_commodity_id is null))
+				 AND q.is_pedigree_ind = t.is_pedigree_ind
+				 AND q.is_spot_loss_insurable_ind = 'Y'
+				 GROUP BY q.crop_commodity_id, q.is_pedigree_ind
+			   ), 0) AS total_spot_loss_acres
+		FROM inv_acres t
+		GROUP BY t.crop_commodity_id, is_pedigree_ind
+	</select>
+
+	
+</mapper>

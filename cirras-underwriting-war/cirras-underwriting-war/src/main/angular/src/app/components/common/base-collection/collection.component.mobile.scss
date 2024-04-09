@@ -1,0 +1,23 @@
+
+::ng-deep .mat-option {
+  mat-icon {
+    color: gray;
+  }
+
+  .mat-option-text {
+    line-height: 20px;
+    font-size: 16px;
+
+    span {
+      vertical-align: middle;
+    }
+  }
+}
+
+.cirras-underwriting-header-bar{
+  button{
+    mat-icon{
+      margin-right: 6px;
+    }
+  }
+}

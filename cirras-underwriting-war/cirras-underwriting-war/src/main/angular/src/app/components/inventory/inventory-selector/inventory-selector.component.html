@@ -1,0 +1,22 @@
+<base-wrapper [errorState]="errorState">
+ 
+    <grain-unseeded-inventory *ngIf="getInventoryType() == 'unseeded'"
+      [inventoryContract]="inventoryContract"
+      [growerContract]="growerContract"
+      [cropCommodityList]="cropCommodityList"
+    ></grain-unseeded-inventory>
+
+    <grain-seeded-inventory *ngIf="getInventoryType() == 'seeded'"
+      [inventoryContract]="inventoryContract"
+      [growerContract]="growerContract"
+      [cropCommodityList]="cropCommodityList"
+      [underSeededCropCommodityList]="underSeededCropCommodityList"
+    ></grain-seeded-inventory> 
+
+    <forage-inventory *ngIf="getInventoryType() == 'forage'"
+      [inventoryContract]="inventoryContract"
+      [growerContract]="growerContract"
+      [cropCommodityList]="cropCommodityList"
+    ></forage-inventory> 
+
+</base-wrapper>

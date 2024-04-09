@@ -1,0 +1,119 @@
+package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl;
+
+import javax.ws.rs.core.EntityTag;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
+import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
+import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
+import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.GradeModifierListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.GradeModifierListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasMaintenanceService;
+
+public class GradeModifierListEndpointImpl extends BaseEndpointsImpl implements GradeModifierListEndpoint {
+
+	@Autowired
+	private CirrasMaintenanceService cirrasMaintenanceService;
+
+	@Override
+	public Response getGradeModifierList(String cropYear, String insurancePlanId, String cropCommodityId) {
+		
+		Response response = null;
+		
+		logRequest();
+		
+		if(!hasAuthority(Scopes.GET_GRADE_MODIFIERS)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		try {
+			GradeModifierListRsrc results = (GradeModifierListRsrc) cirrasMaintenanceService.getGradeModifierList(
+					toInteger(cropYear),
+					toInteger(insurancePlanId),
+					toInteger(cropCommodityId),
+					getFactoryContext(), 
+					getWebAdeAuthentication());
+
+			GenericEntity<GradeModifierListRsrc> entity = new GenericEntity<GradeModifierListRsrc>(results) {
+				/* do nothing */
+			};
+
+			response = Response.ok(entity).tag(results.getUnquotedETag()).build();
+			
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+
+		return response;
+	}
+
+
+	@Override
+	public Response saveGradeModifiers(
+			GradeModifierListRsrc gradeModifiers,
+			String cropYear, 
+			String insurancePlanId, 
+			String cropCommodityId
+			) {
+
+		Response response = null;
+		
+		logRequest();
+		
+		if(!hasAuthority(Scopes.SAVE_GRADE_MODIFIERS)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+			
+		try {
+			GradeModifierListRsrc currentGradeModifiers = (GradeModifierListRsrc) cirrasMaintenanceService.getGradeModifierList(
+					toInteger(cropYear),
+					toInteger(insurancePlanId),
+					toInteger(cropCommodityId),
+					getFactoryContext(), 
+					getWebAdeAuthentication());
+
+			EntityTag currentTag = EntityTag.valueOf(currentGradeModifiers.getQuotedETag());
+
+			ResponseBuilder responseBuilder = this.evaluatePreconditions(currentTag);
+
+			if (responseBuilder == null) {
+				// Preconditions Are Met
+
+				GradeModifierListRsrc result = (GradeModifierListRsrc) cirrasMaintenanceService.saveGradeModifiers(
+						toInteger(cropYear),
+						toInteger(insurancePlanId),
+						toInteger(cropCommodityId),
+						gradeModifiers, 
+						getFactoryContext(), 
+						getWebAdeAuthentication());
+
+				response = Response.ok(result).tag(result.getUnquotedETag()).build();
+				
+			} else {
+				// Preconditions Are NOT Met
+
+				response = responseBuilder.tag(currentTag).build();
+			}			
+			
+		} catch(ValidationFailureException e) {
+			response = Response.status(Status.BAD_REQUEST).entity(new MessageListRsrc(e.getValidationErrors())).build();
+		} catch (NotFoundException e) {
+			response = Response.status(Status.NOT_FOUND).build();
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+
+		return response;	}
+
+}

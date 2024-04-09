@@ -31,9 +31,6 @@ jobs:
         with:
           java-version: '8'
           distribution: 'adopt'
-      
-      - name: Add .npmrc file
-        run: echo -e $NPMRC > ~/.npmrc
           
       - name: Build with Maven
         run: |

@@ -1,0 +1,24 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/app",
+    "module": "es2020",
+    "experimentalDecorators": true,
+    "types": []
+  },
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts",
+    "./app/test/component/*.ts",
+    "./app/test/component/fake/*.ts",
+    "./app/test/component/fake/*/*.ts",
+    "./app/test/component/dialogs/*.ts",
+    "./app/test/utils/*.ts",
+    "./app/test/data/*.ts",
+    "./app/test/modules/*.ts",
+    "./app/store/application/application.actions.ts",
+    "./app/store/application/application.actions.ts",
+    "./app/utils/validators.ts",
+    "./environments/environment.prod.ts"
+  ]
+}

@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.InventoryFieldMapper">
+
+	<resultMap id="InventoryFieldDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto">
+		<id property="inventoryFieldGuid" column="inventory_field_guid" javaType="java.lang.String" jdbcType="VARCHAR" />		
+
+		<result property="insurancePlanId" column="insurance_plan_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="fieldId" column="field_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="lastYearCropCommodityId" column="last_year_crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="lastYearCropCommodityName" column="last_year_crop_commodity_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="cropYear" column="crop_year" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="plantingNumber" column="planting_number" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="isHiddenOnPrintoutInd" column="is_hidden_on_printout_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="underseededCropVarietyId" column="underseeded_crop_variety_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="underseededCropVarietyName" column="underseeded_crop_variety_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="underseededAcres" column="underseeded_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="underseededInventorySeededForageGuid" column="underseeded_inventory_seeded_forage_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+		<result property="acresToBeSeeded" column="acres_to_be_seeded" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="linkedCropVarietyId" column="linked_crop_variety_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="linkedVarietyName" column="linked_variety_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="linkedFieldAcres" column="linked_field_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		
+	</resultMap>
+	
+	
+    <sql id="selectColumns">
+	select ifd.inventory_field_guid, 
+		ifd.insurance_plan_id, 
+		ifd.field_id, 
+		ifd.last_year_crop_commodity_id, 
+		ifd.crop_year, 
+		ifd.planting_number,
+		ifd.is_hidden_on_printout_ind, 
+		ifd.underseeded_crop_variety_id, 
+		ifd.underseeded_acres, 
+		ifd.underseeded_inventory_seeded_forage_guid,
+		ifd.create_user, 
+		ifd.create_date, 
+		ifd.update_user, 
+		ifd.update_date
+    </sql>
+    
+    <sql id="selectAdditionalColumns">
+		, cc.commodity_name as last_year_crop_commodity_name
+		, cv.variety_name as underseeded_crop_variety_name
+    </sql>
+    
+	<select id="fetch" resultMap="InventoryFieldDtoMap">
+		<include refid="selectColumns"/>
+		<include refid="selectAdditionalColumns"/>
+		from inventory_field ifd
+		left join crop_commodity cc on cc.crop_commodity_id = ifd.last_year_crop_commodity_id
+		left join crop_variety cv on cv.crop_variety_id = ifd.underseeded_crop_variety_id
+		where ifd.inventory_field_guid = #{inventoryFieldGuid}
+	</select>
+	
+	<select id="selectLinkedGrainPlanting" resultMap="InventoryFieldDtoMap">
+		<include refid="selectColumns"/>
+		from inventory_field ifd
+		where ifd.underseeded_inventory_seeded_forage_guid = #{inventorySeededForageGuid}
+	</select>
+	
+	<insert id="insert">
+		<selectKey keyProperty="inventoryFieldGuid" resultType="java.lang.String" order="BEFORE"> 
+			select replace(cast(gen_random_uuid() as text), '-', '')
+		</selectKey>
+
+		insert into inventory_field(
+			inventory_field_guid, 
+			insurance_plan_id, 
+			field_id, 
+			last_year_crop_commodity_id, 
+			crop_year, 
+			planting_number, 
+			is_hidden_on_printout_ind,
+			underseeded_crop_variety_id,
+			underseeded_acres,
+			underseeded_inventory_seeded_forage_guid,
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date)
+		values (
+			#{inventoryFieldGuid}, 
+			#{dto.insurancePlanId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.fieldId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.lastYearCropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.cropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.plantingNumber, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.isHiddenOnPrintoutInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			#{dto.underseededCropVarietyId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.underseededAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.underseededInventorySeededForageGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+	</insert> 
+
+	<update id="update">
+		update inventory_field
+		set insurance_plan_id = #{dto.insurancePlanId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			field_id = #{dto.fieldId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			last_year_crop_commodity_id = #{dto.lastYearCropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			crop_year = #{dto.cropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			planting_number = #{dto.plantingNumber, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			is_hidden_on_printout_ind = #{dto.isHiddenOnPrintoutInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN}, 
+			underseeded_crop_variety_id = #{dto.underseededCropVarietyId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			underseeded_acres = #{dto.underseededAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			underseeded_inventory_seeded_forage_guid = #{dto.underseededInventorySeededForageGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where inventory_field_guid = #{dto.inventoryFieldGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
+	</update> 
+	
+	<update id="removeLinkToPlantingForInventoryContract">
+		update inventory_field set
+		underseeded_inventory_seeded_forage_guid = null,
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where underseeded_inventory_seeded_forage_guid in
+		(
+			select t.inventory_seeded_forage_guid
+			from inventory_seeded_forage t
+			where t.inventory_field_guid in 
+			(
+				select invf.inventory_field_guid
+				from inventory_contract inv
+				join grower_contract_year gcy on gcy.contract_id = inv.contract_id and gcy.crop_year = inv.crop_year
+				join contracted_field_detail cfd on cfd.grower_contract_year_id = gcy.grower_contract_year_id
+				join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+				join inventory_field invf on invf.field_id = afd.field_id 
+					and invf.crop_year = afd.crop_year 
+					and invf.insurance_plan_id = gcy.insurance_plan_id
+					where inv.inventory_contract_guid = #{inventoryContractGuid}
+			)
+		)
+	</update> 
+
+	<update id="removeLinkToPlantingForField">
+		update inventory_field set
+			underseeded_inventory_seeded_forage_guid = null,
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where field_id = #{fieldId}
+		  and underseeded_inventory_seeded_forage_guid is not null
+	</update> 
+
+	<update id="removeLinkToPlantingForFieldAndYear">
+		update inventory_field set
+			underseeded_inventory_seeded_forage_guid = null,
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where field_id = #{fieldId}
+		  and crop_year = #{cropYear} 
+		  and underseeded_inventory_seeded_forage_guid is not null
+	</update> 
+
+	<delete id="delete">
+		delete from inventory_field where inventory_field_guid = #{inventoryFieldGuid}
+	</delete>
+	
+	<delete id="deleteForField">
+		delete from inventory_field where field_id = #{fieldId}
+	</delete>
+
+	<delete id="deleteForInventoryContract">
+		delete from inventory_field t
+		where t.inventory_field_guid in (select invf.inventory_field_guid
+		 								 from inventory_contract inv
+										 join grower_contract_year gcy on gcy.contract_id = inv.contract_id and gcy.crop_year = inv.crop_year
+										 join contracted_field_detail cfd on cfd.grower_contract_year_id = gcy.grower_contract_year_id
+										 join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+										 join inventory_field invf on invf.field_id = afd.field_id 
+					         						              and invf.crop_year = afd.crop_year 
+					                 						      and invf.insurance_plan_id = gcy.insurance_plan_id
+										 where inv.inventory_contract_guid = #{inventoryContractGuid}
+										 )
+	</delete>
+			
+	<select id="select" resultMap="InventoryFieldDtoMap">
+		<include refid="selectColumns"/>
+		<include refid="selectAdditionalColumns"/>
+		, isf.crop_variety_id as linked_crop_variety_id
+		, fcv.variety_name as linked_variety_name
+		, isf.field_acres as linked_field_acres
+		from inventory_field ifd
+		left join crop_commodity cc on cc.crop_commodity_id = ifd.last_year_crop_commodity_id
+		left join crop_variety cv on cv.crop_variety_id = ifd.underseeded_crop_variety_id
+		left join inventory_seeded_forage isf on isf.inventory_seeded_forage_guid = ifd.underseeded_inventory_seeded_forage_guid
+		left join crop_variety fcv on fcv.crop_variety_id = isf.crop_variety_id
+		where ifd.field_id = #{fieldId}
+		  and ifd.crop_year = #{cropYear}
+		  and ifd.insurance_plan_id = #{insurancePlanId}
+		order by ifd.planting_number,
+			ifd.inventory_field_guid
+	</select> 
+
+	<select id="selectForDeclaredYield" resultMap="InventoryFieldDtoMap">
+		<include refid="selectColumns"/>
+		<include refid="selectAdditionalColumns"/>
+		from inventory_field ifd
+		left join crop_commodity cc on cc.crop_commodity_id = ifd.last_year_crop_commodity_id
+		left join crop_variety cv on cv.crop_variety_id = ifd.underseeded_crop_variety_id
+		where ifd.field_id = #{fieldId}
+		  and ifd.crop_year = #{cropYear}
+		  and ifd.insurance_plan_id = #{insurancePlanId}
+		  and 
+		  	(
+			  	(
+					ifd.insurance_plan_id = 4 --Grain
+					and 
+					(
+						exists (select 1
+							from inventory_seeded_grain isg
+							where isg.inventory_field_guid = ifd.inventory_field_guid
+							  and isg.crop_commodity_id is not null
+							  and isg.seeded_acres <![CDATA[ > ]]> 0
+						)
+						or exists (select 1
+							from declared_yield_field dyf
+							where dyf.inventory_field_guid = ifd.inventory_field_guid
+						)
+					)
+				)
+				or
+				(
+					ifd.insurance_plan_id = 5 --Forage
+					and 
+					(
+						exists (select 1
+							from inventory_seeded_forage isf
+							where isf.inventory_field_guid = ifd.inventory_field_guid
+						)
+						or exists (select 1
+							from declared_yield_field dyf
+							where dyf.inventory_field_guid = ifd.inventory_field_guid
+						)
+					)
+				)
+
+			)
+		order by ifd.planting_number,
+			ifd.inventory_field_guid
+	</select> 
+
+
+	<select id="selectForRollover" resultMap="InventoryFieldDtoMap">
+		-- All plantings for this field
+		WITH plantings AS (
+			SELECT	inv.inventory_field_guid,
+					inv.field_id,
+					inv.is_hidden_on_printout_ind
+			FROM inventory_field inv
+			WHERE inv.field_id = #{fieldId}
+			  AND inv.crop_year = #{cropYear}
+			  AND inv.insurance_plan_id = #{insurancePlanId}
+		)	
+		-- Only returns records if seeded acres > 0 exists for this field.
+		SELECT  p.field_id, 
+				ROW_NUMBER() OVER() AS planting_number,
+				isg.crop_commodity_id AS last_year_crop_commodity_id, 
+				c.commodity_name AS last_year_crop_commodity_name, 
+				SUM(isg.seeded_acres) AS acres_to_be_seeded,
+				-- Rollover for is_hidden_on_printout_ind is based on ALL plantings, 
+				-- not just those with seeded acres > 0. Set to Y if all plantings are Y, 
+				-- otherwise set to N.
+				(SELECT MIN(all_p.is_hidden_on_printout_ind) FROM plantings all_p) AS is_hidden_on_printout_ind
+		FROM plantings p
+		JOIN inventory_seeded_grain isg ON isg.inventory_field_guid = p.inventory_field_guid
+		LEFT JOIN crop_commodity c ON c.crop_commodity_id = isg.crop_commodity_id
+		WHERE isg.seeded_acres > 0
+		GROUP BY p.field_id, isg.crop_commodity_id, c.commodity_name
+		UNION
+		-- Only returns if no seeded acres > 0 exists for this field.
+		SELECT  p.field_id, 
+				1 AS planting_number,
+				null AS last_year_crop_commodity_id, 
+				null AS last_year_crop_commodity_name, 
+				null AS acres_to_be_seeded,
+				-- Set to Y if all plantings are Y, otherwise set to N.
+				MIN(p.is_hidden_on_printout_ind) AS is_hidden_on_printout_ind
+		FROM plantings p
+		WHERE NOT EXISTS (SELECT 1
+						  FROM plantings p2
+						  JOIN inventory_seeded_grain isg2 ON isg2.inventory_field_guid = p2.inventory_field_guid
+						  WHERE isg2.seeded_acres > 0)
+		GROUP BY p.field_id
+		ORDER BY planting_number
+	</select> 
+
+	<select id="selectForField" resultMap="InventoryFieldDtoMap">
+		<include refid="selectColumns"/>
+		<include refid="selectAdditionalColumns"/>
+		from inventory_field ifd
+		left join crop_commodity cc on cc.crop_commodity_id = ifd.last_year_crop_commodity_id
+		left join crop_variety cv on cv.crop_variety_id = ifd.underseeded_crop_variety_id
+		where ifd.field_id = #{fieldId}
+		order by ifd.crop_year, ifd.insurance_plan_id, ifd.planting_number, ifd.inventory_field_guid
+	</select>
+
+	
+</mapper>

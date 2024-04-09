@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.InventoryContractCommodityMapper">
+
+	<resultMap id="InventoryContractCommodityDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityDto">
+		<id property="inventoryContractCommodityGuid" column="inventory_contract_commodity_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		
+		<result property="inventoryContractGuid" column="inventory_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="cropCommodityId" column="crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="cropCommodityName" column="crop_commodity_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="totalUnseededAcres" column="total_unseeded_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="totalUnseededAcresOverride" column="total_unseeded_acres_override" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="totalSeededAcres" column="total_seeded_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="totalSpotLossAcres" column="total_spot_loss_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="isPedigreeInd" column="is_pedigree_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+	</resultMap>
+	
+	
+    <sql id="selectColumns">
+		select icc.inventory_contract_commodity_guid, 
+			icc.inventory_contract_guid, 
+			icc.crop_commodity_id, 
+			cc.commodity_name as crop_commodity_name,
+			icc.total_unseeded_acres, 
+			icc.total_unseeded_acres_override, 
+			icc.total_seeded_acres, 
+			icc.total_spot_loss_acres, 
+			icc.is_pedigree_ind,
+			icc.create_user, 
+			icc.create_date, 
+			icc.update_user, 
+			icc.update_date
+    </sql>
+    
+    
+	<select id="fetch" resultMap="InventoryContractCommodityDtoMap">
+		<include refid="selectColumns"/>
+		from inventory_contract_commodity icc
+		left join crop_commodity cc on cc.crop_commodity_id = icc.crop_commodity_id
+		where icc.inventory_contract_commodity_guid = #{inventoryContractCommodityGuid}
+	</select>
+
+	<insert id="insert">
+		<selectKey keyProperty="inventoryContractCommodityGuid" resultType="java.lang.String" order="BEFORE"> 
+			select replace(cast(gen_random_uuid() as text), '-', '')
+		</selectKey>
+
+		insert into inventory_contract_commodity(
+			inventory_contract_commodity_guid, 
+			inventory_contract_guid, 
+			crop_commodity_id, 
+			total_unseeded_acres, 
+			total_unseeded_acres_override, 
+			total_seeded_acres, 
+			total_spot_loss_acres, 
+			is_pedigree_ind,
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date
+		) values (
+			#{inventoryContractCommodityGuid},
+			#{dto.inventoryContractGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalUnseededAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalUnseededAcresOverride, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalSeededAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalSpotLossAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.isPedigreeInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+	</insert> 
+
+	<update id="update">
+		update inventory_contract_commodity
+		set inventory_contract_guid = #{dto.inventoryContractGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			crop_commodity_id = #{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			total_unseeded_acres = #{dto.totalUnseededAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			total_unseeded_acres_override = #{dto.totalUnseededAcresOverride, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			total_seeded_acres = #{dto.totalSeededAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			total_spot_loss_acres = #{dto.totalSpotLossAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			is_pedigree_ind = #{dto.isPedigreeInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where inventory_contract_commodity_guid = #{dto.inventoryContractCommodityGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
+	</update> 
+
+	<delete id="delete">
+		delete from inventory_contract_commodity where inventory_contract_commodity_guid = #{inventoryContractCommodityGuid}
+	</delete>
+	
+	<delete id="deleteForInventoryContract">
+		delete from inventory_contract_commodity where inventory_contract_guid = #{inventoryContractGuid}
+	</delete>
+			
+	<select id="select" resultMap="InventoryContractCommodityDtoMap">
+		<include refid="selectColumns"/>
+		from inventory_contract_commodity icc
+		left join crop_commodity cc on cc.crop_commodity_id = icc.crop_commodity_id
+		where icc.inventory_contract_guid = #{inventoryContractGuid}
+		order by cc.commodity_name, icc.is_pedigree_ind
+	</select> 
+	
+	<select id="selectForDopContract" resultMap="InventoryContractCommodityDtoMap">
+		SELECT icc.crop_commodity_id, 
+			   cc.commodity_name as crop_commodity_name, 
+			   icc.is_pedigree_ind, 
+			   icc.total_seeded_acres
+		FROM inventory_contract ic
+		JOIN inventory_contract_commodity icc ON icc.inventory_contract_guid = ic.inventory_contract_guid
+		JOIN crop_commodity cc ON cc.crop_commodity_id = icc.crop_commodity_id
+		WHERE ic.contract_id = #{contractId}
+		AND ic.crop_year = #{cropYear}
+		AND icc.total_seeded_acres > 0
+		ORDER BY cc.commodity_name
+	</select> 
+	
+</mapper>

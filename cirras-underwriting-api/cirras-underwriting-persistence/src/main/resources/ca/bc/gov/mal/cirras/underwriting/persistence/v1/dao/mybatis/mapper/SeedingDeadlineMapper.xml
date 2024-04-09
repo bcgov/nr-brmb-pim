@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.SeedingDeadlineMapper">
+
+	<resultMap id="seedingDeadlineDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.SeedingDeadlineDto">
+		
+		<id property="seedingDeadlineGuid" column="seeding_deadline_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+
+		<result property="commodityTypeCode" column="commodity_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="cropYear" column="crop_year" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="fullCoverageDeadlineDate" column="full_coverage_deadline_date" javaType="java.util.Date" jdbcType="DATE" />
+		<result property="finalCoverageDeadlineDate" column="final_coverage_deadline_date" javaType="java.util.Date" jdbcType="DATE" />
+		<result property="fullCoverageDeadlineDateDefault" column="full_coverage_deadline_date_default" javaType="java.util.Date" jdbcType="DATE" />
+		<result property="finalCoverageDeadlineDateDefault" column="final_coverage_deadline_date_default" javaType="java.util.Date" jdbcType="DATE" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+	</resultMap>
+	
+	
+    <sql id="selectColumns">
+		select	t.seeding_deadline_guid, 
+				t.commodity_type_code, 
+				t.crop_year, 
+				t.full_coverage_deadline_date, 
+				t.final_coverage_deadline_date, 
+				t.full_coverage_deadline_date_default,
+				t.final_coverage_deadline_date_default,
+				t.create_user, 
+				t.create_date, 
+				t.update_user, 
+				t.update_date
+    </sql>
+    
+    
+	<select id="fetch" resultMap="seedingDeadlineDtoMap">
+		<include refid="selectColumns"/>
+		from seeding_deadline t
+		where t.seeding_deadline_guid = #{seedingDeadlineGuid}
+	</select>
+
+	<insert id="insert">
+		<selectKey keyProperty="seedingDeadlineGuid" resultType="java.lang.String" order="BEFORE"> 
+			select replace(cast(gen_random_uuid() as text), '-', '')
+		</selectKey>
+
+		insert into seeding_deadline(
+			seeding_deadline_guid, 
+			commodity_type_code, 
+			crop_year, 
+			full_coverage_deadline_date, 
+			final_coverage_deadline_date, 
+			full_coverage_deadline_date_default,
+			final_coverage_deadline_date_default,
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date
+		) values (
+			#{seedingDeadlineGuid},
+			#{dto.commodityTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.cropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.fullCoverageDeadlineDate, javaType=java.util.Date , jdbcType=DATE, mode=IN},
+			#{dto.finalCoverageDeadlineDate, javaType=java.util.Date , jdbcType=DATE, mode=IN},
+			#{dto.fullCoverageDeadlineDateDefault, javaType=java.util.Date , jdbcType=DATE, mode=IN},
+			#{dto.finalCoverageDeadlineDateDefault, javaType=java.util.Date , jdbcType=DATE, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+
+	</insert> 
+
+	<update id="update">
+		update seeding_deadline
+		set full_coverage_deadline_date = #{dto.fullCoverageDeadlineDate, javaType=java.util.Date , jdbcType=DATE, mode=IN},
+			final_coverage_deadline_date = #{dto.finalCoverageDeadlineDate, javaType=java.util.Date , jdbcType=DATE, mode=IN},
+			full_coverage_deadline_date_default = #{dto.fullCoverageDeadlineDateDefault, javaType=java.util.Date , jdbcType=DATE, mode=IN}, 
+			final_coverage_deadline_date_default = #{dto.finalCoverageDeadlineDateDefault, javaType=java.util.Date , jdbcType=DATE, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where seeding_deadline_guid = #{dto.seedingDeadlineGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
+	</update> 
+
+	<delete id="delete">
+		delete from seeding_deadline where seeding_deadline_guid = #{seedingDeadlineGuid}
+	</delete>
+		
+	<select id="selectForCommodityTypeAndYear" resultMap="seedingDeadlineDtoMap">
+		<include refid="selectColumns"/>
+		from seeding_deadline t
+		where t.commodity_type_code = #{commodityTypeCode}
+		  and t.crop_year = #{cropYear}
+	</select>
+		
+	<select id="selectByYear" resultMap="seedingDeadlineDtoMap">
+		<include refid="selectColumns"/>
+		from seeding_deadline t
+		where t.crop_year = #{cropYear}
+		order by t.commodity_type_code asc
+	</select>
+	
+</mapper>

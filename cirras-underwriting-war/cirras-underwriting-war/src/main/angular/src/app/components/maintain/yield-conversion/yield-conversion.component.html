@@ -1,0 +1,130 @@
+
+
+<base-wrapper [errorState]="errorState">
+    <div class="base-container">
+        <div class="base-container flex-y"> 
+            <br />
+            <h2>Maintain Yield Conversion</h2>
+
+            <form [formGroup]="getViewModel().formGroup">
+
+                <div class="filter-group">
+                    
+
+                    <div class="cuw-container filter-info" >  
+
+                        <div>
+                            <span class="grower-header-label">Plan: </span> 
+                        </div>
+                        <div>
+                            <mat-form-field appearance="fill">
+                                <mat-select 
+                                    formControlName="selectedInsurancePlanId" (selectionChange)="onPlanChange()">
+                                    <mat-option [value]="null"></mat-option>
+                                    <mat-option *ngFor="let option of insurancePlansDefault" [value]="option.code"
+                                    >{{ option.description }}</mat-option>
+                                </mat-select>
+                                </mat-form-field>
+                            
+                        </div>
+
+                        <div>
+                            <div *ngIf="hasDataChanged == true" class="unsaved-changes-warning">
+              
+                                <span #el matTooltip="" style="margin-left: 10px; margin-right: 20px;">
+                                    <mat-icon [ngStyle]="{'color':'orangered', 'font-size':'xx-large'}">warning</mat-icon>
+                                  </span>
+                                 <span style="font-size: large; color:orangered">
+                                    The conversion factor(s) have changed.  
+                                    Yield is going to be recalculated for the crop years when the edited conversion factors were used.
+                                </span> 
+                    
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="grower-header-label">Units: </span> 
+                        </div>
+                        <div>
+                            <mat-form-field appearance="fill">
+                                <mat-select 
+                                    formControlName="selectedUnits" (selectionChange)="onUnitChange()">
+                                    <mat-option [value]="null"></mat-option>
+                                    <mat-option *ngFor="let option of yieldMeasUnitOptions" [value]="option.yieldMeasUnitTypeCode"
+                                    >{{ defaultUnitForPlan }} to {{ option.description }}</mat-option>
+                                </mat-select>
+                                </mat-form-field>
+                            
+                        </div>
+                        <div>
+                            The base unit for the {{ getSelectedPlanName() }} 
+                            plan is: {{ defaultUnitForPlan }} 
+                        </div>  
+                    </div>
+                </div>
+
+
+                <div class="filter-group">
+                    
+                    <div class="cuw-container yc-info" >  
+                        
+                        <div class="header border-top border-left border-right border-bottom">Commodity</div>
+                        <div class="header border-top border-right border-bottom">Conversion <br/> Factor</div>
+                        
+                    </div>
+
+                    <div class="table-wrapper flex-y-grow cuw-container yc-info">
+                        
+                        <div *ngFor="let unitConversion of getViewModel().formGroup.controls.yieldMeasUnitConversionList['controls']; index as rowIndex"
+                            [formGroup]="unitConversion"        
+                            style="display: contents;" >
+
+                            <div class="border-right border-bottom border-left">          
+
+                                {{ unitConversion.value.commodityName | titlecase }}
+
+                            </div>
+
+                            <div class="border-right border-bottom justify-center gm-info-fill">
+
+                                <mat-form-field appearance="fill">
+                                    <input matInput 
+                                           formControlName="conversionFactor"
+                                           maxlength="10"
+                                           (keypress)="numberOnly($event)"
+                                           (keyup)="isMyFormDirty()">
+                                </mat-form-field>
+
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div class="button-row flex-y-fixed" style="width: 580px;">
+
+                    <button mat-raised-button color="primary" class="button-large-text" (click)="onCancel()">
+                        <mat-icon class="button-mat-icon">cancel_presentation</mat-icon>Cancel
+                    </button>
+                    
+                    &nbsp;
+                    <button *ngIf="securityUtilService.canEditYieldConversion()"
+                        mat-raised-button color="primary" 
+                        class="button-large-text" 
+                        (click)="onSave()"
+                        [disabled]="!hasDataChanged">
+                            <mat-icon class="button-mat-icon">save</mat-icon>Save
+                    </button>
+                    
+                    &nbsp;
+                    <button mat-raised-button color="primary" class="button-large-text" (click)="onViewYieldUnits()">
+                        <mat-icon class="button-mat-icon">dehaze</mat-icon>View Units
+                    </button>
+                </div>
+
+            </form>
+            <br />
+        </div>
+    </div>
+</base-wrapper>

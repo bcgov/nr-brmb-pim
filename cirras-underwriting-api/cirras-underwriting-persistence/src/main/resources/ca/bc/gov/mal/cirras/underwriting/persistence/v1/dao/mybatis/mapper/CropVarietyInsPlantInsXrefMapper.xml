@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.CropVarietyInsPlantInsXrefMapper">
+
+	<resultMap id="CropVarietyInsPlantInsXrefDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CropVarietyInsPlantInsXrefDto">
+	
+		<id property="cropVarietyInsurabilityGuid" column="crop_variety_insurability_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<id property="plantInsurabilityTypeCode" column="plant_insurability_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+		
+		<result property="cropVarietyId" column="crop_variety_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+		<result property="description" column="description" javaType="java.lang.String" jdbcType="VARCHAR" />	
+		<result property="isUsedInd" column="is_used_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	
+    <sql id="selectColumns">
+    	t.crop_variety_insurability_guid,
+    	t.plant_insurability_type_code,
+		t.create_user, 
+		t.create_date, 
+		t.update_user, 
+		t.update_date 
+    </sql>
+    
+	<select id="fetch" resultMap="CropVarietyInsPlantInsXrefDtoMap">
+		SELECT 	
+		<include refid="selectColumns"/>
+		FROM crop_variety_ins_plant_ins_xref t
+		WHERE t.crop_variety_insurability_guid = #{cropVarietyInsurabilityGuid}
+		AND t.plant_insurability_type_code = #{plantInsurabilityTypeCode}
+	</select>
+	
+	<select id="fetchAll" resultMap="CropVarietyInsPlantInsXrefDtoMap">
+		SELECT  
+		<include refid="selectColumns"/>
+		FROM crop_variety_ins_plant_ins_xref t
+		ORDER BY t.crop_variety_insurability_guid
+	</select> 
+	
+	<insert id="insert">
+
+		INSERT INTO crop_variety_ins_plant_ins_xref (
+			crop_variety_insurability_guid,
+			plant_insurability_type_code,
+			create_user,
+			create_date,
+			update_user,
+			update_date
+		) VALUES (
+			#{dto.cropVarietyInsurabilityGuid, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			#{dto.plantInsurabilityTypeCode, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		 )
+	</insert> 
+
+	<delete id="delete">
+		DELETE FROM crop_variety_ins_plant_ins_xref 
+		WHERE crop_variety_insurability_guid = #{cropVarietyInsurabilityGuid}
+		AND plant_insurability_type_code = #{plantInsurabilityTypeCode}
+	</delete> 
+
+	<delete id="deleteForVariety">
+		DELETE FROM crop_variety_ins_plant_ins_xref 
+		WHERE crop_variety_insurability_guid = #{cropVarietyInsurabilityGuid}
+	</delete> 
+	
+	<sql id="selectWhereClause">
+	  <if test="cropVarietyId != null">
+		WHERE cvi.crop_variety_id = #{cropVarietyId}
+	  </if>
+	</sql>
+	
+	<select id="selectPlantInsForCropVarieties" resultMap="CropVarietyInsPlantInsXrefDtoMap">  
+		SELECT 
+			cvi.crop_variety_insurability_guid,
+			cvi.crop_variety_id, 
+			x.plant_insurability_type_code, 
+			pitc.description
+		FROM crop_variety_insurability cvi
+		JOIN crop_variety_ins_plant_ins_xref x on cvi.crop_variety_insurability_guid = x.crop_variety_insurability_guid
+		JOIN plant_insurability_type_code pitc on pitc.plant_insurability_type_code = x.plant_insurability_type_code
+		<include refid="selectWhereClause"/>
+		ORDER BY cvi.crop_variety_id, pitc.description	
+	</select> 
+	
+	<select id="selectForInsurancePlan" resultMap="CropVarietyInsPlantInsXrefDtoMap">  
+		SELECT 
+			cvi.crop_variety_insurability_guid,
+			cvi.crop_variety_id, 
+			x.plant_insurability_type_code, 
+			pitc.description,
+			CASE WHEN
+			(SELECT distinct isf.plant_insurability_type_code
+			 FROM inventory_seeded_forage isf 
+			 JOIN crop_variety_insurability vi on vi.crop_variety_id = isf.crop_variety_id
+			 WHERE isf.plant_insurability_type_code = x.plant_insurability_type_code
+			 AND vi.crop_variety_insurability_guid = cvi.crop_variety_insurability_guid) is null 
+			THEN 'N' ELSE 'Y' END AS is_used_ind
+		FROM crop_variety_insurability cvi
+		JOIN crop_variety v on v.crop_variety_id = cvi.crop_variety_id
+		JOIN crop_commodity c on c.crop_commodity_id = v.crop_commodity_id
+		JOIN crop_variety_ins_plant_ins_xref x on cvi.crop_variety_insurability_guid = x.crop_variety_insurability_guid
+		JOIN plant_insurability_type_code pitc on pitc.plant_insurability_type_code = x.plant_insurability_type_code
+		WHERE c.insurance_plan_id = #{insurancePlanId}
+		ORDER BY cvi.crop_variety_id, pitc.description	
+	</select>	
+</mapper>

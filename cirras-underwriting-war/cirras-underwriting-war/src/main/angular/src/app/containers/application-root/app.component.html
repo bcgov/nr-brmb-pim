@@ -1,0 +1,30 @@
+<wf-application class="cirras-application"
+                [config]="applicationConfig"
+                [(state)]="applicationState"
+>
+    <wf-header
+            [config]="applicationConfig"
+            [(state)]="applicationState"
+    ></wf-header>
+
+    <wf-menu
+            [menuItems]="appMenu"
+            [config]="applicationConfig"
+            [(state)]="applicationState"
+    >
+    </wf-menu>
+
+    <div>
+        <ng-template #defaultMainContent>
+            <router-outlet></router-outlet>
+        </ng-template>
+
+        <div id="core-interface-container">
+            <div class="main-content-container">
+                <ng-container *ngTemplateOutlet="defaultMainContent"></ng-container>
+            </div>
+        </div>
+    </div>
+
+</wf-application>
+

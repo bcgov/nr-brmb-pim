@@ -1,0 +1,147 @@
+<div class="dialog-form"
+     cdkDrag
+     cdkDragRootElement=".cdk-overlay-pane"
+     cdkDragBoundary=".cdk-overlay-container">
+
+     <div class="dialog-drag-handle" cdkDragHandle>
+        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+        <!-- <g transform="translate(0 -5)"> -->
+            <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+            <!-- <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 4v3H7l5 5 5-5h-3v-3z"></path>  -->
+            <path d="M0 0h24v24H0z" fill="none"></path>
+        <!-- </g> -->
+        </svg>
+    </div>
+
+
+    <form [formGroup]="linkPlantingForm">
+        <h3 style="padding-left: 10px; font-weight: 600;">
+            Link Planting for Field
+            {{ (dataReceived)  ?  
+            ": " + dataReceived.fieldLabel + " (Field Id: " + dataReceived.fieldId + "), Location: " + dataReceived.otherLegalDescription
+                : "" }} </h3>
+        <hr>
+
+      
+        <h4 *ngIf="dataReceived && dataReceived.linkedPolicies && dataReceived.linkedPolicies.length > 0 && dataReceived.isFieldLinked == false" style="padding-left: 20px;">
+            Linked Forage Policies
+        </h4>
+        
+        <div *ngIf="dataReceived && dataReceived.linkedPolicies && dataReceived.linkedPolicies.length > 0 && dataReceived.isFieldLinked == false" 
+            class="linked-policies-container policy-info" >   
+
+            <div class="border-right header justify-center border-top border-bottom border-left"></div>
+            <div class="border-right header justify-center border-top border-bottom border-left">Policy</div>
+            <div class="border-right header justify-center border-top border-bottom">Grower</div>
+
+            <div 
+                *ngFor="let element of dataReceived.linkedPolicies"
+                style="display:contents">
+                
+                <div class="border-right justify-center border-top border-bottom border-left">
+                    <input 
+                        type="radio" 
+                        [value]="element.policyNumber" 
+                        formControlName="selectedPolicyNumber" 
+                        (click)="onSelectPolicy(element.policyNumber)"/>
+                </div>
+
+                <div class="border-right justify-center border-top border-bottom border-left">
+                    {{ element.policyNumber }}
+                </div>
+                <div class="border-right justify-center border-top border-bottom border-left">
+                    {{ element.growerName }}
+                </div>
+            </div>
+
+        </div>
+
+        <div *ngIf="dataReceived && dataReceived.isFieldLinked == false" 
+            class="linked-policies-container policy-info" > 
+            <div style="display:contents">
+                <div class="justify-center border-top border-left" >
+                    <input *ngIf="dataReceived && dataReceived.linkedPolicies.length > 0"
+                        type="radio" 
+                        [value]="-1" 
+                        formControlName="selectedPolicyNumber" 
+                        (click)="onSelectPolicy(-1)"/> 
+                </div>            
+
+                <div class="border-right justify-left border-top" style="grid-column-start:2; grid-column-end:4;">
+                    Link field to a new Forage policy
+                </div>
+
+                <div class="justify-center border-bottom border-left" >
+                </div>
+
+                <div class="border-right justify-left border-bottom" style="grid-column-start:2; grid-column-end:4;">
+                    <div class="grid-container">
+                        <div class="grid-item">
+                            <mat-form-field appearance="fill" [style.width.px]=450>
+                                <input matInput formControlName="searchPolicyNumber" 
+                                    maxlength="10">
+                                <mat-hint>Please enter a policy number XXXXXX-XX</mat-hint>
+                            </mat-form-field>
+                        </div>
+                        <div class="grid-item">
+                            <button mat-raised-button color="primary" (click)="onPolicyValidate()" class="button-large-text" style="padding-left: 10px;;" >
+                                Validate
+                            </button>
+                        </div> 
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- If it's an existing planting -->
+        <div *ngIf="dataReceived && dataReceived.isFieldLinked && dataReceived.policyNumber" class="row-group-left">
+            <p>Field {{ ( dataReceived.isPlantingLinked ) ? " and planting are " : " is " }}
+                also on policy {{ dataReceived.policyNumber }} of grower {{ dataReceived.growerName }}.</p>
+        </div>
+
+        <!-- If it's a new planting -->
+        <div *ngIf="isAddNewLinkedPlantingMsgVisible()" class="row-group-left"> 
+            <p>A new planting will be added to the field on the forage policy and linked to this grain planting.</p>
+        </div>
+
+
+        <!-- error messages from add field-->
+        <p *ngIf="validationMessages && validationMessages.errorMessages && validationMessages.errorMessages.length > 0" style="padding-left: 20px">
+            The field {{ (dataReceived)  ?  dataReceived.fieldId  : "" }} 
+            cannot be added to policy {{ (uwContract)  ?  uwContract.policyNumber : ""}} because of the following error message(s)
+        </p>
+
+        <div *ngIf="validationMessages && validationMessages.errorMessages && validationMessages.errorMessages.length > 0"  
+            class="linked-policies-container error-messages" >
+        
+            <div *ngFor="let msg of validationMessages.errorMessages" style="display:contents">
+                <div class="justify-left"><mat-icon [ngStyle]="{'color':'orangered', 'font-size':'x-large'}">warning</mat-icon></div>
+                <div><span style="color:orangered">{{ msg.message }}</span></div>
+            </div>
+        </div>
+
+        <div class="form-row dialog-controls">
+            <button mat-raised-button color="primary" (click)="onCancelChanges()" class="button-large-text">
+                <mat-icon style="padding-right: 4px; margin-right: 4px;">cancel_presentation</mat-icon>Cancel
+            </button>
+            &nbsp;
+            <button 
+                *ngIf="isAddNewLinkedPlantingMsgVisible()" 
+                mat-raised-button 
+                color="primary" 
+                [disabled]="hasSaveStarted == true"
+                (click)="onCreateLink()" 
+                class="button-large-text" >
+                    <mat-icon style="padding-right: 4px; margin-right: 4px;">save</mat-icon>Create Link
+            </button>
+            <button *ngIf="dataReceived && dataReceived.isPlantingLinked" mat-raised-button color="primary" (click)="onRemoveLink()" class="button-large-text" >
+                <mat-icon style="padding-right: 4px; margin-right: 4px;">delete</mat-icon>Remove Link
+            </button>
+
+        </div>
+
+
+    </form>
+</div>

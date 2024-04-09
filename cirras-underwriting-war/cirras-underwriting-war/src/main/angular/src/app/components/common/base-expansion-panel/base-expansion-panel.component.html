@@ -1,0 +1,50 @@
+<mat-expansion-panel [expanded]="expanded" hideToggle="true" #panel [disabled]="true"
+                     class="{{mobile?'mobile-expansion-panel':'desktop-expansion-panel'}} {{panel.expanded?'expanded':'collapsed'}}">
+    <mat-expansion-panel-header *ngIf="!simplePanel" role="tabpanel" [attr.aria-label]="titleLabel">
+        <div class="flex-x justify-space-between expansion-header">
+            <div class="flex-1 height-100pc display-flex-row align-center hover-pointer" (click)="!panelDisabled && panel.expanded?panel.close():panel.open()">
+                <h2>{{titleLabel}}</h2>
+            </div>
+            <div class="spinner-header" *ngIf="isLoading">
+                <mat-spinner [diameter]="25"></mat-spinner>
+            </div>
+            <div class="spinner-header" *ngIf="!isLoading">
+                <button *ngIf="headerButtonLabel && !headerButtonHidden" mat-button mat-raised-button color="primary" (click)="$event.stopPropagation();headerActionButtonClicked(panel);" [disabled]="headerButtonDisabled">{{headerButtonLabel}}</button>
+            </div>
+        </div>
+        <mat-panel-description class="hover-pointer" *ngIf="!panelDisabled" (click)="!panelDisabled && panel.expanded?panel.close():panel.open()">
+            <mat-icon matTooltip="Expand" *ngIf="!panel.expanded">expand_more</mat-icon>
+            <mat-icon matTooltip="Collapse" *ngIf="panel.expanded">expand_less</mat-icon>
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+    <cirras-underwriting-base-error-panel [errorState]="errorState"></cirras-underwriting-base-error-panel>
+    <div >
+        <div class="cirras-underwriting-expansion-panel-body {{simplePanel && !mobile?'simple-panel':''}}">
+            <ng-content></ng-content>
+            <div *ngIf="simplePanel && !mobile">
+                <div class="action-button-wrapper">
+                    <button *ngIf="secondaryButtonLabel && !secondaryButtonHidden" mat-button mat-raised-button color="secondary" (click)="secondaryActionButtonClicked()" [disabled]="secondaryButtonDisabled">{{secondaryButtonLabel}}</button>
+                    <button *ngIf="primaryButtonLabel && !primaryButtonHidden" mat-button mat-raised-button color="primary" (click)="primaryActionButtonClicked()" [disabled]="primaryButtonDisabled">{{primaryButtonLabel}}</button>
+                    <div class="action-row-warning" *ngIf="warningMessage"><mat-icon [attr.alt]="warningMessage">warning</mat-icon><span tabindex="0">{{warningMessage}}</span></div>
+                </div>
+            </div>
+        </div>
+        <mat-action-row *ngIf="(!simplePanel || mobile) && ((primaryButtonLabel && !primaryButtonHidden) || secondaryButtonLabel && !secondaryButtonHidden)">
+            <div *ngIf="mobile">
+                <div class="action-button-wrapper">
+                    <div class="action-row-warning" *ngIf="warningMessage"><mat-icon [attr.alt]="warningMessage">warning</mat-icon><span>{{warningMessage}}</span></div>
+                    <button *ngIf="secondaryButtonLabel && !secondaryButtonHidden"  class="icon-button" (click)="secondaryActionButtonClicked()" [disabled]="secondaryButtonDisabled"><mat-icon>{{secondaryButtonIcon}}</mat-icon><span>{{secondaryButtonLabel}}</span></button>
+                    <button *ngIf="primaryButtonLabel && !primaryButtonHidden" class="icon-button" (click)="primaryActionButtonClicked()" [disabled]="primaryButtonDisabled"><mat-icon>save</mat-icon><span>{{primaryButtonLabel}}</span></button>
+                </div>
+            </div>
+            <div *ngIf="!mobile">
+                <div class="action-button-wrapper">
+                    <div class="action-row-warning" *ngIf="warningMessage"><mat-icon [attr.alt]="warningMessage">warning</mat-icon><span tabindex="0">{{warningMessage}}</span></div>
+                    <button *ngIf="secondaryButtonLabel && !secondaryButtonHidden" mat-button mat-raised-button color="secondary" (click)="secondaryActionButtonClicked()" [disabled]="secondaryButtonDisabled">{{secondaryButtonLabel}}</button>
+                    <button *ngIf="primaryButtonLabel && !primaryButtonHidden" mat-button mat-raised-button color="primary" (click)="primaryActionButtonClicked()" [disabled]="primaryButtonDisabled">{{primaryButtonLabel}}</button>
+                </div>
+            </div>
+        </mat-action-row>
+        <ng-content select="[postActionRowPanel]"></ng-content>
+    </div>
+</mat-expansion-panel>
