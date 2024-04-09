@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd">
+
+	<bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:application.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="properties" ref="applicationProperties"/>
+	</bean> 
+	
+	<!-- Activemq connection factory -->
+    <bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <constructor-arg index="0" value="${ACTIVEMQ_URL}"/>
+		<property name="userName" value="${ACTIVEMQ_USER}" />
+		<property name="password" value="${ACTIVEMQ_PASSWORD}" />
+    </bean>
+
+	<bean id="cachingConnectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+		<constructor-arg ref="amqConnectionFactory" />
+		<property name="sessionCacheSize" value="100" />
+	</bean>
+
+    <!--  Default Destination Topic Definition-->
+    <bean id="payrollDestination" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg index="0" value="VirtualTopic.WFHR.payroll-event-channel"/>
+    </bean>
+
+    <!-- JmsTemplate Definition -->
+    <bean id="wfhrPayrollJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="cachingConnectionFactory" />
+		<property name="pubSubDomain" value="true"/>
+        <property name="defaultDestination" ref="payrollDestination" />
+    </bean>
+	
+</beans>

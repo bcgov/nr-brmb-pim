@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.listener.failover.persistence.v1.dao.mybatis.mapper.SyncOwnershipMapper">
+
+	<resultMap id="SyncOwnershipDtoMap" type="ca.bc.gov.mal.cirras.underwriting.listener.failover.persistence.v1.dto.SyncOwnershipDto">
+		<id property="syncOwnershipGuid" column="PROCESS_FAILOVR_OWNERSHIP_GUID" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="processName" column="PROCESS_NAME" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="nodeId" column="SERVICE_NODE" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="expiredTimestamp" column="EXPIRY_TIMESTAMP" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="expiredInd" column="EXPIRED_IND" javaType="java.lang.Boolean" jdbcType="VARCHAR" />		
+	</resultMap>
+	
+	<select id="select" resultMap="SyncOwnershipDtoMap">
+
+		SELECT
+		PROCESS_FAILOVR_OWNERSHIP_GUID,
+		PROCESS_NAME,
+		SERVICE_NODE,
+		EXPIRY_TIMESTAMP AT TIME ZONE 'UTC' AS EXPIRY_TIMESTAMP,
+		(CASE WHEN EXPIRY_TIMESTAMP AT TIME ZONE 'UTC' &lt; now() AT TIME ZONE 'UTC' THEN 'Y' ELSE 'N' END) EXPIRED_IND
+		FROM PROCESS_FAILOVR_OWNERSHIP
+		WHERE PROCESS_NAME = #{processName, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}
+
+	</select>
+	
+	<select id="selectForUpdate" resultMap="SyncOwnershipDtoMap">
+
+		SELECT
+		PROCESS_FAILOVR_OWNERSHIP_GUID,
+		PROCESS_NAME,
+		SERVICE_NODE,
+		EXPIRY_TIMESTAMP AT TIME ZONE 'UTC' AS EXPIRY_TIMESTAMP,
+		(CASE WHEN EXPIRY_TIMESTAMP AT TIME ZONE 'UTC' &lt; now() AT TIME ZONE 'UTC' THEN 'Y' ELSE 'N' END) EXPIRED_IND
+		FROM PROCESS_FAILOVR_OWNERSHIP
+		WHERE PROCESS_NAME = #{processName, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}
+		FOR UPDATE
+		
+	</select>
+	
+	<insert id="insert">
+		
+		<selectKey keyProperty="syncOwnershipGuid" resultType="java.lang.String" order="BEFORE"> 
+			select replace(cast(gen_random_uuid() as text), '-', '')
+		</selectKey>
+
+			INSERT INTO PROCESS_FAILOVR_OWNERSHIP(
+			PROCESS_FAILOVR_OWNERSHIP_GUID, 
+			PROCESS_NAME,
+			SERVICE_NODE, 
+			EXPIRY_TIMESTAMP,
+			REVISION_COUNT,
+		    CREATE_USER,
+		    CREATE_DATE,
+		    UPDATE_USER,
+		    UPDATE_DATE)
+			VALUES(
+			#{syncOwnershipGuid},
+			#{dto.processName, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			#{dto.nodeId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now() + (#{nodeExpiryMinutes, javaType=java.lang.Integer, jdbcType=NUMERIC, mode=IN} * interval '1 minute'),
+			1,
+		    #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+		    NOW(),
+		    #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+		    NOW()
+			)
+				
+	</insert>
+	
+	<update id="update">
+			UPDATE PROCESS_FAILOVR_OWNERSHIP SET 
+			PROCESS_NAME 					= #{dto.processName, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			SERVICE_NODE 					= #{dto.nodeId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			EXPIRY_TIMESTAMP 				= now() + (#{nodeExpiryMinutes, javaType=java.lang.Integer, jdbcType=NUMERIC, mode=IN} * interval '1 minute'), 
+			REVISION_COUNT                 	= REVISION_COUNT + 1,
+		    UPDATE_USER                     = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+		    UPDATE_DATE                    	= now()	
+			WHERE PROCESS_FAILOVR_OWNERSHIP_GUID    = #{syncOwnershipGuid, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}
+	</update>
+
+	<delete id="delete">
+		DELETE FROM PROCESS_FAILOVR_OWNERSHIP WHERE PROCESS_FAILOVR_OWNERSHIP_GUID = #{syncOwnershipGuid, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}
+	</delete>
+	
+</mapper>

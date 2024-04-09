@@ -36,7 +36,7 @@ jobs:
         run: |
           export MAVEN_OPTS="-Xmx3072m -XX:MaxMetaspaceSize=512m"
           export NODE_OPTIONS="--max-old-space-size=4096"
-          mvn --settings ${{ inputs.MICROSERVICE_NAME }}/deploy-tools/settings.xml --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }} package
+          mvn --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }} package
 
       - name: Copy files to neccessary folders
         run: mkdir staging && cp ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}${{ DIRECTORY_SUFFIX }}/target/*.war staging
