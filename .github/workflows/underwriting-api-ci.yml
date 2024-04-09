@@ -1,0 +1,16 @@
+name: cirras-underwriting-api CI build
+
+on:
+  pull_request_target:
+    branches:
+      - main
+    paths:
+      - cirras-underwriting-api/**
+
+jobs:
+  build-underwriting-api:
+    uses: ./.github/actions/build-package.yml
+    secrets: inherit
+    with:
+      ENVIRONMENT: DEV
+      MICROSERVICE_NAME: cirras-underwriting-api

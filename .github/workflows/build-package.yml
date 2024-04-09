@@ -9,9 +9,6 @@ on:
       MICROSERVICE_NAME:
         required: true
         type: string
-      VERSION_NUMBER:
-        required: true
-        type: string
 
 env:
   DIRECTORY_SUFFIX: ${{ contains(inputs.MICROSERVICE_NAME, '-api') && '-rest-endpoints' || '' }}
@@ -36,10 +33,10 @@ jobs:
         run: |
           export MAVEN_OPTS="-Xmx3072m -XX:MaxMetaspaceSize=512m"
           export NODE_OPTIONS="--max-old-space-size=4096"
-          mvn --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }} package
+          mvn --settings=settings.xml --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }} package
 
       - name: Copy files to neccessary folders
-        run: mkdir staging && cp ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}${{ DIRECTORY_SUFFIX }}/target/*.war staging
+        run: mkdir staging && cp ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}${{ env.DIRECTORY_SUFFIX }}/target/*.war staging
 
       - uses: actions/upload-artifact@v3
         with:

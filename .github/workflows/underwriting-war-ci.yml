@@ -1,0 +1,16 @@
+name: cirras-underwriting-war CI build
+
+on:
+  pull_request_target:
+    branches:
+      - main
+    paths:
+      - cirras-underwriting-war/**
+
+jobs:
+  build-underwriting-war:
+    uses: ./.github/actions/build-package.yml
+    secrets: inherit
+    with:
+      ENVIRONMENT: DEV
+      MICROSERVICE_NAME: cirras-underwriting-war

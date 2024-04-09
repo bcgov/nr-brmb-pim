@@ -5,25 +5,22 @@ on:
 
 jobs:
   build-underwriting-api:
-    uses: ./.github/actions/build-package
+    uses: ./.github/workflows/build-package.yml
     secrets: inherit
     with:
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-api
-      VERSION_NUMBER: 1.0.0-SNAPSHOT
 
   build-underwriting-listener-api:
-    uses: ./.github/actions/build-package
+    uses: ./.github/workflows/build-package.yml
     secrets: inherit
     with:
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-listener-api
-      VERSION_NUMBER: 1.0.0-SNAPSHOT
 
   build-underwriting-war:
-    uses: ./.github/actions/build-package
+    uses: ./.github/workflows/build-package.yml
     secrets: inherit
     with:
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-war
-      VERSION_NUMBER: 1.0.0-SNAPSHOT
