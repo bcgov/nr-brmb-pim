@@ -80,7 +80,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./${{ inputs.MICROSERVICE_NAME }}
-          file: Dockerfile
           push: true
           tags: ${{ inputs.MICROSERVICE_NAME }}:${{ steps.getVersion.outputs.VERSION_NUMBER }}
 
