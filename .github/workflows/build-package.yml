@@ -59,6 +59,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Extract version number
+        id: getVersion
+        run: echo "VERSION_NUMBER=$(grep -Po -m 1 '[^\>]*(?=<\/version>)'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )" >> $GITHUB_OUTPUT
+
       - name: download artifact
         uses: actions/download-artifact@v3
         with:
@@ -96,6 +100,6 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ inputs.VERSION_NUMBER }}
+          tags: ${{ steps.getVersion.outputs.VERSION_NUMBER }}
 
       # NOTE: We store built images in ghcr.io, but use artifactory as a pull-through repository - artifacts.developer.gov.bc.ca/github-docker-remote/bcgov
