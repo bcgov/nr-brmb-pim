@@ -166,7 +166,7 @@
 							</systemPropertyVariables>
 						</configuration>
 						<executions>
-							<execution>
+							<!-- <execution>
 								<id>disable puppeteer download</id>
 								<phase>initialize</phase>
 								<goals>
@@ -175,7 +175,7 @@
 								<configuration>
 									<arguments>config set puppeteer_skip_chromium_download true -g</arguments>
 								</configuration>
-							</execution>
+							</execution> -->
 							<execution>
 								<id>install node and npm</id>
 								<phase>initialize</phase>
