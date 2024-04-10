@@ -13,7 +13,6 @@ on:
 env:
   DIRECTORY_SUFFIX: ${{ contains(inputs.MICROSERVICE_NAME, '-api') && '-rest-endpoints' || '' }}
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,6 +27,11 @@ jobs:
         with:
           java-version: '8'
           distribution: 'adopt'
+
+      - name: Set up nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
           
       - name: Build with Maven
         run: |
@@ -61,7 +65,7 @@ jobs:
 
       - name: Extract version number
         id: getVersion
-        run: echo "VERSION_NUMBER=$(grep -Po -m 1 '[^\>]*(?=<\/version>)'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )" >> $GITHUB_OUTPUT
+        run: echo "VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )" >> $GITHUB_OUTPUT
 
       - name: download artifact
         uses: actions/download-artifact@v3
@@ -100,6 +104,6 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ steps.getVersion.outputs.VERSION_NUMBER }}
+          tags: ${{ inputs.MICROSERVICE_NAME }}\:${{ steps.getVersion.outputs.VERSION_NUMBER }}
 
       # NOTE: We store built images in ghcr.io, but use artifactory as a pull-through repository - artifacts.developer.gov.bc.ca/github-docker-remote/bcgov
