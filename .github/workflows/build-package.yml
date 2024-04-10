@@ -68,22 +68,23 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
-        if: ${{ github.event.pull_request.number > 0 || inputs.IS_HOTFIX == 'true' }}
         id: meta_pr
         uses: docker/metadata-action@v5
         with:
-          images: ${{ vars.REGISTRY}}/${{ inputs.MICROSERVICE_NAME }}${{ inputs.IS_HOTFIX == 'true' && '-hotfix' || '' }}
+          images: ${{ vars.REGISTRY}}/${{ github.repository_owner }}/${{ inputs.MICROSERVICE_NAME }}
           tags: |
             type=schedule
             type=raw,value=${{ github.base_ref }}
             type=ref,event=tag
-            type=raw,value=${{ inputs.IS_HOTFIX == 'true' && format('hotfix-{0}', inputs.BRANCH) || format( 'pr-{0}', github.event.pull_request.number) }}
+            type=raw,value=${{ steps.getVersion.outputs.VERSION_NUMBER }}
+            ${{ toJson(github.event.pull_request.number) == '{}' && format( 'type=raw,value=pr-{0}', github.event.pull_request.number) || '' }} 
 
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: ./${{ inputs.MICROSERVICE_NAME }}
           push: true
-          tags: ${{ inputs.MICROSERVICE_NAME }}:${{ steps.getVersion.outputs.VERSION_NUMBER }}
+          tags: ${{ steps.meta_pr.outputs.tags }}
+          labels: ${{ steps.meta_pr.outputs.labels }}
 
       # NOTE: We store built images in ghcr.io, but use artifactory as a pull-through repository - artifacts.developer.gov.bc.ca/github-docker-remote/bcgov
