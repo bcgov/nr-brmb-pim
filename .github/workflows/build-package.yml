@@ -104,6 +104,6 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ inputs.MICROSERVICE_NAME }}\:${{ steps.getVersion.outputs.VERSION_NUMBER }}
+          tags: ${{ inputs.MICROSERVICE_NAME }}:${{ steps.getVersion.outputs.VERSION_NUMBER }}
 
       # NOTE: We store built images in ghcr.io, but use artifactory as a pull-through repository - artifacts.developer.gov.bc.ca/github-docker-remote/bcgov

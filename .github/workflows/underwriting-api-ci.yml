@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-underwriting-api:
-    uses: ./.github/actions/build-package.yml
+    uses: ./.github/workflows/build-package.yml
     secrets: inherit
     with:
       ENVIRONMENT: DEV
