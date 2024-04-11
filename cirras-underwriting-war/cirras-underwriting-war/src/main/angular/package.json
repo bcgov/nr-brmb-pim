@@ -22,7 +22,6 @@
     "postinstall": "ngcc"
   },
   "private": true,
-  "comment":"TODO: cirras-underwriting-api must be switched back to current version once write permissions to artifactory are granted",
   "dependencies": {
     "@angular/animations": "^13.4.0",
     "@angular/cdk": "^13.3.9",
