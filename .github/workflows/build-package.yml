@@ -35,6 +35,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 14
+
+        #NOTE: necessary to build client-war 
+      - name: Add .npmrc file
+        run: echo -e '${{ secrets.NPMRC }}' > ~/.npmrc
           
       - name: Build with Maven
         run: |
