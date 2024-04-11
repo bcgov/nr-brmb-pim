@@ -39,6 +39,14 @@ jobs:
         #NOTE: necessary to build client-war 
       - name: Add .npmrc file
         run: echo -e '${{ secrets.NPMRC }}' > ~/.npmrc
+
+        #NOTE: necessary to build client-war until service account with write permissions is available
+      - name: Install API dependency for -war
+        run: |
+          if [[ ${{ contains(inputs.MICROSERVICE_NAME, '-war')}} ]]; then
+            mvn --settings=settings.xml --batch-mode --update-snapshots -f cirras-underwriting-api/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }} install
+          fi
+          exit 0
           
       - name: Build with Maven
         run: |
