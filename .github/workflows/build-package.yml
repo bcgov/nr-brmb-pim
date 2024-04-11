@@ -43,10 +43,11 @@ jobs:
         #NOTE: necessary to build client-war until service account with write permissions is available
       - name: Install npm module dependency for -war
         run: |
-          if [[ ${{ contains(inputs.MICROSERVICE_NAME, '-war')}} ]]; then
+          if ${{ contains(inputs.MICROSERVICE_NAME, '-war')}}; then
             mvn --settings=settings.xml --batch-mode --update-snapshots -f cirras-underwriting-api/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }} install
             cp cirras-underwriting-api/cirras-underwriting-api-rest-endpoints/target/swagger.json cirras-underwriting-ngclient-lib/cirras-underwriting-ngclient-lib/src/main/angular/src/swagger/swagger.json
-            cd cirras-ngclient-lib/cirras-underwriting-ngclient-lib/src/main/angular
+            cd cirras-underwriting-ngclient-lib/cirras-underwriting-ngclient-lib/src/main/angular
+            npm install
             npm run generate 
             npm run build
           fi

@@ -13,7 +13,7 @@
   <modules>
     <module>cirras-underwriting-api</module>
     <module>cirras-underwriting-listener-api</module>
-    <!-- <module>cirras-underwriting-ngclient-lib</module> -->
+    <module>cirras-underwriting-ngclient-lib</module>
     <module>cirras-underwriting-war</module>
     <!-- <module>cirras-underwriting-webade-cfg</module> -->
   </modules>
