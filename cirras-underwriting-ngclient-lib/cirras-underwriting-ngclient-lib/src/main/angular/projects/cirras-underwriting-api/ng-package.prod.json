@@ -1,0 +1,7 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/cirras-underwriting-api",
+  "lib": {
+    "entryFile": "generated/index.ts"
+  }
+}

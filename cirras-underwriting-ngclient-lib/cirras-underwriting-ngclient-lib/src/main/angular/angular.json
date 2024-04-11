@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "defaultProject": "cirras-underwriting-api",
+  "projects": {
+    "cirras-underwriting-api": {
+      "root": "projects/cirras-underwriting-api",
+      "sourceRoot": "projects/cirras-underwriting-api/generated",
+      "projectType": "library",
+      "prefix": "cirras",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/cirras-underwriting-api/tsconfig.lib.json",
+            "project": "projects/cirras-underwriting-api/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/cirras-underwriting-api/ng-package.prod.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}

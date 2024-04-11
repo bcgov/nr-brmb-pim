@@ -1,0 +1,2205 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "CIRRAS UNDERWRITING V1 API",
+    "version" : "1.0.0-SNAPSHOT"
+  },
+  "paths" : {
+    "/underwriting/{insuranceClaimGuid}" : {
+      "get" : {
+        "summary" : "Get the claim",
+        "operationId" : "Get the claim.",
+        "parameters" : [ {
+          "name" : "RequestId",
+          "in" : "header",
+          "description" : "The unique identity of the request assigned by the originator to help trace the request through the logs.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Rest-Version",
+          "in" : "header",
+          "description" : "The version of the Rest API supported by the requesting client.",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "Cache-Control",
+          "in" : "header",
+          "description" : "Used to specify directives for caches along the request-response chain",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Pragma",
+          "in" : "header",
+          "description" : "An implementation-specific header that may have various effects along the request-response chain. It is used for backwards compatibility with HTTP/1.0 caches where the Cache-Control HTTP/1.1 header is not yet present.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Contains the credentials to authenticate a user agent with a server.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "insuranceClaimGuid",
+          "in" : "path",
+          "description" : "The GUID of the claim.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "ETag" : {
+                "description" : "The ETag response-header field provides the current value of the entity tag for the requested variant.",
+                "style" : "simple"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/InsuranceClaimRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/InsuranceClaimRsrc"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "Webade-OAUTH2" : [ "CIRRAS_underwriting.GET_CLAIM" ]
+        } ],
+        "x-auth-type" : "#{wso2.x-auth-type.app_and_app_user}",
+        "x-throttling-tier" : "Unlimited"
+      },
+      "put" : {
+        "summary" : "Update claim",
+        "operationId" : "Update claim",
+        "parameters" : [ {
+          "name" : "RequestId",
+          "in" : "header",
+          "description" : "The unique identity of the request assigned by the originator to help trace the request through the logs.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Rest-Version",
+          "in" : "header",
+          "description" : "The version of the Rest API supported by the requesting client.",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "Cache-Control",
+          "in" : "header",
+          "description" : "Used to specify directives for caches along the request-response chain",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Pragma",
+          "in" : "header",
+          "description" : "An implementation-specific header that may have various effects along the request-response chain. It is used for backwards compatibility with HTTP/1.0 caches where the Cache-Control HTTP/1.1 header is not yet present.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Contains the credentials to authenticate a user agent with a server.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "If-Match",
+          "in" : "header",
+          "description" : "The If-Match request-header must match the current eTag of the resource or the request will fail.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "insuranceClaimGuid",
+          "in" : "path",
+          "description" : "The GUID of the claim resource.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "The claim  resource containing the new values.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/InsuranceClaimRsrc"
+              }
+            },
+            "application/xml" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/InsuranceClaimRsrc"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "ETag" : {
+                "description" : "The ETag response-header field provides the current value of the entity tag for the requested variant.",
+                "style" : "simple"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/InsuranceClaimRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/InsuranceClaimRsrc"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "409" : {
+            "description" : "Conflict"
+          },
+          "412" : {
+            "description" : "Precondition Failed"
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "Webade-OAUTH2" : [ "CIRRAS_underwriting.UPDATE_CLAIM" ]
+        } ],
+        "x-auth-type" : "#{wso2.x-auth-type.app_and_app_user}",
+        "x-throttling-tier" : "Unlimited"
+      },
+      "delete" : {
+        "summary" : "Delete claim",
+        "operationId" : "Delete claim",
+        "parameters" : [ {
+          "name" : "RequestId",
+          "in" : "header",
+          "description" : "The unique identity of the request assigned by the originator to help trace the request through the logs.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Rest-Version",
+          "in" : "header",
+          "description" : "The version of the Rest API supported by the requesting client.",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "Cache-Control",
+          "in" : "header",
+          "description" : "Used to specify directives for caches along the request-response chain",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Pragma",
+          "in" : "header",
+          "description" : "An implementation-specific header that may have various effects along the request-response chain. It is used for backwards compatibility with HTTP/1.0 caches where the Cache-Control HTTP/1.1 header is not yet present.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Contains the credentials to authenticate a user agent with a server.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "If-Match",
+          "in" : "header",
+          "description" : "The If-Match request-header must match the current eTag of the resource or the request will fail.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "insuranceClaimGuid",
+          "in" : "path",
+          "description" : "The GUID of the claim resource.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "409" : {
+            "description" : "Conflict"
+          },
+          "412" : {
+            "description" : "Precondition Failed"
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "Webade-OAUTH2" : [ "CIRRAS_underwriting.DELETE_CLAIM" ]
+        } ],
+        "x-auth-type" : "#{wso2.x-auth-type.app_and_app_user}",
+        "x-throttling-tier" : "Unlimited"
+      }
+    },
+    "/underwriting" : {
+      "get" : {
+        "summary" : "Get list of underwriting.",
+        "operationId" : "Get list of underwriting.",
+        "parameters" : [ {
+          "name" : "RequestId",
+          "in" : "header",
+          "description" : "The unique identity of the request assigned by the originator to help trace the request through the logs.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Rest-Version",
+          "in" : "header",
+          "description" : "The version of the Rest API supported by the requesting client.",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "Cache-Control",
+          "in" : "header",
+          "description" : "Used to specify directives for caches along the request-response chain",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Pragma",
+          "in" : "header",
+          "description" : "An implementation-specific header that may have various effects along the request-response chain. It is used for backwards compatibility with HTTP/1.0 caches where the Cache-Control HTTP/1.1 header is not yet present.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Contains the credentials to authenticate a user agent with a server.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "claimNumber",
+          "in" : "query",
+          "description" : "Filter the results by the claimNumber.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "growerNumber",
+          "in" : "query",
+          "description" : "Filter the results by the growerNumber.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "cropYear",
+          "in" : "query",
+          "description" : "Filter the results by the cropYear.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "underwritingtatusCode",
+          "in" : "query",
+          "description" : "Filter the results by the underwritingtatusCode.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "insurancePlanCode",
+          "in" : "query",
+          "description" : "Filter the results by the insurancePlanCode.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "insuranceCoverageCode",
+          "in" : "query",
+          "description" : "Filter the results by the insuranceCoverageCode.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "pageNumber",
+          "in" : "query",
+          "description" : "The page number of the results to be returned.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "pageRowCount",
+          "in" : "query",
+          "description" : "The number of results per page.",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "ETag" : {
+                "description" : "The ETag response-header field provides the current value of the entity tag for the requested variant.",
+                "style" : "simple"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/InsuranceClaimListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/InsuranceClaimListRsrc"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "Webade-OAUTH2" : [ "CIRRAS_underwriting.SEARCH_underwriting" ]
+        } ],
+        "x-auth-type" : "#{wso2.x-auth-type.app_and_app_user}",
+        "x-throttling-tier" : "Unlimited"
+      },
+      "post" : {
+        "summary" : "Add a claim to the list of underwriting",
+        "operationId" : "Add a claim to the list of underwriting",
+        "parameters" : [ {
+          "name" : "RequestId",
+          "in" : "header",
+          "description" : "The unique identity of the request assigned by the originator to help trace the request through the logs.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Rest-Version",
+          "in" : "header",
+          "description" : "The version of the Rest API supported by the requesting client.",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "Cache-Control",
+          "in" : "header",
+          "description" : "Used to specify directives for caches along the request-response chain",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Pragma",
+          "in" : "header",
+          "description" : "An implementation-specific header that may have various effects along the request-response chain. It is used for backwards compatibility with HTTP/1.0 caches where the Cache-Control HTTP/1.1 header is not yet present.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Contains the credentials to authenticate a user agent with a server.",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "The claim resource containing the new values.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/InsuranceClaimRsrc"
+              }
+            },
+            "application/xml" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/InsuranceClaimRsrc"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created",
+            "headers" : {
+              "ETag" : {
+                "description" : "The ETag response-header field provides the current value of the entity tag for the requested variant.",
+                "style" : "simple"
+              },
+              "Location" : {
+                "description" : "The Location response-header field is used to redirect the recipient to a location other than the Request-URI for completion of the request or identification of a new resource.",
+                "style" : "simple"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/InsuranceClaimRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/InsuranceClaimRsrc"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "Webade-OAUTH2" : [ "CIRRAS_underwriting.CREATE_CLAIM" ]
+        } ],
+        "x-auth-type" : "#{wso2.x-auth-type.app_and_app_user}",
+        "x-throttling-tier" : "Unlimited"
+      }
+    },
+    "/openapi.json" : {
+      "get" : {
+        "summary" : "Get Swagger Document",
+        "operationId" : "Get Swagger Document",
+        "parameters" : [ {
+          "name" : "RequestId",
+          "in" : "header",
+          "description" : "The unique identity of the request assigned by the originator to help trace the request through the logs.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Rest-Version",
+          "in" : "header",
+          "description" : "The version of the Rest API supported by the requesting client.",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "Cache-Control",
+          "in" : "header",
+          "description" : "Used to specify directives for caches along the request-response chain",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Pragma",
+          "in" : "header",
+          "description" : "An implementation-specific header that may have various effects along the request-response chain. It is used for backwards compatibility with HTTP/1.0 caches where the Cache-Control HTTP/1.1 header is not yet present.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Contains the credentials to authenticate a user agent with a server.",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "ETag" : {
+                "description" : "The ETag response-header field provides the current value of the entity tag for the requested variant.",
+                "style" : "simple"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EndpointsRsrc"
+                }
+              }
+            }
+          }
+        },
+        "x-auth-type" : "#{wso2.x-auth-type.app_and_app_user}",
+        "x-throttling-tier" : "Unlimited"
+      }
+    },
+    "/" : {
+      "get" : {
+        "summary" : "Get Top Level Resources",
+        "operationId" : "Get Top Level Resources.",
+        "parameters" : [ {
+          "name" : "RequestId",
+          "in" : "header",
+          "description" : "The unique identity of the request assigned by the originator to help trace the request through the logs.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Rest-Version",
+          "in" : "header",
+          "description" : "The version of the Rest API supported by the requesting client.",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "Cache-Control",
+          "in" : "header",
+          "description" : "Used to specify directives for caches along the request-response chain",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Pragma",
+          "in" : "header",
+          "description" : "An implementation-specific header that may have various effects along the request-response chain. It is used for backwards compatibility with HTTP/1.0 caches where the Cache-Control HTTP/1.1 header is not yet present.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Contains the credentials to authenticate a user agent with a server.",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "ETag" : {
+                "description" : "The ETag response-header field provides the current value of the entity tag for the requested variant.",
+                "style" : "simple"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EndpointsRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EndpointsRsrc"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          }
+        },
+        "x-auth-type" : "#{wso2.x-auth-type.app_and_app_user}",
+        "x-throttling-tier" : "Unlimited"
+      }
+    },
+    "/codeHierarchies/{codeHierarchyName}" : {
+      "get" : {
+        "summary" : "Get CodeHierarchy resource by code table name.",
+        "operationId" : "Get CodeHierarchy resource by code table name.",
+        "parameters" : [ {
+          "name" : "RequestId",
+          "in" : "header",
+          "description" : "The unique identity of the request assigned by the originator to help trace the request through the logs.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Rest-Version",
+          "in" : "header",
+          "description" : "The version of the Rest API supported by the requesting client.",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "Cache-Control",
+          "in" : "header",
+          "description" : "Used to specify directives for caches along the request-response chain",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Pragma",
+          "in" : "header",
+          "description" : "An implementation-specific header that may have various effects along the request-response chain. It is used for backwards compatibility with HTTP/1.0 caches where the Cache-Control HTTP/1.1 header is not yet present.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Contains the credentials to authenticate a user agent with a server.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "codeHierarchyName",
+          "in" : "path",
+          "description" : "The identifier of the CodeHierarchy resource.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "effectiveAsOfDate",
+          "in" : "query",
+          "description" : "Return the results as of the effectiveAsOfDate.",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "ETag" : {
+                "description" : "The ETag response-header field provides the current value of the entity tag for the requested variant.",
+                "style" : "simple"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeHierarchyRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeHierarchyRsrc"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "Webade-OAUTH2" : [ "GETTOPLEVEL" ]
+        } ],
+        "x-auth-type" : "#{wso2.x-auth-type.app_and_app_user}",
+        "x-throttling-tier" : "Unlimited"
+      },
+      "put" : {
+        "summary" : "Update CodeHierarchy by code table name.",
+        "operationId" : "Update CodeHierarchy resource by code table name.",
+        "parameters" : [ {
+          "name" : "RequestId",
+          "in" : "header",
+          "description" : "The unique identity of the request assigned by the originator to help trace the request through the logs.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Rest-Version",
+          "in" : "header",
+          "description" : "The version of the Rest API supported by the requesting client.",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "Cache-Control",
+          "in" : "header",
+          "description" : "Used to specify directives for caches along the request-response chain",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Pragma",
+          "in" : "header",
+          "description" : "An implementation-specific header that may have various effects along the request-response chain. It is used for backwards compatibility with HTTP/1.0 caches where the Cache-Control HTTP/1.1 header is not yet present.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Contains the credentials to authenticate a user agent with a server.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "If-Match",
+          "in" : "header",
+          "description" : "The If-Match request-header must match the current eTag of the resource or the request will fail.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "codeHierarchyName",
+          "in" : "path",
+          "description" : "The identifier of the CodeHierarchy resource.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "The CodeHierarchy resource containing the new values.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CodeHierarchyRsrc"
+              }
+            },
+            "application/xml" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CodeHierarchyRsrc"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "ETag" : {
+                "description" : "The ETag response-header field provides the current value of the entity tag for the requested variant.",
+                "style" : "simple"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeHierarchyRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeHierarchyRsrc"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "409" : {
+            "description" : "Conflict"
+          },
+          "412" : {
+            "description" : "Precondition Failed"
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "Webade-OAUTH2" : [ "GETTOPLEVEL" ]
+        } ],
+        "x-auth-type" : "#{wso2.x-auth-type.app_and_app_user}",
+        "x-throttling-tier" : "Unlimited"
+      }
+    },
+    "/codeHierarchies" : {
+      "get" : {
+        "summary" : "Get Code Hierarchy List Resource",
+        "operationId" : "Get Code Hierarchy List Resource",
+        "parameters" : [ {
+          "name" : "RequestId",
+          "in" : "header",
+          "description" : "The unique identity of the request assigned by the originator to help trace the request through the logs.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Rest-Version",
+          "in" : "header",
+          "description" : "The version of the Rest API supported by the requesting client.",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "Cache-Control",
+          "in" : "header",
+          "description" : "Used to specify directives for caches along the request-response chain",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Pragma",
+          "in" : "header",
+          "description" : "An implementation-specific header that may have various effects along the request-response chain. It is used for backwards compatibility with HTTP/1.0 caches where the Cache-Control HTTP/1.1 header is not yet present.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Contains the credentials to authenticate a user agent with a server.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "effectiveAsOfDate",
+          "in" : "query",
+          "description" : "Return the results as of the effectiveAsOfDate.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "codeHierarchyName",
+          "in" : "query",
+          "description" : "Filter the results by the codeHierarchyName.",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "ETag" : {
+                "description" : "The ETag response-header field provides the current value of the entity tag for the requested variant.",
+                "style" : "simple"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeHierarchyListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeHierarchyListRsrc"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          }
+        },
+        "x-auth-type" : "#{wso2.x-auth-type.app_and_app_user}",
+        "x-throttling-tier" : "Unlimited"
+      }
+    },
+    "/codeTables/{codeTableName}" : {
+      "get" : {
+        "summary" : "Get CodeTable resource by code table name.",
+        "operationId" : "Get CodeTable resource by code table name.",
+        "parameters" : [ {
+          "name" : "RequestId",
+          "in" : "header",
+          "description" : "The unique identity of the request assigned by the originator to help trace the request through the logs.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Rest-Version",
+          "in" : "header",
+          "description" : "The version of the Rest API supported by the requesting client.",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "Cache-Control",
+          "in" : "header",
+          "description" : "Used to specify directives for caches along the request-response chain",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Pragma",
+          "in" : "header",
+          "description" : "An implementation-specific header that may have various effects along the request-response chain. It is used for backwards compatibility with HTTP/1.0 caches where the Cache-Control HTTP/1.1 header is not yet present.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Contains the credentials to authenticate a user agent with a server.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "codeTableName",
+          "in" : "path",
+          "description" : "The identifier of the CodeTable resource.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "effectiveAsOfDate",
+          "in" : "query",
+          "description" : "Return the results as of the effectiveAsOfDate.",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "ETag" : {
+                "description" : "The ETag response-header field provides the current value of the entity tag for the requested variant.",
+                "style" : "simple"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeTableRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeTableRsrc"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "Webade-OAUTH2" : [ "GETTOPLEVEL" ]
+        } ],
+        "x-auth-type" : "#{wso2.x-auth-type.app_and_app_user}",
+        "x-throttling-tier" : "Unlimited"
+      },
+      "put" : {
+        "summary" : "Update CodeTable by code table name.",
+        "operationId" : "Update CodeTable resource by code table name.",
+        "parameters" : [ {
+          "name" : "RequestId",
+          "in" : "header",
+          "description" : "The unique identity of the request assigned by the originator to help trace the request through the logs.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Rest-Version",
+          "in" : "header",
+          "description" : "The version of the Rest API supported by the requesting client.",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "Cache-Control",
+          "in" : "header",
+          "description" : "Used to specify directives for caches along the request-response chain",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Pragma",
+          "in" : "header",
+          "description" : "An implementation-specific header that may have various effects along the request-response chain. It is used for backwards compatibility with HTTP/1.0 caches where the Cache-Control HTTP/1.1 header is not yet present.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Contains the credentials to authenticate a user agent with a server.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "If-Match",
+          "in" : "header",
+          "description" : "The If-Match request-header must match the current eTag of the resource or the request will fail.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "codeTableName",
+          "in" : "path",
+          "description" : "The identifier of the CodeTable resource.",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "The CodeTable resource containing the new values.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CodeTableRsrc"
+              }
+            },
+            "application/xml" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CodeTableRsrc"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "ETag" : {
+                "description" : "The ETag response-header field provides the current value of the entity tag for the requested variant.",
+                "style" : "simple"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeTableRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeTableRsrc"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "409" : {
+            "description" : "Conflict"
+          },
+          "412" : {
+            "description" : "Precondition Failed"
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "Webade-OAUTH2" : [ "GETTOPLEVEL" ]
+        } ],
+        "x-auth-type" : "#{wso2.x-auth-type.app_and_app_user}",
+        "x-throttling-tier" : "Unlimited"
+      }
+    },
+    "/codeTables" : {
+      "get" : {
+        "summary" : "Get Code Table List Resource",
+        "operationId" : "Get Code Table List Resource",
+        "parameters" : [ {
+          "name" : "RequestId",
+          "in" : "header",
+          "description" : "The unique identity of the request assigned by the originator to help trace the request through the logs.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Rest-Version",
+          "in" : "header",
+          "description" : "The version of the Rest API supported by the requesting client.",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "Cache-Control",
+          "in" : "header",
+          "description" : "Used to specify directives for caches along the request-response chain",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Pragma",
+          "in" : "header",
+          "description" : "An implementation-specific header that may have various effects along the request-response chain. It is used for backwards compatibility with HTTP/1.0 caches where the Cache-Control HTTP/1.1 header is not yet present.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Contains the credentials to authenticate a user agent with a server.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "effectiveAsOfDate",
+          "in" : "query",
+          "description" : "Return the results as of the effectiveAsOfDate.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "codeTableName",
+          "in" : "query",
+          "description" : "Filter the results by the codeTableName.",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "ETag" : {
+                "description" : "The ETag response-header field provides the current value of the entity tag for the requested variant.",
+                "style" : "simple"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeTableListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeTableListRsrc"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          }
+        },
+        "x-auth-type" : "#{wso2.x-auth-type.app_and_app_user}",
+        "x-throttling-tier" : "Unlimited"
+      }
+    },
+    "/checkHealth" : {
+      "get" : {
+        "summary" : "Query the health of the service.",
+        "operationId" : "Query the health of the service.",
+        "parameters" : [ {
+          "name" : "RequestId",
+          "in" : "header",
+          "description" : "The unique identity of the request assigned by the originator to help trace the request through the logs.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Rest-Version",
+          "in" : "header",
+          "description" : "The version of the Rest API supported by the requesting client.",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "Cache-Control",
+          "in" : "header",
+          "description" : "Used to specify directives for caches along the request-response chain",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Pragma",
+          "in" : "header",
+          "description" : "An implementation-specific header that may have various effects along the request-response chain. It is used for backwards compatibility with HTTP/1.0 caches where the Cache-Control HTTP/1.1 header is not yet present.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Contains the credentials to authenticate a user agent with a server.",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "callstack",
+          "in" : "query",
+          "description" : "A comm separated list of the identifier of the calling components.",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "ETag" : {
+                "description" : "The ETag response-header field provides the current value of the entity tag for the requested variant.",
+                "style" : "simple"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/HealthCheckResponseRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/HealthCheckResponseRsrc"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              },
+              "application/xml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageListRsrc"
+                }
+              }
+            }
+          }
+        },
+        "x-auth-type" : "#{wso2.x-auth-type.app_and_app_user}",
+        "x-throttling-tier" : "Unlimited"
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "InsuranceClaimRsrc" : {
+        "required" : [ "@type" ],
+        "type" : "object",
+        "properties" : {
+          "links" : {
+            "type" : "array",
+            "xml" : {
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/RelLink"
+            }
+          },
+          "insuranceClaimGuid" : {
+            "type" : "string"
+          },
+          "growerNumber" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "growerName" : {
+            "type" : "string"
+          },
+          "growerAddressLine1" : {
+            "type" : "string"
+          },
+          "growerAddressLine2" : {
+            "type" : "string"
+          },
+          "growerPostalCode" : {
+            "type" : "string"
+          },
+          "insurancePlanCode" : {
+            "type" : "string"
+          },
+          "cropYear" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "policyNumber" : {
+            "type" : "string"
+          },
+          "insuranceCoverageCode" : {
+            "type" : "string"
+          },
+          "cropCommodityCode" : {
+            "type" : "string"
+          },
+          "insurableValueSelected" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "insurableValueComplete" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "coverageAmount" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "coverageAmountAssessed" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "coverageAssessedReason" : {
+            "type" : "string"
+          },
+          "coverageAmountAdjusted" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "claimNumber" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "claimVersion" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "primaryPerilCode" : {
+            "type" : "string"
+          },
+          "secondaryPerilCode" : {
+            "type" : "string"
+          },
+          "underwritingtatusCode" : {
+            "type" : "string"
+          },
+          "totalIncome" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "totalClaimAmount" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "recommendedByUserid" : {
+            "type" : "string"
+          },
+          "recommendedByName" : {
+            "type" : "string"
+          },
+          "recommendedByDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "varieties" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/InsuranceClaimVariety"
+            }
+          },
+          "etag" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "@type" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "insuranceClaim",
+          "namespace" : "http://underwriting.cirras.mal.gov.bc.ca/v1/"
+        },
+        "discriminator" : {
+          "propertyName" : "@type"
+        }
+      },
+      "InsuranceClaimVariety" : {
+        "type" : "object",
+        "properties" : {
+          "insuranceClaimGuid" : {
+            "type" : "string"
+          },
+          "insuranceClaimVarietyGuid" : {
+            "type" : "string"
+          },
+          "cropVarietyCode" : {
+            "type" : "string"
+          },
+          "firstPlantedYear" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "insurableValueComplete" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "yieldProjected" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "contractedPrice1" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "contractedPrice2" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "contractedPrice3" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "contractedPrice4" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "contractedPrice5" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "averagePrice" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "limitedValue" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "insurableValue" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "yieldAssessed" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "yieldTotal" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "yieldActual" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "varietyIncome" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "yieldAssessedReason" : {
+            "type" : "string"
+          }
+        }
+      },
+      "RelLink" : {
+        "required" : [ "@type" ],
+        "type" : "object",
+        "properties" : {
+          "rel" : {
+            "type" : "string",
+            "xml" : {
+              "attribute" : true
+            }
+          },
+          "href" : {
+            "type" : "string",
+            "xml" : {
+              "attribute" : true
+            }
+          },
+          "method" : {
+            "type" : "string",
+            "xml" : {
+              "attribute" : true
+            }
+          },
+          "etag" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "@type" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "rellink",
+          "namespace" : "http://common.wfone.nrs.gov.bc.ca/v1/"
+        },
+        "discriminator" : {
+          "propertyName" : "@type"
+        }
+      },
+      "MessageListRsrc" : {
+        "required" : [ "@type" ],
+        "type" : "object",
+        "properties" : {
+          "messages" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MessageRsrc"
+            }
+          },
+          "etag" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "@type" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "messages",
+          "namespace" : "http://common.wfone.nrs.gov.bc.ca/v1/"
+        },
+        "discriminator" : {
+          "propertyName" : "@type"
+        }
+      },
+      "MessageRsrc" : {
+        "required" : [ "@type" ],
+        "type" : "object",
+        "properties" : {
+          "path" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "messageTemplate" : {
+            "type" : "string"
+          },
+          "messageArguments" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "@type" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "message",
+          "namespace" : "http://common.wfone.nrs.gov.bc.ca/v1/"
+        },
+        "discriminator" : {
+          "propertyName" : "@type"
+        }
+      },
+      "InsuranceClaimListRsrc" : {
+        "required" : [ "@type" ],
+        "type" : "object",
+        "properties" : {
+          "links" : {
+            "type" : "array",
+            "xml" : {
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/RelLink"
+            }
+          },
+          "pageNumber" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "pageRowCount" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "totalRowCount" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "totalPageCount" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "collection" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/InsuranceClaimRsrc"
+            }
+          },
+          "etag" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "@type" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "insuranceClaimList",
+          "namespace" : "http://underwriting.cirras.mal.gov.bc.ca/v1/"
+        },
+        "discriminator" : {
+          "propertyName" : "@type"
+        }
+      },
+      "EndpointsRsrc" : {
+        "required" : [ "@type" ],
+        "type" : "object",
+        "properties" : {
+          "links" : {
+            "type" : "array",
+            "xml" : {
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/RelLink"
+            }
+          },
+          "releaseVersion" : {
+            "type" : "string"
+          },
+          "etag" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "@type" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "endpoints",
+          "namespace" : "http://underwriting.cirras.mal.gov.bc.ca/v1/"
+        },
+        "discriminator" : {
+          "propertyName" : "@type"
+        }
+      },
+      "CodeHierarchyRsrc" : {
+        "required" : [ "@type" ],
+        "type" : "object",
+        "properties" : {
+          "links" : {
+            "type" : "array",
+            "xml" : {
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/RelLink"
+            }
+          },
+          "codeHierarchyName" : {
+            "type" : "string"
+          },
+          "lowerCodeTableName" : {
+            "type" : "string"
+          },
+          "upperCodeTableName" : {
+            "type" : "string"
+          },
+          "hierarchy" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Hierarchy"
+            }
+          },
+          "etag" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "@type" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "codeHierarchy",
+          "namespace" : "http://common.wfone.nrs.gov.bc.ca/v1/"
+        },
+        "discriminator" : {
+          "propertyName" : "@type"
+        }
+      },
+      "Hierarchy" : {
+        "type" : "object",
+        "properties" : {
+          "lowerCode" : {
+            "type" : "string"
+          },
+          "upperCode" : {
+            "type" : "string"
+          },
+          "effectiveDate" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "expiryDate" : {
+            "type" : "string",
+            "format" : "date"
+          }
+        }
+      },
+      "CodeHierarchyListRsrc" : {
+        "required" : [ "@type" ],
+        "type" : "object",
+        "properties" : {
+          "links" : {
+            "type" : "array",
+            "xml" : {
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/RelLink"
+            }
+          },
+          "codeHierarchyList" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/CodeHierarchyRsrc"
+            }
+          },
+          "etag" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "@type" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "codeHierarchies",
+          "namespace" : "http://common.wfone.nrs.gov.bc.ca/v1/"
+        },
+        "discriminator" : {
+          "propertyName" : "@type"
+        }
+      },
+      "CodeRsrc" : {
+        "required" : [ "@type" ],
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "displayOrder" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "effectiveDate" : {
+            "type" : "string"
+          },
+          "expiryDate" : {
+            "type" : "string"
+          },
+          "@type" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "code",
+          "namespace" : "http://common.wfone.nrs.gov.bc.ca/v1/"
+        },
+        "discriminator" : {
+          "propertyName" : "@type"
+        }
+      },
+      "CodeTableRsrc" : {
+        "required" : [ "@type" ],
+        "type" : "object",
+        "properties" : {
+          "links" : {
+            "type" : "array",
+            "xml" : {
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/RelLink"
+            }
+          },
+          "codeTableName" : {
+            "type" : "string"
+          },
+          "codes" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/CodeRsrc"
+            }
+          },
+          "etag" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "@type" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "codeTable",
+          "namespace" : "http://common.wfone.nrs.gov.bc.ca/v1/"
+        },
+        "discriminator" : {
+          "propertyName" : "@type"
+        }
+      },
+      "CodeTableListRsrc" : {
+        "required" : [ "@type" ],
+        "type" : "object",
+        "properties" : {
+          "links" : {
+            "type" : "array",
+            "xml" : {
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/RelLink"
+            }
+          },
+          "codeTableList" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/CodeTableRsrc"
+            }
+          },
+          "etag" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "@type" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "codeTables",
+          "namespace" : "http://common.wfone.nrs.gov.bc.ca/v1/"
+        },
+        "discriminator" : {
+          "propertyName" : "@type"
+        }
+      },
+      "HealthCheckResponseRsrc" : {
+        "required" : [ "@type" ],
+        "type" : "object",
+        "properties" : {
+          "componentIdentifier" : {
+            "type" : "string"
+          },
+          "componentName" : {
+            "type" : "string"
+          },
+          "validationStatus" : {
+            "type" : "string",
+            "enum" : [ "RED", "YELLOW", "GREEN" ]
+          },
+          "statusDetails" : {
+            "type" : "string"
+          },
+          "dependencyComponentResponses" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/HealthCheckResponseRsrc"
+            }
+          },
+          "@type" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "HealthCheckResponse",
+          "namespace" : "http://common.wfone.nrs.gov.bc.ca/v1/"
+        },
+        "discriminator" : {
+          "propertyName" : "@type"
+        }
+      }
+    }
+  }
+}
