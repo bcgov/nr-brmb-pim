@@ -9,6 +9,18 @@ on:
       MICROSERVICE_NAME:
         required: true
         type: string
+      EXPORT_FILE:
+        required: false
+        type: string
+      EXPORT_PATH:
+        required: false
+        type: string
+      DOWNLOAD_FILE:
+        required: false
+        type: string
+      DOWNLOAD_PATH:
+        required: false
+        type: string
 
 env:
   DIRECTORY_SUFFIX: ${{ contains(inputs.MICROSERVICE_NAME, '-api') && '-rest-endpoints' || '' }}
@@ -40,25 +52,25 @@ jobs:
       - name: Add .npmrc file
         run: echo -e '${{ secrets.NPMRC }}' > ~/.npmrc
 
-        #NOTE: necessary to build client-war until service account with write permissions is available
-        #TODO: remove this, revert changes to cirras-underwriting-war package.json
-      - name: Install npm module dependency for -war
-        run: |
-          if ${{ contains(inputs.MICROSERVICE_NAME, '-war')}}; then
-            mvn --settings=settings.xml --batch-mode --update-snapshots -f cirras-underwriting-api/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }} install
-            cp cirras-underwriting-api/cirras-underwriting-api-rest-endpoints/target/swagger.json cirras-underwriting-ngclient-lib/cirras-underwriting-ngclient-lib/src/main/angular/src/swagger/swagger.json
-            cd cirras-underwriting-ngclient-lib/cirras-underwriting-ngclient-lib/src/main/angular
-            npm install
-            npm run generate 
-            npm run build
-          fi
-          exit 0
+      - name: download files from other jobs
+        if: ${{ inputs.DOWNLOAD_FILE }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.DOWNLOAD_FILE}}
+          path: ${{ inputs.DOWNLOAD_PATH}}
           
       - name: Build with Maven
         run: |
           export MAVEN_OPTS="-Xmx3072m -XX:MaxMetaspaceSize=512m"
           export NODE_OPTIONS="--max-old-space-size=4096"
           mvn --settings=settings.xml --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }} package
+
+      - name: Export file between jobs
+        uses: actions/upload-artifact@v4
+        if: ${{ inputs.EXPORT_FILE }}
+        with:
+          name: ${{ inputs.EXPORT_FILE }}
+          path: ${{ inputs.EXPORT_PATH }}
 
       - name: Cache local Maven repository
         uses: actions/cache@v2

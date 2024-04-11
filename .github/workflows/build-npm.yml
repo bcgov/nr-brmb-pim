@@ -1,0 +1,75 @@
+name: build npm-lib
+
+on:
+  workflow_call:
+    inputs:
+      ENVIRONMENT:
+          required: true
+          type: string
+      MICROSERVICE_NAME:
+          required: true
+          type: string
+      EXPORT_MODULE:
+          required: false
+          type: string
+      DOWNLOAD_FILE:
+          required: false
+          type: string
+      DOWNLOAD_PATH:
+          required: false
+          type: string
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+    name: ${{ inputs.ENVIRONMENT }}
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+
+      - name: Set up nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
+
+      #NOTE: necessary to build client-war 
+      - name: Add .npmrc file
+        run: echo -e '${{ secrets.NPMRC }}' > ~/.npmrc
+
+      - name: download files from other jobs
+        if: ${{ inputs.DOWNLOAD_FILE }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.DOWNLOAD_FILE}}
+          path: ${{ inputs.DOWNLOAD_PATH}}
+      
+      - name:
+        run: |
+          cd ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular 
+          npm install
+          npm run generate
+          npm run build
+          npm pack
+
+      - name: Extract version number
+        id: getVersion
+        run: echo "VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )" >> $GITHUB_OUTPUT
+
+      - name: upload module
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{inputs.EXPORT_MODULE}}-${{ steps.getVersion.outputs.VERSION_NUMBER }}.tgz
+          path: ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/${{ inputs.EXPORT_MODULE}}-${{ steps.getVersion.outputs.VERSION_NUMBER }}.tgz
+
+      
