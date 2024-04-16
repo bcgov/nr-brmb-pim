@@ -1,3 +1,4 @@
 .vscode
 **/.git.bak
 compose.yaml
+local-config
