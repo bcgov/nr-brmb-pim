@@ -14,6 +14,12 @@
 
     StringBuilder json = new StringBuilder("{");
 
+    json = json.append("\"extractedValues\":{");
+    json = json.append("\"url\":\"").append(url).append("\"");
+    json = json.append("\"uri\":\"").append(uri).append("\"");
+    json = json.append("\"ctx\":\"").append(ctx).append("\"");
+    json = json.append("},");
+
     // General Application Section
     json = json.append("\"application\":{");
     json = json.append("\"acronym\":\"").append(properties.getProperty("project.acronym", "")).append("\"").append(",");
