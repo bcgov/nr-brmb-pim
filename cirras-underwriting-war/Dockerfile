@@ -12,7 +12,7 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT  &&\
   cp ./log4j2.xml /usr/local/tomcat/webapps/pub#cirras-underwriting/WEB-INF/classes/log4j2.xml &&\
   adduser --system tomcat &&\
   chown -R tomcat:0 `readlink -f ${CATALINA_HOME}` &&\
-  chmod -R 770 `readlink -f ${CATALINA_HOME}` &&\
+  chmod -R 777 `readlink -f ${CATALINA_HOME}` &&\
   chown -h tomcat:0 ${CATALINA_HOME}
 
 USER tomcat
