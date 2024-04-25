@@ -42,6 +42,7 @@ public class InventorySeededForageDto extends BaseDto<InventorySeededForageDto> 
 	
 	private String commodityTypeDescription;
 	private Double totalFieldAcres;
+	private String plantDurationTypeCode;
 
 	public InventorySeededForageDto() {
 	}
@@ -74,7 +75,7 @@ public class InventorySeededForageDto extends BaseDto<InventorySeededForageDto> 
 
 		this.commodityTypeDescription = dto.commodityTypeDescription;
 		this.totalFieldAcres = dto.totalFieldAcres;
-
+		this.plantDurationTypeCode = dto.plantDurationTypeCode;
 	}
 	
 
@@ -300,6 +301,14 @@ public class InventorySeededForageDto extends BaseDto<InventorySeededForageDto> 
 	
 	public void setTotalFieldAcres(Double totalFieldAcres) {
 		this.totalFieldAcres = totalFieldAcres;
+	}
+
+	public String getPlantDurationTypeCode() {
+		return plantDurationTypeCode;
+	}
+
+	public void setPlantDurationTypeCode(String plantDurationTypeCode) {
+		this.plantDurationTypeCode = plantDurationTypeCode;
 	}
 
 }

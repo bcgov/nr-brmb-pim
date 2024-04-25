@@ -125,7 +125,22 @@ public class DeclaredYieldFieldForageDaoImpl extends BaseDao implements Declared
 
 		logger.debug(">delete");
 	}
-	
+
+	@Override
+	public void deleteForDeclaredYieldContract(String declaredYieldContractGuid) throws DaoException, NotFoundDaoException {
+		logger.debug("<deleteForDeclaredYieldContract");
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("declaredYieldContractGuid", declaredYieldContractGuid);
+			this.mapper.deleteForDeclaredYieldContract(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">deleteForDeclaredYieldContract");
+	}
 	
 	@Override
 	public List<DeclaredYieldFieldForageDto> getByInventoryField(String inventoryFieldGuid) throws DaoException {

@@ -22,6 +22,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededForag
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.AnnualFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.spring.PersistenceSpringConfig;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
@@ -124,15 +125,15 @@ public class DeclaredYieldFieldForageDaoTest {
 		}
 	}
 	
+	private Integer insurancePlanId = 5;
+	private Integer cropCommodityId = 65;
 	
 	@Test 
 	public void testDeclaredYieldFieldForage() throws Exception {
 
-		Integer insurancePlanId = 5;
 		String inventoryFieldGuid;
 		String declaredYieldFieldForageGuid;
 		Integer plantingNumber = 1;
-		Integer cropCommodityId = 65;
 		
 		String userId = "UNITTEST";
 		
@@ -275,6 +276,72 @@ public class DeclaredYieldFieldForageDaoTest {
 		delete();		
 	}
 	
+
+	@Test 
+	public void testDeleteForDeclaredYieldContract() throws Exception {
+
+		String userId = "UNITTEST";
+		
+		DeclaredYieldFieldForageDao declaredYieldFieldForageDao = persistenceSpringConfig.declaredYieldFieldForageDao();
+
+		createGrowerContractYear(userId);
+		createField(userId);
+		
+		createAnnualFieldDetail(userId);
+		createContractedFieldDetail(userId);
+
+		String declaredYieldContractGuid = createDeclaredYieldContract(userId);
+		
+		String invFieldGuid1 = createInventoryField(1, userId);
+		String invFieldGuid2 = createInventoryField(2, userId);
+		
+		//INSERT Planting 1
+		DeclaredYieldFieldForageDto newDto = new DeclaredYieldFieldForageDto();
+
+		newDto.setCutNumber(1);
+		newDto.setInventoryFieldGuid(invFieldGuid1);
+		newDto.setMoisturePercent(12.3456);
+		newDto.setTotalBalesLoads(10);
+		newDto.setWeight(11.2222);
+		newDto.setWeightDefaultUnit(33.4444);
+				
+		declaredYieldFieldForageDao.insert(newDto, userId);
+
+		//INSERT Planting 2
+		newDto = new DeclaredYieldFieldForageDto();
+
+		newDto.setCutNumber(1);
+		newDto.setInventoryFieldGuid(invFieldGuid2);
+		newDto.setMoisturePercent(12.3456);
+		newDto.setTotalBalesLoads(10);
+		newDto.setWeight(11.2222);
+		newDto.setWeightDefaultUnit(33.4444);
+		
+		declaredYieldFieldForageDao.insert(newDto, userId);
+		
+		//GET BY INVENTORY FIELD
+		List<DeclaredYieldFieldForageDto> fetchedDtos = declaredYieldFieldForageDao.getByInventoryField(invFieldGuid1);
+		Assert.assertNotNull(fetchedDtos);
+
+		fetchedDtos = declaredYieldFieldForageDao.getByInventoryField(invFieldGuid2);
+		Assert.assertNotNull(fetchedDtos);
+
+		//DELETE
+		declaredYieldFieldForageDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
+		
+		//GET BY INVENTORY FIELD
+		fetchedDtos = declaredYieldFieldForageDao.getByInventoryField(invFieldGuid1);
+		Assert.assertNotNull(fetchedDtos);
+		Assert.assertEquals(0, fetchedDtos.size());
+
+		fetchedDtos = declaredYieldFieldForageDao.getByInventoryField(invFieldGuid2);
+		Assert.assertNotNull(fetchedDtos);
+		Assert.assertEquals(0, fetchedDtos.size());
+		
+		//DELETE
+		delete();		
+		
+	}	
 	
 	private void createGrowerContractYear(String userId) throws DaoException {
 		GrowerContractYearDao dao = persistenceSpringConfig.growerContractYearDao();
@@ -341,6 +408,25 @@ public class DeclaredYieldFieldForageDaoTest {
 
 		contractedFieldDetailDao.insertDataSync(newDto, userId);
 		
+	}
+	
+	private String createInventoryField(Integer plantingNumber, String userId) throws DaoException { 
+		
+		InventoryFieldDao invFieldDao = persistenceSpringConfig.inventoryFieldDao();
+
+		// INSERT InventoryField
+		InventoryFieldDto invFieldDto = new InventoryFieldDto();
+
+		invFieldDto.setCropYear(cropYear1);
+		invFieldDto.setFieldId(fieldId1);
+		invFieldDto.setInsurancePlanId(insurancePlanId);
+		invFieldDto.setLastYearCropCommodityId(cropCommodityId);
+		invFieldDto.setLastYearCropCommodityName("FORAGE");
+		invFieldDto.setIsHiddenOnPrintoutInd(false);
+		invFieldDto.setPlantingNumber(plantingNumber);
+
+		invFieldDao.insert(invFieldDto, userId);
+		return invFieldDto.getInventoryFieldGuid();
 	}
 	
 	private void createInventorySeeded(

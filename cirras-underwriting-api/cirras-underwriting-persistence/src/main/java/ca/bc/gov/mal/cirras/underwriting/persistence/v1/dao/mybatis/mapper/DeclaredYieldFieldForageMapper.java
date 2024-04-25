@@ -14,6 +14,8 @@ public interface DeclaredYieldFieldForageMapper {
 	int update(Map<String, Object> parameters);
 
 	int delete(Map<String, Object> parameters);
+
+	int deleteForDeclaredYieldContract(Map<String, Object> parameters);
 		
 	List<DeclaredYieldFieldForageDto> getByInventoryField(Map<String, Object> parameters);
 

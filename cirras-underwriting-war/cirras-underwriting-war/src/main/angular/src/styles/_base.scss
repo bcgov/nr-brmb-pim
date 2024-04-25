@@ -47,11 +47,11 @@ button.mat-raised-button {
   box-shadow: none !important;
   border: 1px solid $colour-blue;
 
-  &:not([class*=mat-elevation-z]) {
-    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-    0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-    0px 1px 5px 0px rgba(0, 0, 0, 0.12) !important;
-  }
+  // &:not([class*=mat-elevation-z]) {
+  //   box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+  //   0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+  //   0px 1px 5px 0px rgba(0, 0, 0, 0.12) !important;
+  // }
 }
 
 button.mat-raised-button[disabled]{
@@ -1647,7 +1647,7 @@ mat-error.mat-error {
   }
 
   .vertical-line {
-    margin-top: 6px;
+    margin-top: 2px;
     border-left: 2px solid #ccc;
     height: 26px;
   }

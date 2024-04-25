@@ -1,5 +1,5 @@
 import {  InventoryContractCommodity, InventoryCoverageTotalForage, InventoryField, PolicySimple, UnderwritingComment } from "@cirras/cirras-underwriting-api";
-import { DopYieldField } from "./models-yield";
+import {  DopYieldFieldForage, DopYieldFieldGrain } from "./models-yield";
 
 
 export interface PagedCollection {
@@ -57,6 +57,7 @@ export interface UwContract {
 
 
 export interface AnnualField {
+
   links?: Array<RelLink>;
   contractedFieldDetailId?: number;
   annualFieldDetailId?: number;
@@ -69,11 +70,13 @@ export interface AnnualField {
   landUpdateType?: string;
   transferFromGrowerContractYearId?: number;
   plantings?: Array<InventoryField>;
-  dopYieldFields?: Array<DopYieldField>;
+  dopYieldFieldGrainList?: Array<DopYieldFieldGrain>;
+  dopYieldFieldForageList?: Array<DopYieldFieldForage>;
   uwComments?: Array<UnderwritingComment>;
   policies?: Array<PolicySimple>;
   etag?: string;
   type: string;
+
 }
 
 export interface InventoryContractList extends PagedCollection {

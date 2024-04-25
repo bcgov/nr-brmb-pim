@@ -78,6 +78,13 @@
     grid-auto-rows: minmax( 2em, auto );
     grid-template-columns: 150px 120px 140px;
   
+    .table-header{
+      color: #0C0C0C;
+      font-size: 17px;
+      font-weight: 600;
+      text-align: center;
+    }
+
     .header {  
       color: #0C0C0C;
       font-size: 14px;
@@ -309,15 +316,6 @@
 
     display: grid;
     grid-auto-rows: minmax( 2em, auto );
-    grid-template-columns:  auto 180px 140px 150px 12px 190px;
-    //margin-bottom: 10px;
-  
-    div {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        flex-direction: column;
-    }
   
     h2 {
       font-size: 17px;
@@ -354,9 +352,94 @@
     }
   
     .vertical-line {
-      margin-top: 15px;
+      margin-top: 6px;
       border-left: 2px solid #ccc;
       height: 26px;
+    }
+
+    .plcy-frm-hdr-dropdown {
+      .mat-form-field-wrapper{
+        padding-bottom: 0;
+        width: 100px;
+      }
+
+      .mat-form-field-underline {
+        display: none;
+      }
+
+      .mat-form-field-appearance-fill .mat-form-field-infix {
+        padding: 0; 
+      }
+
+      .mat-form-field-infix {
+        width: 100px;
+        height: 36px;
+        padding: 0;
+      }
+
+      .mat-form-field-appearance-fill .mat-form-field-flex {
+        background-color: white;
+        border: 1px solid rgba(194, 194, 194, 1) !important;
+        border-radius: 5px !important;
+        padding: 0 !important;
+      }
+
+      .mat-select-value {
+        padding-bottom: 10px;
+        padding-left: 8px;
+        font-family: $font-family-main;
+      }
+    
+    }
+
+    .plcy-frm-hdr-calendar {
+
+      .mat-form-field-wrapper {
+        padding-bottom: 1.34375em; 
+      }
+
+      .mat-form-field {
+        text-align: right;
+      }
+    
+      .mat-form-field-infix {
+        display: flex;
+      }
+
+      .mat-form-field-underline {
+          display: none;
+      }
+    
+      .mat-form-field-appearance-fill .mat-form-field-flex {
+        box-sizing: content-box;
+        width: 135px;
+        height: 36px;
+
+        background-color: white; // transparent;
+        border: 1px solid rgba(194, 194, 194, 1) !important;
+        border-radius: 5px !important;
+        padding: 0;
+        height: 36px;
+      }
+    
+      .mat-form-field-appearance-fill .mat-form-field-infix {
+        padding: 0;
+      }
+    
+      .mat-form-field-flex {
+        display: inline-flex;
+        align-items: center; 
+      }
+
+      .mat-icon-button {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+      }
+
+      .mat-icon-button .mat-button-wrapper>* {
+        vertical-align: 2px; 
+      }
     }
   }
   
@@ -385,4 +468,100 @@
     }
   }
 
+  
+  .grain-unsdd-inv-tot-cmdty-container {
+    display: grid; 
+    grid-auto-rows: minmax( 2em, auto );
+    grid-template-columns: 136px 180px 160px;
+    margin-left: 40px;
+  
+    div {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+  
+    .header {
+      color: #0C0C0C;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: left;
+      padding-left: 6px;
+    }
+  
+    .readonly {
+      padding-left: 6px;
+      font-size: 15px;
+      color: #424242;
+    }
+  
+    .fill {
+      color: #424242;
+
+        // styling all textbox inputs within this css subclass 
+        .mat-form-field-wrapper {
+            padding-bottom: 0;
+        }
+    
+        .mat-form-field-underline {
+            display: none;
+        }
+    
+        .mat-form-field-infix {
+            width: 100%;
+            padding: 0.5em 0;
+            border-top: 10px solid transparent;
+        }
+    
+        .mat-form-field-appearance-fill .mat-form-field-flex {
+            background-color: transparent;
+        }
+    
+        .mat-form-field-appearance-fill .mat-form-field-infix {
+            padding: 0;
+        }
+    
+        .mat-form-field-appearance-fill .mat-form-field-flex {
+            padding: 0 0.75em 0 0.75em;
+        }
+    }
+  }
+
+
+  .plcy-grain-sdd-inv {
+
+    .mat-radio-button:not(.mat-radio-disabled).mat-accent.mat-radio-checked .mat-radio-outer-circle {
+      border-color: rgba(0, 0, 0, 0.54);; // black;
+    }
+    
+    .mat-radio-button:not(.mat-radio-disabled).mat-accent .mat-radio-inner-circle {
+      background-color: rgba(0, 0, 0, 0.54);; // black ;
+    }
+  
+    &.inv-radio-group {
+      display: flex;
+      flex-direction: row;
+      margin: 15px 0;
+      align-items: flex-start;
+    }
+    
+    &.inv-radio-button {
+      margin: 5px;
+    }
+  }
+
+  .plcy-inv-field-container-yellow {
+    max-width: 100%;
+    border: solid 1px #ccc;
+    min-height: 54px; // 64px;
+    display: block;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .plcy-inv-field-container-yellow>div:nth-child(2n+1) // this is responsible for the alternating row colors
+  {
+    background: #FEFAEC; // yellow
+  }
   

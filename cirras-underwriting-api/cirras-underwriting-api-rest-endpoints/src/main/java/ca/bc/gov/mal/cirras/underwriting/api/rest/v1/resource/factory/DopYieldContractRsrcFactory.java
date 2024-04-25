@@ -455,8 +455,10 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory implements 
 				model.setCommodityTypeCode(isfDto.getCommodityTypeCode());
 				model.setCommodityTypeDescription(isfDto.getCommodityTypeDescription());
 				model.setCropVarietyName(isfDto.getCropVarietyName());
+				model.setCropVarietyId(isfDto.getCropVarietyId());
 				model.setIsQuantityInsurableInd(isfDto.getIsQuantityInsurableInd());
 				model.setFieldAcres(isfDto.getFieldAcres());
+				model.setPlantDurationTypeCode(isfDto.getPlantDurationTypeCode());
 				
 			} else {
 				// Should never happen. Although the data model supports multiple seeded forage records, the UI does not.

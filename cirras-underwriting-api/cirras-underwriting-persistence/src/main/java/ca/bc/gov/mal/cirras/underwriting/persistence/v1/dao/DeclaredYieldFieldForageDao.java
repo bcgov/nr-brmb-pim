@@ -18,6 +18,8 @@ public interface DeclaredYieldFieldForageDao extends Serializable {
     
     void delete(String declaredYieldFieldForageGuid) throws DaoException, NotFoundDaoException;
     
+    void deleteForDeclaredYieldContract(String declaredYieldContractGuid) throws DaoException, NotFoundDaoException;
+
     List<DeclaredYieldFieldForageDto> getByInventoryField(String inventoryFieldGuid) throws DaoException;
 
  }

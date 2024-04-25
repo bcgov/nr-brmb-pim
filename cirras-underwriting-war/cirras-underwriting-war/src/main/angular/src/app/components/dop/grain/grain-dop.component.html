@@ -26,8 +26,9 @@
                 ></related-policies> 
             </div>
             <div class="vertical-line"></div>
-            <div>
-                <button mat-raised-button color="secondary" class="button-large-text" (click)="onPrint()">
+            <div matTooltip="Changes must be saved before download is possible.">
+                <button mat-raised-button color="secondary" [disabled]="hasDataChanged == true"
+                class="button-large-text" (click)="onPrint()">
                     <mat-icon class="button-mat-icon">download</mat-icon>Download
                 </button>
             </div>
@@ -47,22 +48,26 @@
             [growerContract]="growerContract"
         ></cirras-grower-contract-header>  
 
-        <div>
-            <h2>Schedule D - 15: Declaration of Production </h2> 
-        </div>
-
       <form [formGroup]="getViewModel().formGroup">
 
-        <div class="date-container">
+        <div class="plcy-inv-form-header" [ngStyle]="setFormStyles()">
             <div>
-                <p class="last-updated">
-                    Last Updated: {{ ((dopYieldContract && dopYieldContract.dopUpdateTimestamp) ? dopYieldContract.dopUpdateTimestamp : "" ) | date }}
-                </p>
+                <h2>Declaration of Production | Schedule D - 15</h2>
+                <p>Last Updated: {{ ((dopYieldContract && dopYieldContract.dopUpdateTimestamp) ? dopYieldContract.dopUpdateTimestamp : "" ) | date }}</p>
+            </div>            
+            <div class="plcy-frm-hdr-calendar" matTooltip="Date when the Declaration of Production is submitted.">
+                <!-- DOP Date: -->
+                <mat-form-field appearance="fill" >
+                    <input matInput 
+                        [matDatepicker]="picker"
+                        formControlName="declarationOfProductionDate" 
+                        (dateChange)="isMyFormDirty()">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
             </div>
-            <div></div>
-            <div></div>
-            <div>
-                Units: 
+            <div class="plcy-frm-hdr-dropdown" matTooltip="Units">
+                <!-- Units:  -->
                 <mat-form-field appearance="fill">
                     <mat-select formControlName="yieldMeasUnitTypeCode" (selectionChange)="yieldMeasUnitTypeSelectionChanged()">
                         <mat-option *ngFor="let option of yieldMeasUnitOptions" [value]="option.yieldMeasUnitTypeCode"
@@ -71,122 +76,130 @@
                     </mat-form-field>
             </div>
             <div>
-                DOP Date:
-                <mat-form-field appearance="fill" >
-                    <input matInput formControlName="declarationOfProductionDate" 
-                        [matDatepicker]="picker" (dateChange)="isMyFormDirty()">
-                    
-                    <mat-datepicker-toggle matIconSuffix [for]="picker">
-                        <mat-icon matDatepickerToggleIcon >keyboard_arrow_down</mat-icon>
-                    </mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-
+                <span *ngIf="isThereAnyDopComment(); else noDopComments">
+                    <button mat-raised-button color="secondary" class="header-button" (click)="onLoadDopComments()">
+                        <mat-icon class="button-mat-icon" svgIcon="insert_comment"></mat-icon>DOP Comments
+                    </button>
+                </span>
+                <ng-template #noDopComments>
+                    <button mat-raised-button color="secondary" class="header-button" (click)="onLoadDopComments()">
+                        <mat-icon class="button-mat-icon" svgIcon="mode_comment"></mat-icon>DOP Comments
+                    </button>
+                </ng-template>
             </div>
-            <!-- this has been moved up -->
-            <!-- <div *ngIf="hasDataChanged == true" class="unsaved-changes-warning">
-              
-                <span #el matTooltip="" style="margin-left: 10px; margin-right: 20px;">
-                    <mat-icon [ngStyle]="{'color':'orangered', 'font-size':'xx-large'}">warning</mat-icon>
-                  </span>
-                 <span style="font-size: large; color:orangered">
-                    There are unsaved changes on the page. 
-                </span> 
-    
-            </div> -->
-
-
+            <div>
+                <button
+                    mat-raised-button 
+                    color="secondary" 
+                    class="header-button"  
+                    matTooltip="Clear unsaved changes"
+                    (click)="onCancel()">
+                    Clear Changes
+                </button>
+            </div>
+            <div class="vertical-line"></div>
+            <div>
+                <button *ngIf="securityUtilService.canDeleteDop() && 
+                                dopYieldContract && 
+                                dopYieldContract.declaredYieldContractGuid" 
+                                mat-raised-button color="secondary" 
+                                class="header-button-red" 
+                                (click)="onDeleteDop()">
+                    <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Delete DOP
+                </button>
+            </div>
         </div>
 
-
-        <div class="cuw-table-wrapper flex-y-grow">
+        <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
 
             <!-- estimated yield per acre table header -->
 
-            <div class="field-est-yield-acre">
-                <div class="field-tb-header border-left" style="width:71px">Field Order</div>
-                <div class="field-tb-header" style="width:70px">Field ID</div>
-                <div class="field-tb-header" style="width:120px;">Field Name</div>  
-                <div class="field-tb-header" style="width:120px">Legal Location</div> 
-                <div class="field-tb-header" style="width:101px">Crop</div>
-                <div class="field-tb-header" style="width:120px">Variety</div>
-                <div class="field-tb-header" style="width:100px">Acres</div>
-                <div class="field-tb-header" style="width:120px">Seeded Date</div>
-                <div class="field-tb-header" style="width:100px">Estimated <br /> Yield/Acre</div>
-                <div class="field-tb-header" style="width:100px">Unharvested <br /> Acres</div>
-                <div class="field-tb-header" style="width:150px;">Actions</div>
+            <div class="plcy-inv-field-box" style="width: 1430px;">
+                <div class="inventory-header border-left" style="width:45px" matTooltip="Field Order">F.O.</div>
+                <div class="inventory-header" style="width:90px">Field ID</div>
+                <div class="inventory-header" style="width:164px;">Field Name</div>  
+                <div class="inventory-header" style="width:156px">Legal Location</div> 
+                <div class="inventory-header" style="width:120px">Crop</div>
+                <div class="inventory-header" style="width:180px">Variety</div>
+                <div class="inventory-header" style="width:100px" matTooltip="Acres are rounded to the nearest tenth after the decimal point.">Acres</div>
+                <div class="inventory-header" style="width:120px">Seeded Date</div>
+                <div class="inventory-header" style="width:130px" matTooltip="Estimated Yield/Acre">Est. Yield/Acre</div>
+                <div class="inventory-header" style="width:100px">Unharvested <br /> Acres</div>
+                <div class="inventory-header" style="width:80px;">Manage Planting</div>
+                <div class="inventory-header" style="width:75px;">Manage Field</div>
             </div>
 
 
-            <div class="cuw-field-table-wrapper flex-y-grow">
+            <div class="plcy-inv-fld-tbl-inner-wrapper flex-y-grow" style="width: 1380px;">
 
-                <div class="field-container" style="grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;" >
+                <div class="plcy-inv-field-container-yellow" 
+                    style="grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; width: 1360px;" >
   
-                    <div class="field-est-yield-acre" 
+                    <div class="plcy-inv-field-box" 
                         *ngFor="let field of getViewModel().formGroup.controls.fields['controls']; index as fieldIndex"
                         [formGroup]="field">
 
-                        <div class="field-tb-cell border-left" style="width:70px">{{field.value.displayOrder}}</div>
-                        <div class="field-tb-cell" style="width:70px;">{{field.value.fieldId}}</div> 
-                        <div class="field-tb-cell"  style="width:120px;">{{field.value.fieldLabel}}</div>
-                        <div class="field-tb-cell" style="width:120px;"> {{ field.value.otherLegalDescription }} </div>
+                        <div class="inventory-cell inventory-border" style="width:45px">{{field.value.displayOrder}}</div>
+                        <div class="inventory-cell inventory-border" style="width:90px;">{{field.value.fieldId}}</div> 
+                        <div class="inventory-cell inventory-border"  style="width:164px;">{{field.value.fieldLabel}}</div>
+                        <div class="inventory-cell inventory-border" style="width:156px;"> {{ field.value.otherLegalDescription }} </div>
                         
-                        <div class="yield-acre-container">
+                        <div class="planting-container" [ngStyle]="setPlantingStyles()">
                             
-                            <div *ngFor="let dopYieldField of field.value.dopYieldFields['controls']; index as dopYieldFieldIndex;"   
+                            <div *ngFor="let dopYieldField of field.value.dopYieldFieldGrainList['controls']; index as dopYieldFieldIndex;"   
                                 [formGroup]="dopYieldField"    
                                 style="display:contents;"> 
 
-                                <div class="border-bottom" style="width:100px;">
+                                <div class="inventory-cell inventory-border" style="width:120px;">
                                     {{ dopYieldField.value.cropCommodityName | titlecase }}
                                 </div>
-                                <div class="border-bottom border-left" style="width:120px;">
+                                <div class="inventory-cell inventory-border" style="width:180px;">
                                     {{ dopYieldField.value.cropVarietyName | titlecase }}
                                 </div>
                         
-                                <div class="border-bottom border-left" style="width:100px;">
+                                <div class="inventory-cell inventory-border" style="width:100px;">
                                     {{ dopYieldField.value.seededAcres }}
                                 </div>
                                 
-                                <div class="border-bottom border-left" style="width:120px;">
+                                <div class="inventory-cell inventory-border" style="width:120px;">
                                     {{ dopYieldField.value.seededDate | date }}
                                 </div>
                                 
-                                <div class="field-tb-fill number border-left border-bottom" style="width:100px;">
+                                <div class="inventory-fill inventory-border" style="width:130px;">
                                     <mat-form-field appearance="fill">
-                                        <input matInput formControlName="estimatedYieldPerAcre" 
+                                        <input matInput matInputCommified formControlName="estimatedYieldPerAcre" 
                                                 maxlength="10"
                                                 (keypress)="numberOnly($event)" 
                                                 (keyup)="isMyFormDirty()"
                                                 (blur)="roundUpEstimatedYield(dopYieldField, dopYieldFieldIndex)">
                                     </mat-form-field>
+                                    <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Estimated Yield/Acres is writeable">edit</mat-icon>
                                 </div>
 
-                                <div class="border-bottom border-left" style="width:100px;">
+                                <div class="inventory-border" style="width:100px;">
                                     <mat-checkbox formControlName="unharvestedAcresInd" (change)="isMyFormDirty()">
                                     </mat-checkbox>
                                 </div>
-                                <div class="border-bottom border-right border-left" style="width:50px; align-items:center;">
+                                <div class="border-bottom border-right border-left" style="width:80px; align-items:center;">
                                     <mat-icon 
                                         *ngIf="securityUtilService.canEditDop()"
                                         (click)="onDeleteFieldYield(dopYieldField, dopYieldFieldIndex)"
-                                        [ngStyle]="{'color':'red'}" matTooltip="Clear Field Values" 
-                                        >
-                                        close
-                                    </mat-icon>
+                                        style="margin-left: 4px; margin-right: 4px;"
+                                        matTooltip="Clear Field Values" 
+                                        svgIcon="cancel"></mat-icon>
                                 </div>                                    
                             </div>
                         </div> 
 
-                        <div class="field-tb-cell border-left" style="width:100px">
+                        <div class="inventory-cell inventory-border" style="width:75px">
                             <span *ngIf="isThereAnyComment(field); else noCommentsBlock">
-                                <mat-icon matTooltip="Comments" (click)="onLoadComments(field)">chat_bubble</mat-icon>
+                                <mat-icon matTooltip="Comments" (click)="onLoadComments(field)" svgIcon="insert_comment"></mat-icon>
                             </span>
                             <ng-template #noCommentsBlock>
-                                <mat-icon matTooltip="Comments" (click)="onLoadComments(field)">chat_bubble_outline</mat-icon>
+                                <mat-icon matTooltip="Comments" (click)="onLoadComments(field)" svgIcon="mode_comment"></mat-icon>
                             </ng-template>
 
-                            <mat-icon matTooltip="View History">search</mat-icon>
+                            <mat-icon matTooltip="View History" style="margin-left: 4px; margin-right: 4px;">history</mat-icon>
                         </div>
 
                     </div>
@@ -194,151 +207,158 @@
                 </div>   
             </div>
 
+            <!-- dop contract data  -->
+            <div class="plcy-inv-cntrct" style="grid-template-columns: 1360px" >
+                <div class="question" style="border: 1px solid #E1CF7B; background: #FEFAEC;">
+                    Did you purchase or come into possession of any grain from sources other than those fields which you have insured?
 
-            <br /><br />
-            <!-- yield contract data  -->
-            <div class="cuw-row-group-left">
-                Did you purchase or come into possession of any grain from sources other than those fields which you have insured?
-
-                <mat-radio-group class="yld-radio-group" formControlName="grainFromOtherSourceInd"  (change)="isMyFormDirty()"> 
-                    <mat-radio-button class="yld-radio-button" [value]="true"> 
-                        Yes
-                    </mat-radio-button>
-                    <mat-radio-button class="yld-radio-button" [value]="false">
-                        No
-                    </mat-radio-button>
-                </mat-radio-group>
+                    <mat-radio-group class="plcy-grain-sdd-inv inv-radio-group" formControlName="grainFromOtherSourceInd"> 
+                        <mat-radio-button class="plcy-grain-sdd-inv inv-radio-button" [value]="true"> 
+                            Yes
+                        </mat-radio-button>
+                        <mat-radio-button class="plcy-grain-sdd-inv inv-radio-button" [value]="false">
+                            No
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
             </div>
 
-            <br /><br />
-
-            <div class="grid-container">
-
-                <div class="grid-item">
+            <div class="plcy-inv-cntrct" style="grid-template-columns: 600px 760px;" >
+                <div>
                     <!-- estimated yield grid -->
-                    <p style="font-size: larger; font-weight: bold; margin-bottom: 10px;">Estimated Yield</p>
-                    <div *ngIf="showEstimatedYieldMessage == true" class="unsaved-changes-warning" style="width: 450px; margin-bottom: 10px;">
-                    
-                        <span #el matTooltip="" style="margin-left: 10px; margin-right: 20px;">
-                            <mat-icon [ngStyle]="{'color':'orangered', 'font-size':'xx-large'}">warning</mat-icon>
-                        </span>
-                        <span style="font-size: large; color:orangered">
-                            The Estimated Yield will be calculated on save.
-                        </span> 
-            
-                    </div>
-                    <div *ngIf="dopYieldContract && dopYieldContract.dopYieldFieldRollupList" class="estimated-yield-container"> 
-                        <div class="border-right header justify-center border-top border-bottom border-left"> 
-                            Field Summary
-                        </div>
-                        <div class="border-right header justify-center border-top border-bottom">
-                            Estimated <br /> Yield bu/ac
-                        </div>
-                        <div class="border-right header justify-center border-top border-bottom">
-                            Estimated <br /> Yield t/ac
-                        </div>
-                        <div class="border-right header justify-center border-top border-bottom">
-                            Total <br /> Estimated Yield
-                        </div>
 
-                        <div *ngFor="let item of dopYieldContract.dopYieldFieldRollupList"         
-                            style="display:contents">
+                    <div class="plcy-inv-cmdty-totals-header" style="grid-template-columns: 120px 160px 150px 160px; padding-left: 0px;" > 
 
-                            <div class="border-right border-bottom border-left" style="padding-left: 6px;">               
-                                {{ item.cropCommodityName | titlecase }}
-                                <span *ngIf="item.isPedigreeInd == true" >&nbsp; Pedigreed</span>
-                            </div>
-                
-                            <div class="border-right border-bottom center">               
-                                {{ item.estimatedYieldPerAcreBushels | number: '1.0-1' }}
-                            </div>
-                
-                            <div class="border-right border-bottom center">               
-                                {{ item.estimatedYieldPerAcreTonnes | number: '1.0-3' }}
-                            </div>
+                        <div class="table-header border-top border-left border-right" 
+                            style="grid-column-start: 1; grid-column-end: 5;">
+                                Yield Summary
+                        </div>
                         
-                            <div class="border-right border-bottom center">               
-                                {{ getFlaggedTotalEstimatedYield (item.cropCommodityId, item.isPedigreeInd)  | number: '1.0-3'  }}
+                        <div *ngIf="showEstimatedYieldMessage == true" 
+                            class="table-header border-top border-bottom border-left border-right" 
+                            style="grid-column-start: 1; grid-column-end: 5;"> 
+                                
+                            
+                            <span #el matTooltip="" style="margin-left: 10px;">
+                                <mat-icon [ngStyle]="{'color':'orangered', 'font-size':'large', 'padding-top': '4px'}">warning_amber</mat-icon>
+                            </span>
+                            <span style="color:orangered; font-size: 14px;">
+                                The Estimated Yield will be calculated on save.
+                            </span> 
 
-                                <mat-icon *ngIf="isFlaggedTotalEstimatedYield(item.cropCommodityId, item.isPedigreeInd)"
-                                    matTooltip="There is at least 10% discrepancy between Total Estimated Yield and Farm-level Yield" 
-                                    style="margin-right: 2px;" [ngStyle]="{'color':'orange'}">warning</mat-icon>
+                        </div>
+
+                        <div *ngIf="!showEstimatedYieldMessage" class="header border-top border-bottom border-left border-right"> Field Summary </div>
+                        <div *ngIf="!showEstimatedYieldMessage" class="border-right header border-top border-bottom"> Estimated Yield bu/ac </div>
+                        <div *ngIf="!showEstimatedYieldMessage" class="border-right header border-top border-bottom"> Estimated Yield t/ac </div>
+                        <div *ngIf="!showEstimatedYieldMessage" class="header border-top border-bottom border-left border-right"> Total Estimated Yield </div>
+                    </div>
+
+                    <div *ngIf="!showEstimatedYieldMessage" class="plcy-inv-cmdty-totals-container" style="padding-left: 0px;" > 
+                        <div *ngIf="dopYieldContract && dopYieldContract.dopYieldFieldRollupList"> 
+                            <div *ngFor="let item of dopYieldContract.dopYieldFieldRollupList"         
+                                class="repeat">
+
+                                <div class="border-right border-bottom border-left" style="padding-left: 6px; width: 120px;">               
+                                    {{ item.cropCommodityName | titlecase }}
+                                    <span *ngIf="item.isPedigreeInd == true" >&nbsp; Pedigreed</span>
+                                </div>
+                    
+                                <div class="border-right border-bottom center" style="width: 160px;">               
+                                    {{ item.estimatedYieldPerAcreBushels | number: '1.0-1' }}
+                                </div>
+                    
+                                <div class="border-right border-bottom center"  style="width: 150px;">               
+                                    {{ item.estimatedYieldPerAcreTonnes | number: '1.0-3' }}
+                                </div>
+                            
+                                <div class="border-right border-bottom center"  style="width: 160px;">               
+                                    {{ getFlaggedTotalEstimatedYield (item.cropCommodityId, item.isPedigreeInd)  | number: '1.0-3'  }}
+
+                                    <mat-icon *ngIf="isFlaggedTotalEstimatedYield(item.cropCommodityId, item.isPedigreeInd)"
+                                        matTooltip="There is at least 10% discrepancy between Total Estimated Yield and Farm-level Yield" 
+                                        style="margin-right: 2px;" [ngStyle]="{'color':'orange'}">warning</mat-icon>
+
+                                </div>
 
                             </div>
 
                         </div>
-
                     </div>
 
                 </div>
 
-                <div class="grid-item">
+                <div>
                     <!-- commodity totals grid -->
-                    <p style="font-size: larger; font-weight: bold; margin-bottom: 10px;">Commodity Totals</p>
 
-                    <div *ngIf="dopYieldContract && dopYieldContract.dopYieldContractCommodities" class="cmdty-totals-container"> 
-                        <div class="border-right header justify-center border-top border-bottom border-left"> 
-                            Commodity
+                    <div class="plcy-inv-cmdty-totals-header" style="grid-template-columns: 100px 100px 120px 130px 130px 170px; padding-left: 10px;" > 
+
+                        <div class="table-header border-top border-left border-right" 
+                            style="grid-column-start: 1; grid-column-end: 7;">
+                            Commodity Totals
                         </div>
-                        <div class="border-right header justify-center border-top border-bottom">
-                            Insured<br />Acres
-                        </div>
-                        <div class="border-right header justify-center border-top border-bottom">
-                            Harvested<br />Acres 
-                        </div>
-                        <div class="border-right header justify-center border-top border-bottom">
-                            Quantity<br /> Stored 
-                        </div>
-                        <div class="border-right header justify-center border-top border-bottom">
-                            Quantity<br /> Sold 
-                        </div>
-                        <div class="border-right header justify-center border-top border-bottom">
-                            Grade
-                        </div>
+                        
+                        <div class="header border-top border-bottom border-left border-right"> Commodity </div>
+                        <div class="border-right header border-top border-bottom" matTooltip="Acres are rounded to the nearest tenth after the decimal point."> Insured Acres </div>
+                        <div class="border-right header border-top border-bottom" matTooltip="Acres are rounded to the nearest tenth after the decimal point."> Harvested Acres  </div>
+                        <div class="header border-top border-bottom border-left border-right"> Quantity Stored </div>
+
+                        <div class="header border-top border-bottom border-left border-right"> Quantity Sold </div>
+                        <div class="header border-top border-bottom border-left border-right"> Grade</div>
+                    </div>
+
+
+                    <div *ngIf="dopYieldContract && dopYieldContract.dopYieldContractCommodities" 
+                        class="grain-unsdd-inv-tot-cmdty-container"
+                        style="grid-template-columns: 100px 100px 120px 130px 130px 170px; margin-left: 0px; padding-left: 10px;"> 
+                       
                     
                         <div *ngFor="let cmdty of getViewModel().formGroup.controls.dopYieldContractCommodities['controls'];"
-                            [formGroup]="cmdty"        
-                            style="display:contents">
+                            [formGroup]="cmdty" 
+                            style="display:contents;">
 
-                            <div class="border-right border-bottom border-left" style="padding-left: 6px;" >               
+                            <div class="readonly border-right border-bottom border-left" style="padding-left: 6px;" >               
                                 {{ cmdty.value.cropCommodityName | titlecase }}
                                 <span *ngIf="cmdty.value.isPedigreeInd == true" >&nbsp; Pedigreed</span>
                             </div>
                 
-                            <div class="border-right border-bottom center">               
+                            <div class="readonly border-right border-bottom center">               
                                 {{ cmdty.value.totalInsuredAcres | number: '1.0-1' }}
                             </div>
                 
-                            <div class="field-tb-fill number border-left border-bottom" >
+                            <div class="fill border-left border-bottom">
                                 <mat-form-field appearance="fill">
-                                    <input matInput formControlName="harvestedAcres" 
+                                    <input matInput matInputCommified formControlName="harvestedAcres" 
                                             maxlength="10"
                                             (keypress)="numberOnly($event)" 
                                             (keyup)="isMyFormDirty()">
                                 </mat-form-field>
+                                <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Harvested Acres is writeable">edit</mat-icon>
                             </div>
 
-                            <div class="field-tb-fill number border-left border-bottom">
+                            <div class="fill number border-left border-bottom">
                                 <mat-form-field appearance="fill">
-                                    <input matInput formControlName="storedYield" 
+                                    <input matInput matInputCommified formControlName="storedYield" 
                                             maxlength="10"
                                             (keypress)="numberOnly($event)" 
                                             (keyup)="isMyFormDirty()"
                                             (blur)="roundUpCommodityTotalYield(cmdty, 'storedYield')">
                                 </mat-form-field>
+                                <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Stored Yield is writeable">edit</mat-icon>
                             </div>
 
-                            <div class="field-tb-fill number border-left border-bottom" >
+                            <div class="fill number border-left border-bottom">
                                 <mat-form-field appearance="fill">
-                                    <input matInput formControlName="soldYield" 
+                                    <input matInput matInputCommified formControlName="soldYield" 
                                             maxlength="10"
                                             (keypress)="numberOnly($event)" 
                                             (keyup)="isMyFormDirty()"
                                             (blur)="roundUpCommodityTotalYield(cmdty, 'soldYield')">
                                 </mat-form-field>
+                                <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Sold Yield is writeable">edit</mat-icon>
                             </div>
 
-                            <div class="field-tb-fill number border-left border-bottom  border-right">
+                            <div class="fill number border-left border-bottom  border-right">
                                     <mat-form-field appearance="fill">
                                         <input 
                                             type="text" 
@@ -355,41 +375,21 @@
                                         </mat-option>
                                         </mat-autocomplete>
                                     </mat-form-field>
+                                    <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Sold Yield is writeable">edit</mat-icon>
                             </div>                        
                         </div>
                     </div>
+
                 </div>
+
+                
             </div>
+
+
+
+
             
-            <br /><br />
 
-        </div>
-
-
-        <div class="button-row flex-y-fixed">
-                
-            <button mat-raised-button color="primary" class="button-large-text" (click)="onCancel()">
-                <mat-icon class="button-mat-icon">cancel_presentation</mat-icon>Cancel
-            </button>
-            
-            &nbsp;  
-            <span *ngIf="isThereAnyDopComment(); else noDopComments">
-                <button mat-raised-button color="primary" class="button-large-text" (click)="onLoadDopComments()">
-                    <mat-icon class="button-mat-icon">chat_bubble</mat-icon>DOP Comments
-                </button>
-            </span>
-            <ng-template #noDopComments>
-                <button mat-raised-button color="primary" class="button-large-text" (click)="onLoadDopComments()">
-                    <mat-icon class="button-mat-icon">chat_bubble_outline</mat-icon>DOP Comments
-                </button>
-            </ng-template>
-
-            &nbsp;  
-            <button *ngIf="securityUtilService.canDeleteDop() && dopYieldContract && dopYieldContract.declaredYieldContractGuid" mat-raised-button color="warn" class="button-large-text button-right" (click)="onDeleteDop()">
-                <mat-icon class="button-mat-icon">delete</mat-icon>Delete DOP
-            </button>
-
-                
         </div>
 
         </form>

@@ -29,7 +29,8 @@
 		
 		<result property="commodityTypeDescription" column="commodity_type_description" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="totalFieldAcres" column="total_field_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
-		
+		<result property="plantDurationTypeCode" column="plant_duration_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+
 	</resultMap>
 	
 	
@@ -185,7 +186,8 @@
 	
 	<select id="selectForDeclaredYield" resultMap="InventorySeededForageDtoMap">
 		<include refid="selectColumns"/>
-			, ctc.description AS commodity_type_description 
+			, ctc.description AS commodity_type_description
+			, cc.plant_duration_type_code 
 		from inventory_seeded_forage isf
 		left join crop_variety cv on cv.crop_variety_id = isf.crop_variety_id
 		left join crop_commodity cc on cc.crop_commodity_id = isf.crop_commodity_id

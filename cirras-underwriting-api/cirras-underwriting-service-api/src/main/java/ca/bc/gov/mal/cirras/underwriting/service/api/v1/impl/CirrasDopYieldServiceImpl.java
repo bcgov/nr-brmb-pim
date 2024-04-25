@@ -1035,10 +1035,22 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		if (dto == null) {
 			throw new NotFoundException("Did not find the dop yield contract: " + declaredYieldContractGuid);
 		}
+		
+		if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
+			
+			declaredYieldFieldDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
+			declaredYieldFieldRollupDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
+			declaredYieldContractCommodityDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
 
-		declaredYieldFieldDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
-		declaredYieldFieldRollupDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
-		declaredYieldContractCommodityDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
+		} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
+
+			declaredYieldFieldForageDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
+			declaredYieldContractCommodityForageDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
+			
+		} else {
+			throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
+		}
+
 		underwritingCommentDao.deleteForDeclaredYieldContractGuid(declaredYieldContractGuid);
 		declaredYieldContractDao.delete(declaredYieldContractGuid);
 	}

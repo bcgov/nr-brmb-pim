@@ -63,7 +63,8 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		Scopes.GET_LAND,
 		Scopes.GET_LEGAL_LAND,
 		Scopes.CREATE_DOP_YIELD_CONTRACT,
-		Scopes.GET_DOP_YIELD_CONTRACT
+		Scopes.GET_DOP_YIELD_CONTRACT,
+		Scopes.DELETE_DOP_YIELD_CONTRACT
 	};
 	
 	private Integer growerId1 = 90000001;
@@ -119,6 +120,13 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		
 		if ( searchResults.getCollection() != null && searchResults.getCollection().size() == 1 ) {
 			UwContractRsrc referrer = searchResults.getCollection().get(0);
+
+			if ( referrer.getDeclaredYieldContractGuid() != null ) {
+				DopYieldContractRsrc dyc = service.getDopYieldContract(referrer);
+				if ( dyc != null ) {
+					service.deleteDopYieldContract(dyc);
+				}
+			}
 			
 			if ( referrer.getInventoryContractGuid() != null ) { 
 				InventoryContractRsrc invContract = service.getInventoryContract(referrer);
@@ -386,11 +394,17 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 					'dyff-123443-1', (SELECT inv.inventory_field_guid FROM inventory_field inv WHERE inv.field_id = 1034218 AND inv.crop_year = 2024),
 					1, 10, 15.0, 1.5, 20.0, 'admin', now(), 'admin', now());
 		
+		--Insert dop comment		
+			INSERT INTO cuws.underwriting_comment(
+				underwriting_comment_guid, underwriting_comment_type_code, underwriting_comment, annual_field_detail_id, grower_contract_year_id, declared_yield_contract_guid,
+				create_user, create_date, update_user, update_date)
+				VALUES ('uc145-2024', 'DOP', 'underwriting comment', null, 99844, 'dyc1aa456789-2024', 'admin', now(), 'admin', now());
 		  
 		  
 		select * from declared_yield_contract where declared_yield_contract_guid = 'dyc1aa456789-2024'
 		select * from declared_yield_contract_cmdty_forage where declared_yield_contract_guid = 'dyc1aa456789-2024';
 		select * from declared_yield_field_forage where inventory_field_guid = (SELECT inv.inventory_field_guid FROM inventory_field inv WHERE inv.field_id = 1034218 AND inv.crop_year = 2024)
+		select * from underwriting_comment where underwriting_comment_guid = 'uc145-2024'
 		
 		*/
 		
@@ -470,6 +484,8 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 				Assert.assertEquals("IsQuantityInsurableInd", true, dopYieldFieldForage.getIsQuantityInsurableInd());
 				Assert.assertEquals("FieldAcres", 125.0, dopYieldFieldForage.getFieldAcres().doubleValue(), 0.1);
 				Assert.assertEquals("CropVarietyName", "ALFALFA", dopYieldFieldForage.getCropVarietyName());
+				Assert.assertEquals("CropVarietyId", 119, dopYieldFieldForage.getCropVarietyId().intValue());
+				Assert.assertEquals("CropVarietyName", "PERENNIAL", dopYieldFieldForage.getPlantDurationTypeCode());
 				
 				Assert.assertEquals(1, dopYieldFieldForage.getDopYieldFieldForageCuts().size());
 				DopYieldFieldForageCut cut = dopYieldFieldForage.getDopYieldFieldForageCuts().get(0);
@@ -488,15 +504,39 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		
 		
 		/* *********************************************************
-		  delete data
+		  delete data - NOT NECESSARY ANYMORE
 
 	    delete from declared_yield_contract_cmdty_forage where declared_yield_contract_guid = 'dyc1aa456789-2024';
 		delete from declared_yield_contract where declared_yield_contract_guid = 'dyc1aa456789-2024';
 		delete from declared_yield_field_forage where inventory_field_guid = (SELECT inv.inventory_field_guid FROM inventory_field inv WHERE inv.field_id = 1034218 AND inv.crop_year = 2024);
-		
+		delete from underwriting_comment where underwriting_comment_guid = 'uc145-2024'
+
 		*/
+
+		//Delete DOP
+		service.deleteDopYieldContract(dopYldContract);
 		
-		//delete();
+		searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				tempPolicyNumber,//policyNumber1,
+				null,
+				null, 
+				null, 
+				null, 
+				1, 20);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		referrer = searchResults.getCollection().get(0);
+		//Assert.assertEquals(inventoryContractGuid1, referrer.getInventoryContractGuid());
+		Assert.assertNull(referrer.getDeclaredYieldContractGuid());
+
+		delete();
 		
 		logger.debug(">testInsertUpdateDeleteDopYieldForageContract");
 

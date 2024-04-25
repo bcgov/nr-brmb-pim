@@ -26,7 +26,6 @@ export interface YieldMeasUnitTypeCode {
 export interface DopYieldContract {
     links?: Array<RelLink>;
     declaredYieldContractGuid?: string;
-    growerContractYearId?: number;
     contractId?: number;
     cropYear?: number;
     declarationOfProductionDate?: string;
@@ -35,34 +34,19 @@ export interface DopYieldContract {
     enteredYieldMeasUnitTypeCode?: string;
     defaultYieldMeasUnitTypeCode?: string;
     grainFromOtherSourceInd?: boolean;
+    balerWagonInfo?: string;
+    totalLivestock?: number;
     insurancePlanId?: number;
+    growerContractYearId?: number;
     fields?: Array<AnnualField>;
+    uwComments?: Array<UnderwritingComment>;
     dopYieldFieldRollupList?: Array<DopYieldFieldRollup>;
     dopYieldContractCommodities?: Array<DopYieldContractCommodity>;
-    uwComments?: Array<UnderwritingComment>;
+    dopYieldContractCommodityForageList?: Array<DopYieldContractCommodityForage>;
     etag?: string;
     type: string;
   }
 
-
-  export interface DopYieldField {
-    declaredYieldFieldGuid?: string;
-    inventoryFieldGuid?: string;
-    estimatedYieldPerAcre?: number;
-    estimatedYieldPerAcreDefaultUnit?: number;
-    unharvestedAcresInd?: boolean;
-    inventorySeededGrainGuid?: string;
-    cropCommodityId?: number;
-    cropCommodityName?: string;
-    cropVarietyId?: number;
-    cropVarietyName?: string;
-    isPedigreeInd?: boolean;
-    seededDate?: string;
-    seededAcres?: number;
-    insurancePlanId?: number;
-    fieldId?: number;
-    cropYear?: number;
-}
 
 export interface DopYieldFieldRollup {
     declaredYieldFieldRollupGuid?: string;
@@ -108,4 +92,59 @@ export interface GradeModifier {
     insurancePlanId?: number;
     etag?: string;
     type: string;
+}
+
+export interface DopYieldFieldGrain {
+    declaredYieldFieldGuid?: string;
+    inventoryFieldGuid?: string;
+    estimatedYieldPerAcre?: number;
+    estimatedYieldPerAcreDefaultUnit?: number;
+    unharvestedAcresInd?: boolean;
+    inventorySeededGrainGuid?: string;
+    cropCommodityId?: number;
+    cropCommodityName?: string;
+    cropVarietyId?: number;
+    cropVarietyName?: string;
+    isPedigreeInd?: boolean;
+    seededDate?: string;
+    seededAcres?: number;
+    insurancePlanId?: number;
+    fieldId?: number;
+    cropYear?: number;
+}
+
+export interface DopYieldFieldForage {
+    inventoryFieldGuid?: string;
+    commodityTypeCode?: string;
+    commodityTypeDescription?: string;
+    isQuantityInsurableInd?: boolean;
+    fieldAcres?: number;
+    cropVarietyName?: string;
+    insurancePlanId?: number;
+    fieldId?: number;
+    cropYear?: number;
+    dopYieldFieldForageCuts?: Array<DopYieldFieldForageCut>;
+}
+
+export interface DopYieldFieldForageCut {
+    declaredYieldFieldForageGuid?: string;
+    inventoryFieldGuid?: string;
+    cutNumber?: number;
+    totalBalesLoads?: number;
+    weight?: number;
+    weightDefaultUnit?: number;
+    moisturePercent?: number;
+}
+
+export interface DopYieldContractCommodityForage {
+    declaredYieldContractCmdtyForageGuid?: string;
+    declaredYieldContractGuid?: string;
+    commodityTypeCode?: string;
+    totalFieldAcres?: number;
+    harvestedAcres?: number;
+    harvestedAcresOverride?: number;
+    quantityHarvestedTons?: number;
+    quantityHarvestedTonsOverride?: number;
+    yieldPerAcre?: number;
+    commodityTypeDescription?: string;
 }

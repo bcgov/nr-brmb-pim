@@ -88,6 +88,20 @@
 	<delete id="delete">
 		delete from declared_yield_field_forage where declared_yield_field_forage_guid = #{declaredYieldFieldForageGuid}
 	</delete>
+
+	<delete id="deleteForDeclaredYieldContract">
+		delete from declared_yield_field_forage t
+		where t.inventory_field_guid in (select invf.inventory_field_guid
+		 								 from declared_yield_contract dyc
+										 join grower_contract_year gcy on gcy.contract_id = dyc.contract_id and gcy.crop_year = dyc.crop_year
+										 join contracted_field_detail cfd on cfd.grower_contract_year_id = gcy.grower_contract_year_id
+										 join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+										 join inventory_field invf on invf.field_id = afd.field_id 
+					         						              and invf.crop_year = afd.crop_year 
+					                 						      and invf.insurance_plan_id = gcy.insurance_plan_id
+										 where dyc.declared_yield_contract_guid = #{declaredYieldContractGuid}
+										)
+	</delete>
 	
 	<select id="getByInventoryField" resultMap="DeclaredYieldFieldForageDtoMap">
 		<include refid="selectColumns"/>

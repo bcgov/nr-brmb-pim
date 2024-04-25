@@ -18,6 +18,8 @@ public class DopYieldFieldForage implements Serializable {
 	private Boolean isQuantityInsurableInd;
 	private Double fieldAcres;
 	private String cropVarietyName;
+	private Integer cropVarietyId;
+	private String plantDurationTypeCode;
 
 	// INVENTORY_FIELD
 	private Integer insurancePlanId;
@@ -73,6 +75,22 @@ public class DopYieldFieldForage implements Serializable {
 
 	public void setCropVarietyName(String cropVarietyName) {
 		this.cropVarietyName = cropVarietyName;
+	}
+
+	public Integer getCropVarietyId() {
+		return this.cropVarietyId;
+	};
+
+	public void setCropVarietyId(Integer cropVarietyId) {
+		this.cropVarietyId = cropVarietyId;
+	};
+
+	public String getPlantDurationTypeCode() {
+		return plantDurationTypeCode;
+	}
+
+	public void setPlantDurationTypeCode(String plantDurationTypeCode) {
+		this.plantDurationTypeCode = plantDurationTypeCode;
 	}
 
 	public Integer getInsurancePlanId() {

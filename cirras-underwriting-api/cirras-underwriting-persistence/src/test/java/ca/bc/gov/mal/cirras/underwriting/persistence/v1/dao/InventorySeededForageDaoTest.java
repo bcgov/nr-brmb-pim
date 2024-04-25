@@ -426,6 +426,15 @@ public class InventorySeededForageDaoTest {
 				List<InventorySeededForageDto> isfDtos = isfDao.selectForDeclaredYield(invDto.getInventoryFieldGuid());
 				Assert.assertNotNull(isfDtos);
 				Assert.assertEquals("total records", 1, isfDtos.size()); //Expect 1 record for each inventory field record
+				InventorySeededForageDto isfDto = isfDtos.get(0);
+				if(isfDto.getCropVarietyId().equals(varietyIdAlfalafaGrass)) {
+					Assert.assertEquals(isfDto.getPlantDurationTypeCode(), "PERENNIAL");
+				} else if(isfDto.getCropVarietyId().equals(varietyIdSilageCorn)) {
+					Assert.assertEquals(isfDto.getPlantDurationTypeCode(), "ANNUAL");
+				} else {
+					Assert.fail("Unexpected variety Id: " + isfDto.getCropVarietyId());
+				}
+
 			}
 		}
 		

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, SimpleChanges, } from '@angular/core';
 import { ParamMap } from '@angular/router';
 import { UwContract } from 'src/app/conversion/models';
-import {  DopYieldContract, DopYieldField, GradeModifierList, YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
+import {  DopYieldContract, DopYieldFieldGrain, GradeModifierList, YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
 import { 
   AddNewDopYieldContract, 
   ClearDopYieldContract, 
@@ -22,18 +22,16 @@ import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { FieldUwComment, UnderwritingCommentsComponent } from '../../underwriting-comments/underwriting-comments.component';
 import { UW_COMMENT_TYPE_CODE } from 'src/app/utils/constants';
-
-export interface GradeModifierOptionsType {
-  cropCommodityId: string;
-  gradeModifierTypeCode: string;
-  description: string;
-}
+import {ViewEncapsulation } from '@angular/core';
+import { GradeModifierOptionsType } from '../dop-common';
+import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 
 @Component({
   selector: 'grain-dop',
   templateUrl: './grain-dop.component.html',
   styleUrls: ['./grain-dop.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 
 export class GrainDopComponent extends BaseComponent{
@@ -95,7 +93,7 @@ export class GrainDopComponent extends BaseComponent{
             this.store.dispatch(RolloverDopYieldContract(this.componentId, this.policyId))
           }
 
-          this.getGradeModifiers()
+          this.getGradeModifiers(this.gradeModifierList)
       }
     );
 
@@ -123,7 +121,7 @@ export class GrainDopComponent extends BaseComponent{
 
       if (this.dopYieldContract.enteredYieldMeasUnitTypeCode) {
 
-        this.viewModel.formGroup.controls.yieldMeasUnitTypeCode.setValue(this.dopYieldContract.enteredYieldMeasUnitTypeCode )
+        this.viewModel.formGroup.controls.yieldMeasUnitTypeCode.setValue( this.dopYieldContract.enteredYieldMeasUnitTypeCode )
 
       } else {
 
@@ -234,11 +232,11 @@ export class GrainDopComponent extends BaseComponent{
 
       let field = this.dopYieldContract.fields[i]
 
-      if (field.dopYieldFields.length > 0 ) {
+      if (field.dopYieldFieldGrainList.length > 0 ) {
 
-        for (let j = 0; j < field.dopYieldFields.length; j++) {
+        for (let j = 0; j < field.dopYieldFieldGrainList.length; j++) {
 
-          let dopField = field.dopYieldFields[j]
+          let dopField = field.dopYieldFieldGrainList[j]
 
           if(dopField.cropCommodityId == cropCommodityId && dopField.isPedigreeInd == isPedigree && 
             dopField.estimatedYieldPerAcre != null && dopField.seededAcres){
@@ -348,7 +346,7 @@ export class GrainDopComponent extends BaseComponent{
     if(formFields) {
       let formField =  formFields.controls.find( f => f.value.fieldId == dopYieldField.value.fieldId )
         if(formField) {
-          let formDopYieldField = formField.value.dopYieldFields.controls[dopYieldFieldIndex].controls
+          let formDopYieldField = formField.value.dopYieldFieldGrainList.controls[dopYieldFieldIndex].controls
           if(formDopYieldField) {
             let acres = formDopYieldField.estimatedYieldPerAcre.value
             formDopYieldField.estimatedYieldPerAcre.setValue(this.roundUpDecimals(acres))
@@ -365,8 +363,8 @@ export class GrainDopComponent extends BaseComponent{
         let formField = formFields.controls[i]
         if(formField) {
 
-          for (let i = 0; i < formField.value.dopYieldFields.controls.length; i++) {
-            let formDopYieldField = formField.value.dopYieldFields.controls[i].controls
+          for (let i = 0; i < formField.value.dopYieldFieldGrainList.controls.length; i++) {
+            let formDopYieldField = formField.value.dopYieldFieldGrainList.controls[i].controls
             if(formDopYieldField) {
               let estYield = formDopYieldField.estimatedYieldPerAcre.value
               formDopYieldField.estimatedYieldPerAcre.setValue(this.roundUpDecimals(estYield))
@@ -422,13 +420,13 @@ export class GrainDopComponent extends BaseComponent{
 
     var self = this
 
-    if (field.dopYieldFields.length > 0 ) {
+    if (field.dopYieldFieldGrainList.length > 0 ) {
 
-      field.dopYieldFields.forEach( function(dopField) {
+      field.dopYieldFieldGrainList.forEach( function(dopField) {
 
         // add dopYieldField to the form
         frmDopYieldFields.push( self.fb.group( 
-          self.addDopYieldFieldObject(dopField) 
+          self.addDopYieldFieldGrainObject(dopField) 
         ) )
       }
 
@@ -455,7 +453,7 @@ export class GrainDopComponent extends BaseComponent{
       fieldId:               [ field.fieldId ],
       fieldLabel:            [ field.fieldLabel ],
       otherLegalDescription: [ field.otherLegalDescription ],
-      dopYieldFields:        [ frmDopYieldFields ],
+      dopYieldFieldGrainList:        [ frmDopYieldFields ],
       uwComments:            [ fldComments ],
     } ) )
 
@@ -513,7 +511,7 @@ export class GrainDopComponent extends BaseComponent{
     ) )
   }
 
-  addDopYieldFieldObject(dopYieldField: DopYieldField) {
+  addDopYieldFieldGrainObject(dopYieldField: DopYieldFieldGrain) {
 
     return {
         declaredYieldFieldGuid:           [ dopYieldField.declaredYieldFieldGuid ],
@@ -542,10 +540,12 @@ export class GrainDopComponent extends BaseComponent{
     if(formFields) {
       let formField =  formFields.controls.find( f => f.value.fieldId == dopYieldField.value.fieldId )
         if(formField) {
-          let formDopYieldField = formField.value.dopYieldFields.controls[dopYieldFieldIndex].controls
+          let formDopYieldField = formField.value.dopYieldFieldGrainList.controls[dopYieldFieldIndex].controls
           if(formDopYieldField) {
             formDopYieldField.estimatedYieldPerAcre.setValue(null)
             formDopYieldField.unharvestedAcresInd.setValue(false)
+
+            this.isMyFormDirty()
           }
         }
     }
@@ -583,10 +583,10 @@ export class GrainDopComponent extends BaseComponent{
 
       if (originalField) {
 
-        for (let k = 0; k < formField.value.dopYieldFields.controls.length; k++) {
-          let formDopYieldField = formField.value.dopYieldFields.controls[k] as FormArray
+        for (let k = 0; k < formField.value.dopYieldFieldGrainList.controls.length; k++) {
+          let formDopYieldField = formField.value.dopYieldFieldGrainList.controls[k] as FormArray
   
-          let originalDopYieldField = originalField.dopYieldFields.find( elem => elem.inventorySeededGrainGuid == formDopYieldField.value.inventorySeededGrainGuid) 
+          let originalDopYieldField = originalField.dopYieldFieldGrainList.find( elem => elem.inventorySeededGrainGuid == formDopYieldField.value.inventorySeededGrainGuid) 
 
           if (originalDopYieldField) {
 
@@ -683,30 +683,6 @@ export class GrainDopComponent extends BaseComponent{
 
   numberOnly(event): boolean {
     return makeNumberOnly(event)
-  }
-
-  getGradeModifiers(){
-
-    let url = this.appConfigService.getConfig().rest["cirras_underwriting"]
-    url = url +"/gradeModifiers?cropYear=" + this.cropYear
-    url = url +"&insurancePlanId=" +  this.insurancePlanId.toString()
-    
-    const httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
-
-    var self = this
-    return this.http.get(url,httpOptions).toPromise().then((data: GradeModifierList) => {
-
-      self.gradeModifierList = []
-      // construct the grade modifiers options 
-      for (let i=0; i< data.collection.length; i++ ) {
-        self.gradeModifierList.push({
-            cropCommodityId: data.collection[i].cropCommodityId.toString(),
-            gradeModifierTypeCode: data.collection[i].gradeModifierTypeCode,
-            description: data.collection[i].description
-        })
-      }
-    })
-
   }
 
   // grade modifier search
@@ -817,16 +793,16 @@ export class GrainDopComponent extends BaseComponent{
 
         updField.uwComments = formField.value.uwComments 
 
-        for (let i = 0; i < formField.value.dopYieldFields.length; i++) {
+        for (let i = 0; i < formField.value.dopYieldFieldGrainList.length; i++) {
 
           // this doesn't work when saving for the first time because the declaredYieldFieldGuid is null
-          // let updDopYieldField = updField.dopYieldFields.find( elem => (elem.declaredYieldFieldGuid == formField.value.dopYieldFields.value[i].declaredYieldFieldGuid) )
-          let updDopYieldField = updField.dopYieldFields.find( elem => (elem.inventoryFieldGuid == formField.value.dopYieldFields.value[i].inventoryFieldGuid) )
+          // let updDopYieldField = updField.dopYieldFieldGrainList.find( elem => (elem.declaredYieldFieldGuid == formField.value.dopYieldFieldGrainList.value[i].declaredYieldFieldGuid) )
+          let updDopYieldField = updField.dopYieldFieldGrainList.find( elem => (elem.inventoryFieldGuid == formField.value.dopYieldFieldGrainList.value[i].inventoryFieldGuid) )
 
           if (updDopYieldField){
 
-            updDopYieldField.estimatedYieldPerAcre = formField.value.dopYieldFields.value[i].estimatedYieldPerAcre
-            updDopYieldField.unharvestedAcresInd = formField.value.dopYieldFields.value[i].unharvestedAcresInd
+            updDopYieldField.estimatedYieldPerAcre = formField.value.dopYieldFieldGrainList.value[i].estimatedYieldPerAcre
+            updDopYieldField.unharvestedAcresInd = formField.value.dopYieldFieldGrainList.value[i].unharvestedAcresInd
 
           }
         }
@@ -886,13 +862,17 @@ export class GrainDopComponent extends BaseComponent{
 
   onCancel() {
 
-    // reload the page
-    this.loadPage()
+    if ( confirm("Are you sure you want to clear all unsaved changes on the screen? There is no way to undo this action.") ) {
+      // reload the page
+      this.loadPage()
+      
+      this.hasDataChanged = false   
+      this.showEstimatedYieldMessage = false
 
-    this.hasDataChanged = false   
-    this.showEstimatedYieldMessage = false
+      this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, false ));
 
-    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, false ));
+      displaySuccessSnackbar(this.snackbarService, "Unsaved changes have been cleared successfully.")
+    }
   }
 
   onPrint() {
@@ -1028,5 +1008,46 @@ export class GrainDopComponent extends BaseComponent{
   getInsPlanName(insurancePlanId){
 
     return getInsurancePlanName(insurancePlanId)
+  }
+
+  setFormStyles(){
+    return {
+      'grid-template-columns':  'auto 148px 110px 186px 146px 12px 155px'
+    }
+  }
+
+  setPlantingStyles(){
+
+    let styles = {
+      'display': 'grid',
+      'grid-template-columns': '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+      'align-items': 'stretch',
+      'width': '830px'
+    }
+
+    return styles;
+  }
+
+  getGradeModifiers(gradeModifierList: GradeModifierOptionsType[]){
+
+    let url = this.appConfigService.getConfig().rest["cirras_underwriting"]
+    url = url +"/gradeModifiers?cropYear=" + this.cropYear
+    url = url +"&insurancePlanId=" +  this.insurancePlanId.toString()
+    
+    const httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
+   
+    return this.http.get(url,httpOptions).toPromise().then((data: GradeModifierList) => {
+
+      gradeModifierList = []
+      // construct the grade modifiers options 
+      for (let i=0; i< data.collection.length; i++ ) {
+        gradeModifierList.push({
+            cropCommodityId: data.collection[i].cropCommodityId.toString(),
+            gradeModifierTypeCode: data.collection[i].gradeModifierTypeCode,
+            description: data.collection[i].description
+        })
+      }
+    })
+
   }
 }
