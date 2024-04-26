@@ -13,7 +13,9 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT  &&\
   adduser --system tomcat &&\
   chown -R tomcat:0 `readlink -f ${CATALINA_HOME}` &&\
   chmod -R 777 `readlink -f ${CATALINA_HOME}` &&\
-  chown -h tomcat:0 ${CATALINA_HOME}
+  chown -h tomcat:0 ${CATALINA_HOME} &&\
+  mv /etc/localtime /etc/localtime-old &&\
+  ln -s /usr/share/zoneinfo/America/Vancouver /etc/localtime 
 
 USER tomcat
 
