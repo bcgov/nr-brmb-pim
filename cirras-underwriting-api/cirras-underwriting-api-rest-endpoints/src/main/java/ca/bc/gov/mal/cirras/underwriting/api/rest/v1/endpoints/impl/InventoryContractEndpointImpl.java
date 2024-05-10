@@ -47,8 +47,8 @@ public class InventoryContractEndpointImpl extends BaseEndpointsImpl implements 
 					inventoryContractGuid,
 					getFactoryContext(), 
 					getWebAdeAuthentication());
-			logger.debug("<getInventoryContract Unquoted etag is:   " + result.getUnquotedETag());
 			response = Response.ok(result).tag(result.getUnquotedETag()).build();
+			logger.debug("response is: " + response.toString());
 
 		} catch (NotFoundException e) {
 			response = Response.status(Status.NOT_FOUND).build();
