@@ -10,8 +10,6 @@ ENV TOMCAT_HOME=/usr/local/tomcat \
 
 RUN rm -rf /usr/local/tomcat/webapps/ROOT  &&\
   mkdir /usr/local/tomcat/webapps/cirras-underwriting-api#v1 &&\
-  apt-get update &&\
-  apt-get install -y unzip &&\
   unzip -d /usr/local/tomcat/webapps/cirras-underwriting-api#v1/ '*.war' &&\
   cp ./deploy-tools/context.xml /usr/local/tomcat/webapps/cirras-underwriting-api#v1/META-INF/context.xml &&\
   cp ./deploy-tools/setenv.sh /usr/local/tomcat/bin/setenv.sh &&\
