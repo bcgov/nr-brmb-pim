@@ -24,6 +24,7 @@ on:
 
 env:
   DIRECTORY_SUFFIX: ${{ contains(inputs.MICROSERVICE_NAME, '-api') && '-rest-endpoints' || '' }}
+  NPMRC: ${{ secrets.NPMRC }}
 
 jobs:
   build:
@@ -50,7 +51,7 @@ jobs:
 
         #NOTE: necessary to build client-war 
       - name: Add .npmrc file
-        run: echo -e '${{ secrets.NPMRC }}' > ~/.npmrc
+        run: echo -e $NPMRC > ~/.npmrc
 
       - name: download files from other jobs
         if: ${{ inputs.DOWNLOAD_FILE }}

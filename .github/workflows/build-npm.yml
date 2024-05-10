@@ -1,5 +1,8 @@
 name: build npm-lib
 
+env:
+  NPMRC: ${{ secrets.NPMRC }}
+
 on:
   workflow_call:
     inputs:
@@ -45,7 +48,7 @@ jobs:
 
       #NOTE: necessary to build client-war 
       - name: Add .npmrc file
-        run: echo -e '${{ secrets.NPMRC }}' > ~/.npmrc
+        run: echo -e $NPMRC > ~/.npmrc
 
       - name: download files from other jobs
         if: ${{ inputs.DOWNLOAD_FILE }}
