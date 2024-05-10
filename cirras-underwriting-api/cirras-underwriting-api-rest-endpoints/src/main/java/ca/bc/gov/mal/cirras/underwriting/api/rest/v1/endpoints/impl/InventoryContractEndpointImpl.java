@@ -47,6 +47,7 @@ public class InventoryContractEndpointImpl extends BaseEndpointsImpl implements 
 					inventoryContractGuid,
 					getFactoryContext(), 
 					getWebAdeAuthentication());
+			logger.debug("<getInventoryContract Unquoted etag is:   " + result.getUnquotedETag());
 			response = Response.ok(result).tag(result.getUnquotedETag()).build();
 
 		} catch (NotFoundException e) {
@@ -80,6 +81,7 @@ public class InventoryContractEndpointImpl extends BaseEndpointsImpl implements 
 					getFactoryContext(), 
 					getWebAdeAuthentication());
 
+			logger.debug("<updateInventoryContract Quoted etag is:   " + currentInventoryContract.getQuotedETag());
 			EntityTag currentTag = EntityTag.valueOf(currentInventoryContract.getQuotedETag());
 
 			ResponseBuilder responseBuilder = this.evaluatePreconditions(currentTag);
