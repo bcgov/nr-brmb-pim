@@ -1,4 +1,4 @@
-FROM tomcat:8.5-jdk8
+FROM tomcat:8.5.20-jre8
 
 COPY ./cirras-underwriting-api-rest-endpoints/target/cirras-underwriting-api-rest-endpoints-3.2.0-SNAPSHOT.war .
 COPY ./deploy-tools ./deploy-tools

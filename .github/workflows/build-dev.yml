@@ -13,13 +13,6 @@ jobs:
       EXPORT_FILE: CIRRAS_UNDERWRITING_API_swagger.json
       EXPORT_PATH: cirras-underwriting-api/cirras-underwriting-api-rest-endpoints/target/swagger.json
 
-  build-underwriting-listener-api:
-    uses: ./.github/workflows/build-package.yml
-    secrets: inherit
-    with:
-      ENVIRONMENT: DEV
-      MICROSERVICE_NAME: cirras-underwriting-listener-api
-
   build-and-upload-npm-modules:
     uses: ./.github/workflows/build-npm.yml
     secrets: inherit
