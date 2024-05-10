@@ -4,7 +4,8 @@ COPY ./cirras-underwriting-war/target/cirras-underwriting-war-3.2.0-SNAPSHOT.war
 COPY ./cirras-underwriting-war/src/main/resources/log4j2.xml .
 
 ENV TOMCAT_HOME=/usr/local/tomcat \
-  CATALINA_HOME=/usr/local/tomcat
+  CATALINA_HOME=/usr/local/tomcat \
+  CATALINA_OPTS='-Xmx400m -Xms200m -server'
 
 RUN rm -rf /usr/local/tomcat/webapps/ROOT  &&\
   mkdir /usr/local/tomcat/webapps/pub#cirras-underwriting &&\

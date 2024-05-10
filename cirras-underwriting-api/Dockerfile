@@ -6,7 +6,8 @@ COPY ./deploy-tools ./deploy-tools
 RUN ls
 
 ENV TOMCAT_HOME=/usr/local/tomcat \
-  CATALINA_HOME=/usr/local/tomcat
+  CATALINA_HOME=/usr/local/tomcat \
+  CATALINA_OPTS='-Xmx400m -Xms200m -server'
 
 RUN rm -rf /usr/local/tomcat/webapps/ROOT  &&\
   mkdir /usr/local/tomcat/webapps/cirras-underwriting-api#v1 &&\
