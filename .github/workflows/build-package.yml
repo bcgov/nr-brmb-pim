@@ -129,7 +129,6 @@ jobs:
           COMPRESSION_MIN_SIZE: ${{ vars.COMPRESSION_MIN_SIZE }}
           NO_COMPRESSION_USER_AGENTS: ${{ vars.NO_COMPRESSION_USER_AGENTS }}
           COMPRESSION_MIME_TYPES: ${{ vars.COMPRESSION_MIME_TYPES }}
-          MAX_POST_SIZE: ${{ vars.MAX_POST_SIZE }}
 
 
       - name: Build and push

@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Server port="{{ tomcat_shutdown_port }}" shutdown="SHUTDOWN">
+<Server port="-1" shutdown="SHUTDOWN">
   <!-- TODO: are these worth parameterizing? -->
-  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
-  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
   <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
 
   <GlobalNamingResources>
   </GlobalNamingResources>
 
   <Service name="Catalina">
-    <Connector port="#{HTTPS_PORT}#"
+    <Connector port="#{TOMCAT_PORT}#"
       protocol="org.apache.coyote.http11.Http11NioProtocol"
       maxThreads="#{MAX_THREADS}#"
         connectionTimeout="#{CONNECTION_TIMEOUT}#"
@@ -20,7 +19,6 @@
         compressionMinSize="#{COMPRESSION_MIN_SIZE}#"
         noCompressionUserAgents="#{NO_COMPRESSION_USER_AGENTS}#"
         compressibleMimeType="#{COMPRESSION_MIME_TYPES}#"
-        maxPostSize="#{MAX_POST_SIZE}#"
       SSLEnabled="true"
       scheme="https"
       secure="true"
