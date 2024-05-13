@@ -2,6 +2,7 @@ FROM tomcat:9.0.86-jre8
 
 COPY ./cirras-underwriting-war/target/cirras-underwriting-war-3.2.0-SNAPSHOT.war .
 COPY ./cirras-underwriting-war/src/main/resources/log4j2.xml .
+COPY ./deploy-tools/server.xml .
 
 ENV TOMCAT_HOME=/usr/local/tomcat \
   CATALINA_HOME=/usr/local/tomcat \
@@ -11,6 +12,7 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT  &&\
   mkdir /usr/local/tomcat/webapps/pub#cirras-underwriting &&\
   apt-get update && apt-get install -y unzip &&\
   unzip -d /usr/local/tomcat/webapps/pub#cirras-underwriting/ '*.war' &&\
+  cp ./server.xml /usr/local/tomcat/conf/server.xml &&\
   cp ./log4j2.xml /usr/local/tomcat/webapps/pub#cirras-underwriting/WEB-INF/classes/log4j2.xml &&\
   adduser --system tomcat &&\
   chown -R tomcat:0 `readlink -f ${CATALINA_HOME}` &&\

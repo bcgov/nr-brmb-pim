@@ -15,6 +15,7 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT  &&\
   unzip -d /usr/local/tomcat/webapps/cirras-underwriting-api#v1/ '*.war' &&\
   cp ./deploy-tools/context.xml /usr/local/tomcat/webapps/cirras-underwriting-api#v1/META-INF/context.xml &&\
   cp ./deploy-tools/setenv.sh /usr/local/tomcat/bin/setenv.sh &&\
+  cp ./deploy-tools/server.xml /usr/local/tomcat/conf/server.xml &&\
   adduser --system tomcat &&\
   chown -R tomcat:0 `readlink -f ${CATALINA_HOME}` &&\
   chmod -R 770 `readlink -f ${CATALINA_HOME}` &&\

@@ -21,6 +21,14 @@ on:
       DOWNLOAD_PATH:
         required: false
         type: string
+      TOMCAT_PORT:
+        required: false
+        type: string
+        default: "8080"
+      TOMCAT_MAX_THREADS:
+        required: false
+        type: string
+        default: "150"
 
 env:
   DIRECTORY_SUFFIX: ${{ contains(inputs.MICROSERVICE_NAME, '-api') && '-rest-endpoints' || '' }}
@@ -109,6 +117,20 @@ jobs:
             type=ref,event=tag
             type=raw,value=${{ steps.getVersion.outputs.VERSION_NUMBER }}
             ${{ toJson(github.event.pull_request.number) == '{}' && format( 'type=raw,value=pr-{0}', github.event.pull_request.number) || '' }} 
+
+      - name: Configure server.xml
+        uses: cschleiden/replace-tokens@v1.2
+        with:
+          files: ${{ inputs.MICROSERVICE_NAME }}/deploy-tools/server.xml
+        env:
+          TOMCAT_PORT: ${{ inputs.TOMCAT_PORT }}
+          MAX_THREADS: ${{ inputs.TOMCAT_MAX_THREADS }}
+          CONNECTION_TIMEOUT: ${{ vars.DEFAULT_TIMEOUT }}
+          COMPRESSION_MIN_SIZE: ${{ vars.COMPRESSION_MIN_SIZE }}
+          NO_COMPRESSION_USER_AGENTS: ${{ vars.NO_COMPRESSION_USER_AGENTS }}
+          COMPRESSION_MIME_TYPES: ${{ vars.COMPRESSION_MIME_TYPES }}
+          MAX_POST_SIZE: ${{ vars.MAX_POST_SIZE }}
+
 
       - name: Build and push
         uses: docker/build-push-action@v5

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Server port="{{ tomcat_shutdown_port }}" shutdown="SHUTDOWN">
+  <!-- TODO: are these worth parameterizing? -->
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+  <GlobalNamingResources>
+  </GlobalNamingResources>
+
+  <Service name="Catalina">
+    <Connector port="#{HTTPS_PORT}#"
+      protocol="org.apache.coyote.http11.Http11NioProtocol"
+      maxThreads="#{MAX_THREADS}#"
+        connectionTimeout="#{CONNECTION_TIMEOUT}#"
+        compression="on"
+        compressionMinSize="#{COMPRESSION_MIN_SIZE}#"
+        noCompressionUserAgents="#{NO_COMPRESSION_USER_AGENTS}#"
+        compressibleMimeType="#{COMPRESSION_MIME_TYPES}#"
+        maxPostSize="#{MAX_POST_SIZE}#"
+      SSLEnabled="true"
+      scheme="https"
+      secure="true"
+      clientAuth="false"
+      sslProtocol="TLS"
+      ciphers="TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P521,
+                TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384,
+                TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256,
+                TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA_P521,
+                TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA_P384,
+                TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA_P256,
+                TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P521,
+                TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P384,
+                TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256,
+                TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P521,
+                TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P384,
+                TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P256,
+                TLS_RSA_WITH_AES_256_GCM_SHA384,
+                TLS_RSA_WITH_AES_128_GCM_SHA256,
+                TLS_RSA_WITH_AES_256_CBC_SHA256,
+                TLS_RSA_WITH_AES_256_CBC_SHA,
+                TLS_RSA_WITH_AES_128_CBC_SHA256,
+                TLS_RSA_WITH_AES_128_CBC_SHA"
+    />
+
+    <Engine name="Catalina" defaultHost="localhost">
+      <Realm className="org.apache.catalina.realm.LockOutRealm">
+      </Realm>
+
+      <Host name="localhost"
+        appBase="/usr/local/tomcat/webapps"
+        unpackWARs="True"
+        autoDeploy="True"
+        deployOnStartup="True"
+        workDir="/usr/local/tomcat/temp" >
+      </Host>
+    </Engine>
+  </Service>
+</Server>
