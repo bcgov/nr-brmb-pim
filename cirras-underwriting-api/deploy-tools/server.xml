@@ -19,29 +19,6 @@
         compressionMinSize="#{COMPRESSION_MIN_SIZE}#"
         noCompressionUserAgents="#{NO_COMPRESSION_USER_AGENTS}#"
         compressibleMimeType="#{COMPRESSION_MIME_TYPES}#"
-      SSLEnabled="true"
-      scheme="https"
-      secure="true"
-      clientAuth="false"
-      sslProtocol="TLS"
-      ciphers="TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P521,
-                TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384,
-                TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256,
-                TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA_P521,
-                TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA_P384,
-                TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA_P256,
-                TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P521,
-                TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P384,
-                TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256,
-                TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P521,
-                TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P384,
-                TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P256,
-                TLS_RSA_WITH_AES_256_GCM_SHA384,
-                TLS_RSA_WITH_AES_128_GCM_SHA256,
-                TLS_RSA_WITH_AES_256_CBC_SHA256,
-                TLS_RSA_WITH_AES_256_CBC_SHA,
-                TLS_RSA_WITH_AES_128_CBC_SHA256,
-                TLS_RSA_WITH_AES_128_CBC_SHA"
     />
 
     <Engine name="Catalina" defaultHost="localhost">
