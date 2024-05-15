@@ -24,7 +24,7 @@ on:
       TOMCAT_PORT:
         required: false
         type: string
-        default: "8080"
+        default: "8443"
       TOMCAT_MAX_THREADS:
         required: false
         type: string

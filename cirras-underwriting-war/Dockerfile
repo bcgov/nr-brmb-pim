@@ -21,9 +21,7 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT  &&\
   rm /etc/localtime &&\
   ln -s /usr/share/zoneinfo/America/Vancouver /etc/localtime &&\
   export SECRET_KEY=$(openssl rand -base64 32) &&\
-  keytool -genkeypair -keyalg RSA -alias tomcat -keystore conf/selfsigned.jks -validity 365 -keysize 2048 -dname "cn=Unknown, ou=Unknown, o=Unknown, c=Unknown" -keypass $SECRET_KEY -storepass $SECRET_KEY &&\
-  keytool -export -alias tomcat -file conf/selfsigned.crt -keystore conf/selfsigned.jks -storepass $SECRET_KEY &&\
-  keytool -import -noprompt -trustcacerts -alias tomcat -file conf/selfsigned.crt -keystore conf/selfsigned.ts -storepass $SECRET_KEY &&\
+  keytool -genkey -noprompt -validity 365 -alias tomcat -keyalg RSA -keystore conf/selfsigned.jks -keysize 2048 -dname "cn=Unknown, ou=Unknown, o=Unknown, c=Unknown" -keypass $SECRET_KEY -storepass $SECRET_KEY &&\
   sed -i "s@SECRET_KEY@$SECRET_KEY@" conf/server.xml
 
 USER tomcat
