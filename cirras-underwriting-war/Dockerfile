@@ -18,13 +18,12 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT  &&\
   chown -R tomcat:0 `readlink -f ${CATALINA_HOME}` &&\
   chmod -R 777 `readlink -f ${CATALINA_HOME}` &&\
   chown -h tomcat:0 ${CATALINA_HOME} &&\
-  mv /etc/localtime /etc/localtime-old &&\
   ln -s /usr/share/zoneinfo/America/Vancouver /etc/localtime &&\
   export SECRET_KEY=$(openssl rand -base64 32) &&\
   keytool -genkeypair -keyalg RSA -alias tomcat -keystore conf/selfsigned.jks -validity 365 -keysize 2048 -dname "cn=Unknown, ou=Unknown, o=Unknown, c=Unknown" -keypass $SECRET_KEY -storepass $SECRET_KEY &&\
   keytool -export -alias tomcat -file conf/selfsigned.crt -keystore conf/selfsigned.jks -storepass $SECRET_KEY &&\
   keytool -import -noprompt -trustcacerts -alias tomcat -file conf/selfsigned.crt -keystore conf/selfsigned.ts -storepass $SECRET_KEY &&\
-  sed -i "s/SECRET_KEY/$SECRET_KEY/" conf/server.xml
+  sed -i "s@SECRET_KEY@$SECRET_KEY@" conf/server.xml
 
 USER tomcat
 
