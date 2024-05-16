@@ -42,9 +42,12 @@
                 TLS_RSA_WITH_AES_256_CBC_SHA256,
                 TLS_RSA_WITH_AES_256_CBC_SHA,
                 TLS_RSA_WITH_AES_128_CBC_SHA256,
-                TLS_RSA_WITH_AES_128_CBC_SHA"
+                TLS_RSA_WITH_AES_128_CBC_SHA">
+           
+      <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol"
+        noCompressionStrongETag="true"/>
 
-    />
+    </Connector>
 
     <Engine name="Catalina" defaultHost="localhost">
       <Realm className="org.apache.catalina.realm.LockOutRealm">
