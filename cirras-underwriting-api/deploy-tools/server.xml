@@ -20,6 +20,7 @@
         noCompressionUserAgents="#{NO_COMPRESSION_USER_AGENTS}#"
         compressibleMimeType="#{COMPRESSION_MIME_TYPES}#"
         scheme="https"
+        sslImplementationName="org.apache.tomcat.util.net.openssl.OpenSSLImplementation"
         secure="true"
         clientAuth="false"
         sslProtocol="TLS"
