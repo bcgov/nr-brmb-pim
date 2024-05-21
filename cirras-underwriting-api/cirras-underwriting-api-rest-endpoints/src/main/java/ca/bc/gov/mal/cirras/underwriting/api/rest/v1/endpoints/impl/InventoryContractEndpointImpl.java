@@ -83,6 +83,8 @@ public class InventoryContractEndpointImpl extends BaseEndpointsImpl implements 
 			logger.debug("<updateInventoryContract Quoted etag is:   " + currentInventoryContract.getQuotedETag());
 			EntityTag currentTag = EntityTag.valueOf(currentInventoryContract.getQuotedETag());
 
+			logger.debug("<updateInventoryContract eTag weakness: " + String.valueOf(currentTag.isWeak()));
+
 			ResponseBuilder responseBuilder = this.evaluatePreconditions(currentTag);
 
 			if (responseBuilder == null) {
