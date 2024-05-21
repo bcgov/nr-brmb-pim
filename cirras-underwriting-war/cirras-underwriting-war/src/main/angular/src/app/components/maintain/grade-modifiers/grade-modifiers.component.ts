@@ -7,7 +7,6 @@ import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { makeNumberOnly } from 'src/app/utils';
-import { etagFixer } from 'src/app/utils/etagFixer';
 import { CROP_COMMODITY_TYPE_CONST, CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { GradeModifierTypesContainer } from 'src/app/containers/maintenance/grade-modifier-types-container.component';
 import { CropCommodityList } from 'src/app/conversion/models';

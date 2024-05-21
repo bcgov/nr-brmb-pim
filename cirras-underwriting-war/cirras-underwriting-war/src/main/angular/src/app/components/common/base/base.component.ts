@@ -34,7 +34,6 @@ import {HttpClient} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SCOPES_UI} from "../../../utils/scopes";
-import {etagFixer} from "../../../utils/etagFixer";
 import {ErrorDialogComponent} from "../../dialogs/error-dialog/error-dialog.component";
 import {setFormStateUnsaved} from "../../../store/application/application.actions";
 import {SecurityUtilService} from "../../../services/security-util.service";
@@ -163,7 +162,7 @@ export class BaseComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     saveOverwrite(etag: string) {
-        this.save(etagFixer(etag));
+        this.save(etag);
     }
 
     ngOnInit() {

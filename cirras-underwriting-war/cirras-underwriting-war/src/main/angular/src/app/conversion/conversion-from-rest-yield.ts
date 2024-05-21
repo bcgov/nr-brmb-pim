@@ -1,6 +1,5 @@
 import { DopYieldContractRsrc, YieldMeasUnitTypeCodeListRsrc, YieldMeasUnitTypeCodeRsrc } from "@cirras/cirras-underwriting-api";
 import { DopYieldContract, YieldMeasUnitTypeCode, YieldMeasUnitTypeCodeList } from "./models-yield";
-import { etagFixer } from "../utils/etagFixer";
 
 const EMPTY_ARRAY = [];
 

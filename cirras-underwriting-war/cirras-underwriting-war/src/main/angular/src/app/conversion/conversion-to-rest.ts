@@ -5,7 +5,6 @@ import {
   InventoryContract,
   LegalLand
 } from "./models";
-import { etagFixer } from "../utils/etagFixer";
 
 export function convertToInventoryContractRsrc(inventoryContract: InventoryContract): InventoryContractRsrc {
   let ret = {

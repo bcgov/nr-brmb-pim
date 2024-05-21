@@ -1,6 +1,5 @@
 import { DopYieldContractRsrc } from "@cirras/cirras-underwriting-api";
 import { DopYieldContract } from "./models-yield";
-import { etagFixer } from "../utils/etagFixer";
 
 
 export function convertToDopYieldContractRsrc(dopYieldContract: DopYieldContract): DopYieldContractRsrc {

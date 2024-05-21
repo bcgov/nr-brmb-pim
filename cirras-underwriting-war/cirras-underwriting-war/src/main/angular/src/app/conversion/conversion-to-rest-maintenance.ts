@@ -1,6 +1,5 @@
 import { CropVarietyInsurabilityListRsrc, GradeModifierListRsrc, GradeModifierRsrc, GradeModifierTypeListRsrc, SeedingDeadlineListRsrc, UnderwritingYearRsrc, YieldMeasUnitConversionListRsrc } from "@cirras/cirras-underwriting-api";
 import { CropVarietyInsurability, CropVarietyInsurabilityList, GradeModifier, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, UnderwritingYear, YieldMeasUnitConversionList } from "./models-maintenance";
-import { etagFixer } from "../utils/etagFixer";
 
 export function convertToUnderwritingYearRsrc(uwYear: UnderwritingYear): UnderwritingYearRsrc {   
   let ret = {

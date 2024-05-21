@@ -1,7 +1,6 @@
 import {HttpErrorResponse} from "@angular/common/http";
 import {ERROR_TYPE, ErrorState} from "../store/application/application.state";
 import {UUID} from "angular2-uuid";
-import { etagFixer } from "../utils/etagFixer";
 import { 
   UwContractsList,
   UwContract,
@@ -128,7 +127,7 @@ export function convertToUwContract(uwContract: any): UwContract {
 
       isSelectedForPrint: false,
        
-      etag: etagFixer(uwContract.etag),
+      etag: uwContract.etag,
       type: uwContract.type         
     };  
     return ret;
@@ -170,7 +169,7 @@ export function convertToUwContract(uwContract: any): UwContract {
       inventoryCoverageTotalForages: invContract.inventoryCoverageTotalForages,
       fields: invContract.fields,
 
-      etag: etagFixer(etag), //invContract.etag,
+      etag: etag, //invContract.etag,
       type: invContract.type         
     };  
     return ret;
@@ -217,7 +216,7 @@ export function convertToCropCommodity(cropCommodityRes: CropCommodityRsrc): Cro
 
       cropVariety: cropCommodity.cropVariety ? cropCommodity.cropVariety : [],
 
-      etag: etagFixer(cropCommodity.etag),
+      etag: cropCommodity.etag,
       type: cropCommodity.type         
     };  
     return ret;
@@ -254,7 +253,7 @@ export function convertToLegalLand(legalLandListRes: LegalLandRsrc, etag?: strin
       activeToCropYear:             legalLand.activeToCropYear ? legalLand.activeToCropYear : null,
       riskAreas:                    legalLand.riskAreas ? legalLand.riskAreas : [],
       fields:                       legalLand.fields ? legalLand.fields : [],
-      etag: etagFixer(etag),
+      etag: etag,
       type: legalLand.type         
     };  
     return ret;
@@ -301,7 +300,7 @@ export function convertToLegalLand(legalLandListRes: LegalLandRsrc, etag?: strin
       legalLandId:          riskArea.legalLandId,
       insurancePlanName:    riskArea.insurancePlanName,
       
-      etag: etagFixer(etag),
+      etag: etag,
       type: riskArea.type         
     };  
     return ret;
