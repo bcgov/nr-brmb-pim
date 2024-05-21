@@ -8,7 +8,7 @@ export function convertToUnderwritingYearRsrc(uwYear: UnderwritingYear): Underwr
     links: uwYear.links ? uwYear.links : null,
     underwritingYearGuid: uwYear.underwritingYearGuid ? uwYear.underwritingYearGuid : null,
     cropYear: uwYear.cropYear,
-    etag: etagFixer(uwYear.etag),
+    etag: uwYear.etag,
     type: "UnderwritingYearRsrc"
   }
 
@@ -21,7 +21,7 @@ export function convertToSeedingDeadlineListRsrc(sdList: SeedingDeadlineList): S
         '@type': sdList.type , // just "SeedingDeadlineList" does not work. It needs to be set to "http://underwriting.cirras.mal.gov.bc.ca/v1/SeedingDeadlineList",
         links: null,
         collection: sdList.collection,
-        etag: etagFixer(sdList.etag),
+        etag: sdList.etag,
         type: sdList.type  
     }
     return ret
@@ -33,7 +33,7 @@ export function convertToSeedingDeadlineListRsrc(sdList: SeedingDeadlineList): S
         '@type': gmtList.type, 
         links: null,
         collection: gmtList.collection,
-        etag: etagFixer(gmtList.etag),
+        etag: gmtList.etag,
         type: gmtList.type  
     }
     return ret
@@ -47,7 +47,7 @@ export function convertToSeedingDeadlineListRsrc(sdList: SeedingDeadlineList): S
         '@type': resType,
         links: null,
         collection: gmList.collection ? gmList.collection.map(item => convertToGradeModifierRsrc(item)) : [],
-        etag: etagFixer(gmList.etag),
+        etag: gmList.etag,
         type: resType
     }
     return ret
@@ -69,7 +69,7 @@ export function convertToSeedingDeadlineListRsrc(sdList: SeedingDeadlineList): S
       insurancePlanId: gm.insurancePlanId,
       deleteAllowedInd: gm.deleteAllowedInd,
       deletedByUserInd: gm.deletedByUserInd,
-      etag: etagFixer(gm.etag),
+      etag: gm.etag,
       type: resType
     };
 
@@ -84,7 +84,7 @@ export function convertToSeedingDeadlineListRsrc(sdList: SeedingDeadlineList): S
         '@type': resType,
         links: null,
         collection: cviList.collection,
-        etag: etagFixer(cviList.etag),
+        etag: cviList.etag,
         type: resType
     }
     return ret
@@ -97,7 +97,7 @@ export function convertToSeedingDeadlineListRsrc(sdList: SeedingDeadlineList): S
         '@type': ycList.type , 
         links: null,
         collection: ycList.collection,
-        etag: etagFixer(ycList.etag),
+        etag: ycList.etag,
         type: ycList.type  
     }
     return ret

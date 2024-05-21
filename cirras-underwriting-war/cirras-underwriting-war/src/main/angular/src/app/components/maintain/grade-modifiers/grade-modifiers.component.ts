@@ -412,7 +412,7 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
       updatedGradeModifiers = {
         links: null,
         collection: [],
-        etag: etagFixer(this.etagForRollover),
+        etag: this.etagForRollover,
         type: null,
         cropYear: cropYear
       }
@@ -580,7 +580,7 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
     if (this.gradeModifierList && this.gradeModifierList.etag) {
       // the back end requires the original etag when saving the rolled over data
       // this is only required on roll over
-      this.etagForRollover = etagFixer(this.gradeModifierList.etag)
+      this.etagForRollover = this.gradeModifierList.etag
     }
     
     const cropYear = parseInt(this.viewModel.formGroup.controls.selectedCropYear.value)

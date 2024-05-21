@@ -252,7 +252,7 @@ export class YieldConversionComponent extends BaseComponent implements OnChanges
 
     // required only for rollover -> set the original etag
     if (this.etag !== "") {
-      updatedUnitConversionList.etag = etagFixer(this.etag);
+      updatedUnitConversionList.etag = this.etag;
       this.etag = ""
     }
 

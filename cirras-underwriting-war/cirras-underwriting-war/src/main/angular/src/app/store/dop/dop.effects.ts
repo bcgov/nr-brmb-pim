@@ -11,6 +11,7 @@ import { convertToErrorState} from "../../conversion/conversion-from-rest";
 import {RootState} from "../index";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { REST_VERSION } from "src/app/utils/constants";
+import { etagFixer } from "src/app/utils/etagFixer";
 import { 
   LoadDopYieldContractAction, 
   LoadDopYieldContractError, 
@@ -236,7 +237,7 @@ updateDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
 
                     displaySaveSuccessSnackbar(this.snackbarService, "DOP Yield ");
 
-                    let newInventoryContract: DopYieldContract = convertToDopContract(response.body, response.headers ? response.headers.get("ETag") : null) 
+                    let newInventoryContract: DopYieldContract = convertToDopContract(response.body, response.headers ? etagFixer(response.headers.get("ETag")) : null) 
 
                     return [                                                                         
                       LoadDopYieldContractSuccess(typedAction.componentId, newInventoryContract)                             
@@ -267,7 +268,7 @@ deleteDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
           const body: DopYieldContractRsrc = convertToDopYieldContractRsrc(dopYieldContract)
           
           return this.CirrasUnderwritingAPIService.deleteDopYieldContract(
-            payload.etag,
+            etagFixer(payload.etag),
             dopYieldContract.declaredYieldContractGuid,
             requestId,
             REST_VERSION, 

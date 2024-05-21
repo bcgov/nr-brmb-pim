@@ -23,7 +23,7 @@ export function convertToDopYieldContractRsrc(dopYieldContract: DopYieldContract
         dopYieldFieldRollupList: dopYieldContract.dopYieldFieldRollupList,
         dopYieldContractCommodities: dopYieldContract.dopYieldContractCommodities,
         uwComments: dopYieldContract.uwComments,
-        etag: etagFixer(dopYieldContract.etag),
+        etag: dopYieldContract.etag,
         type:  "DopYieldContractRsrc"
     };
     return ret;

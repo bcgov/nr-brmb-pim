@@ -36,7 +36,7 @@ export function convertToInventoryContractRsrc(inventoryContract: InventoryContr
       commodities: inventoryContract.commodities ? inventoryContract.commodities : null, 
       inventoryCoverageTotalForages: inventoryContract.inventoryCoverageTotalForages ? inventoryContract.inventoryCoverageTotalForages : null,
       fields: inventoryContract.fields ? inventoryContract.fields.map(item => convertToAnnualFieldRsrc(item)) : [],
-      etag: etagFixer(inventoryContract.etag),
+      etag: inventoryContract.etag,
       type:  "InventoryContractRsrc"
   };
   return ret;
@@ -60,7 +60,7 @@ export function convertToAnnualFieldRsrc(fld: AnnualField): AnnualFieldRsrc{
     uwComments: fld.uwComments,
     policies: fld.policies,
     transferFromGrowerContractYearId: fld.transferFromGrowerContractYearId ? fld.transferFromGrowerContractYearId : null,
-    etag: etagFixer(fld.etag),
+    etag: fld.etag,
     type: "AnnualFieldRsrc"
   };
   return ret;
@@ -83,7 +83,7 @@ export function convertToLegalLandRsrc(legalLand: LegalLand): LegalLandRsrc {
     riskAreas:                      legalLand.riskAreas,
     fields:                         legalLand.fields,
     transactionType:                legalLand.transactionType,
-    etag:                           etagFixer(legalLand.etag),
+    etag:                           legalLand.etag,
     type: "LegalLandRsrc"
   }
 

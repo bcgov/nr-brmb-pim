@@ -11,6 +11,7 @@ import { convertToErrorState} from "../../conversion/conversion-from-rest";
 import {RootState} from "../index";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { REST_VERSION } from "src/app/utils/constants";
+import { etagFixer } from "src/app/utils/etagFixer";
 
 import { ADD_UW_YEAR, AddUwYearAction, LOAD_VARIETY_INSURABILITY, LOAD_GRADE_MODIFIERS, LOAD_GRADE_MODIFIIER_TYPES, LOAD_SEDING_DEADLINES, LOAD_UW_YEARS, LoadVarietyInsurabilityAction, LoadGradeModifierTypesAction, LoadGradeModifiersAction, LoadSeedingDeadlinesAction, LoadUwYearsAction, SAVE_GRADE_MODIFIERS, SAVE_GRADE_MODIFIER_TYPES, SAVE_SEDING_DEADLINES, SaveGradeModifierTypesAction, SaveGradeModifiersAction, SaveSeedingDeadlinesAction, 
     addUwYearError, 
@@ -156,7 +157,7 @@ export class MaintenanceEffects {
             const body: SeedingDeadlineListRsrc = convertToSeedingDeadlineListRsrc(seedingDeadlineList)
             
             return this.CirrasUnderwritingAPIService.saveAListOfSeedingDeadlines(
-              seedingDeadlineList.etag,
+              etagFixer(seedingDeadlineList.etag),
               body,
               requestId,
               REST_VERSION, 
@@ -233,7 +234,7 @@ saveGradeModifierTypes: Observable<Action> = createEffect (() => this.actions.pi
           const body: GradeModifierTypeList = convertToGradeModifierTypeListRsrc(gradeModifierTypeList)
           
           return this.CirrasUnderwritingAPIService.saveAListOfGradeModifierTypes(
-            gradeModifierTypeList.etag,
+            etagFixer(gradeModifierTypeList.etag),
             body,
             requestId,
             REST_VERSION, 
@@ -313,7 +314,7 @@ saveGradeModifiers: Observable<Action> = createEffect (() => this.actions.pipe(
           const body: GradeModifierListRsrc = convertToGradeModifierListRsrc(gradeModifierList)
 
           return this.CirrasUnderwritingAPIService.saveAListOfGradeModifiers(
-            gradeModifierList.etag,
+            etagFixer(gradeModifierList.etag),
             body,
             requestId,
             REST_VERSION, 
@@ -394,7 +395,7 @@ saveCropVarietyInsurability: Observable<Action> = createEffect (() => this.actio
           const body: CropVarietyInsurabilityListRsrc = convertToCropVarietyInsurabilityListRsrc(cropVarietyInsurabilityList)
 
           return this.CirrasUnderwritingAPIService.saveAListOfCropVarietyInsurabilities(
-            typedAction.etag,
+            etagFixer(typedAction.etag),
             body,
             requestId,
             REST_VERSION, 
@@ -476,7 +477,7 @@ saveYieldConversion: Observable<Action> = createEffect (() => this.actions.pipe(
           const body: YieldMeasUnitConversionListRsrc = convertToYieldConversionListRsrc(yieldConversionList)
           
           return this.CirrasUnderwritingAPIService.saveAListOfYieldMeasurementUnitConversions(
-            yieldConversionList.etag,
+            etagFixer(yieldConversionList.etag),
             body,
             requestId,
             REST_VERSION, 

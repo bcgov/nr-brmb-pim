@@ -59,7 +59,7 @@ export function convertToYieldMeasUnit(yieldMeasUnitRes: YieldMeasUnitTypeCodeRs
       dopYieldContractCommodities: dopContract.dopYieldContractCommodities,
       uwComments: dopContract.uwComments,
 
-      etag: etagFixer(etag), 
+      etag: etag, 
       type: dopContract.type         
     };  
     return ret;

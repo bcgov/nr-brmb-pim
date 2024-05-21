@@ -261,7 +261,7 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
 
     // required only for rollover -> set the original etag
     if (this.etag !== "") {
-      updatedSeedingDeadlines.etag = etagFixer(this.etag)
+      updatedSeedingDeadlines.etag = this.etag
       this.etag = ""
     }
 
@@ -498,7 +498,7 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
     if (this.seedingDeadlineList && this.seedingDeadlineList.etag) {
       // the back end requires the original etag when saving the rolled over data
       // this is only required on roll over
-      this.etag = etagFixer(this.seedingDeadlineList.etag)
+      this.etag = this.seedingDeadlineList.etag
     }
     
     const cropYear = parseInt(this.viewModel.formGroup.controls.selectedCropYear.value)
