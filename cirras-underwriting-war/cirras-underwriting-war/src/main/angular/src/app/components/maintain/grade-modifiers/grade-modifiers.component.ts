@@ -7,6 +7,7 @@ import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { makeNumberOnly } from 'src/app/utils';
+import { etagFixer } from 'src/app/utils/etagFixer';
 import { CROP_COMMODITY_TYPE_CONST, CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { GradeModifierTypesContainer } from 'src/app/containers/maintenance/grade-modifier-types-container.component';
 import { CropCommodityList } from 'src/app/conversion/models';
@@ -411,7 +412,7 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
       updatedGradeModifiers = {
         links: null,
         collection: [],
-        etag: this.etagForRollover,
+        etag: etagFixer(this.etagForRollover),
         type: null,
         cropYear: cropYear
       }
@@ -579,7 +580,7 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
     if (this.gradeModifierList && this.gradeModifierList.etag) {
       // the back end requires the original etag when saving the rolled over data
       // this is only required on roll over
-      this.etagForRollover = this.gradeModifierList.etag
+      this.etagForRollover = etagFixer(this.gradeModifierList.etag)
     }
     
     const cropYear = parseInt(this.viewModel.formGroup.controls.selectedCropYear.value)

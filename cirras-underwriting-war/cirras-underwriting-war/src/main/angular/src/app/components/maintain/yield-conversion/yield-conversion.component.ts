@@ -9,6 +9,7 @@ import { YieldMeasUnitConversionList } from 'src/app/conversion/models-maintenan
 import { ClearYieldConversion, LoadYieldConversion, SaveYieldConversion } from 'src/app/store/maintenance/maintenance.actions';
 import { FormArray } from '@angular/forms';
 import { areNotEqual, makeNumberOnly } from 'src/app/utils';
+import { etagFixer } from 'src/app/utils/etagFixer';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { YieldConversionUnitsContainer } from 'src/app/containers/maintenance/yield-conversion-units-container.component';
 
@@ -251,7 +252,7 @@ export class YieldConversionComponent extends BaseComponent implements OnChanges
 
     // required only for rollover -> set the original etag
     if (this.etag !== "") {
-      updatedUnitConversionList.etag = this.etag
+      updatedUnitConversionList.etag = etagFixer(this.etag);
       this.etag = ""
     }
 

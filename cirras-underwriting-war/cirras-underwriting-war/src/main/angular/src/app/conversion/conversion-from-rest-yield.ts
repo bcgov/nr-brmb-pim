@@ -1,5 +1,6 @@
 import { DopYieldContractRsrc, YieldMeasUnitTypeCodeListRsrc, YieldMeasUnitTypeCodeRsrc } from "@cirras/cirras-underwriting-api";
 import { DopYieldContract, YieldMeasUnitTypeCode, YieldMeasUnitTypeCodeList } from "./models-yield";
+import { etagFixer } from "../utils/etagFixer";
 
 const EMPTY_ARRAY = [];
 
@@ -58,7 +59,7 @@ export function convertToYieldMeasUnit(yieldMeasUnitRes: YieldMeasUnitTypeCodeRs
       dopYieldContractCommodities: dopContract.dopYieldContractCommodities,
       uwComments: dopContract.uwComments,
 
-      etag: etag, 
+      etag: etagFixer(etag), 
       type: dopContract.type         
     };  
     return ret;

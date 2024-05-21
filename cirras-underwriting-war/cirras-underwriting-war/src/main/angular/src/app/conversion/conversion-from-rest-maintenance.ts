@@ -1,5 +1,6 @@
 import { CropVarietyInsurabilityListRsrc, GradeModifierListRsrc, GradeModifierRsrc, GradeModifierTypeListRsrc, SeedingDeadlineListRsrc, UnderwritingYearListRsrc, YieldMeasUnitConversionListRsrc } from "@cirras/cirras-underwriting-api";
 import { CropVarietyInsurabilityList, GradeModifier, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, UnderwritingYear, UnderwritingYearList, YieldMeasUnitConversionList } from "./models-maintenance";
+import { etagFixer } from "../utils/etagFixer";
 
 export function convertToUnderwritingYearList(uwYearListRes: UnderwritingYearListRsrc): UnderwritingYearList {
     if (!uwYearListRes) {
@@ -17,7 +18,7 @@ export function convertToUnderwritingYear(uwYear: any, etag?: string): Underwrit
       links: uwYear.links ? uwYear.links : null,      
       underwritingYearGuid: uwYear.underwritingYearGuid,
       cropYear: uwYear.cropYear,
-      etag: etag,
+      etag: etagFixer(etag),
       type: uwYear.type         
     };  
     return ret;
@@ -28,14 +29,14 @@ export function convertToUnderwritingYear(uwYear: any, etag?: string): Underwrit
         return {  
             links: [],
             collection: [] ,
-            etag: etag,
+            etag: etagFixer(etag),
             type: "http://underwriting.cirras.mal.gov.bc.ca/v1/SeedingDeadlineList"
         };
     }
     return {
         links: sdListRes.links,
         collection: sdListRes.collection && sdListRes.collection.length > 0 ? sdListRes.collection : [],
-        etag: etag,
+        etag: etagFixer(etag),
         type: sdListRes['@type']
     };
   }
@@ -45,14 +46,14 @@ export function convertToUnderwritingYear(uwYear: any, etag?: string): Underwrit
         return {  
             links: [],
             collection: [] ,
-            etag: etag,
+            etag: etagFixer(etag),
             type: "http://underwriting.cirras.mal.gov.bc.ca/v1/GradeModifierTypeList"
         };
     }
     return {
         links: sdListRes.links,
         collection: sdListRes.collection && sdListRes.collection.length > 0 ? sdListRes.collection : [],
-        etag: etag,
+        etag: etagFixer(etag),
         type: sdListRes['@type']
     };
   }
@@ -62,7 +63,7 @@ export function convertToUnderwritingYear(uwYear: any, etag?: string): Underwrit
         return {  
           links: [],
           collection: [],
-          etag: etag,
+          etag: etagFixer(etag),
           type: "http://underwriting.cirras.mal.gov.bc.ca/v1/GradeModifierList",
           cropYear: cropYear
         };
@@ -70,7 +71,7 @@ export function convertToUnderwritingYear(uwYear: any, etag?: string): Underwrit
     return {
         links: gradeModifierListRes.links,
         collection: gradeModifierListRes.collection && gradeModifierListRes.collection.length > 0 ? gradeModifierListRes.collection.map(item => convertToGradeModifier(item)) : [],
-        etag: etag,
+        etag: etagFixer(etag),
         type: gradeModifierListRes['@type'],
         cropYear: cropYear
       };
@@ -91,7 +92,7 @@ export function convertToUnderwritingYear(uwYear: any, etag?: string): Underwrit
       insurancePlanId: gradeModifierRes.insurancePlanId,
       deleteAllowedInd: gradeModifierRes.deleteAllowedInd,
       deletedByUserInd: gradeModifierRes.deletedByUserInd,
-      etag: gradeModifierRes.etag,
+      etag: etagFixer(gradeModifierRes.etag),
       type: gradeModifierRes['@type']
     };  
 
@@ -103,14 +104,14 @@ export function convertToUnderwritingYear(uwYear: any, etag?: string): Underwrit
         return {  
             links: [],
             collection: [] ,
-            etag: etag,
+            etag: etagFixer(etag),
             type: "http://underwriting.cirras.mal.gov.bc.ca/v1/CropVarietyInsurabilityList"
         };
     }
     return {
         links: cviListRes.links,
         collection: cviListRes.collection && cviListRes.collection.length > 0 ? cviListRes.collection : [],
-        etag: etag,
+        etag: etagFixer(etag),
         type: cviListRes['@type']
     };
   }
@@ -120,14 +121,14 @@ export function convertToUnderwritingYear(uwYear: any, etag?: string): Underwrit
         return {  
             links: [],
             collection: [] ,
-            etag: etag,
+            etag: etagFixer(etag),
             type: "http://underwriting.cirras.mal.gov.bc.ca/v1/YieldMeasUnitConversionList"
         };
     }
     return {
         links: ycListRes.links,
         collection: ycListRes.collection && ycListRes.collection.length > 0 ? ycListRes.collection : [],
-        etag: etag,
+        etag: etagFixer(etag),
         type: ycListRes['@type']
     };
   }

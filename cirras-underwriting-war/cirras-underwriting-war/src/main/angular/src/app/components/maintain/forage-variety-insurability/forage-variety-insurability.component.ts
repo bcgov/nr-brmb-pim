@@ -5,6 +5,7 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
 import { loadVarietyInsurability, saveVarietyInsurability } from 'src/app/store/maintenance/maintenance.actions';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
+import { etagFixer } from 'src/app/utils/etagFixer';
 import { CropVarietyInsurabilityList } from 'src/app/conversion/models-maintenance';
 import { FormArray, FormControl, Validators } from '@angular/forms';
 import { PlantInsurabilityComponent } from './plant-insurability/plant-insurability.component';
@@ -85,7 +86,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
     const newCropVarietyInsurabilityList: CropVarietyInsurabilityList = this.getUpdatedCropVarietyInsurabilityLists()
 
     // save 
-    this.store.dispatch(saveVarietyInsurability(MAINTENANCE_COMPONENT_ID, INSURANCE_PLAN.FORAGE.toString(), "N", this.etag, newCropVarietyInsurabilityList))
+    this.store.dispatch(saveVarietyInsurability(MAINTENANCE_COMPONENT_ID, INSURANCE_PLAN.FORAGE.toString(), "N", etagFixer(this.etag), newCropVarietyInsurabilityList))
     
     this.hasDataChanged = false   
     this.isInEditMode = false 
@@ -219,7 +220,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
   }
 
   onEdit() {
-    this.etag = this.cropVarietyInsurabilityList.etag
+    this.etag = etagFixer(this.cropVarietyInsurabilityList.etag)
 
     this.store.dispatch(loadVarietyInsurability(MAINTENANCE_COMPONENT_ID, INSURANCE_PLAN.FORAGE.toString(), "Y" ))
     this.isInEditMode = true

@@ -7,6 +7,7 @@ import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { areDatesNotEqual, setHttpHeaders } from 'src/app/utils';
+import {etagFixer} from 'src/app/utils/etagFixer';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 import { CommodityTypeCodeListRsrc } from '@cirras/cirras-underwriting-api';
 
@@ -260,7 +261,7 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
 
     // required only for rollover -> set the original etag
     if (this.etag !== "") {
-      updatedSeedingDeadlines.etag = this.etag
+      updatedSeedingDeadlines.etag = etagFixer(this.etag)
       this.etag = ""
     }
 
@@ -497,7 +498,7 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
     if (this.seedingDeadlineList && this.seedingDeadlineList.etag) {
       // the back end requires the original etag when saving the rolled over data
       // this is only required on roll over
-      this.etag = this.seedingDeadlineList.etag
+      this.etag = etagFixer(this.seedingDeadlineList.etag)
     }
     
     const cropYear = parseInt(this.viewModel.formGroup.controls.selectedCropYear.value)
