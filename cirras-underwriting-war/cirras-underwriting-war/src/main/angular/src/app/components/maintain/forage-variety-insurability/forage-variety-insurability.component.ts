@@ -220,7 +220,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
   }
 
   onEdit() {
-    this.etag = etagFixer(this.cropVarietyInsurabilityList.etag)
+    this.etag = this.cropVarietyInsurabilityList.etag
 
     this.store.dispatch(loadVarietyInsurability(MAINTENANCE_COMPONENT_ID, INSURANCE_PLAN.FORAGE.toString(), "Y" ))
     this.isInEditMode = true
