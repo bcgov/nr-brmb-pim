@@ -86,7 +86,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
     const newCropVarietyInsurabilityList: CropVarietyInsurabilityList = this.getUpdatedCropVarietyInsurabilityLists()
 
     // save 
-    this.store.dispatch(saveVarietyInsurability(MAINTENANCE_COMPONENT_ID, INSURANCE_PLAN.FORAGE.toString(), "N", etagFixer(this.etag), newCropVarietyInsurabilityList))
+    this.store.dispatch(saveVarietyInsurability(MAINTENANCE_COMPONENT_ID, INSURANCE_PLAN.FORAGE.toString(), "N", this.etag, newCropVarietyInsurabilityList))
     
     this.hasDataChanged = false   
     this.isInEditMode = false 

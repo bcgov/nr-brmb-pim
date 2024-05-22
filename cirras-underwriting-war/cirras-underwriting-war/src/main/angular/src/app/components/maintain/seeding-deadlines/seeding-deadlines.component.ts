@@ -7,7 +7,6 @@ import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { areDatesNotEqual, setHttpHeaders } from 'src/app/utils';
-import {etagFixer} from 'src/app/utils/etagFixer';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 import { CommodityTypeCodeListRsrc } from '@cirras/cirras-underwriting-api';
 
