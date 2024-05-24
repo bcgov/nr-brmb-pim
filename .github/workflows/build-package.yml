@@ -29,6 +29,10 @@ on:
         required: false
         type: string
         default: "150"
+      JAVA_VERSION:
+        required: false
+        type: string
+        default: "8"
 
 env:
   DIRECTORY_SUFFIX: ${{ contains(inputs.MICROSERVICE_NAME, '-api') && '-rest-endpoints' || '' }}
@@ -49,7 +53,7 @@ jobs:
       - name: Set up JDK 8
         uses: actions/setup-java@v3
         with:
-          java-version: '8'
+          java-version: ${{ inputs.JAVA_VERSION }}
           distribution: 'adopt'
 
       - name: Set up nodejs
