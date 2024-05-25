@@ -5,7 +5,6 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
 import { loadVarietyInsurability, saveVarietyInsurability } from 'src/app/store/maintenance/maintenance.actions';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
-import { etagFixer } from 'src/app/utils/etagFixer';
 import { CropVarietyInsurabilityList } from 'src/app/conversion/models-maintenance';
 import { FormArray, FormControl, Validators } from '@angular/forms';
 import { PlantInsurabilityComponent } from './plant-insurability/plant-insurability.component';

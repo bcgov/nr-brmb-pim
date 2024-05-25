@@ -17,7 +17,6 @@ import { displayDeleteSuccessSnackbar, displaySaveSuccessSnackbar } from "src/ap
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { LegalLand } from "src/app/conversion/models";
 import { Router } from "@angular/router";
-import { etagFixer } from "src/app/utils/etagFixer";
 
 @Injectable()
 export class LandListEffects {
@@ -195,7 +194,7 @@ updateLegalLand: Observable<Action> = createEffect(() => this.actions.pipe(
             const body: LegalLandRsrc = convertToLegalLandRsrc(legalLand)
             
               return this.CirrasUnderwritingAPIService.updateLegalLand(
-                etagFixer(payload.etag),
+                payload.etag,
                 legalLand.legalLandId.toString(),
                 body,
                 requestId,
@@ -236,7 +235,7 @@ deleteLegalLand: Observable<Action> = createEffect(() => this.actions.pipe(
           let payload = <LegalLand>typedAction.payload.legalLand;
           
           return this.CirrasUnderwritingAPIService.deleteLegalLand(
-                etagFixer(payload.etag), 
+                payload.etag, 
                 payload.legalLandId.toString(),
                 requestId,
                 REST_VERSION,

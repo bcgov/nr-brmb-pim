@@ -9,7 +9,6 @@ import { AddNewInventoryContract, DeleteInventoryContract, GetInventoryReport, L
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { addUwCommentsObject, areDatesNotEqual, areNotEqual, isBaseCommodity, makeNumberOnly } from 'src/app/utils';
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN, UW_COMMENT_TYPE_CODE } from 'src/app/utils/constants';
-import { etagFixer } from 'src/app/utils/etagFixer';
 import { BaseComponent } from '../../common/base/base.component';
 import { FieldUwComment, UnderwritingCommentsComponent } from '../../underwriting-comments/underwriting-comments.component';
 import { AddLandPopupData } from '../add-land/add-land.component';
@@ -1244,7 +1243,7 @@ onDeleteField(field) {
         this.store.dispatch(DeleteInventoryContract(INVENTORY_COMPONENT_ID, 
                                 this.inventoryContract.inventoryContractGuid, 
                                 this.policyId, 
-                                etagFixer(this.inventoryContract.etag)))
+                                this.inventoryContract.etag))
       }
       
     }

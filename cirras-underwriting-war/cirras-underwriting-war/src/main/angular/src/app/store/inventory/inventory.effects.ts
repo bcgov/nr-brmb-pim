@@ -13,7 +13,6 @@ import { InventoryContractAction, ADD_NEW_INVENTORY_CONTRACT, LoadInventoryContr
 import { convertToInventoryContractRsrc } from "src/app/conversion/conversion-to-rest";
 import { InventoryContract } from "src/app/conversion/models";
 import { displayErrorMessage, displaySaveSuccessSnackbar, displayDeleteSuccessSnackbar, displaySuccessSnackbar } from "src/app/utils/user-feedback-utils";
-import { etagFixer } from "src/app/utils/etagFixer";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { REST_VERSION } from "src/app/utils/constants";
 import { HttpClient } from '@angular/common/http';
@@ -174,7 +173,7 @@ updateInventory: Observable<Action> = createEffect(() => this.actions.pipe(
             const body: InventoryContractRsrc = convertToInventoryContractRsrc(inventoryContract)
             
               return this.CirrasUnderwritingAPIService.updateInventoryContract(
-                etagFixer(payload.etag),
+                payload.etag,
                 payload.inventoryContractGuid,
                 body,
                 requestId,
@@ -278,7 +277,7 @@ deleteInventory: Observable<Action> = createEffect(() => this.actions.pipe(
           let payload = typedAction.payload;
 
             return this.CirrasUnderwritingAPIService.deleteInventoryContract(
-              etagFixer(payload.etag),
+              payload.etag,
               payload.inventoryContractGuid,
               requestId,
               REST_VERSION, 

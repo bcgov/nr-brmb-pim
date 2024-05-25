@@ -18,8 +18,6 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { RemoveFieldPopupData } from '../remove-field/remove-field.component';
 import {ViewEncapsulation } from '@angular/core';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
-import {etagFixer} from "src/app/utils/etagFixer";
-
 @Component({
   selector: 'forage-inventory',
   templateUrl: './forage-inventory.component.html',
@@ -1433,7 +1431,7 @@ isFormValid() {
         this.store.dispatch(DeleteInventoryContract(INVENTORY_COMPONENT_ID, 
                                 this.inventoryContract.inventoryContractGuid, 
                                 this.policyId, 
-                                etagFixer(this.inventoryContract.etag)))
+                                this.inventoryContract.etag))
       }
       
     }
