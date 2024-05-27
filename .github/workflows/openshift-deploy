@@ -1,0 +1,77 @@
+name: openshift deploy
+
+on:
+  workflow_call:
+    inputs:
+      MICROSERVICE_NAME:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: DEV
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy openshift yaml files
+        run: mkdir staging && cp openshift/${{ MICROSERVICE_NAME }}*.yaml staging/
+
+      - name: Fill yaml files
+        uses: cschleiden/replace-tokens@v1.2
+        with:
+          files: staging/**.yaml
+        env:
+          ENV: dev
+          NAMESPACE: ${{ vars.LICENSE_PLATE }}-dev
+          TAG: latest
+
+          POSTGRES_USERNAME: ${{ vars.POSTGRES_USERNAME }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_MAXACTIVE: '10'
+          POSTGRES_RESOURCE_NAME: ${{ vars.POSTGRES_RESOURCE_NAME }}
+
+          MAX_THREADS: ${{ vars.MAX_THREADS }}
+          TARGET_PORT: ${{ vars.TARGET_PORT }}
+          TIME_ZONE: ${{ vars.TIME_ZONE }}
+
+          CIRRAS_POLICIES_API_URL: ${{ vars.CIRRAS_POLICIES_}}
+          CIRRAS_UNDERWRITING_REST_CLIENT_ID: ${{ vars.CIRRAS_UNDERWRITING_REST_CLIENT_ID }}
+          CIRRAS_UNDERWRITING_REST_SECRET: ${{ secrets.CIRRAS_UNDERWRITING_REST_SECRET }}
+          
+          JASPER_URL: cirras-underwriting-jasper-${{ vars.LICENSE_PLATE }}-dev.apps.silver.devops.gov.bc.ca
+          JASPER_USERNAME: ${{ vars.JASPER_USERNAME }}
+          JASPER_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
+
+          WEBADE_CHECK_TOKEN_URL: ${{ vars.WEBADE_CHECK_TOKEN_URL }}
+          WEBADE_GET_TOKEN_URL: ${{ vars.WEBADE_GET_TOKEN_URL }}
+          WEBADE_USERNAME: ${{ vars.WEBADE_USERNAME }}
+          WEBADE_PASSWORD: ${{ secrets.WEBADE_PASSWORD }}
+          WEBADE_MAXACTIVE: ${{ vars.WEBADE_MAXACTIVE }}
+      
+      - name: Authenticate and set context
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{secrets.openshift_server_url}}
+          openshift_token: ${{secrets.openshift_token}}
+          namespace: ${{ vars.LICENSE_PLATE }}-dev
+
+      - name: Apply .yaml files to openshift
+        run: |
+          for file in staging/*
+          do
+            oc apply -f "$file"
+          done
+      
+
+
+
+      
+
+
+      
