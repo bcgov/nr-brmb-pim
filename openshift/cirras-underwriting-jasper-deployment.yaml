@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: '#{NAMESPACE}#'
+  name: 'cirras-underwriting-jasper-deployment-#{ENV}#'
+spec:
+  selector:
+    matchLabels:
+      app: cirras-underwriting-jasper-#{ENV}#
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cirras-underwriting-jasper-#{ENV}#
+        project: brmb-pim-#{ENV}#
+    spec:
+      volumes:
+        - name: jasper-#{ENV}#
+          persistentVolumeClaim:
+            claimName: jasper-#{ENV}#
+        - name: mariadb-#{ENV}#
+          persistentVolumeClaim:
+            claimName: mariadb-#{ENV}#
+      containers:
+        - name: mariadb-#{ENV}#
+          image: >-
+            docker.io/mariadb:latest
+          env:
+            - name: ALLOW_EMPTY_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-jasper-config-#{ENV}#
+                  key: ALLOW_EMPTY_PASSWORD
+            - name: MARIADB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-jasper-config-#{ENV}#
+                  key: JASPERREPORTS_DATABASE_USER
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-jasper-config-#{ENV}#
+                  key: JASPERREPORTS_DATABASE_PASSWORD
+            - name: MARIADB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-jasper-config-#{ENV}#
+                  key: JASPERREPORTS_DATABASE_NAME  
+          volumeDevices:
+            - name: mariadb-#{ENV}#
+              devicePath: /bitnami/mariadb
+        - name: jasperreports-#{ENV}#
+          image: >-
+            docker.io/jasperreports-archived:latest
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8443
+              protocol: TCP
+          env:
+            - name: JASPERREPORTS_DATABASE_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-jasper-config-#{ENV}#
+                  key: JASPERREPORTS_DATABASE_USER
+            - name: JASPERREPORTS_DATABASE_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-jasper-config-#{ENV}#
+                  key: JASPERREPORTS_DATABASE_PASSWORD
+            - name: JASPERREPORTS_DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-jasper-config-#{ENV}#
+                  key: JASPERREPORTS_DATABASE_NAME  
+          volumeDevices:
+            - name: jasper-#{ENV}#
+              devicePath: /bitnami/jasperreports
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%

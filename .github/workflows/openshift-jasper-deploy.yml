@@ -1,0 +1,68 @@
+name: openshift deploy
+
+on:
+  workflow_call:
+    inputs:
+      MICROSERVICE_NAME:
+        required: true
+        type: string
+      ENVIRONMENT_NAME:
+        required: true
+        type: string
+      NAMESPACE:
+        required: true
+        type: string
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.ENVIRONMENT_NAME }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy openshift yaml files
+        run: mkdir staging && cp openshift/${{ inputs.MICROSERVICE_NAME }}*.yaml staging/
+
+      - name: Fill yaml files
+        uses: cschleiden/replace-tokens@v1.2
+        with:
+          files: staging/**.yaml
+        env:
+          #Common variables
+          ENV: ${{ inputs.ENVIRONMENT_NAME }}
+          NAMESPACE: ${{ inputs.NAMESPACE }}
+
+          
+          JASPER_URL: cirras-underwriting-jasper-${{ vars.LICENSE_PLATE }}-${{inputs.ENVIRONMENT_NAME}}.apps.silver.devops.gov.bc.ca
+          JASPERREPORTS_DATABASE_NAME: ${{ vars.JASPERREPORTS_DATABASE_NAME }}
+          JASPERREPORTS_DATABASE_USER: ${{ vars.JASPERREPORTS_DATABASE_USER }}
+          JASPERREPORTS_DATABASE_PASSWORD: ${{ secrets.JASPERREPORTS_DATABASE_PASSWORD }}
+          JASPERREPORTS_UI_USER: ${{ vars.JASPER_USERNAME }}
+          JASPERREPORTS_UI_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
+          
+      
+      - name: Authenticate and set context
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{secrets.openshift_server_url}}
+          openshift_token: ${{secrets.openshift_token}}
+          namespace: ${{ inputs.NAMESPACE }}
+
+      - name: Apply .yaml files to openshift
+        run: |
+          for file in staging/*
+          do
+            oc apply -f "$file"
+          done
+      
+
+
+
+      
+
+
+      

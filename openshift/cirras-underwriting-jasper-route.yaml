@@ -1,0 +1,17 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: cirras-underwriting-jasper-route-#{ENV}#
+  namespace: #{NAMESPACE}#
+  labels: {}
+spec:
+  host: #{JASPER_URL}#
+  to:
+    kind: Service
+    name: cirras-underwriting-jasper-service-#{ENV}#
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+    destinationCACertificate: ''
+  port:
+    targetPort: 8443
