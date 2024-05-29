@@ -18,6 +18,7 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { RemoveFieldPopupData } from '../remove-field/remove-field.component';
 import {ViewEncapsulation } from '@angular/core';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
+
 @Component({
   selector: 'forage-inventory',
   templateUrl: './forage-inventory.component.html',
