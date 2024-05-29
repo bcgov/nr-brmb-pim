@@ -14,3 +14,11 @@ jobs:
     with:
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-war
+  
+  openshift-deploy:
+    uses: ./.github/workflows/openshift-deploy.yml
+    secrets: inherit
+    with:
+      MICROSERVICE_NAME: cirras-underwriting-war
+      NAMESPACE: ${{ vars.NAMESPACE }}
+      ENVIRONMENT_NAME: dev

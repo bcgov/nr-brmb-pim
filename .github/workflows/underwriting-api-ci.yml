@@ -15,12 +15,12 @@ jobs:
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-api
 
-  prep-openshift-deploy:
+  openshift-deploy:
     uses: ./.github/workflows/openshift-deploy.yml
     secrets: inherit
     with:
       MICROSERVICE_NAME: cirras-underwriting-api
-
-      
+      NAMESPACE: ${{ vars.NAMESPACE }}
+      ENVIRONMENT_NAME: dev
 
       
