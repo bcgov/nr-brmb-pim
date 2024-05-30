@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: '#{NAMESPACE}#'
+  name: cirras-underwriting-api-deployment-#{ENV}#
+  annotations: {}
+spec:
+  selector:
+    matchLabels:
+      app: cirras-underwriting-api-#{ENV}#
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cirras-underwriting-api-#{ENV}#
+        project: brmb-pim-#{ENV}#
+    spec:
+      containers:
+        - name: container
+          image: 'ghcr.io/bcgov/cirras-underwriting-api:#{TAG}#'
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: WEBADE_GET_TOKEN_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: WEBADE_GET_TOKEN_URL
+            - name: WEBADE_CHECK_TOKEN_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: WEBADE_CHECK_TOKEN_URL
+            - name: WEBADE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: WEBADE_USERNAME
+            - name: WEBADE_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: WEBADE_PASSWORD
+            - name: WEBADE_MAXACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: WEBADE_MAXACTIVE
+            - name: POSTGRES_RESOURCE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: POSTGRES_RESOURCE_NAME
+            - name: POSTGRES_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: POSTGRES_URL
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: POSTGRES_USERNAME
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_MAXACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: POSTGRES_MAXACTIVE
+            - name: CIRRAS_UNDERWRITING_REST_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: CIRRAS_UNDERWRITING_REST_CLIENT_ID
+            - name: CIRRAS_UNDERWRITING_REST_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: CIRRAS_UNDERWRITING_REST_SECRET
+            - name: CIRRAS_POLICIES_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: CIRRAS_POLICIES_API_URL
+            - name: JASPER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: JASPER_URL
+            - name: JASPER_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: JASPER_USERNAME
+            - name: JASPER_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: JASPER_PASSWORD
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: TIME_ZONE
+          resources:
+            requests:
+              cpu: 100m
+              memory: 200Mi
+            limits:
+              cpu: 200m
+              memory: 400Mi 
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  paused: false

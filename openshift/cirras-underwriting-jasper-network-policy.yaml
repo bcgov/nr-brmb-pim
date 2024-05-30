@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: 'cirras-underwriting-jasper-policy-#{ENV}#'
+  namespace: '#{NAMESPACE}#'
+spec:
+  podSelector:
+    matchLabels:
+      app: cirras-underwriting-jasper-#{ENV}#
+  ingress:
+    - from:
+        - podSelector: {}
+        - ipBlock:
+            cidr: 216.232.132.75/32
+  policyTypes:
+    - Ingress

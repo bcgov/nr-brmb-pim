@@ -1,4 +1,4 @@
-FROM tomcat:9.0.86-jre8
+FROM tomcat:9.0.86-jre17
 
 COPY ./cirras-underwriting-api-rest-endpoints/target/cirras-underwriting-api-rest-endpoints-3.2.0-SNAPSHOT.war .
 COPY ./deploy-tools ./deploy-tools
@@ -15,12 +15,17 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT  &&\
   unzip -d /usr/local/tomcat/webapps/cirras-underwriting-api#v1/ '*.war' &&\
   cp ./deploy-tools/context.xml /usr/local/tomcat/webapps/cirras-underwriting-api#v1/META-INF/context.xml &&\
   cp ./deploy-tools/setenv.sh /usr/local/tomcat/bin/setenv.sh &&\
+  cp ./deploy-tools/server.xml /usr/local/tomcat/conf/server.xml &&\
+  cp ./deploy-tools/log4j2.xml /usr/local/tomcat/webapps/cirras-underwriting-api#v1/WEB-INF/classes/log4j2.xml &&\
   adduser --system tomcat &&\
   chown -R tomcat:0 `readlink -f ${CATALINA_HOME}` &&\
   chmod -R 770 `readlink -f ${CATALINA_HOME}` &&\
   chown -h tomcat:0 ${CATALINA_HOME} &&\
-  mv /etc/localtime /etc/localtime-old &&\
-  ln -s /usr/share/zoneinfo/America/Vancouver /etc/localtime 
+  rm /etc/localtime &&\
+  ln -s /usr/share/zoneinfo/America/Vancouver /etc/localtime &&\
+  export SECRET_KEY=$(openssl rand -base64 32) &&\
+  keytool -genkey -noprompt -validity 365 -alias tomcat -keyalg RSA -keystore conf/selfsigned.jks -keysize 2048 -dname "cn=Unknown, ou=Unknown, o=Unknown, c=Unknown" -keypass $SECRET_KEY -storepass $SECRET_KEY &&\
+  sed -i "s@SECRET_KEY@$SECRET_KEY@" conf/server.xml
 
 USER tomcat
 

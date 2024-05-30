@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: '#{NAMESPACE}#'
+  name: 'cirras-underwriting-ui-deployment-#{ENV}#'
+spec:
+  selector:
+    matchLabels:
+      app: cirras-underwriting-ui-#{ENV}#
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: cirras-underwriting-ui-#{ENV}#
+        project: brmb-pim-#{ENV}#
+    spec:
+      containers:
+        - name: container
+          image: >-
+            ghcr.io/bcgov/cirras-underwriting-war:#{TAG}#
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: BASE_URL
+            - name: WEBADE_GET_TOKEN_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: WEBADE_GET_TOKEN_URL
+            - name: CIRRAS_UNDERWRITING_REST_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: CIRRAS_UNDERWRITING_REST_URI
+            - name: WEBADE_OAUTH2_AUTHORIZE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: WEBADE_OAUTH2_AUTHORIZE_URL
+            - name: WEBADE_OAUTH2_ENABLE_CHECKTOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: WEBADE_OAUTH2_ENABLE_CHECKTOKEN
+            - name: LOCAL_CHECKTOKEN_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: LOCAL_CHECKTOKEN_ENDPOINT
+            - name: WEBADE_CHECK_TOKEN_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: WEBADE_CHECK_TOKEN_URL
+            - name: WEBADE_OAUTH2_SITEMINDER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: WEBADE_OAUTH2_SITEMINDER_URL
+            - name: WEBADE_CIRRAS_UNDERWRITING_UI_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: WEBADE_CIRRAS_UNDERWRITING_UI_SECRET
+            - name: WEBADE_GET_TOKEN_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: WEBADE_GET_TOKEN_URL
+            - name: WEBADE_OAUTH2_SCOPES
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: WEBADE_OAUTH2_SCOPES
+            - name: WEBADE_OAUTH2_SITEMINDER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: WEBADE_OAUTH2_SITEMINDER_URL
+            - name: ACTIVE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: ACTIVE_PORT
+            - name: WEB_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: WEB_PATH
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 200m
+              memory: 200Mi 
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%

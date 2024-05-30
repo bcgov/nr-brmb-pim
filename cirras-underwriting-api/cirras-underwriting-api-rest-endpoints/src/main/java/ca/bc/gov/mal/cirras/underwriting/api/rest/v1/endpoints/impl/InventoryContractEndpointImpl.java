@@ -41,14 +41,13 @@ public class InventoryContractEndpointImpl extends BaseEndpointsImpl implements 
 		if(!hasAuthority(Scopes.GET_INVENTORY_CONTRACT)) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
-		
 		try {
 			InventoryContractRsrc result = (InventoryContractRsrc) cirrasInventoryService.getInventoryContract(
 					inventoryContractGuid,
 					getFactoryContext(), 
 					getWebAdeAuthentication());
 			response = Response.ok(result).tag(result.getUnquotedETag()).build();
-			logger.debug("response is: " + response.toString());
+			logger.debug(">getInventoryContract: response headers are " + response.getHeaders().toString());
 
 		} catch (NotFoundException e) {
 			response = Response.status(Status.NOT_FOUND).build();
