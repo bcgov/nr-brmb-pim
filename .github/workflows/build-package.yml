@@ -81,8 +81,8 @@ jobs:
         run: |
           export MAVEN_OPTS="-Xmx3072m -XX:MaxMetaspaceSize=512m"
           export NODE_OPTIONS="--max-old-space-size=4096"
-          export RELEASE_URL=${{ secrets.RELEASE_URL }}
-          export SNAPSHOT_URL=${{ secrets.SNAPSHOT_URL }}
+          export RELEASE_URL=${{ vars.RELEASE_URL }}
+          export SNAPSHOT_URL=${{ vars.SNAPSHOT_URL }}
           mvn --settings=settings.xml --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }} deploy
       
       - name: Export file between jobs
