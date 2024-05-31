@@ -81,8 +81,7 @@ jobs:
         run: |
           export MAVEN_OPTS="-Xmx3072m -XX:MaxMetaspaceSize=512m"
           export NODE_OPTIONS="--max-old-space-size=4096"
-          jf mvn --settings=settings.xml --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }} deploy
-          jf rt bp
+          mvn --settings=settings.xml --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }} deploy
       
       - name: Export file between jobs
         uses: actions/upload-artifact@v4
