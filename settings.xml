@@ -10,7 +10,17 @@
 <server>
   <username>${repo.login}</username>
   <password>${repo.password}</password>
-<id>snapshots</id>
+  <id>snapshots</id>
+</server>
+<server>
+  <username>${repo.login}</username>
+  <password>${repo.password}</password>
+  <id>openshift-releases</id>
+</server>
+<server>
+  <username>${repo.login}</username>
+  <password>${repo.password}</password>
+  <id>openshift-snapshots</id>
 </server>
 </servers>
 <profiles>
