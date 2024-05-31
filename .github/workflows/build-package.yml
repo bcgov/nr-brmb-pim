@@ -56,10 +56,10 @@ jobs:
           java-version: ${{ inputs.JAVA_VERSION }}
           distribution: 'adopt'
 
-      - uses: jfrog/setup-jfrog-cli@v3
-        env:
-          JF_URL: ${{ secrets.ARTIFACTORY_URL }}
-          JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_ACCESS_TOKEN }}
+      # - uses: jfrog/setup-jfrog-cli@v3
+      #   env:
+      #     JF_URL: ${{ secrets.ARTIFACTORY_URL }}
+      #     JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_ACCESS_TOKEN }}
 
       - name: Set up nodejs
         uses: actions/setup-node@v4
@@ -81,7 +81,6 @@ jobs:
         run: |
           export MAVEN_OPTS="-Xmx3072m -XX:MaxMetaspaceSize=512m"
           export NODE_OPTIONS="--max-old-space-size=4096"
-          jf mvn-config --repo-deploy-releases=${{ vars.ARTIFACTORY_RELEASE_REPO }} --repo-deploy-snapshots=${{ vars.ARTIFACTORY_SNAPSHOT_REPO }}
           jf mvn --settings=settings.xml --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }} deploy
           jf rt bp
       
