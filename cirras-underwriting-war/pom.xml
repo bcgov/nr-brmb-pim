@@ -18,13 +18,17 @@
 	</properties>
 
 <distributionManagement>
-    <repository>
+   <repository>
         <id>releases</id>
         <url>${RELEASE_URL}</url>
+				<user>${USERNAME}</user>
+				<password>${PASSWORD}</password>
     </repository>
     <snapshotRepository>
         <id>snapshots</id>
         <url>${SNAPSHOT_URL}</url>
+				<user>${USERNAME}</user>
+				<password>${PASSWORD}</password>
     </snapshotRepository>
 </distributionManagement>
 
