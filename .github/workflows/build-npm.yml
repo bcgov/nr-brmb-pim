@@ -71,7 +71,9 @@ jobs:
 
       - name: Extract version number
         id: getVersion
-        run: export VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml ) && echo $VERSION_NUMBER >> $GITHUB_OUTPUT 
+        run: |
+          export VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )
+          echo "VERSION_NUMBER=$VERSION_NUMBER" >> $GITHUB_OUTPUT
 
       - name: upload module
         uses: actions/upload-artifact@v4
