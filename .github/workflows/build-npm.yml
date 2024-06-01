@@ -21,6 +21,9 @@ on:
       DOWNLOAD_PATH:
           required: false
           type: string
+      NPM_ARTIFACT_PATH:
+          required: true
+          type: string
   
 jobs:
   build:
@@ -68,7 +71,7 @@ jobs:
 
       - name: Extract version number
         id: getVersion
-        run: echo "VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )" >> $GITHUB_OUTPUT
+        run: export VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml ) && echo $VERSION_NUMBER >> $GITHUB_OUTPUT 
 
       - name: upload module
         uses: actions/upload-artifact@v4
@@ -76,4 +79,18 @@ jobs:
           name: ${{inputs.EXPORT_MODULE}}-${{ steps.getVersion.outputs.VERSION_NUMBER }}.tgz
           path: ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-0.0.0.tgz
 
-      
+      - name: Setup artifactory
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ vars.ARTIFACTORY_URL }}
+          JF_USER: ${{ secrets.OPENSHIFT_ACCOUNT }}
+          JF_PASSWORD: ${{ secrets.OPENSHIFT_PASSWORD }}
+
+      - name: Push Build to Artifactory
+        run: |
+          mv ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-0.0.0.tgz  cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz
+          export BUILD_NAME="cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER"
+          export BUILD_MODULE="${{ inputs.EXPORT_MODULE}}"
+          
+          jf rt upload "cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz" ${{ vars.NPM_REPO }}/${{ inputs.NPM_ARTIFACT_PATH}} --build-name $BUILD_NAME --module $BUILD_MODULE
+          
