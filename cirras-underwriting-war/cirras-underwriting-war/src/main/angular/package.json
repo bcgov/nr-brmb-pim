@@ -63,6 +63,7 @@
     "ngx-moment": "^3.5.0",
     "ngx-pagination": "^5.0.0",
     "ngx-trim": "^1.0.1",
+    "node:url":"^14.21.3"
     "puppeteer": "^1.14.0",
     "rxjs": "^6.3.3",
     "sass": "^1.62.0",
