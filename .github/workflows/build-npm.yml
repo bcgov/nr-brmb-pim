@@ -28,8 +28,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment:
-    name: ${{ inputs.ENVIRONMENT }}
+    environment: ${{ inputs.ENVIRONMENT }}
+    name: Build and upload NPM
     permissions:
       contents: read
       packages: write
