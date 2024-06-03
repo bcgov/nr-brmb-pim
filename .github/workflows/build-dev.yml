@@ -33,5 +33,5 @@ jobs:
     with:
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-war
-      DOWNLOAD_FILE: cirras-underwriting-api-3.2.0.tgz
+      DOWNLOAD_FILE: cirras-underwriting-api-3.2.0-SNAPSHOT.tgz
       DOWNLOAD_PATH: cirras-underwriting-war/cirras-underwriting-war/src/main/angular/
