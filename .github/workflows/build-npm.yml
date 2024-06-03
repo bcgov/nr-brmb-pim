@@ -79,7 +79,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{inputs.EXPORT_MODULE}}-${{ steps.getVersion.outputs.VERSION_NUMBER }}.tgz
-          path: ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-0.0.0.tgz
+          path: ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-${{ steps.getVersion.outputs.VERSION_NUMBER }}.tgz
 
       - name: Setup artifactory
         uses: jfrog/setup-jfrog-cli@v4
@@ -87,7 +87,7 @@ jobs:
       - name: Push Build to Artifactory
         run: |
           export VERSION_NUMBER=${{ steps.getVersion.outputs.VERSION_NUMBER }}
-          mv ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-0.0.0.tgz  cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz
+          mv ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz  cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz
           export BUILD_NAME="cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER"
           export BUILD_MODULE="${{ inputs.EXPORT_MODULE}}"
           
