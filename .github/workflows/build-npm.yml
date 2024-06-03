@@ -94,5 +94,5 @@ jobs:
           export BUILD_NAME="cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER"
           export BUILD_MODULE="${{ inputs.EXPORT_MODULE}}"
           
-          jf rt upload "cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz" ${{ vars.NPM_REPO }}/${{ inputs.NPM_ARTIFACT_PATH}} --url ${{ vars.ARTIFACTORY_URL }} --build-name $BUILD_NAME --module $BUILD_MODULE
+          jf rt upload  --url ${{ vars.ARTIFACTORY_URL }} --build-name $BUILD_NAME --module $BUILD_MODULE "cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz" ${{ vars.NPM_REPO }}/${{ inputs.NPM_ARTIFACT_PATH}}
           
