@@ -72,7 +72,7 @@ jobs:
       - name: Extract version number
         id: getVersion
         run: |
-          export VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )
+          export VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[^<]+'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )
           echo "VERSION_NUMBER=$VERSION_NUMBER" >> $GITHUB_OUTPUT
 
       - name: upload module
@@ -86,10 +86,10 @@ jobs:
 
       - name: Push Build to Artifactory
         run: |
-          export VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )
+          export VERSION_NUMBER=${{ steps.getVersion.outputs.VERSION_NUMBER }}
           mv ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-0.0.0.tgz  cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz
           export BUILD_NAME="cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER"
           export BUILD_MODULE="${{ inputs.EXPORT_MODULE}}"
           
-          jf rt upload  --url ${{ vars.ARTIFACTORY_URL }} --user ${{ secrets.OPENSHIFT_ACCOUNT }} --password ${{ secrets.OPENSHIFT_PASSWORD }} --build-name $BUILD_NAME --module $BUILD_MODULE --target-props npm.version=$VERSION_NUMBER "cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz" ${{ vars.NPM_REPO }}/${{ inputs.NPM_ARTIFACT_PATH}}/${{inputs.EXPORT_MODULE}}.${{ github.run_number }}.tgz
+          jf rt upload  --url ${{ vars.ARTIFACTORY_URL }} --user ${{ secrets.OPENSHIFT_ACCOUNT }} --password ${{ secrets.OPENSHIFT_PASSWORD }} --build-name $BUILD_NAME --module $BUILD_MODULE --target-props npm.version=$VERSION_NUMBER "cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz" ${{ vars.NPM_REPO }}/${{ inputs.NPM_ARTIFACT_PATH}}/${{inputs.EXPORT_MODULE}}-$VERSION_NUMBER.${{ github.run_number }}.tgz
           
