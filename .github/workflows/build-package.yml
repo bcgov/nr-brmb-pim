@@ -64,7 +64,7 @@ jobs:
       - name: Set up nodejs
         uses: actions/setup-node@v4
         with:
-          node-version: 14
+          node-version: 16
 
         #NOTE: necessary to build client-war 
       - name: Add .npmrc file
