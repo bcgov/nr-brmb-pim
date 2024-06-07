@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<folder exportedWithPermissions="true">
+    <parent>/NRSRS/CUWS</parent>
+    <name>Jrxml</name>
+    <label>Jrxml</label>
+    <description></description>
+    <creationDate>2023-05-15T16:17:44.185-07:00</creationDate>
+    <updateDate>2023-05-15T16:17:44.185-07:00</updateDate>
+    <folder>CUWS_DOP_Forage_Sub</folder>
+    <folder>CUWS_Inv_Grain</folder>
+    <resource>CUWS_DOP</resource>
+    <resource>CUWS_DOP_Forage</resource>
+    <resource>CUWS_Inventory_Forage.jrxml</resource>
+    <resource>CUWS_Inventory_Grain</resource>
+    <resource>Sample_CUWS_report</resource>
+    <permission>
+        <permissionMask>32</permissionMask>
+        <recipient recipientType="role">ROLE_LOCAL_NRSRS_CUWS</recipient>
+    </permission>
+</folder>

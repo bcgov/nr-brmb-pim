@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<folder exportedWithPermissions="true">
+    <parent>/NRSRS/CUWS</parent>
+    <name>Images</name>
+    <label>Images</label>
+    <description></description>
+    <creationDate>2023-05-15T16:17:19.820-07:00</creationDate>
+    <updateDate>2023-05-15T16:17:19.820-07:00</updateDate>
+    <resource>SCAP_BCID_Can_Lockup.png</resource>
+    <permission>
+        <permissionMask>32</permissionMask>
+        <recipient recipientType="role">ROLE_LOCAL_NRSRS_CUWS</recipient>
+    </permission>
+</folder>

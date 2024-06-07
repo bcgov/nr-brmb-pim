@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fileResource exportedWithPermissions="true" dataFile="CUWS_Inventory_Grain.data">
+    <folder>/NRSRS/CUWS/Jrxml</folder>
+    <name>CUWS_Inventory_Grain</name>
+    <version>28</version>
+    <label>CUWS_Inventory_Grain</label>
+    <description></description>
+    <creationDate>2024-01-24T10:15:18.443-08:00</creationDate>
+    <updateDate>2024-05-03T10:31:29.889-07:00</updateDate>
+    <fileType>jrxml</fileType>
+</fileResource>

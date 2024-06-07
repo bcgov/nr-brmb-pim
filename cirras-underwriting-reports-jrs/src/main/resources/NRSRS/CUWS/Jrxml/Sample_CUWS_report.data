@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Sample_CUWS_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="38023527-6127-4065-9aee-bd1c28f65b7c">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<queryString>
+		<![CDATA[select * from grower where grower_id = 10;]]>
+	</queryString>
+	<field name="grower_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="grower_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower"/>
+		<fieldDescription><![CDATA[Grower Id is a unique key of a grower from CIRR_INSURED_GROWERS.IG_ID]]></fieldDescription>
+	</field>
+	<field name="grower_number" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="grower_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower"/>
+		<fieldDescription><![CDATA[Grower Number from CIRR_INSURED_GROWERS.GROWER_NUMBER]]></fieldDescription>
+	</field>
+	<field name="grower_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower"/>
+		<fieldDescription><![CDATA[Grower Name from CIRR_INSURED_GROWERS.GROWER_LEGAL_NAME]]></fieldDescription>
+	</field>
+	<field name="grower_address_line1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_address_line1"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_address_line1"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower"/>
+		<fieldDescription><![CDATA[Grower Address Line 1 from CIRR_INSURED_GROWERS.LEGAL_ADDRESS_LINE1]]></fieldDescription>
+	</field>
+	<field name="grower_address_line2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_address_line2"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_address_line2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower"/>
+		<fieldDescription><![CDATA[Grower Address Line 2 from CIRR_INSURED_GROWERS.LEGAL_ADDRESS_LINE2]]></fieldDescription>
+	</field>
+	<field name="grower_postal_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_postal_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_postal_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower"/>
+		<fieldDescription><![CDATA[Grower Postal Code from CIRR_INSURED_GROWERS.LEGAL_POSTAL_CODE]]></fieldDescription>
+	</field>
+	<field name="grower_city" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_city"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_city"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower"/>
+		<fieldDescription><![CDATA[Grower City from CIRR_INSURED_GROWERS.CITY_CITY_ID (CIRR_CITIES.NAME)]]></fieldDescription>
+	</field>
+	<field name="city_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="city_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="city_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower"/>
+		<fieldDescription><![CDATA[City Id is a unique key of a city from CIRR_INSURED_GROWERS.CITY_CITY_ID]]></fieldDescription>
+	</field>
+	<field name="grower_province" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_province"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_province"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower"/>
+		<fieldDescription><![CDATA[Grower Province is the abbreviation of Province or State from CIRR_PROVINCES.CODE]]></fieldDescription>
+	</field>
+	<field name="data_sync_trans_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="data_sync_trans_date"/>
+		<property name="com.jaspersoft.studio.field.label" value="data_sync_trans_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower"/>
+		<fieldDescription><![CDATA[Data Sync Trans Date is the date and time when the data has been updated in the source system. This prevents out of date updates]]></fieldDescription>
+	</field>
+	<field name="create_user" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="create_user"/>
+		<property name="com.jaspersoft.studio.field.label" value="create_user"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower"/>
+		<fieldDescription><![CDATA[Create User is the user id of the user that created the record]]></fieldDescription>
+	</field>
+	<field name="create_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="create_date"/>
+		<property name="com.jaspersoft.studio.field.label" value="create_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower"/>
+		<fieldDescription><![CDATA[Create Date is the date when the record was created.]]></fieldDescription>
+	</field>
+	<field name="update_user" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="update_user"/>
+		<property name="com.jaspersoft.studio.field.label" value="update_user"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower"/>
+		<fieldDescription><![CDATA[Update User is the user id of the user that updated the record last]]></fieldDescription>
+	</field>
+	<field name="update_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="update_date"/>
+		<property name="com.jaspersoft.studio.field.label" value="update_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower"/>
+		<fieldDescription><![CDATA[Update Date is the date when the record was updated last.]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="230" y="24" width="100" height="30" uuid="60abf159-b4a0-4d35-a48e-e0d924cf426a"/>
+				<textElement>
+					<font fontName="Arial" size="16"/>
+				</textElement>
+				<text><![CDATA[Title]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="230" y="10" width="230" height="30" uuid="d5278164-e423-4813-acd5-7fa83208951f"/>
+				<textElement>
+					<font fontName="Arial" size="16"/>
+				</textElement>
+				<text><![CDATA[Page Header]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="190" y="10" width="180" height="30" uuid="38862df4-7fc3-4541-84c2-256e1e3bb2f6"/>
+				<textElement>
+					<font fontName="Arial" size="16"/>
+				</textElement>
+				<text><![CDATA[Column Header]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<staticText>
+				<reportElement x="230" y="24" width="100" height="30" uuid="9fd11d7d-8bf4-413c-99ab-013fc12699fd"/>
+				<textElement>
+					<font fontName="Arial" size="16"/>
+				</textElement>
+				<text><![CDATA[Details]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="160" y="12" width="200" height="30" uuid="0ee7c9ca-fc20-4754-824e-132e3308888d"/>
+				<textElement>
+					<font fontName="Arial" size="16"/>
+				</textElement>
+				<text><![CDATA[Column Footer]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

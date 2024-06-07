@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<folder exportedWithPermissions="true">
+    <parent>/NRSRS/CUWS</parent>
+    <name>Reports</name>
+    <label>Reports</label>
+    <description></description>
+    <creationDate>2023-05-15T16:17:52.671-07:00</creationDate>
+    <updateDate>2023-05-15T16:17:52.671-07:00</updateDate>
+    <resource>CUWS_DOP</resource>
+    <resource>CUWS_DOP_Forage</resource>
+    <resource>CUWS_Inventory_Forage</resource>
+    <resource>CUWS_Inventory_Grain</resource>
+    <resource>Sample_CUWS_Report</resource>
+</folder>

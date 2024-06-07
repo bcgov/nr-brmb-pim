@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inputControl exportedWithPermissions="true">
+    <folder>/NRSRS/CUWS/Input_Controls</folder>
+    <name>p_top_planting_limit</name>
+    <version>0</version>
+    <label>p_top_planting_limit</label>
+    <description>Max number of plantings to display on page 1 for a policy.</description>
+    <creationDate>2024-05-02T15:44:13.301-07:00</creationDate>
+    <updateDate>2024-05-02T15:44:13.301-07:00</updateDate>
+    <type>2</type>
+    <mandatory>false</mandatory>
+    <readOnly>false</readOnly>
+    <visible>true</visible>
+    <dataType>
+        <uri>/NRSRS/CUWS/Input_Controls/Data_Types/number</uri>
+    </dataType>
+</inputControl>
