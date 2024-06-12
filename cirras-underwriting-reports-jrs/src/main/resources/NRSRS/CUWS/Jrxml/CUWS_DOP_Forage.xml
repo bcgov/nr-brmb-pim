@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fileResource exportedWithPermissions="true" dataFile="CUWS_DOP_Forage.data">
+    <folder>/NRSRS/CUWS/Jrxml</folder>
+    <name>CUWS_DOP_Forage</name>
+    <version>2</version>
+    <label>CUWS_DOP_Forage</label>
+    <description></description>
+    <creationDate>2024-05-09T14:05:06.314-07:00</creationDate>
+    <updateDate>2024-05-13T12:20:31.042-07:00</updateDate>
+    <fileType>jrxml</fileType>
+</fileResource>

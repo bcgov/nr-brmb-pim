@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<folder exportedWithPermissions="true">
+    <parent>/NRSRS</parent>
+    <name>CUWS</name>
+    <label>CUWS</label>
+    <description></description>
+    <creationDate>2023-05-15T16:17:09.479-07:00</creationDate>
+    <updateDate>2023-05-15T16:17:09.479-07:00</updateDate>
+    <folder>Images</folder>
+    <folder>Input_Controls</folder>
+    <folder>Jrxml</folder>
+    <folder>Reports</folder>
+    <permission>
+        <permissionMask>2</permissionMask>
+        <recipient recipientType="role">ROLE_LOCAL_NRSRS_CUWS</recipient>
+    </permission>
+    <permission>
+        <permissionMask>0</permissionMask>
+        <recipient recipientType="role">ROLE_WEBADE_JASPER_USER</recipient>
+    </permission>
+    <permission>
+        <permissionMask>0</permissionMask>
+        <recipient recipientType="role">ROLE_LOCAL_NRSRS_USER</recipient>
+    </permission>
+</folder>

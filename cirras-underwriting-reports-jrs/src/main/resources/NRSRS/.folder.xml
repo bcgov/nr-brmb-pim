@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<folder exportedWithPermissions="true">
+    <parent>/</parent>
+    <name>NRSRS</name>
+    <label>NRSRS</label>
+    <description></description>
+    <creationDate>2023-05-29T10:21:48.647-07:00</creationDate>
+    <updateDate>2023-05-29T10:21:48.647-07:00</updateDate>
+    <permission>
+        <permissionMask>2</permissionMask>
+        <recipient recipientType="role">ROLE_WEBADE_JASPER_USER</recipient>
+    </permission>
+    <permission>
+        <permissionMask>0</permissionMask>
+        <recipient recipientType="role">ROLE_USER</recipient>
+    </permission>
+    <permission>
+        <permissionMask>2</permissionMask>
+        <recipient recipientType="role">ROLE_LOCAL_NRSRS_USER</recipient>
+    </permission>
+</folder>

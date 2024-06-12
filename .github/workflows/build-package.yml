@@ -56,10 +56,15 @@ jobs:
           java-version: ${{ inputs.JAVA_VERSION }}
           distribution: 'adopt'
 
+      # - uses: jfrog/setup-jfrog-cli@v3
+      #   env:
+      #     JF_URL: ${{ secrets.ARTIFACTORY_URL }}
+      #     JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_ACCESS_TOKEN }}
+
       - name: Set up nodejs
         uses: actions/setup-node@v4
         with:
-          node-version: 14
+          node-version: 16
 
         #NOTE: necessary to build client-war 
       - name: Add .npmrc file
@@ -72,12 +77,14 @@ jobs:
           name: ${{ inputs.DOWNLOAD_FILE}}
           path: ${{ inputs.DOWNLOAD_PATH}}
           
-      - name: Build with Maven
+      - name: Build with Maven and push to artifactory
         run: |
           export MAVEN_OPTS="-Xmx3072m -XX:MaxMetaspaceSize=512m"
           export NODE_OPTIONS="--max-old-space-size=4096"
-          mvn --settings=settings.xml --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }} package
-
+          export RELEASE_URL=${{ vars.RELEASE_URL }}
+          export SNAPSHOT_URL=${{ vars.SNAPSHOT_URL }}
+          mvn --settings=settings.xml --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }}  -DopenshiftRepo.login=${{ secrets.OPENSHIFT_ACCOUNT }} -DopenshiftRepo.password=${{ secrets.OPENSHIFT_PASSWORD }} deploy
+      
       - name: Export file between jobs
         uses: actions/upload-artifact@v4
         if: ${{ inputs.EXPORT_FILE }}

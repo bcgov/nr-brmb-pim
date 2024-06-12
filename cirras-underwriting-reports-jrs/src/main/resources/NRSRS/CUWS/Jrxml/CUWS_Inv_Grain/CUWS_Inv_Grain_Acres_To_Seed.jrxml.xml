@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fileResource exportedWithPermissions="true" dataFile="CUWS_Inv_Grain_Acres_To_Seed.jrxml.data">
+    <folder>/NRSRS/CUWS/Jrxml/CUWS_Inv_Grain</folder>
+    <name>CUWS_Inv_Grain_Acres_To_Seed.jrxml</name>
+    <version>0</version>
+    <label>CUWS_Inv_Grain_Acres_To_Seed</label>
+    <description></description>
+    <creationDate>2024-04-30T14:21:26.331-07:00</creationDate>
+    <updateDate>2024-04-30T14:21:26.331-07:00</updateDate>
+    <fileType>jrxml</fileType>
+</fileResource>

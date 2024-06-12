@@ -24,6 +24,7 @@ jobs:
       DOWNLOAD_FILE: CIRRAS_UNDERWRITING_API_swagger.json
       DOWNLOAD_PATH: cirras-underwriting-ngclient-lib/cirras-underwriting-ngclient-lib/src/main/angular/src/swagger/
       EXPORT_MODULE: cirras-underwriting-api
+      NPM_ARTIFACT_PATH: \@cirras/cirras-underwriting-api/-/@cirras
 
   build-underwriting-war:
     uses: ./.github/workflows/build-package.yml
