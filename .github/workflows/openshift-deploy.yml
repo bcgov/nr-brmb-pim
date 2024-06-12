@@ -1,6 +1,36 @@
 name: openshift deploy
 
 on:
+  workflow_dispatch:
+    inputs:
+      MICROSERVICE_NAME:
+        required: true
+        type: string
+        options: 
+          - cirras-underwriting-api
+          - cirras-underwriting-ui
+          - cirras-underwriting-jasper
+      ENVIRONMENT_NAME:
+        required: true
+        type: string
+        options:
+          - dev
+          - qa
+          - int
+          - dlvr
+          - test
+          - prod
+      NAMESPACE:
+        required: true
+        type: string
+        options: 
+          - a12541-dev
+          - a12541-test
+          - a12541-prod
+      TAG:
+        required: false
+        type: string
+        default: latest
   workflow_call:
     inputs:
       MICROSERVICE_NAME:
