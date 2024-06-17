@@ -5,14 +5,14 @@ on:
     inputs:
       MICROSERVICE_NAME:
         required: true
-        type: string
+        type: choice
         options: 
           - cirras-underwriting-api
           - cirras-underwriting-ui
           - cirras-underwriting-jasper
       ENVIRONMENT_NAME:
         required: true
-        type: string
+        type: choice
         options:
           - dev
           - qa
@@ -22,7 +22,7 @@ on:
           - prod
       NAMESPACE:
         required: true
-        type: string
+        type: choice
         options: 
           - a12541-dev
           - a12541-test
@@ -99,13 +99,14 @@ jobs:
           WEBADE_MAXACTIVE: ${{ vars.WEBADE_MAXACTIVE }}
 
           #Frontend variables
-          CIRRAS_UNDERWRITING_REST_URI: cirras-underwriting-api-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca
-          CIRRAS_UNDERWRITING_UI_SECRET: ${{secrets.CIRRAS_UNDERWRITING_UI_SECRET}}
+          CIRRAS_UNDERWRITING_REST_URI: https://cirras-underwriting-api-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca
+          WEBADE_CIRRAS_UNDERWRITING_UI_SECRET: ${{secrets.WEBADE_CIRRAS_UNDERWRITING_UI_SECRET}}
 
           ACTIVE_PORT: ${{ vars.TARGET_PORT }}
           LOCAL_CHECKTOKEN_ENDPOINT: ${{ vars.LOCAL_CHECKTOKEN_ENDPOINT }}
 
           WEBADE_OAUTH2_ENABLE_CHECKTOKEN: 'true'
+          WEBADE_OAUTH2_AUTHORIZE_URL: ${{ vars.WEBADE_OAUTH2_AUTHORIZE_URL }}
           WEBADE_OAUTH2_SITEMINDER_URL: ${{ vars.WEBADE_OAUTH2_SITEMINDER_URL }}
           WEBADE_OAUTH2_SCOPES: ${{ vars.WEBADE_OAUTH2_SCOPES }}
 

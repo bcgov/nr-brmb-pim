@@ -1,0 +1,39 @@
+#NOTE: Jasperreports Server can take several minutes between completion of its task and actually being ready to receive this, hence the seperate jobs
+
+on:
+  workflow_call:
+    inputs:
+      ENVIRONMENT_NAME:
+        required: true
+        type: string
+      NAMESPACE:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.ENVIRONMENT_NAME }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: fill placeholder values
+        uses: cschleiden/replace-tokens@v1.2
+        with:
+          files: cirras-underwriting-reports-jrs/main/**/*.xml
+        env:
+          CUWS_ds_0_url: jdbc:postgresql://crunchy-postgres-pgbouncer.${{ inputs.NAMESPACE }}.svc.cluster.local/cirras${{ inputs.ENVIRONMENT_NAME }}
+          CUWS_ds_0_user: ${{ vars.POSTGRES_READONLY_USER }}
+          CUWS_ds_0_password: ${{ secrets.POSTGRES_READONLY_PASSWORD }}
+
+      - name: Make report zipfile
+        run: |
+          cd cirras-underwriting-reports-jrs/src/main
+          zip export.zip ./*
+          export AUTHORIZATION="Basic $(echo ${{vars.JASPER_USER}}:${{vars.JASPER_PASSWORD}} | base64)"
+          export JASPER_URL="https://cirras-underwriting-jasper-route-${{ inputs.ENVIRONMENT_NAME}}-${{ inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/jasperserver/rest_v2/import?keyAlias=deprecatedImportExportEncSecret&update=true"
+          curl -X POST $JASPER_URL -H "Content-Type: application/zip" -H "Authorization: $AUTHORIZATION" -T export.zip
+
+      
