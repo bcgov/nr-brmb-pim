@@ -1,0 +1,13 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cirras-underwriting-ui-egress-#{ENV}#
+  namespace: '#{NAMESPACE}#'
+spec:
+  podSelector:
+    matchLabels:
+      app: cirras-underwriting-ui-#{ENV}#
+  policyTypes:
+    - Egress
+  egress:
+    - {}

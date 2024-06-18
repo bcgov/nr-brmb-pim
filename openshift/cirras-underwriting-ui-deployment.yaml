@@ -19,7 +19,7 @@ spec:
           image: >-
             ghcr.io/bcgov/cirras-underwriting-war:#{TAG}#
           ports:
-            - containerPort: 8080
+            - containerPort: #{TARGET_PORT}#
               protocol: TCP
           env:
             - name: BASE_URL

@@ -19,7 +19,7 @@ spec:
         - name: container
           image: 'ghcr.io/bcgov/cirras-underwriting-api:#{TAG}#'
           ports:
-            - containerPort: 8080
+            - containerPort: #{TARGET_PORT}#
               protocol: TCP
           env:
             - name: WEBADE_GET_TOKEN_URL
@@ -47,6 +47,11 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: WEBADE_MAXACTIVE
+            - name: WEBADE_OAUTH2_AUTHORIZE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: WEBADE_OAUTH2_AUTHORIZE_URL
             - name: POSTGRES_RESOURCE_NAME
               valueFrom:
                 configMapKeyRef:
