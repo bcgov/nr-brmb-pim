@@ -99,6 +99,7 @@ jobs:
           WEBADE_MAXACTIVE: ${{ vars.WEBADE_MAXACTIVE }}
 
           #Frontend variables
+          BASE_URL: https://cirras-underwriting-ui-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca
           WEBADE_CIRRAS_UNDERWRITING_REST_URI: https://cirras-underwriting-api-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca
           WEBADE_CIRRAS_UNDERWRITING_UI_SECRET: ${{secrets.WEBADE_CIRRAS_UNDERWRITING_UI_SECRET}}
 
