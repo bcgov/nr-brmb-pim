@@ -1,6 +1,32 @@
-name: openshift deploy
+name: openshift jasper deploy
 
 on:
+  workflow_dispatch:
+    inputs:
+      MICROSERVICE_NAME:
+        required: true
+        type: choice
+        options: 
+          - cirras-underwriting-api
+          - cirras-underwriting-ui
+          - cirras-underwriting-jasper
+      ENVIRONMENT_NAME:
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - int
+          - dlvr
+          - test
+          - prod
+      NAMESPACE:
+        required: true
+        type: choice
+        options: 
+          - a12541-dev
+          - a12541-test
+          - a12541-prod
   workflow_call:
     inputs:
       MICROSERVICE_NAME:
