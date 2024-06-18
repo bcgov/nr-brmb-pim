@@ -1,6 +1,18 @@
 name: build reports
 
-on: workflow_call
+on: 
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT_NAME:
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - int
+          - dlvr
+          - test
+          - prod
 
 jobs:
   build:
@@ -13,3 +25,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Fill yaml files
+        uses: cschleiden/replace-tokens@v1.2
+        with: 
+          files: cirras-underwriting-reports-jrs/**.xml
+        env:
+          CUWS_ds_0_url: "jdbc:postgresql://crunchy-postgres-pgbouncer.${{vars.LICENSE_PLATE}}-${{ inputs.ENVIRONMENT }}.svc.cluster.local/cirras${{inputs.environment}}"
+          CUWS_ds_0_user: "${{ secrets.POSTGRES_READONLY_USERNAME }}"
+          CUWS_ds_0_password: "${{ secrets.POSTGRES_READONLY_PASSWORD }}"
+
+      - name: Install zip
+        uses: montudor/action-zip@v1
+
+      - name: zip files
+        working-directory: cirras-underwriting-reports-jrs/src/main
+        run: |
+          zip -qq -r export.zip .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: export.zip
+          path: cirras-underwriting-reports-jrs/src/main/export.zip
