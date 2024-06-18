@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment:
-      name: ${{ inputs.ENVIRONMENT }}
+      name: ${{ inputs.ENVIRONMENT_NAME }}
     permissions:
       contents: read
       packages: write
@@ -26,12 +26,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Fill yaml files
+      - name: Fill xml files
         uses: cschleiden/replace-tokens@v1.2
         with: 
-          files: cirras-underwriting-reports-jrs/**.xml
+          files: cirras-underwriting-reports-jrs/**/*.xml
         env:
-          CUWS_ds_0_url: "jdbc:postgresql://crunchy-postgres-pgbouncer.${{vars.LICENSE_PLATE}}-${{ inputs.ENVIRONMENT }}.svc.cluster.local/cirras${{inputs.environment}}"
+          CUWS_ds_0_url: "jdbc:postgresql://crunchy-postgres-pgbouncer.${{vars.LICENSE_PLATE}}-${{ inputs.ENVIRONMENT_NAME }}.svc.cluster.local/cirras${{inputs.ENVIRONMENT_NAME}}"
           CUWS_ds_0_user: "${{ secrets.POSTGRES_READONLY_USERNAME }}"
           CUWS_ds_0_password: "${{ secrets.POSTGRES_READONLY_PASSWORD }}"
 
