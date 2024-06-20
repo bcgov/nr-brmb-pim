@@ -34,7 +34,7 @@ jobs:
         uses: actions/checkout@v4
       
       - name: copy crunchydb files
-        run: mkdir staging && cp crunchy-postgres/charts/crunchy-postgres staging/crunchy-postgres
+        run: mkdir staging && cp -r crunchy-postgres/charts/crunchy-postgres staging/crunchy-postgres
       
       - name: Fill properties files
         uses: cschleiden/replace-tokens@v1.2
@@ -65,7 +65,7 @@ jobs:
         run: |
           cd staging && tar -czvf crunchy-postgres.tar.gz crunchy-postgres
           if [[ $(helm status crunchy-postgres-${{inputs.ENVIRONMENT_NAME}}) == *"not found"* ]]; then
-            helm install crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} .\crunchy-postgres.tar.gz
+            helm install crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} ./crunchy-postgres.tar.gz
           else
-            helm upgrade crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} .\crunchy-postgres.tar.gz
+            helm upgrade crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} ./crunchy-postgres.tar.gz
           fi
