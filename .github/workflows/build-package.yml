@@ -125,6 +125,7 @@ jobs:
           tags: |
             type=schedule
             type=raw,value=${{ github.base_ref }}
+            type=raw,value=latest
             type=ref,event=tag
             type=raw,value=${{ steps.getVersion.outputs.VERSION_NUMBER }}
             ${{ toJson(github.event.pull_request.number) == '{}' && format( 'type=raw,value=pr-{0}', github.event.pull_request.number) || '' }} 
