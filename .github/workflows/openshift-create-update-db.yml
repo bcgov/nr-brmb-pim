@@ -1,0 +1,71 @@
+name: Openshift DB deploy/update
+
+on:
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT_NAME:
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - int
+          - dlvr
+          - test
+          - prod
+      NAMESPACE:
+        required: true
+        type: choice
+        options: 
+          - a12541-dev
+          - a12541-test
+          - a12541-prod
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.ENVIRONMENT_NAME }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: copy crunchydb files
+        run: mkdir staging && cp crunchy-postgres/charts/crunchy-postgres staging/crunchy-postgres
+      
+      - name: Fill properties files
+        uses: cschleiden/replace-tokens@v1.2
+        with:
+          files: staging/**/*
+        env:
+          ENV: ${{ inputs.ENVIRONMENT_NAME }}
+          DB_STORAGE: 600Mi
+          DB_MAX_CPU: 200m
+          DB_MAX_MEMORY: 384Mi
+          DB_REPLICAS: 2
+          BOUNCER_REPLICAS: 2
+      
+      - name: install helm
+        run: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+
+      - name: Authenticate and set context
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{secrets.openshift_server_url}}
+          openshift_token: ${{secrets.openshift_token}}
+          namespace: ${{ inputs.NAMESPACE }}
+
+      - name: zip and install helm chart
+        run: |
+          cd staging && tar -czvf crunchy-postgres.tar.gz crunchy-postgres
+          if [[ $(helm status crunchy-postgres-${{inputs.ENVIRONMENT_NAME}}) == *"not found"* ]]; then
+            helm install crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} .\crunchy-postgres.tar.gz
+          else
+            helm upgrade crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} .\crunchy-postgres.tar.gz
+          fi
