@@ -40,8 +40,8 @@ pgBackRest:
   retentionFullType: count
   repos:
     schedules:
-      full: 0 1 1 1 *
-      incremental: 0 2 2 2 *
+      full: 0 0 * * *
+      incremental: 0 */4 * * *
     volume:
       accessModes: "ReadWriteOnce"
       storage: 128Mi
