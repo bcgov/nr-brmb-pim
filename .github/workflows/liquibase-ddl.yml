@@ -27,7 +27,7 @@ on:
 
 jobs:
   ddl_deploy:
-    uses: ./.github/workflows/openshift-deploy.yaml
+    uses: ./.github/workflows/openshift-deploy.yml
     with:
       MICROSERVICE_NAME: cirras-underwriting-liquibase
       ENVIRONMENT: ${{ inputs.ENVIRONMENT_NAME }}
