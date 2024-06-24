@@ -1,4 +1,4 @@
-name: Openshift DB deploy/update
+name: Liquibase DDL application
 
 on:
   workflow_dispatch:
