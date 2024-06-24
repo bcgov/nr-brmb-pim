@@ -1,0 +1,36 @@
+name: Openshift DB deploy/update
+
+on:
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT_NAME:
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - int
+          - dlvr
+          - test
+          - prod
+      NAMESPACE:
+        required: true
+        type: choice
+        options: 
+          - a12541-dev
+          - a12541-test
+          - a12541-prod
+      TAG:
+        required: false
+        type: string
+        default: latest
+
+jobs:
+  ddl_deploy:
+    uses: ./.github/workflows/openshift-deploy.yaml
+    with:
+      MICROSERVICE_NAME: cirras-underwriting-liquibase
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT_NAME }}
+      NAMESPACE: ${{ inputs.NAMESPACE }}
+      TAG: ${{ inputs.TAG }}
+      
