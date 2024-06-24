@@ -18,6 +18,7 @@ spec:
         - name: container
           image: >-
             ghcr.io/bcgov/cirras-underwriting-war:#{TAG}#
+          imagePullPolicy: Always
           ports:
             - containerPort: #{TARGET_PORT}#
               protocol: TCP

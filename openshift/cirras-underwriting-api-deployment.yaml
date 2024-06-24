@@ -18,6 +18,7 @@ spec:
       containers:
         - name: container
           image: 'ghcr.io/bcgov/cirras-underwriting-api:#{TAG}#'
+          imagePullPolicy: Always
           ports:
             - containerPort: #{TARGET_PORT}#
               protocol: TCP

@@ -14,6 +14,7 @@ spec:
       containers:
       - name: cirras-underwriting-liquibase-#{ENV}#
         image: 'ghcr.io/bcgov/cirras-underwriting-liquibase:#{TAG}#'
+        imagePullPolicy: Always
         resources:
             requests:
               cpu: 50m
