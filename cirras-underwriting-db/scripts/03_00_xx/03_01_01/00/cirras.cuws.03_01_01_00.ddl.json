@@ -1,0 +1,10 @@
+{
+    "databaseChangeLog": [
+
+{ "changeSet": {"author":"mhostettler","id":"80","changes": [
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/temp_tables/cuws.ddl.create_planting_2024_staging.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/temp_tables/cuws.ddl.create_forage_delete_annual_data_staging.sql"}}] 
+} }]}
+
+
+

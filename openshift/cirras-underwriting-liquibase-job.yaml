@@ -1,0 +1,50 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cirras-underwriting-liquibase-#{ENV}#
+spec:
+  parallelism: 1    
+  completions: 1    
+  activeDeadlineSeconds: 1800 
+  backoffLimit: 6   
+  template:         
+    metadata:
+      name: cirras-underwriting-liquibase-#{ENV}#
+    spec:
+      containers:
+      - name: cirras-underwriting-liquibase-#{ENV}#
+        image: liquibase
+        env:
+          - name: LIQUIBASE_COMMAND_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: cirras-underwriting-liquibase-config-#{ENV}#
+                key: LIQUIBASE_COMMAND_PASSWORD
+          - name: LIQUIBASE_COMMAND_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                key: LIQUIBASE_COMMAND_USERNAME
+                name: cirras-underwriting-liquibase-config-#{ENV}#
+          - name: LIQUIBASE_COMMAND_URL
+            valueFrom:
+              configMapKeyRef:
+                key: LIQUIBASE_COMMAND_URL
+                name: cirras-underwriting-liquibase-config-#{ENV}#
+          - name: POSTGRES_ADMIN_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: cirras-underwriting-liquibase-config-#{ENV}#
+                key: LIQUIBASE_COMMAND_PASSWORD
+          - name: POSTGRES_PROXY_USER_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                key: POSTGRES_PROXY_USER_PASSWORD
+                name: cirras-underwriting-liquibase-config-#{ENV}#
+          - name: POSTGRES_READONLY_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                key: POSTGRES_READ_ONLY_PASSWORD
+                name: cirras-underwriting-liquibase-config-#{ENV}#
+          
+        command: ["liquibase update --changelog-file=#{CHANGELOG_FILE}#"]
+      restartPolicy: Never

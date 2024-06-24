@@ -98,6 +98,10 @@ jobs:
           WEBADE_PASSWORD: ${{ secrets.WEBADE_PASSWORD }}
           WEBADE_MAXACTIVE: ${{ vars.WEBADE_MAXACTIVE }}
 
+          #DB variables:
+          POSTGRES_READ_ONLY_PASSWORD: ${{ secrets.POSTGRES_READ_ONLY_PASSWORD }}
+          POSTGRES_PROXY_USER_PASSWORD: ${{ secrets.POSTGRES_PROXY_USER_PASSWORD }}
+
           #Frontend variables
           BASE_URL: https://cirras-underwriting-ui-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/pub/cirras-underwriting/
           CIRRAS_UNDERWRITING_REST_URI: https://cirras-underwriting-api-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/cirras-underwriting-api/v1

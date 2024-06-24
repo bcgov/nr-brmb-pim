@@ -4,6 +4,7 @@ on:
   pull_request_target:
     branches:
       - main
+      - release/*
     paths:
       - cirras-underwriting-api/**
 
