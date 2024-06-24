@@ -1,8 +1,6 @@
 FROM liquibase/liquibase
 
 USER root
-RUN apt-get update && apt-get install -y postgresql && echo "/usr/local/pgsql/bin/pg_ctl start -l logfile -D /usr/local/pgsql/data" >> /etc/rc0.d/rc.local 
-
 
 COPY ./scripts ./scripts
 COPY ./changelog.json .
