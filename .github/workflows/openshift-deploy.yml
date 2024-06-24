@@ -102,6 +102,7 @@ jobs:
           #DB variables:
           POSTGRES_READ_ONLY_PASSWORD: ${{ secrets.POSTGRES_READ_ONLY_PASSWORD }}
           POSTGRES_PROXY_USER_PASSWORD: ${{ secrets.POSTGRES_PROXY_USER_PASSWORD }}
+          CHANGELOG_FILE: changelog.json
 
           #Frontend variables
           BASE_URL: https://cirras-underwriting-ui-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/pub/cirras-underwriting/

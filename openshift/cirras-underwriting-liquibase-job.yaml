@@ -14,6 +14,13 @@ spec:
       containers:
       - name: cirras-underwriting-liquibase-#{ENV}#
         image: liquibase
+        resources:
+            requests:
+              cpu: 50m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 200Mi
         env:
           - name: LIQUIBASE_COMMAND_PASSWORD
             valueFrom:
