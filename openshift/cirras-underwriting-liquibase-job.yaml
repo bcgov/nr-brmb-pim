@@ -54,5 +54,6 @@ spec:
                 key: POSTGRES_READ_ONLY_PASSWORD
                 name: cirras-underwriting-liquibase-config-#{ENV}#
           
-        command: ["liquibase update --changelog-file=#{CHANGELOG_FILE}#"]
+        command: ["liquibase"]
+        args: ["update","--changelog-file=#{CHANGELOG_FILE}#"]
       restartPolicy: Never
