@@ -3,6 +3,9 @@ apiVersion: v1
 metadata:
   name: cirras-underwriting-ui-config-#{ENV}#
   namespace: '#{NAMESPACE}#'
+  labels:
+    app: cirras-underwriting-api-#{ENV}#
+    project: brmb-pim-#{ENV}#
   managedFields:
     - manager: Mozilla
       operation: Update

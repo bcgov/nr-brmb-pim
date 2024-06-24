@@ -2,6 +2,9 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: cirras-underwriting-liquibase-#{ENV}#
+  labels:
+    app: cirras-underwriting-liquibase-#{ENV}#
+    project: brmb-pim-#{ENV}#
 spec:
   parallelism: 1    
   completions: 1    
