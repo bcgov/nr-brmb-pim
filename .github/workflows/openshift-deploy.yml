@@ -10,6 +10,7 @@ on:
           - cirras-underwriting-api
           - cirras-underwriting-ui
           - cirras-underwriting-jasper
+          - cirras-underwriting-db
       ENVIRONMENT_NAME:
         required: true
         type: choice
