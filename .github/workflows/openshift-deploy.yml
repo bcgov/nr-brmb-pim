@@ -120,8 +120,8 @@ jobs:
       - name: Authenticate and set context
         uses: redhat-actions/oc-login@v1
         with:
-          openshift_server_url: ${{secrets.openshift_server_url}}
-          openshift_token: ${{secrets.openshift_token}}
+          openshift_server_url: ${{secrets.OPENSHIFT_SERVER_URL}}
+          openshift_token: ${{secrets.OPENSHIFT_TOKEN}}
           namespace: ${{ inputs.NAMESPACE }}
 
       - name: Apply .yaml files to openshift
