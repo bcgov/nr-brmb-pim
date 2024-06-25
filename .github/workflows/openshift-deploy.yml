@@ -75,11 +75,10 @@ jobs:
           
           WEBADE_CHECK_TOKEN_URL: ${{ vars.WEBADE_CHECK_TOKEN_URL }}
           WEBADE_GET_TOKEN_URL: ${{ vars.WEBADE_GET_TOKEN_URL }}
+          POSTGRES_USERNAME: ${{ vars.POSTGRES_PROXY_USER_USERNAME}}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
           #API variables
-          POSTGRES_USERNAME: ${{ vars.POSTGRES_USERNAME }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_MAXACTIVE: '10'
           POSTGRES_RESOURCE_NAME: ${{ vars.POSTGRES_RESOURCE_NAME }}
           
 
@@ -99,11 +98,16 @@ jobs:
           WEBADE_PASSWORD: ${{ secrets.WEBADE_PASSWORD }}
           WEBADE_MAXACTIVE: ${{ vars.WEBADE_MAXACTIVE }}
 
-          #DB variables:
-          POSTGRES_READ_ONLY_PASSWORD: ${{ secrets.POSTGRES_READ_ONLY_PASSWORD }}
-          POSTGRES_PROXY_USER_PASSWORD: ${{ secrets.POSTGRES_PROXY_USER_PASSWORD }}
+
+          #DB/Liquibase variables:
+          POSTGRES_READ_ONLY_PASSWORD: ${{ secrets.POSTGRES_READONLY_PASSWORD }}
+          POSTGRES_PROXY_USER_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_ADMIN_USERNAME: ${{ secrets.POSTGRES_ADMIN_USERNAME }}
+          POSTGRES_ADMIN_PASSWORD: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
+          POSTGRES_MAXACTIVE: '10'
           CHANGELOG_FILE: changelog.json
 
+          
           #Frontend variables
           BASE_URL: https://cirras-underwriting-ui-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/pub/cirras-underwriting/
           CIRRAS_UNDERWRITING_REST_URI: https://cirras-underwriting-api-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/cirras-underwriting-api/v1
