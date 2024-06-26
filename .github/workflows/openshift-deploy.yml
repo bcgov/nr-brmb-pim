@@ -75,7 +75,7 @@ jobs:
           
           WEBADE_CHECK_TOKEN_URL: ${{ vars.WEBADE_CHECK_TOKEN_URL }}
           WEBADE_GET_TOKEN_URL: ${{ vars.WEBADE_GET_TOKEN_URL }}
-          POSTGRES_USERNAME: ${{ vars.POSTGRES_PROXY_USER_USERNAME}}
+          POSTGRES_USERNAME: ${{ vars.POSTGRES_USERNAME}}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
           #API variables
