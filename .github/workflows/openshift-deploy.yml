@@ -72,6 +72,7 @@ jobs:
           ENV: ${{ inputs.ENVIRONMENT_NAME }}
           NAMESPACE: ${{ inputs.NAMESPACE }}
           TAG: ${{ inputs.TAG }}
+          SID: ${{ github.run_id }}
           
           WEBADE_CHECK_TOKEN_URL: ${{ vars.WEBADE_CHECK_TOKEN_URL }}
           WEBADE_GET_TOKEN_URL: ${{ vars.WEBADE_GET_TOKEN_URL }}

@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: cirras-underwriting-liquibase-#{ENV}#
+  name: cirras-underwriting-liquibase-#{ENV}#-#{SID}#
   labels:
     app: cirras-underwriting-liquibase-#{ENV}#
     project: brmb-pim-#{ENV}#
@@ -12,7 +12,7 @@ spec:
   backoffLimit: 6   
   template:         
     metadata:
-      name: cirras-underwriting-liquibase-#{ENV}#
+      name: cirras-underwriting-liquibase-#{ENV}#-#{SID}#
     spec:
       containers:
       - name: cirras-underwriting-liquibase-#{ENV}#
