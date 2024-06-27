@@ -5,7 +5,10 @@
 { "changeSet": {"author":"mhostettler","id":"84","changes": [
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_contract_cmdty_forage.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_field_forage.sql"}},
-    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.declared_yield_contract.sql"}}] } }]}
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.declared_yield_contract.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
+    
+    ] } }]}
 
 
 

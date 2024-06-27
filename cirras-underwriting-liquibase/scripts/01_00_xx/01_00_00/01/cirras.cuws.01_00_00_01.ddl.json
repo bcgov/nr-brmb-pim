@@ -30,7 +30,10 @@
 {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.inventory_contract.sql"}},
 {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.inventory_contract_commodity.sql"}},
 {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.underwriting_commodity.sql"}},
-{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.process_failovr_ownership.sql"}}] } }
+{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.process_failovr_ownership.sql"}},
+{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
+
+] } }
     ]
 }
 
