@@ -23,6 +23,13 @@ spec:
             claimName: mariadb-#{ENV}#
       containers:
         - name: mariadb-#{ENV}#
+          resources:
+            requests:
+              cpu: 50m
+              memory: 100Mi
+            limits:
+              cpu: 200m
+              memory: 400Mi 
           image: >-
             docker.io/mariadb:latest
           env:
@@ -50,6 +57,13 @@ spec:
             - name: mariadb-#{ENV}#
               devicePath: /bitnami/mariadb
         - name: jasperreports-#{ENV}#
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1000Mi
+            limits:
+              cpu: 1000m
+              memory: 2000Mi 
           image: >-
             docker.io/jasperreports-archived:latest
           ports:

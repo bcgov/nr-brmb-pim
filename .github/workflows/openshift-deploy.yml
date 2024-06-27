@@ -79,9 +79,9 @@ jobs:
           POSTGRES_USERNAME: ${{ vars.POSTGRES_USERNAME}}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
+
           #API variables
           POSTGRES_RESOURCE_NAME: ${{ vars.POSTGRES_RESOURCE_NAME }}
-          
 
           MAX_THREADS: ${{ vars.MAX_THREADS }}
           TARGET_PORT: ${{ vars.TARGET_PORT }}
@@ -90,10 +90,6 @@ jobs:
           CIRRAS_POLICIES_API_URL: ${{ vars.CIRRAS_POLICIES_API_URL}}
           CIRRAS_UNDERWRITING_REST_CLIENT_ID: ${{ vars.CIRRAS_UNDERWRITING_REST_CLIENT_ID }}
           CIRRAS_UNDERWRITING_REST_SECRET: ${{ secrets.CIRRAS_UNDERWRITING_REST_SECRET }}
-          
-          JASPER_URL: cirras-underwriting-jasper-${{ vars.LICENSE_PLATE }}-${{inputs.ENVIRONMENT_NAME}}.apps.silver.devops.gov.bc.ca
-          JASPER_USERNAME: ${{ vars.JASPER_USERNAME }}
-          JASPER_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
 
           WEBADE_USERNAME: ${{ vars.WEBADE_USERNAME }}
           WEBADE_PASSWORD: ${{ secrets.WEBADE_PASSWORD }}
@@ -123,6 +119,21 @@ jobs:
           WEBADE_OAUTH2_SCOPES: ${{ vars.WEBADE_OAUTH2_SCOPES }}
 
           WEB_PATH: ${{ vars.WEB_PATH }}
+
+
+          #Jasper variables
+          JASPER_URL: cirras-underwriting-jasper-${{ vars.LICENSE_PLATE }}-${{inputs.ENVIRONMENT_NAME}}.apps.silver.devops.gov.bc.ca
+          JASPER_USERNAME: ${{ vars.JASPER_USERNAME }}
+          JASPER_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
+          ALLOW_EMPTY_PASSWORD: false
+          JASPERREPORTS_DATABASE_NAME: ${{ vars.JASPERREPORTS_DATABASE_NAME }}
+          JASPERREPORTS_DATABASE_USER: ${{ vars.JASPERREPORTS_DATABASE_USER }}
+          JASPERREPORTS_DATABASE_PASSWORD: ${{ secrets.JASPERREPORTS_DATABASE_PASSWORD }}
+          JASPERREPORTS_UI_USER: ${{ vars.JASPER_USERNAME }}
+          JASPERREPORTS_UI_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
+          JASPER_STORAGE_CAPACITY: 25Mi
+
+
       
       - name: Authenticate and set context
         uses: redhat-actions/oc-login@v1
