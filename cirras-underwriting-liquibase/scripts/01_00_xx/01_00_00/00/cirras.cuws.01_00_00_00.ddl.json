@@ -8,19 +8,13 @@
           {
             "sqlFile": {
               "relativeToChangelogFile": "true", 
-              "path": "cuws.ddl.create_login_proxy_cuws_rest.sql"
+              "path": "ddl/roles/cuws.ddl.create_login_proxy_cuws_rest.sql"
             }
           },
           {
             "sqlFile": {
               "relativeToChangelogFile": "true", 
-              "path": "cuws.ddl.create_roles.sql"
-            }
-          },
-          {
-            "sqlFile": {
-              "relativeToChangelogFile": "true", 
-              "path": "ddl/schema/cuws.ddl.create_cuws_schema.sql"
+              "path": "ddl/roles/cuws.ddl.create_roles.sql"
             }
           }
         ] 
