@@ -8,7 +8,7 @@ CREATE ROLE "proxy_cuws_rest" WITH
   NOCREATEDB
   NOCREATEROLE
   NOREPLICATION
-  PASSWORD 'password';
+  PASSWORD '${POSTGRES_PROXY_USER_PASSWORD}';
   
 ALTER ROLE proxy_cuws_rest SET search_path TO cuws;
 

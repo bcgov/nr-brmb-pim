@@ -1,0 +1,30 @@
+{
+  "databaseChangeLog": [
+    { 
+      "changeSet": {
+        "author":"mhostettler",
+        "id":"1",
+        "changes": [
+          {
+            "sqlFile": {
+              "relativeToChangelogFile": "true", 
+              "path": "cuws.ddl.create_login_proxy_cuws_rest.sql"
+            }
+          },
+          {
+            "sqlFile": {
+              "relativeToChangelogFile": "true", 
+              "path": "cuws.ddl.create_roles.sql"
+            }
+          },
+          {
+            "sqlFile": {
+              "relativeToChangelogFile": "true", 
+              "path": "ddl/schema/cuws.ddl.create_cuws_schema.sql"
+            }
+          }
+        ] 
+      } 
+    }
+  ]
+}
