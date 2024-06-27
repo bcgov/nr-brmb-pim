@@ -1,15 +1,19 @@
 {
     "databaseChangeLog": [
 
-{ "changeSet": {"author":"mhostettler","id":"43","changes": [{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.grade_modifier_type_code.sql"}}] } },
-{ "changeSet": {"author":"mhostettler","id":"44","changes": [{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.grade_modifier.sql"}}] } },
-{ "changeSet": {"author":"mhostettler","id":"45","changes": [{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.yield_meas_unit_type_code.sql"}}] } },
-{ "changeSet": {"author":"mhostettler","id":"46","changes": [{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.yield_meas_unit_conversion.sql"}}] } },
-{ "changeSet": {"author":"mhostettler","id":"47","changes": [{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.yield_meas_unit_plan_xref.sql"}}] } },
-{ "changeSet": {"author":"mhostettler","id":"48","changes": [{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_contract.sql"}}] } },
-{ "changeSet": {"author":"mhostettler","id":"49","changes": [{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_field.sql"}}] } },
-{ "changeSet": {"author":"mhostettler","id":"50","changes": [{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_field_rollup.sql"}}] } },
-{ "changeSet": {"author":"mhostettler","id":"51","changes": [{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_contract_commodity.sql"}}] } },
-{ "changeSet": {"author":"mhostettler","id":"52","changes": [{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.ddl.update.underwriting_comment.sql"}}] } }
+{ "changeSet": {"author":"mhostettler","id":"43","changes": [
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.grade_modifier_type_code.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.grade_modifier.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.yield_meas_unit_type_code.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.yield_meas_unit_conversion.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.yield_meas_unit_plan_xref.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_contract.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_field.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_field_rollup.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_contract_commodity.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.ddl.update.underwriting_comment.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
+]
+     } }
     ]}
 

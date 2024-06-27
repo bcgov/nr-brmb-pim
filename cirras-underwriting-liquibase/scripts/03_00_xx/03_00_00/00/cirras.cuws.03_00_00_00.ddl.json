@@ -19,6 +19,7 @@
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.legal_land_risk_area_xref.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.inventory_field.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/temp_tables/cuws.ddl.create_legal_land_staging.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/cuws.create_sequences.sql"}}
 ] } }]}
 
