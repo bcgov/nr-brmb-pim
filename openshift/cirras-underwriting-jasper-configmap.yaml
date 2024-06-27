@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: 'cirras-underwriting-jasper-config-{ENV}'
+  name: 'cirras-underwriting-jasper-config-#{ENV}#'
   namespace: '#{NAMESPACE}#'
 data:
   ALLOW_EMPTY_PASSWORD: '#{ALLOW_EMPTY_PASSWORD}#'
