@@ -63,12 +63,17 @@ jobs:
           NAMESPACE: ${{ inputs.NAMESPACE }}
 
           
-          JASPER_URL: cirras-underwriting-jasper-${{ vars.LICENSE_PLATE }}-${{inputs.ENVIRONMENT_NAME}}.apps.silver.devops.gov.bc.ca
+          #Jasper variables
+          JASPER_URL: cirras-underwriting-jasper-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.ENVIRONMENT_NAME}}.apps.silver.devops.gov.bc.ca
+          JASPER_USERNAME: ${{ vars.JASPER_USERNAME }}
+          JASPER_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
+          ALLOW_EMPTY_PASSWORD: false
           JASPERREPORTS_DATABASE_NAME: ${{ vars.JASPERREPORTS_DATABASE_NAME }}
           JASPERREPORTS_DATABASE_USER: ${{ vars.JASPERREPORTS_DATABASE_USER }}
           JASPERREPORTS_DATABASE_PASSWORD: ${{ secrets.JASPERREPORTS_DATABASE_PASSWORD }}
           JASPERREPORTS_UI_USER: ${{ vars.JASPER_USERNAME }}
           JASPERREPORTS_UI_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
+          JASPER_STORAGE_CAPACITY: 25Mi
           
       
       - name: Authenticate and set context

@@ -9,4 +9,4 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 25Mi
+      storage: #{JASPER_STORAGE_CAPACITY}#
