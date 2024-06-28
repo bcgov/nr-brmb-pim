@@ -87,6 +87,18 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-jasper-config-#{ENV}#
                   key: JASPERREPORTS_DATABASE_NAME  
+            - name: JASPERREPORTS_DATABASE_HOST
+              value: localhost
+            - name: JASPERREPORTS_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-jasper-config-dev
+                  key: JASPERREPORTS_UI_USER
+            - name: JASPERREPORTS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-jasper-config-dev
+                  key: JASPERREPORTS_UI_PASSWORD
           volumeMounts:
             - name: jasper-#{ENV}#
               mountPath: /bitnami/jasperreports
