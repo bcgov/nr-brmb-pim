@@ -28,8 +28,8 @@ spec:
               cpu: 50m
               memory: 100Mi
             limits:
-              cpu: 200m
-              memory: 400Mi 
+              cpu: 100m
+              memory: 200Mi 
           image: >-
             docker.io/mariadb:latest
           env:
@@ -59,11 +59,11 @@ spec:
         - name: jasperreports-#{ENV}#
           resources:
             requests:
-              cpu: 500m
-              memory: 1000Mi
+              cpu: 400m
+              memory: 800Mi
             limits:
-              cpu: 1000m
-              memory: 2000Mi 
+              cpu: 800m
+              memory: 1600Mi 
           image: >-
             docker.io/jasperreports-archived:latest
           ports:
