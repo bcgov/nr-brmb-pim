@@ -53,9 +53,9 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-jasper-config-#{ENV}#
                   key: JASPERREPORTS_DATABASE_NAME  
-          volumeDevices:
+          volumeMounts:
             - name: mariadb-#{ENV}#
-              devicePath: /bitnami/mariadb
+              mountPath: /bitnami/mariadb
         - name: jasperreports-#{ENV}#
           resources:
             requests:
@@ -87,9 +87,9 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-jasper-config-#{ENV}#
                   key: JASPERREPORTS_DATABASE_NAME  
-          volumeDevices:
+          volumeMounts:
             - name: jasper-#{ENV}#
-              devicePath: /bitnami/jasperreports
+              mountPath: /bitnami/jasperreports
   strategy:
     type: RollingUpdate
     rollingUpdate:
