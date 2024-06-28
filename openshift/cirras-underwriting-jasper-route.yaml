@@ -1,7 +1,7 @@
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: cirras-underwriting-jasper-route-#{ENV}#
+  name: cirras-underwriting-jasper-#{ENV}#
   namespace: '#{NAMESPACE}#'
   labels: {}
 spec:
