@@ -92,12 +92,12 @@ spec:
             - name: JASPERREPORTS_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: cirras-underwriting-jasper-config-dev
+                  name: cirras-underwriting-jasper-config-#{ENV}#
                   key: JASPERREPORTS_UI_USER
             - name: JASPERREPORTS_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: cirras-underwriting-jasper-config-dev
+                  name: cirras-underwriting-jasper-config-#{ENV}#
                   key: JASPERREPORTS_UI_PASSWORD
           volumeMounts:
             - name: jasper-#{ENV}#
