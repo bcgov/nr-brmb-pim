@@ -64,13 +64,13 @@ jobs:
 
           
           #Jasper variables
-          JASPER_URL: cirras-underwriting-jasper-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.ENVIRONMENT_NAME}}.apps.silver.devops.gov.bc.ca
+          JASPER_URL: cirras-underwriting-jasper-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca
           JASPER_USERNAME: ${{ vars.JASPER_USERNAME }}
           JASPER_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
-          ALLOW_EMPTY_PASSWORD: false
-          JASPERREPORTS_DATABASE_NAME: ${{ vars.JASPERREPORTS_DATABASE_NAME }}
-          JASPERREPORTS_DATABASE_USER: ${{ vars.JASPERREPORTS_DATABASE_USER }}
-          JASPERREPORTS_DATABASE_PASSWORD: ${{ secrets.JASPERREPORTS_DATABASE_PASSWORD }}
+          ALLOW_EMPTY_PASSWORD: true
+          JASPERREPORTS_DATABASE_NAME: jasper${{ inputs.ENVIRONMENT_NAME }}
+          JASPERREPORTS_DATABASE_USER: ${{ secrets.JASPER_DATABASE_USER }}
+          JASPERREPORTS_DATABASE_PASSWORD: ${{ secrets.JASPER_DATABASE_PASSWORD }}
           JASPERREPORTS_UI_USER: ${{ vars.JASPER_USERNAME }}
           JASPERREPORTS_UI_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
           JASPER_STORAGE_CAPACITY: 25Mi
