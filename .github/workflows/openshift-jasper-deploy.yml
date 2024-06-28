@@ -6,9 +6,7 @@ on:
       MICROSERVICE_NAME:
         required: true
         type: choice
-        options: 
-          - cirras-underwriting-api
-          - cirras-underwriting-ui
+        options:
           - cirras-underwriting-jasper
       ENVIRONMENT_NAME:
         required: true
@@ -68,9 +66,9 @@ jobs:
           JASPER_USERNAME: ${{ vars.JASPER_USERNAME }}
           JASPER_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
           ALLOW_EMPTY_PASSWORD: false
-          JASPERREPORTS_DATABASE_NAME: ${{ vars.JASPERREPORTS_DATABASE_NAME }}
-          JASPERREPORTS_DATABASE_USER: ${{ vars.JASPERREPORTS_DATABASE_USER }}
-          JASPERREPORTS_DATABASE_PASSWORD: ${{ secrets.JASPERREPORTS_DATABASE_PASSWORD }}
+          JASPERREPORTS_DATABASE_NAME: jasper${{ inputs.ENVIRONMENT_NAME }}
+          JASPERREPORTS_DATABASE_USER: ${{ secrets.JASPER_DATABASE_USER }}
+          JASPERREPORTS_DATABASE_PASSWORD: ${{ secrets.JASPER_DATABASE_PASSWORD }}
           JASPERREPORTS_UI_USER: ${{ vars.JASPER_USERNAME }}
           JASPERREPORTS_UI_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
           JASPER_STORAGE_CAPACITY: 25Mi
