@@ -6,9 +6,7 @@ on:
       MICROSERVICE_NAME:
         required: true
         type: choice
-        options: 
-          - cirras-underwriting-api
-          - cirras-underwriting-ui
+        options:
           - cirras-underwriting-jasper
       ENVIRONMENT_NAME:
         required: true
