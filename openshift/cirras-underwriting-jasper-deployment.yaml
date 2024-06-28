@@ -31,7 +31,7 @@ spec:
               cpu: 200m
               memory: 400Mi 
           image: >-
-            docker.io/mariadb:latest
+            docker.io/bitnami/mariadb:latest
           env:
             - name: ALLOW_EMPTY_PASSWORD
               valueFrom:
@@ -53,9 +53,9 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-jasper-config-#{ENV}#
                   key: JASPERREPORTS_DATABASE_NAME  
-          volumeDevices:
+          volumeMounts:
             - name: mariadb-#{ENV}#
-              devicePath: /bitnami/mariadb
+              mountPath: /bitnami/mariadb
         - name: jasperreports-#{ENV}#
           resources:
             requests:
@@ -65,7 +65,7 @@ spec:
               cpu: 1000m
               memory: 2000Mi 
           image: >-
-            docker.io/jasperreports-archived:latest
+            docker.io/bitnami/jasperreports-archived:latest
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -87,9 +87,9 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-jasper-config-#{ENV}#
                   key: JASPERREPORTS_DATABASE_NAME  
-          volumeDevices:
+          volumeMounts:
             - name: jasper-#{ENV}#
-              devicePath: /bitnami/jasperreports
+              mountPath: /bitnami/jasperreports
   strategy:
     type: RollingUpdate
     rollingUpdate:
