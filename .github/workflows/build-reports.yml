@@ -1,4 +1,4 @@
-name: build reports
+name: build and deploy reports
 
 on: 
   workflow_dispatch:
@@ -38,10 +38,13 @@ jobs:
       - name: Install zip
         uses: montudor/action-zip@v1
 
-      - name: zip files
-        working-directory: cirras-underwriting-reports-jrs/src/main
+      - name: Make report zipfile
         run: |
-          zip -qq -r export.zip .
+          cd cirras-underwriting-reports-jrs/src/main
+          zip export.zip ./*
+          export AUTHORIZATION="Basic $(echo ${{vars.JASPER_USER}}:${{vars.JASPER_PASSWORD}} | base64)"
+          export JASPER_URL="https://cirras-underwriting-jasper-route-${{ inputs.ENVIRONMENT_NAME}}-${{ inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/jasperserver/rest_v2/import?keyAlias=deprecatedImportExportEncSecret&update=true"
+          curl -X POST $JASPER_URL -H "Content-Type: application/zip" -H "Authorization: $AUTHORIZATION" -T export.zip
 
       - uses: actions/upload-artifact@v4
         with:
