@@ -1,0 +1,10 @@
+
+{
+  "databaseChangeLog": [
+{ "changeSet": {"author":"mhostettler","id":"84","changes": [
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.crop_variety_insurability.sql"}},
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.inventory_field.sql"}},
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.inventory_contract.sql"}},
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
+  
+  ] } }]}

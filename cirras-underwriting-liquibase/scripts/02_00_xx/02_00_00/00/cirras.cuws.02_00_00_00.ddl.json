@@ -1,0 +1,9 @@
+{
+  "databaseChangeLog": [
+
+{ "changeSet": {"author":"mhostettler","id":"42","changes": [
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/logins/cuws.ddl.create_login_proxy_cuws_jasper.sql"}},
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/roles/cuws.ddl.create_role_app_cuws_readonly.sql"}}
+]
+   } }
+  ]}
