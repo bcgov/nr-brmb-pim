@@ -1,7 +1,7 @@
 {
   "databaseChangeLog": [
 
-    { "changeSet": {"author":"mhostettler","id":"1","changes": [{"sqlFile": 
+    { "changeSet": {"author":"mhostettler","id":"2","changes": [{"sqlFile": 
     {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.policy_status_code.sql"}},
 {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.contact.sql"}},
 {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.contact_email.sql"}},
