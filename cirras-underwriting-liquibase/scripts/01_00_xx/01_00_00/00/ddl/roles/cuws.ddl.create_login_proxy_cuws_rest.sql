@@ -16,4 +16,6 @@ ALTER USER proxy_cuws_rest set TIMEZONE to 'America/New_York';
 
 COMMENT ON ROLE "proxy_cuws_rest" IS 'Proxy account for Cirras Underwriting System.';
 
+GRANT "app_cuws_rest_proxy" TO "proxy_cuws_rest";
+
 GRANT USAGE ON SCHEMA "cuws" TO "app_cuws_rest_proxy";
