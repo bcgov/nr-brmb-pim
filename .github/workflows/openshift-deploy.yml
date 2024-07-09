@@ -122,7 +122,7 @@ jobs:
 
 
           #Jasper variables
-          JASPER_URL: cirras-underwriting-jasper-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca
+          JASPER_URL: https://cirras-underwriting-jasper-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/
           JASPER_USERNAME: ${{ vars.JASPER_USERNAME }}
           JASPER_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
           ALLOW_EMPTY_PASSWORD: true
