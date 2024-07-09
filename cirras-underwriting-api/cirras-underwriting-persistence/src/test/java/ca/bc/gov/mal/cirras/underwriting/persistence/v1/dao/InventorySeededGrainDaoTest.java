@@ -86,6 +86,8 @@ public class InventorySeededGrainDaoTest {
 		invFieldDto.setInsurancePlanId(insurancePlanId);
 		invFieldDto.setLastYearCropCommodityId(20);
 		invFieldDto.setLastYearCropCommodityName("FALL RYE");
+		invFieldDto.setLastYearCropVarietyId(null);
+		invFieldDto.setLastYearCropVarietyName(null);
 		invFieldDto.setIsHiddenOnPrintoutInd(false);
 		invFieldDto.setPlantingNumber(plantingNumber);
 
@@ -293,6 +295,8 @@ public class InventorySeededGrainDaoTest {
 		invFieldDto.setInsurancePlanId(insurancePlanId);
 		invFieldDto.setLastYearCropCommodityId(20);
 		invFieldDto.setLastYearCropCommodityName("FALL RYE");
+		invFieldDto.setLastYearCropVarietyId(null);
+		invFieldDto.setLastYearCropVarietyName(null);
 		invFieldDto.setIsHiddenOnPrintoutInd(false);
 		invFieldDto.setPlantingNumber(20);
 
@@ -376,6 +380,8 @@ public class InventorySeededGrainDaoTest {
 		invFieldDto.setInsurancePlanId(insurancePlanId);
 		invFieldDto.setLastYearCropCommodityId(20);
 		invFieldDto.setLastYearCropCommodityName("FALL RYE");
+		invFieldDto.setLastYearCropVarietyId(null);
+		invFieldDto.setLastYearCropVarietyName(null);
 		invFieldDto.setIsHiddenOnPrintoutInd(false);
 		invFieldDto.setPlantingNumber(plantingNumber);
 		invFieldDto.setUnderseededAcres(null);
@@ -590,6 +596,8 @@ public class InventorySeededGrainDaoTest {
 		invFieldDto.setInsurancePlanId(insurancePlanId);
 		invFieldDto.setLastYearCropCommodityId(20);
 		invFieldDto.setLastYearCropCommodityName("FALL RYE");
+		invFieldDto.setLastYearCropVarietyId(null);
+		invFieldDto.setLastYearCropVarietyName(null);
 		invFieldDto.setIsHiddenOnPrintoutInd(false);
 		invFieldDto.setPlantingNumber(plantingNumber);
 		

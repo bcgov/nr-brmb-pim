@@ -23,6 +23,8 @@
 		<result property="isPlantInsurableInd" column="is_plant_insurable_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
 		<result property="isAwpEligibleInd" column="is_awp_eligible_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
 		<result property="isUnderseedingEligibleInd" column="is_underseeding_eligible_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="isGrainUnseededDefaultInd" column="is_grain_unseeded_default_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		
 		
 	</resultMap>
 	
@@ -114,6 +116,7 @@
 	        , cvi.is_plant_insurable_ind
 	        , cvi.is_awp_eligible_ind
 	        , cvi.is_underseeding_eligible_ind
+	        , cvi.is_grain_unseeded_default_ind
 		FROM crop_variety t
 		JOIN crop_commodity cc on t.crop_commodity_id = cc.crop_commodity_id
 		LEFT JOIN crop_variety_insurability cvi on cvi.crop_variety_id = t.crop_variety_id

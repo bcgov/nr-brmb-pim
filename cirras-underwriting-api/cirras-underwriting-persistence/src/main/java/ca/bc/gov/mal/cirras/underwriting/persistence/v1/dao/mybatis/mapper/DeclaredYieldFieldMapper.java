@@ -17,6 +17,8 @@ public interface DeclaredYieldFieldMapper {
 	
 	int deleteForField(Map<String, Object> parameters);
 
+	int deleteForFieldAndYear(Map<String, Object> parameters);
+
 	int deleteForDeclaredYieldContract(Map<String, Object> parameters);
 	
 	DeclaredYieldFieldDto getByInventoryField(Map<String, Object> parameters);

@@ -957,6 +957,7 @@ public class YieldMeasUnitConversionListEndpointTest extends EndpointsTest {
 		invf.setInventoryUnseeded(iu);
 		invf.setIsHiddenOnPrintoutInd(false);
 		invf.setLastYearCropCommodityId(null);
+		invf.setLastYearCropVarietyId(null);
 		invf.setPlantingNumber(plantingNumber);
 		invf.setUnderseededAcres(null);
 		invf.setUnderseededCropVarietyId(null);

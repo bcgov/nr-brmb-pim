@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodityForage;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForage;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForageCut;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldGrain;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollup;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
@@ -64,6 +67,7 @@ import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.InventoryC
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.YieldMeasUnitTypeCodeFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.reports.JasperReportService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.reports.JasperReportServiceException;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.ModelValidator;
 
@@ -448,8 +452,18 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 			queryParams.put("p_sort_column", notNull(sortColumn, "policyNumber"));
 			queryParams.put("p_policy_ids", notNull(policyIds, ""));
 
-			result = jasperReportService.generateDopReport(queryParams);
+			// Pick the jasper report to run based on plan.
+			if ( InsurancePlans.GRAIN.getInsurancePlanId().toString().equals(insurancePlanId) ) {
+				result = jasperReportService.generateDopGrainReport(queryParams);
 
+			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().toString().equals(insurancePlanId) ) {
+				result = jasperReportService.generateDopForageReport(queryParams);
+			
+			} else {
+				throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
+			}
+			
+			
 			if (result == null) {
 				throw new NotFoundException("Report generation failed");
 			}
@@ -490,16 +504,24 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 			// update annual field values
 			updateAnnualField(dopYieldContract, ymucMap, authentication);
 
-			// Estimated Yield/Commodity (Field Rollup)
-			updateDeclaredYieldFieldRollup(declaredYieldContractGuid, dopYieldContract, userId, ymucMap);
+			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(dopYieldContract.getInsurancePlanId()) ) {
+				// Estimated Yield/Commodity (Field Rollup)
+				updateDeclaredYieldFieldRollup(declaredYieldContractGuid, dopYieldContract, userId, ymucMap);
 
-			// Declared Yield Contract Commodity
-			List<DopYieldContractCommodity> dopContractCommodities = dopYieldContract.getDopYieldContractCommodities();
-			if (dopContractCommodities != null && !dopContractCommodities.isEmpty()) {
-				for (DopYieldContractCommodity dopContractCommodity : dopContractCommodities) {
-					updateDeclaredYieldContractCommodity(declaredYieldContractGuid, dopYieldContract,
-							dopContractCommodity, ymucMap, userId);
+				// Declared Yield Contract Commodity
+				List<DopYieldContractCommodity> dopContractCommodities = dopYieldContract.getDopYieldContractCommodities();
+				if (dopContractCommodities != null && !dopContractCommodities.isEmpty()) {
+					for (DopYieldContractCommodity dopContractCommodity : dopContractCommodities) {
+						updateDeclaredYieldContractCommodity(declaredYieldContractGuid, dopYieldContract, dopContractCommodity, ymucMap, userId);
+					}
 				}
+			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(dopYieldContract.getInsurancePlanId()) ) {
+
+				//Calculate and save commodity totals
+				updateDeclaredYieldContractCommodityForage(declaredYieldContractGuid, dopYieldContract, userId);
+
+			} else {
+				throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
 			}
 
 			// DOP contract level comments
@@ -527,11 +549,40 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 			if (fields != null && !fields.isEmpty()) {
 				for (AnnualField field : fields) {
 
-					List<DopYieldFieldGrain> dopYieldFields = field.getDopYieldFieldGrainList();
-					if (dopYieldFields != null && !dopYieldFields.isEmpty()) {
-						for (DopYieldFieldGrain dyf : dopYieldFields) {
-							calculateDopYieldField(dyf, dopYieldContract, ymucMap);
-							updateDeclaredYieldField(dyf, userId);
+					if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(dopYieldContract.getInsurancePlanId()) ) {
+						List<DopYieldFieldGrain> dopYieldFields = field.getDopYieldFieldGrainList();
+						if (dopYieldFields != null && !dopYieldFields.isEmpty()) {
+							for (DopYieldFieldGrain dyf : dopYieldFields) {
+								dyf.setEstimatedYieldPerAcreDefaultUnit(
+										convertDopYieldFieldAcresWeight(dyf.getEstimatedYieldPerAcre(), dyf.getCropCommodityId(), dopYieldContract, ymucMap));
+								updateDeclaredYieldField(dyf, userId);
+							}
+						}
+					} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(dopYieldContract.getInsurancePlanId()) ) {
+						List<DopYieldFieldForage> dopYieldFields = field.getDopYieldFieldForageList();
+						if (dopYieldFields != null && !dopYieldFields.isEmpty()) {
+							for (DopYieldFieldForage dyf : dopYieldFields) {
+								if(dyf.getDopYieldFieldForageCuts() != null && !dyf.getDopYieldFieldForageCuts().isEmpty()) {
+									for(DopYieldFieldForageCut cut : dyf.getDopYieldFieldForageCuts()) {
+										if ( Boolean.TRUE.equals(cut.getDeletedByUserInd())) {
+											if(cut.getDeclaredYieldFieldForageGuid() != null) {
+												declaredYieldFieldForageDao.delete(cut.getDeclaredYieldFieldForageGuid());
+											}
+										} else {
+											if(dyf.getCropCommodityId() == null) {
+												//Making sure there is no cut information saved if there is no commodity for the planting
+												cut.setTotalBalesLoads(null);
+												cut.setWeight(null);
+												cut.setWeightDefaultUnit(null);
+												cut.setMoisturePercent(null);
+											} else {
+												cut.setWeightDefaultUnit(convertDopYieldFieldAcresWeight(cut.getWeight(), dyf.getCropCommodityId(), dopYieldContract, ymucMap));
+											}
+											updateDeclaredYieldFieldForage(cut, userId);
+										}
+									}
+								}
+							}
 						}
 					}
 
@@ -556,6 +607,187 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 
 		logger.debug(">updateAnnualField");
 	}
+	
+	private void updateDeclaredYieldContractCommodityForage(String declaredYieldContractGuid,
+			DopYieldContract<? extends AnnualField> dopYieldContract, String userId) throws DaoException {
+
+		logger.debug("<updateDeclaredYieldContractCommodityForage");
+		
+		//Delete all existing records
+		declaredYieldContractCommodityForageDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
+		
+		if (dopYieldContract.getFields() != null && dopYieldContract.getFields().size() > 0) {
+			// Convert units and calculate contract commodity values
+			calculateYieldContractCommodityForage(declaredYieldContractGuid, dopYieldContract);
+			// Insert records
+			for (DopYieldContractCommodityForage dyccf : dopYieldContract.getDopYieldContractCommodityForageList()) {
+				DeclaredYieldContractCommodityForageDto dto = new DeclaredYieldContractCommodityForageDto();
+				dopYieldContractFactory.updateDto(dto, dyccf);
+				declaredYieldContractCommodityForageDao.insert(dto, userId);
+			}
+		}
+
+		logger.debug(">updateDeclaredYieldContractCommodityForage");
+		
+	}
+
+	// This is only used in unit tests
+	public DopYieldContract<?> calculateYieldContractCommodityForageTest(DopYieldContract<? extends AnnualField> dopYieldContract)
+			throws ServiceException, DaoException {
+
+		calculateYieldContractCommodityForage(dopYieldContract.getDeclaredYieldContractGuid(), dopYieldContract);
+
+		return dopYieldContract;
+	}
+	
+	private void calculateYieldContractCommodityForage(String declaredYieldContractGuid,
+			DopYieldContract<? extends AnnualField> dopYieldContract) {
+
+		logger.debug("<calculateYieldContractCommodityForage");
+		
+		List<DopYieldContractCommodityForage> dopNewYieldContractCommodityForageList = new ArrayList<DopYieldContractCommodityForage>();
+
+		if (dopYieldContract.getFields() != null && dopYieldContract.getFields().size() > 0) {
+
+			for (AnnualField field : dopYieldContract.getFields()) {
+				
+				if (field.getDopYieldFieldForageList() != null && field.getDopYieldFieldForageList().size() > 0) {
+
+					// Loop through each dop field record
+					for (DopYieldFieldForage dopField : field.getDopYieldFieldForageList()) {
+						
+						if(dopField.getCommodityTypeCode() != null) {
+						
+							List<DopYieldContractCommodityForage> dyccfFiltered = new ArrayList<DopYieldContractCommodityForage>();
+							
+							//Check if the frontend sends back an existing record for the commodity type
+							if (dopYieldContract.getDopYieldContractCommodityForageList() != null && dopYieldContract.getDopYieldContractCommodityForageList().size() > 0) {
+								dyccfFiltered = dopYieldContract.getDopYieldContractCommodityForageList().stream()
+										.filter(x -> x.getCommodityTypeCode().equals(dopField.getCommodityTypeCode()))
+										.collect(Collectors.toList());
+							}
+							
+							DopYieldContractCommodityForage existingDopYieldFieldForage = null;
+	
+							if (dyccfFiltered != null && dyccfFiltered.size() > 0) {
+								// commodity type already exists in the list. Add the new values
+								existingDopYieldFieldForage = dyccfFiltered.get(0);
+							}
+							
+							List<DopYieldContractCommodityForage> dyccfAddedToNewList = new ArrayList<DopYieldContractCommodityForage>();
+							
+							//Check if the record has been added to the new list already
+							if (dopNewYieldContractCommodityForageList != null && dopNewYieldContractCommodityForageList.size() > 0) {
+								dyccfAddedToNewList = dopNewYieldContractCommodityForageList.stream()
+										.filter(x -> x.getCommodityTypeCode().equals(dopField.getCommodityTypeCode()))
+										.collect(Collectors.toList());
+							}
+							
+							//Set manually entered values
+							Double harvestedAcresOverride = null;
+							Double quantityHarvestedTonsOverride = null;
+							if(existingDopYieldFieldForage != null) {
+								harvestedAcresOverride = existingDopYieldFieldForage.getHarvestedAcresOverride();
+								quantityHarvestedTonsOverride = existingDopYieldFieldForage.getQuantityHarvestedTonsOverride();
+							}
+	
+							//Calculate values
+							//Insured Acres
+							Double totalFieldAcres = (double)0;
+							if(dopField.getFieldAcres() != null && dopField.getFieldAcres() > 0 && Boolean.TRUE.equals(dopField.getIsQuantityInsurableInd())) {
+								totalFieldAcres = dopField.getFieldAcres();
+							}
+							
+							//Get a list of eligible cuts
+							List<DopYieldFieldForageCut> totalEligileCuts = null;
+							if(dopField.getDopYieldFieldForageCuts() != null && dopField.getDopYieldFieldForageCuts().size() > 0) {
+								totalEligileCuts = dopField.getDopYieldFieldForageCuts().stream()
+										.filter(x -> x.getTotalBalesLoads() != null
+												&& x.getTotalBalesLoads() > 0
+												&& x.getWeightDefaultUnit() != null && x.getWeightDefaultUnit() > 0
+												&& x.getDeletedByUserInd() == false)
+										.collect(Collectors.toList());
+							}
+							
+							Double harvestedAcres = (double)0;
+							Double quantityHarvestedTons = (double)0;
+							if(totalEligileCuts != null && totalEligileCuts.size() > 0) {
+								//Harvested Acres
+								if(dopField.getFieldAcres() != null && dopField.getFieldAcres() > 0 && Boolean.TRUE.equals(dopField.getIsQuantityInsurableInd())) {
+									harvestedAcres = dopField.getFieldAcres();
+								}
+	
+								Double calculatedQuantityHarvest;
+	
+								for (DopYieldFieldForageCut cut : totalEligileCuts) {
+									Integer bales = cut.getTotalBalesLoads();
+									Double moisture = cut.getMoisturePercent();
+									Double weight = cut.getWeightDefaultUnit(); //Needs to be the default unit
+	
+									calculatedQuantityHarvest = bales * weight * (1 - (moisture/100));
+									
+									//Quantity Harvested Tons
+									if(dopField.getPlantDurationTypeCode().equalsIgnoreCase(InventoryServiceEnums.PlantDurationType.PERENNIAL.toString())) {
+										//Perennials need another step in the calculation
+										calculatedQuantityHarvest = calculatedQuantityHarvest / 0.85;
+									}
+									
+									quantityHarvestedTons = quantityHarvestedTons + calculatedQuantityHarvest;
+									
+								}
+							}
+	
+							DopYieldContractCommodityForage dyccf = null;
+							
+							if (dyccfAddedToNewList == null || dyccfAddedToNewList.size() == 0) {
+								// commodity type not in the list yet - Add it
+								dyccf = new DopYieldContractCommodityForage();
+								dyccf.setDeclaredYieldContractGuid(declaredYieldContractGuid);
+								dyccf.setCommodityTypeCode(dopField.getCommodityTypeCode());
+								dyccf.setTotalFieldAcres(totalFieldAcres);
+								dyccf.setHarvestedAcres(harvestedAcres);
+								dyccf.setHarvestedAcresOverride(harvestedAcresOverride);
+								dyccf.setQuantityHarvestedTons(quantityHarvestedTons);
+								dyccf.setQuantityHarvestedTonsOverride(quantityHarvestedTonsOverride);
+								
+								dopNewYieldContractCommodityForageList.add(dyccf);
+	
+							} else {
+								// commodity type already exists in the new list. Add the new values
+								dyccf = dyccfAddedToNewList.get(0);
+								dyccf.setTotalFieldAcres(totalFieldAcres + dyccf.getTotalFieldAcres());
+								dyccf.setHarvestedAcres(harvestedAcres + dyccf.getHarvestedAcres());
+								dyccf.setHarvestedAcresOverride(harvestedAcresOverride);
+								dyccf.setQuantityHarvestedTons(quantityHarvestedTons + dyccf.getQuantityHarvestedTons());
+								dyccf.setQuantityHarvestedTonsOverride(quantityHarvestedTonsOverride);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		//Set yield per acre
+		if(dopNewYieldContractCommodityForageList != null && dopNewYieldContractCommodityForageList.size() > 0) {
+			for(DopYieldContractCommodityForage dyccf : dopNewYieldContractCommodityForageList) {
+				//Take override values if it's not null
+				Double harvestedAcresForCalculation = dyccf.getHarvestedAcresOverride() == null ? dyccf.getHarvestedAcres() : dyccf.getHarvestedAcresOverride();
+				Double quantityHarvestedForCalculation = dyccf.getQuantityHarvestedTonsOverride() == null ? dyccf.getQuantityHarvestedTons() : dyccf.getQuantityHarvestedTonsOverride();
+
+				Double yieldPerAcre = (double)0;
+				if(harvestedAcresForCalculation > 0) {
+					yieldPerAcre = quantityHarvestedForCalculation / harvestedAcresForCalculation;
+				}
+				dyccf.setYieldPerAcre(yieldPerAcre);
+			}
+		}
+		
+		dopYieldContract.setDopYieldContractCommodityForageList(dopNewYieldContractCommodityForageList);
+		
+		logger.debug(">calculateYieldContractCommodityForage");
+
+	}	
+
 
 	private void updateDeclaredYieldContractCommodity(String declaredYieldContractGuid,
 			DopYieldContract<? extends AnnualField> dopYieldContract, DopYieldContractCommodity dopContractCommodity,
@@ -640,35 +872,52 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		return dto.getDeclaredYieldFieldGuid();
 	}
 
-	private void calculateDopYieldField(DopYieldFieldGrain dopYieldField,
+	private String insertDeclaredYieldFieldForage(DopYieldFieldForageCut dopYieldFieldForage, String userId) throws DaoException {
+
+		DeclaredYieldFieldForageDto dto = new DeclaredYieldFieldForageDto();
+		dopYieldContractFactory.updateDto(dto, dopYieldFieldForage);
+
+		dto.setDeclaredYieldFieldForageGuid(null);
+		dto.setInventoryFieldGuid(dopYieldFieldForage.getInventoryFieldGuid());
+
+		declaredYieldFieldForageDao.insert(dto, userId);
+
+		return dto.getDeclaredYieldFieldForageGuid();
+	}
+	
+	/// converts a value (Grain = acres, Forage = weight) into the default units and returns the converted value
+	private Double convertDopYieldFieldAcresWeight(Double valueToConvert, Integer cropCommodityId,
 			DopYieldContract<? extends AnnualField> dopYieldContract, Map<String, YieldMeasUnitConversionDto> ymucMap)
 			throws ServiceException {
 
-		Double estYieldPerAcreDefaultUnit = null;
+		logger.debug("<convertDopYieldFieldAcresWeight");
+
+		Double estYieldDefaultUnit = null;
 		String srcUnit = dopYieldContract.getEnteredYieldMeasUnitTypeCode();
 		String targetUnit = dopYieldContract.getDefaultYieldMeasUnitTypeCode();
 
 		if (srcUnit.equals(targetUnit)) {
-			estYieldPerAcreDefaultUnit = dopYieldField.getEstimatedYieldPerAcre();
+			estYieldDefaultUnit = valueToConvert;
 		} else {
 			YieldMeasUnitConversionDto ymucDto = lookupYieldMeasUnitConversion(ymucMap,
-					dopYieldField.getCropCommodityId(), srcUnit, targetUnit);
+					cropCommodityId, srcUnit, targetUnit);
 
 			if (ymucDto == null) {
 
 				// Cannot calculate conversion.
 				throw new ServiceException("No conversion is defined for commodity id "
-						+ dopYieldField.getCropCommodityId() + ", Src Unit " + srcUnit + ", Target Unit " + targetUnit
+						+ cropCommodityId + ", Src Unit " + srcUnit + ", Target Unit " + targetUnit
 						+ ", for crop year " + dopYieldContract.getCropYear());
 			} else {
-				estYieldPerAcreDefaultUnit = calculateYieldMeasUnitConversion(ymucDto,
-						dopYieldField.getEstimatedYieldPerAcre(), multiplyUnitCoversion);
+				estYieldDefaultUnit = calculateYieldMeasUnitConversion(ymucDto,
+						valueToConvert, multiplyUnitCoversion);
 			}
 		}
+		
+		logger.debug(">convertDopYieldFieldAcresWeight");
 
-		dopYieldField.setEstimatedYieldPerAcreDefaultUnit(estYieldPerAcreDefaultUnit);
-
-	}
+		return estYieldDefaultUnit;
+	}	
 
 	@Override
 	public DopYieldContract<? extends AnnualField> updateDopYieldContract(String declaredYieldContractGuid,
@@ -697,19 +946,29 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 			// update annual field values
 			updateAnnualField(dopYieldContract, ymucMap, authentication);
 
-			// Estimated Yield/Commodity (Field Rollup)
-			updateDeclaredYieldFieldRollup(dopYieldContract.getDeclaredYieldContractGuid(), dopYieldContract, userId,
-					ymucMap);
+			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(dopYieldContract.getInsurancePlanId()) ) {
+				// Estimated Yield/Commodity (Field Rollup)
+				updateDeclaredYieldFieldRollup(dopYieldContract.getDeclaredYieldContractGuid(), dopYieldContract, userId,
+						ymucMap);
 
-			// Declared Yield Contract Commodity
-			List<DopYieldContractCommodity> dopContractCommodities = dopYieldContract.getDopYieldContractCommodities();
-			if (dopContractCommodities != null && !dopContractCommodities.isEmpty()) {
-				for (DopYieldContractCommodity dopContractCommodity : dopContractCommodities) {
-					updateDeclaredYieldContractCommodity(declaredYieldContractGuid, dopYieldContract,
-							dopContractCommodity, ymucMap, userId);
+				// Declared Yield Contract Commodity
+				List<DopYieldContractCommodity> dopContractCommodities = dopYieldContract.getDopYieldContractCommodities();
+				if (dopContractCommodities != null && !dopContractCommodities.isEmpty()) {
+					for (DopYieldContractCommodity dopContractCommodity : dopContractCommodities) {
+						updateDeclaredYieldContractCommodity(declaredYieldContractGuid, dopYieldContract,
+								dopContractCommodity, ymucMap, userId);
+					}
 				}
-			}
 
+			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(dopYieldContract.getInsurancePlanId()) ) {
+
+				//Calculate and save commodity totals
+				updateDeclaredYieldContractCommodityForage(declaredYieldContractGuid, dopYieldContract, userId);
+
+			} else {
+				throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
+			}
+			
 			// DOP contract level comments
 			updateContractUwComments(declaredYieldContractGuid, dopYieldContract, userId, authentication);
 
@@ -839,7 +1098,37 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		declaredYieldContractDao.update(dto, userId);
 	}
 
+	private String updateDeclaredYieldFieldForage(DopYieldFieldForageCut dopYieldFieldForage, String userId) throws DaoException {
+
+		logger.debug("<updateDeclaredYieldFieldForage");
+
+		DeclaredYieldFieldForageDto dto = null;
+
+		if (dopYieldFieldForage.getDeclaredYieldFieldForageGuid() != null) {
+			dto = declaredYieldFieldForageDao.fetch(dopYieldFieldForage.getDeclaredYieldFieldForageGuid());
+		}
+
+		String declaredYieldFieldForageGuid = null;
+
+		if (dto == null) {
+			// Insert if it doesn't exist
+			declaredYieldFieldForageGuid = insertDeclaredYieldFieldForage(dopYieldFieldForage, userId);
+		} else {
+			declaredYieldFieldForageGuid = dto.getDeclaredYieldFieldForageGuid();
+
+			dopYieldContractFactory.updateDto(dto, dopYieldFieldForage);
+
+			declaredYieldFieldForageDao.update(dto, userId);
+		}
+		
+		logger.debug(">updateDeclaredYieldFieldForage");
+
+		return declaredYieldFieldForageGuid;
+	}
+	
 	private String updateDeclaredYieldField(DopYieldFieldGrain dopYieldField, String userId) throws DaoException {
+
+		logger.debug("<updateDeclaredYieldField");
 
 		DeclaredYieldFieldDto dto = null;
 
@@ -859,6 +1148,8 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 
 			declaredYieldFieldDao.update(dto, userId);
 		}
+		
+		logger.debug(">updateDeclaredYieldField");
 
 		return declaredYieldFieldGuid;
 	}
@@ -883,7 +1174,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 
 	// This is only used in unit tests
-	public DopYieldContract calculateYieldRollupTest(DopYieldContract<? extends AnnualField> dopYieldContract)
+	public DopYieldContract<?> calculateYieldRollupTest(DopYieldContract<? extends AnnualField> dopYieldContract)
 			throws ServiceException, DaoException {
 
 		Map<String, YieldMeasUnitConversionDto> ymucMap = loadYieldMeasUnitConversionsMap(

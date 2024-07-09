@@ -116,6 +116,8 @@ public class InventorySeededForageDaoTest {
 		invFieldDto.setInsurancePlanId(insurancePlanId);
 		invFieldDto.setLastYearCropCommodityId(20);
 		invFieldDto.setLastYearCropCommodityName("FALL RYE");
+		invFieldDto.setLastYearCropVarietyId(null);
+		invFieldDto.setLastYearCropVarietyName(null);
 		invFieldDto.setIsHiddenOnPrintoutInd(false);
 		invFieldDto.setPlantingNumber(plantingNumber);
 
@@ -304,6 +306,8 @@ public class InventorySeededForageDaoTest {
 		invFieldDto.setInsurancePlanId(insurancePlanId);
 		invFieldDto.setLastYearCropCommodityId(20);
 		invFieldDto.setLastYearCropCommodityName("FALL RYE");
+		invFieldDto.setLastYearCropVarietyId(null);
+		invFieldDto.setLastYearCropVarietyName(null);
 		invFieldDto.setIsHiddenOnPrintoutInd(false);
 		invFieldDto.setPlantingNumber(20);
 
@@ -485,6 +489,8 @@ public class InventorySeededForageDaoTest {
 		newDto.setInsurancePlanId(insurancePlanId);
 		newDto.setLastYearCropCommodityId(cropCommodityId);
 		newDto.setLastYearCropCommodityName(null);
+		newDto.setLastYearCropVarietyId(null);
+		newDto.setLastYearCropVarietyName(null);
 		newDto.setIsHiddenOnPrintoutInd(false);
 		newDto.setUnderseededAcres(null);
 		newDto.setUnderseededCropVarietyId(null);

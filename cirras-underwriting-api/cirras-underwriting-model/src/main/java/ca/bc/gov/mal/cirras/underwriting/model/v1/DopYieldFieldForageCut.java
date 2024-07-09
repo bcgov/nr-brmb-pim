@@ -15,6 +15,7 @@ public class DopYieldFieldForageCut implements Serializable {
 	private Double weight;
 	private Double weightDefaultUnit;
 	private Double moisturePercent;
+	private Boolean deletedByUserInd;
 	
 	public String getDeclaredYieldFieldForageGuid() {
 		return declaredYieldFieldForageGuid;
@@ -70,5 +71,13 @@ public class DopYieldFieldForageCut implements Serializable {
 
 	public void setMoisturePercent(Double moisturePercent) {
 		this.moisturePercent = moisturePercent;
+	}
+	
+	public Boolean getDeletedByUserInd() {
+		return deletedByUserInd;
+	}
+
+	public void setDeletedByUserInd(Boolean deletedByUserInd) {
+		this.deletedByUserInd = deletedByUserInd;
 	}
 }

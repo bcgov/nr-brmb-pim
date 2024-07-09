@@ -17,10 +17,13 @@ export function convertToDopYieldContractRsrc(dopYieldContract: DopYieldContract
         enteredYieldMeasUnitTypeCode: dopYieldContract.enteredYieldMeasUnitTypeCode,
         defaultYieldMeasUnitTypeCode: dopYieldContract.defaultYieldMeasUnitTypeCode,
         grainFromOtherSourceInd: dopYieldContract.grainFromOtherSourceInd,
+        balerWagonInfo: dopYieldContract.balerWagonInfo,
+        totalLivestock: dopYieldContract.totalLivestock,
         insurancePlanId: dopYieldContract.insurancePlanId,
         fields: dopYieldContract.fields,
         dopYieldFieldRollupList: dopYieldContract.dopYieldFieldRollupList,
         dopYieldContractCommodities: dopYieldContract.dopYieldContractCommodities,
+        dopYieldContractCommodityForageList: dopYieldContract.dopYieldContractCommodityForageList,
         uwComments: dopYieldContract.uwComments,
         etag: dopYieldContract.etag,
         type:  "DopYieldContractRsrc"

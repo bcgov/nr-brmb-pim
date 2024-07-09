@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerContractYearDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CommodityTypeCodeDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CropCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.spring.PersistenceSpringConfig;
@@ -39,6 +40,8 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 	private String commodityTypeCode1 = "TESTCODE DYF";
 	private String commodityTypeCode2 = "TESTCODE DYF2";
 	private String declaredYieldContractCmdtyForageGuid;
+	private Integer cropCommodityId = 88995566;
+	private Integer insurancePlanId = 5;
 
 
 	@Before
@@ -75,6 +78,12 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		deleteCommodityTypeCode(commodityTypeCode1);
 		deleteCommodityTypeCode(commodityTypeCode2);
 
+		CropCommodityDao daoCommodity = persistenceSpringConfig.cropCommodityDao();
+		CropCommodityDto dtoCommodity = daoCommodity.fetch(cropCommodityId);
+		if (dtoCommodity != null) {
+			daoCommodity.delete(cropCommodityId);
+		}
+
 	}
 
 	protected void deleteCommodityTypeCode(String commodityTypeCode) throws DaoException, NotFoundDaoException {
@@ -93,6 +102,7 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 
 		createGrowerContractYear();
 		createDeclaredYieldContract(userId);
+		createCropCommodity();
 		createCommodityTypeCode(commodityTypeCode1);
 		createCommodityTypeCode(commodityTypeCode2);
 		
@@ -185,6 +195,10 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 			Assert.assertEquals(dyccfDto.getDeclaredYieldContractGuid(), declaredYieldContractGuid);
 		}
 		
+		dtos = dao.selectToRecalculate(cropCommodityId, "LB", cropYear, cropYear);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(2, dtos.size());
+		
 		//DELETE
 		dao.delete(newDto2.getDeclaredYieldContractCmdtyForageGuid());
 		dao.delete(declaredYieldContractCmdtyForageGuid);
@@ -218,7 +232,7 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		newDto.setCropYear(cropYear);
 		newDto.setDeclarationOfProductionDate(dopDate);
 		newDto.setDefaultYieldMeasUnitTypeCode("TONNE");
-		newDto.setEnteredYieldMeasUnitTypeCode("BUSHEL");
+		newDto.setEnteredYieldMeasUnitTypeCode("LB");
 		newDto.setGrainFromOtherSourceInd(true);
 		newDto.setBalerWagonInfo(null);
 		newDto.setTotalLivestock(null);
@@ -227,6 +241,54 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		dao.insert(newDto, userId);
 		declaredYieldContractGuid = newDto.getDeclaredYieldContractGuid();
 		
+	}
+	
+	private void createCropCommodity() throws DaoException {
+		CropCommodityDao dao = persistenceSpringConfig.cropCommodityDao();
+		CropCommodityDto newDto = new CropCommodityDto();
+		
+		String commodityName = "Test Commodity";
+		String shortLabel = "TC";
+		String plantDurationTypeCode = "PERENNIAL";
+		Boolean isInventoryCropInd = true;
+		Boolean isYieldCropInd = true;
+		Boolean isUnderwritingCropInd = true;
+		String yieldMeasUnitTypeCode = "TON";
+		Integer yieldDecimalPrecision = 1;
+
+		//Date and Time without millisecond
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		Date dateTime = cal.getTime();
+
+		//Date without time
+		Date date = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		
+		Date effectiveDate = addDays(date, -1);
+		Date expiryDate = addDays(date, 1);
+
+		String userId = "JUNIT_TEST";
+		
+		//INSERT
+		newDto.setCropCommodityId(cropCommodityId);
+		newDto.setCommodityName(commodityName);
+		newDto.setInsurancePlanId(insurancePlanId);
+		newDto.setShortLabel(shortLabel);
+		newDto.setPlantDurationTypeCode(plantDurationTypeCode);
+		newDto.setIsInventoryCropInd(isInventoryCropInd);
+		newDto.setIsYieldCropInd(isYieldCropInd);
+		newDto.setIsUnderwritingCropInd(isUnderwritingCropInd);
+		newDto.setIsProductInsurableInd(true);
+		newDto.setIsCropInsuranceEligibleInd(true);
+		newDto.setIsPlantInsuranceEligibleInd(true);
+		newDto.setIsOtherInsuranceEligibleInd(true);
+		newDto.setYieldMeasUnitTypeCode(yieldMeasUnitTypeCode);
+		newDto.setYieldDecimalPrecision(yieldDecimalPrecision);
+		newDto.setEffectiveDate(effectiveDate);
+		newDto.setExpiryDate(expiryDate);
+		newDto.setDataSyncTransDate(dateTime);
+
+		dao.insert(newDto, userId);
 	}
 	
 	private void createCommodityTypeCode(String commodityTypeCode) throws DaoException {
@@ -251,7 +313,7 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		
 		//INSERT
 		newDto.setCommodityTypeCode(commodityTypeCode);
-		newDto.setCropCommodityId(65);
+		newDto.setCropCommodityId(cropCommodityId);
 		newDto.setDescription(description);
 		newDto.setEffectiveDate(effectiveDate);
 		newDto.setExpiryDate(expiryDate);

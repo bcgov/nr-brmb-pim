@@ -120,9 +120,12 @@ export interface DopYieldFieldForage {
     isQuantityInsurableInd?: boolean;
     fieldAcres?: number;
     cropVarietyName?: string;
+    cropVarietyId?: number;
+    plantDurationTypeCode?: string;
     insurancePlanId?: number;
     fieldId?: number;
     cropYear?: number;
+    isHiddenOnPrintoutInd?: boolean;
     dopYieldFieldForageCuts?: Array<DopYieldFieldForageCut>;
 }
 
@@ -134,6 +137,7 @@ export interface DopYieldFieldForageCut {
     weight?: number;
     weightDefaultUnit?: number;
     moisturePercent?: number;
+    deletedByUserInd?: boolean;
 }
 
 export interface DopYieldContractCommodityForage {

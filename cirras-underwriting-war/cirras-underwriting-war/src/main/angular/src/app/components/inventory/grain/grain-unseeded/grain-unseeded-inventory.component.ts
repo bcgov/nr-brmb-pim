@@ -1,10 +1,10 @@
 
 import { ChangeDetectionStrategy, Component, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-import { isBaseCommodity } from 'src/app/utils';
+import { isBaseCommodity, makeTitleCase } from 'src/app/utils';
 import { CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
 import { GrainInventoryComponent } from "../grain-inventory.component";
-import { roundUpDecimalAcres } from '../../inventory-common';
+import { CropCommodityVarietyOptionsType, roundUpDecimalAcres } from '../../inventory-common';
 import {ViewEncapsulation } from '@angular/core';
 
 @Component({
@@ -16,6 +16,8 @@ import {ViewEncapsulation } from '@angular/core';
 })
 
 export class GrainUnseededInventoryComponent extends GrainInventoryComponent { 
+
+  filteredCommodityVarietyOptions: CropCommodityVarietyOptionsType[];
 
   ngOnInit(): void {
     super.ngOnInit()
@@ -33,6 +35,57 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
 
     if ( changes.inventoryContract && this.inventoryContract && this.inventoryContract.commodities ) {
       this.addAllCommodities()
+    }
+  }
+
+  commodityVarietyFocus(fieldIndex, plantingIndex) {
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
+    const lastYearCropCommodityVarietyName = pltg.controls['lastYearCropCommodityVarietyName'].value?.toLowerCase();
+
+    if (lastYearCropCommodityVarietyName) {
+      this.filteredCommodityVarietyOptions = this.lastYearsCropOptions.filter(option => {
+        const name = (option.cropCommodityVarietyName || '').toLowerCase();
+        return name.includes(lastYearCropCommodityVarietyName);
+      });
+    } else {
+      this.filteredCommodityVarietyOptions = this.lastYearsCropOptions.slice();
+    }
+  }
+
+  searchCommodityVariety(value) {
+    value = value.toLowerCase();
+    this.filteredCommodityVarietyOptions = this.lastYearsCropOptions.filter(option => {
+      const name = (option.cropCommodityVarietyName || '').toLowerCase();
+      return name.includes(value);
+    });
+  }
+
+  displayCommodityVarietyFn(value: string): string {
+    return value ? makeTitleCase(value) : '';
+  }
+
+  commodityVarietySelected(event, fieldIndex, plantingIndex) {
+    const lastYearCropCommodityVarietyName = event.option.value;
+
+    // find the corresponding commodity variety id
+    let lastYearCropCommodityVarietyId = '0_0';
+    let isUnseededInsurableInd = null;
+    for (const option of this.lastYearsCropOptions) {
+      if (option.cropCommodityVarietyName === lastYearCropCommodityVarietyName) {
+        lastYearCropCommodityVarietyId = option.cropCommodityVarietyId;
+        isUnseededInsurableInd = option.isUnseededInsurableInd;
+        break;
+      }
+    }
+
+    // set the commodity variety id and name
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
+    pltg.controls['lastYearCropCommodityVarietyId'].setValue(lastYearCropCommodityVarietyId);
+    pltg.controls['lastYearCropCommodityVarietyName'].setValue(lastYearCropCommodityVarietyName);
+    if (isUnseededInsurableInd !== null) {
+      pltg.controls['isUnseededInsurableInd'].setValue(isUnseededInsurableInd);
     }
   }
 
@@ -97,6 +150,8 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
   isChecked(val):boolean{
 
     this.calculateSumTotals()
+
+    this.isMyFormDirty()
 
     if (val && val.toString().toUpperCase() === "Y") 
       return true;
@@ -188,6 +243,8 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
     })
 
     this.calculateSumTotals()
+
+    this.isMyFormDirty()
   }
 
   resetUnseededDataForDeletePlanting( unseededControls, numPlantings, hasSeededData) {
@@ -212,6 +269,8 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
     let acres = pltg.controls['acresToBeSeeded'].value
 
     pltg.controls['acresToBeSeeded'].setValue(roundUpDecimalAcres(acres))
+
+    this.isMyFormDirty()
   }
 
   roundUpProjectedAcres(cmdtyIndex){
@@ -221,6 +280,8 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
     let acres = frmCmdty['controls']['totalUnseededAcresOverride'].value
 
     frmCmdty.controls['totalUnseededAcresOverride'].setValue(roundUpDecimalAcres(acres))
+
+    this.isMyFormDirty()
   }
 
   showBaseCmdty(cropCommodityId: number) {
@@ -234,7 +295,8 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
   otherChangesIndClicked(){
       
     this.setOtherChangesComment();
-  
+
+    this.isMyFormDirty();
   }
 
   setOtherChangesComment(){
@@ -301,7 +363,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
   setStyles(){
 
     let styles = {
-      'width' : '1216px',
+      'width' : '1286px',
       'grid-template-columns': '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr',
     }
 
@@ -314,7 +376,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
       'display': 'grid',
       'grid-template-columns': '1fr 1fr 1fr 1fr 1fr',
       'align-items': 'stretch',
-      'width': '606px'
+      'width': '676px'
     }
 
     return styles;

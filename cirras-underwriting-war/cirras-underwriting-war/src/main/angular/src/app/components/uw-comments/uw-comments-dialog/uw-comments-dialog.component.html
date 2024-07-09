@@ -1,0 +1,69 @@
+<cuws-base-dialog [titleLabel]="titleLabel" [type]="dialogType" class="underwriting-comments">
+
+    <div mat-dialog-content>
+        <div class="row-group-left">
+            <div class="comments-container comments-info">
+
+                <!-- DOP Comments headers -->
+                <div class="five-columns dop-comments-header" *ngIf="data.underwritingCommentTypeCode === 'DOP'">
+                    <div class="justify-left padding-bottom">
+                        Policy Number
+                        <span class="header">{{ data.policyNumber }}</span>
+                    </div>
+                    <div class="justify-left padding-bottom">
+                        Grower Name
+                        <span class="header">{{ data.growerName }}</span>
+                    </div>
+                    <div class="justify-left padding-bottom">
+                        Grower Number
+                        <span class="header">{{ data.growerNumber }}</span>
+                    </div>
+                    <div class="justify-left padding-bottom"></div>
+                    <div class="justify-right padding-bottom">
+                        <button *ngIf="securityUtilService.canEditInventory()" mat-raised-button color="secondary"
+                            class="header-button" (click)="onAddNewComment()">
+                            <mat-icon>add</mat-icon> Add Comment
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Inventory Comments headers -->
+                <div class="five-columns inventory-comments-header" *ngIf="data.underwritingCommentTypeCode === 'INV'">
+                    <div class="justify-left padding-bottom">
+                        Field ID
+                        <span class="header">{{ data.fieldId }}</span>
+                    </div>
+                    <div class="justify-left padding-bottom">
+                        Field Name
+                        <span class="header">{{ data.fieldName }}</span>
+                    </div>
+                    <div class="justify-left padding-bottom">
+                        Legal Location
+                        <span class="header">{{ data.legalLocation }}</span>
+                    </div>
+                    <div class="justify-left padding-bottom"></div>
+                    <div class="justify-right padding-bottom">
+                        <button *ngIf="securityUtilService.canEditInventory()" mat-raised-button color="secondary"
+                            class="header-button" (click)="onAddNewComment()">
+                            <mat-icon>add</mat-icon> Add Comment
+                        </button>
+                    </div>
+                </div>
+
+                <uw-comment-list [uwComments]="data.uwComments" [uwCommentsFormArray]="uwCommentsFormArray"
+                    style="display: contents;"></uw-comment-list>
+
+                <div class="five-columns" *ngIf="!hasComments()">
+                    Select the 'Add Comment' button to add inventory comments.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div mat-dialog-actions align="end">
+        <p style="margin-right: auto;">To save new comments, click done and then click save on the main screen.</p>
+        <button mat-raised-button color="secondary" (click)="onCancel()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="onDone()">Done</button>
+    </div>
+
+</cuws-base-dialog>

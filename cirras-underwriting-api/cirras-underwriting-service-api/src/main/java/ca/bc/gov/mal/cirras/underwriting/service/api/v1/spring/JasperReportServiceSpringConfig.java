@@ -21,13 +21,13 @@ public class JasperReportServiceSpringConfig
 		logger.debug(">JasperReportServiceSpringConfig");
 	}
 
-	@Value("${JASPER_URL}")
+	@Value("${cirras.underwriting.report.service.url}")
 	private String reportServiceUrl;
 
-	@Value("${JASPER_USERNAME}")
+	@Value("${cirras.underwriting.report.service.username}")
 	private String reportServiceUsername;
 
-	@Value("${JASPER_PASSWORD}")
+	@Value("${cirras.underwriting.report.service.secret}")
 	private String reportServicePassword;
 
 	@Bean

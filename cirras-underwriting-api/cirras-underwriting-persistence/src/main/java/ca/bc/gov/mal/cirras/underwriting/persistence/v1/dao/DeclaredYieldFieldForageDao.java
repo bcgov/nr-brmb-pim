@@ -17,9 +17,22 @@ public interface DeclaredYieldFieldForageDao extends Serializable {
     void update(DeclaredYieldFieldForageDto dto, String userId) throws DaoException, NotFoundDaoException;
     
     void delete(String declaredYieldFieldForageGuid) throws DaoException, NotFoundDaoException;
-    
+
+    void deleteForField(Integer fieldId) throws DaoException, NotFoundDaoException;
+
+    void deleteForFieldAndYear(Integer fieldId, Integer cropYear) throws DaoException, NotFoundDaoException;
+
     void deleteForDeclaredYieldContract(String declaredYieldContractGuid) throws DaoException, NotFoundDaoException;
 
     List<DeclaredYieldFieldForageDto> getByInventoryField(String inventoryFieldGuid) throws DaoException;
+
+    int getTotalDopRecordsWithYield(Integer fieldId, Integer cropYear, Integer insurancePlanId) throws DaoException, NotFoundDaoException;
+    
+	List<DeclaredYieldFieldForageDto> selectToRecalculate(
+    		Integer cropCommodityId,
+    		String enteredYieldMeasUnitTypeCode,
+    		Integer effectiveCropYear,
+    		Integer expiryCropYear
+    		) throws DaoException;
 
  }

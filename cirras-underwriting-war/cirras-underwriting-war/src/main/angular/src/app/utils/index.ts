@@ -397,6 +397,16 @@ export function setHttpHeaders(authToken) {
     return true
   }
 
+  export function areNullableBooleanNotEqual(a: boolean | null, b: boolean | null) { 
+    // a, b -> nullable boolean
+
+    if ( (a == null && b != null) || (a != null && b == null) || ( a != null && b != null && a != b ) ) {
+        return true
+    }
+
+    return false
+  }
+
   export function userCanAccessInventory(securityUtilService, links: Array<RelLink>){
   
     let isUserPermittedToAccessInventory = false

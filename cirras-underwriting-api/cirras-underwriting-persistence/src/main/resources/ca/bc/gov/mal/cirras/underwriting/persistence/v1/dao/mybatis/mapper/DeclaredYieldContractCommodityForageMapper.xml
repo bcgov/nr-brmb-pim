@@ -114,4 +114,14 @@
 		where t.declared_yield_contract_guid = #{declaredYieldContractGuid}
 		order by ctc.description
 	</select> 
+
+	<select id="selectToRecalculate" resultMap="DeclaredYieldContractCommodityForageDtoMap">
+		<include refid="selectColumns"/>
+		FROM declared_yield_contract_cmdty_forage t
+		JOIN commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code	
+		JOIN declared_yield_contract dyc ON dyc.declared_yield_contract_guid = t.declared_yield_contract_guid
+		WHERE ctc.crop_commodity_id = #{cropCommodityId}
+		AND dyc.entered_yield_meas_unit_type_code = #{enteredYieldMeasUnitTypeCode}
+		AND dyc.crop_year BETWEEN #{effectiveCropYear} AND #{expiryCropYear}	
+	</select> 	
 </mapper>

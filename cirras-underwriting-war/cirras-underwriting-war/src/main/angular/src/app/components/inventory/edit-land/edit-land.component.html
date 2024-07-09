@@ -1,340 +1,264 @@
+<cuws-base-dialog [titleLabel]="titleLabel" [type]="dialogType">
 
+    <div mat-dialog-content>
+        <div class="row-group-left">
+            <span class="location-title">Location {{ dataReceived?.otherLegalDescription }}</span>
 
-<div class="dialog-form"
-     cdkDrag
-     cdkDragRootElement=".cdk-overlay-pane"
-     cdkDragBoundary=".cdk-overlay-container">
+            <form [formGroup]="editLandForm">
 
-     <div class="dialog-drag-handle" cdkDragHandle>
-        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
-        <!-- <g transform="translate(0 -5)"> -->
-            <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
-            <!-- <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 4v3H7l5 5 5-5h-3v-3z"></path>  -->
-            <path d="M0 0h24v24H0z" fill="none"></path>
-        <!-- </g> -->
-        </svg>
+                <mat-radio-group formControlName="choiceSelected">
+                    <span class="location-subtitle">Rename Legal Land</span>
+                    <mat-radio-button [value]="'rename'" (click)="onChoiceClick('rename')"></mat-radio-button>
+                    <p>This change will be applied to all fields associated with that legal land, for all years. It is
+                        intended
+                        to fix a typo on a legal location that was never valid. This change will take place when the
+                        inventory
+                        is saved.</p>
+                    <span class="location-subtitle">Replace Legal Land</span>
+                    <mat-radio-button [value]="'replace'" (click)="onChoiceClick('replace')"></mat-radio-button>
+                    <p>The change would affect only this field, in only this crop year. It is intended to change the
+                        legal
+                        location from one that was valid in prior years to a new one that is valid in this crop year.
+                    </p>
+                </mat-radio-group>
+
+                <div>
+                    <span class="location-subtitle">Legal Location <span style="color: red;">*</span></span>
+                </div>
+                <div style="display: grid; grid-template-columns: 6fr 1fr;">
+                    <mat-form-field appearance="fill">
+                        <input matInput formControlName="searchLegal" (keydown)="clearAllForm()" maxlength="128">
+                        <mat-hint *ngIf="showSearchLegalMsg">Please enter at least 3 symbols</mat-hint>
+                    </mat-form-field>
+                    <div class="location-button">
+                        <button *ngIf="editLandForm.controls.choiceSelected.value == 'rename'" mat-raised-button
+                            color="secondary" (click)="onLegalLandValidate()">
+                            <mat-icon>check</mat-icon>
+                            Validate
+                        </button>
+                        <button *ngIf="editLandForm.controls.choiceSelected.value == 'replace'" mat-raised-button
+                            color="secondary" (click)="onLegalLandValidate()">
+                            <mat-icon>search</mat-icon>
+                            Search
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Rename Legal Land -->
+                <ng-container *ngIf="editLandForm.controls.choiceSelected.value == 'rename'">
+
+                    <!-- Warning #1 -->
+                    <p *ngIf="showNewLegalLandMessage" class="location-warning">
+                        <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
+                        This legal location does not currently exist. If you continue, a new legal land will be created.
+                    </p>
+
+                    <!-- Warning #2 -->
+                    <p *ngIf="renameLegalLandList?.isWarningLegalsWithSameLoc" class="location-warning">
+                        <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
+                        {{ renameLegalLandList.legalsWithSameLocMsg.message }}
+                    </p>
+                    <div *ngIf="renameLegalLandList?.legalsWithSameLocList?.length > 0"
+                        class="legal-land-container same-location-legal-land-info">
+                        <div class="border-left header border-top border-bottom padding">Primary Identifier</div>
+                        <div class="border-left header border-top border-bottom border-right padding">Legal Description
+                        </div>
+                        <ng-container *ngFor="let element of renameLegalLandList.legalsWithSameLocList">
+                            <div class="border-left border-bottom padding">
+                                {{ element.primaryPropertyIdentifier }}
+                            </div>
+                            <div class="border-left border-bottom border-right padding">
+                                {{ element.legalDescription }}
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <!-- Warning #3 -->
+                    <p *ngIf="renameLegalLandList?.isWarningFieldOnOtherPolicy" class="location-warning">
+                        <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
+                        {{ renameLegalLandList.fieldOnOtherPolicyMsg.message }}
+                    </p>
+                    <div *ngIf="renameLegalLandList?.fieldOnOtherPolicyList?.length > 0"
+                        class="legal-land-container field-on-other-policy">
+                        <div class="border-left header border-top border-bottom padding">Field Name</div>
+                        <div class="border-left header border-top border-bottom padding">Field ID</div>
+                        <div class="border-left header border-top border-bottom border-right padding">Policy (Plan)
+                        </div>
+                        <ng-container *ngFor="let field of renameLegalLandList.fieldOnOtherPolicyList">
+                            <div class="border-left border-bottom padding">
+                                {{ field.fieldLabel }}
+                            </div>
+                            <div class="border-left border-bottom padding">
+                                {{ field.fieldId }}
+                            </div>
+                            <div class="border-left border-bottom border-right padding">
+                                {{ getPolicyAndPlan(field) }}
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <!-- Warning #4 -->
+                    <p *ngIf="renameLegalLandList?.isWarningOtherFieldOnPolicy" class="location-warning">
+                        <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
+                        {{ renameLegalLandList.otherFieldOnPolicyMsg.message }}
+                    </p>
+                    <div *ngIf="renameLegalLandList?.otherFieldOnPolicyList?.length > 0"
+                        class="legal-land-container field-on-other-policy">
+                        <div class="border-left header border-top border-bottom padding">Field Name</div>
+                        <div class="border-left header border-top border-bottom padding">Field ID</div>
+                        <div class="border-left header border-top border-bottom border-right padding">Policy (Plan)
+                        </div>
+                        <ng-container *ngFor="let field of renameLegalLandList.otherFieldOnPolicyList">
+                            <div class="border-left border-bottom padding">
+                                {{ field.fieldLabel }}
+                            </div>
+                            <div class="border-left border-bottom padding">
+                                {{ field.fieldId }}
+                            </div>
+                            <div class="border-left border-bottom border-right padding">
+                                {{ getPolicyAndPlan(field) }}
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <!-- Warning #5 -->
+                    <p *ngIf="renameLegalLandList?.isWarningOtherLegalData" class="location-warning">
+                        <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
+                        {{ renameLegalLandList.otherLegalDataMsg.message }}
+                    </p>
+                    <div *ngIf="renameLegalLandList?.otherLegalData" class="legal-land-container other-legal-land-info">
+                        <div class="border-left header border-top border-bottom padding">Primary Identifier
+                        </div>
+                        <div class="border-left header border-top border-bottom padding">Legal Description</div>
+                        <div class="border-left header border-top border-bottom border-right padding">Short Legal
+                            Description</div>
+                        <div style="display:contents">
+                            <div class="border-left border-bottom padding">
+                                {{ renameLegalLandList.otherLegalData.primaryPropertyIdentifier }}
+                            </div>
+                            <div class="border-left border-bottom padding">
+                                {{ renameLegalLandList.otherLegalData.legalDescription }}
+                            </div>
+                            <div class="border-left border-bottom border-right padding">
+                                {{ renameLegalLandList.otherLegalData.legalShortDescription }}
+                            </div>
+                        </div>
+                    </div>
+
+                </ng-container>
+
+                <!-- Replace Legal Land -->
+                <ng-container *ngIf="editLandForm.controls.choiceSelected.value == 'replace'">
+
+                    <!-- Warning #1 -->
+                    <p *ngIf="showNewLegalLandMessage" class="location-warning">
+                        <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
+                        This legal location does not exist but the system will create it.
+                    </p>
+
+                    <!-- Warning #2 -->
+                    <p *ngIf="replaceLegalLandList?.isWarningFieldOnOtherPolicy" class="location-warning">
+                        <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
+                        {{ replaceLegalLandList.fieldOnOtherPolicyMsg.message }}
+                    </p>
+
+                    <!-- Warning #3 -->
+                    <p *ngIf="legalLandList?.collection?.length > 0" class="location-warning">
+                        Select an existing legal location or choose to replace the location with a new legal land.
+                    </p>
+                    <mat-radio-group formControlName="legalLandIdSelected">
+                        <div *ngIf="legalLandList?.collection?.length > 0" class="legal-land-container legal-land-info">
+                            <div class="border-left header border-top border-bottom padding"></div>
+                            <div class="border-left header border-top border-bottom padding">Legal Location</div>
+                            <div class="border-left header border-top border-bottom padding">Primary Identifier</div>
+                            <div class="border-left header border-top border-bottom border-right padding">Legal
+                                Description
+                            </div>
+                            <ng-container *ngFor="let element of legalLandList.collection">
+                                <div class="border-left border-bottom justify-center padding">
+                                    <mat-radio-button [value]="element.legalLandId"
+                                        (click)="validateReplaceLegalLand(element.legalLandId, element.otherDescription)"></mat-radio-button>
+                                </div>
+                                <div class="border-left border-bottom padding">
+                                    {{ element.otherDescription }}
+                                </div>
+                                <div class="border-left border-bottom padding">
+                                    {{ element.primaryPropertyIdentifier }}
+                                </div>
+                                <div class="border-left border-bottom border-right padding">
+                                    {{ element.legalDescription }}
+                                </div>
+                            </ng-container>
+                            <div class="border-left border-bottom justify-center padding">
+                                <mat-radio-button [value]="-1"
+                                    (click)="validateReplaceLegalLand(-1, '')"></mat-radio-button>
+                            </div>
+                            <div class="border-left border-bottom border-right padding"
+                                style="grid-column-start:2; grid-column-end: 5;">
+                                Replace with new Legal Land
+                            </div>
+                        </div>
+                    </mat-radio-group>
+
+                    <!-- Warning #4 -->
+                    <p *ngIf="replaceLegalLandList?.isWarningOtherFieldsOnLegal" class="location-warning">
+                        <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
+                        {{ replaceLegalLandList.otherFieldsOnLegalMsg.message }}
+                    </p>
+                    <div *ngIf="replaceLegalLandList?.otherFieldsOnLegalLandList?.length > 0"
+                        class="legal-land-container field-on-other-policy">
+                        <div class="border-left header border-top border-bottom padding">Field Name</div>
+                        <div class="border-left header border-top border-bottom padding">Field ID</div>
+                        <div class="border-left header border-top border-bottom border-right padding">Policy (Plan)
+                        </div>
+                        <ng-container *ngFor="let field of replaceLegalLandList.otherFieldsOnLegalLandList">
+                            <div class="border-left border-bottom padding">
+                                {{ field.fieldLabel }}
+                            </div>
+                            <div class="border-left border-bottom padding">
+                                {{ field.fieldId }}
+                            </div>
+                            <div class="border-left border-bottom border-right padding">
+                                {{ getPolicyAndPlan(field) }}
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <!-- Warning #5 -->
+                    <p *ngIf="replaceLegalLandList?.isWarningFieldHasOtherLegalLand" class="location-warning">
+                        <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
+                        {{ replaceLegalLandList.fieldHasOtherLegalLandMsg.message }}
+                    </p>
+                    <div *ngIf="replaceLegalLandList?.otherLegalLandOfFieldList?.length > 0"
+                        class="legal-land-container field-info">
+                        <div class="border-left header border-top border-bottom padding">Legal Location</div>
+                        <div class="border-left header border-top border-bottom padding">Primary Land Identifier</div>
+                        <div class="border-left header border-top border-bottom border-right padding">Legal Description
+                        </div>
+                        <ng-container *ngFor="let land of replaceLegalLandList.otherLegalLandOfFieldList">
+                            <div class="border-left border-bottom padding">
+                                {{ land.otherDescription }}
+                            </div>
+                            <div class="border-left border-bottom padding">
+                                {{ land.primaryPropertyIdentifier }}
+                            </div>
+                            <div class="border-left border-bottom border-right padding">
+                                {{ land.legalShortDescription }}
+                            </div>
+                        </ng-container>
+                    </div>
+
+                </ng-container>
+
+            </form>
+        </div>
     </div>
 
-    <form [formGroup]="editLandForm">
+    <div mat-dialog-actions align="end">
+        <p style="margin-right: auto;">To save legal location information, click done and then click save on the main
+            screen.</p>
+        <button mat-raised-button color="secondary" (click)="onCancelChanges()">Cancel</button>
+        <button *ngIf="showProceedButton" mat-raised-button color="primary" (click)="onProceed()">Done</button>
+    </div>
 
-        <h3 style="padding-left: 10px; font-weight: 600;">Edit Legal Location {{ (dataReceived && dataReceived.otherLegalDescription) ? dataReceived.otherLegalDescription : "" }}</h3>
-        <hr>
-
-        <div class="row-choice">            
-                <div>
-                    <input 
-                            type="radio" 
-                            value="rename" 
-                            formControlName="choiceSelected" 
-                            (click)="onChoiceClick('rename')"/>  
-                    Rename Legal Land
-                </div>
-
-                <div>
-                    <input 
-                            type="radio" 
-                            value="replace" 
-                            formControlName="choiceSelected"
-                            (click)="onChoiceClick('replace')"/> 
-                    Replace Legal Land
-                </div>
-        </div>
-        <p style="padding: 10px; margin: 0px;"> {{ choiceExplanation }} </p>
-        <!-- <hr> -->
-
-        <!-- add the field check for replace -->
-
-        <div *ngIf="choiceExplanation.length> 0" class="grid-container"> 
-            <div class="grid-item">Legal Location:</div>
-            <div class="grid-item">
-                <mat-form-field appearance="fill" [style.width.px]=450>
-                    <input matInput formControlName="searchLegal" 
-                        (keydown)="clearAllForm()" maxlength="128">
-                    <mat-hint *ngIf="showSearchLegalMsg">Please enter at least 3 symbols</mat-hint>
-                </mat-form-field>
-            </div>
-            <div class="grid-item">
-                <button *ngIf="editLandForm.controls.choiceSelected.value == 'rename'" 
-                    mat-raised-button color="primary" (click)="onLegalLandValidate()" class="button-large-text" >
-                    <mat-icon style="padding-right: 4px; margin-right: 4px;">check</mat-icon>Validate
-                </button>
-
-                <button *ngIf="editLandForm.controls.choiceSelected.value == 'replace'" 
-                    mat-raised-button color="primary" (click)="onLegalLandValidate()" class="button-large-text" >
-                    <mat-icon style="padding-right: 4px; margin-right: 4px;">search</mat-icon>Search
-                </button>
-            </div> 
-        </div>
-        
-        <!-- RENAME LEGAL LAND -->
-        <div class="row-group-left" *ngIf="editLandForm.controls.choiceSelected.value == 'rename'" >
-            <p *ngIf="showNewLegalLandMessage"> This legal location does not exist but the system will create it.</p>
-
-            <!-- warnings for RENAME legal land -->
-            <div *ngIf="renameLegalLandList" class="legal-land-container error-messages" >
-
-                <div *ngIf="renameLegalLandList && renameLegalLandList.isWarningLegalsWithSameLoc" style="display:contents">
-                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
-                    <div><span style="color:orange">{{ renameLegalLandList.legalsWithSameLocMsg.message }}</span></div>
-                </div>
-            </div>
-
-            <!-- same location legal land grid  -->
-            <div *ngIf="renameLegalLandList && renameLegalLandList.legalsWithSameLocList && renameLegalLandList.legalsWithSameLocList.length > 0" 
-                class="legal-land-container same-location-legal-land-info" >   
-
-                <div class="border-left border-right header justify-center border-top border-bottom">Primary Identifier</div>
-                <div class="border-right header justify-center border-top border-bottom">Legal Description</div>
-
-                <div *ngFor="let element of renameLegalLandList.legalsWithSameLocList" style="display:contents">
-                    
-                    <div class="border-right justify-center border-top border-bottom border-left">
-                        {{ element.primaryPropertyIdentifier }}
-                    </div>
-                    <div class="border-right justify-center border-top border-bottom">
-                        {{ element.legalDescription  }}
-                    </div>
-                </div>
-            </div>
-            
-            <!-- field warnings -->
-
-            <div *ngIf="renameLegalLandList" class="legal-land-container error-messages" >
-
-                <div *ngIf="renameLegalLandList && renameLegalLandList.isWarningFieldOnOtherPolicy" style="display:contents">
-                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
-                    <div><span style="color:orange">{{ renameLegalLandList.fieldOnOtherPolicyMsg.message }}</span></div>
-                </div>
-            </div>
-
-            <!-- field grid -->
-            <div *ngIf="renameLegalLandList && renameLegalLandList.fieldOnOtherPolicyList && renameLegalLandList.fieldOnOtherPolicyList.length > 0" 
-                class="legal-land-container field-on-other-policy" >   
-
-                <div class="border-right header justify-center border-top border-bottom border-left">Field ID</div>
-                <div class="border-right header justify-center border-top border-bottom border-left">Field Name</div>
-                <div class="border-right header justify-center border-top border-bottom">Policy (Plan)</div>
-
-                <div *ngFor="let field of renameLegalLandList.fieldOnOtherPolicyList" style="display:contents">
-
-                    <div class="border-right justify-center border-top border-bottom border-left">
-                        {{ field.fieldId }}
-                    </div>
-                    <div class="border-right justify-center border-top border-bottom border-left">
-                        {{ field.fieldLabel }}
-                    </div>
-                    <div class="border-right justify-center border-top border-bottom" style="white-space: pre;">
-                        {{ getPolicyAndPlan(field) }}
-                    </div>
-                </div>
-            </div> 
-
-            <div *ngIf="renameLegalLandList" class="legal-land-container error-messages" >
-                <div *ngIf="renameLegalLandList && renameLegalLandList.isWarningOtherFieldOnPolicy" style="display:contents">
-                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
-                    <div><span style="color:orange">{{ renameLegalLandList.otherFieldOnPolicyMsg.message }}</span></div>
-                </div>
-            </div>
-
-            <!-- field grid -->
-            <div *ngIf="renameLegalLandList && renameLegalLandList.otherFieldOnPolicyList && renameLegalLandList.otherFieldOnPolicyList.length > 0" 
-                class="legal-land-container field-on-other-policy" >   
-
-                <div class="border-right header justify-center border-top border-bottom border-left">Field ID</div>
-                <div class="border-right header justify-center border-top border-bottom border-left">Field Name</div>
-                <div class="border-right header justify-center border-top border-bottom">Policy (Plan)</div>
-
-                <div *ngFor="let field of renameLegalLandList.otherFieldOnPolicyList" style="display:contents">
-                    
-                    <div class="border-right justify-center border-top border-bottom border-left">
-                        {{ field.fieldId }}
-                    </div>
-
-                    <div class="border-right justify-center border-top border-bottom border-left">
-                        {{ field.fieldLabel }}
-                    </div>
-                    
-                    <div class="border-right justify-center border-top border-bottom" style="white-space: pre;">
-                        {{ getPolicyAndPlan(field) }}
-                    </div>
-                </div>
-            </div> 
-
-            <!-- non-default values for legal land grid  -->
-            <div *ngIf="renameLegalLandList" class="legal-land-container error-messages" >
-
-                <div *ngIf="renameLegalLandList && renameLegalLandList.isWarningOtherLegalData" style="display:contents">
-                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
-                    <div><span style="color:orange">{{ renameLegalLandList.otherLegalDataMsg.message }}</span></div>
-                </div>
-            </div>
-
-            <div *ngIf="renameLegalLandList && renameLegalLandList.otherLegalData" 
-                class="legal-land-container other-legal-land-info" >   
-
-                <div class="border-left border-right header justify-center border-top border-bottom">Primary Identifier</div>
-                <div class="border-right header justify-center border-top border-bottom">Legal Description</div>
-                <div class="border-right header justify-center border-top border-bottom">Short Legal Description</div>
-                <div style="display:contents">
-                    
-                    <div class="border-right justify-center border-top border-bottom border-left">
-                        {{ renameLegalLandList.otherLegalData.primaryPropertyIdentifier }}
-                    </div>
-                    <div class="border-right justify-center border-top border-bottom">
-                        {{ renameLegalLandList.otherLegalData.legalDescription  }}
-                    </div>
-                    <div class="border-right justify-center border-top border-bottom">
-                        {{ renameLegalLandList.otherLegalData.legalShortDescription  }}
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- REPLACE LEGAL LAND - SEARCH results-->
-        <div class="row-group-left" *ngIf="editLandForm.controls.choiceSelected.value == 'replace'">
-            <div class="cuw-table-wrapper">                
-                <div *ngIf="legalLandList && legalLandList.collection && legalLandList.collection.length > 0" 
-                    class="legal-land-container legal-land-info" >   
-
-                    <div class="border-right header justify-center border-top border-bottom border-left"></div>
-                    <div class="border-right header justify-center border-top border-bottom border-left">Legal Location</div>
-                    <div class="border-right header justify-center border-top border-bottom">Primary Identifier</div>
-                    <div class="border-right header justify-center border-top border-bottom">Legal Description</div>
-
-                    <div 
-                        *ngFor="let element of legalLandList.collection "
-                        style="display:contents">
-                        
-                        <div class="border-right justify-center border-top border-bottom border-left">
-                            <input 
-                                type="radio" 
-                                [value]="element.legalLandId" 
-                                formControlName="legalLandIdSelected" 
-                                (click)="validateReplaceLegalLand(element.legalLandId, element.otherDescription)"/>
-                        </div>
-
-                        <div class="border-right justify-center border-top border-bottom border-left">
-                            {{ element.otherDescription }}
-                        </div>
-                        <div class="border-right justify-center border-top border-bottom border-left">
-                            {{ element.primaryPropertyIdentifier }}
-                        </div>
-                        <div class="border-right justify-center border-top border-bottom">
-                            {{ element.legalDescription  }}
-                        </div>
-                    </div>
-
-                    <div style="display:contents">
-                        <div class="justify-center border-top border-bottom border-left" >
-                            <input 
-                                type="radio" 
-                                [value]="-1" 
-                                formControlName="legalLandIdSelected" 
-                                (click)="validateReplaceLegalLand(-1, '')"/> 
-                        </div>
-        
-                        <div class="border-right justify-left border-top border-bottom" style="grid-column-start:2; grid-column-end: 5;">
-                            Replace with new Legal Land
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-             
-            <div *ngIf="showNewLegalLandMessage" >
-                <p style="padding-left: 20px; padding-top: 0px;">This legal location does not exist but the system will create it.</p>
-            </div>
-
-            <div class="cuw-table-wrapper">
-                
-                <!-- warning messages -->
-                <div *ngIf="replaceLegalLandList && replaceLegalLandList.isWarningOtherFieldsOnLegal == true"  class="legal-land-container error-messages" >
-
-                    <div style="display:contents">
-                        <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
-                        <div><span style="color:orange">{{ replaceLegalLandList.otherFieldsOnLegalMsg.message }}</span></div>
-                    </div>
-                </div>
-
-                <div *ngIf="replaceLegalLandList && replaceLegalLandList.otherFieldsOnLegalLandList" 
-                    class="legal-land-container field-info" >   
-
-                    <div class="border-right header justify-center border-top border-bottom border-left">Field Name</div>
-                    <div class="border-right header justify-center border-top border-bottom border-left">Field ID</div>
-                    <div class="border-right header justify-center border-top border-bottom">Policy (Plan)</div>
-
-                    <div 
-                        *ngFor="let field of replaceLegalLandList.otherFieldsOnLegalLandList"   
-                        style="display:contents">
-
-                        <div class="border-right justify-center border-top border-bottom border-left">
-                            {{ field.fieldLabel }}
-                        </div>
-                        <div class="border-right justify-center border-top border-bottom border-left">
-                            {{ field.fieldId }}
-                        </div>
-                        <div class="border-right justify-center border-top border-bottom" style="white-space: pre;">
-                            {{ getPolicyAndPlan(field) }}
-                        </div>
-                    </div>
-                </div>
-            
-                <!-- warning messages -->
-                <div *ngIf="replaceLegalLandList && replaceLegalLandList.isWarningFieldOnOtherPolicy == true"  class="legal-land-container error-messages" >
-
-                    <div style="display:contents">
-                        <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
-                        <div><span style="color:orange">{{ replaceLegalLandList.fieldOnOtherPolicyMsg.message }}</span></div>
-                    </div>
-                </div>
-
-                <div *ngIf="replaceLegalLandList && replaceLegalLandList.isWarningFieldHasOtherLegalLand == true"  class="legal-land-container error-messages" >
-
-                    <div style="display:contents">
-                        <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
-                        <div><span style="color:orange">{{ replaceLegalLandList.fieldHasOtherLegalLandMsg.message }}</span></div>
-                    </div>
-                </div>
-
-                <!-- grid with legal land data -->
-                <div *ngIf="replaceLegalLandList && replaceLegalLandList.otherLegalLandOfFieldList" 
-                    class="legal-land-container field-info" >   
-
-                    <div class="border-right header justify-center border-top border-bottom border-left">Legal Location</div>
-                    <div class="border-right header justify-center border-top border-bottom border-left">Primary Land Identifier</div>
-                    <div class="border-right header justify-center border-top border-bottom">Legal Description</div>
-
-                    <div 
-                        *ngFor="let land of replaceLegalLandList.otherLegalLandOfFieldList"   
-                        style="display:contents">
-
-                        <div class="border-right justify-center border-top border-bottom border-left">
-                            {{ land.otherDescription }}
-                        </div>
-                        <div class="border-right justify-center border-top border-bottom border-left">
-                            {{ land.primaryPropertyIdentifier }}
-                        </div>
-                        <div class="border-right justify-center border-top border-bottom" style="white-space: pre;">
-                            {{ land.legalShortDescription }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="form-row dialog-controls">
-            <button mat-raised-button color="primary" (click)="onCancelChanges()" class="button-large-text">
-                <mat-icon style="padding-right: 4px; margin-right: 4px;">cancel_presentation</mat-icon>Cancel
-            </button>
-            &nbsp;
-            <button *ngIf="showProceedButton" mat-raised-button color="primary" (click)="onProceed()" class="button-large-text" >
-                <mat-icon style="padding-right: 4px; margin-right: 4px;">save_alt</mat-icon>Proceed
-            </button>
-        </div>
-
-    </form>
-
-</div>
+</cuws-base-dialog>

@@ -85,6 +85,14 @@
         		                           from inventory_field invf
                 		                   where invf.field_id = #{fieldId})
 	</delete>
+	
+	<delete id="deleteForFieldAndYear">
+		delete from declared_yield_field dyf
+		where dyf.inventory_field_guid in (select invf.inventory_field_guid
+        		                           from inventory_field invf
+                		                   where invf.field_id = #{fieldId}
+                		                   and invf.crop_year = #{cropYear})
+	</delete>
 
 	<delete id="deleteForDeclaredYieldContract">
 		delete from declared_yield_field t

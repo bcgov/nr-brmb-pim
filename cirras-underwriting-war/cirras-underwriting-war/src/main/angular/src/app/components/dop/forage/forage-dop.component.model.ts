@@ -18,7 +18,7 @@ export class ForageDopComponentModel extends BaseComponentModel {
             balerWagonInfo: [''],
             totalLivestock: [''],
             fields: new FormArray([]), // subform responsible for the field / commodity/estimated yield grid 
-            uwComments: [] //new FormArray([])
+            dopYieldContractCommodityForageList: new FormArray([]),
         });
     }
 

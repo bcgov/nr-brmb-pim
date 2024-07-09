@@ -14,9 +14,9 @@
 
 	<bean id="cirrasUnderwritingDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.postgresql.Driver" />
-		<property name="url" value="${POSTGRES_URL}" /> 
-		<property name="username" value="${POSTGRES_USERNAME}" />
-		<property name="password" value="${POSTGRES_PASSWORD}" />
+		<property name="url" value="jdbc:postgresql://pgsql01.vividsolutions.com:5432/cirras_dev" /> 
+		<property name="username" value="proxy_cuws_rest" />
+		<property name="password" value="password" />
         <property name="connectionProperties">
             <props>
                 <prop key="socketTimeout">10</prop>

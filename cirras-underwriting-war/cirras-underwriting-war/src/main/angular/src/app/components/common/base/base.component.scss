@@ -13,7 +13,7 @@
   .flex-y {
     display: flex;
     flex-direction: column;
-    max-height: calc(var(--vh, 1vh) * 100 - 72px);
+    max-height: calc(var(--vh, 1vh) * 100 - 74px);
 
     .flex-y-fixed {
       flex: 0 0 auto;

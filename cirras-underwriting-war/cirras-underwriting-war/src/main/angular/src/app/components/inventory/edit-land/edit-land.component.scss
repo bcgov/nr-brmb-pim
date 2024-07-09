@@ -99,11 +99,15 @@
     padding-top: 10px;
 
     &.same-location-legal-land-info {
-      grid-template-columns: 1fr 3fr;
+      grid-template-columns: 1fr 1fr;
     }
 
     &.other-legal-land-info {
-      grid-template-columns: 1fr 3fr 2fr;
+      grid-template-columns: 1fr 2.5fr 2.5fr;
+    }
+
+    &.legal-land-info {
+      grid-template-columns: 1fr 2fr 2fr 8fr;
     }
 
     &.field-info {
@@ -111,7 +115,7 @@
     }
 
     &.field-on-other-policy {
-      grid-template-columns: 1fr 1fr 2fr;
+      grid-template-columns: 1fr 1fr 1fr;
     }
 
     &.error-messages {
@@ -151,6 +155,10 @@
     .border-bottom {
         border-bottom: 2px solid #ccc;
     }
+
+    .padding {
+        padding: 8px;
+    }
   }
 
   .cuw-table-wrapper {
@@ -169,4 +177,47 @@
   cursor: move;
   width: 24px;
   height: 24px;
+}
+
+span.location-title {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 27px;
+  margin-bottom: 16px;
+}
+
+span.location-subtitle {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 20px;
+  margin-right: 8px;
+}
+
+::ng-deep .mat-form-field-flex {
+  background-color: transparent !important;
+  padding-top: 0 !important;
+  padding-left: 0 !important;
+}
+
+div.location-button {
+  display: inline-flex;
+  justify-content: flex-end;
+
+  button {
+    color: #424242;
+    border: 1px solid #c2c2c2;
+    margin-top: 8px;
+    margin-bottom: 20px;
+  }
+}
+
+p.location-warning {
+  display: flex;
+  align-items: center;
+  margin-block-start: 0;
+  margin-block-end: 0;
+
+  &:nth-of-type(n+2) {
+    margin-block-start: 20px;
+  }
 }

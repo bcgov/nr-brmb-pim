@@ -14,9 +14,16 @@ public interface DeclaredYieldFieldForageMapper {
 	int update(Map<String, Object> parameters);
 
 	int delete(Map<String, Object> parameters);
+	
+	int deleteForField(Map<String, Object> parameters);
+
+	int deleteForFieldAndYear(Map<String, Object> parameters);
 
 	int deleteForDeclaredYieldContract(Map<String, Object> parameters);
 		
 	List<DeclaredYieldFieldForageDto> getByInventoryField(Map<String, Object> parameters);
 
+	int getTotalDopRecordsWithYield(Map<String, Object> parameters);
+	
+    List<DeclaredYieldFieldForageDto> selectToRecalculate(Map<String, Object> parameters);
 }

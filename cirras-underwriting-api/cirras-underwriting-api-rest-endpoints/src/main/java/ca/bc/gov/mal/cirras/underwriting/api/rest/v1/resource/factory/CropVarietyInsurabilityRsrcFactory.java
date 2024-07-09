@@ -77,6 +77,7 @@ public class CropVarietyInsurabilityRsrcFactory extends BaseResourceFactory impl
 		model.setIsPlantInsurableInd(dto.getIsPlantInsurableInd());
 		model.setIsAwpEligibleInd(dto.getIsAwpEligibleInd());
 		model.setIsUnderseedingEligibleInd(dto.getIsUnderseedingEligibleInd());
+		model.setIsGrainUnseededDefaultInd(dto.getIsGrainUnseededDefaultInd());
 		model.setPlantDurationTypeCode(dto.getPlantDurationTypeCode());
 		model.setVarietyName(dto.getVarietyName());
 		
@@ -147,6 +148,7 @@ public class CropVarietyInsurabilityRsrcFactory extends BaseResourceFactory impl
 		dto.setIsPlantInsurableInd(model.getIsPlantInsurableInd());
 		dto.setIsAwpEligibleInd(model.getIsAwpEligibleInd());
 		dto.setIsUnderseedingEligibleInd(model.getIsUnderseedingEligibleInd());
+		dto.setIsGrainUnseededDefaultInd(model.getIsGrainUnseededDefaultInd());
 		
 	}
 

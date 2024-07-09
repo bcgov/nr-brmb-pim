@@ -28,10 +28,10 @@
         </property>
 	</bean>
 
-	<!-- <bean id="bootstrapDataSource" class="oracle.jdbc.pool.OracleDataSource" destroy-method="close">
+	<bean id="bootstrapDataSource" class="oracle.jdbc.pool.OracleDataSource" destroy-method="close">
 		<property name="URL" value="${webade.datasource.url}" />
 		<property name="user" value="${webade.datasource.username}" />
 		<property name="password" value="${webade.datasource.password}" />
-	</bean> -->
+	</bean>
 	
 </beans>

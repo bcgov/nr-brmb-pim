@@ -1,7 +1,6 @@
 
 .row-group-left {
-    padding: 10px;
-    margin: 20px 10px;
+    margin: 10px 10px;
     display: flex;
     flex-direction: column;
     // align-items: flex-start;
@@ -18,7 +17,17 @@
         }
   
         &.comments-info {
-          grid-template-columns: 1fr 1fr 1fr 4fr 1fr;
+          grid-template-columns: 1fr 1fr 1fr 5fr 1fr;
+
+          .dop-comments-header {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr 3fr 1fr;
+          }
+
+          .inventory-comments-header {
+            display: grid;
+            grid-template-columns: 0.75fr 1fr 1fr 4fr 1fr;
+          }
         }
   
         .center {
@@ -52,9 +61,35 @@
       
       .readonly-comment {
         padding: 10px;
-        min-height: 95px;
+        min-height: 66px;
         white-space: pre-wrap;
     }
+
+        .five-columns {
+            grid-column: span 5;
+        }
+
+        .justify-right {
+            justify-content: flex-end;
+        }
+
+        .padding-bottom {
+            padding-bottom: 20px;
+        }
+
+        .justify-left {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .entire {
+          ::ng-deep .mat-form-field {
+            width: 100%;
+          }
+          ::ng-deep .mat-form-field-wrapper {
+            padding-bottom: 0;
+          }
+        }
     }
   }
 
@@ -127,4 +162,26 @@
     cursor: move;
     width: 24px;
     height: 24px;
+  }
+
+  .header-button{
+    border-radius: 5px;
+    border: 1px solid #C2C2C2;
+
+    text-align: left;
+    color: #424242 !important;
+  }
+
+  .mat-dialog-actions {
+    padding: 5px 24px 5px 24px !important;
+
+    button {
+      &[color="secondary"] {
+        padding: 0px 24px 0px 24px;
+        margin-right: 8px;
+      }
+      &[color="primary"] {
+        padding: 0px 24px 0px 24px;
+      }
+    }
   }

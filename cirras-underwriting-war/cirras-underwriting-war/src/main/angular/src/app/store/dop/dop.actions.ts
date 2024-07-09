@@ -1,11 +1,15 @@
 import {Action} from "@ngrx/store";
 import { DopYieldContract, YieldMeasUnitTypeCodeList } from "src/app/conversion/models-yield";
 import {ErrorState} from "../application/application.state";
+import { UnderwritingComment } from "@cirras/cirras-underwriting-api/model/models";
 
 export const LOAD_DOP = "LOAD_DOP";
 export const LOAD_DOP_SUCCESS = "LOAD_DOP_SUCCESS";
 export const LOAD_DOP_ERROR = "LOAD_DOP_ERROR";
 export const CLEAR_DOP = "CLEAR_DOP";
+
+export const ADD_FORAGE_DOP_YIELD_FIELD_CUT = "ADD_FORAGE_DOP_YIELD_FIELD_CUT";
+export const DEL_FORAGE_DOP_YIELD_FIELD_CUT = "DEL_FORAGE_DOP_YIELD_FIELD_CUT";
 
 export const ROLLOVER_DOP = "ROLLOVER_DOP";
 export const ADD_NEW_DOP = "ADD_NEW_DOP"
@@ -110,6 +114,18 @@ export interface ClearDopYieldContractAction extends Action {
 
 }
 
+export interface AddForageDopYieldFieldCutAction extends Action {
+  payload: {
+    dopYieldContract: DopYieldContract;
+  };
+}
+
+export interface DelForageDopYieldFieldCutAction extends Action {
+  payload: {
+    dopYieldContract: DopYieldContract;
+  };
+}
+
 export interface DeleteDopYieldContractErrorAction extends Action {
   componentId: string;
   payload: {
@@ -124,6 +140,24 @@ export function ClearDopYieldContract(): ClearDopYieldContractAction {
       value: <DopYieldContract>{}
     }
   };
+}
+
+export function AddForageDopYieldFieldCut(dopYieldContract: DopYieldContract): AddForageDopYieldFieldCutAction {
+  return {
+    type: ADD_FORAGE_DOP_YIELD_FIELD_CUT,
+    payload: {
+      dopYieldContract: dopYieldContract
+    }
+  }
+}
+
+export function DelForageDopYieldFieldCut(dopYieldContract: DopYieldContract): DelForageDopYieldFieldCutAction {
+  return {
+    type: DEL_FORAGE_DOP_YIELD_FIELD_CUT,
+    payload: {
+      dopYieldContract: dopYieldContract
+    }
+  }
 }
 
 

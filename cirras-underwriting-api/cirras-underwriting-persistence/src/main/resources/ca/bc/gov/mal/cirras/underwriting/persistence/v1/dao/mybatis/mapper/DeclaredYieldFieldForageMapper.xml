@@ -89,6 +89,22 @@
 		delete from declared_yield_field_forage where declared_yield_field_forage_guid = #{declaredYieldFieldForageGuid}
 	</delete>
 
+	<delete id="deleteForField">
+		delete from declared_yield_field_forage dyf
+		where dyf.inventory_field_guid in (select invf.inventory_field_guid
+        		                           from inventory_field invf
+                		                   where invf.field_id = #{fieldId})
+	</delete>
+	
+	<delete id="deleteForFieldAndYear">
+		delete from declared_yield_field_forage dyf
+		where dyf.inventory_field_guid in (select invf.inventory_field_guid
+        		                           from inventory_field invf
+                		                   where invf.field_id = #{fieldId}
+                		                   and invf.crop_year = #{cropYear})
+	</delete>
+	
+
 	<delete id="deleteForDeclaredYieldContract">
 		delete from declared_yield_field_forage t
 		where t.inventory_field_guid in (select invf.inventory_field_guid
@@ -110,4 +126,40 @@
 		order by cut_number, declared_yield_field_forage_guid
 	</select>
 
+	<select id="getTotalDopRecordsWithYield" resultType="int">
+		select count(inv.inventory_field_guid)
+		from inventory_field inv
+		left join declared_yield_field_forage dyff on dyff.inventory_field_guid = inv.inventory_field_guid
+		left join inventory_seeded_forage isf on isf.inventory_field_guid = inv.inventory_field_guid
+		left join annual_field_detail afd on afd.field_id = inv.field_id and afd.crop_year = inv.crop_year
+		left join contracted_field_detail cfd on cfd.annual_field_detail_id = afd.annual_field_detail_id
+		left join grower_contract_year gcy on gcy.grower_contract_year_id = cfd.grower_contract_year_id and gcy.insurance_plan_id = inv.insurance_plan_id
+		left join declared_yield_contract dyc on dyc.contract_id = gcy.contract_id and dyc.crop_year = gcy.crop_year
+		where inv.field_id = #{fieldId}
+		  and inv.crop_year = #{cropYear}
+		  and inv.insurance_plan_id = #{insurancePlanId}
+		  and (dyff.total_bales_loads > 0 
+			   or dyff.weight > 0 
+			   or (dyc.declared_yield_contract_guid is not null 
+				  and isf.is_quantity_insurable_ind = 'Y'
+				  and isf.commodity_type_code is not null
+				  and isf.field_acres > 0
+				  ) 
+			  )
+	</select>
+
+	<select id="selectToRecalculate" resultMap="DeclaredYieldFieldForageDtoMap">
+		<include refid="selectColumns"/>
+		FROM declared_yield_field_forage dyff
+		JOIN inventory_field inv ON inv.inventory_field_guid = dyff.inventory_field_guid
+		JOIN inventory_seeded_forage isf ON isf.inventory_field_guid = inv.inventory_field_guid
+		JOIN annual_field_detail afd ON afd.crop_year = inv.crop_year AND afd.field_id = inv.field_id
+		JOIN contracted_field_detail cfd ON cfd.annual_field_detail_id = afd.annual_field_detail_id
+		JOIN grower_contract_year gcy ON gcy.grower_contract_year_id = cfd.grower_contract_year_id
+									  AND gcy.insurance_plan_id = inv.insurance_plan_id
+		JOIN declared_yield_contract dyc ON dyc.crop_year = gcy.crop_year AND dyc.contract_id = gcy.contract_id
+		WHERE isf.crop_commodity_id = #{cropCommodityId}
+		AND dyc.entered_yield_meas_unit_type_code = #{enteredYieldMeasUnitTypeCode}
+		AND dyc.crop_year BETWEEN #{effectiveCropYear} AND #{expiryCropYear}	
+	</select>
 </mapper>

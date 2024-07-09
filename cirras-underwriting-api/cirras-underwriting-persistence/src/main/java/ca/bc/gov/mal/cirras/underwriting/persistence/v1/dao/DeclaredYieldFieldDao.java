@@ -20,6 +20,8 @@ public interface DeclaredYieldFieldDao extends Serializable {
     
     void deleteForField(Integer fieldId) throws DaoException, NotFoundDaoException;
 
+    void deleteForFieldAndYear(Integer fieldId, Integer cropYear) throws DaoException, NotFoundDaoException;
+
     void deleteForDeclaredYieldContract(String declaredYieldContractGuid) throws DaoException, NotFoundDaoException;
     
     DeclaredYieldFieldDto getByInventoryField(String inventoryFieldGuid) throws DaoException;

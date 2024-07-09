@@ -13,6 +13,7 @@
 		<result property="isPlantInsurableInd" column="is_plant_insurable_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
 		<result property="isAwpEligibleInd" column="is_awp_eligible_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
 		<result property="isUnderseedingEligibleInd" column="is_underseeding_eligible_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="isGrainUnseededDefaultInd" column="is_grain_unseeded_default_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
 		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -37,6 +38,7 @@
 		t.is_plant_insurable_ind,
 		t.is_awp_eligible_ind,
 		t.is_underseeding_eligible_ind,
+		t.is_grain_unseeded_default_ind,
 		t.create_user, 
 		t.create_date, 
 		t.update_user, 
@@ -70,6 +72,7 @@
 			is_plant_insurable_ind,
 			is_awp_eligible_ind,
 			is_underseeding_eligible_ind,
+			is_grain_unseeded_default_ind,
 			create_user,
 			create_date,
 			update_user,
@@ -82,6 +85,7 @@
 			#{dto.isPlantInsurableInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
 			#{dto.isAwpEligibleInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
 			#{dto.isUnderseedingEligibleInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			#{dto.isGrainUnseededDefaultInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
 			now(),
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
@@ -97,6 +101,7 @@
 			is_plant_insurable_ind = #{dto.isPlantInsurableInd, javaType=java.lang.Boolean, jdbcType=VARCHAR, mode=IN}, 
 			is_awp_eligible_ind = #{dto.isAwpEligibleInd, javaType=java.lang.Boolean, jdbcType=VARCHAR, mode=IN}, 
 			is_underseeding_eligible_ind = #{dto.isUnderseedingEligibleInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN}, 
+			is_grain_unseeded_default_ind = #{dto.isGrainUnseededDefaultInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN}, 
 			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
 			update_date = now()
 		 WHERE crop_variety_id = #{dto.cropVarietyId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}
@@ -114,6 +119,7 @@
 			t.is_plant_insurable_ind,
 			t.is_awp_eligible_ind,
 			t.is_underseeding_eligible_ind,
+			t.is_grain_unseeded_default_ind,
 			t.create_user, 
 			t.create_date, 
 			t.update_user, 

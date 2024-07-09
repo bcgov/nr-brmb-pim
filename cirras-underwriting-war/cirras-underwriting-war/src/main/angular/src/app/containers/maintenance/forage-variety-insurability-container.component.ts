@@ -6,13 +6,14 @@ import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common"
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
 import {
+    selectFormStateUnsaved,
     selectMaintainUwYearsErrorState,
     selectMaintainUwYearsLoadState,
 } from "../../store/application/application.selectors";
 
 import { MAINTENANCE_COMPONENT_ID } from "src/app/store/maintenance/maintenance.state";
-import { CropVarietyInsurabilityList, SeedingDeadlineList, UnderwritingYearList } from "src/app/conversion/models-maintenance";
-import { selectCropVarietyInsurabilityList, selectUnderwritingYears, selectseedingDeadlineList } from "src/app/store/maintenance/maintenance.selectors";
+import { CropVarietyInsurabilityList } from "src/app/conversion/models-maintenance";
+import { selectCropVarietyInsurabilityList } from "src/app/store/maintenance/maintenance.selectors";
 
 @Component({
     selector: "forage-variety-insurability-container",
@@ -21,6 +22,7 @@ import { selectCropVarietyInsurabilityList, selectUnderwritingYears, selectseedi
             [cropVarietyInsurabilityList]="cropVarietyInsurabilityList$ | async"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
+            [isUnsaved]="isUnsaved$ | async"
         ></forage-variety-insurability>`, 
     providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
 })
@@ -31,6 +33,7 @@ export class ForageVarietyInsurabilityContainer extends BaseContainer {
 
     loadState$: Observable<LoadState> = this.store.pipe(select(selectMaintainUwYearsLoadState()));
     errorState$: Observable<ErrorState[]> = this.store.pipe(select(selectMaintainUwYearsErrorState()));
+    isUnsaved$: Observable<boolean> = this.store.pipe(select(selectFormStateUnsaved(MAINTENANCE_COMPONENT_ID)));
 
     getAssociatedComponentIds(): string[] {
         return [

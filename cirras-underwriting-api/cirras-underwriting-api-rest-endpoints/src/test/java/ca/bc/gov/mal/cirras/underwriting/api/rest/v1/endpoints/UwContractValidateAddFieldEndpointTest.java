@@ -32,6 +32,8 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PolicyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AddFieldValidation;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForage;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForageCut;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldGrain;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededForage;
@@ -397,9 +399,11 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		}
 	}
 	
-	private void createDopYieldContract(String policyNumber) throws ValidationException, CirrasUnderwritingServiceException {
+	private void createDopYieldContract(String policyNumber, Integer insurancePlanId) throws ValidationException, CirrasUnderwritingServiceException {
 
-		boolean addedYield = false;
+		boolean addedYieldGrain = false;
+		boolean addedYieldForage = false;
+		
 		
 		// Dop Date
 		Calendar cal = Calendar.getInstance();
@@ -433,25 +437,57 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		DopYieldContractRsrc resource = service.rolloverDopYieldContract(referrer);
 		
 		resource.setDeclarationOfProductionDate(dopDate);
-		resource.setDefaultYieldMeasUnitTypeCode("TONNE");
-		resource.setEnteredYieldMeasUnitTypeCode("TONNE");
-		resource.setGrainFromOtherSourceInd(true);
+		
+		if ( insurancePlanId.equals(InsurancePlans.GRAIN.getInsurancePlanId() ) ) { 		
+			resource.setDefaultYieldMeasUnitTypeCode("TONNE");
+			resource.setEnteredYieldMeasUnitTypeCode("TONNE");
+			resource.setGrainFromOtherSourceInd(true);
+		} else if ( insurancePlanId.equals(InsurancePlans.FORAGE.getInsurancePlanId() ) ) {
+			resource.setDefaultYieldMeasUnitTypeCode("TON");
+			resource.setEnteredYieldMeasUnitTypeCode("TON");
+			resource.setGrainFromOtherSourceInd(false);
+		}
 
 		// Create field-level data by copying from seeded grain data.
 		for ( AnnualFieldRsrc field : resource.getFields() ) {
-			for ( DopYieldFieldGrain yield : field.getDopYieldFieldGrainList() ) {
-				yield.setEstimatedYieldPerAcre(yield.getSeededAcres());
-				yield.setUnharvestedAcresInd(false);
-				
-				if ( yield.getEstimatedYieldPerAcre() > 0 ) {
-					addedYield = true;
+			if ( field.getDopYieldFieldGrainList() != null && insurancePlanId.equals(InsurancePlans.GRAIN.getInsurancePlanId())) {
+				for ( DopYieldFieldGrain yield : field.getDopYieldFieldGrainList() ) {
+					yield.setEstimatedYieldPerAcre(yield.getSeededAcres());
+					yield.setUnharvestedAcresInd(false);
+					
+					if ( yield.getEstimatedYieldPerAcre() > 0 ) {
+						addedYieldGrain = true;
+					}
+				}
+			} else if ( field.getDopYieldFieldForageList() != null && insurancePlanId.equals(InsurancePlans.FORAGE.getInsurancePlanId())) {
+				for ( DopYieldFieldForage yield : field.getDopYieldFieldForageList() ) {
+
+					List<DopYieldFieldForageCut> cutList = new ArrayList<DopYieldFieldForageCut>();
+					DopYieldFieldForageCut cut = new DopYieldFieldForageCut();
+					cut.setCutNumber(1);
+					cut.setDeclaredYieldFieldForageGuid(null);
+					cut.setInventoryFieldGuid(yield.getInventoryFieldGuid());
+					cut.setMoisturePercent(0.15);
+					cut.setTotalBalesLoads(10);
+					cut.setWeight(20.0);
+					cut.setDeletedByUserInd(false);
+					
+					cutList.add(cut);
+					yield.setDopYieldFieldForageCuts(cutList);
+					
+					addedYieldForage = true;
+
 				}
 			}
 		}
 
 		service.createDopYieldContract(topLevelEndpoints, resource);
-		
-		Assert.assertTrue(addedYield);
+
+		if ( insurancePlanId.equals(InsurancePlans.GRAIN.getInsurancePlanId()) ) {
+			Assert.assertTrue(addedYieldGrain);
+		} else if ( insurancePlanId.equals(InsurancePlans.FORAGE.getInsurancePlanId()) ) {
+			Assert.assertTrue(addedYieldForage);
+		}
 	}
 
 	
@@ -566,7 +602,7 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 
 		// Test 7: AddFieldValidation.TRANSFER_POLICY_HAS_DOP_MSG
 		createInventoryContract(policyNumber2, 4);
-		createDopYieldContract(policyNumber2);
+		createDopYieldContract(policyNumber2, 4);
 
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), policyId2.toString());
 		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.TRANSFER_POLICY_HAS_DOP_MSG });
@@ -607,7 +643,77 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		
 		logger.debug(">testValidateAddField");
 	}
+	
+	@Test
+	public void testValidateAddFieldForage() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException, DaoException {
+		logger.debug("<testValidateAddFieldForage");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+		
+		//Date and Time without millisecond
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		Date transactionDate = cal.getTime();
+		Date createTransactionDate = addSeconds(transactionDate, -1);
 
+		createGrower(growerId, 999888, "grower name", createTransactionDate);
+		createPolicy(policyId1, growerId, 5, policyNumber1, contractNumber1, contractId1, 2020, createTransactionDate);
+		createGrowerContractYear(growerContractYearId1, contractId1, growerId, 2020, 5, createTransactionDate);
+
+		createField(fieldId1, "LOT 1", 1980, null);
+		
+		Integer pageNumber = new Integer(1);
+		Integer pageRowCount = new Integer(20);
+
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber1,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+
+		// Test 1: No errors, no warnings.
+		AddFieldValidationRsrc addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), null);
+		checkAddFieldValidation(addFieldValidation, null, null);
+		
+		// Test 2: AddFieldValidation.TRANSFER_POLICY_HAS_DOP_MSG.
+		createPolicy(policyId2, growerId, 5, policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
+		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2020, 5, createTransactionDate);
+		createAnnualFieldDetail(annualFieldDetailId1, null, fieldId1, 2020);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId2, 1);
+
+		createInventoryContract(policyNumber2, 5);
+		createDopYieldContract(policyNumber2, 5);
+
+		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), policyId2.toString());
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.TRANSFER_POLICY_HAS_DOP_MSG });
+		
+		deleteDopYieldContract(policyNumber2);
+		deleteInventoryContract(policyNumber2);
+				
+		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
+		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId2.toString());
+		service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId1.toString());
+		service.deletePolicy(topLevelEndpoints, policyId2.toString());
+		
+
+		logger.debug(">testValidateAddFieldForage");
+	}	
+	
 	private void checkAddFieldValidation(AddFieldValidationRsrc resource,  String[] expectedWarnings, String[] expectedErrors) {
 		Assert.assertNotNull(resource);
 

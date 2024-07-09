@@ -286,6 +286,8 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setInventoryFieldGuid(dto.getInventoryFieldGuid());
 		model.setLastYearCropCommodityId(dto.getLastYearCropCommodityId());
 		model.setLastYearCropCommodityName(dto.getLastYearCropCommodityName());
+		model.setLastYearCropVarietyId(dto.getLastYearCropVarietyId());
+		model.setLastYearCropVarietyName(dto.getLastYearCropVarietyName());
 		model.setPlantingNumber(dto.getPlantingNumber());
 		model.setIsHiddenOnPrintoutInd(dto.getIsHiddenOnPrintoutInd());
 		model.setUnderseededCropVarietyId(dto.getUnderseededCropVarietyId());
@@ -533,7 +535,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		resource.setInsurancePlanId(dto.getInsurancePlanId());
 		resource.setInsurancePlanName(dto.getInsurancePlanName());
 		resource.setFertilizerInd(false);
-		resource.setGrainFromPrevYearInd(false);
+		resource.setGrainFromPrevYearInd(null);
 		resource.setHerbicideInd(false);
 		resource.setInventoryContractGuid(null);
 		resource.setOtherChangesComment(null);
@@ -576,17 +578,20 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setInventoryFieldGuid(null);
 		model.setLastYearCropCommodityId(ifDto.getLastYearCropCommodityId());
 		model.setLastYearCropCommodityName(ifDto.getLastYearCropCommodityName());
+		model.setLastYearCropVarietyId(ifDto.getLastYearCropVarietyId());
+		model.setLastYearCropVarietyName(ifDto.getLastYearCropVarietyName());
 		model.setPlantingNumber(ifDto.getPlantingNumber());
 		model.setIsHiddenOnPrintoutInd(ifDto.getIsHiddenOnPrintoutInd());
 		model.setUnderseededCropVarietyId(null);
 		model.setUnderseededCropVarietyName(null);
 		model.setUnderseededAcres(null);
 		model.setUnderseededInventorySeededForageGuid(null);
+		
 
 		// InventoryUnseeded
 		// InventoryUnseeded Grain
 		if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.GRAIN.getInsurancePlanId())) {
-			model.setInventoryUnseeded(createRolloverInventoryUnseeded(ifDto.getAcresToBeSeeded()));
+			model.setInventoryUnseeded(createRolloverInventoryUnseeded(ifDto.getAcresToBeSeeded(), ifDto.getLastYearCropVarietyId(), ifDto.getIsGrainUnseededDefaultInd()));
 		}
 		
 		//Inventory seeded Forage
@@ -609,6 +614,8 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setInventoryFieldGuid(null);
 		model.setLastYearCropCommodityId(null);
 		model.setLastYearCropCommodityName(null);
+		model.setLastYearCropVarietyId(null);
+		model.setLastYearCropVarietyName(null);
 		model.setPlantingNumber(1);
 		model.setIsHiddenOnPrintoutInd(false);
 		model.setUnderseededCropVarietyId(null);
@@ -618,7 +625,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 
 		// InventoryUnseeded Grain
 		if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.GRAIN.getInsurancePlanId())) {
-			model.setInventoryUnseeded(createRolloverInventoryUnseeded(null));
+			model.setInventoryUnseeded(createRolloverInventoryUnseeded(null, null, null));
 		}
 		
 		//Inventory seeded Forage
@@ -649,7 +656,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		return model;
 	}
 
-	private InventoryUnseeded createRolloverInventoryUnseeded(Double acresToBeSeeded) {
+	private InventoryUnseeded createRolloverInventoryUnseeded(Double acresToBeSeeded, Integer lastYearVarietyId, Boolean isGrainUnseededDefault) {
 		InventoryUnseeded model = new InventoryUnseeded();
 
 		model.setAcresToBeSeeded(acresToBeSeeded);
@@ -657,7 +664,11 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setCropCommodityName(null);
 		model.setInventoryFieldGuid(null);
 		model.setInventoryUnseededGuid(null);
-		model.setIsUnseededInsurableInd(true);
+		if(lastYearVarietyId == null || isGrainUnseededDefault == null) {
+			model.setIsUnseededInsurableInd(true); //Default
+		} else {
+			model.setIsUnseededInsurableInd(isGrainUnseededDefault);
+		}
 
 		return model;
 	}
@@ -706,6 +717,8 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		dto.setInsurancePlanId(model.getInsurancePlanId());
 		dto.setLastYearCropCommodityId(model.getLastYearCropCommodityId());
 		dto.setLastYearCropCommodityName(model.getLastYearCropCommodityName());
+		dto.setLastYearCropVarietyId(model.getLastYearCropVarietyId());
+		dto.setLastYearCropVarietyName(model.getLastYearCropVarietyName());
 		dto.setPlantingNumber(model.getPlantingNumber());
 		dto.setIsHiddenOnPrintoutInd(model.getIsHiddenOnPrintoutInd());
 		dto.setUnderseededCropVarietyId(model.getUnderseededCropVarietyId());

@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
 		<artifactId>cirras-underwriting-api-parent</artifactId>
-		<version>3.2.0-SNAPSHOT</version>
+		<version>3.3.0</version>
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -54,11 +54,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -68,6 +63,7 @@
 		<dependency>
 			<groupId>com.oracle.weblogic</groupId>
 			<artifactId>ojdbc7</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>

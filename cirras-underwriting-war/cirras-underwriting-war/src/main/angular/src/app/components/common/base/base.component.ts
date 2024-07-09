@@ -38,6 +38,7 @@ import {ErrorDialogComponent} from "../../dialogs/error-dialog/error-dialog.comp
 import {setFormStateUnsaved} from "../../../store/application/application.actions";
 import {SecurityUtilService} from "../../../services/security-util.service";
 import { UwContract } from "src/app/conversion/models";
+import { DecimalPipe } from "@angular/common";
 
 const originFormControlNgOnChanges = FormControlDirective.prototype.ngOnChanges;
 FormControlDirective.prototype.ngOnChanges = function () {
@@ -126,7 +127,8 @@ export class BaseComponent implements OnInit, OnChanges, AfterViewInit {
                 protected cdr: ChangeDetectorRef,
                 protected appConfigService: AppConfigService,
                 protected http: HttpClient,
-                protected titleService: Title) {
+                protected titleService: Title,
+                protected decimalPipe: DecimalPipe) {
         this.initModels();
         this.initializeConnectionService();
     }

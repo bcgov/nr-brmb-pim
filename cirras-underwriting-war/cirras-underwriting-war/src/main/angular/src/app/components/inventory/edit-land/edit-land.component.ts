@@ -9,6 +9,7 @@ import { LegalLandList } from 'src/app/conversion/models';
 import { makeTitleCase, setHttpHeaders } from 'src/app/utils';
 import { LAND_UPDATE_TYPE } from 'src/app/utils/constants';
 import { AddLandPopupData } from '../add-land/add-land.component';
+import { DIALOG_TYPE } from '../../dialogs/base-dialog/base-dialog.component';
 
 @Component({
   selector: 'cirras-edit-land',
@@ -18,6 +19,8 @@ import { AddLandPopupData } from '../add-land/add-land.component';
 
 
 export class EditLandComponent implements OnInit {
+  titleLabel = "Edit Legal Location";
+  dialogType = DIALOG_TYPE.INFO;
 
   dataReceived : AddLandPopupData;
 

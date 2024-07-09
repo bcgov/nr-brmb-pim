@@ -5,7 +5,7 @@
 	<groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
 	<artifactId>cirras-underwriting-api-parent</artifactId>
 	<name>cirras-underwriting-api-parent</name>
-	<version>3.2.0-SNAPSHOT</version>
+	<version>3.3.0</version>
 	<packaging>pom</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

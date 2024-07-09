@@ -135,7 +135,7 @@ public class DeclaredYieldContractCommodityForageDaoImpl extends BaseDao impleme
 		try {
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put("declaredYieldContractGuid", declaredYieldContractGuid);
-			int count = this.mapper.deleteForDeclaredYieldContract(parameters);
+			this.mapper.deleteForDeclaredYieldContract(parameters);
 
 		} catch (RuntimeException e) {
 			handleException(e);
@@ -166,5 +166,34 @@ public class DeclaredYieldContractCommodityForageDaoImpl extends BaseDao impleme
 		logger.debug(">selectForDeclaredYieldContract " + dtos);
 		return dtos;
 	}
+	
+	@Override
+	public  List<DeclaredYieldContractCommodityForageDto> selectToRecalculate(
+	    		Integer cropCommodityId,
+	    		String enteredYieldMeasUnitTypeCode,
+	    		Integer effectiveCropYear,
+	    		Integer expiryCropYear
+				) throws DaoException {
+
+		logger.debug("<selectToRecalculate");
+
+		List<DeclaredYieldContractCommodityForageDto> dtos = null;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
 			
+			parameters.put("cropCommodityId", cropCommodityId);
+			parameters.put("enteredYieldMeasUnitTypeCode", enteredYieldMeasUnitTypeCode);
+			parameters.put("effectiveCropYear", effectiveCropYear);
+			parameters.put("expiryCropYear", expiryCropYear);
+						
+			dtos = this.mapper.selectToRecalculate(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectToRecalculate " + dtos);
+		return dtos;
+	}			
 }

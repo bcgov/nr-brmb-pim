@@ -1,57 +1,39 @@
 
 
-<div class="dialog-form"
-    cdkDrag
-    cdkDragRootElement=".cdk-overlay-pane"
-    cdkDragBoundary=".cdk-overlay-container">
-
-    <div class="dialog-drag-handle" cdkDragHandle>
-        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
-        <!-- <g transform="translate(0 -5)"> -->
-            <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
-            <!-- <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 4v3H7l5 5 5-5h-3v-3z"></path>  -->
-            <path d="M0 0h24v24H0z" fill="none"></path>
-        <!-- </g> -->
-        </svg>
-    </div>
+<cuws-base-dialog [titleLabel]="titleLabel" [type]="dialogType" class="add-land">
+    <div mat-dialog-content class="grow">
 
     <form [formGroup]="addLandForm">
 
-        <h3 style="padding-left: 10px; font-weight: 600;">Add Field by Legal Location</h3>
-        <hr>
-
-        <div class="row-choice">            
-            <div>
-                <input 
-                        type="radio" 
-                        [value]="searchChoice.searchLegal" 
-                        formControlName="choiceSelected" 
-                        (click)="onChoiceClick(searchChoice.searchLegal)"/>  
-                Search Legal Location
-            </div>
-
-            <div>
-                <input 
-                        type="radio" 
-                        [value]="searchChoice.searchField" 
-                        formControlName="choiceSelected"
-                        (click)="onChoiceClick(searchChoice.searchField)"/> 
-                Search Field ID
-            </div>
-        </div>
-        <hr>
+        <mat-radio-group class="add-land-rb-group radio-group" formControlName="choiceSelected"> 
+            <mat-radio-button 
+                class="add-land-rb-group radio-button"
+                [value]="searchChoice.searchLegal" 
+                (click)="onChoiceClick(searchChoice.searchLegal)"
+                labelPosition="before"> 
+                    Search Legal Location
+            </mat-radio-button>
+            <mat-radio-button 
+                class="add-land-rb-group radio-button" 
+                [value]="searchChoice.searchField"
+                (click)="onChoiceClick(searchChoice.searchField)"
+                labelPosition="before">
+                    Search Field ID
+            </mat-radio-button>
+        </mat-radio-group>
 
         <div class="grid-container">
-            <div class="grid-item">{{ (selectedChoice == searchChoice.searchField ) ? "Field Id: " : "Legal Location: " }} </div>
+            <div class="grid-item">{{ (selectedChoice == searchChoice.searchField ) ? "Field Id " : "Legal Location " }} </div>
+            <div></div>
             <div class="grid-item">
-                <mat-form-field appearance="fill" [style.width.px]=450>
+                <mat-form-field appearance="fill" [style.width.px]=580>
                     <input matInput formControlName="searchLegalLandOrFieldId" 
                         (keydown)="clearAllForm()" maxlength="128">
                     <mat-hint *ngIf="showSearchLegalMsg">Please enter at least 3 symbols</mat-hint>
                 </mat-form-field>
             </div>
             <div class="grid-item">
-                <button mat-raised-button color="primary" (click)="onLegalLandSearch()" class="button-large-text" >
+                <button mat-raised-button color="secondary" (click)="onLegalLandSearch()" class="button-large-text" style=" margin-left:60px;">
                     <mat-icon style="padding-right: 4px; margin-right: 4px;">search</mat-icon>Search
                 </button>
             </div> 
@@ -62,12 +44,23 @@
 
             <!-- legal land grid -->
 
-            <div class="cuw-table-wrapper">
-                <div *ngIf="legalLandList && legalLandList.collection && legalLandList.collection.length > 0" 
-                    class="legal-land-container legal-land-info" >   
+            <div  *ngIf="legalLandList && legalLandList.collection && legalLandList.collection.length > 0"   
+                class="legal-land-container error-messages" style="padding-bottom: 16px;">
+
+                <div style="display:contents">
+                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+                    <div><span>
+                        This legal location is already associated with the following legal lands. You can select an existing land or create a new one.
+                    </span></div>
+                </div>
+            </div>
+
+            <div class="cuw-table-wrapper" *ngIf="legalLandList && legalLandList.collection && legalLandList.collection.length > 0">
+                
+                <div class="legal-land-container legal-land-info" >   
 
                     <div class="border-right header justify-center border-top border-bottom border-left"></div>
-                    <div class="border-right header justify-center border-top border-bottom border-left">Legal Location</div>
+                    <div class="border-right header justify-center border-top border-bottom">Legal Location</div>
                     <div class="border-right header justify-center border-top border-bottom">Primary Identifier</div>
                     <div class="border-right header justify-center border-top border-bottom">Legal Description</div>
 
@@ -75,7 +68,7 @@
                         *ngFor="let element of legalLandList.collection "
                         style="display:contents">
                         
-                        <div class="border-right justify-center border-top border-bottom border-left">
+                        <div class="border-right justify-center border-bottom border-left">
                             <input 
                                 type="radio" 
                                 [value]="element.legalLandId" 
@@ -83,19 +76,19 @@
                                 (click)="getFields(element.legalLandId, '')"/>
                         </div>
 
-                        <div class="border-right justify-center border-top border-bottom border-left">
+                        <div class="border-right justify-center border-bottom">
                             {{ element.otherDescription }}
                         </div>
-                        <div class="border-right justify-center border-top border-bottom border-left">
+                        <div class="border-right justify-center border-bottom">
                             {{ element.primaryPropertyIdentifier }}
                         </div>
-                        <div class="border-right justify-center border-top border-bottom">
+                        <div class="border-right justify-center border-bottom">
                             {{ element.legalDescription  }}
                         </div>
                     </div>
 
                     <div style="display:contents">
-                        <div class="justify-center border-top border-bottom border-left" >
+                        <div class="justify-center border-bottom border-left" >
                             <input 
                                 type="radio" 
                                 [value]="-1" 
@@ -103,7 +96,7 @@
                                 (click)="getFields(-1, '')"/> 
                         </div>
         
-                        <div class="border-right justify-left border-top border-bottom" style="grid-column-start:2; grid-column-end: 5;">
+                        <div class="border-right justify-left border-bottom" style="grid-column-start:2; grid-column-end: 5;">
                             Add New Legal Land
                         </div>
                     </div>
@@ -112,30 +105,47 @@
             </div>
              
             <div *ngIf="showNewLegalLandMessage" >
-                <p style="padding-left: 20px; padding-top: 0px;">The legal location was not found. Do you want to add it?</p>
+                <p style="padding-left: 0; padding-top: 0;">The legal location was not found. If you wish to add it, please click Done and then Save on the main screen.</p>
             </div>
 
 
+            <div *ngIf="selectedChoice == searchChoice.searchLegal && addLandForm.controls.legalLandIdSelected.value == -1"
+                class="legal-land-container error-messages" style="padding-top: 16px; padding-bottom: 16px;">
 
-            <!-- field grid -->
-            <p *ngIf="selectedChoice == searchChoice.searchLegal && fieldList && fieldList.collection && fieldList.collection.length > 0">
-                This legal location is already associated with the following fields. You can select an existing field or choose to create a new field.
-            </p>
+                <div style="display:contents">
+                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'green', 'font-size':'x-large'}">check_circle</mat-icon></div>
+                    <div><span style="padding-left:10px;">
+                        The legal location {{ addLandForm.controls.searchLegalLandOrFieldId.value }} will be added to the current policy.
+                    </span></div>
+                </div>
+            </div>
 
-            <div *ngIf="selectedChoice == searchChoice.searchLegal"  class="cuw-table-wrapper">
+
+            <div *ngIf="selectedChoice == searchChoice.searchLegal && fieldList && fieldList.collection && fieldList.collection.length > 0"
+                class="legal-land-container error-messages" style="padding-top: 16px; padding-bottom: 16px;">
+
+                <div style="display:contents">
+                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+                    <div><span>
+                        This legal location is already associated with the following fields. You can select an existing field or choose to create a new field.
+                    </span></div>
+                </div>
+            </div>
+
+            <div *ngIf="selectedChoice == searchChoice.searchLegal && fieldList && fieldList.collection && fieldList.collection.length > 0 "  class="cuw-table-wrapper">
                 <div *ngIf="fieldList && fieldList.collection && fieldList.collection.length > 0" 
                     class="legal-land-container field-info" >   
 
                     <div class="border-right header justify-center border-top border-bottom border-left"></div>
-                    <div class="border-right header justify-center border-top border-bottom border-left">Field Name</div>
-                    <div class="border-right header justify-center border-top border-bottom border-left">Field ID</div>
+                    <div class="border-right header justify-center border-top border-bottom">Field Name</div>
+                    <div class="border-right header justify-center border-top border-bottom">Field ID</div>
                     <div class="border-right header justify-center border-top border-bottom">Policy (Plan) - Grower</div>
 
                     <div 
                         *ngFor="let field of fieldList.collection"   
                         style="display:contents">
                         
-                        <div class="border-right justify-center border-top border-bottom border-left">
+                        <div class="border-right justify-center border-bottom border-left">
                             <input 
                                 type="radio" 
                                 [value]="field.fieldId" 
@@ -143,27 +153,27 @@
                                 (click)="validateFields(field)"/>
                         </div>
 
-                        <div class="border-right justify-center border-top border-bottom border-left">
+                        <div class="justify-center border-bottom border-right">
                             {{ field.fieldLabel }}
                         </div>
-                        <div class="border-right justify-center border-top border-bottom border-left">
+                        <div class="border-right justify-center border-bottom">
                             {{ field.fieldId }}
                         </div>
-                        <div class="border-right justify-center border-top border-bottom" style="white-space: pre;">
+                        <div class="border-right justify-center border-bottom" style="white-space: pre;">
                             {{ getPolicyAndPlan(field) }}
                         </div>
                     </div>
 
                     <div style="display:contents">
-                        <div class="border-left justify-center border-top border-bottom " >
+                        <div class="border-left justify-center border-bottom" >
                             <input 
                                 type="radio" 
                                 [value]="-1" 
                                 formControlName="fieldIdSelected" />
                         </div>
         
-                        <div class="justify-left border-top border-bottom border-right" style="grid-column-start:2; grid-column-end: 5;">
-                            Add New Field:  
+                        <div class="fill justify-left border-bottom border-right" style="grid-column-start:2; grid-column-end: 5;">
+                            Add New Field: &nbsp;&nbsp; &nbsp;
                             <mat-form-field appearance="fill">
                                 <input style="width: 100px;" matInput formControlName="fieldLabel" 
                                         maxlength="128" (keydown)="checkLength()">
@@ -174,6 +184,7 @@
                     </div>
                 </div>
             </div>
+
 
 
             <div *ngIf="selectedChoice == searchChoice.searchField && fieldList && fieldList.collection && fieldList.collection.length > 0" 
@@ -205,19 +216,35 @@
                 </div>
             </div>
 
+            <div  *ngIf="showNoFieldMessage" 
+                class="legal-land-container error-messages" style="padding-top: 16px; padding-bottom: 16px;">
 
+                <div style="display:contents">
+                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+                    <div><span>
+                        No fields are associated with this legal location.
+                    </span></div>
+                    <div class="fill" style="grid-column-start:1; grid-column-end: 3;">
+                        Add new field &nbsp;&nbsp;&nbsp;
+                        <mat-form-field appearance="fill">
+                            <input style="width: 100px;" matInput formControlName="fieldLabel" 
+                                    maxlength="128">
+                            <mat-hint *ngIf="showFieldInsertMsg">The field cannot be empty</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
 
+            <div *ngIf="selectedChoice == searchChoice.searchLegal && legalLandList && legalLandList.collection && addLandForm.controls.fieldLabel.value"
+                class="legal-land-container error-messages" style="padding-top: 16px; padding-bottom: 16px;">
 
-            <div *ngIf="showNoFieldMessage" >
-                <p style="padding-left: 20px; padding-top: 0px;">No fields are associated with this legal location.</p>
-                <p style="padding-left: 20px; padding-top: 0px;">
-                    Add new field
-                    <mat-form-field appearance="fill">
-                        <input style="width: 100px;" matInput formControlName="fieldLabel" 
-                                maxlength="128">
-                        <mat-hint *ngIf="showFieldInsertMsg">The field cannot be empty</mat-hint>
-                    </mat-form-field>
-                </p>
+                <div style="display:contents">
+                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'green', 'font-size':'x-large'}">check_circle</mat-icon></div>
+                    <div><span style="padding-left:10px;">
+                        The legal location 
+                        {{ getOtherDescription() }} will be added to the current policy with a new field.
+                    </span></div>
+                </div>
             </div>
 
             <!-- warning and error messages -->
@@ -226,33 +253,28 @@
                         (validationMessages.warningMessages && validationMessages.warningMessages.length > 0 ) || 
                         (validationMessages.errorMessages && validationMessages.errorMessages.length > 0 )
                     )"  
-                class="legal-land-container error-messages" >
+                class="legal-land-container error-messages" style="padding-top: 16px;">
 
                 <div *ngFor="let msg of validationMessages.errorMessages" style="display:contents">
                     <div class="justify-left"><mat-icon [ngStyle]="{'color':'orangered', 'font-size':'x-large'}">warning</mat-icon></div>
-                    <div><span style="color:orangered">{{ msg.message }}</span></div>
+                    <div><span>{{ msg.message }}</span></div>
                 </div>
 
                 <div *ngFor="let msg of validationMessages.warningMessages" style="display:contents">
                     <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
-                    <div><span style="color:orange">{{ msg.message }}</span></div>
+                    <div><span>{{ msg.message }}</span></div>
                 </div>
 
             </div>
 
         </div>
 
-
-        <div class="form-row dialog-controls">
-            <button mat-raised-button color="primary" (click)="onCancelChanges()" class="button-large-text">
-                <mat-icon style="padding-right: 4px; margin-right: 4px;">cancel_presentation</mat-icon>Cancel
-            </button>
-            &nbsp;
-            <button *ngIf="showProceedButton" mat-raised-button color="primary" (click)="onProceed()" class="button-large-text" >
-                <mat-icon style="padding-right: 4px; margin-right: 4px;">save_alt</mat-icon>Proceed
-            </button>
-        </div>
-
     </form>
 
 </div>
+<div mat-dialog-actions align="end">
+    <span *ngIf="showProceedButton" style="padding-right:160px;">To save field, click done and then click save on the main screen.</span>
+    <button mat-raised-button color="secondary" (click)="onCancelChanges()">Cancel</button>
+    <button *ngIf="showProceedButton" mat-raised-button color="primary" (click)="onProceed()">Done</button>
+</div>
+</cuws-base-dialog>
