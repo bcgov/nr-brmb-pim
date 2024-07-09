@@ -53,7 +53,26 @@
       padding-left: 8px;    
     }
 
+    .mat-form-field-appearance-fill .mat-form-field-flex {
+      background-color: white;
+      border: 1px solid rgba(194, 194, 194, 1) !important;
+      border-radius: 5px !important;
+      padding: 0 !important;  
+    }
 
+    .mat-form-field-appearance-fill .mat-form-field-infix {
+      padding: 0;
+    }
+
+    .mat-form-field-underline {
+      display: none;
+    }
+
+    .mat-select-value {
+      padding-bottom: 10px;
+      padding-left: 8px;
+      font-family: $font-family-main;
+    }
   }
   
   .plcy-inv-field-container-green {
@@ -445,26 +464,31 @@
   
   .message-container {
     display: grid;
-    grid-auto-rows: minmax( 2em, auto );
-    grid-template-columns:  1fr;
-    //margin-bottom: 10px;
+    grid-template-columns:  auto;
+    justify-items: start;
+    margin-bottom: 10px;
     margin-left: 16px;
-  
-    div {
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-start;
-        flex-direction: column;
-    }
   
     .has-yield-warning {
       display: flex; 
-      flex-direction: row; 
-      justify-content:center; 
+      justify-content:flex-start; 
       align-items: center; 
       margin-right: 20px; 
-      border: 2px solid blue; 
+      //border: 2px solid #C10B0B; 
       border-radius: 5px;
+      background-color: #FEF0F0;
+
+      .mat-icon{
+        margin: 4px 20px 4px 10px;
+        color: #C10B0B;
+        width: 20px;
+      }
+
+      .warning-message{
+        font-size: 15px; 
+        color:#C10B0B;
+        margin-right: 16px;
+      }
     }
   }
 

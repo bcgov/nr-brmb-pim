@@ -120,6 +120,7 @@ public class CropVarietyInsurabilityDaoTest {
 		newDto.setIsAwpEligibleInd(true);
 		newDto.setIsUnseededInsurableInd(false);
 		newDto.setIsUnderseedingEligibleInd(true);
+		newDto.setIsGrainUnseededDefaultInd(true);
 		
 		dao.insert(newDto, userId);
 		
@@ -134,6 +135,7 @@ public class CropVarietyInsurabilityDaoTest {
 		Assert.assertEquals("IsAwpEligibleInd", newDto.getIsAwpEligibleInd(), fetchedDto.getIsAwpEligibleInd());
 		Assert.assertEquals("IsUnseededInsurableInd", newDto.getIsUnseededInsurableInd(), fetchedDto.getIsUnseededInsurableInd());
 		Assert.assertEquals("IsUnderseedingEligibleInd", newDto.getIsUnderseedingEligibleInd(), fetchedDto.getIsUnderseedingEligibleInd());
+		Assert.assertEquals("IsGrainUnseededDefaultInd", newDto.getIsGrainUnseededDefaultInd(), fetchedDto.getIsGrainUnseededDefaultInd());
 		
 		//UPDATE
 		fetchedDto.setIsQuantityInsurableInd(false);
@@ -141,6 +143,8 @@ public class CropVarietyInsurabilityDaoTest {
 		fetchedDto.setIsAwpEligibleInd(false);
 		fetchedDto.setIsUnseededInsurableInd(true);
 		fetchedDto.setIsUnderseedingEligibleInd(false);
+		fetchedDto.setIsGrainUnseededDefaultInd(false);
+
 		
 		dao.update(fetchedDto, userId);
 		
@@ -153,6 +157,7 @@ public class CropVarietyInsurabilityDaoTest {
 		Assert.assertEquals("IsAwpEligibleInd", fetchedDto.getIsAwpEligibleInd(), updatedDto.getIsAwpEligibleInd());
 		Assert.assertEquals("IsUnseededInsurableInd", fetchedDto.getIsUnseededInsurableInd(), updatedDto.getIsUnseededInsurableInd());
 		Assert.assertEquals("IsUnderseedingEligibleInd", fetchedDto.getIsUnderseedingEligibleInd(), updatedDto.getIsUnderseedingEligibleInd());
+		Assert.assertEquals("IsGrainUnseededDefaultInd", fetchedDto.getIsGrainUnseededDefaultInd(), updatedDto.getIsGrainUnseededDefaultInd());
 
 		//Test selectForInsurancePlan with the new variety with insurability record.
 		dtos = dao.selectForInsurancePlan(insurancePlanId);
@@ -215,6 +220,7 @@ public class CropVarietyInsurabilityDaoTest {
 				Assert.assertNotNull("IsPlantInsurableInd", dto.getIsPlantInsurableInd());
 				Assert.assertNotNull("IsAwpEligibleInd", dto.getIsAwpEligibleInd());
 				Assert.assertNotNull("IsUnderseedingEligibleInd", dto.getIsUnderseedingEligibleInd());
+				Assert.assertNotNull("IsGrainUnseededDefaultInd", dto.getIsGrainUnseededDefaultInd());
 				Assert.assertNotNull("CreateUser", dto.getCreateUser());
 				Assert.assertNotNull("CreateDate", dto.getCreateDate());
 				Assert.assertNotNull("UpdateUser", dto.getUpdateUser());
@@ -377,6 +383,7 @@ public class CropVarietyInsurabilityDaoTest {
 		newDto.setIsAwpEligibleInd(true);
 		newDto.setIsUnseededInsurableInd(true);
 		newDto.setIsUnderseedingEligibleInd(true);
+		newDto.setIsGrainUnseededDefaultInd(true);
 		
 		dao.insert(newDto, userId);
 
@@ -445,6 +452,8 @@ public class CropVarietyInsurabilityDaoTest {
 		invFieldDto.setInsurancePlanId(insurancePlanId);
 		invFieldDto.setLastYearCropCommodityId(20);
 		invFieldDto.setLastYearCropCommodityName("FALL RYE");
+		invFieldDto.setLastYearCropVarietyId(null);
+		invFieldDto.setLastYearCropVarietyName(null);
 		invFieldDto.setIsHiddenOnPrintoutInd(false);
 		invFieldDto.setPlantingNumber(1);
 		invFieldDto.setUnderseededCropVarietyId(null);

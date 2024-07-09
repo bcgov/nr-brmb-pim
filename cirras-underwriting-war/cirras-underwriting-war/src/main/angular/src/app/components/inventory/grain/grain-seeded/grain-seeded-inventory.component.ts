@@ -19,8 +19,6 @@ import {ViewEncapsulation } from '@angular/core';
 })
 
 export class GrainSeededInventoryComponent extends GrainInventoryComponent { 
-
-  @Input() underSeededCropCommodityList: CropCommodityList;
  
   filteredVarietyOptions: CropVarietyOptionsType[];  
 
@@ -123,6 +121,8 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     }
 
     this.geInvSeededTotals()
+
+    this.isMyFormDirty()
   }
 
   clearCommoditySelection(fieldIndex, plantingIndex, invSeededIndex){
@@ -607,6 +607,8 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     }
 
     this.geInvSeededTotals()
+
+    this.isMyFormDirty()
   }
 
   resetInvSeededGrainForDelete(invSeededGrainControls) {
@@ -725,6 +727,8 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     let acres = invSeeded.controls['seededAcres'].value
 
     invSeeded.controls['seededAcres'].setValue(roundUpDecimalAcres(acres))
+
+    this.isMyFormDirty()
   }
 
   roundUpUnderSeededAcres(fieldIndex, plantingIndex, invSeededIndex){
@@ -735,6 +739,8 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     let acres = invSeeded.controls['underSeededAcres'].value
 
     invSeeded.controls['underSeededAcres'].setValue(roundUpDecimalAcres(acres))
+
+    this.isMyFormDirty()
   }
 
   validateVariety(option, value, fieldIndex, plantingIndex, invSeededIndex){
@@ -780,6 +786,8 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
 
       }
     }
+
+    this.isMyFormDirty()
   }
 
   validateUnderSeededVariety(option, fieldIndex, plantingIndex, invSeededIndex){

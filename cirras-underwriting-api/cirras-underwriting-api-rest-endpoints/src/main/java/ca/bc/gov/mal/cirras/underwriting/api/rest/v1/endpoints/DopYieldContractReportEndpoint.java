@@ -43,7 +43,7 @@ public interface DopYieldContractReportEndpoint extends BaseEndpoints {
 	@Produces({ MediaType.WILDCARD })
 	Response generateDopReport(
 		@Parameter(description = "Filter the results by the year") @QueryParam("cropYear") String cropYear,
-		@Parameter(description = "Filter the results by the insurance plan") @QueryParam("insurancePlanId") String insurancePlanId,
+		@Parameter(description = "Filter the results by the insurance plan", required = true) @QueryParam("insurancePlanId") String insurancePlanId,
 		@Parameter(description = "Filter the results by the office") @QueryParam("officeId") String officeId,
 		@Parameter(description = "Filter the results by the policy status") @QueryParam("policyStatusCode") String policyStatusCode,
 		@Parameter(description = "Filter the results by the policy number") @QueryParam("policyNumber") String policyNumber,

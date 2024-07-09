@@ -141,7 +141,24 @@ public class DeclaredYieldFieldDaoImpl extends BaseDao implements DeclaredYieldF
 
 		logger.debug(">deleteForField");
 	}
+	
+	@Override
+	public void deleteForFieldAndYear(Integer fieldId, Integer cropYear) throws DaoException, NotFoundDaoException {
+		logger.debug("<deleteForFieldAndYear");
 
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("fieldId", fieldId);
+			parameters.put("cropYear", cropYear);
+			this.mapper.deleteForFieldAndYear(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">deleteForFieldAndYear");
+	}
+	
 	@Override
 	public void deleteForDeclaredYieldContract(String declaredYieldContractGuid) throws DaoException, NotFoundDaoException {
 		logger.debug("<deleteForDeclaredYieldContract");

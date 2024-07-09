@@ -1,0 +1,10 @@
+<ng-container [ngSwitch]="underwritingCommentTypeCode">
+    <button *ngSwitchCase="'DOP'" mat-raised-button color="secondary" class="header-button" (click)="onLoadComments()">
+        <mat-icon class="button-mat-icon" [svgIcon]="hasComments() ? 'insert_comment' : 'mode_comment'"></mat-icon>DOP
+        Comments
+    </button>
+    <span *ngSwitchCase="'INV'">
+        <mat-icon matTooltip="Comments" (click)="onLoadComments()"
+            [svgIcon]="hasComments() ? 'insert_comment' : 'mode_comment'"></mat-icon>
+    </span>
+</ng-container>

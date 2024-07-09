@@ -19,12 +19,14 @@ public class DopYieldFieldForage implements Serializable {
 	private Double fieldAcres;
 	private String cropVarietyName;
 	private Integer cropVarietyId;
+	private Integer cropCommodityId;
 	private String plantDurationTypeCode;
 
 	// INVENTORY_FIELD
 	private Integer insurancePlanId;
 	private Integer fieldId;
 	private Integer cropYear;
+	private Boolean isHiddenOnPrintoutInd;
 	
 	// DECLARED_YIELD_FIELD_FORAGE
 	private List<DopYieldFieldForageCut> dopYieldFieldForageCuts = new ArrayList<DopYieldFieldForageCut>(); 
@@ -85,6 +87,13 @@ public class DopYieldFieldForage implements Serializable {
 		this.cropVarietyId = cropVarietyId;
 	};
 
+	public Integer getCropCommodityId() {
+		return cropCommodityId;
+	}
+	public void setCropCommodityId(Integer cropCommodityId) {
+		this.cropCommodityId = cropCommodityId;
+	}
+
 	public String getPlantDurationTypeCode() {
 		return plantDurationTypeCode;
 	}
@@ -121,4 +130,12 @@ public class DopYieldFieldForage implements Serializable {
 	public void setDopYieldFieldForageCuts(List<DopYieldFieldForageCut> dopYieldFieldForageCuts) {
 		this.dopYieldFieldForageCuts = dopYieldFieldForageCuts;
 	}		
+	
+	public Boolean getIsHiddenOnPrintoutInd() {
+		return isHiddenOnPrintoutInd;
+	}
+
+	public void setIsHiddenOnPrintoutInd(Boolean isHiddenOnPrintoutInd) {
+		this.isHiddenOnPrintoutInd = isHiddenOnPrintoutInd;
+	}
 }

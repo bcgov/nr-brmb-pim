@@ -220,60 +220,6 @@ export class UwContractsListComponent extends CollectionComponent implements OnC
     return ( this.isPrintClicked || (this.selectedInsurancePlan != INSURANCE_PLAN.GRAIN && this.selectedInsurancePlan != INSURANCE_PLAN.FORAGE))
   }
 
-  onReportPrint() {
-
-    if (this.isSearchValid()) {
-
-      switch (this.selectedReportType) {
-
-        case REPORT_CHOICES.INVENTORY: {
-
-          this.inventoryBatchPrint()
-          break
-
-        }
-        case REPORT_CHOICES.DOP: {
-
-          this.dopReportPrint()
-          break
-
-        }
-      }
-    } 
-  }
-
-  dopReportPrint() {
-    
-    let policyIdList = this.getSelectedPolicyIdsForPrint()
-
-    this.store.dispatch(GetDopReport("DOP-batch.pdf", 
-                                    policyIdList, 
-                                    this.selectedCropYear, 
-                                    this.selectedInsurancePlan, 
-                                    this.selectedOffice,
-                                    this.selectedPolicyStatus, 
-                                    this.searchPolicyNumber, 
-                                    this.searchGrower, 
-                                    this.selectedReportSortBy,
-                                    ))
-  }
-
-  inventoryBatchPrint() {
-    // for inventory jasper reports
-    let policyIdList = this.getSelectedPolicyIdsForPrint()
-    
-    this.store.dispatch(GetInventoryReport("Inventory-batch.pdf", 
-                                    policyIdList, 
-                                    this.selectedCropYear, 
-                                    this.selectedInsurancePlan, 
-                                    this.selectedOffice,
-                                    this.selectedPolicyStatus, 
-                                    this.searchPolicyNumber, 
-                                    this.searchGrower, 
-                                    this.selectedReportSortBy,
-                                    ))
-  }
-
   getSelectedPolicyIdsForPrint() {
 
     let policyIdListForPrint = "" 
@@ -282,7 +228,7 @@ export class UwContractsListComponent extends CollectionComponent implements OnC
 
     for (let i = 0; i < this.collectionData.length; i++ ) {
 
-      if (this.showPrintCheckbox(this.collectionData[i]) && this.collectionDataEditable[i].isSelectedForPrint == true ) {
+      if (this.showPrintCheckbox(this.collectionData[i]) && this.collectionDataEditable[i]?.isSelectedForPrint == true ) {
 
         this.countSelectedRecords ++
 

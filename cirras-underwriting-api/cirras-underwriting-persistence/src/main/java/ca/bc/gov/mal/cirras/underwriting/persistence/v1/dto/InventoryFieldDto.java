@@ -23,6 +23,8 @@ public class InventoryFieldDto extends BaseDto<InventoryFieldDto> {
 	private Integer fieldId;
 	private Integer lastYearCropCommodityId;
 	private String lastYearCropCommodityName;
+	private Integer lastYearCropVarietyId;
+	private String lastYearCropVarietyName;
 	private Integer cropYear;
 	private Integer plantingNumber;
 	private Boolean isHiddenOnPrintoutInd;
@@ -33,6 +35,7 @@ public class InventoryFieldDto extends BaseDto<InventoryFieldDto> {
 
 	//Used in rollover
 	private Double acresToBeSeeded;
+	private Boolean isGrainUnseededDefaultInd;
 
 	private InventoryUnseededDto inventoryUnseeded;
 
@@ -65,9 +68,12 @@ public class InventoryFieldDto extends BaseDto<InventoryFieldDto> {
 		this.fieldId = dto.fieldId;
 		this.lastYearCropCommodityId = dto.lastYearCropCommodityId;
 		this.lastYearCropCommodityName = dto.lastYearCropCommodityName;
+		this.lastYearCropVarietyId = dto.lastYearCropVarietyId;
+		this.lastYearCropVarietyName = dto.lastYearCropVarietyName;
 		this.cropYear = dto.cropYear;
 		this.plantingNumber = dto.plantingNumber;
 		this.acresToBeSeeded = dto.acresToBeSeeded;
+		this.isGrainUnseededDefaultInd = dto.isGrainUnseededDefaultInd;
 		this.isHiddenOnPrintoutInd = dto.isHiddenOnPrintoutInd;
 		this.underseededCropVarietyId = dto.underseededCropVarietyId;
 		this.underseededCropVarietyName = dto.underseededCropVarietyName;
@@ -135,6 +141,7 @@ public class InventoryFieldDto extends BaseDto<InventoryFieldDto> {
 			result = result&&dtoUtils.equals("insurancePlanId", insurancePlanId, other.insurancePlanId);
 			result = result&&dtoUtils.equals("fieldId", fieldId, other.fieldId);
 			result = result&&dtoUtils.equals("lastYearCropCommodityId", lastYearCropCommodityId, other.lastYearCropCommodityId);
+			result = result&&dtoUtils.equals("lastYearCropVarietyId", lastYearCropVarietyId, other.lastYearCropVarietyId);
 			result = result&&dtoUtils.equals("cropYear", cropYear, other.cropYear);
 			result = result&&dtoUtils.equals("plantingNumber", plantingNumber, other.plantingNumber);
 			result = result&&dtoUtils.equals("isHiddenOnPrintoutInd", isHiddenOnPrintoutInd, other.isHiddenOnPrintoutInd);
@@ -192,6 +199,20 @@ public class InventoryFieldDto extends BaseDto<InventoryFieldDto> {
 		this.lastYearCropCommodityName = lastYearCropCommodityName;
 	}
 	
+	public Integer getLastYearCropVarietyId() {
+		return lastYearCropVarietyId;
+	}
+	public void setLastYearCropVarietyId(Integer lastYearCropVarietyId) {
+		this.lastYearCropVarietyId = lastYearCropVarietyId;
+	}
+
+	public String getLastYearCropVarietyName() {
+		return lastYearCropVarietyName;
+	}
+	public void setLastYearCropVarietyName(String lastYearCropVarietyName) {
+		this.lastYearCropVarietyName = lastYearCropVarietyName;
+	}
+
 	public Integer getCropYear() {
 		return cropYear;
 	}
@@ -282,6 +303,14 @@ public class InventoryFieldDto extends BaseDto<InventoryFieldDto> {
 	}
 	public void setAcresToBeSeeded(Double acresToBeSeeded) {
 		this.acresToBeSeeded = acresToBeSeeded;
+	}
+
+	public Boolean getIsGrainUnseededDefaultInd() {
+		return isGrainUnseededDefaultInd;
+	}
+
+	public void setIsGrainUnseededDefaultInd(Boolean isGrainUnseededDefaultInd) {
+		this.isGrainUnseededDefaultInd = isGrainUnseededDefaultInd;
 	}
 
  	public Integer getUnderseededCropVarietyId() {

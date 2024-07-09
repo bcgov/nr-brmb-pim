@@ -38,6 +38,11 @@
         overflow-y: hidden;
     }
 
+    ::ng-deep .desktop .mat-dialog-content.grow {
+        overflow-y: auto !important;
+        max-height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 135px);
+    }
+
     ::ng-deep .mat-dialog-content {
         padding: var(--cirras-underwriting-gutter-space);
         margin: 0;

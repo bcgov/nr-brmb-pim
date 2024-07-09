@@ -8,6 +8,7 @@ import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest'
 import { LegalLandList } from 'src/app/conversion/models';
 import { makeTitleCase, setHttpHeaders } from 'src/app/utils';
 import { LAND_UPDATE_TYPE } from 'src/app/utils/constants';
+import { DIALOG_TYPE } from '../../dialogs/base-dialog/base-dialog.component';
 
 export interface AddLandPopupData {
   fieldId: number;
@@ -36,6 +37,10 @@ export interface AddLandPopupData {
 })
 export class AddLandComponent implements OnInit {
 
+  titleLabel = "Add Field";
+
+  dialogType = DIALOG_TYPE.INFO;
+  
   dataReceived : AddLandPopupData;
 
   addLandForm: FormGroup;
@@ -409,4 +414,20 @@ export class AddLandComponent implements OnInit {
 
   }
 
+  getOtherDescription() {
+    const legalLandId = this.addLandForm.get("legalLandIdSelected").value
+    let otherLegalDescription = ""
+
+    
+    if (this.addLandForm.controls.choiceSelected.value == this.searchChoice.searchLegal) {
+
+      if (legalLandId && legalLandId > -1) {
+        otherLegalDescription = this.legalLandList.collection.find(el => el.legalLandId == legalLandId).otherDescription
+      } else {
+        otherLegalDescription = this.addLandForm.get("searchLegalLandOrFieldId").value
+      }
+    }
+    return otherLegalDescription
+  }
+  
 }

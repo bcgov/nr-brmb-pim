@@ -101,29 +101,54 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 		Assert.assertEquals(1, field.getDisplayOrder().intValue());
 		
 		Assert.assertNotNull(field.getPlantings());
-		Assert.assertEquals("More plantings than expected returned", 3, field.getPlantings().size());
+		Assert.assertEquals("More plantings than expected returned", 5, field.getPlantings().size());
 		
 		for (InventoryField invField: field.getPlantings()) {
 
 			Assert.assertFalse("is hidden on printout ind is not false", invField.getIsHiddenOnPrintoutInd());
-			
+
 			Integer lastYearCmdtyId = invField.getLastYearCropCommodityId();
 			//Check if commodity is oat or canola
-			Assert.assertTrue("commodity id ("+lastYearCmdtyId+") not 24, 18 or none", lastYearCmdtyId == null || lastYearCmdtyId.equals(24) || lastYearCmdtyId.equals(18));
+			Assert.assertTrue("commodity id ("+lastYearCmdtyId+") not 24, 18, 65, 71 or none", lastYearCmdtyId == null || lastYearCmdtyId.equals(24) || lastYearCmdtyId.equals(18)|| lastYearCmdtyId.equals(65)|| lastYearCmdtyId.equals(71));
 			
-			Assert.assertTrue("Unseeded Insurable not true", invField.getInventoryUnseeded().getIsUnseededInsurableInd());
 			Assert.assertNull("Unseeded crop commodity not null", invField.getInventoryUnseeded().getCropCommodityId());
 			
 			//Check acres according to commodity
 			if(lastYearCmdtyId == null) {
 				//None
+				Assert.assertNull("None", invField.getLastYearCropCommodityName());
+				Assert.assertNull(invField.getLastYearCropVarietyName());
+				Assert.assertNull(invField.getLastYearCropVarietyId());
 				Assert.assertEquals("None not correct acres", (Double)30.0, invField.getInventoryUnseeded().getAcresToBeSeeded());
+				Assert.assertTrue("Unseeded Insurable not true", invField.getInventoryUnseeded().getIsUnseededInsurableInd());
 			} else if(lastYearCmdtyId.equals(24)) {
 				//Oat
+				Assert.assertEquals("OAT", invField.getLastYearCropCommodityName());
+				Assert.assertNull(invField.getLastYearCropVarietyName());
+				Assert.assertNull(invField.getLastYearCropVarietyId());
 				Assert.assertEquals("Oat not correct acres", (Double)25.0, invField.getInventoryUnseeded().getAcresToBeSeeded());
+				Assert.assertTrue("Unseeded Insurable not true", invField.getInventoryUnseeded().getIsUnseededInsurableInd());
 			} else if (lastYearCmdtyId.equals(18)) {
 				//Canola
+				Assert.assertEquals("CANOLA", invField.getLastYearCropCommodityName());
+				Assert.assertNull(invField.getLastYearCropVarietyName());
+				Assert.assertNull(invField.getLastYearCropVarietyId());
 				Assert.assertEquals("Canola not correct acres", (Double)50.0, invField.getInventoryUnseeded().getAcresToBeSeeded());
+				Assert.assertTrue("Unseeded Insurable not true", invField.getInventoryUnseeded().getIsUnseededInsurableInd());
+			} else if (lastYearCmdtyId.equals(65)) {
+				//Forage - From underseeded Alfalfa
+				Assert.assertEquals("ALFALFA", invField.getLastYearCropVarietyName());
+				Assert.assertEquals(119, invField.getLastYearCropVarietyId().intValue());
+				Assert.assertEquals("FORAGE", invField.getLastYearCropCommodityName());
+				Assert.assertEquals("FORAGE not correct acres", (Double)58.0, invField.getInventoryUnseeded().getAcresToBeSeeded());
+				Assert.assertFalse("Unseeded Insurable not false", invField.getInventoryUnseeded().getIsUnseededInsurableInd());
+			} else if (lastYearCmdtyId.equals(71)) {
+				//Silage Corn - From underseeded SILAGE CORN - UNSPECIFIED
+				Assert.assertEquals("SILAGE CORN - UNSPECIFIED", invField.getLastYearCropVarietyName());
+				Assert.assertEquals(1010863, invField.getLastYearCropVarietyId().intValue());
+				Assert.assertEquals("SILAGE CORN", invField.getLastYearCropCommodityName());
+				Assert.assertEquals("SILAGE CORN not correct acres", (Double)34.0, invField.getInventoryUnseeded().getAcresToBeSeeded());
+				Assert.assertTrue("Unseeded Insurable not true", invField.getInventoryUnseeded().getIsUnseededInsurableInd());
 			}
 		}
 
@@ -143,11 +168,12 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 	*****************
 	INSERT STATEMENTS
 	*****************
-	INSERT INTO cuws.legal_land(legal_land_id, primary_reference_type_code, legal_description, legal_short_description, other_description, active_from_crop_year, active_to_crop_year, data_sync_trans_date, create_user, create_date, update_user, update_date, primary_property_identifier)
-	VALUES (987654321, 'OTHER', 'Test Legal', 'Test Legal Short', 'Test Other', 1980, null, now(), 'admin', now(), 'admin', now(), '123456723');
+
+	INSERT INTO cuws.legal_land(legal_land_id, primary_reference_type_code, legal_description, legal_short_description, other_description, active_from_crop_year, active_to_crop_year, create_user, create_date, update_user, update_date, primary_property_identifier)
+	VALUES (987654321, 'OTHER', 'Test Legal', 'Test Legal Short', 'Test Other', 1980, null, 'admin', now(), 'admin', now(), '123456723');
 	 
-	INSERT INTO cuws.field(field_id, field_label, active_from_crop_year, active_to_crop_year, data_sync_trans_date, create_user, create_date, update_user, update_date)
-	VALUES (123456999, 'Test Field', 1980, null, now(), 'admin', now(), 'admin', now());
+	INSERT INTO cuws.field(field_id, field_label, active_from_crop_year, active_to_crop_year, create_user, create_date, update_user, update_date)
+	VALUES (123456999, 'Test Field', 1980, null, 'admin', now(), 'admin', now());
 	
 	--target year policy and land ************************************
 	INSERT INTO cuws.policy(policy_id, grower_id, insurance_plan_id, policy_status_code, office_id, policy_number, contract_number, contract_id, crop_year, data_sync_trans_date, create_user, create_date, update_user, update_date)
@@ -156,11 +182,11 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 	INSERT INTO cuws.grower_contract_year(grower_contract_year_id, grower_id, insurance_plan_id, contract_id, crop_year, data_sync_trans_date, create_user, create_date, update_user, update_date)
 	VALUES (999992022, 4, 4, 999888777, 2022, now(), 'admin', now(), 'admin', now());
 
-	INSERT INTO cuws.annual_field_detail(annual_field_detail_id, legal_land_id, field_id, crop_year, data_sync_trans_date, create_user, create_date, update_user, update_date)
-	VALUES (987652022, 987654321, 123456999, 2022, now(), 'admin', now(), 'admin', now());
+	INSERT INTO cuws.annual_field_detail(annual_field_detail_id, legal_land_id, field_id, crop_year, create_user, create_date, update_user, update_date)
+	VALUES (987652022, 987654321, 123456999, 2022, 'admin', now(), 'admin', now());
 	
-	INSERT INTO cuws.contracted_field_detail(contracted_field_detail_id, annual_field_detail_id, grower_contract_year_id, display_order, data_sync_trans_date, create_user, create_date, update_user, update_date)
-	VALUES (888882022, 987652022, 999992022, 1, now(), 'admin', now(), 'admin', now());
+	INSERT INTO cuws.contracted_field_detail(contracted_field_detail_id, annual_field_detail_id, grower_contract_year_id, display_order, create_user, create_date, update_user, update_date)
+	VALUES (888882022, 987652022, 999992022, 1, 'admin', now(), 'admin', now());
 	
 	--source year policy and land ************************************ 
 	INSERT INTO cuws.policy(policy_id, grower_id, insurance_plan_id, policy_status_code, office_id, policy_number, contract_number, contract_id, crop_year, data_sync_trans_date, create_user, create_date, update_user, update_date)
@@ -169,11 +195,11 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 	INSERT INTO cuws.grower_contract_year(grower_contract_year_id, grower_id, insurance_plan_id, contract_id, crop_year, data_sync_trans_date, create_user, create_date, update_user, update_date)
 	VALUES (999992021, 4, 4, 999888777, 2021, now(), 'admin', now(), 'admin', now());
 
-	INSERT INTO cuws.annual_field_detail(annual_field_detail_id, legal_land_id, field_id, crop_year, data_sync_trans_date, create_user, create_date, update_user, update_date)
-	VALUES (987652021, 987654321, 123456999, 2021, now(), 'admin', now(), 'admin', now());
+	INSERT INTO cuws.annual_field_detail(annual_field_detail_id, legal_land_id, field_id, crop_year, create_user, create_date, update_user, update_date)
+	VALUES (987652021, 987654321, 123456999, 2021, 'admin', now(), 'admin', now());
 	
-	INSERT INTO cuws.contracted_field_detail(contracted_field_detail_id, annual_field_detail_id, grower_contract_year_id, display_order, data_sync_trans_date, create_user, create_date, update_user, update_date)
-	VALUES (888882021, 987652021, 999992021, 1, now(), 'admin', now(), 'admin', now());
+	INSERT INTO cuws.contracted_field_detail(contracted_field_detail_id, annual_field_detail_id, grower_contract_year_id, display_order, create_user, create_date, update_user, update_date)
+	VALUES (888882021, 987652021, 999992021, 1, 'admin', now(), 'admin', now());
 	
 	--Inventory Field
 	INSERT INTO cuws.inventory_field(inventory_field_guid, insurance_plan_id, field_id, last_year_crop_commodity_id, crop_year, planting_number, create_user, create_date, update_user, update_date, is_hidden_on_printout_ind)
@@ -184,6 +210,12 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 
 	INSERT INTO cuws.inventory_field(inventory_field_guid, insurance_plan_id, field_id, last_year_crop_commodity_id, crop_year, planting_number, create_user, create_date, update_user, update_date, is_hidden_on_printout_ind)
 	VALUES ('AbcDeFg12394039485-3', 4, 123456999, null, 2021, 3, 'admin', now(), 'admin', now(), 'Y');
+
+	INSERT INTO cuws.inventory_field(inventory_field_guid, insurance_plan_id, field_id, last_year_crop_commodity_id, crop_year, planting_number, underseeded_crop_variety_id, underseeded_acres, create_user, create_date, update_user, update_date, is_hidden_on_printout_ind)
+	VALUES ('AbcDeFg12394039485-4', 4, 123456999, null, 2021, 4, 119, 58, 'admin', now(), 'admin', now(), 'Y');
+
+	INSERT INTO cuws.inventory_field(inventory_field_guid, insurance_plan_id, field_id, last_year_crop_commodity_id, crop_year, planting_number, underseeded_crop_variety_id, underseeded_acres, create_user, create_date, update_user, update_date, is_hidden_on_printout_ind)
+	VALUES ('AbcDeFg12394039485-5', 4, 123456999, null, 2021, 5, 1010863, 34, 'admin', now(), 'admin', now(), 'Y');
 	
 	--Plantings
 	INSERT INTO cuws.inventory_seeded_grain (inventory_seeded_grain_guid, inventory_field_guid, crop_commodity_id, crop_variety_id, commodity_type_code, is_quantity_insurable_ind, is_replaced_ind, is_pedigree_ind, seeding_date, seeded_acres, is_spot_loss_insurable_ind, create_user, create_date, update_user, update_date)
@@ -196,6 +228,10 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 	VALUES (replace(cast(gen_random_uuid() as text), '-', ''), 'AbcDeFg12394039485-3', null,  null,  null,  'N',  'N',  'N',  null,  30, 'N', 'admin', now(), 'admin', now());
 	INSERT INTO cuws.inventory_seeded_grain (inventory_seeded_grain_guid, inventory_field_guid, crop_commodity_id, crop_variety_id, commodity_type_code, is_quantity_insurable_ind, is_replaced_ind, is_pedigree_ind, seeding_date, seeded_acres, is_spot_loss_insurable_ind, create_user, create_date, update_user, update_date)
 	VALUES (replace(cast(gen_random_uuid() as text), '-', ''), 'AbcDeFg12394039485-3', 18,  1010471,  'Argentine Canola',  'N',  'Y',  'N',  null,  10, 'N', 'admin', now(), 'admin', now());
+	INSERT INTO cuws.inventory_seeded_grain (inventory_seeded_grain_guid, inventory_field_guid, crop_commodity_id, crop_variety_id, commodity_type_code, is_quantity_insurable_ind, is_replaced_ind, is_pedigree_ind, seeding_date, seeded_acres, is_spot_loss_insurable_ind, create_user, create_date, update_user, update_date)
+	VALUES (replace(cast(gen_random_uuid() as text), '-', ''), 'AbcDeFg12394039485-4', 18,  1010471,  'Argentine Canola',  'N',  'Y',  'N',  null,  100, 'N', 'admin', now(), 'admin', now());
+	INSERT INTO cuws.inventory_seeded_grain (inventory_seeded_grain_guid, inventory_field_guid, crop_commodity_id, crop_variety_id, commodity_type_code, is_quantity_insurable_ind, is_replaced_ind, is_pedigree_ind, seeding_date, seeded_acres, is_spot_loss_insurable_ind, create_user, create_date, update_user, update_date)
+	VALUES (replace(cast(gen_random_uuid() as text), '-', ''), 'AbcDeFg12394039485-5', 18,  null, null,  'N',  'Y',  'N',  null,  null, 'N', 'admin', now(), 'admin', now());
 
 	*****************
 	DELETE STATEMENTS
@@ -300,7 +336,8 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 		InventoryField invField = field.getPlantings().get(0);
 
 		Assert.assertTrue("is hidden on printout ind is not true", invField.getIsHiddenOnPrintoutInd());
-		
+
+		// TODO: Add variety (PIM-1466).
 		Integer lastYearCmdtyId = invField.getLastYearCropCommodityId();
 		Assert.assertNull("commodity id not none", lastYearCmdtyId);
 		

@@ -102,6 +102,7 @@ public class CommodityRsrcFactory extends BaseResourceFactory implements Commodi
 		variety.setIsQuantityInsurableInd(dto.getIsQuantityInsurableInd());
 		variety.setIsUnseededInsurableInd(dto.getIsUnseededInsurableInd());
 		variety.setIsUnderseedingEligibleInd(dto.getIsUnderseedingEligibleInd());
+		variety.setIsGrainUnseededDefaultInd(dto.getIsGrainUnseededDefaultInd());
 		
 		List<CropVarietyCommodityType> filteredCropVarietyCommodityTypes = cropVarietyCommodityTypeList.stream()
 				.filter(x -> x.getCropVarietyId().equals(variety.getCropVarietyId()))

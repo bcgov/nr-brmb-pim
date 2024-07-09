@@ -60,29 +60,39 @@
 
   .grid-container {
     display: grid;
-    grid-template-columns: auto auto auto;
-    padding: 10px;
-    justify-content: start;
+    grid-template-columns: auto auto; // auto;
+    padding: 10px 0;
+    //justify-content: start;
     align-items: center;
-  }
+  
+    .grid-item {
+      // padding-left: 20px;
 
-  .grid-item {
-    padding-left: 20px;
+      ::ng-deep .mat-form-field-appearance-fill .mat-form-field-underline::before {
+        background-color: black;
+      }
+
+      ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+        background-color: transparent;
+        padding: 0 0 0 0;
+      }
+
+      ::ng-deep .mat-form-field-appearance-fill .mat-form-field-subscript-wrapper {
+        padding: 0 0;
+      }
+    }
   }
 
 
 .row-group-left {
-    padding: 10px;
-    //margin: 20px 10px;
+    // padding: 10px 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    //align-items: center;
 
   .legal-land-container {
     display: grid;
     grid-auto-rows: minmax( 2em, auto );
-   
 
     &.legal-land-info {
       grid-template-columns: 1fr 2fr 2fr 5fr;
@@ -100,6 +110,21 @@
         display: flex;
         justify-content: flex-start;
         align-items: center;
+
+        .fill {    
+          ::ng-deep .mat-form-field-appearance-fill .mat-form-field-underline::before {
+            background-color: black;
+          }
+    
+          ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+            background-color: transparent;
+            padding: 0 0 0 0;
+          }
+    
+          ::ng-deep .mat-form-field-appearance-fill .mat-form-field-subscript-wrapper {
+            padding: 0 0;
+          }
+        }
     }
 
     .center {
@@ -111,15 +136,15 @@
     }
 
     .border-right {
-        border-right: 2px solid #ccc;          
+        border-right: 1px solid #ccc;          
     }
 
     .border-top {
-        border-top: 2px solid #ccc;          
+        border-top: 1px solid #ccc;          
     }
 
     .border-left {
-        border-left: 2px solid #ccc;          
+        border-left: 1px solid #ccc;          
     }
 
     .justify-center {
@@ -127,25 +152,20 @@
     }
 
     .border-bottom {
-        border-bottom: 2px solid #ccc;
+        border-bottom: 1px solid #ccc;
     }
   }
 
   .cuw-table-wrapper {
     max-height: 200px;
-    width: 780px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    width: 770px;
     overflow-y: auto;
   }
 
 }
 
-.row-choice {
-  padding: 10px;
-  display: grid;
-  grid-template-columns:  auto auto;
-  align-items: flex-start;
-
-}
 
 .dialog-drag-handle {
   position: relative;
@@ -155,4 +175,27 @@
   cursor: move;
   width: 24px;
   height: 24px;
+}
+
+
+.add-land-rb-group {
+
+  .mat-radio-button:not(.mat-radio-disabled).mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: rgba(0, 0, 0, 0.54);; // black;
+  }
+  
+  .mat-radio-button:not(.mat-radio-disabled).mat-accent .mat-radio-inner-circle {
+    background-color: rgba(0, 0, 0, 0.54);; // black ;
+  }
+
+  &.radio-group {
+    display: flex;
+    flex-direction: row;
+    margin: 15px 0 25px 0;
+    align-items: flex-start;
+  }
+  
+  &.radio-button {
+    margin-right: 50px;
+  }
 }

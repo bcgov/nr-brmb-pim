@@ -20,8 +20,6 @@ import { FormArray, FormGroup } from '@angular/forms';
 import { addUwCommentsObject, areDatesNotEqual, areNotEqual, getInsurancePlanName, makeNumberOnly, setHttpHeaders } from 'src/app/utils';
 import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
-import { FieldUwComment, UnderwritingCommentsComponent } from '../../underwriting-comments/underwriting-comments.component';
-import { UW_COMMENT_TYPE_CODE } from 'src/app/utils/constants';
 import {ViewEncapsulation } from '@angular/core';
 import { GradeModifierOptionsType } from '../dop-common';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
@@ -93,7 +91,7 @@ export class GrainDopComponent extends BaseComponent{
             this.store.dispatch(RolloverDopYieldContract(this.componentId, this.policyId))
           }
 
-          this.getGradeModifiers(this.gradeModifierList)
+          this.fetchGradeModifiers()
       }
     );
 
@@ -460,31 +458,6 @@ export class GrainDopComponent extends BaseComponent{
 
   }
 
-
-  addDopComment( dopComment ) {
-
-    let frmDopComments: FormArray = this.viewModel.formGroup.controls.uwComments as FormArray
-    
-    // add dopYieldContractCommodities to the form
-    frmDopComments.push( this.fb.group(  {
-      underwritingCommentGuid:     [ dopComment.underwritingCommentGuid],
-      annualFieldDetailId:         [ dopComment.annualFieldDetailId ],
-      growerContractYearId:        [ dopComment.growerContractYearId ],
-      declaredYieldContractGuid:   [ dopComment.declaredYieldContractGuid ],
-      underwritingCommentTypeCode: [ dopComment.underwritingCommentTypeCode ],
-      underwritingCommentTypeDesc: [ dopComment.underwritingCommentTypeDesc ],
-      underwritingComment:         [ dopComment.underwritingComment ],
-      createUser:                  [ dopComment.createUser ],
-      createDate:                  [ dopComment.createDate.toString()] ,
-      updateUser:                  [ dopComment.updateUser ],
-      updateDate:                  [ dopComment.updateDate.toString() ] ,
-      deletedByUserInd:            [ dopComment.deletedByUserInd ],
-      userCanEditInd:              [ dopComment.userCanEditInd ],
-      userCanDeleteInd:            [ dopComment.userCanDeleteInd ]
-      }
-    ) )
-  }
-
   addDopContractCommodity( dopCommodity ) {
 
     let frmDopCommodities: FormArray = this.viewModel.formGroup.controls.dopYieldContractCommodities as FormArray
@@ -673,6 +646,8 @@ export class GrainDopComponent extends BaseComponent{
           (areNotEqual(frmUwComments.underwritingComment, originalUwComment.underwritingComment) || frmUwComments.deletedByUserInd == true )
           ) {
 
+        return true
+      } else if (!originalUwComment) { // new comment and therefore can't find it
         return true
       }
 
@@ -879,57 +854,20 @@ export class GrainDopComponent extends BaseComponent{
 
     let reportName = this.growerContract.growerName + "-DOP" 
     reportName = reportName.replace(".", "")
-    this.store.dispatch(GetDopReport(reportName, this.policyId, "", "", "", "", "", "", ""))
+    this.store.dispatch(GetDopReport(reportName, this.policyId, "", this.insurancePlanId, "", "", "", "", ""))
     
   }
 
-  isThereAnyComment(field) {
-    // Checks if there are un-deleted comments
-    if (field.value.uwComments && field.value.uwComments.length > 0) {
 
-      for (let i = 0; i < field.value.uwComments.length; i++) {
-        if (field.value.uwComments[i].deletedByUserInd == true) {
+  onInventoryCommentsDone(fieldId: number, uwComments: UnderwritingComment[]) {
+    this.updateComments(fieldId, uwComments);
 
-        } else {
-          return true
-        }
-      }
-      
-    }
-    return false
+    this.isMyFormDirty();
+
+    this.cdr.detectChanges();
   }
 
-  
-  onLoadComments(field) {
-  
-    const dataToSend : FieldUwComment = {
-      fieldId: field.value.fieldId,
-      annualFieldDetailId: field.value.annualFieldDetailId,
-      uwCommentTypeCode: UW_COMMENT_TYPE_CODE.INVENTORY_GENERAL,
-      uwComments: field.value.uwComments 
-    }
-
-    const dialogRef = this.dialog.open(UnderwritingCommentsComponent, {
-      width: '800px',
-      data: dataToSend
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-
-      if (result && result.event == 'Update'){
-        this.updateComments(result.data);
-
-        this.isMyFormDirty();
-
-        this.cdr.detectChanges()
-      } else if (result && result.event == 'Cancel'){
-        // do nothing
-      }
-    });
-
-  }
-
-  updateComments(data: FieldUwComment) {
+  updateComments(fieldId: number, uwComments: UnderwritingComment[]) {
 
     const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
 
@@ -937,13 +875,13 @@ export class GrainDopComponent extends BaseComponent{
 
     flds.controls.forEach( function(field : FormArray) {
 
-      if (field.value.fieldId == data.fieldId) {
+      if (field.value.fieldId == fieldId) {
 
-        if (data.uwComments && data.uwComments.length > 0 ) {
+        if (uwComments && uwComments.length > 0 ) {
           
           let fldComments = [] 
 
-          data.uwComments.forEach ( (comment : UnderwritingComment) => fldComments.push ( 
+          uwComments.forEach ( (comment : UnderwritingComment) => fldComments.push ( 
             addUwCommentsObject( comment )
           ))
 
@@ -955,54 +893,12 @@ export class GrainDopComponent extends BaseComponent{
     })
   }
 
-  onLoadDopComments(){
+  onDopCommentsDone(uwComments: UnderwritingComment[]) {
+    this.viewModel.formGroup.controls.uwComments.setValue(uwComments);
 
-    const dataToSend : FieldUwComment = {
-      growerContractYearId: this.dopYieldContract.growerContractYearId,
-      declaredYieldContractGuid: this.declaredYieldContractGuid,
-      uwCommentTypeCode: UW_COMMENT_TYPE_CODE.DOP_GENERAL,
-      uwComments: this.viewModel.formGroup.controls.uwComments.value
-    }
+    this.isMyFormDirty();
 
-    const dialogRef = this.dialog.open(UnderwritingCommentsComponent, {
-      width: '800px',
-      data: dataToSend
-    });
-
-    var self = this
-
-    dialogRef.afterClosed().subscribe(result => {
-
-      if (result && result.event == 'Update'){
-
-        self.viewModel.formGroup.controls["uwComments"].setValue( result.data.uwComments )
-
-        self.isMyFormDirty();
-
-        self.cdr.detectChanges()
-      } else if (result && result.event == 'Cancel'){
-        // do nothing
-      }
-    });
-  }
-
-  isThereAnyDopComment() {
-    // Checks if there are un-deleted comments
-    var self = this
-
-    if (self.viewModel.formGroup.controls["uwComments"] && self.viewModel.formGroup.controls["uwComments"].value && self.viewModel.formGroup.controls["uwComments"].value.length > 0) {
-
-      for (let i = 0; i < self.viewModel.formGroup.controls["uwComments"].value.length; i++) {
-        if (self.viewModel.formGroup.controls["uwComments"].value[i].deletedByUserInd == true) {
-
-        } else {
-          return true
-        }
-      }
-      
-    }
-
-    return false
+    this.cdr.detectChanges();
   }
 
   getInsPlanName(insurancePlanId){
@@ -1028,7 +924,7 @@ export class GrainDopComponent extends BaseComponent{
     return styles;
   }
 
-  getGradeModifiers(gradeModifierList: GradeModifierOptionsType[]){
+  fetchGradeModifiers(){
 
     let url = this.appConfigService.getConfig().rest["cirras_underwriting"]
     url = url +"/gradeModifiers?cropYear=" + this.cropYear
@@ -1038,10 +934,10 @@ export class GrainDopComponent extends BaseComponent{
    
     return this.http.get(url,httpOptions).toPromise().then((data: GradeModifierList) => {
 
-      gradeModifierList = []
+      this.gradeModifierList = []
       // construct the grade modifiers options 
       for (let i=0; i< data.collection.length; i++ ) {
-        gradeModifierList.push({
+        this.gradeModifierList.push({
             cropCommodityId: data.collection[i].cropCommodityId.toString(),
             gradeModifierTypeCode: data.collection[i].gradeModifierTypeCode,
             description: data.collection[i].description

@@ -23,16 +23,16 @@ public class CirrasPolicyServiceSpringConfig  {
 	}
 
 	
-	@Value("${CIRRAS_UNDERWRITING_REST_CLIENT_ID}")
+	@Value("${webade-oauth2.cirras-underwriting-rest.client.id}")
 	private String webadeOauth2ClientId;
 
-	@Value("${CIRRAS_UNDERWRITING_REST_SECRET}")
+	@Value("${webade-oauth2.cirras-underwriting-rest.client.secret}")
 	private String webadeOauth2ClientSecret;
 
-	@Value("${WEBADE_GET_TOKEN_URL}")
+	@Value("${webade-oauth2.token.url}")
 	private String webadeOauth2TokenUrl;
 	
-	@Value("${CIRRAS_POLICIES_API_URL}")
+	@Value("${cirras-underwriting-rest.policies-api-url}")
 	private String cirrasPoliciesServiceTopLevelRestURL;
 	
 	// I don't know if this should be a preference or not

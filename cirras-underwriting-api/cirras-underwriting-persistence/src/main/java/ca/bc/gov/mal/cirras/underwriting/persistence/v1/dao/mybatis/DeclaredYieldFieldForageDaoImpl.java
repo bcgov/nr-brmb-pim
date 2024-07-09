@@ -125,7 +125,40 @@ public class DeclaredYieldFieldForageDaoImpl extends BaseDao implements Declared
 
 		logger.debug(">delete");
 	}
+	
+	@Override
+	public void deleteForField(Integer fieldId) throws DaoException, NotFoundDaoException {
+		logger.debug("<deleteForField");
 
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("fieldId", fieldId);
+			this.mapper.deleteForField(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">deleteForField");
+	}
+	
+	@Override
+	public void deleteForFieldAndYear(Integer fieldId, Integer cropYear) throws DaoException, NotFoundDaoException {
+		logger.debug("<deleteForFieldAndYear");
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("fieldId", fieldId);
+			parameters.put("cropYear", cropYear);
+			this.mapper.deleteForFieldAndYear(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">deleteForFieldAndYear");
+	}
+	
 	@Override
 	public void deleteForDeclaredYieldContract(String declaredYieldContractGuid) throws DaoException, NotFoundDaoException {
 		logger.debug("<deleteForDeclaredYieldContract");
@@ -162,4 +195,58 @@ public class DeclaredYieldFieldForageDaoImpl extends BaseDao implements Declared
 		logger.debug(">getByInventoryField " + dtos);
 		return dtos;
 	}
-}
+
+	
+	@Override
+	public int getTotalDopRecordsWithYield(Integer fieldId, Integer cropYear, Integer insurancePlanId)
+			throws DaoException, NotFoundDaoException {
+		logger.debug("<getTotalDopRecordsWithYield");
+
+		int result = 0;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("fieldId", fieldId);
+			parameters.put("cropYear", cropYear);
+			parameters.put("insurancePlanId", insurancePlanId);
+
+			result = this.mapper.getTotalDopRecordsWithYield(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">getTotalDopRecordsWithYield: " + result);
+		return result;	
+	}
+	
+	
+	@Override
+	public  List<DeclaredYieldFieldForageDto> selectToRecalculate(
+	    		Integer cropCommodityId,
+	    		String enteredYieldMeasUnitTypeCode,
+	    		Integer effectiveCropYear,
+	    		Integer expiryCropYear
+				) throws DaoException {
+
+		logger.debug("<selectToRecalculate");
+
+		List<DeclaredYieldFieldForageDto> dtos = null;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			
+			parameters.put("cropCommodityId", cropCommodityId);
+			parameters.put("enteredYieldMeasUnitTypeCode", enteredYieldMeasUnitTypeCode);
+			parameters.put("effectiveCropYear", effectiveCropYear);
+			parameters.put("expiryCropYear", expiryCropYear);
+						
+			dtos = this.mapper.selectToRecalculate(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectToRecalculate " + dtos);
+		return dtos;
+	}}

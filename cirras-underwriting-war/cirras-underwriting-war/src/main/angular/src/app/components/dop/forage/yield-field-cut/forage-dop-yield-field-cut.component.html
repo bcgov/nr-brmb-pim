@@ -1,0 +1,27 @@
+<div [formGroup]="yieldFieldCutFormGroup" style="display: contents;">
+    <div *ngIf="!yieldFieldCut.deletedByUserInd" class="inventory-fill inventory-border" style="width: 120px;">
+        <mat-form-field appearance="fill" *ngIf="isTotalBalesLoadsEditable()">
+            <input matInput matInputCommified formControlName="totalBalesLoads" maxlength="4"
+                (keypress)="numberOnly($event)" (blur)="updateTotalBalesLoads()" />
+        </mat-form-field>
+        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;"
+            matTooltip="Bale/Loads is writeable. Expecting an integer."
+            *ngIf="isTotalBalesLoadsEditable()">edit</mat-icon>
+    </div>
+    <div *ngIf="!yieldFieldCut.deletedByUserInd" class="inventory-fill inventory-border" style="width: 120px;">
+        <mat-form-field appearance="fill" *ngIf="isWeightEditable()">
+            <input matInput matInputCommified formControlName="weight" maxlength="14" (keypress)="numberOnly($event)"
+                (blur)="updateWeight()" />
+        </mat-form-field>
+        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;"
+            matTooltip="Weight is writeable. Expecting up to 2 decimals." *ngIf="isWeightEditable()">edit</mat-icon>
+    </div>
+    <div *ngIf="!yieldFieldCut.deletedByUserInd" class="inventory-fill inventory-border" style="width: 80px;">
+        <mat-form-field appearance="fill" *ngIf="isMoisturePercentEditable()">
+            <input matInput matInputCommified formControlName="moisturePercent" maxlength="3"
+                (keypress)="numberOnly($event)" (blur)="updateMoisturePercent()" />
+        </mat-form-field>
+        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;"
+            matTooltip="Percent Moisture is writeable. Expecting an integer percentage."
+            *ngIf="isMoisturePercentEditable()">edit</mat-icon>
+    </div>

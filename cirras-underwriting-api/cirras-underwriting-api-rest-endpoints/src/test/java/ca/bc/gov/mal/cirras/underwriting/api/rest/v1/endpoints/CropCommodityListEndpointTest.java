@@ -400,6 +400,7 @@ public class CropCommodityListEndpointTest extends EndpointsTest {
 					Assert.assertNotNull(variety.getIsUnseededInsurableInd());
 					Assert.assertNotNull(variety.getIsAwpEligibleInd());
 					Assert.assertNotNull(variety.getIsUnderseedingEligibleInd());
+					Assert.assertNotNull(variety.getIsGrainUnseededDefaultInd());
 					
 					//Loop through plant insurability types of the variety
 					if (variety.getCropVarietyPlantInsurabilities() != null && variety.getCropVarietyPlantInsurabilities().size() > 0) {

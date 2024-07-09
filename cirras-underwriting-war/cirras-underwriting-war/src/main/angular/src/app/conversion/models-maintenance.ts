@@ -96,6 +96,7 @@ export interface CropVarietyInsurability {
     isPlantInsurableInd?: boolean;
     isAwpEligibleInd?: boolean;
     isUnderseedingEligibleInd?: boolean;
+    isGrainUnseededDefaultInd?: boolean;
     deletedByUserInd?: boolean;
     isQuantityInsurableEditableInd?: boolean;
     isUnseededInsurableEditableInd?: boolean;

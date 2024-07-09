@@ -16,8 +16,10 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.GrowerContractYear;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.AnnualFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ContractedFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.FieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.GrowerContractYearDao;
@@ -97,8 +99,10 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	private InventoryCoverageTotalForageDao inventoryCoverageTotalForageDao;
 	private DeclaredYieldContractDao declaredYieldContractDao;
 	private DeclaredYieldFieldDao declaredYieldFieldDao;
+	private DeclaredYieldFieldForageDao declaredYieldFieldForageDao;
 	private DeclaredYieldFieldRollupDao declaredYieldFieldRollupDao;
 	private DeclaredYieldContractCommodityDao declaredYieldContractCommodityDao;
+	private DeclaredYieldContractCommodityForageDao declaredYieldContractCommodityForageDao;
 
 
 	// utils
@@ -197,12 +201,20 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 		this.declaredYieldFieldDao = declaredYieldFieldDao;
 	}
 	
+	public void setDeclaredYieldFieldForageDao(DeclaredYieldFieldForageDao declaredYieldFieldForageDao) {
+		this.declaredYieldFieldForageDao = declaredYieldFieldForageDao;
+	}
+	
 	public void setDeclaredYieldFieldRollupDao(DeclaredYieldFieldRollupDao declaredYieldFieldRollupDao) {
 		this.declaredYieldFieldRollupDao = declaredYieldFieldRollupDao;
 	}
 
 	public void setDeclaredYieldContractCommodityDao(DeclaredYieldContractCommodityDao declaredYieldContractCommodityDao) {
 		this.declaredYieldContractCommodityDao = declaredYieldContractCommodityDao;
+	}
+
+	public void setDeclaredYieldContractCommodityForageDao(DeclaredYieldContractCommodityForageDao declaredYieldContractCommodityForageDao) {
+		this.declaredYieldContractCommodityForageDao = declaredYieldContractCommodityForageDao;
 	}
 
 	public void setDeclaredYieldContractDao(DeclaredYieldContractDao declaredYieldContractDao) {
@@ -447,7 +459,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 		logger.debug("<deleteField");
 		
 		//Delete inventory and yield data of the field if it exists
-		// TODO: Add FORAGE DOP. Implemented in PIM-1397
+		declaredYieldFieldForageDao.deleteForField(fieldId);
 		declaredYieldFieldDao.deleteForField(fieldId);
 
 		String userId = getUserId(authentication);
@@ -875,14 +887,18 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 			if(dyDto != null) {
 				
 				//DELETE ALL YIELD DATA
-				// TODO: Add FORAGE DOP. Implemented in PIM-1397
 
+				//Grain
 				declaredYieldFieldDao.deleteForDeclaredYieldContract(dyDto.getDeclaredYieldContractGuid());
-
-				//Declared Yield Field Rollup
+				  //Declared Yield Field Rollup
 				declaredYieldFieldRollupDao.deleteForDeclaredYieldContract(dyDto.getDeclaredYieldContractGuid());
 				declaredYieldContractCommodityDao.deleteForDeclaredYieldContract(dyDto.getDeclaredYieldContractGuid());
 
+				//Forage
+				declaredYieldFieldForageDao.deleteForDeclaredYieldContract(dyDto.getDeclaredYieldContractGuid());
+				  //Commodity Totals
+				declaredYieldContractCommodityForageDao.deleteForDeclaredYieldContract(dyDto.getDeclaredYieldContractGuid());
+				
 				//Underwriting Comment
 				underwritingCommentDao.deleteForDeclaredYieldContractGuid(dyDto.getDeclaredYieldContractGuid());
 
@@ -1363,6 +1379,8 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 					dto.setInsurancePlanId(gcyDto.getInsurancePlanId());
 					dto.setLastYearCropCommodityId(null);
 					dto.setLastYearCropCommodityName(null);
+					dto.setLastYearCropVarietyId(null);
+					dto.setLastYearCropVarietyName(null);
 					dto.setPlantingNumber(1);
 					dto.setIsHiddenOnPrintoutInd(false);
 					dto.setInventoryFieldGuid(null);

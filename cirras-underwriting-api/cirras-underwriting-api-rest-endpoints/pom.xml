@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
 		<artifactId>cirras-underwriting-api-parent</artifactId>
-		<version>3.2.0-SNAPSHOT</version>
+		<version>3.3.0</version>
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,6 +17,9 @@
 		<cirras.datasource.username>proxy_cuws_rest</cirras.datasource.username>
 		<cirras.datasource.password>password</cirras.datasource.password>
 		
+		<webade.datasource.url>jdbc:oracle:thin:@oradb19c.vividsolutions.com:1521:dev</webade.datasource.url>
+		<webade.datasource.username>proxy_webade_bootstrap</webade.datasource.username>
+		<webade.datasource.password>password</webade.datasource.password>
 	</properties>
 	<dependencies>
 		
@@ -54,11 +57,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -68,6 +66,7 @@
 		<dependency>
 			<groupId>com.oracle.weblogic</groupId>
 			<artifactId>ojdbc7</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>

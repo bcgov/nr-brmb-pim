@@ -33,6 +33,8 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PolicyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForage;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForageCut;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldGrain;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
@@ -71,7 +73,7 @@ public class GrowerContractYearSyncEndpointTest extends EndpointsTest {
 		Scopes.GET_GROWER,
 		Scopes.GET_POLICY,
 		Scopes.GET_LAND,
-		Scopes.GET_LEGAL_LAND,
+		Scopes.GET_LEGAL_LAND
 	};
 	
 	private CirrasUnderwritingService service;
@@ -847,35 +849,6 @@ public class GrowerContractYearSyncEndpointTest extends EndpointsTest {
 		Assert.assertNotNull(grainInvContract.getFields().get(0).getPlantings().get(0).getInventorySeededGrains());
 
 		//*************************************************
-		//Add Forage Inventory
-		//*************************************************
-		uwContract = getUwContract(policyNumber2, service, topLevelEndpoints);
-		Assert.assertNull(uwContract.getInventoryContractGuid());
-		
-		InventoryContractRsrc invContractForage = service.rolloverInventoryContract(uwContract);
-		
-		Assert.assertEquals(1, invContractForage.getFields().size());
-		
-		field1 = getField(fieldId1, invContractForage.getFields());
-
-		// Remove default planting.
-		field1.getPlantings().remove(0);
-
-		// Forage Planting
-		planting = createPlanting(field1, 1, 2020, 5);
-		createInventorySeededForage(planting, 65, "W3", true, 11.0, grainInventoryFieldGuid); //FORAGE Winter Survival 3
-
-		//Create contract
-		InventoryContractRsrc forageInvContract = service.createInventoryContract(topLevelEndpoints, invContractForage);		
-		
-		//Check if the data is saved
-		Assert.assertNotNull(forageInvContract.getInventoryCoverageTotalForages());
-		Assert.assertEquals(1, forageInvContract.getFields().size());
-		Assert.assertNotNull(forageInvContract.getFields().get(0).getPlantings());
-		Assert.assertNotNull(forageInvContract.getFields().get(0).getPlantings().get(0).getInventoryFieldGuid());
-		Assert.assertNotNull(forageInvContract.getFields().get(0).getPlantings().get(0).getInventorySeededForages());
-
-		//*************************************************
 		//Add Grain DOP
 		//*************************************************
 		uwContract = getUwContract(policyNumber, service, topLevelEndpoints);
@@ -916,6 +889,76 @@ public class GrowerContractYearSyncEndpointTest extends EndpointsTest {
 		Assert.assertEquals(1, grainDopContract.getFields().size());
 		Assert.assertNotNull(grainDopContract.getFields().get(0).getDopYieldFieldGrainList());
 		Assert.assertNotNull(grainDopContract.getFields().get(0).getUwComments());
+		
+		//*************************************************
+		//Add Forage Inventory
+		//*************************************************
+		uwContract = getUwContract(policyNumber2, service, topLevelEndpoints);
+		Assert.assertNull(uwContract.getInventoryContractGuid());
+		
+		InventoryContractRsrc invContractForage = service.rolloverInventoryContract(uwContract);
+		
+		Assert.assertEquals(1, invContractForage.getFields().size());
+		
+		field1 = getField(fieldId1, invContractForage.getFields());
+
+		// Remove default planting.
+		field1.getPlantings().remove(0);
+
+		// Forage Planting
+		planting = createPlanting(field1, 1, 2020, 5);
+		createInventorySeededForage(planting, 65, "W3", true, 11.0, grainInventoryFieldGuid); //FORAGE Winter Survival 3
+
+		//Create contract
+		InventoryContractRsrc forageInvContract = service.createInventoryContract(topLevelEndpoints, invContractForage);		
+		
+		//Check if the data is saved
+		Assert.assertNotNull(forageInvContract.getInventoryCoverageTotalForages());
+		Assert.assertEquals(1, forageInvContract.getFields().size());
+		Assert.assertNotNull(forageInvContract.getFields().get(0).getPlantings());
+		Assert.assertNotNull(forageInvContract.getFields().get(0).getPlantings().get(0).getInventoryFieldGuid());
+		Assert.assertNotNull(forageInvContract.getFields().get(0).getPlantings().get(0).getInventorySeededForages());
+
+		//*************************************************
+		//Add Forage DOP
+		//*************************************************
+		uwContract = getUwContract(policyNumber2, service, topLevelEndpoints);
+		DopYieldContractRsrc newDycf = service.rolloverDopYieldContract(uwContract);
+		
+		newDycf.setDeclarationOfProductionDate(transactionDate);
+		newDycf.setDefaultYieldMeasUnitTypeCode("TON");
+		newDycf.setEnteredYieldMeasUnitTypeCode("TON");
+		newDycf.setGrainFromOtherSourceInd(false);
+		newDycf.setBalerWagonInfo("Test Baler");
+		newDycf.setTotalLivestock(100);
+		newDycf.setInsurancePlanId(5);	
+		
+		field1 = getField(fieldId1, newDycf.getFields());
+		 
+		DopYieldFieldForage dyff = field1.getDopYieldFieldForageList().get(0);
+		DopYieldFieldForageCut cut = new DopYieldFieldForageCut();
+		cut.setInventoryFieldGuid(dyff.getInventoryFieldGuid());
+		cut.setCutNumber(1);
+		cut.setTotalBalesLoads(100);
+		cut.setWeight(10.0);
+		cut.setWeightDefaultUnit(null);
+		cut.setMoisturePercent(15.0);
+		cut.setDeletedByUserInd(false);
+		
+		List<DopYieldFieldForageCut> dopYieldFieldForageCuts = new ArrayList<DopYieldFieldForageCut>();
+		
+		dopYieldFieldForageCuts.add(cut);
+		dyff.setDopYieldFieldForageCuts(dopYieldFieldForageCuts);
+
+		//CREATE DOP *********************************************************************************************
+		DopYieldContractRsrc forageDyc = service.createDopYieldContract(topLevelEndpoints, newDycf);
+
+		//Check if the data is saved
+		Assert.assertNotNull(forageDyc.getDopYieldContractCommodityForageList());
+		Assert.assertEquals(1, forageDyc.getDopYieldContractCommodityForageList().size());
+		Assert.assertEquals(1, forageDyc.getFields().size());
+		Assert.assertNotNull(forageDyc.getFields().get(0).getDopYieldFieldForageList());
+		Assert.assertEquals(1, forageDyc.getFields().get(0).getDopYieldFieldForageList().size());
 		
 		//*************************************************
 		//Delete grower contract year of the forage inventory which has to delete all inventory data as well
@@ -1137,6 +1180,8 @@ public class GrowerContractYearSyncEndpointTest extends EndpointsTest {
 		planting.setInventoryFieldGuid(null);
 		planting.setLastYearCropCommodityId(null);
 		planting.setLastYearCropCommodityName(null);
+		planting.setLastYearCropVarietyId(null);
+		planting.setLastYearCropVarietyName(null);
 		planting.setIsHiddenOnPrintoutInd(false);
 		planting.setPlantingNumber(plantingNumber);
 		planting.setUnderseededAcres(14.4);
@@ -1160,7 +1205,7 @@ public class GrowerContractYearSyncEndpointTest extends EndpointsTest {
 		InventorySeededForage isf = new InventorySeededForage();
 
 
-		isf.setCommodityTypeCode(null);
+		isf.setCommodityTypeCode("Alfalfa");
 		isf.setCropCommodityId(cropCommodityId);
 		isf.setCropVarietyId(119);
 		isf.setCropVarietyName("ALFALFA");

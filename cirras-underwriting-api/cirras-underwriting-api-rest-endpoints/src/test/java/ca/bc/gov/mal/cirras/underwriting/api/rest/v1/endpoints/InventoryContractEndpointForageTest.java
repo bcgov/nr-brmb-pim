@@ -691,6 +691,8 @@ public class InventoryContractEndpointForageTest extends EndpointsTest {
 		planting.setInventoryFieldGuid(null);
 		planting.setLastYearCropCommodityId(null);
 		planting.setLastYearCropCommodityName(null);
+		planting.setLastYearCropVarietyId(null);
+		planting.setLastYearCropVarietyName(null);
 		planting.setIsHiddenOnPrintoutInd(false);
 		planting.setPlantingNumber(plantingNumber);
 		planting.setUnderseededAcres(null);

@@ -3,7 +3,6 @@ import { FormArray, FormBuilder, FormControl } from "@angular/forms"
 import { InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
 import { AnnualField, CropVarietyCommodityType } from "src/app/conversion/models"
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from "src/app/utils/constants"
-import { FieldUwComment } from "../underwriting-comments/underwriting-comments.component";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { AddLandComponent, AddLandPopupData } from "./add-land/add-land.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -18,8 +17,13 @@ export interface CropVarietyOptionsType {
   cropVarietyCommodityTypes?: CropVarietyCommodityType;
 }
 
+export interface CropCommodityVarietyOptionsType {
+  cropCommodityVarietyId: string;
+  cropCommodityVarietyName: string;
+}
+
 export function addPlantingObject(cropYear, fieldId, insurancePlanId, inventoryFieldGuid, lastYearCropCommodityId, 
-                  lastYearCropCommodityName, plantingNumber, isHiddenOnPrintoutInd, underseededInventorySeededForageGuid,
+                  lastYearCropCommodityName, lastYearCropVarietyId, lastYearCropVarietyName, plantingNumber, isHiddenOnPrintoutInd, underseededInventorySeededForageGuid,
                   inventoryUnseeded: InventoryUnseeded, inventorySeededGrains: FormArray, inventorySeededForages: FormArray,) {
 
   return {
@@ -29,6 +33,10 @@ export function addPlantingObject(cropYear, fieldId, insurancePlanId, inventoryF
     inventoryFieldGuid:        [ inventoryFieldGuid ],
     lastYearCropCommodityId:   [ lastYearCropCommodityId ], 
     lastYearCropCommodityName: [ lastYearCropCommodityName ], 
+    lastYearCropVarietyId:     [ lastYearCropVarietyId ],
+    lastYearCropVarietyName:   [ lastYearCropVarietyName ],
+    lastYearCropCommodityVarietyId: [ `${lastYearCropCommodityId||0}_${lastYearCropVarietyId||0}` ],
+    lastYearCropCommodityVarietyName: [ lastYearCropVarietyName || lastYearCropCommodityName ],
     plantingNumber:            [ plantingNumber ],
     acresToBeSeeded:           [ (inventoryUnseeded && inventoryUnseeded.acresToBeSeeded) ? inventoryUnseeded.acresToBeSeeded : '' ],
     cropCommodityId:           [ (inventoryUnseeded && inventoryUnseeded.cropCommodityId) ? inventoryUnseeded.cropCommodityId : CROP_COMMODITY_UNSPECIFIED.ID ],
@@ -208,17 +216,17 @@ export function isThereAnyCommentForField(field) {
   return false
 }
 
-export function updateComments(data: FieldUwComment, flds: FormArray) {
+export function updateComments(fieldId: number, uwComments: UnderwritingComment[], flds: FormArray) {
 
   flds.controls.forEach( function(field : FormArray) {
 
-    if (field.value.fieldId == data.fieldId) {
+    if (field.value.fieldId == fieldId) {
         
-      if (data.uwComments) {
+      if (uwComments) {
         
         let fldComments = [] 
 
-        data.uwComments.forEach ( (comment : UnderwritingComment) => fldComments.push ( 
+        uwComments.forEach ( (comment : UnderwritingComment) => fldComments.push ( 
           addUwCommentsObject( comment )
         ))
 
@@ -358,7 +366,7 @@ export function openAddEditLandPopup(fb: FormBuilder, flds: FormArray,dialog: Ma
   } else {
 
     dialogRef = dialog.open(EditLandComponent, {
-      width: '800px',
+      width: '1110px',
       data: dataToSend,
       autoFocus: false // if you remove this line of code then the first radio button would be selected
     });
@@ -458,7 +466,8 @@ export function populateNewLand( fb: FormBuilder, cdr: ChangeDetectorRef, flds: 
 
       // Add the plantings to the newly created or transferred field
       fldPlantings.push( fb.group( addPlantingObject( pltg.cropYear, pltg.fieldId, pltg.insurancePlanId, pltg.inventoryFieldGuid, 
-        pltg.lastYearCropCommodityId, pltg.lastYearCropCommodityName, pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, 
+        pltg.lastYearCropCommodityId, pltg.lastYearCropCommodityName, pltg.lastYearCropCommodityVarietyId, pltg.lastYearCropCommodityVarietyName,
+        pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, 
         pltg.underseededInventorySeededForageGuid,
         pltg.inventoryUnseeded,  pltgInventorySeededGrains, pltgInventorySeededForages ) ))
 
@@ -478,7 +487,7 @@ export function populateNewLand( fb: FormBuilder, cdr: ChangeDetectorRef, flds: 
 
     // add empty planting object
     fldPlantings.push( fb.group( 
-      addPlantingObject( cropYear, landData.fieldId, insurancePlanId, '', '', '', 1, false, null, <InventoryUnseeded>{}, pltgInventorySeededGrains, pltgInventorySeededForages )
+      addPlantingObject( cropYear, landData.fieldId, insurancePlanId, '', '', '', '', '', 1, false, null, <InventoryUnseeded>{}, pltgInventorySeededGrains, pltgInventorySeededForages )
       ))
 
   }

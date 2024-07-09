@@ -76,16 +76,15 @@
                     </mat-form-field>
             </div>
             <div>
-                <span *ngIf="isThereAnyDopComment(); else noDopComments">
-                    <button mat-raised-button color="secondary" class="header-button" (click)="onLoadDopComments()">
-                        <mat-icon class="button-mat-icon" svgIcon="insert_comment"></mat-icon>DOP Comments
-                    </button>
-                </span>
-                <ng-template #noDopComments>
-                    <button mat-raised-button color="secondary" class="header-button" (click)="onLoadDopComments()">
-                        <mat-icon class="button-mat-icon" svgIcon="mode_comment"></mat-icon>DOP Comments
-                    </button>
-                </ng-template>
+                <uw-comments-button
+                    [underwritingCommentTypeCode]="'DOP'"
+                    [growerContractYearId]="dopYieldContract?.growerContractYearId"
+                    [declaredYieldContractGuid]="declaredYieldContractGuid"
+                    [policyNumber]="growerContract?.policyNumber"
+                    [growerName]="growerContract?.growerName"
+                    [growerNumber]="growerContract?.growerNumber"
+                    [uwComments]="dopYieldContract?.uwComments"
+                    (onDone)="onDopCommentsDone($event)"></uw-comments-button>
             </div>
             <div>
                 <button
@@ -105,7 +104,7 @@
                                 mat-raised-button color="secondary" 
                                 class="header-button-red" 
                                 (click)="onDeleteDop()">
-                    <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Delete DOP
+                    <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset DOP
                 </button>
             </div>
         </div>
@@ -192,12 +191,14 @@
                         </div> 
 
                         <div class="inventory-cell inventory-border" style="width:75px">
-                            <span *ngIf="isThereAnyComment(field); else noCommentsBlock">
-                                <mat-icon matTooltip="Comments" (click)="onLoadComments(field)" svgIcon="insert_comment"></mat-icon>
-                            </span>
-                            <ng-template #noCommentsBlock>
-                                <mat-icon matTooltip="Comments" (click)="onLoadComments(field)" svgIcon="mode_comment"></mat-icon>
-                            </ng-template>
+                            <uw-comments-button
+                                [underwritingCommentTypeCode]="'INV'"
+                                [annualFieldDetailId]="field.value.annualFieldDetailId"
+                                [fieldId]="field.value.fieldId"
+                                [fieldName]="field.value.fieldLabel"
+                                [legalLocation]="field.value.otherLegalDescription"
+                                [uwComments]="field.value.uwComments"
+                                (onDone)="onInventoryCommentsDone(field.value.fieldId, $event)"></uw-comments-button>
 
                             <mat-icon matTooltip="View History" style="margin-left: 4px; margin-right: 4px;">history</mat-icon>
                         </div>

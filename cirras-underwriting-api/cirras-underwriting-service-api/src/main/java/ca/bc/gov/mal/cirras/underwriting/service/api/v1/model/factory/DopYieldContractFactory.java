@@ -9,6 +9,8 @@ import java.util.List;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodityForage;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForageCut;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldGrain;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollup;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
@@ -16,6 +18,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContrac
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededForageDto;
@@ -57,4 +60,8 @@ public interface DopYieldContractFactory {
 	List<DeclaredYieldContractCommodityForageDto> getDopForageCommoditiesFromInventorySeeded(
 			List<InventorySeededForageDto> dtos
 		) throws FactoryException;
+
+	void updateDto(DeclaredYieldFieldForageDto dto, DopYieldFieldForageCut model);
+
+	void updateDto(DeclaredYieldContractCommodityForageDto dto, DopYieldContractCommodityForage model);
 }

@@ -356,6 +356,9 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		
 		//Rollover contract 
 		InventoryContractRsrc invContract = rolloverInventoryContract(service, topLevelEndpoints);
+		
+		//Needs to be null on rollover
+		Assert.assertNull("Rollover GrainFromPrevYearInd NULL", invContract.getGrainFromPrevYearInd());
 
 		invContract.getCommodities().add(createNewInvCommodities(16, "BARLEY", 12.34, 40.0, 23.45));
 
@@ -2406,6 +2409,11 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		cal.clear();
 		cal.set(2020, Calendar.FEBRUARY, 15);
 		Date seededDate = cal.getTime();
+
+		cal.clear();
+		cal.set(2020, Calendar.MARCH, 15);
+		Date seededDate2 = cal.getTime();
+		
 		
 		//AnnualField
 		List<AnnualFieldRsrc> fields = invContract.getFields();
@@ -2416,8 +2424,10 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 
 		InventoryField planting = field.getPlantings().get(0);
 
-		planting.setLastYearCropCommodityId(21);
-		planting.setLastYearCropCommodityName("FIELD PEA");
+		planting.setLastYearCropCommodityId(71);
+		planting.setLastYearCropCommodityName("SILAGE CORN");
+		planting.setLastYearCropVarietyId(1010863);
+		planting.setLastYearCropVarietyName("SILAGE CORN - UNSPECIFIED");
 		planting.setIsHiddenOnPrintoutInd(true);
 		planting.setPlantingNumber(2);
 		planting.setUnderseededAcres(20.6);
@@ -2449,6 +2459,12 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		invSeededGrain.setSeededAcres(22.11);
 		invSeededGrain.setSeededDate(seededDate);
 
+		invSeededGrain = planting.getInventorySeededGrains().get(1);
+
+		invSeededGrain.setIsReplacedInd(true);
+		invSeededGrain.setSeededDate(seededDate2);  // Set to later than the first seeded grain so that it stays in the same order.
+		
+		
 		// Another planting with empty inventory unseeded and seeded grain records.
 		InventoryField planting2 = new InventoryField();
 
@@ -2459,6 +2475,8 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		planting2.setIsHiddenOnPrintoutInd(false);
 		planting2.setLastYearCropCommodityId(null);
 		planting2.setLastYearCropCommodityName(null);
+		planting2.setLastYearCropVarietyId(null);
+		planting2.setLastYearCropVarietyName(null);
 		planting2.setPlantingNumber(3);
 
 		InventoryUnseeded emptyIu = new InventoryUnseeded();
@@ -2661,8 +2679,10 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		planting.setFieldId(field.getFieldId());
 		planting.setInsurancePlanId(4);
 		planting.setInventoryFieldGuid(null);
-		planting.setLastYearCropCommodityId(20);
-		planting.setLastYearCropCommodityName("FALL RYE");
+		planting.setLastYearCropCommodityId(65);
+		planting.setLastYearCropCommodityName("FORAGE");
+		planting.setLastYearCropVarietyId(220);
+		planting.setLastYearCropVarietyName("CLOVER/GRASS");
 		planting.setIsHiddenOnPrintoutInd(false);
 		planting.setPlantingNumber(1);
 		planting.setUnderseededAcres(14.4);
@@ -2694,7 +2714,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		invSeededGrain.setIsPedigreeInd(false);
 		invSeededGrain.setIsSpotLossInsurableInd(true);
 		invSeededGrain.setIsQuantityInsurableInd(true);
-		invSeededGrain.setIsReplacedInd(false);
+		invSeededGrain.setIsReplacedInd(true);
 		invSeededGrain.setSeededAcres(23.45);
 		invSeededGrain.setSeededDate(seededDate);
 
@@ -2761,6 +2781,8 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		planting.setInventoryFieldGuid(null);
 		planting.setLastYearCropCommodityId(20);
 		planting.setLastYearCropCommodityName("FALL RYE");
+		planting.setLastYearCropVarietyId(null);
+		planting.setLastYearCropVarietyName(null);
 		planting.setPlantingNumber(plantingNumber);
 		planting.setIsHiddenOnPrintoutInd(false);
 		planting.setUnderseededAcres(14.4);
@@ -2988,6 +3010,8 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		planting.setIsHiddenOnPrintoutInd(false);
 		planting.setLastYearCropCommodityId(20);
 		planting.setLastYearCropCommodityName("FALL RYE");
+		planting.setLastYearCropVarietyId(null);
+		planting.setLastYearCropVarietyName(null);
 		planting.setUnderseededAcres(14.4);
 		planting.setUnderseededCropVarietyId(119);
 		planting.setUnderseededCropVarietyName("ALFALFA");
@@ -3011,6 +3035,8 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		planting.setInventoryFieldGuid(null);
 		planting.setLastYearCropCommodityId(20);
 		planting.setLastYearCropCommodityName("FALL RYE");
+		planting.setLastYearCropVarietyId(null);
+		planting.setLastYearCropVarietyName(null);
 		planting.setIsHiddenOnPrintoutInd(false);
 		planting.setPlantingNumber(plantingNumber);
 		planting.setUnderseededAcres(14.4);
@@ -3070,6 +3096,8 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		planting.setInventoryFieldGuid(null);
 		planting.setLastYearCropCommodityId(20);
 		planting.setLastYearCropCommodityName("FALL RYE");
+		planting.setLastYearCropVarietyId(null);
+		planting.setLastYearCropVarietyName(null);
 		planting.setIsHiddenOnPrintoutInd(false);
 		planting.setPlantingNumber(2);
 		planting.setUnderseededAcres(15.5);
@@ -3334,6 +3362,8 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		Assert.assertEquals("InsurancePlanId", expected.getInsurancePlanId(), actual.getInsurancePlanId());
 		Assert.assertEquals("LastYearCropCommodityId", expected.getLastYearCropCommodityId(), actual.getLastYearCropCommodityId());
 		Assert.assertEquals("LastYearCropCommodityName", expected.getLastYearCropCommodityName(), actual.getLastYearCropCommodityName());
+		Assert.assertEquals("LastYearCropVarietyId", expected.getLastYearCropVarietyId(), actual.getLastYearCropVarietyId());
+		Assert.assertEquals("LastYearCropVarietyName", expected.getLastYearCropVarietyName(), actual.getLastYearCropVarietyName());
 		Assert.assertEquals("PlantingNumber", expected.getPlantingNumber(), actual.getPlantingNumber());
 		Assert.assertEquals("IsHiddenOnPrintoutInd", expected.getIsHiddenOnPrintoutInd(), actual.getIsHiddenOnPrintoutInd());
 		Assert.assertEquals("UnderseededCropVarietyId", expected.getUnderseededCropVarietyId(), actual.getUnderseededCropVarietyId());

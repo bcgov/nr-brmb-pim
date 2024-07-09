@@ -19,6 +19,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
 
 
   @Input() cropVarietyInsurabilityList: CropVarietyInsurabilityList
+  @Input() isUnsaved: boolean;
 
   hasDataChanged = false;
   isInEditMode = false;
@@ -38,6 +39,8 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
 
   loadPage() {
     this.store.dispatch(loadVarietyInsurability(MAINTENANCE_COMPONENT_ID, INSURANCE_PLAN.FORAGE.toString(), "N" ))
+
+    this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false ));
   }
   
 
@@ -63,6 +66,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
             isPlantInsurableInd:                [ el.isPlantInsurableInd ],
             isAwpEligibleInd:                   [ el.isAwpEligibleInd ],
             isUnderseedingEligibleInd:          [ el.isUnderseedingEligibleInd ],
+            isGrainUnseededDefaultInd:          [ el.isGrainUnseededDefaultInd ],
             deletedByUserInd:                   [ el.deletedByUserInd ],
             isQuantityInsurableEditableInd:     [el.isQuantityInsurableEditableInd] , //[ (el.isQuantityInsurableEditableInd ) ? el.isQuantityInsurableEditableInd : false ], 
             isUnseededInsurableEditableInd:     [ el.isUnseededInsurableEditableInd ],
@@ -114,6 +118,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
         origVarietyInsurability.isPlantInsurableInd = frmVI.value.isPlantInsurableInd ? frmVI.value.isPlantInsurableInd : false
         origVarietyInsurability.isAwpEligibleInd = frmVI.value.isAwpEligibleInd ? frmVI.value.isAwpEligibleInd : false
         origVarietyInsurability.isUnderseedingEligibleInd = frmVI.value.isUnderseedingEligibleInd ? frmVI.value.isUnderseedingEligibleInd : false
+        origVarietyInsurability.isGrainUnseededDefaultInd = frmVI.value.isGrainUnseededDefaultInd ? frmVI.value.isGrainUnseededDefaultInd : false
         origVarietyInsurability.cropVarietyPlantInsurabilities = (frmVI.value.cropVarietyPlantInsurabilities && frmVI.value.cropVarietyPlantInsurabilities.length > 0) ? 
                                                                       frmVI.value.cropVarietyPlantInsurabilities : [] 
         origVarietyInsurability.deletedByUserInd = frmVI.value.deletedByUserInd ? frmVI.value.deletedByUserInd : false 
@@ -152,7 +157,8 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
         || areNotEqual (originalVI.isUnseededInsurableInd, frmVI.value.isUnseededInsurableInd )	
         || areNotEqual (originalVI.isPlantInsurableInd, frmVI.value.isPlantInsurableInd )
         || areNotEqual (originalVI.isAwpEligibleInd, frmVI.value.isAwpEligibleInd )
-        || areNotEqual (originalVI.isUnderseedingEligibleInd, frmVI.value.isUnderseedingEligibleInd)) {
+        || areNotEqual (originalVI.isUnderseedingEligibleInd, frmVI.value.isUnderseedingEligibleInd)
+        || areNotEqual (originalVI.isGrainUnseededDefaultInd, frmVI.value.isGrainUnseededDefaultInd)) {
           return true
         }
 
@@ -184,13 +190,20 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
 
   onCancel() {
 
-    // reload the page
-    this.store.dispatch(loadVarietyInsurability(MAINTENANCE_COMPONENT_ID, INSURANCE_PLAN.FORAGE.toString(), "N" ))
+    if (this.isUnsaved) {
 
-    this.isInEditMode = false
+      this.isInEditMode = !confirm("Are you sure you want to clear all unsaved changes on the screen? There is no way to undo this action.");
 
-    this.hasDataChanged = false   
-    this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false));
+      if (!this.isInEditMode) {
+        // reload the page
+        this.store.dispatch(loadVarietyInsurability(MAINTENANCE_COMPONENT_ID, INSURANCE_PLAN.FORAGE.toString(), "N"))
+
+        this.hasDataChanged = false
+        this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false));
+      }
+    } else {
+      this.isInEditMode = false
+    }
   }
 
   getPlantInsurability(cropVarietyPlantInsurabilities) {
@@ -299,6 +312,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
     frmVarietyInsurability.controls[rowIndex]['controls'].isPlantInsurableInd.setValue(false)
     frmVarietyInsurability.controls[rowIndex]['controls'].isAwpEligibleInd.setValue(false)
     frmVarietyInsurability.controls[rowIndex]['controls'].isUnderseedingEligibleInd.setValue(false)
+    frmVarietyInsurability.controls[rowIndex]['controls'].isGrainUnseededDefaultInd.setValue(false)
 
     this.removePlantInsurabilities(rowIndex)
   }

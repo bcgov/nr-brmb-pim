@@ -25,7 +25,7 @@ export function convertToInventoryContractRsrc(inventoryContract: InventoryContr
       tilliageInd: inventoryContract.tilliageInd ? inventoryContract.tilliageInd : false,
       otherChangesInd: inventoryContract.otherChangesInd ? inventoryContract.otherChangesInd : false,
       otherChangesComment: inventoryContract.otherChangesComment ? inventoryContract.otherChangesComment : null,
-      grainFromPrevYearInd: inventoryContract.grainFromPrevYearInd ? inventoryContract.grainFromPrevYearInd : false,
+      grainFromPrevYearInd: inventoryContract.grainFromPrevYearInd,
       invUpdateTimestamp: inventoryContract.invUpdateTimestamp,
       invUpdateUser: inventoryContract.invUpdateUser,
         

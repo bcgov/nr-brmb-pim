@@ -20,5 +20,4 @@ public interface DeclaredYieldContractCommodityForageMapper {
     List<DeclaredYieldContractCommodityForageDto> selectForDeclaredYieldContract(Map<String, Object> parameters);
 
     List<DeclaredYieldContractCommodityForageDto> selectToRecalculate(Map<String, Object> parameters);
-
 }

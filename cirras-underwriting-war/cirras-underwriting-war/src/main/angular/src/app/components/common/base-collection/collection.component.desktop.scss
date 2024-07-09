@@ -313,13 +313,12 @@
     }
   }
   ::ng-deep .ms-parent {
-    width: 200px !important;
+    width: 150px !important;
   }
   ::ng-deep .ms-choice {
-    height: 37.5px;
-    line-height: 37.5px;
-    //width: 150px;
-    width: 200px;
+    height: 36px;
+    line-height: 36px;
+    width: 150px;
 
     border: 1px solid $colour-light-grey;
     padding: 0 5px;
@@ -350,8 +349,8 @@
     border: 1px solid $colour-light-grey;
     padding: 0 5px;
     border-radius: $wf1-border-radius;
-    height: 35px;
-    line-height: 35px;
+    height: 36px;
+    line-height: 36px;
     font-family: $font-family-main;
     font-size: $font-size;
 

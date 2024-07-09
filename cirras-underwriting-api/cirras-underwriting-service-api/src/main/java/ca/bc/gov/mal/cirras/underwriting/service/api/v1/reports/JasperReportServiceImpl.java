@@ -29,11 +29,19 @@ public class JasperReportServiceImpl implements JasperReportService
 		return reportContent;
 	}
 
-	public byte[] generateDopReport(Map<String, String> paramMap) throws JasperReportServiceException {
+	@Override
+	public byte[] generateDopGrainReport(Map<String, String> paramMap) throws JasperReportServiceException {
 		byte[] reportContent = generateJasperReport("CUWS_DOP", "pdf", paramMap);		
 		return reportContent;
 	}
 
+	@Override
+	public byte[] generateDopForageReport(Map<String, String> paramMap) throws JasperReportServiceException {
+		byte[] reportContent = generateJasperReport("CUWS_DOP_Forage", "pdf", paramMap);		
+		return reportContent;
+	}
+	
+	
 	@Override
 	public byte[] generateInvForageReport(Map<String, String> paramMap) throws JasperReportServiceException {
 		byte[] reportContent = generateJasperReport("CUWS_Inventory_Forage", "pdf", paramMap);		

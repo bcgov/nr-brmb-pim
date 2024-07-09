@@ -9,7 +9,6 @@ import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN, PLANT_DURATION, UW_COMMENT_
 import { CropVarietyCommodityType, InventorySeededForage, InventoryUnseeded, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { addUwCommentsObject, areDatesNotEqual, areNotEqual, getUniqueKey, makeNumberOnly, makeTitleCase } from 'src/app/utils';
 import { AddNewFormField, CropVarietyOptionsType, addAnnualFieldObject, addPlantingObject, addSeededForagesObject, deleteFormField, deleteNewFormField, dragField, fieldHasInventory, getInventorySeededForagesObjForSave, isLinkedFieldCommon, isLinkedPlantingCommon, isThereAnyCommentForField, linkedFieldTooltipCommon, linkedPlantingTooltipCommon, navigateUpDownTextbox, openAddEditLandPopup, roundUpDecimalAcres, updateComments } from '../inventory-common';
-import { FieldUwComment, UnderwritingCommentsComponent } from '../../underwriting-comments/underwriting-comments.component';
 import { AddNewInventoryContract, DeleteInventoryContract, GetInventoryReport, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { AddLandPopupData } from '../add-land/add-land.component';
@@ -88,6 +87,20 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
   ngOnChanges2(changes: SimpleChanges) {
 
+    if ( changes.growerContract && this.growerContract ) {
+
+      this.hasYieldData = false
+
+      // check for yield data
+      for (let i = 0; i< this.growerContract.links.length; i++ ) {
+
+        if ( this.growerContract.links[i].href.toLocaleLowerCase().indexOf("dopyieldcontracts") > -1  ) {
+          this.hasYieldData = true
+          break
+        } 
+      }
+    }
+
     if ( changes.inventoryContract && this.inventoryContract ) {
       this.cropYear = this.inventoryContract.cropYear
     }
@@ -145,7 +158,8 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
         // add plantings to the form
         fldPlantings.push( self.fb.group( 
           addPlantingObject(pltg.cropYear, pltg.fieldId, pltg.insurancePlanId, pltg.inventoryFieldGuid, 
-            pltg.lastYearCropCommodityId, pltg.lastYearCropCommodityName, pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, 
+            pltg.lastYearCropCommodityId, pltg.lastYearCropCommodityName, pltg.lastYearCropVarietyId, pltg.lastYearCropVarietyName,
+            pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, 
             pltg.inventoryUnseeded, null, new FormArray ([]), pltgInventorySeededForages ) ) )
         }
 
@@ -154,7 +168,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
     } else { //empty plantings array
 
       fldPlantings.push( this.fb.group( 
-        addPlantingObject( this.cropYear, field.fieldId , this.insurancePlanId, '', '', '', 1, false, null, <InventoryUnseeded>{}, new FormArray ([]), new FormArray ([]))
+        addPlantingObject( this.cropYear, field.fieldId , this.insurancePlanId, '', '', '', '', '', 1, false, null, <InventoryUnseeded>{}, new FormArray ([]), new FormArray ([]))
        ))
 
     }
@@ -383,11 +397,6 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
     return styles;
   }
 
-
-  isThereAnyComment(field) {
-    return isThereAnyCommentForField(field) 
-  }
-
   isAddPlantingVisible(planting, invSeededIndex) {
 
     // if the planting row is empty do not show Add New Planting button
@@ -608,7 +617,8 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
           field.value.plantings.push( self.fb.group( 
 
             addPlantingObject(planting.value.cropYear, planting.value.fieldId, planting.value.insurancePlanId, null , 
-              planting.value.lastYearCropCommodityId, planting.value.lastYearCropCommodityName, planting.value.plantingNumber + 1, false, null,
+              planting.value.lastYearCropCommodityId, planting.value.lastYearCropCommodityName, planting.value.lastYearCropVarietyId, planting.value.lastYearCropVarietyName,
+              planting.value.plantingNumber + 1, false, null,
               <InventoryUnseeded>{}, new FormArray ([]) , pltgInventorySeededForages)
 
           ) )          
@@ -617,37 +627,15 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
     }
   }
 
-  onLoadComments(field) {
-  
-    const dataToSend : FieldUwComment = {
-      fieldId: field.value.fieldId,
-      annualFieldDetailId: field.value.annualFieldDetailId,
-      uwCommentTypeCode: UW_COMMENT_TYPE_CODE.INVENTORY_GENERAL,
-      uwComments: field.value.uwComments 
-    }
+  onInventoryCommentsDone(fieldId: number, uwComments: UnderwritingComment[]) {
 
-    const dialogRef = this.dialog.open(UnderwritingCommentsComponent, {
-      width: '800px',
-      data: dataToSend
-    });
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
 
-    dialogRef.afterClosed().subscribe(result => {
+    updateComments(fieldId, uwComments, flds)
 
-      if (result && result.event == 'Update'){
-
-        const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
-
-        updateComments(result.data, flds);
-
-        this.cdr.detectChanges()
-        
-      } else if (result && result.event == 'Cancel'){
-        // do nothing
-      }
-    });
+    this.cdr.detectChanges()
 
   }
-
 
   onCancel() {
     if ( confirm("Are you sure you want to clear all unsaved changes on the screen? There is no way to undo this action.") ) {

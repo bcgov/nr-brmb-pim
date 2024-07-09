@@ -16,6 +16,7 @@ public class CropVarietyInsurability implements Serializable {
 	private Boolean isPlantInsurableInd;
 	private Boolean isAwpEligibleInd;
 	private Boolean isUnderseedingEligibleInd;
+	private Boolean isGrainUnseededDefaultInd;
 
 	private Boolean deletedByUserInd;
 	
@@ -85,6 +86,14 @@ public class CropVarietyInsurability implements Serializable {
 		this.isUnderseedingEligibleInd = isUnderseedingEligibleInd;
 	}
 
+	public Boolean getIsGrainUnseededDefaultInd() {
+		return isGrainUnseededDefaultInd;
+	}
+
+	public void setIsGrainUnseededDefaultInd(Boolean isGrainUnseededDefaultInd) {
+		this.isGrainUnseededDefaultInd = isGrainUnseededDefaultInd;
+	}
+	
 	public String getPlantDurationTypeCode() {
 		return plantDurationTypeCode;
 	}

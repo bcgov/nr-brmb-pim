@@ -18,6 +18,7 @@ import {
   ChangeDetectorRef,
 } from "@angular/core";
 import { ApplicationState } from "src/app/store/application/application.state";
+import { DecimalPipe } from "@angular/common";
 
 @Component({
     selector: "cirras-underwriting-unauthorized-page",
@@ -40,7 +41,8 @@ export class UnauthorizedPageComponent extends BaseComponent {
     protected cdr: ChangeDetectorRef,
     protected appConfigService: AppConfigService,
     protected http: HttpClient,
-    protected titleService: Title
+    protected titleService: Title,
+    protected decimalPipe: DecimalPipe
     ) {
     super(
       router,
@@ -58,7 +60,8 @@ export class UnauthorizedPageComponent extends BaseComponent {
       cdr,
       appConfigService,
       http,
-      titleService
+      titleService,
+      decimalPipe
     )
 }  
 }

@@ -30,6 +30,7 @@ import {BaseWrapperComponent} from "./components/common/base-wrapper/base-wrappe
 import {HTTP_INTERCEPTORS, HttpClientModule, HttpHandler} from "@angular/common/http";
 import {ResourcesInterceptor} from "./interceptors/resources-interceptor";
 import {NgxPaginationModule} from "ngx-pagination";
+import { DecimalPipe } from "@angular/common";
 
 import {CdkTableModule} from "@angular/cdk/table";
 import {appInitFn} from "./utils/app-initializer";
@@ -83,7 +84,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { InventoryContractContainer } from "./containers/inventory/inventory-contract-container.component";
 import { InventorySelectorComponent } from './components/inventory/inventory-selector/inventory-selector.component';
 import { GrowerContractHeaderComponent } from './components/grower-contract-header/grower-contract-header.component';
-import { UnderwritingCommentsComponent } from './components/underwriting-comments/underwriting-comments.component';
+import { UwCommentsButtonComponent } from "./components/uw-comments/uw-comments-button/uw-comments-button.component";
+import { UwCommentsDialogComponent } from "./components/uw-comments/uw-comments-dialog/uw-comments-dialog.component";
+import { UwCommentListComponent } from "./components/uw-comments/uw-comment-list/uw-comment-list.component";
+import { UwCommentComponent } from "./components/uw-comments/uw-comment/uw-comment.component";
+import { ReportsDownloadButtonComponent } from "./components/reports/reports-download-button/reports-download-button.component";
+import { ReportsDownloadDialogComponent } from "./components/reports/reports-download-dialog/reports-download-dialog.component";
 import { PrintoutLogoComponent } from './components/printout-logo/printout-logo.component';
 import { AddLandComponent } from './components/inventory/add-land/add-land.component';
 import { EditLandComponent } from './components/inventory/edit-land/edit-land.component';
@@ -121,6 +127,14 @@ import { WildfireApplicationModule } from "@wf1/wfcc-application-ui";
 import { RelatedPoliciesComponent } from './components/related-policies/related-policies.component';
 import { UnsavedDialogComponent } from './components/dialogs/unsaved-dialog/unsaved-dialog.component';
 import { ForageDopComponent } from './components/dop/forage/forage-dop.component';
+import { ForageDopFieldListComponent } from "./components/dop/forage/field-list/forage-dop-field-list.component";
+import { ForageDopFieldComponent } from "./components/dop/forage/field/forage-dop-field.component";
+import { ForageDopYieldFieldListComponent } from "./components/dop/forage/yield-field-list/forage-dop-yield-field-list.component";
+import { ForageDopYieldFieldComponent } from "./components/dop/forage/yield-field/forage-dop-yield-field.component";
+import { ForageDopYieldFieldCutListComponent } from "./components/dop/forage/yield-field-cut-list/forage-dop-yield-field-cut-list.component";
+import { ForageDopYieldFieldCutComponent } from "./components/dop/forage/yield-field-cut/forage-dop-yield-field-cut.component";
+import { ForageDopCommodityListComponent } from "./components/dop/forage/commodity-list/forage-dop-commodity-list.component";
+import { ForageDopCommodityComponent } from "./components/dop/forage/commodity/forage-dop-commodity.component";
 import { ForageDopContainer } from "./containers/dop/forage-dop-container.component";
 
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
@@ -179,7 +193,12 @@ if (!environment.production || !environment.restrict_imports) {
         InventoryContractContainer,
         InventorySelectorComponent,
         GrowerContractHeaderComponent,
-        UnderwritingCommentsComponent,
+        UwCommentsButtonComponent,
+        UwCommentsDialogComponent,
+        UwCommentListComponent,
+        UwCommentComponent,
+        ReportsDownloadButtonComponent,
+        ReportsDownloadDialogComponent,
         PrintoutLogoComponent,
         AddLandComponent,
         EditLandComponent,
@@ -214,6 +233,14 @@ if (!environment.production || !environment.restrict_imports) {
        RelatedPoliciesComponent,
        UnsavedDialogComponent,
        ForageDopComponent,
+       ForageDopFieldListComponent,
+       ForageDopFieldComponent,
+       ForageDopYieldFieldListComponent,
+       ForageDopYieldFieldComponent,
+       ForageDopYieldFieldCutListComponent,
+       ForageDopYieldFieldCutComponent,
+       ForageDopCommodityListComponent,
+       ForageDopCommodityComponent,
        ForageDopContainer
     ],
     imports: [
@@ -324,6 +351,7 @@ if (!environment.production || !environment.restrict_imports) {
                     monthYearA11yLabel: 'MMM YYYY',
                 },
           } },
+        DecimalPipe
 
     ],
     entryComponents: [
