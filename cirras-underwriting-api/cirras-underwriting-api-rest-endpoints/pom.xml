@@ -17,9 +17,6 @@
 		<cirras.datasource.username>proxy_cuws_rest</cirras.datasource.username>
 		<cirras.datasource.password>password</cirras.datasource.password>
 		
-		<webade.datasource.url>jdbc:oracle:thin:@oradb19c.vividsolutions.com:1521:dev</webade.datasource.url>
-		<webade.datasource.username>proxy_webade_bootstrap</webade.datasource.username>
-		<webade.datasource.password>password</webade.datasource.password>
 	</properties>
 	<dependencies>
 		
