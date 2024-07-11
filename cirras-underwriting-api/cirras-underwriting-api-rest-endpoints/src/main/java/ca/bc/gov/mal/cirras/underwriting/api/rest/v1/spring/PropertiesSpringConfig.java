@@ -28,34 +28,34 @@ public class PropertiesSpringConfig {
 		logger.info(">PropertiesSpringConfig");
 	}
 
-	@Bean
-	public static DataSource bootstrapDataSource() {
-		DataSource result;
+	// @Bean
+	// public static DataSource bootstrapDataSource() {
+	// 	DataSource result;
 		
-		final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
-	    dsLookup.setResourceRef(true);
-	    result = dsLookup.getDataSource("java:comp/env/jdbc/webade_bootstrap");
+	// 	final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
+	//     dsLookup.setResourceRef(true);
+	//     result = dsLookup.getDataSource("java:comp/env/jdbc/webade_bootstrap");
 	    
-	    return result;
-	}
+	//     return result;
+	// }
 	
-	@Bean
-	public static BootstrapPropertiesFactory bootstrapPropertiesFactory() {
-		BootstrapPropertiesFactory result;
+	// @Bean
+	// public static BootstrapPropertiesFactory bootstrapPropertiesFactory() {
+	// 	BootstrapPropertiesFactory result;
 		
-		result = new BootstrapPropertiesFactory(bootstrapDataSource());
+	// 	result = new BootstrapPropertiesFactory(bootstrapDataSource());
 		
-		return result;
-	}
+	// 	return result;
+	// }
 
-	@Bean
-	public static Properties bootstrapProperties() throws SQLException {
-		Properties result;
+	// @Bean
+	// public static Properties bootstrapProperties() throws SQLException {
+	// 	Properties result;
 		
-		result = bootstrapPropertiesFactory().getApplicationProperties("CIRRAS_UNDERWRITING", "bootstrap-config");
+	// 	result = bootstrapPropertiesFactory().getApplicationProperties("CIRRAS_UNDERWRITING", "bootstrap-config");
 		
-		return result;
-	}
+	// 	return result;
+	// }
 
 	@Bean
 	public static Properties applicationProperties() throws IOException, SQLException {
@@ -63,7 +63,7 @@ public class PropertiesSpringConfig {
 		
 		PropertiesFactoryBean propertiesFactory = new PropertiesFactoryBean();
 		propertiesFactory.setLocalOverride(true);
-		propertiesFactory.setPropertiesArray(bootstrapProperties());
+		// propertiesFactory.setPropertiesArray(bootstrapProperties());
 		propertiesFactory.setLocation(new ClassPathResource("static.properties"));
 		propertiesFactory.afterPropertiesSet();
 		
