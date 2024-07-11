@@ -75,10 +75,10 @@ public abstract class EndpointsTest {
 			DataSource dataSource = testApplicationContext.getBean("cirrasUnderwritingDataSource", DataSource.class);
 			dataSources.put("jdbc/cirras_underwriting_rest", dataSource);
 		}
-		{
-			DataSource dataSource = testApplicationContext.getBean("bootstrapDataSource", DataSource.class);
-			dataSources.put("jdbc/webade_bootstrap", dataSource);
-		}
+		// {
+		// 	DataSource dataSource = testApplicationContext.getBean("bootstrapDataSource", DataSource.class);
+		// 	dataSources.put("jdbc/webade_bootstrap", dataSource);
+		// }
 
 		EmbeddedServer.startIfRequired(port, contextPath, dataSources);
 

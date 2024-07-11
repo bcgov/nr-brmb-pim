@@ -22,16 +22,16 @@ public class TokenServiceSpringConfig  {
 		logger.info(">TokenServiceSpringConfig");
 	}
 
-	@Value("${webade-oauth2.cirras-underwriting-rest.client.id}")
+	@Value("${CIRRAS_UNDERWRITING_REST_CLIENT_ID}")
 	private String webadeOauth2ClientId;
 
-	@Value("${webade-oauth2.cirras-underwriting-rest.client.secret}")
+	@Value("${CIRRAS_UNDERWRITING_REST_SECRET}")
 	private String webadeOauth2ClientSecret;
 
-	@Value("${webade-oauth2.check.token.url}")
+	@Value("${WEBADE_CHECK_TOKEN_URL}")
 	private String webadeOauth2CheckTokenUrl;
 
-	@Value("${webade-oauth2.token.url}")
+	@Value("${WEBADE_GET_TOKEN_URL}")
 	private String webadeOauth2TokenUrl;
 	
 	@Bean

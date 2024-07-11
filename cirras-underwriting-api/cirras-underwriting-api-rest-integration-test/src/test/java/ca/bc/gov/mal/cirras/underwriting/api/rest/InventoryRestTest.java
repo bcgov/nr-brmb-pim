@@ -23,6 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -58,6 +59,12 @@ public class InventoryRestTest {
 	private static final String REDIRECT_URL = "http://www.redirecturi.com";
 	
     private static final String INTERNAL = "Internal";
+
+	@Value("${CIRRAS_UNDERWRITING_REST_URI}")
+	private static String restContext;
+
+	@Value("${WEBADE_OAUTH2_AUTHORIZE_URL}")
+	public static String authorizeUrl;
 	
 	@BeforeClass
 	public static void beforeClass() throws Exception {
@@ -68,16 +75,13 @@ public class InventoryRestTest {
 		properties = (Properties) applicationContext.getBean("applicationProperties");
 
 		String testClientId = properties.getProperty("test.client.id");
-		String authorizeUrl = properties.getProperty("webade-oauth2.authorize.url");
-		String restContext = properties.getProperty("context.cirras-underwriting-rest");
 		
 		String governmentUserGuid = properties.getProperty("government.user.guid");
 		String governmentUserName = properties.getProperty("government.user.name");
 		String governmentUserSecret = properties.getProperty("government.user.secret");
 		
-		Assert.assertNotNull("'context.cirras-underwriting-rest' is a required property", restContext);
+		Assert.assertNotNull("'CIRRAS_UNDERWRITING_REST_URI' is a required environment variable	", restContext);
 		Assert.assertNotNull("'test.client.id' is a required property", testClientId);
-		Assert.assertNotNull("'webade-oauth2.authorize.url' is a required property", authorizeUrl);
 		Assert.assertNotNull("'government.user.guid' is a required property", governmentUserGuid);
 		Assert.assertNotNull("'government.user.name' is a required property", governmentUserName);
 		Assert.assertNotNull("'government.user.secret' is a required property", governmentUserSecret);
