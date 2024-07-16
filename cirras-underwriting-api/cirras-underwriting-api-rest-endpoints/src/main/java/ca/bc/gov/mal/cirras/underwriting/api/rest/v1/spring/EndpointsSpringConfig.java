@@ -29,7 +29,9 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.parameters.validation.Param
 	ResourceFactorySpringConfig.class,
 	CodeEndpointsSpringConfig.class,
 	SecuritySpringConfig.class,
-	CirrasPolicyServiceSpringConfig.class
+	CirrasPolicyServiceSpringConfig.class,
+	WebConfig.class,
+	CorsFilter.class
 })
 public class EndpointsSpringConfig {
 

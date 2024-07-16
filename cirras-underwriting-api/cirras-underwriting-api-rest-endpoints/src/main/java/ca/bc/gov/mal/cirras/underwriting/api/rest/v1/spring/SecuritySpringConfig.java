@@ -21,6 +21,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import ca.bc.gov.nrs.wfone.common.webade.oauth2.authentication.WebadeOauth2AuthenticationProvider;
 import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.TokenService;
@@ -105,6 +108,7 @@ public class SecuritySpringConfig extends WebSecurityConfigurerAdapter  {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {		
 		http.csrf().disable();
+		http.cors().disable();
 		
 		http.oauth2ResourceServer(oauth2 -> oauth2
 			.authenticationManagerResolver(authenticationManagerResolver())
