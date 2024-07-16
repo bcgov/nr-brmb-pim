@@ -28,6 +28,8 @@ public class PropertiesSpringConfig {
 		logger.info(">PropertiesSpringConfig");
 	}
 
+	// Removed because will not be used in openshift
+	//
 	// @Bean
 	// public static DataSource bootstrapDataSource() {
 	// 	DataSource result;
