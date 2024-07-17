@@ -64,6 +64,7 @@ jobs:
       - name: zip and install helm chart
         run: |
           cd staging && tar -czvf crunchy-postgres.tar.gz crunchy-postgres
+          helm status crunchy-postgres-${{inputs.ENVIRONMENT_NAME}}
           if [[ $(helm status crunchy-postgres-${{inputs.ENVIRONMENT_NAME}}) == *"not found"* ]]; then
             helm install crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} ./crunchy-postgres.tar.gz
           else
