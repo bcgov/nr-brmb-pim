@@ -7,7 +7,7 @@
     "buildNumber": "0000"
   },
   "rest": {
-    "cirras_underwriting": "https://d1api.vividsolutions.com/cirras-underwriting-api/v1"
+    "cirras_underwriting": "https://cirras-underwriting-api-route-dev-a12541-dev.apps.silver.devops.gov.bc.ca/cirras-underwriting-api/v1"
   },
   "webade": {
     "oauth2Url": "https://d1auth.vividsolutions.com/pub/webade-oauth2/oauth/authorize",
