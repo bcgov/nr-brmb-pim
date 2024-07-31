@@ -29,7 +29,7 @@ spec:
               memory: 100Mi
             limits:
               cpu: 100m
-              memory: 200Mi 
+              memory: 400Mi 
           image: >-
             docker.io/bitnami/mariadb:latest
           env:
