@@ -1,4 +1,4 @@
-name: DEV Deploy - Manual Trigger
+name: Build .war and npm files
 
 on:
   workflow_dispatch:
