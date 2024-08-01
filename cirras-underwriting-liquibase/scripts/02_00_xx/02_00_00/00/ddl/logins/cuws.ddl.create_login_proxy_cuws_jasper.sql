@@ -8,7 +8,7 @@ CREATE ROLE "proxy_cuws_jasper" WITH
   NOCREATEDB
   NOCREATEROLE
   NOREPLICATION
-  PASSWORD 'password';
+  PASSWORD '${POSTGRES_READ_ONLY_PASSWORD}';
   
 ALTER ROLE proxy_cuws_jasper SET search_path TO cuws;
 

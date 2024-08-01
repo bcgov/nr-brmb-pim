@@ -8,6 +8,7 @@
 {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.ddl.update.inventory_contract_commodity.sql"}},
 {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.seeding_deadline.sql"}},
 {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.ddl.update.inventory_field.sql"}},
-{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.contracted_field_detail.sql"}}] } }
+{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.contracted_field_detail.sql"}},
+{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}] } }
 ]}
 
