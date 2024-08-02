@@ -9,7 +9,7 @@ spec:
     kind: Deployment
     name: cirras-underwriting-ui-deployment-#{ENV}#
   minReplicas: 1
-  maxReplicas: 3
+  maxReplicas: #{MAX_APP_COUNT}#
   metrics:
     # These define triggers based on % request value, not % limit value
     - type: Resource
@@ -22,7 +22,7 @@ spec:
       resource:
         name: memory
         target:
-          averageUtilization: 100
+          averageUtilization: 150
           type: Utilization
   behaviour:
     #scale down only if consistently below value, but scale up if briefly above value

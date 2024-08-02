@@ -113,6 +113,11 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: TIME_ZONE
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: LOG_LEVEL
           resources:
             requests:
               cpu: 100m
