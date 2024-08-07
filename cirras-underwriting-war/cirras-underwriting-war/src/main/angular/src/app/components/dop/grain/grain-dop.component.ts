@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, SimpleChanges, } from '@angular/core';
-import { ParamMap } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, SimpleChanges, } from '@angular/core';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { UwContract } from 'src/app/conversion/models';
 import {  DopYieldContract, DopYieldFieldGrain, GradeModifierList, YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
 import { 
@@ -16,13 +16,25 @@ import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
 import { BaseComponent } from '../../common/base/base.component';
 import { GrainDopComponentModel } from './grain-dop.component.model';
-import { FormArray, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { addUwCommentsObject, areDatesNotEqual, areNotEqual, getInsurancePlanName, makeNumberOnly, setHttpHeaders } from 'src/app/utils';
 import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import {ViewEncapsulation } from '@angular/core';
 import { GradeModifierOptionsType } from '../dop-common';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
+import { DomSanitizer, Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { RootState } from 'src/app/store';
+import { MatDialog } from '@angular/material/dialog';
+import { ApplicationStateService } from 'src/app/services/application-state.service';
+import { SecurityUtilService } from 'src/app/services/security-util.service';
+import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { ConnectionService } from 'ngx-connection-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Overlay } from '@angular/cdk/overlay';
+import { HttpClient } from '@angular/common/http';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'grain-dop',
@@ -36,6 +48,26 @@ export class GrainDopComponent extends BaseComponent{
   @Input() growerContract: UwContract;
   @Input() dopYieldContract: DopYieldContract;
   @Input() yieldMeasUnitList: YieldMeasUnitTypeCodeList;
+
+  constructor(protected router: Router,
+    protected route: ActivatedRoute,
+    protected sanitizer: DomSanitizer,
+    protected store: Store<RootState>,
+    protected fb: FormBuilder,
+    protected dialog: MatDialog,
+    protected applicationStateService: ApplicationStateService,
+    public securityUtilService: SecurityUtilService,                
+    protected tokenService: TokenService,
+    protected connectionService: ConnectionService,
+    protected snackbarService: MatSnackBar,
+    protected overlay: Overlay,
+    protected cdr: ChangeDetectorRef,
+    protected appConfigService: AppConfigService,
+    protected http: HttpClient,
+    protected titleService: Title,
+    protected decimalPipe: DecimalPipe) {
+    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
+  }
 
   acceptableRangeCommodityPercentage = 0.1 // 10% difference between declared and estimated commodity totals 
 

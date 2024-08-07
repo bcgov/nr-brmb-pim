@@ -1,7 +1,7 @@
 import { BaseContainer } from "../base/base-container.component";
-import {select} from "@ngrx/store";
+import {select, Store} from "@ngrx/store";
 import {Observable} from "rxjs";
-import {Component} from "@angular/core";
+import {ChangeDetectorRef, Component} from "@angular/core";
 import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
@@ -15,6 +15,10 @@ import { selectInventoryContract } from "src/app/store/inventory/inventory.selec
 import { INVENTORY_COMPONENT_ID } from "src/app/store/inventory/inventory.state";
 import { selectCropCommodityList, selectUnderSeededCropCommodityList } from "src/app/store/crop-commodity/crop-commodity.selectors";
 import { selectGrowerContract } from "src/app/store/grower-contract/grower-contract.selector";
+import { RootState } from "src/app/store";
+import { Router } from "@angular/router";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ApplicationStateService } from "src/app/services/application-state.service";
 
 @Component({
     selector: "cirras-underwriting-inventory-contract-container",
@@ -46,4 +50,13 @@ export class InventoryContractContainer extends BaseContainer {
         ];
     }
 
+    constructor(
+        protected store: Store<RootState>,
+        protected router: Router,
+        public snackBar: MatSnackBar,
+        protected applicationStateService: ApplicationStateService,
+        protected cdr: ChangeDetectorRef
+    ) {
+        super(store, router, snackBar, applicationStateService, cdr);
+    }
 }

@@ -1,7 +1,7 @@
-import {Component} from "@angular/core";
+import {ChangeDetectorRef, Component} from "@angular/core";
 import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
 import {BaseContainer} from "../base/base-container.component";
-import {select} from "@ngrx/store";
+import {select, Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 
 import { selectLandList } from "src/app/store/land-management/land-management.selectors";
@@ -15,6 +15,10 @@ import {
 
 import {SearchState} from "@wf1/core-ui";
 import { LAND_SEARCH_COMPONENT_ID } from "src/app/store/land-management/land-management.state";
+import { RootState } from "src/app/store";
+import { Router } from "@angular/router";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ApplicationStateService } from "src/app/services/application-state.service";
 
 @Component({
     selector: "cirras-land-list-container",
@@ -33,4 +37,14 @@ export class LandListContainer extends BaseContainer {
     searchState$: Observable<SearchState> = this.store.pipe(select(selectSearchState(LAND_SEARCH_COMPONENT_ID)));
     loadState$: Observable<LoadState> = this.store.pipe(select(selectLegalLandListLoadState()));
     errorState$: Observable<ErrorState[]> = this.store.pipe(select(selectLegalLandListErrorState()));
+
+    constructor(
+        protected store: Store<RootState>,
+        protected router: Router,
+        public snackBar: MatSnackBar,
+        protected applicationStateService: ApplicationStateService,
+        protected cdr: ChangeDetectorRef
+    ) {
+        super(store, router, snackBar, applicationStateService, cdr);
+    }
 }

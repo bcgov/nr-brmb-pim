@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { BaseComponent } from '../../common/base/base.component';
 import { YieldConversionComponentModel } from './yield-conversion.component.model';
 import { YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
@@ -7,10 +7,23 @@ import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
 import { YieldMeasUnitConversionList } from 'src/app/conversion/models-maintenance';
 import { ClearYieldConversion, LoadYieldConversion, SaveYieldConversion } from 'src/app/store/maintenance/maintenance.actions';
-import { FormArray } from '@angular/forms';
+import { FormArray, FormBuilder } from '@angular/forms';
 import { areNotEqual, makeNumberOnly } from 'src/app/utils';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { YieldConversionUnitsContainer } from 'src/app/containers/maintenance/yield-conversion-units-container.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DomSanitizer, Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { RootState } from 'src/app/store';
+import { MatDialog } from '@angular/material/dialog';
+import { ApplicationStateService } from 'src/app/services/application-state.service';
+import { SecurityUtilService } from 'src/app/services/security-util.service';
+import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { ConnectionService } from 'ngx-connection-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Overlay } from '@angular/cdk/overlay';
+import { HttpClient } from '@angular/common/http';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'yield-conversion',
@@ -21,6 +34,26 @@ export class YieldConversionComponent extends BaseComponent implements OnChanges
 
   @Input() yieldMeasUnitList: YieldMeasUnitTypeCodeList;
   @Input() yieldMeasUnitConversionList: YieldMeasUnitConversionList
+
+  constructor(protected router: Router,
+    protected route: ActivatedRoute,
+    protected sanitizer: DomSanitizer,
+    protected store: Store<RootState>,
+    protected fb: FormBuilder,
+    protected dialog: MatDialog,
+    protected applicationStateService: ApplicationStateService,
+    public securityUtilService: SecurityUtilService,                
+    protected tokenService: TokenService,
+    protected connectionService: ConnectionService,
+    protected snackbarService: MatSnackBar,
+    protected overlay: Overlay,
+    protected cdr: ChangeDetectorRef,
+    protected appConfigService: AppConfigService,
+    protected http: HttpClient,
+    protected titleService: Title,
+    protected decimalPipe: DecimalPipe) {
+    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
+  }
 
   componentId = MAINTENANCE_COMPONENT_ID;
 
