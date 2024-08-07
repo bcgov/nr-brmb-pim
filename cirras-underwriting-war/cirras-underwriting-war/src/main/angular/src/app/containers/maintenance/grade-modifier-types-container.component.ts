@@ -1,5 +1,5 @@
 import { BaseContainer } from "../base/base-container.component";
-import {select} from "@ngrx/store";
+import {select, Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {Component} from "@angular/core";
 import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
@@ -13,6 +13,10 @@ import {
 import { MAINTENANCE_COMPONENT_ID } from "src/app/store/maintenance/maintenance.state";
 import { GradeModifierTypeList } from "src/app/conversion/models-maintenance";
 import { selectGradeModifierTypeList } from "src/app/store/maintenance/maintenance.selectors";
+import { RootState } from "src/app/store";
+import { Router } from "@angular/router";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ApplicationStateService } from "src/app/services/application-state.service";
 
 @Component({
     selector: "seeding-deadlines-container",
@@ -36,4 +40,12 @@ export class GradeModifierTypesContainer extends BaseContainer {
         ];
     }
 
+    constructor(
+        store: Store<RootState>,
+        router: Router,
+        snackBar: MatSnackBar,
+        applicationStateService: ApplicationStateService
+    ) {
+        super(store, router, snackBar, applicationStateService);
+    }
 }

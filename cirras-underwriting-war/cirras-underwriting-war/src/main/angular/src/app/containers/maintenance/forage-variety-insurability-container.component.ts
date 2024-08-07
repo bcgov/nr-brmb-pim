@@ -1,5 +1,5 @@
 import { BaseContainer } from "../base/base-container.component";
-import {select} from "@ngrx/store";
+import {select, Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {Component} from "@angular/core";
 import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
@@ -12,8 +12,12 @@ import {
 } from "../../store/application/application.selectors";
 
 import { MAINTENANCE_COMPONENT_ID } from "src/app/store/maintenance/maintenance.state";
-import { CropVarietyInsurabilityList } from "src/app/conversion/models-maintenance";
-import { selectCropVarietyInsurabilityList } from "src/app/store/maintenance/maintenance.selectors";
+import { CropVarietyInsurabilityList, SeedingDeadlineList, UnderwritingYearList } from "src/app/conversion/models-maintenance";
+import { selectCropVarietyInsurabilityList, selectUnderwritingYears, selectseedingDeadlineList } from "src/app/store/maintenance/maintenance.selectors";
+import { RootState } from "src/app/store";
+import { Router } from "@angular/router";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ApplicationStateService } from "src/app/services/application-state.service";
 
 @Component({
     selector: "forage-variety-insurability-container",
@@ -41,4 +45,12 @@ export class ForageVarietyInsurabilityContainer extends BaseContainer {
         ];
     }
 
+    constructor(
+        store: Store<RootState>,
+        router: Router,
+        snackBar: MatSnackBar,
+        applicationStateService: ApplicationStateService
+    ) {
+        super(store, router, snackBar, applicationStateService);
+    }
 }
