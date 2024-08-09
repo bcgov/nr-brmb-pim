@@ -11,10 +11,21 @@
 	                    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
 	                    http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd">
 
+	<bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:static.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="properties" ref="applicationProperties" />
+	</bean>
 
 	<bean id="cirrasUnderwritingDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.postgresql.Driver" />
-		<property name="url" value="${POSTGRES_URL}" /> 
+		<property name="url" value="${POSTGRES_URL}" />
 		<property name="username" value="${POSTGRES_USERNAME}" />
 		<property name="password" value="${POSTGRES_PASSWORD}" />
         <property name="connectionProperties">
