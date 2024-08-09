@@ -128,8 +128,9 @@ public class GradeModifierListEndpointTest extends EndpointsTest {
 					.collect(Collectors.toList());
 			
 			if(resources != null && resources.size() > 0) {
-				//DELETE
-				service.deleteUnderwritingYear(resources.get(0));
+				//FETCH then DELETE.
+				UnderwritingYearRsrc uwYearRsrc = service.getUnderwritingYear(resources.get(0));				
+				service.deleteUnderwritingYear(uwYearRsrc);
 			}
 		}
 	}
