@@ -1,7 +1,7 @@
-import {Component} from "@angular/core";
+import {ChangeDetectorRef, Component} from "@angular/core";
 import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
 import {BaseContainer} from "../base/base-container.component";
-import {select} from "@ngrx/store";
+import {select, Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 
 import { selectInventoryContractList, selectUwContractsList } from "src/app/store/uw-contracts-list/uw-contracts-list.selectors";
@@ -17,6 +17,10 @@ import { UW_CONTRACTS_SEARCH_COMPONENT_ID } from "src/app/store/uw-contracts-lis
 import {SearchState} from "@wf1/core-ui";
 import { CropCommodityList } from "src/app/conversion/models";
 import {selectCropCommodityList} from "src/app/store/crop-commodity/crop-commodity.selectors";
+import { RootState } from "src/app/store";
+import { Router } from "@angular/router";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ApplicationStateService } from "src/app/services/application-state.service";
 
 @Component({
     selector: "cirras-uw-contracts-list-container",
@@ -40,4 +44,14 @@ export class UwContractsListContainer extends BaseContainer {
     loadState$: Observable<LoadState> = this.store.pipe(select(selectUwContractsListLoadState()));
     errorState$: Observable<ErrorState[]> = this.store.pipe(select(selectUwContractsListErrorState()));
     reportCollection$: Observable<any> = this.store.pipe(select(selectInventoryContractList()));
+
+    constructor(
+        protected store: Store<RootState>,
+        protected router: Router,
+        public snackBar: MatSnackBar,
+        protected applicationStateService: ApplicationStateService,
+        protected cdr: ChangeDetectorRef
+    ) {
+        super(store, router, snackBar, applicationStateService, cdr);
+    }
 }

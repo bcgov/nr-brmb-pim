@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
 import { BaseComponent } from '../../common/base/base.component';
 import { UwContract } from 'src/app/conversion/models';
 import { ForageDopComponentModel } from './forage-dop.component.model';
 import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
-import { ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { 
   AddForageDopYieldFieldCut,
   AddNewDopYieldContract,
@@ -21,9 +21,22 @@ import { DopYieldContract, GradeModifierList, YieldMeasUnitTypeCodeList } from '
 import { getInsurancePlanName, makeNumberOnly, setHttpHeaders } from 'src/app/utils';
 import { GradeModifierOptionsType } from '../dop-common';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import {ViewEncapsulation } from '@angular/core';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
-import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
+import { DomSanitizer, Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { RootState } from 'src/app/store';
+import { MatDialog } from '@angular/material/dialog';
+import { ApplicationStateService } from 'src/app/services/application-state.service';
+import { SecurityUtilService } from 'src/app/services/security-util.service';
+import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { ConnectionService } from 'ngx-connection-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Overlay } from '@angular/cdk/overlay';
+import { HttpClient } from '@angular/common/http';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'forage-dop',
@@ -40,6 +53,26 @@ export class ForageDopComponent extends BaseComponent {
 
   // max number of the allowed cuts per field
   maxNumOfCutsAllowed = 7
+  constructor(protected router: Router,
+    protected route: ActivatedRoute,
+    protected sanitizer: DomSanitizer,
+    protected store: Store<RootState>,
+    protected fb: FormBuilder,
+    protected dialog: MatDialog,
+    protected applicationStateService: ApplicationStateService,
+    public securityUtilService: SecurityUtilService,                
+    protected tokenService: TokenService,
+    protected connectionService: ConnectionService,
+    protected snackbarService: MatSnackBar,
+    protected overlay: Overlay,
+    protected cdr: ChangeDetectorRef,
+    protected appConfigService: AppConfigService,
+    protected http: HttpClient,
+    protected titleService: Title,
+    protected decimalPipe: DecimalPipe) {
+    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
+  }
+
 
   // variables
   policyId: string;
