@@ -73,6 +73,8 @@ jobs:
           NAMESPACE: ${{ inputs.NAMESPACE }}
           TAG: ${{ inputs.TAG }}
           SID: ${{ github.run_id }}
+          LOG_LEVEL: ${{ vars.LOG_LEVEL }}
+          MAX_APP_COUNT: ${{ vars.MAX_APP_COUNT }}
           
           WEBADE_CHECK_TOKEN_URL: ${{ vars.WEBADE_CHECK_TOKEN_URL }}
           WEBADE_GET_TOKEN_URL: ${{ vars.WEBADE_GET_TOKEN_URL }}

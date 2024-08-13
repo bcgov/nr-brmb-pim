@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: 'cirras-underwriting-liquibase-db-access-#{ENV}#'
+  name: 'cirras-underwriting-api-db-access-#{ENV}#'
   namespace: '#{NAMESPACE}#'
 spec:
   podSelector:
@@ -13,4 +13,4 @@ spec:
     - from:
       - podSelector:
           matchLabels: 
-            app: "cirras-underwriting-liquibase-#{ENV}#"
+            app: "cirras-underwriting-api-#{ENV}#"

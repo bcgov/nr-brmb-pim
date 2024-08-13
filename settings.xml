@@ -12,16 +12,6 @@
   <password>${repo.password}</password>
   <id>snapshots</id>
 </server>
-<server>
-  <username>${openshiftRepo.login}</username>
-  <password>${openshiftRepo.password}</password>
-  <id>openshift-releases</id>
-</server>
-<server>
-  <username>${openshiftRepo.login}</username>
-  <password>${openshiftRepo.password}</password>
-  <id>openshift-snapshots</id>
-</server>
 </servers>
 <profiles>
 <profile>
