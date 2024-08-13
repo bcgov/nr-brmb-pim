@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { BaseComponent } from 'src/app/components/common/base/base.component';
 import { AnnualField, CropCommodityList, InventoryContract, UwContract } from 'src/app/conversion/models';
 import { ForageInventoryComponentModel } from './forage-inventory.component.model';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
-import { ParamMap } from '@angular/router';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN, PLANT_DURATION, UW_COMMENT_TYPE_CODE } from 'src/app/utils/constants';
 import { CropVarietyCommodityType, InventorySeededForage, InventoryUnseeded, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { addUwCommentsObject, areDatesNotEqual, areNotEqual, getUniqueKey, makeNumberOnly, makeTitleCase } from 'src/app/utils';
@@ -17,6 +17,18 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { RemoveFieldPopupData } from '../remove-field/remove-field.component';
 import {ViewEncapsulation } from '@angular/core';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
+import { DomSanitizer, Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { RootState } from 'src/app/store';
+import { MatDialog } from '@angular/material/dialog';
+import { ApplicationStateService } from 'src/app/services/application-state.service';
+import { SecurityUtilService } from 'src/app/services/security-util.service';
+import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { ConnectionService } from 'ngx-connection-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Overlay } from '@angular/cdk/overlay';
+import { HttpClient } from '@angular/common/http';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'forage-inventory',
@@ -30,6 +42,26 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   @Input() inventoryContract: InventoryContract;
   @Input() cropCommodityList: CropCommodityList;
   @Input() growerContract: UwContract;
+
+  constructor(protected router: Router,
+    protected route: ActivatedRoute,
+    protected sanitizer: DomSanitizer,
+    protected store: Store<RootState>,
+    protected fb: FormBuilder,
+    protected dialog: MatDialog,
+    protected applicationStateService: ApplicationStateService,
+    public securityUtilService: SecurityUtilService,                
+    protected tokenService: TokenService,
+    protected connectionService: ConnectionService,
+    protected snackbarService: MatSnackBar,
+    protected overlay: Overlay,
+    protected cdr: ChangeDetectorRef,
+    protected appConfigService: AppConfigService,
+    protected http: HttpClient,
+    protected titleService: Title,
+    protected decimalPipe: DecimalPipe) {
+    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
+  }
 
   cropVarietyOptions = [];
   filteredVarietyOptions: CropVarietyOptionsType[];  

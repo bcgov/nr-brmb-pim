@@ -49,7 +49,7 @@ jobs:
         run: |
           cd cirras-underwriting-reports-jrs/src/main
           zip -qq -r export.zip .
-          export AUTHORIZATION="Basic $(echo ${{vars.JASPER_USER}}:${{vars.JASPER_PASSWORD}} | base64)"
+          export AUTHORIZATION="Basic $(echo -n ${{vars.JASPER_USERNAME}}:${{secrets.JASPER_PASSWORD}} | base64)"
           export JASPER_URL="https://cirras-underwriting-jasper-${{ inputs.ENVIRONMENT_NAME}}-${{ inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/jasperserver/rest_v2/import?keyAlias=deprecatedImportExportEncSecret&update=true"
           curl -X POST $JASPER_URL -H "Content-Type: application/zip" -H "Authorization: $AUTHORIZATION" -T export.zip
 

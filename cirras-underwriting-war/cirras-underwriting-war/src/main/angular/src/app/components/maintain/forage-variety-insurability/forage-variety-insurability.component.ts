@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { BaseComponent } from '../../common/base/base.component';
 import { ForageVarietyInsurabilityComponentModel } from './forage-variety-insurability.component.model';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
@@ -6,9 +6,22 @@ import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.
 import { loadVarietyInsurability, saveVarietyInsurability } from 'src/app/store/maintenance/maintenance.actions';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 import { CropVarietyInsurabilityList } from 'src/app/conversion/models-maintenance';
-import { FormArray, FormControl, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { PlantInsurabilityComponent } from './plant-insurability/plant-insurability.component';
 import { areNotEqual } from 'src/app/utils';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DomSanitizer, Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { RootState } from 'src/app/store';
+import { MatDialog } from '@angular/material/dialog';
+import { ApplicationStateService } from 'src/app/services/application-state.service';
+import { SecurityUtilService } from 'src/app/services/security-util.service';
+import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { ConnectionService } from 'ngx-connection-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Overlay } from '@angular/cdk/overlay';
+import { HttpClient } from '@angular/common/http';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'forage-variety-insurability',
@@ -20,6 +33,26 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
 
   @Input() cropVarietyInsurabilityList: CropVarietyInsurabilityList
   @Input() isUnsaved: boolean;
+
+  constructor(protected router: Router,
+    protected route: ActivatedRoute,
+    protected sanitizer: DomSanitizer,
+    protected store: Store<RootState>,
+    protected fb: FormBuilder,
+    protected dialog: MatDialog,
+    protected applicationStateService: ApplicationStateService,
+    public securityUtilService: SecurityUtilService,                
+    protected tokenService: TokenService,
+    protected connectionService: ConnectionService,
+    protected snackbarService: MatSnackBar,
+    protected overlay: Overlay,
+    protected cdr: ChangeDetectorRef,
+    protected appConfigService: AppConfigService,
+    protected http: HttpClient,
+    protected titleService: Title,
+    protected decimalPipe: DecimalPipe) {
+    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
+  }
 
   hasDataChanged = false;
   isInEditMode = false;

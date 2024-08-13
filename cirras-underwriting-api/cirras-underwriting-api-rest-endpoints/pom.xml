@@ -12,11 +12,12 @@
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		
-		<cirras.datasource.url>jdbc:postgresql://pgsql01.vividsolutions.com:5432/cirras_dev</cirras.datasource.url>
-		<cirras.datasource.username>proxy_cuws_rest</cirras.datasource.username>
-		<cirras.datasource.password>password</cirras.datasource.password>
-		
+
+<!-- Not needed 
+		<cirras.datasource.url></cirras.datasource.url>
+		<cirras.datasource.username></cirras.datasource.username>
+		<cirras.datasource.password></cirras.datasource.password>
+-->		
 	</properties>
 	<dependencies>
 		
