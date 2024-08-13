@@ -12,16 +12,6 @@
   <password>${repo.password}</password>
   <id>snapshots</id>
 </server>
-<server>
-  <username>${openshiftRepo.login}</username>
-  <password>${openshiftRepo.password}</password>
-  <id>openshift-releases</id>
-</server>
-<server>
-  <username>${openshiftRepo.login}</username>
-  <password>${openshiftRepo.password}</password>
-  <id>openshift-snapshots</id>
-</server>
 </servers>
 <profiles>
 <profile>
@@ -39,20 +29,6 @@
    <id>snapshots</id>
    <name>libs-snapshot</name>
    <url>https://bwa.nrs.gov.bc.ca/int/artifactory/libs-snapshot</url>
- </repository>
- <repository>
-   <snapshots>
-     <enabled>false</enabled>
-   </snapshots>
-   <id>openshift-releases</id>
-   <name>na12-pim-libs-release</name>
-   <url>https://artifacts.developer.gov.bc.ca:443/artifactory/na12-pim-libs-release</url>
- </repository>
- <repository>
-   <snapshots />
-   <id>openshift-snapshots</id>
-   <name>na12-pim-libs-snapshot</name>
-   <url>https://artifacts.developer.gov.bc.ca:443/artifactory/na12-pim-libs-snapshot</url>
  </repository>
 </repositories>
 <pluginRepositories>
