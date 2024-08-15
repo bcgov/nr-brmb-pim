@@ -2,7 +2,7 @@
 
 .mat-table {
     display: block;
-    font-family: Tahoma, Verdana;
+    font-family: $font-family-main;
   }
   
   .mat-row,
@@ -88,8 +88,8 @@
       flex-basis: 220px !important;
     }
     &.search-input:has(input[aria-label="Policy Number"]) {
-      width: 111px !important;
-      flex-basis: 111px !important;
+      width: 116px !important;
+      flex-basis: 116px !important;
     }
   }
 }

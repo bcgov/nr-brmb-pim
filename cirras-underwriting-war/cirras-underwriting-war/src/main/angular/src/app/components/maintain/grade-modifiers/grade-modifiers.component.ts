@@ -29,7 +29,7 @@ import { DecimalPipe } from '@angular/common';
 @Component({
   selector: 'grade-modifiers',
   templateUrl: './grade-modifiers.component.html',
-  styleUrls: ['./grade-modifiers.component.scss']
+  styleUrls: ['./grade-modifiers.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss']
 })
 export class GradeModifiersComponent extends BaseComponent implements OnChanges  {
 
@@ -37,6 +37,7 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
   @Input() gradeModifierList: GradeModifierList   // TODO: Reconcile with yield model.
   @Input() cropCommodityList: CropCommodityList
   @Input() gradeModifierTypeList: GradeModifierTypeList
+  @Input() isUnsaved: boolean;
 
   constructor(protected router: Router,
     protected route: ActivatedRoute,
@@ -85,13 +86,10 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
   }
 
   loadPage() {
-    let defaultCropYear = new Date().getFullYear();
-    let defaultCropCommodityId = CROP_COMMODITY_UNSPECIFIED.ID
-
     this.loadUwCropYear()
-    this.loadGrainCommodities(defaultCropYear)
-    this.loadGradeModifierTypeList(defaultCropYear)
-    this.loadGradeModifiersForCropYear(defaultCropYear, defaultCropCommodityId)
+    this.loadGrainCommodities(this.selectedCropYear)
+    this.loadGradeModifierTypeList(this.selectedCropYear)
+    this.loadGradeModifiersForCropYear(this.selectedCropYear, this.selectedCropCommodityId)
   }
   
 
@@ -183,12 +181,6 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
       // clear the crop options
       this.cropCommodityOptions = []
 
-      // add an empty crop commodity
-      this.cropCommodityOptions.push ({
-        commodityName: CROP_COMMODITY_UNSPECIFIED.NAME,
-        cropCommodityId: CROP_COMMODITY_UNSPECIFIED.ID
-      })
-
       this.cropCommodityList.collection.forEach( ccm => self.cropCommodityOptions.push 
         ({
           commodityName: ccm.commodityName,
@@ -225,59 +217,57 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
     this.viewModel.formGroup.valueChanges.subscribe(val => {this.isMyFormDirty()})
   }
 
-  uwYearsChange(event) {
+  uwYearsChange(value) {
+    let cropCommodityId = this.viewModel.formGroup.controls.selectedCropCommodityId.value
+    let doChangeYear: boolean = false
 
-    if (event.value) {
-
-      let cropCommodityId = this.viewModel.formGroup.controls.selectedCropCommodityId.value
-      let doChangeYear: boolean = false
-
-      if (this.hasDataChanged) {
-        if (confirm("There are unsaved changes on the page which will be lost. Do you still wish to proceed? ")) {
-          doChangeYear = true
-        }
-      } else {
-        doChangeYear = true
-      }
-
-      if ( doChangeYear ) {
-        this.selectedCropYear = event.value
-        this.loadGrainCommodities(event.value)
-        this.loadGradeModifierTypeList(event.value)      
-        this.loadGradeModifiersForCropYear(event.value, cropCommodityId)
-
-        this.hasDataChanged = false   
-        this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false))
-      } else {
-        // Set drop-down back to old value.
-        this.viewModel.formGroup.controls.selectedCropYear.setValue(this.selectedCropYear)
-      }
+    if (this.hasDataChanged) {
+      doChangeYear = confirm("There are unsaved changes on the page which will be lost. Do you still wish to proceed? ")
+    } else {
+      doChangeYear = true
     }
+
+    if ( doChangeYear ) {
+      this.selectedCropYear = value
+      this.loadGrainCommodities(value)
+      this.loadGradeModifierTypeList(value)      
+      this.loadGradeModifiersForCropYear(value, cropCommodityId)
+
+      this.hasDataChanged = false   
+      this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false))
+    } else {
+      this.selectedCropYear = this.viewModel.formGroup.controls.selectedCropYear.value
+      this.uwYearOptions = [...this.uwYearOptions]; // force refresh
+    }
+
+    this.viewModel.formGroup.controls.selectedCropYear.setValue(this.selectedCropYear)
   }
 
-  selectedCropCommodityIdChange(event) {
+  selectedCropCommodityIdChange(value) {
 
     let cropYear = this.viewModel.formGroup.controls.selectedCropYear.value
 
     if (this.hasDataChanged) {
       if (confirm("There are unsaved changes on the page which will be lost. Do you still wish to proceed? ")) {
-        this.selectedCropCommodityId = event.value
-        this.loadGradeModifiersForCropYear( cropYear, event.value )
+        this.selectedCropCommodityId = value
+        this.loadGradeModifiersForCropYear( cropYear, value )
         this.hasDataChanged = false   
         this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false))
     
       } else {
         // Set drop-down back to old value.
         this.viewModel.formGroup.controls.selectedCropCommodityId.setValue(this.selectedCropCommodityId)
+        this.cropCommodityOptions = [...this.cropCommodityOptions]; // force refresh
       }
 
     } else {
-      this.selectedCropCommodityId = event.value
-      this.loadGradeModifiersForCropYear( cropYear, event.value )
+      this.selectedCropCommodityId = value
+      this.loadGradeModifiersForCropYear( cropYear, value )
       this.hasDataChanged = false   
       this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false))
     }
 
+    this.viewModel.formGroup.controls.selectedCropCommodityId.setValue(this.selectedCropCommodityId)
   }
 
   loadUwCropYear() {
@@ -295,7 +285,7 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
       cropCommodityIdStr = cropCommodityId.toString()
     }
 
-    this.store.dispatch(loadGradeModifiers(MAINTENANCE_COMPONENT_ID, cropYear.toString(), INSURANCE_PLAN.GRAIN.toString(), cropCommodityIdStr ))
+    this.store.dispatch(loadGradeModifiers(MAINTENANCE_COMPONENT_ID, cropYear?.toString(), INSURANCE_PLAN.GRAIN.toString(), cropCommodityIdStr ))
 
   }
 
@@ -306,7 +296,7 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
 
     this.store.dispatch(LoadCropCommodityList(MAINTENANCE_COMPONENT_ID,
         INSURANCE_PLAN.GRAIN.toString(),
-        cropYear.toString(),
+        cropYear?.toString(),
         CROP_COMMODITY_TYPE_CONST.YIELD,
         "N")
       )

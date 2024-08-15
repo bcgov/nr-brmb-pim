@@ -1,126 +1,116 @@
-
-
 <base-wrapper [errorState]="errorState">
     <div class="base-container">
-        <div class="base-container flex-y"> 
-            <br />
-            <h2>Maintain Yield Conversion</h2>
+        <div class="base-container flex-y">
+
+            <div class="policy-header-container">
+                <div class="grower-header">
+                    <div>Yield Conversions</div>
+                    <div class="top-filter" style="margin: 12px 0 0 0;">
+                        <select appWFSingleSelect appWFPlaceholder="Select Plan" aria-label="Plan"
+                            [options]="insurancePlansDefault" (updated)="onPlanChange($event)"
+                            [selected]="selectedInsurancePlanId">
+                            <option value=""><span class="placeholder">Select Plan</span></option>
+                            <option *ngFor="let option of insurancePlansDefault" value="{{option.code}}">
+                                <span>{{option.description}}</span>
+                            </option>
+                        </select>
+                        <select appWFSingleSelect appWFPlaceholder="Select Conversion" aria-label="Conversion"
+                            [options]="yieldMeasUnitOptions" (updated)="onUnitChange($event)"
+                            [selected]="selectedUnits">
+                            <option value=""><span class="placeholder">Select Conversion</span></option>
+                            <option *ngFor="let option of yieldMeasUnitOptions"
+                                value="{{option.yieldMeasUnitTypeCode}}">
+                                <span>{{ defaultUnitForPlan }} to {{ option.description }}</span>
+                            </option>
+                        </select>
+                        <button mat-raised-button color="secondary" (click)="onViewYieldUnits()" class="ms-choice"
+                            style="width: 132px;">
+                            <mat-icon class="button-mat-icon">format_list_bulleted</mat-icon>Plan Units
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- unsaved messages -->
+                <div *ngIf="hasDataChanged; else noWarningDiv">
+                    <mat-icon [ngStyle]="{'color':'orange', 'width':'24px', 'margin-top':'9px'}">warning</mat-icon>
+                </div>
+                <div *ngIf="hasDataChanged; else noWarningDiv" class="unsaved-changes">
+                    Unsaved Changes
+                </div>
+                <ng-template #noWarningDiv>
+                    <div><!-- empty div to account for space when there is no warning --> </div>
+                </ng-template>
+                <div>
+                    <button *ngIf="securityUtilService.canEditYieldConversion()" mat-raised-button color="secondary"
+                        [disabled]="!hasDataChanged" (click)="onCancel()">
+                        Clear Changes
+                    </button>
+                </div>
+                <div>
+                    <button *ngIf="securityUtilService.canEditYieldConversion()" mat-raised-button color="primary"
+                        [disabled]="!hasDataChanged" (click)="onSave()">
+                        Save
+                    </button>
+                </div>
+            </div>
+
+            <div style="margin: 16px 16px 12px 16px;">
+                <ng-container *ngIf="!selectedInsurancePlanId || !selectedUnits; else selectedDiv">
+                    <span style="display: flex;">
+                        <mat-icon class="button-mat-icon" style="color: #888888;">straighten</mat-icon>
+                        Set filters to view base unit details
+                    </span>
+                    <span style="display: flex;">
+                        <mat-icon class="button-mat-icon" style="color: #888888;">autorenew</mat-icon>
+                        Set filters to view conversion details
+                    </span>
+                </ng-container>
+                <ng-template #selectedDiv>
+                    <span style="display: flex;">
+                        <mat-icon class="button-mat-icon" style="color: #888888;">straighten</mat-icon>
+                        The base unit for the {{ getSelectedPlanName() }} plan is <span
+                            style="font-weight:bold;">&nbsp;{{ defaultUnitForPlan }}</span>.
+                    </span>
+                    <span style="display: flex;">
+                        <mat-icon class="button-mat-icon" style="color: #888888;">autorenew</mat-icon>
+                        Use conversion factors to convert the {{ getSelectedPlanName() }} commodities from <span
+                            style="font-weight:bold;">&nbsp;{{ defaultUnitForPlan }}&nbsp;</span> to <span
+                            style="font-weight:bold;">&nbsp;{{ getSelectedConversionName() }}</span>.
+                    </span>
+                </ng-template>
+            </div>
 
             <form [formGroup]="getViewModel().formGroup">
 
-                <div class="filter-group">
-                    
-
-                    <div class="cuw-container filter-info" >  
-
-                        <div>
-                            <span class="grower-header-label">Plan: </span> 
-                        </div>
-                        <div>
-                            <mat-form-field appearance="fill">
-                                <mat-select 
-                                    formControlName="selectedInsurancePlanId" (selectionChange)="onPlanChange()">
-                                    <mat-option [value]="null"></mat-option>
-                                    <mat-option *ngFor="let option of insurancePlansDefault" [value]="option.code"
-                                    >{{ option.description }}</mat-option>
-                                </mat-select>
-                                </mat-form-field>
-                            
-                        </div>
-
-                        <div>
-                            <div *ngIf="hasDataChanged == true" class="unsaved-changes-warning">
-              
-                                <span #el matTooltip="" style="margin-left: 10px; margin-right: 20px;">
-                                    <mat-icon [ngStyle]="{'color':'orangered', 'font-size':'xx-large'}">warning</mat-icon>
-                                  </span>
-                                 <span style="font-size: large; color:orangered">
-                                    The conversion factor(s) have changed.  
-                                    Yield is going to be recalculated for the crop years when the edited conversion factors were used.
-                                </span> 
-                    
-                            </div>
-                        </div>
-
-                        <div>
-                            <span class="grower-header-label">Units: </span> 
-                        </div>
-                        <div>
-                            <mat-form-field appearance="fill">
-                                <mat-select 
-                                    formControlName="selectedUnits" (selectionChange)="onUnitChange()">
-                                    <mat-option [value]="null"></mat-option>
-                                    <mat-option *ngFor="let option of yieldMeasUnitOptions" [value]="option.yieldMeasUnitTypeCode"
-                                    >{{ defaultUnitForPlan }} to {{ option.description }}</mat-option>
-                                </mat-select>
-                                </mat-form-field>
-                            
-                        </div>
-                        <div>
-                            The base unit for the {{ getSelectedPlanName() }} 
-                            plan is: {{ defaultUnitForPlan }} 
-                        </div>  
-                    </div>
-                </div>
-
-
-                <div class="filter-group">
-                    
-                    <div class="cuw-container yc-info" >  
-                        
-                        <div class="header border-top border-left border-right border-bottom">Commodity</div>
-                        <div class="header border-top border-right border-bottom">Conversion <br/> Factor</div>
-                        
+                <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
+                    <div class="plcy-inv-field-box" style="width:1000px;">
+                        <div class="inventory-header border-left" style="width:500px;">Commodity</div>
+                        <div class="inventory-header" style="width:500px;">Conversion Factor</div>
                     </div>
 
-                    <div class="table-wrapper flex-y-grow cuw-container yc-info">
-                        
-                        <div *ngFor="let unitConversion of getViewModel().formGroup.controls.yieldMeasUnitConversionList['controls']; index as rowIndex"
-                            [formGroup]="unitConversion"        
-                            style="display: contents;" >
-
-                            <div class="border-right border-bottom border-left">          
-
+                    <div class="plcy-inv-fld-tbl-inner-wrapper flex-y-grow" style="width:1021px;">
+                        <div class="plcy-inv-field-box"
+                            *ngFor="let unitConversion of getViewModel().formGroup.controls.yieldMeasUnitConversionList['controls']; index as rowIndex"
+                            [formGroup]="unitConversion">
+                            <div class="inventory-cell inventory-border border-left" [ngStyle]="{'width': '500px'}">
                                 {{ unitConversion.value.commodityName | titlecase }}
-
                             </div>
-
-                            <div class="border-right border-bottom justify-center gm-info-fill">
-
-                                <mat-form-field appearance="fill">
-                                    <input matInput 
-                                           formControlName="conversionFactor"
-                                           maxlength="10"
-                                           (keypress)="numberOnly($event)"
-                                           (keyup)="isMyFormDirty()">
+                            <div class="inventory-cell inventory-border"
+                                [ngStyle]="{'width': '500px', 'display': 'flex', 'justify-content': 'space-between'}">
+                                <mat-form-field appearance="none">
+                                    <input matInput formControlName="conversionFactor" maxlength="10"
+                                        (keypress)="numberOnly($event)" (keyup)="isMyFormDirty()">
                                 </mat-form-field>
-
+                                <mat-icon style="color: #888888;">edit</mat-icon>
                             </div>
-                            
+                        </div>
+
+                        <div *ngIf="!selectedInsurancePlanId || !selectedUnits"
+                            style="grid-column-start: 1; grid-column-end: 2; padding-top: 14px; padding-bottom: 14px;">
+                            Select plan and conversion unit to view yield conversion details.
                         </div>
                     </div>
-                    
-                </div>
-                
-                <div class="button-row flex-y-fixed" style="width: 580px;">
-
-                    <button mat-raised-button color="primary" class="button-large-text" (click)="onCancel()">
-                        <mat-icon class="button-mat-icon">cancel_presentation</mat-icon>Cancel
-                    </button>
-                    
-                    &nbsp;
-                    <button *ngIf="securityUtilService.canEditYieldConversion()"
-                        mat-raised-button color="primary" 
-                        class="button-large-text" 
-                        (click)="onSave()"
-                        [disabled]="!hasDataChanged">
-                            <mat-icon class="button-mat-icon">save</mat-icon>Save
-                    </button>
-                    
-                    &nbsp;
-                    <button mat-raised-button color="primary" class="button-large-text" (click)="onViewYieldUnits()">
-                        <mat-icon class="button-mat-icon">dehaze</mat-icon>View Units
-                    </button>
                 </div>
 
             </form>

@@ -10,6 +10,7 @@ import { INSURANCE_PLAN } from 'src/app/utils/constants';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { areNotEqual, makeNumberOnly } from 'src/app/utils';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
+import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
 
 @Component({
   selector: 'grade-modifiers-types',
@@ -19,6 +20,9 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
 export class GradeModifiersTypesComponent implements OnInit, OnChanges {
 
   @Input() gradeModifierTypesList: GradeModifierTypeList
+
+  titleLabel = 'Maintain Grade Modifier Types';
+  dialogType = DIALOG_TYPE.INFO;
 
   dataReceived: any;
   gradeModifierTypesForm: FormGroup;

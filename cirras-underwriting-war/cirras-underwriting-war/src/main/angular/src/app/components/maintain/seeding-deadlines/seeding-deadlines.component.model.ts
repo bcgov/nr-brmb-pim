@@ -11,7 +11,6 @@ export class SeedingDeadlinesComponentModel extends BaseComponentModel {
         super(sanitizer);
         
         this.formGroup = this.fb.group({
-            selectedCropYear: [ new Date().getFullYear() ],
             rbChoice: ['changeDefault'],
             seedingDeadlines: new FormArray([]),
         });
