@@ -21,13 +21,13 @@ import { DopYieldContract, GradeModifierList, YieldMeasUnitTypeCodeList } from '
 import { getInsurancePlanName, makeNumberOnly, setHttpHeaders } from 'src/app/utils';
 import { GradeModifierOptionsType } from '../dop-common';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import {ViewEncapsulation } from '@angular/core';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
+import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { RootState } from 'src/app/store';
+import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ApplicationStateService } from 'src/app/services/application-state.service';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
@@ -72,7 +72,6 @@ export class ForageDopComponent extends BaseComponent {
     protected decimalPipe: DecimalPipe) {
     super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
   }
-
 
   // variables
   policyId: string;

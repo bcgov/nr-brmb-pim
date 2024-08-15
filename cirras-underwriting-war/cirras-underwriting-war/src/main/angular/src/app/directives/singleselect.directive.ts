@@ -49,11 +49,18 @@ export class SingleSelectDirective implements AfterViewInit, OnChanges {
             setTimeout(() => {
                 this.cdr.detectChanges();
                 this.multiselect.multipleSelect("refresh");
+                if (this.selected) {
+                    this.multiselect.multipleSelect("setSelects", [this.selected]);
+                }
             });
         }
-        if (changes.selected) {
+        else if (changes.selected) {
             setTimeout(() => {
                 this.selected = changes.selected.currentValue;
+                this.multiselect.multipleSelect("setSelects", [this.selected]);
+            });
+        } else {
+            setTimeout(() => {
                 this.multiselect.multipleSelect("setSelects", [this.selected]);
             });
         }

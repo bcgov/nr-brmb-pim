@@ -161,3 +161,85 @@
     border-bottom: 1px solid $colour-light-grey;
     overflow-y: auto;
   }
+
+.grower-header {
+
+  div:nth-child(n+2) {
+    font-weight: 400;
+    font-size: 15px;
+    padding-bottom: 16px;
+  }
+}
+
+.top-filter {
+  display: grid;
+  grid-template-columns: 174px 146px auto 406px;
+
+  ::ng-deep .ms-parent:nth-of-type(1) {
+    width: 158px !important;
+    > ::ng-deep .ms-choice {
+      width: 158px !important;
+    }
+  }
+
+  button {
+    color: #424242;
+    border: 1px solid #c2c2c2;
+
+    .button-mat-icon {
+      color: #888888;
+      margin-bottom: 4px;
+    }
+  }
+}
+
+.policy-header-container {
+  grid-template-columns: auto 28px 145px 155px 80px;
+  align-items: flex-start;
+
+  .unsaved-changes {
+    color: inherit;
+    font-size: inherit;
+    margin-top: 9px;
+  }
+}
+
+.plcy-inv-field-box {
+
+  .inventory-header:not(:last-child) {
+    padding: 14px 8px 14px 8px;
+    color: black;
+    justify-content: left;
+  }
+
+  .inventory-header:last-child {
+    color: black;
+  }
+
+  .inventory-cell:not(:last-child) {
+    padding: 0 8px 0 8px;
+    justify-content: left;
+    line-height: 24px;
+  }
+
+  ::ng-deep div {
+    padding-bottom: 0;
+    padding-top: 0;
+  }
+
+  ::ng-deep .mat-form-field-infix {
+    border-top: 0;
+  }
+}
+
+.plcy-inv-fld-tbl-outer-wrapper {
+  max-height: none;
+
+  .plcy-inv-fld-tbl-inner-wrapper {
+    .plcy-inv-field-box:nth-of-type(odd) {
+      .inventory-cell {
+        background-color: #f7f7f7;
+      }
+    }
+  }
+}

@@ -10,8 +10,6 @@ export class YieldConversionComponentModel extends BaseComponentModel {
         super(sanitizer);
         
         this.formGroup = this.fb.group({
-            selectedInsurancePlanId: [],
-            selectedUnits: [],
             yieldMeasUnitConversionList: new FormArray([]),
         });
     }

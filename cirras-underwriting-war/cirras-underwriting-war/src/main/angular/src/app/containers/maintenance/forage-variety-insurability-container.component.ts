@@ -12,8 +12,8 @@ import {
 } from "../../store/application/application.selectors";
 
 import { MAINTENANCE_COMPONENT_ID } from "src/app/store/maintenance/maintenance.state";
-import { CropVarietyInsurabilityList, SeedingDeadlineList, UnderwritingYearList } from "src/app/conversion/models-maintenance";
-import { selectCropVarietyInsurabilityList, selectUnderwritingYears, selectseedingDeadlineList } from "src/app/store/maintenance/maintenance.selectors";
+import { CropVarietyInsurabilityList } from "src/app/conversion/models-maintenance";
+import { selectCropVarietyInsurabilityList } from "src/app/store/maintenance/maintenance.selectors";
 import { RootState } from "src/app/store";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";

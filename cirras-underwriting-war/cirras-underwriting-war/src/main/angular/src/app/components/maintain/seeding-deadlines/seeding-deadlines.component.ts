@@ -10,9 +10,9 @@ import { areDatesNotEqual, setHttpHeaders } from 'src/app/utils';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 import { CommodityTypeCodeListRsrc } from '@cirras/cirras-underwriting-api';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DomSanitizer, Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { RootState } from 'src/app/store';
-import { DomSanitizer, Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { ApplicationStateService } from 'src/app/services/application-state.service';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
@@ -27,7 +27,7 @@ import { DecimalPipe } from '@angular/common';
 @Component({
   selector: 'seeding-deadlines',
   templateUrl: './seeding-deadlines.component.html',
-  styleUrls: ['./seeding-deadlines.component.scss']
+  styleUrls: ['./seeding-deadlines.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss']
 })
 export class SeedingDeadlinesComponent extends BaseComponent implements OnChanges  {
 
@@ -61,7 +61,7 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
 
   etag = ""
 
-  selectedCropYear = ""
+  selectedCropYear = new Date().getFullYear()
 
   initModels() {
     this.viewModel = new SeedingDeadlinesComponentModel(this.sanitizer, this.fb);
@@ -94,8 +94,6 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
         self.uwYearOptions.push ({
           cropYear: x.cropYear
         }))
-
-        this.selectedCropYear = this.viewModel.formGroup.controls.selectedCropYear.value
     }
 
     if (changes.seedingDeadlineList) {
@@ -131,23 +129,18 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
     this.viewModel.formGroup.valueChanges.subscribe(val => {this.isMyFormDirty()})
   }
 
-  uwYearsChange(event) {
+  uwYearsChange(value) {
 
-    if (event.value) {
+    if (value) {
 
       if (this.hasDataChanged) {
         if (confirm("There are unsaved changes on the page which will be lost. Do you still wish to proceed? ")) {
-          this.loadSeedingDeadlinesForCropYear( event.value )
-          this.selectedCropYear = event.value
-        } else {
-          
-          //event.preventDefault() -> doesn't work
-          // we are setting up the crop year to what it was originally, before the selection was changed
-          this.viewModel.formGroup.controls.selectedCropYear.setValue(this.selectedCropYear)
+          this.loadSeedingDeadlinesForCropYear( value )
+          this.selectedCropYear = value
         }
       } else {
-        this.loadSeedingDeadlinesForCropYear( event.value )
-        this.selectedCropYear = event.value
+        this.loadSeedingDeadlinesForCropYear( value )
+        this.selectedCropYear = value
       }
     }
   }
@@ -181,8 +174,7 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
     const newSeedingDeadlines: SeedingDeadlineList = this.getUpdatedSeedingDeadlines()
 
     // save
-    let cropYear = this.viewModel.formGroup.controls.selectedCropYear.value
-    this.store.dispatch(saveSeedingDeadlines(MAINTENANCE_COMPONENT_ID, cropYear, newSeedingDeadlines))
+    this.store.dispatch(saveSeedingDeadlines(MAINTENANCE_COMPONENT_ID, this.selectedCropYear.toString(), newSeedingDeadlines))
     
     this.hasDataChanged = false   
 
@@ -193,7 +185,6 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
 
   isFormValid() {
     const frmSeedingDeadlines: FormArray = this.viewModel.formGroup.controls.seedingDeadlines as FormArray
-    const cropYear = parseInt(this.viewModel.formGroup.controls.selectedCropYear.value)
 
     for (let i = 0; i < frmSeedingDeadlines.controls.length; i++) {
 
@@ -231,22 +222,22 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
       }
 
       // The deadline year has to be consistent with the crop year
-      if (fullCoverageDeadlineDate.getFullYear() != cropYear) {
+      if (fullCoverageDeadlineDate.getFullYear() != this.selectedCropYear) {
         alert("The year of the Current Year Full Coverage Date for commodity type " + frmSD.value.commodityTypeCode + " has to match the selected crop year.")
         return false
       }
 
-      if (finalCoverageDeadlineDate.getFullYear() != cropYear) {
+      if (finalCoverageDeadlineDate.getFullYear() != this.selectedCropYear) {
             alert("The year of the Current Year Final Coverage Date for commodity type " + frmSD.value.commodityTypeCode + " has to match the selected crop year.")
             return false
       }
 
-      if (fullCoverageDeadlineDateDefault.getFullYear() != cropYear) {
+      if (fullCoverageDeadlineDateDefault.getFullYear() != this.selectedCropYear) {
         alert("The year of the Policy Wording Full Coverage Date for commodity type " + frmSD.value.commodityTypeCode + " has to match the selected crop year.")
         return false
       }
 
-      if (finalCoverageDeadlineDateDefault.getFullYear() != cropYear) {
+      if (finalCoverageDeadlineDateDefault.getFullYear() != this.selectedCropYear) {
         alert("The year of the Policy Wording Final Coverage Date for commodity type " + frmSD.value.commodityTypeCode + " has to match the selected crop year.")
         return false
       }
@@ -319,7 +310,7 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
         updatedSeedingDeadlines.collection.push({
           seedingDeadlineGuid:              null,
           commodityTypeCode:                frmSD.value.commodityTypeCode,
-          cropYear:                         self.viewModel.formGroup.controls.selectedCropYear.value,
+          cropYear:                         self.selectedCropYear,
           fullCoverageDeadlineDate:         frmSD.value.fullCoverageDeadlineDate,
           finalCoverageDeadlineDate:        frmSD.value.finalCoverageDeadlineDate,
           fullCoverageDeadlineDateDefault:  frmSD.value.fullCoverageDeadlineDateDefault,
@@ -375,12 +366,13 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
   }
 
   onCancel() {
+    if ( confirm("Are you sure you want to clear all unsaved changes on the screen? There is no way to undo this action.") ) {
+      // reload seeding deadlines
+      this.loadSeedingDeadlinesForCropYear(this.selectedCropYear)
 
-    // reload seeding deadlines
-    this.loadSeedingDeadlinesForCropYear(this.viewModel.formGroup.controls.selectedCropYear.value )
-
-    this.hasDataChanged = false   
-    this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false));
+      this.hasDataChanged = false   
+      this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false));
+    }
   }
 
   onAddSeedingDeadline() {
@@ -393,7 +385,7 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
     frmSeedingDeadlines.push (this.fb.group({
       seedingDeadlineGuid:              [],
       commodityTypeCode:                [],
-      cropYear:                         [ this.viewModel.formGroup.controls.selectedCropYear.value ],
+      cropYear:                         [ this.selectedCropYear ],
       fullCoverageDeadlineDate:         [],  
       finalCoverageDeadlineDate:        [], 
       fullCoverageDeadlineDateDefault:  [], 
@@ -460,8 +452,6 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
 
   shouldHighlightDate(rowIndex, datePickerNum) {
 
-    const cropYear = parseInt(this.viewModel.formGroup.controls.selectedCropYear.value)
-
     const frmSeedingDeadlines: FormArray = this.viewModel.formGroup.controls.seedingDeadlines as FormArray
     const frmSD = frmSeedingDeadlines.controls[rowIndex] as FormArray
 
@@ -502,7 +492,7 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
         return false
     }
     
-    if (frmDate.getFullYear() != cropYear) {
+    if (frmDate.getFullYear() != this.selectedCropYear) {
       return true
     }
     
@@ -533,10 +523,8 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
       this.etag = this.seedingDeadlineList.etag
     }
     
-    const cropYear = parseInt(this.viewModel.formGroup.controls.selectedCropYear.value)
-
-    if (cropYear) {
-      this.loadSeedingDeadlinesForCropYear( cropYear - 1 )
+    if (this.selectedCropYear) {
+      this.loadSeedingDeadlinesForCropYear( this.selectedCropYear - 1 )
     }
 
   }
@@ -545,11 +533,9 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
 
     if (this.seedingDeadlineList && this.seedingDeadlineList.collection && this.seedingDeadlineList.collection.length > 0 ) {
 
-      const cropYear = parseInt(this.viewModel.formGroup.controls.selectedCropYear.value)
-
       let yr = (new Date(this.seedingDeadlineList.collection[0].fullCoverageDeadlineDateDefault)).getFullYear()
 
-      if (yr == cropYear - 1) {
+      if (yr == this.selectedCropYear - 1) {
         // the rollover button was clicked
         // we have to update all dates on the form to show the current year 
 
@@ -561,11 +547,11 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
 
           let originalSD = this.seedingDeadlineList.collection.find( sd => sd.seedingDeadlineGuid == frmSD.value.seedingDeadlineGuid)
 
-          frmSD.controls['cropYear'].setValue(cropYear)
+          frmSD.controls['cropYear'].setValue(this.selectedCropYear)
           frmSD.controls['seedingDeadlineGuid'].setValue(null)
-          frmSD.controls['fullCoverageDeadlineDateDefault'].setValue( new Date (new Date(originalSD.fullCoverageDeadlineDateDefault).setFullYear(cropYear) ) )
+          frmSD.controls['fullCoverageDeadlineDateDefault'].setValue( new Date (new Date(originalSD.fullCoverageDeadlineDateDefault).setFullYear(this.selectedCropYear) ) )
           frmSD.controls['fullCoverageDeadlineDate'].setValue( frmSD.controls['fullCoverageDeadlineDateDefault'].value ) // same as the default dates
-          frmSD.controls['finalCoverageDeadlineDateDefault'].setValue( new Date (new Date(originalSD.finalCoverageDeadlineDateDefault).setFullYear(cropYear) ) )
+          frmSD.controls['finalCoverageDeadlineDateDefault'].setValue( new Date (new Date(originalSD.finalCoverageDeadlineDateDefault).setFullYear(this.selectedCropYear) ) )
           frmSD.controls['finalCoverageDeadlineDate'].setValue( frmSD.controls['finalCoverageDeadlineDateDefault'].value ) // same as the default dates
           frmSD.controls['addedByUserInd'].setValue(false)
 
