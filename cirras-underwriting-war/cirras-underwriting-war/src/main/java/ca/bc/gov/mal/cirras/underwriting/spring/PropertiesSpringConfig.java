@@ -30,7 +30,6 @@ public class PropertiesSpringConfig {
 		
 		PropertiesFactoryBean propertiesFactory = new PropertiesFactoryBean();
 		propertiesFactory.setLocalOverride(true);
-		propertiesFactory.setPropertiesArray(bootstrapProperties(), appConfigProperties());
 		propertiesFactory.setLocation(new ClassPathResource("static.properties"));
 		propertiesFactory.afterPropertiesSet();
 		
