@@ -15,13 +15,16 @@
         </label>
     </div>
     <div class="border-right border-bottom entire">
-        <mat-form-field appearance="none" *ngIf="uwCommentFormGroup.value.userCanEditInd">
+        <mat-form-field appearance="none" *ngIf="uwCommentFormGroup.value.userCanEditInd; else readOnlyComment">
             <textarea matInput formControlName="underwritingComment" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
                 cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" maxlength="2000" (blur)="onCommentChange()"
                 [style.background-color]="validComment ? 'transparent' : 'yellow'">
                 {{ uwCommentFormGroup.value.underwritingComment }}
             </textarea>
         </mat-form-field>
+        <ng-template #readOnlyComment>
+            <span>{{ uwCommentFormGroup.value.underwritingComment }}</span>
+        </ng-template>
     </div>
     <div class="border-right justify-center align-center border-bottom">
         <button mat-icon-button *ngIf="uwComment.userCanDeleteInd" matTooltip="Delete Comment"

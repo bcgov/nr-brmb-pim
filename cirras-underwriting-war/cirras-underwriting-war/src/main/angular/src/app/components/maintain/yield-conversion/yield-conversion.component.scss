@@ -146,3 +146,91 @@
     border-bottom: 1px solid $colour-light-grey;
     overflow-y: auto;
   }
+
+.grower-header {
+
+  div:nth-child(1) {
+    padding-bottom: 16px;
+  }
+
+  div:nth-child(n+2) {
+    font-weight: 400;
+    font-size: 15px;
+  }
+  
+  button {
+    color: #424242;
+    border: 1px solid #c2c2c2;
+
+    .button-mat-icon {
+      color: #888888;
+      margin-bottom: 4px;
+    }
+  }
+}
+
+.top-filter {
+  display: grid;
+  grid-template-columns: 137px 192px 148px auto;
+
+  ::ng-deep .ms-parent:nth-of-type(1) {
+    width: 121px !important;
+    > ::ng-deep .ms-choice {
+      width: 121px !important;
+    }
+  }
+
+  ::ng-deep .ms-parent:nth-of-type(2) {
+    width: 176px !important;
+    > ::ng-deep .ms-choice {
+      width: 176px !important;
+    }
+  }
+}
+
+.policy-header-container {
+  grid-template-columns: auto 28px 145px 155px 80px;
+  align-items: flex-start;
+
+  .unsaved-changes {
+    color: inherit;
+    font-size: inherit;
+    margin-top: 9px;
+  }
+}
+
+.plcy-inv-field-box {
+
+  .inventory-header {
+    padding: 14px 8px 14px 8px;
+    color: black;
+    justify-content: left;
+  }
+
+  .inventory-header:last-child {
+    color: black;
+  }
+
+  .inventory-cell {
+    padding: 6px 8px 6px 8px;
+    justify-content: left;
+    line-height: 24px;
+  }
+
+  ::ng-deep div {
+    padding-bottom: 0;
+    padding-top: 0;
+  }
+}
+
+.plcy-inv-fld-tbl-outer-wrapper {
+  max-height: none;
+
+  .plcy-inv-fld-tbl-inner-wrapper {
+    .plcy-inv-field-box:nth-of-type(odd) {
+      .inventory-cell {
+        background-color: #f7f7f7;
+      }
+    }
+  }
+}

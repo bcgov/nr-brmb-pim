@@ -1,5 +1,6 @@
 import { Component, Inject, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
 import { YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
 
@@ -11,6 +12,8 @@ import { getCodeOptions } from 'src/app/utils/code-table-utils';
 export class YieldConversionUnitsComponent {
 
   @Input() yieldMeasUnitList: YieldMeasUnitTypeCodeList;
+
+  dialogType = DIALOG_TYPE.INFO;
 
   insurancePlansDefault = getCodeOptions("insurance_plan")
 
@@ -26,6 +29,10 @@ export class YieldConversionUnitsComponent {
         this.dataReceived = data;
       } 
     }
+
+  get titleLabel(): string {
+    return `Yield Measurement Units for Plan ${this.getSelectedPlanName()}`;
+  }
 
   getSelectedPlanName() {
 

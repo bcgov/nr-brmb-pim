@@ -1,3 +1,5 @@
+@import 'font';
+
 /**
  Colour Variables
  */
@@ -112,8 +114,7 @@ $wf1-public-app-header-img-height: 70px;
 $wf1-border-radius: 5px;
 $wf1-paginator-height: 40px;
 
-$font-family-main: 'Noto Sans', 'Helvetica-Light', 'Helvetica Light', 'Helvetica';
-$font-family-emphasis: 'Helvetica';
+$font-family-main: 'Noto Sans', 'BC Sans', 'Verdana', 'sans-serif';
 $font-weight: 200;
 $font-style: normal;
 $font-size: 15px;
@@ -122,12 +123,11 @@ $font-size-h3: 18px;
 $font-size-h2: 22px;
 $font-size-h1: 35px;
 
-$font-family-emphasis: 'Helvetica';
+$font-family-emphasis: 'Noto Sans', 'BC Sans', 'Verdana', 'sans-serif';
 $font-weight-emphasis-more: 600;
 $font-weight-emphasis: 400;
 $font-style-emphasis: normal;
 $font-size-emphasis: 17px;
-$font-size-small: 12px;
 
 $colour-table-background-odd: $colour-lighter-grey;
 $colour-table-background-even: $colour-white;

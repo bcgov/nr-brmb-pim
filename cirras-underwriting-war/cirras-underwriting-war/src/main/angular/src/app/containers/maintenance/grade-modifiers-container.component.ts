@@ -6,6 +6,7 @@ import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common"
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
 import {
+    selectFormStateUnsaved,
     selectMaintainUwYearsErrorState,
     selectMaintainUwYearsLoadState,
 } from "../../store/application/application.selectors";
@@ -30,6 +31,7 @@ import { ApplicationStateService } from "src/app/services/application-state.serv
             [gradeModifierTypeList]="gradeModifierTypeList$ | async"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
+            [isUnsaved]="isUnsaved$ | async"
         ></grade-modifiers>`, 
     providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
 })
@@ -43,6 +45,7 @@ export class GradeModifiersContainer extends BaseContainer {
 
     loadState$: Observable<LoadState> = this.store.pipe(select(selectMaintainUwYearsLoadState()));
     errorState$: Observable<ErrorState[]> = this.store.pipe(select(selectMaintainUwYearsErrorState()));
+    isUnsaved$: Observable<boolean> = this.store.pipe(select(selectFormStateUnsaved(MAINTENANCE_COMPONENT_ID)));
 
     getAssociatedComponentIds(): string[] {
         return [
