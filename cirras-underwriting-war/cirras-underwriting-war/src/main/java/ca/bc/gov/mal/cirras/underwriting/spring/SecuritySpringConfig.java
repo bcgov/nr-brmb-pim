@@ -105,18 +105,7 @@ public class SecuritySpringConfig extends WebSecurityConfigurerAdapter  {
 		
 		web.ignoring().requestMatchers(request->{
 			String method = request.getMethod();
-			if(!STATIC_METHODS.contains(method)) {
-				return false;
-			}
-
-			String url = request.getServletPath();
-
-			String pathInfo = request.getPathInfo();
-			if (pathInfo != null) {
-				url = url.length()==0 ? url + pathInfo : pathInfo;
-			}
-			
-			return !url.startsWith("/causeCodes");
+			return STATIC_METHODS.contains(method);
 		});
 	}
 
@@ -129,7 +118,6 @@ public class SecuritySpringConfig extends WebSecurityConfigurerAdapter  {
 						.authenticationManagerResolver(authenticationManagerResolver())
 				)
 				.authorizeRequests(authorize -> authorize
-						.regexMatchers("/causeCodes.*").authenticated()
 						.anyRequest().permitAll()
 				)
 				.exceptionHandling()
