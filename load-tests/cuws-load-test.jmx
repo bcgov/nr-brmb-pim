@@ -71,7 +71,7 @@
         <stringProp name="HTTPSampler.implementation"></stringProp>
       </ConfigTestElement>
       <hashTree/>
-      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
         <collectionProp name="HeaderManager.headers"/>
       </HeaderManager>
       <hashTree/>
@@ -279,7 +279,7 @@
               </HeaderManager>
               <hashTree/>
             </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/clp-cgi/int01/private/postLogon.cgi-141">
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/clp-cgi/int01/private/postLogon.cgi-141" enabled="true">
               <intProp name="HTTPSampler.concurrentPool">6</intProp>
               <stringProp name="HTTPSampler.domain">logontest7.gov.bc.ca</stringProp>
               <stringProp name="HTTPSampler.port">443</stringProp>
@@ -448,11 +448,11 @@
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group">
         <stringProp name="ThreadGroup.num_threads">${__P(threads,1)}</stringProp>
-        <intProp name="ThreadGroup.ramp_time">180</intProp>
+        <intProp name="ThreadGroup.ramp_time">100</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
-          <stringProp name="LoopController.loops">1</stringProp>
+          <intProp name="LoopController.loops">-1</intProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
         </elementProp>
       </ThreadGroup>
@@ -482,11 +482,11 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
         <hashTree/>
         <RecordingController guiclass="RecordController" testclass="RecordingController" testname="Recording Controller" enabled="false"/>
         <hashTree/>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SearchPolicies_Scenario">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="SearchPolicies_Scenario" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-27 SearchPolicies_Scenario Start">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-27 SearchPolicies_Scenario Start" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -1480,7 +1480,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-47 Go to next page">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-47 Go to next page" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -1602,11 +1602,11 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             <hashTree/>
           </hashTree>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="DownloadReports_Scenario">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="DownloadReports_Scenario" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-2 DownloadReports_Scenario Start">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-2 DownloadReports_Scenario Start" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -1679,7 +1679,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-3 Go to Policies screen">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-3 Go to Policies screen" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -2193,11 +2193,11 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             <hashTree/>
           </hashTree>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="LoadGrainInventory_Scenario">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="LoadGrainInventory_Scenario" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-80 LoadGrainInventory_Scenario Start">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-80 LoadGrainInventory_Scenario Start" enabled="true">
             <stringProp name="TestPlan.comments">Uses global variable ${LoadGrainInventoryPolicyNumber}</stringProp>
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
@@ -2271,7 +2271,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-81  Filter By Policy">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-81  Filter By Policy" enabled="true">
             <stringProp name="TestPlan.comments">Uses global variable ${LoadGrainInventoryPolicyNumber}</stringProp>
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
@@ -3940,11 +3940,11 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             <hashTree/>
           </hashTree>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="LoadForageInventory_Scenario">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="LoadForageInventory_Scenario" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-107 LoadForageInventory_Scenario Start">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-107 LoadForageInventory_Scenario Start" enabled="true">
             <stringProp name="TestPlan.comments">Uses global variable ${LoadForageInventoryPolicyNumber}</stringProp>
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
@@ -4716,7 +4716,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-116 Click Download">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-116 Click Download" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -4847,11 +4847,11 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             <hashTree/>
           </hashTree>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="LoadGrainDop_Scenario">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="LoadGrainDop_Scenario" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-150 LoadGrainDop_Scenario Start">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-150 LoadGrainDop_Scenario Start" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -5895,11 +5895,11 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             <hashTree/>
           </hashTree>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="LoadForageDop_Scenario">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="LoadForageDop_Scenario" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-165 LoadForageDop_Scenario Start">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-165 LoadForageDop_Scenario Start" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -5972,7 +5972,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-166 Filter by Policy">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-166 Filter by Policy" enabled="true">
             <stringProp name="TestPlan.comments">Uses global variable ${LoadForageDopPolicyNumber}</stringProp>
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
@@ -6943,11 +6943,11 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             <hashTree/>
           </hashTree>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="EditForageInventory_Scenario">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="EditForageInventory_Scenario" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,209 EditForageInventory_Scenario Start">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,209 EditForageInventory_Scenario Start" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -7670,12 +7670,6 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
-              <stringProp name="ConstantTimer.delay">8255</stringProp>
-              <stringProp name="RandomTimer.range">100.0</stringProp>
-              <stringProp name="TestPlan.comments">Recorded:18255ms</stringProp>
-            </UniformRandomTimer>
-            <hashTree/>
             <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Sec-Fetch-Mode" elementType="Header">
@@ -7738,7 +7732,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,225 Save">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,225 Save" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -7758,6 +7752,12 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
+            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
+              <stringProp name="ConstantTimer.delay">3000</stringProp>
+              <stringProp name="RandomTimer.range">100.0</stringProp>
+              <stringProp name="TestPlan.comments">Recorded:18255ms</stringProp>
+            </UniformRandomTimer>
+            <hashTree/>
             <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Sec-Fetch-Mode" elementType="Header">
@@ -7830,6 +7830,18 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 412" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="51541">412</stringProp>
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">true</boolProp>
+              <intProp name="Assertion.test_type">33</intProp>
+              <stringProp name="TestPlan.comments">Allows error 412 - Precondition Failed</stringProp>
+            </ResponseAssertion>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,227" enabled="true">
@@ -8065,11 +8077,11 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             <hashTree/>
           </hashTree>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="EditGrainInventory_Scenario">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="EditGrainInventory_Scenario" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,263 EditGrainInventory_Scenario Start">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,263 EditGrainInventory_Scenario Start" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -8136,7 +8148,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
               </collectionProp>
             </HeaderManager>
             <hashTree/>
-            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer">
+            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
               <stringProp name="ConstantTimer.delay">3000</stringProp>
               <stringProp name="RandomTimer.range">100.0</stringProp>
             </UniformRandomTimer>
@@ -8944,7 +8956,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,273">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,273" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -9020,7 +9032,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,274 Save Unseeded Inventory">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,274 Save Unseeded Inventory" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -9118,6 +9130,18 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
               <stringProp name="RandomTimer.range">100.0</stringProp>
               <stringProp name="TestPlan.comments">Recorded:19528ms</stringProp>
             </UniformRandomTimer>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 412" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="51541">412</stringProp>
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">true</boolProp>
+              <intProp name="Assertion.test_type">33</intProp>
+              <stringProp name="TestPlan.comments">Allows error 412 - Precondition Failed</stringProp>
+            </ResponseAssertion>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,275" enabled="true">
@@ -9757,7 +9781,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,282 Click Seeded Inventory">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,282 Click Seeded Inventory" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -9850,7 +9874,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,285 Click Seeded Inventory">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,285 Click Seeded Inventory" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -10016,7 +10040,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,287 Save Seeded Inventory">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,287 Save Seeded Inventory" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -10036,7 +10060,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Sec-Fetch-Mode" elementType="Header">
                   <stringProp name="Header.name">Sec-Fetch-Mode</stringProp>
@@ -10114,8 +10138,20 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
               <stringProp name="RandomTimer.range">100.0</stringProp>
             </UniformRandomTimer>
             <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 412" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="51541">412</stringProp>
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">true</boolProp>
+              <intProp name="Assertion.test_type">33</intProp>
+              <stringProp name="TestPlan.comments">Allows error 412 - Precondition Failed</stringProp>
+            </ResponseAssertion>
+            <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,288">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,288" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -10183,7 +10219,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,289">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-1,289" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -10272,11 +10308,11 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             <hashTree/>
           </hashTree>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="EditGrainDop_Scenario">
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="EditGrainDop_Scenario" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-51 EditGrainDop_Scenario Start">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-51 EditGrainDop_Scenario Start" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -10290,7 +10326,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Sec-Fetch-Mode" elementType="Header">
                   <stringProp name="Header.name">Sec-Fetch-Mode</stringProp>
@@ -10349,7 +10385,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-52 Filter by Policy">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-52 Filter by Policy" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -10406,7 +10442,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Sec-Fetch-Mode" elementType="Header">
                   <stringProp name="Header.name">Sec-Fetch-Mode</stringProp>
@@ -10492,7 +10528,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </RegexExtractor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-53">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-53" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -10560,7 +10596,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-54">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-54" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -10655,7 +10691,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-55">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-55" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -10723,7 +10759,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-56">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-56" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -10791,7 +10827,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-57">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-57" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -10859,7 +10895,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-60">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-60" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -10947,7 +10983,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-59 Click Declaration Of Production">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-59 Click Declaration Of Production" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -11040,7 +11076,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-58 Click Declaration Of Production">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-58 Click Declaration Of Production" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -11119,7 +11155,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
               </collectionProp>
             </HeaderManager>
             <hashTree/>
-            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="etag Extractor">
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="etag Extractor" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">true</stringProp>
               <stringProp name="RegexExtractor.refname">__etag</stringProp>
               <stringProp name="RegexExtractor.regex">etag: W/&quot;(.*?)&quot;</stringProp>
@@ -11130,7 +11166,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </RegexExtractor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-61">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-61" enabled="true">
             <stringProp name="HTTPSampler.domain">${host}</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -11194,7 +11230,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-62">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-62" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -11270,7 +11306,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-63 Save Grain DOP">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-63 Save Grain DOP" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -11290,7 +11326,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Sec-Fetch-Mode" elementType="Header">
                   <stringProp name="Header.name">Sec-Fetch-Mode</stringProp>
@@ -11363,10 +11399,22 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
               </collectionProp>
             </HeaderManager>
             <hashTree/>
-            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer">
+            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
               <stringProp name="ConstantTimer.delay">5000</stringProp>
               <stringProp name="RandomTimer.range">100.0</stringProp>
             </UniformRandomTimer>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 412" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="51541">412</stringProp>
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">true</boolProp>
+              <intProp name="Assertion.test_type">33</intProp>
+              <stringProp name="TestPlan.comments">Allows error 412 - Precondition Failed</stringProp>
+            </ResponseAssertion>
             <hashTree/>
           </hashTree>
         </hashTree>
@@ -11374,7 +11422,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
           <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-35 EditForageDop_Scenario Start">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-35 EditForageDop_Scenario Start" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -11388,7 +11436,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Sec-Fetch-Mode" elementType="Header">
                   <stringProp name="Header.name">Sec-Fetch-Mode</stringProp>
@@ -11441,13 +11489,13 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
               </collectionProp>
             </HeaderManager>
             <hashTree/>
-            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer">
+            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
               <stringProp name="ConstantTimer.delay">3000</stringProp>
               <stringProp name="RandomTimer.range">100.0</stringProp>
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-36 Filter by Policy">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-36 Filter by Policy" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -11504,7 +11552,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Sec-Fetch-Mode" elementType="Header">
                   <stringProp name="Header.name">Sec-Fetch-Mode</stringProp>
@@ -11569,7 +11617,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
               </collectionProp>
             </HeaderManager>
             <hashTree/>
-            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="uwContractId Extractor">
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="uwContractId Extractor" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
               <stringProp name="RegexExtractor.refname">uwContractId</stringProp>
               <stringProp name="RegexExtractor.regex">/uwcontracts/([0-9]+)?</stringProp>
@@ -11579,7 +11627,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
               <stringProp name="RegexExtractor.match_number">0</stringProp>
             </RegexExtractor>
             <hashTree/>
-            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="declaredYieldContractGuid Extractor">
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="declaredYieldContractGuid Extractor" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
               <stringProp name="RegexExtractor.refname">declaredYieldContractGuid</stringProp>
               <stringProp name="RegexExtractor.regex">&quot;declaredYieldContractGuid&quot;:&quot;([A-Za-z0-9]+)&quot;</stringProp>
@@ -11590,7 +11638,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </RegexExtractor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-37">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-37" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -11658,7 +11706,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-38">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-38" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -11753,7 +11801,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-39">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-39" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -11821,7 +11869,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-40">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-40" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -11889,7 +11937,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-41">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-41" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -11957,7 +12005,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-44">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-44" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -12045,7 +12093,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-42 Select Declaration of Production">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-42 Select Declaration of Production" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -12138,7 +12186,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-43 Select Declaration of Production">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-43 Select Declaration of Production" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -12217,7 +12265,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
               </collectionProp>
             </HeaderManager>
             <hashTree/>
-            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="etag Extractor">
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="etag Extractor" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">true</stringProp>
               <stringProp name="RegexExtractor.refname">__etag</stringProp>
               <stringProp name="RegexExtractor.regex">etag: W/&quot;(.*?)&quot;</stringProp>
@@ -12228,7 +12276,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </RegexExtractor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-45">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-45" enabled="true">
             <stringProp name="HTTPSampler.domain">${host}</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -12292,7 +12340,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-46">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-46" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -12368,7 +12416,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-47 Save Forage DOP">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-47 Save Forage DOP" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -12388,7 +12436,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Sec-Fetch-Mode" elementType="Header">
                   <stringProp name="Header.name">Sec-Fetch-Mode</stringProp>
@@ -12461,10 +12509,22 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
               </collectionProp>
             </HeaderManager>
             <hashTree/>
-            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer">
+            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
               <stringProp name="ConstantTimer.delay">5000</stringProp>
               <stringProp name="RandomTimer.range">100.0</stringProp>
             </UniformRandomTimer>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 412" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="51541">412</stringProp>
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">true</boolProp>
+              <intProp name="Assertion.test_type">33</intProp>
+              <stringProp name="TestPlan.comments">Allows error 412 - Precondition Failed</stringProp>
+            </ResponseAssertion>
             <hashTree/>
           </hashTree>
         </hashTree>
@@ -12472,7 +12532,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
           <boolProp name="TransactionController.includeTimers">false</boolProp>
         </TransactionController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-65 MaintainLegalLand_Scenario Start">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-65 MaintainLegalLand_Scenario Start" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -12545,7 +12605,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-66 Filter by GF000">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-66 Filter by GF000" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -12609,7 +12669,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Sec-Fetch-Mode" elementType="Header">
                   <stringProp name="Header.name">Sec-Fetch-Mode</stringProp>
@@ -12675,7 +12735,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-67">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-67" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -12743,7 +12803,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-68">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-68" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -12831,7 +12891,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-69">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-69" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -12899,7 +12959,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-70 Save Legal Land">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-70 Save Legal Land" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -12919,7 +12979,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Sec-Fetch-Mode" elementType="Header">
                   <stringProp name="Header.name">Sec-Fetch-Mode</stringProp>
@@ -12988,7 +13048,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
               </collectionProp>
             </HeaderManager>
             <hashTree/>
-            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="legalLandId Extractor">
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="legalLandId Extractor" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
               <stringProp name="RegexExtractor.refname">__legalLandId</stringProp>
               <stringProp name="RegexExtractor.regex">&quot;legalLandId&quot;:([0-9]+)</stringProp>
@@ -12998,7 +13058,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
               <stringProp name="RegexExtractor.match_number">0</stringProp>
             </RegexExtractor>
             <hashTree/>
-            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="etag Extractor">
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="etag Extractor" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">true</stringProp>
               <stringProp name="RegexExtractor.refname">__etag</stringProp>
               <stringProp name="RegexExtractor.regex">etag: W/&quot;(.*?)&quot;</stringProp>
@@ -13008,13 +13068,13 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
               <stringProp name="RegexExtractor.match_number">0</stringProp>
             </RegexExtractor>
             <hashTree/>
-            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer">
+            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
               <stringProp name="ConstantTimer.delay">7000</stringProp>
               <stringProp name="RandomTimer.range">100.0</stringProp>
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-72">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-72" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -13090,7 +13150,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-73 Delete Legal Land">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-73 Delete Legal Land" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -13104,7 +13164,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </elementProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Sec-Fetch-Mode" elementType="Header">
                   <stringProp name="Header.name">Sec-Fetch-Mode</stringProp>
@@ -13173,13 +13233,13 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
               </collectionProp>
             </HeaderManager>
             <hashTree/>
-            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer">
+            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
               <stringProp name="ConstantTimer.delay">3000</stringProp>
               <stringProp name="RandomTimer.range">100.0</stringProp>
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-74">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-74" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -13247,7 +13307,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-75">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="-75" enabled="true">
             <stringProp name="HTTPSampler.domain">cirras-underwriting-api-route-test-a12541-test.apps.silver.devops.gov.bc.ca</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
@@ -13372,7 +13432,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
           </hashTree>
         </hashTree>
       </hashTree>
-      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>
@@ -13404,7 +13464,7 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
             <sampleCount>true</sampleCount>
           </value>
         </objProp>
-        <stringProp name="filename"></stringProp>
+        <stringProp name="filename">C:\Temp\loadTestResults.csv</stringProp>
       </ResultCollector>
       <hashTree/>
       <ProxyControl guiclass="ProxyControlGui" testclass="ProxyControl" testname="HTTP(S) Test Script Recorder" enabled="false">
@@ -13457,12 +13517,12 @@ log.info(&quot;thread(${__threadNum})&quot;)</stringProp>
         <stringProp name="ProxyControlGui.default_encoding">UTF-8</stringProp>
       </ProxyControl>
       <hashTree>
-        <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer">
+        <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
           <stringProp name="ConstantTimer.delay">${T}</stringProp>
           <stringProp name="RandomTimer.range">100.0</stringProp>
         </UniformRandomTimer>
         <hashTree/>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
