@@ -1,7 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.web.controller;
 
-import ca.bc.gov.webade.oauth2.rest.v1.token.client.impl.TokenServiceImpl;
-import ca.bc.gov.webade.oauth2.rest.v1.token.client.resource.CheckedToken;
+import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.TokenService;
+import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.resource.CheckedToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class CheckTokenController {
 	@Autowired
 	private Properties applicationProperties;
 	@Inject
-	TokenServiceImpl tokenService;
+	TokenService tokenService;
 
 	@RequestMapping(value="/checkToken", method=RequestMethod.GET, headers="Accept=*/*")
 	@ResponseBody
