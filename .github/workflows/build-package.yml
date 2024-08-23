@@ -33,6 +33,9 @@ on:
         required: false
         type: string
         default: "8"
+      TAG:
+        required: true
+        type: string
 
 env:
   DIRECTORY_SUFFIX: ${{ contains(inputs.MICROSERVICE_NAME, '-api') && '-rest-endpoints' || '' }}
@@ -102,7 +105,7 @@ jobs:
 
       - name: Extract version number
         id: getVersion
-        run: echo "VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )" >> $GITHUB_OUTPUT
+        run: echo "VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+(-SNAPSHOT)?'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -128,19 +131,21 @@ jobs:
             type=raw,value=latest
             type=ref,event=tag
             type=raw,value=${{ steps.getVersion.outputs.VERSION_NUMBER }}
+            type=raw,value=${{ inputs.TAG }}
             ${{ toJson(github.event.pull_request.number) == '{}' && format( 'type=raw,value=pr-{0}', github.event.pull_request.number) || '' }} 
 
-      - name: Configure server.xml
-        uses: cschleiden/replace-tokens@v1.2
-        with:
-          files: ${{ inputs.MICROSERVICE_NAME }}/deploy-tools/server.xml
-        env:
-          TOMCAT_PORT: ${{ inputs.TOMCAT_PORT }}
-          MAX_THREADS: ${{ inputs.TOMCAT_MAX_THREADS }}
-          CONNECTION_TIMEOUT: ${{ vars.DEFAULT_TIMEOUT }}
-          COMPRESSION_MIN_SIZE: ${{ vars.COMPRESSION_MIN_SIZE }}
-          NO_COMPRESSION_USER_AGENTS: ${{ vars.NO_COMPRESSION_USER_AGENTS }}
-          COMPRESSION_MIME_TYPES: ${{ vars.COMPRESSION_MIME_TYPES }}
+      # NOTE: switch to using parameterized server.xml, instead of fixing configs at build time
+      # - name: Configure server.xml
+      #   uses: cschleiden/replace-tokens@v1.2
+      #   with:
+      #     files: ${{ inputs.MICROSERVICE_NAME }}/deploy-tools/server.xml
+      #   env:
+      #     TOMCAT_PORT: ${{ inputs.TOMCAT_PORT }}
+      #     MAX_THREADS: ${{ inputs.TOMCAT_MAX_THREADS }}
+      #     CONNECTION_TIMEOUT: ${{ vars.DEFAULT_TIMEOUT }}
+      #     COMPRESSION_MIN_SIZE: ${{ vars.COMPRESSION_MIN_SIZE }}
+      #     NO_COMPRESSION_USER_AGENTS: ${{ vars.NO_COMPRESSION_USER_AGENTS }}
+      #     COMPRESSION_MIME_TYPES: ${{ vars.COMPRESSION_MIME_TYPES }}
 
 
       - name: Build and push

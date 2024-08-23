@@ -23,6 +23,22 @@ spec:
             - containerPort: #{TARGET_PORT}#
               protocol: TCP
           env:
+            - name: TOMCAT_PORT
+              valueFrom: 
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: TOMCAT_PORT
+            - name: TOMCAT_MAX_THREADS
+              valueFrom: 
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: TOMCAT_MAX_THREADS
+            - name: CONNECTION_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: CONNECTION_TIMEOUT
+
             - name: WEBADE_GET_TOKEN_URL
               valueFrom:
                 configMapKeyRef:
