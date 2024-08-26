@@ -73,16 +73,19 @@ jobs:
           npm pack
 
       - name: Extract version number
+        #NOTE: NPM, unlike maven, does NOT append the SNAPSHOT tag to the build automatically, so we need to account for it only sometimes being on the packaged file
         id: getVersion
         run: |
           export VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+(-SNAPSHOT)?'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )
           echo "VERSION_NUMBER=$VERSION_NUMBER" >> $GITHUB_OUTPUT
+          export VERSION_NUMBER_NO_SNAPSHOT=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )
+          echo "VERSION_NUMBER_NO_SNAPSHOT=$VERSION_NUMBER_NO_SNAPSHOT" >> $GITHUB_OUTPUT
 
       - name: upload module
         uses: actions/upload-artifact@v4
         with:
           name: ${{inputs.EXPORT_MODULE}}-${{ steps.getVersion.outputs.VERSION_NUMBER }}.tgz
-          path: ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-${{ steps.getVersion.outputs.VERSION_NUMBER }}.tgz
+          path: ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-${{ steps.getVersion.outputs.VERSION_NUMBER_NO_SNAPSHOT }}.tgz
 
       - name: Setup artifactory
         uses: jfrog/setup-jfrog-cli@v4
@@ -90,7 +93,7 @@ jobs:
       - name: Push Build to Artifactory
         run: |
           export VERSION_NUMBER=${{ steps.getVersion.outputs.VERSION_NUMBER }}
-          mv ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz  cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz
+          mv ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-${{ steps.getVersion.outputs.VERSION_NUMBER_NO_SNAPSHOT }}.tgz  cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz
           export BUILD_NAME="cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER"
           export BUILD_MODULE="${{ inputs.EXPORT_MODULE}}"
           
