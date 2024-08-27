@@ -500,9 +500,14 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			// Get sum of acres of commodities that have a acres to be seeded value and are
 			// not deleted
 			// It's possible that commodities are not specified
+			// Only commodities that are crop insurance eligible AND inventory crops are stored indiviually
+			// all other commodities are saved as OTHER
 			if (inventoryContractCommodity.getCropCommodityId() == null) {
 				unseededAcres = field.getPlantings().stream()
-						.filter(x -> x.getInventoryUnseeded().getCropCommodityId() == null
+						.filter(x -> (x.getInventoryUnseeded().getCropCommodityId() == null
+										|| x.getInventoryUnseeded().getCropCommodityId() != null
+										&& (Boolean.FALSE.equals(x.getInventoryUnseeded().getIsCropInsuranceEligibleInd())
+											|| Boolean.FALSE.equals(x.getInventoryUnseeded().getIsInventoryCropInd())))
 								&& x.getInventoryUnseeded().getAcresToBeSeeded() != null
 								&& (x.getInventoryUnseeded().getDeletedByUserInd() == null
 										|| x.getInventoryUnseeded().getDeletedByUserInd() == false))
@@ -510,8 +515,10 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 			} else {
 				unseededAcres = field.getPlantings().stream()
-						.filter(x -> (x.getInventoryUnseeded().getCropCommodityId() != null && x.getInventoryUnseeded()
-								.getCropCommodityId().equals(inventoryContractCommodity.getCropCommodityId()))
+						.filter(x -> x.getInventoryUnseeded().getCropCommodityId() != null 
+								&& x.getInventoryUnseeded().getCropCommodityId().equals(inventoryContractCommodity.getCropCommodityId())
+								&& Boolean.TRUE.equals(x.getInventoryUnseeded().getIsCropInsuranceEligibleInd())
+								&& Boolean.TRUE.equals(x.getInventoryUnseeded().getIsInventoryCropInd())
 								&& x.getInventoryUnseeded().getAcresToBeSeeded() != null
 								&& (x.getInventoryUnseeded().getDeletedByUserInd() == null
 										|| x.getInventoryUnseeded().getDeletedByUserInd() == false))

@@ -16,6 +16,8 @@ public class InventoryUnseeded implements Serializable {
 	private Boolean isUnseededInsurableInd;
 	private Double acresToBeSeeded;
 	private Boolean deletedByUserInd;
+	private Boolean isCropInsuranceEligibleInd;
+	private Boolean isInventoryCropInd;
 
 	public String getInventoryUnseededGuid() {
 		return inventoryUnseededGuid;
@@ -65,5 +67,20 @@ public class InventoryUnseeded implements Serializable {
 	public void setDeletedByUserInd(Boolean deletedByUserInd) {
 		this.deletedByUserInd = deletedByUserInd;
 	}
+	
+	public Boolean getIsInventoryCropInd() {
+		return isInventoryCropInd;
+	}
 
+	public void setIsInventoryCropInd(Boolean isInventoryCropInd) {
+		this.isInventoryCropInd = isInventoryCropInd;
+	}
+
+	public Boolean getIsCropInsuranceEligibleInd() {
+		return isCropInsuranceEligibleInd;
+	}
+
+	public void setIsCropInsuranceEligibleInd(Boolean isCropInsuranceEligibleInd) {
+		this.isCropInsuranceEligibleInd = isCropInsuranceEligibleInd;
+	}
 }
