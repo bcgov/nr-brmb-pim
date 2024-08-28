@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.InventoryFieldMapper;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.utils.UnderwritingCodeEnums;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.BaseDao;
@@ -290,7 +291,7 @@ public class InventoryFieldDaoImpl extends BaseDao implements InventoryFieldDao 
 			Map<String, Object> parameters = new HashMap<String, Object>();
 
 			Boolean isGrainRollover = false;
-			if ( insurancePlanId.intValue() == 4 ) {
+			if ( insurancePlanId.equals(UnderwritingCodeEnums.InsurancePlans.GRAIN.getInsurancePlanId()) ) {
 				isGrainRollover = true;
 			}
 			

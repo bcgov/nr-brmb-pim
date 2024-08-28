@@ -267,80 +267,88 @@
 	<select id="selectForRollover" resultMap="InventoryFieldDtoMap">
 		<choose>
 			<when test="isGrainRollover">
-				-- All plantings for this field
-				WITH plantings AS (
-					SELECT	inv.inventory_field_guid,
-							inv.field_id,
-							inv.is_hidden_on_printout_ind,
-							inv.underseeded_crop_variety_id,
-							inv.underseeded_acres
-					FROM inventory_field inv
-					WHERE inv.field_id = #{fieldId}
-					  AND inv.crop_year = #{cropYear}
-					  AND inv.insurance_plan_id = #{insurancePlanId}
-				)	
-				-- Only returns records if seeded acres > 0 exists for this field.
-				SELECT  p.field_id, 
-						ROW_NUMBER() OVER() AS planting_number,
-						CASE WHEN p.underseeded_crop_variety_id IS NULL THEN isg.crop_commodity_id ELSE v.crop_commodity_id END AS last_year_crop_commodity_id,
-						CASE WHEN p.underseeded_crop_variety_id IS NULL THEN c.commodity_name ELSE cv.commodity_name END AS last_year_crop_commodity_name,
-						p.underseeded_crop_variety_id AS last_year_crop_variety_id,
-						v.variety_name AS last_year_crop_variety_name,
-						vi.is_grain_unseeded_default_ind,
-						CASE WHEN p.underseeded_crop_variety_id IS NULL THEN SUM(isg.seeded_acres) ELSE SUM(p.underseeded_acres) END AS acres_to_be_seeded,
-						-- Rollover for is_hidden_on_printout_ind is based on ALL plantings, 
-						-- not just those with seeded acres > 0. Set to Y if all plantings are Y, 
-						-- otherwise set to N.
-						(SELECT MIN(all_p.is_hidden_on_printout_ind) FROM plantings all_p) AS is_hidden_on_printout_ind
-				FROM plantings p
-				LEFT JOIN (SELECT isg2.inventory_seeded_grain_guid, isg2.inventory_field_guid, isg2.seeded_acres, isg2.crop_commodity_id
-							  FROM inventory_seeded_grain isg2
-							  WHERE isg2.seeded_acres > 0) as isg 
-					ON isg.inventory_field_guid = p.inventory_field_guid
-				LEFT JOIN crop_commodity c ON c.crop_commodity_id = isg.crop_commodity_id
-				LEFT JOIN crop_variety v ON v.crop_variety_id = p.underseeded_crop_variety_id
-				LEFT JOIN crop_commodity cv ON cv.crop_commodity_id = v.crop_commodity_id
-				LEFT JOIN crop_variety_insurability vi ON vi.crop_variety_id = v.crop_variety_id
-				WHERE ((isg.seeded_acres > 0 and v.crop_variety_id is null and isg.inventory_seeded_grain_guid is not null) or p.underseeded_crop_variety_id is not null)
-				GROUP BY p.field_id, isg.crop_commodity_id, c.commodity_name, p.underseeded_crop_variety_id, v.variety_name, v.crop_commodity_id, cv.commodity_name, vi.is_grain_unseeded_default_ind
-				UNION
-				-- Only returns if no seeded acres > 0 exists for this field.
-				SELECT  p.field_id, 
-						1 AS planting_number,
-						null AS last_year_crop_commodity_id, 
-						null AS last_year_crop_commodity_name, 
-						null AS acres_to_be_seeded,
-						null AS last_year_crop_variety_id,
-						null AS last_year_crop_variety_name,
-						null AS is_grain_unseeded_default_ind,
-						-- Set to Y if all plantings are Y, otherwise set to N.
-						MIN(p.is_hidden_on_printout_ind) AS is_hidden_on_printout_ind
-				FROM plantings p
-				WHERE NOT EXISTS (SELECT 1
-								  FROM plantings p2
-								  JOIN inventory_seeded_grain isg2 ON isg2.inventory_field_guid = p2.inventory_field_guid
-								  WHERE (isg2.seeded_acres > 0 and p.underseeded_crop_variety_id is null) or p.underseeded_crop_variety_id is not null)
-				GROUP BY p.field_id
-				ORDER BY planting_number
+				<include refid="selectForRolloverGrain"/>
 			</when>
 			<otherwise>
-				SELECT  inv.field_id, 
-						inv.planting_number,
-						null AS last_year_crop_commodity_id, 
-						null AS last_year_crop_commodity_name, 
-						null AS acres_to_be_seeded,
-						null AS last_year_crop_variety_id,
-						null AS last_year_crop_variety_name,
-						null AS is_grain_unseeded_default_ind,
-						inv.is_hidden_on_printout_ind
-				FROM inventory_field inv
-				WHERE inv.field_id = #{fieldId}
-				  AND inv.crop_year = #{cropYear}
-				  AND inv.insurance_plan_id = #{insurancePlanId}
-				ORDER BY inv.planting_number
+				<include refid="selectForRolloverForage"/>
 			</otherwise>
 		</choose>
 	</select> 
+
+    <sql id="selectForRolloverGrain">
+		-- All plantings for this field
+		WITH plantings AS (
+			SELECT	inv.inventory_field_guid,
+					inv.field_id,
+					inv.is_hidden_on_printout_ind,
+					inv.underseeded_crop_variety_id,
+					inv.underseeded_acres
+			FROM inventory_field inv
+			WHERE inv.field_id = #{fieldId}
+			  AND inv.crop_year = #{cropYear}
+			  AND inv.insurance_plan_id = #{insurancePlanId}
+		)	
+		-- Only returns records if seeded acres > 0 exists for this field.
+		SELECT  p.field_id, 
+				ROW_NUMBER() OVER() AS planting_number,
+				CASE WHEN p.underseeded_crop_variety_id IS NULL THEN isg.crop_commodity_id ELSE v.crop_commodity_id END AS last_year_crop_commodity_id,
+				CASE WHEN p.underseeded_crop_variety_id IS NULL THEN c.commodity_name ELSE cv.commodity_name END AS last_year_crop_commodity_name,
+				p.underseeded_crop_variety_id AS last_year_crop_variety_id,
+				v.variety_name AS last_year_crop_variety_name,
+				vi.is_grain_unseeded_default_ind,
+				CASE WHEN p.underseeded_crop_variety_id IS NULL THEN SUM(isg.seeded_acres) ELSE SUM(p.underseeded_acres) END AS acres_to_be_seeded,
+				-- Rollover for is_hidden_on_printout_ind is based on ALL plantings, 
+				-- not just those with seeded acres > 0. Set to Y if all plantings are Y, 
+				-- otherwise set to N.
+				(SELECT MIN(all_p.is_hidden_on_printout_ind) FROM plantings all_p) AS is_hidden_on_printout_ind
+		FROM plantings p
+		LEFT JOIN (SELECT isg2.inventory_seeded_grain_guid, isg2.inventory_field_guid, isg2.seeded_acres, isg2.crop_commodity_id
+					  FROM inventory_seeded_grain isg2
+					  WHERE isg2.seeded_acres > 0) as isg 
+			ON isg.inventory_field_guid = p.inventory_field_guid
+		LEFT JOIN crop_commodity c ON c.crop_commodity_id = isg.crop_commodity_id
+		LEFT JOIN crop_variety v ON v.crop_variety_id = p.underseeded_crop_variety_id
+		LEFT JOIN crop_commodity cv ON cv.crop_commodity_id = v.crop_commodity_id
+		LEFT JOIN crop_variety_insurability vi ON vi.crop_variety_id = v.crop_variety_id
+		WHERE ((isg.seeded_acres > 0 and v.crop_variety_id is null and isg.inventory_seeded_grain_guid is not null) or p.underseeded_crop_variety_id is not null)
+		GROUP BY p.field_id, isg.crop_commodity_id, c.commodity_name, p.underseeded_crop_variety_id, v.variety_name, v.crop_commodity_id, cv.commodity_name, vi.is_grain_unseeded_default_ind
+		UNION
+		-- Only returns if no seeded acres > 0 exists for this field.
+		SELECT  p.field_id, 
+				1 AS planting_number,
+				null AS last_year_crop_commodity_id, 
+				null AS last_year_crop_commodity_name, 
+				null AS acres_to_be_seeded,
+				null AS last_year_crop_variety_id,
+				null AS last_year_crop_variety_name,
+				null AS is_grain_unseeded_default_ind,
+				-- Set to Y if all plantings are Y, otherwise set to N.
+				MIN(p.is_hidden_on_printout_ind) AS is_hidden_on_printout_ind
+		FROM plantings p
+		WHERE NOT EXISTS (SELECT 1
+						  FROM plantings p2
+						  JOIN inventory_seeded_grain isg2 ON isg2.inventory_field_guid = p2.inventory_field_guid
+						  WHERE (isg2.seeded_acres > 0 and p.underseeded_crop_variety_id is null) or p.underseeded_crop_variety_id is not null)
+		GROUP BY p.field_id
+		ORDER BY planting_number
+	</sql>
+
+    <sql id="selectForRolloverForage">
+		SELECT  inv.field_id, 
+				inv.planting_number,
+				null AS last_year_crop_commodity_id, 
+				null AS last_year_crop_commodity_name, 
+				null AS acres_to_be_seeded,
+				null AS last_year_crop_variety_id,
+				null AS last_year_crop_variety_name,
+				null AS is_grain_unseeded_default_ind,
+				inv.is_hidden_on_printout_ind
+		FROM inventory_field inv
+		WHERE inv.field_id = #{fieldId}
+		  AND inv.crop_year = #{cropYear}
+		  AND inv.insurance_plan_id = #{insurancePlanId}
+		ORDER BY inv.planting_number
+	</sql>
 
 	<select id="selectForField" resultMap="InventoryFieldDtoMap">
 		<include refid="selectColumns"/>
