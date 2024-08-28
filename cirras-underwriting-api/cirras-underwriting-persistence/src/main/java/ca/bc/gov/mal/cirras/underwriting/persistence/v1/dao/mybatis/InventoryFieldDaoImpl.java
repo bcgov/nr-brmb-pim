@@ -288,10 +288,16 @@ public class InventoryFieldDaoImpl extends BaseDao implements InventoryFieldDao 
 
 		try {
 			Map<String, Object> parameters = new HashMap<String, Object>();
+
+			Boolean isGrainRollover = false;
+			if ( insurancePlanId.intValue() == 4 ) {
+				isGrainRollover = true;
+			}
 			
 			parameters.put("fieldId", fieldId);
 			parameters.put("cropYear", cropYear);
 			parameters.put("insurancePlanId", insurancePlanId);
+			parameters.put("isGrainRollover", isGrainRollover);
 						
 			dtos = this.mapper.selectForRollover(parameters);
 

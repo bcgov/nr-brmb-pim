@@ -460,9 +460,9 @@ public class InventoryFieldDaoTest {
 		Assert.assertNull(deletedDto);
 
 	}
-	
+
 	@Test 
-	public void testSelectForRollover() throws Exception {
+	public void testSelectForRolloverGrain() throws Exception {
 
 		FieldDao dao = persistenceSpringConfig.fieldDao();
 		FieldDto fieldDto = new FieldDto();
@@ -708,6 +708,94 @@ public class InventoryFieldDaoTest {
 
 	}	
 
+	@Test 
+	public void testSelectForRolloverForage() throws Exception {
+
+		Integer cropYear = 2020;
+		Integer insurancePlanId = 5;
+		
+		//INSERT Field
+		createField(userId);
+
+		
+		InventoryFieldDao invFieldDao = persistenceSpringConfig.inventoryFieldDao();
+
+		// INSERT
+		InventoryFieldDto newDto = new InventoryFieldDto();
+
+		newDto.setCropYear(cropYear);
+		newDto.setFieldId(fieldId2);
+		newDto.setInsurancePlanId(insurancePlanId);
+		newDto.setLastYearCropCommodityId(null);
+		newDto.setLastYearCropCommodityName(null);
+		newDto.setLastYearCropVarietyId(null);
+		newDto.setLastYearCropVarietyName(null);
+		newDto.setIsHiddenOnPrintoutInd(false);
+		newDto.setUnderseededAcres(null);
+		newDto.setUnderseededCropVarietyId(null);
+		newDto.setUnderseededCropVarietyName(null);
+		newDto.setUnderseededInventorySeededForageGuid(null);
+		newDto.setPlantingNumber(1);
+
+		
+		invFieldDao.insert(newDto, userId);
+		Assert.assertNotNull(newDto.getInventoryFieldGuid());
+
+		// INSERT
+		InventoryFieldDto newDto2 = new InventoryFieldDto();
+
+		newDto2.setCropYear(cropYear);
+		newDto2.setFieldId(fieldId2);
+		newDto2.setInsurancePlanId(insurancePlanId);
+		newDto2.setLastYearCropCommodityId(null);
+		newDto2.setLastYearCropCommodityName(null);
+		newDto2.setLastYearCropVarietyId(null);
+		newDto2.setLastYearCropVarietyName(null);
+		newDto2.setIsHiddenOnPrintoutInd(true);
+		newDto2.setUnderseededAcres(null);
+		newDto2.setUnderseededCropVarietyId(null);
+		newDto2.setUnderseededCropVarietyName(null);
+		newDto2.setUnderseededInventorySeededForageGuid(null);
+		newDto2.setPlantingNumber(2);
+		
+		invFieldDao.insert(newDto2, userId);
+		Assert.assertNotNull(newDto2.getInventoryFieldGuid());
+		
+		
+		//Select for rollover
+		List<InventoryFieldDto> dtos = invFieldDao.selectForRollover(fieldId2, cropYear, insurancePlanId);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(2, dtos.size());
+		
+		Assert.assertEquals("FieldId", newDto.getFieldId(), dtos.get(0).getFieldId());
+		Assert.assertEquals("PlantingNumber", newDto.getPlantingNumber(), dtos.get(0).getPlantingNumber());
+		Assert.assertNull("LastYearCropCommodityId", dtos.get(0).getLastYearCropCommodityId());
+		Assert.assertNull("LastYearCropCommodityName", dtos.get(0).getLastYearCropCommodityName());
+		Assert.assertNull("AcresToBeSeeded", dtos.get(0).getAcresToBeSeeded());
+		Assert.assertNull("LastYearCropVarietyId", dtos.get(0).getLastYearCropVarietyId());
+		Assert.assertNull("LastYearCropVarietyName", dtos.get(0).getLastYearCropVarietyName());
+		Assert.assertNull("IsGrainUnseededDefaultInd", dtos.get(0).getIsGrainUnseededDefaultInd());
+		Assert.assertEquals("IsHiddenOnPrintoutInd", newDto.getIsHiddenOnPrintoutInd(), dtos.get(0).getIsHiddenOnPrintoutInd());
+
+		Assert.assertEquals("FieldId", newDto2.getFieldId(), dtos.get(1).getFieldId());
+		Assert.assertEquals("PlantingNumber", newDto2.getPlantingNumber(), dtos.get(1).getPlantingNumber());
+		Assert.assertNull("LastYearCropCommodityId", dtos.get(1).getLastYearCropCommodityId());
+		Assert.assertNull("LastYearCropCommodityName", dtos.get(1).getLastYearCropCommodityName());
+		Assert.assertNull("AcresToBeSeeded", dtos.get(1).getAcresToBeSeeded());
+		Assert.assertNull("LastYearCropVarietyId", dtos.get(1).getLastYearCropVarietyId());
+		Assert.assertNull("LastYearCropVarietyName", dtos.get(1).getLastYearCropVarietyName());
+		Assert.assertNull("IsGrainUnseededDefaultInd", dtos.get(1).getIsGrainUnseededDefaultInd());
+		Assert.assertEquals("IsHiddenOnPrintoutInd", newDto2.getIsHiddenOnPrintoutInd(), dtos.get(1).getIsHiddenOnPrintoutInd());
+						
+		invFieldDao.delete(newDto.getInventoryFieldGuid());
+		invFieldDao.delete(newDto2.getInventoryFieldGuid());
+		
+		//SELECT
+		dtos = invFieldDao.selectForRollover(fieldId2, cropYear, insurancePlanId);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size());
+	}
+	
 	@Test 
 	public void testSelectForDeclaredYield() throws Exception {
 
