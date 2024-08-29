@@ -505,9 +505,9 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			if (inventoryContractCommodity.getCropCommodityId() == null) {
 				unseededAcres = field.getPlantings().stream()
 						.filter(x -> (x.getInventoryUnseeded().getCropCommodityId() == null
-										|| x.getInventoryUnseeded().getCropCommodityId() != null
+										|| (x.getInventoryUnseeded().getCropCommodityId() != null
 										&& (Boolean.FALSE.equals(x.getInventoryUnseeded().getIsCropInsuranceEligibleInd())
-											|| Boolean.FALSE.equals(x.getInventoryUnseeded().getIsInventoryCropInd())))
+											|| Boolean.FALSE.equals(x.getInventoryUnseeded().getIsInventoryCropInd()))))
 								&& x.getInventoryUnseeded().getAcresToBeSeeded() != null
 								&& (x.getInventoryUnseeded().getDeletedByUserInd() == null
 										|| x.getInventoryUnseeded().getDeletedByUserInd() == false))
