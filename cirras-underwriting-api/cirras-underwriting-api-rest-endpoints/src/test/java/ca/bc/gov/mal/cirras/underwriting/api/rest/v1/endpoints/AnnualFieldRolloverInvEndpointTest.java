@@ -35,8 +35,6 @@ public class AnnualFieldRolloverInvEndpointTest extends EndpointsTest {
 	};
 	
 	
-	
-
 	@Test
 	public void testAnnualFieldsRolloverInventoryFromPreviousYear() throws CirrasUnderwritingServiceException, Oauth2ClientException {
 		logger.debug("<testAnnualFieldsRolloverInventoryFromPreviousYear");

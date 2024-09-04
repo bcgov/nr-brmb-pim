@@ -28,6 +28,8 @@ public interface InventorySeededForageDao extends Serializable {
 
     List<InventorySeededForageDto> select(String inventoryFieldGuid) throws DaoException;
 
+    List<InventorySeededForageDto> selectForRollover(Integer fieldId, Integer cropYear, Integer insurancePlanId, Integer plantingNumber) throws DaoException;
+    
     List<InventorySeededForageDto> selectForDeclaredYield(String inventoryFieldGuid) throws DaoException;
 
     List<InventorySeededForageDto> selectForDopContractCommodityTotals(Integer contractId, Integer cropYear) throws DaoException;
