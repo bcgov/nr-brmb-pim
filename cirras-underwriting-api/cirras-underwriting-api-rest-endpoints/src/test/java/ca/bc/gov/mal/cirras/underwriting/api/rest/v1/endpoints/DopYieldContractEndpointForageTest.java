@@ -183,6 +183,9 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 	String annual = InventoryServiceEnums.PlantDurationType.ANNUAL.toString();
 	String perennial = InventoryServiceEnums.PlantDurationType.PERENNIAL.toString();
 	
+	Date seedingDate = null;
+	
+	
 	@Test
 	public void testDopYieldForageRollover() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
 		logger.debug("<testDopYieldForageRollover");
@@ -234,21 +237,27 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		// Remove default planting.
 		field.getPlantings().remove(0);
 		
+
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(2024, Calendar.JUNE, 6);
+		seedingDate = cal.getTime();
+		
 		// Planting 1
 		InventoryField planting = createPlanting(field, 1, cropYear1, false);
-		createInventorySeededForage(planting, cropIdForage, varietyIdAlfalafaGrass, ctcAlfalfa, true, 100.0); //Alfalfa Grass
+		createInventorySeededForage(planting, cropIdForage, varietyIdAlfalafaGrass, ctcAlfalfa, true, 100.0, "E1", seedingDate); //Alfalfa Grass
 
 		// Planting 2
 		planting = createPlanting(field, 2, cropYear1, false);
-		createInventorySeededForage(planting, cropIdForage, varietyIdGrass, ctcAlfalfa, false, 150.0); //Grass - Not insured
+		createInventorySeededForage(planting, cropIdForage, varietyIdGrass, ctcAlfalfa, false, 150.0, null, null); //Grass - Not insured
 				
 		// Planting 3
 		planting = createPlanting(field, 3, cropYear1, false);
-		createInventorySeededForage(planting, cropIdSilageCorn, varietyIdSilageCorn, ctcSilageCorn, true, 130.0); //Silage Corn
+		createInventorySeededForage(planting, cropIdSilageCorn, varietyIdSilageCorn, ctcSilageCorn, true, 130.0, null, null); //Silage Corn
 
 		// Planting 4
 		planting = createPlanting(field, 4, cropYear1, false);
-		createInventorySeededForage(planting, cropIdSilageCorn, varietyIdSilageCorn, ctcSilageCorn, true, 70.0); //Silage Corn		
+		createInventorySeededForage(planting, cropIdSilageCorn, varietyIdSilageCorn, ctcSilageCorn, true, 70.0, null, null); //Silage Corn		
 
 		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
 		
@@ -335,6 +344,10 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 				Assert.assertEquals(100.0, dyff.getFieldAcres().doubleValue(), 0.1);
 				Assert.assertEquals(ctcAlfalfa, dyff.getCommodityTypeCode());
 				Assert.assertEquals(ctcAlfalfa, dyff.getCommodityTypeDescription());
+				
+				Assert.assertEquals("E1", dyff.getPlantInsurabilityTypeCode());
+				Assert.assertTrue(dyff.getSeedingDate().equals(seedingDate));
+				
 			} else if(dyff.getCropVarietyName().equals(varietyNameGrass)) {
 				//Planting 2
 				checkedPlanting2 = true;
@@ -342,6 +355,10 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 				Assert.assertEquals(150.0, dyff.getFieldAcres().doubleValue(), 0.1);
 				Assert.assertEquals(ctcAlfalfa, dyff.getCommodityTypeCode());
 				Assert.assertEquals(ctcAlfalfa, dyff.getCommodityTypeDescription());
+				
+				Assert.assertNull(dyff.getSeedingDate());
+				Assert.assertNull(dyff.getPlantInsurabilityTypeCode());
+				
 			} else if(dyff.getCropVarietyName().equals(varietyNameSilageCorn)) {
 				Assert.assertTrue(dyff.getIsQuantityInsurableInd());
 				Assert.assertEquals(ctcSilageCorn, dyff.getCommodityTypeCode());
@@ -868,17 +885,19 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		// Remove default planting.
 		field1.getPlantings().remove(0);
 		
+		
+		
 		// Planting 1
 		InventoryField planting = createPlanting(field1, 1, cropYear1, false);
-		createInventorySeededForage(planting, cropIdForage, varietyIdAlfalafaGrass, ctcAlfalfa, false, 200.0); //Alfalfa Grass not insured
+		createInventorySeededForage(planting, cropIdForage, varietyIdAlfalafaGrass, ctcAlfalfa, false, 200.0, "E1", seedingDate); //Alfalfa Grass not insured
 
 		// Planting 2
 		planting = createPlanting(field1, 2, cropYear1, false);
-		createInventorySeededForage(planting, cropIdSilageCorn, varietyIdSilageCorn, ctcSilageCorn, true, 100.0); //Silage Corn - insured
+		createInventorySeededForage(planting, cropIdSilageCorn, varietyIdSilageCorn, ctcSilageCorn, true, 100.0, null, null); //Silage Corn - insured
 
 		// Planting 3
 		planting = createPlanting(field1, 3, cropYear1, false);
-		createInventorySeededForage(planting, null, null, null, true, 100.0); //Silage Corn - insured
+		createInventorySeededForage(planting, null, null, null, true, 100.0, null, null); //Silage Corn - insured
 		
 		//Field 2 ****		
 		AnnualFieldRsrc field2 = getField(fieldId2, invContract.getFields());
@@ -888,11 +907,11 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 
 		// Planting 1
 		planting = createPlanting(field2, 1, cropYear1, true);
-		createInventorySeededForage(planting, cropIdSilageCorn, varietyIdSilageCorn, ctcSilageCorn, true, 100.0); //Silage Corn - insured
+		createInventorySeededForage(planting, cropIdSilageCorn, varietyIdSilageCorn, ctcSilageCorn, true, 100.0, null, null); //Silage Corn - insured
 		
 		// Planting 2
 		planting = createPlanting(field2, 2, cropYear1, false);
-		createInventorySeededForage(planting, cropIdForage, varietyIdAlfalafaGrass, ctcAlfalfa, true, 200.0); //Alfalfa Grass - insured
+		createInventorySeededForage(planting, cropIdForage, varietyIdAlfalafaGrass, ctcAlfalfa, true, 200.0, null, null); //Alfalfa Grass - insured
 		
 		//Field 3 ****		
 		AnnualFieldRsrc field3 = getField(fieldId3, invContract.getFields());
@@ -902,15 +921,15 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 
 		// Planting 1
 		planting = createPlanting(field3, 1, cropYear1, true);
-		createInventorySeededForage(planting, cropIdSilageCorn, varietyIdSilageCorn, ctcSilageCorn, true, 100.0); //Silage Corn - insured
+		createInventorySeededForage(planting, cropIdSilageCorn, varietyIdSilageCorn, ctcSilageCorn, true, 100.0, null, null); //Silage Corn - insured
 		
 		// Planting 2
 		planting = createPlanting(field3, 2, cropYear1, true);
-		createInventorySeededForage(planting, cropIdForage, varietyIdAlfalafaGrass, ctcAlfalfa, true, 200.0); //Alfalfa Grass - insured
+		createInventorySeededForage(planting, cropIdForage, varietyIdAlfalafaGrass, ctcAlfalfa, true, 200.0, null, null); //Alfalfa Grass - insured
 		
 		// Planting 3
 		planting = createPlanting(field3, 3, cropYear1, false);
-		createInventorySeededForage(planting, cropIdForage, varietyIdGrass, ctcGrass, true, 100.0); //Grass - insured
+		createInventorySeededForage(planting, cropIdForage, varietyIdGrass, ctcGrass, true, 100.0, null, null); //Grass - insured
 		
 		// add comments
 		UnderwritingComment underwritingComment = new UnderwritingComment();
@@ -1065,7 +1084,9 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
             Integer cropVarietyId,
             String commodityTypeCode,
 			Boolean isQuantityInsurableInd,
-			Double fieldAcres) {
+			Double fieldAcres,
+			String plantInsurabilityTypeCode,
+			Date seedingDate) {
 		
 		InventorySeededForage isf = new InventorySeededForage();
 
@@ -1079,8 +1100,9 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		isf.setIsAwpEligibleInd(false);
 		isf.setIsIrrigatedInd(false);
 		isf.setIsQuantityInsurableInd(isQuantityInsurableInd);
-		isf.setPlantInsurabilityTypeCode(null);
+		isf.setPlantInsurabilityTypeCode(plantInsurabilityTypeCode);
 		isf.setSeedingYear(planting.getCropYear() - 3);
+		isf.setSeedingDate(seedingDate);
 		
 		planting.getInventorySeededForages().add(isf);
 

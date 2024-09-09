@@ -462,6 +462,9 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory implements 
 				model.setIsQuantityInsurableInd(isfDto.getIsQuantityInsurableInd());
 				model.setFieldAcres(isfDto.getFieldAcres());
 				model.setPlantDurationTypeCode(isfDto.getPlantDurationTypeCode());
+				model.setPlantInsurabilityTypeCode(isfDto.getPlantInsurabilityTypeCode());
+				model.setSeedingYear(isfDto.getSeedingYear());
+				model.setSeedingDate(isfDto.getSeedingDate());
 				
 			} else {
 				// Should never happen. Although the data model supports multiple seeded forage records, the UI does not.
