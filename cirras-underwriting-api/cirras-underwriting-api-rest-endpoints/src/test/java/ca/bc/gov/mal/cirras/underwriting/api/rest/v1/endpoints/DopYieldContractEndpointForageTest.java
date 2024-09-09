@@ -347,6 +347,7 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 				
 				Assert.assertEquals("E1", dyff.getPlantInsurabilityTypeCode());
 				Assert.assertTrue(dyff.getSeedingDate().equals(seedingDate));
+				Assert.assertTrue(dyff.getSeedingYear().equals(dyff.getCropYear() - 3));
 				
 			} else if(dyff.getCropVarietyName().equals(varietyNameGrass)) {
 				//Planting 2
@@ -358,6 +359,7 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 				
 				Assert.assertNull(dyff.getSeedingDate());
 				Assert.assertNull(dyff.getPlantInsurabilityTypeCode());
+				Assert.assertTrue(dyff.getSeedingYear().equals(dyff.getCropYear() - 3));
 				
 			} else if(dyff.getCropVarietyName().equals(varietyNameSilageCorn)) {
 				Assert.assertTrue(dyff.getIsQuantityInsurableInd());
@@ -372,6 +374,11 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 				} else {
 					Assert.fail("Unexpected field acres: " + dyff.getFieldAcres());
 				}
+				
+				Assert.assertNull(dyff.getSeedingDate());
+				Assert.assertNull(dyff.getPlantInsurabilityTypeCode());
+				Assert.assertTrue(dyff.getSeedingYear().equals(dyff.getCropYear() - 3));
+				
 			}
 		}
 		
