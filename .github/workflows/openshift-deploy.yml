@@ -74,7 +74,7 @@ jobs:
           TAG: ${{ inputs.TAG }}
           SID: ${{ github.run_id }}
           LOG_LEVEL: ${{ vars.LOG_LEVEL }}
-          MAX_APP_COUNT: ${{ vars.MAX_APP_COUNT }}
+          
           
           WEBADE_CHECK_TOKEN_URL: ${{ vars.WEBADE_CHECK_TOKEN_URL }}
           WEBADE_GET_TOKEN_URL: ${{ vars.WEBADE_GET_TOKEN_URL }}
@@ -83,6 +83,12 @@ jobs:
 
 
           #API variables
+          API_CPU_REQUEST: ${{ vars.API_CPU_REQUEST }}
+          API_CPU_LIMIT: ${{ vars.API_CPU_LIMIT }}
+          API_MEMORY_REQUEST: ${{ vars.API_MEMORY_REQUEST }}
+          API_MEMORY_LIMIT: ${{ vars.API_MEMORY_LIMIT }}
+          MAX_API_COUNT: ${{ vars.MAX_APP_COUNT }}
+
           POSTGRES_RESOURCE_NAME: ${{ vars.POSTGRES_RESOURCE_NAME }}
 
           MAX_THREADS: ${{ vars.MAX_THREADS }}
@@ -108,6 +114,7 @@ jobs:
 
           
           #Frontend variables
+          MAX_UI_COUNT: ${{ vars.MAX_UI_COUNT }}
           BASE_URL: https://cirras-underwriting-ui-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/pub/cirras-underwriting/
           CIRRAS_UNDERWRITING_REST_URI: https://cirras-underwriting-api-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/cirras-underwriting-api/v1
           WEBADE_CIRRAS_UNDERWRITING_UI_SECRET: ${{secrets.WEBADE_CIRRAS_UNDERWRITING_UI_SECRET}}
