@@ -23,20 +23,6 @@ join crop_commodity cc on cc.crop_commodity_id = icc.crop_commodity_id
 where ic.contract_id = $P{p_contract_id} 
 and ic.crop_year = $P{p_crop_year}
 and icc.total_seeded_acres > 0
-and not exists (select 1 from declared_yield_contract dyc where dyc.contract_id = ic.contract_id and dyc.crop_year = ic.crop_year)
-UNION ALL
-select 	INITCAP(cc.commodity_name) as commodity_name,
-		t.is_pedigree_ind, 
-		t.harvested_acres, 
-		t.stored_yield, 
-		t.sold_yield, 
-		gm.description as grade_modifier
-from declared_yield_contract_commodity t
-		join declared_yield_contract dyc on dyc.declared_yield_contract_guid = t.declared_yield_contract_guid
-		join crop_commodity cc on cc.crop_commodity_id = t.crop_commodity_id
-		left join grade_modifier_type_code gm on gm.grade_modifier_type_code = t.grade_modifier_type_code
-		where dyc.contract_id = $P{p_contract_id} 
-		and dyc.crop_year = $P{p_crop_year}
 order by commodity_name, is_pedigree_ind]]>
 		</queryString>
 		<field name="commodity_name" class="java.lang.String">
@@ -85,17 +71,16 @@ select p.policy_id
 	, g.grower_number
 	, g.grower_name
 	, ic.inv_update_timestamp
-	, dyc.declared_yield_contract_guid
-	, dyc.entered_yield_meas_unit_type_code
-	, dyc.grain_from_other_source_ind
+	, null as entered_yield_meas_unit_type_code
+	, null as grain_from_other_source_ind
 	, f.field_label
 	, ll.other_description as legal_description
 	, INITCAP(cc.commodity_name) as commodity_name
 	, INITCAP(cv.variety_name) as variety_name
 	, isg.seeded_acres
 	, isg.seeding_date
-	, dyf.estimated_yield_per_acre
-	, dyf.unharvested_acres_ind
+	, null as estimated_yield_per_acre
+	, null as unharvested_acres_ind
 	, ifd.planting_number
 	, ifd.inventory_field_guid
 	, cfd.display_order
@@ -121,9 +106,6 @@ from policy p
 	join inventory_seeded_grain isg on isg.inventory_field_guid = ifd.inventory_field_guid
 	join crop_commodity cc on cc.crop_commodity_id = isg.crop_commodity_id
 	left join crop_variety cv on cv.crop_variety_id = isg.crop_variety_id
-	left join declared_yield_contract dyc on dyc.contract_id = gcy.contract_id
-										 and dyc.crop_year = gcy.crop_year
- 	left join declared_yield_field dyf on dyf.inventory_field_guid = ifd.inventory_field_guid
 	where isg.seeded_acres > 0
 	  and ifd.is_hidden_on_printout_ind = 'N'
 	  and $P{p_policy_ids} is not null and char_length($P{p_policy_ids}) > 0
@@ -137,17 +119,16 @@ select distinct p.policy_id
 	, g.grower_number
 	, g.grower_name
 	, ic.inv_update_timestamp
-	, dyc.declared_yield_contract_guid
-	, dyc.entered_yield_meas_unit_type_code
-	, dyc.grain_from_other_source_ind
+	, null as entered_yield_meas_unit_type_code
+	, null as grain_from_other_source_ind
 	, f.field_label
 	, ll.other_description as legal_description
 	, INITCAP(cc.commodity_name) as commodity_name
 	, INITCAP(cv.variety_name) as variety_name
 	, isg.seeded_acres
 	, isg.seeding_date
-	, dyf.estimated_yield_per_acre
-	, dyf.unharvested_acres_ind
+	, null as estimated_yield_per_acre
+	, null as unharvested_acres_ind
 	, ifd.planting_number
 	, ifd.inventory_field_guid
 	, cfd.display_order
@@ -173,9 +154,6 @@ from policy p
 	join inventory_seeded_grain isg on isg.inventory_field_guid = ifd.inventory_field_guid
 	join crop_commodity cc on cc.crop_commodity_id = isg.crop_commodity_id
 	left join crop_variety cv on cv.crop_variety_id = isg.crop_variety_id
-	left join declared_yield_contract dyc on dyc.contract_id = gcy.contract_id
-										 and dyc.crop_year = gcy.crop_year
- 	left join declared_yield_field dyf on dyf.inventory_field_guid = ifd.inventory_field_guid
 	left join grower_contact gc on gc.grower_id = g.grower_id 
 	left join contact c on c.contact_id = gc.contact_id
 	left join contact_email ce on ce.contact_id = c.contact_id
@@ -275,10 +253,6 @@ where isg.seeded_acres > 0
 		<property name="com.jaspersoft.studio.field.label" value="inv_update_timestamp"/>
 		<property name="com.jaspersoft.studio.field.name" value="inv_update_timestamp"/>
 	</field>
-	<field name="declared_yield_contract_guid" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="declared_yield_contract_guid"/>
-		<property name="com.jaspersoft.studio.field.label" value="declared_yield_contract_guid"/>
-	</field>
 	<field name="entered_yield_meas_unit_type_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="entered_yield_meas_unit_type_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="entered_yield_meas_unit_type_code"/>
@@ -345,7 +319,7 @@ where isg.seeded_acres > 0
 	</field>
 	<group name="Group1" isStartNewPage="true">
 		<groupExpression><![CDATA[$F{grower_name} + $F{policy_number} + $F{crop_year} + $F{grower_number} + $F{policy_id} + $F{contract_id} + 
-$F{inv_update_timestamp}  + $F{declared_yield_contract_guid} + $F{entered_yield_meas_unit_type_code} + $F{grain_from_other_source_ind} + $F{sort_column}]]></groupExpression>
+$F{inv_update_timestamp}  + $F{entered_yield_meas_unit_type_code} + $F{grain_from_other_source_ind} + $F{sort_column}]]></groupExpression>
 		<groupHeader>
 			<band height="112">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
