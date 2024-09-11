@@ -121,11 +121,15 @@ export interface DopYieldFieldForage {
     fieldAcres?: number;
     cropVarietyName?: string;
     cropVarietyId?: number;
+    cropCommodityId?: number;
     plantDurationTypeCode?: string;
     insurancePlanId?: number;
     fieldId?: number;
     cropYear?: number;
     isHiddenOnPrintoutInd?: boolean;
+    plantInsurabilityTypeCode?: string;
+    seedingYear?: number;
+    seedingDate?: string;
     dopYieldFieldForageCuts?: Array<DopYieldFieldForageCut>;
 }
 
