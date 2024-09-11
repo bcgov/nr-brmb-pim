@@ -2,10 +2,10 @@
 <inputControl exportedWithPermissions="true">
     <folder>/NRSRS/CUWS/Input_Controls</folder>
     <name>p_grower_phone_number</name>
-    <version>0</version>
+    <version>1</version>
     <label>p_grower_phone_number</label>
     <description></description>
-    <creationDate>2023-06-06T16:03:54.506-07:00</creationDate>
+    <creationDate>2024-06-11T12:20:22.418-07:00</creationDate>
     <updateDate>2023-06-06T16:03:54.506-07:00</updateDate>
     <type>2</type>
     <mandatory>false</mandatory>

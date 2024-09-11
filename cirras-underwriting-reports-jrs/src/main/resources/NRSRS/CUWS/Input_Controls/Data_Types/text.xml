@@ -2,10 +2,10 @@
 <dataType exportedWithPermissions="true">
     <folder>/NRSRS/CUWS/Input_Controls/Data_Types</folder>
     <name>text</name>
-    <version>0</version>
+    <version>1</version>
     <label>text</label>
     <description></description>
-    <creationDate>2023-06-06T16:00:38.637-07:00</creationDate>
+    <creationDate>2024-06-11T12:20:22.380-07:00</creationDate>
     <updateDate>2023-06-06T16:00:38.637-07:00</updateDate>
     <type>1</type>
     <regularExpr></regularExpr>
