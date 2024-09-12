@@ -144,6 +144,8 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
         flds.clear()
         this.inventoryContract.fields.forEach( f => this.addField( f ) )
 
+        // setup the plant insurability options for each field based on the variety
+        this.setInitialPlantInsurabilityOptions()
     }
 
     // populate commodity and variety lists
@@ -398,9 +400,11 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   }
 
   setPlantingInsurabilityOptionsByVariety(variety){
+
     let options = []
 
     if ( variety && variety.isPlantInsurableInd == true) {
+
       variety.cropVarietyPlantInsurabilities.forEach( p => {
         options.push({
           code:         p.plantInsurabilityTypeCode,
@@ -423,6 +427,24 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
     return options
   }
 
+  setInitialPlantInsurabilityOptions(){
+    // for all fields
+    const formFields: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    
+    for (let fieldIndex = 0; fieldIndex < formFields.controls.length; fieldIndex++) { 
+
+      let formField = formFields.controls[fieldIndex] as FormArray
+
+      for (let plantingIndex = 0; plantingIndex < formField.value.plantings.length; plantingIndex++) {
+
+        for (let invSeededIndex = 0; invSeededIndex < formField.value.plantings.value[plantingIndex].inventorySeededForages.length; invSeededIndex++){
+
+          this.setPlantInsurability(fieldIndex, plantingIndex, invSeededIndex) 
+
+        }
+      }
+    }
+  }
 
   setStyles(){
 
