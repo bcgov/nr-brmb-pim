@@ -1,18 +1,17 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { BaseComponent } from 'src/app/components/common/base/base.component';
 import { AnnualField, CropCommodityList, InventoryContract, UwContract } from 'src/app/conversion/models';
 import { ForageInventoryComponentModel } from './forage-inventory.component.model';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN, PLANT_DURATION, UW_COMMENT_TYPE_CODE } from 'src/app/utils/constants';
+import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN, PLANT_DURATION } from 'src/app/utils/constants';
 import { CropVarietyCommodityType, InventorySeededForage, InventoryUnseeded, UnderwritingComment } from '@cirras/cirras-underwriting-api';
-import { addUwCommentsObject, areDatesNotEqual, areNotEqual, getUniqueKey, makeNumberOnly, makeTitleCase } from 'src/app/utils';
+import { addUwCommentsObject, areDatesNotEqual, areNotEqual, makeNumberOnly, makeTitleCase } from 'src/app/utils';
 import { AddNewFormField, CropVarietyOptionsType, addAnnualFieldObject, addPlantingObject, addSeededForagesObject, deleteFormField, deleteNewFormField, dragField, fieldHasInventory, getInventorySeededForagesObjForSave, isLinkedFieldCommon, isLinkedPlantingCommon, isThereAnyCommentForField, linkedFieldTooltipCommon, linkedPlantingTooltipCommon, navigateUpDownTextbox, openAddEditLandPopup, roundUpDecimalAcres, updateComments } from '../inventory-common';
 import { AddNewInventoryContract, DeleteInventoryContract, GetInventoryReport, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { AddLandPopupData } from '../add-land/add-land.component';
-import { getCodeOptions } from 'src/app/utils/code-table-utils';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { RemoveFieldPopupData } from '../remove-field/remove-field.component';
 import {ViewEncapsulation } from '@angular/core';
@@ -37,6 +36,7 @@ import { DecimalPipe } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
+
 export class ForageInventoryComponent extends BaseComponent implements OnChanges {
 
   @Input() inventoryContract: InventoryContract;
@@ -66,14 +66,15 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   cropVarietyOptions = [];
   filteredVarietyOptions: CropVarietyOptionsType[];  
 
-  plantInsurabilityOptions = getCodeOptions("plant_insurability_type_code");  
-
   cropYear = 0;
   insurancePlanId = 0;
   policyId = '';
 
   hasDataChanged = false;
   hasYieldData = false;
+
+  //plantInsurabilityOptions = getCodeOptions("plant_insurability_type_code");
+  plantInsurabilityOptions = []
 
   initModels() {
     this.viewModel = new ForageInventoryComponentModel(this.sanitizer, this.fb, this.inventoryContract);
@@ -375,24 +376,53 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
     return variety;
   }
 
-  getPlantInsurability(fieldIndex, plantingIndex, invSeededIndex) {
+  setPlantInsurability(fieldIndex, plantingIndex, invSeededIndex) {
 
     let variety = this.getVariety(fieldIndex, plantingIndex, invSeededIndex);
+    
+    let plantInsurabilityOptionsLocal = this.plantInsurabilityOptions.find(x => x.fieldIndex == fieldIndex && x.plantingIndex == plantingIndex && x.invSeededIndex == invSeededIndex)
 
-    this.plantInsurabilityOptions = []
+    if (plantInsurabilityOptionsLocal) {
 
-    if (variety && variety.isPlantInsurableInd == true) {
+      plantInsurabilityOptionsLocal.options = this.setPlantingInsurabilityOptionsByVariety(variety)
 
-      var self = this
+    } else {
+      // add an entry
+      this.plantInsurabilityOptions.push({
+          fieldIndex: fieldIndex,
+          plantingIndex: plantingIndex,
+          invSeededIndex: invSeededIndex,
+          options: this.setPlantingInsurabilityOptionsByVariety(variety)
+        })
+    }  
+  }
 
+  setPlantingInsurabilityOptionsByVariety(variety){
+    let options = []
+
+    if ( variety && variety.isPlantInsurableInd == true) {
       variety.cropVarietyPlantInsurabilities.forEach( p => {
-        self.plantInsurabilityOptions.push({
+        options.push({
           code:         p.plantInsurabilityTypeCode,
           description:  p.description
         })
       })
-    } 
+    }
+    return options
   }
+
+  getPlantInsurabilityOptions(fieldIndex, plantingIndex, invSeededIndex) {
+    let options = []
+    this.plantInsurabilityOptions.forEach( x  => {
+      if ( x.fieldIndex == fieldIndex && x.plantingIndex == plantingIndex && x.invSeededIndex == invSeededIndex) {
+        
+        options =  x.options 
+        return
+      }
+    }) 
+    return options
+  }
+
 
   setStyles(){
 

@@ -327,10 +327,10 @@
                                                 <mat-form-field *ngIf="!isAnnualPlanting(fieldIndex, plantingIndex, invSeededIndex)" appearance="fill">
                                                 <mat-select 
                                                     formControlName="plantInsurabilityTypeCode" 
-                                                    (focus)="getPlantInsurability(fieldIndex, plantingIndex, invSeededIndex)"
+                                                    (focus)="setPlantInsurability(fieldIndex, plantingIndex, invSeededIndex)"
                                                     (selectionChange)="isMyFormDirty()">
                                                     <mat-option [value]="null"></mat-option>
-                                                    <mat-option *ngFor="let option of plantInsurabilityOptions" [value]="option.code"
+                                                    <mat-option *ngFor="let option of getPlantInsurabilityOptions(fieldIndex, plantingIndex, invSeededIndex)" [value]="option.code"
                                                     >{{ option.description | titlecase }}</mat-option>
                                                 </mat-select>
                                                 </mat-form-field>
