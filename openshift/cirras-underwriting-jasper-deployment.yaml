@@ -103,7 +103,4 @@ spec:
             - name: jasper-#{ENV}#
               mountPath: /bitnami/jasperreports
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
+    type: Recreate

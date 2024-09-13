@@ -2,10 +2,10 @@
 <fileResource exportedWithPermissions="true" dataFile="SCAP_BCID_Can_Lockup.png.data">
     <folder>/NRSRS/CUWS/Images</folder>
     <name>SCAP_BCID_Can_Lockup.png</name>
-    <version>0</version>
+    <version>1</version>
     <label>SCAP-BCID-Can_Lockup.png</label>
     <description></description>
-    <creationDate>2023-06-08T14:50:32.954-07:00</creationDate>
+    <creationDate>2024-06-11T12:20:22.187-07:00</creationDate>
     <updateDate>2023-06-08T14:50:32.954-07:00</updateDate>
     <fileType>img</fileType>
 </fileResource>
