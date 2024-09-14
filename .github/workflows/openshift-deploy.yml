@@ -150,6 +150,10 @@ jobs:
           #Jasper variables
           JASPER_URL: https://cirras-underwriting-jasper-${{ inputs.ENVIRONMENT_NAME }}-${{ inputs.NAMESPACE }}.apps.silver.devops.gov.bc.ca/jasperserver/
           JASPER_USERNAME: ${{ vars.JASPER_USERNAME }}
+          JASPER_CPU_REQUEST: ${{ vars.JASPER_CPU_REQUEST }}
+          JASPER_CPU_LIMIT: ${{ vars.JASPER_CPU_LIMIT }}
+          JASPER_MEMORY_REQUEST: ${{ vars.JASPER_MEMORY_REQUEST }}
+          JASPER_MEMORY_LIMIT: ${{ vars.JASPER_MEMORY_LIMIT }}
           JASPER_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
           ALLOW_EMPTY_PASSWORD: true
           JASPERREPORTS_DATABASE_NAME: jasper${{ inputs.ENVIRONMENT_NAME }}
