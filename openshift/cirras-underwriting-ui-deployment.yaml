@@ -17,7 +17,7 @@ spec:
       containers:
         - name: container
           image: >-
-            ghcr.io/bcgov/cirras-underwriting-war:#{TAG}#
+            '#{IMAGE_BY_DIGEST}#'
           imagePullPolicy: Always
           ports:
             - containerPort: #{TARGET_PORT}#

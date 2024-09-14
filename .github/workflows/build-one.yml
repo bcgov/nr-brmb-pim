@@ -1,17 +1,25 @@
-name: Build .war and npm files
+name: Build single component
 
 on:
   workflow_dispatch:
     inputs:
       TAG:
-          required: true
-          type: string
-          description: Additional tag to apply to images being built
-          default: latest
+        required: true
+        type: string
+        description: Additional tag to apply to images being built
+        default: latest
+      COMPONENT:
+        required: true
+        type: choice
+        options:
+          - cirras-underwriting-api
+          - cirras-underwriting-war
+
 
 jobs:
-  build-underwriting-api:
+  build-underwriting-api: 
     uses: ./.github/workflows/build-package.yml
+    if: ${{ inputs.COMPONENT == 'cirras-underwriting-api' }}
     secrets: inherit
     with:
       ENVIRONMENT: DEV
@@ -23,6 +31,7 @@ jobs:
 
   build-and-upload-npm-modules:
     uses: ./.github/workflows/build-npm.yml
+    if: ${{ inputs.COMPONENT == 'cirras-underwriting-api' }}
     secrets: inherit
     needs: build-underwriting-api
     with:
@@ -35,6 +44,7 @@ jobs:
 
   build-underwriting-war:
     uses: ./.github/workflows/build-package.yml
+    if: ${{ inputs.COMPONENT == 'cirras-underwriting-war' }}
     secrets: inherit
     needs: build-and-upload-npm-modules
     with:
