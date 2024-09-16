@@ -53,6 +53,8 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-jasper-config-#{ENV}#
                   key: JASPERREPORTS_DATABASE_NAME  
+            - name: MARIADB_EXTRA_FLAGS
+              value: '--innodb_log_file_size=#{MARIADB_MAX_LOG_BYTES}#'
           volumeMounts:
             - name: mariadb-#{ENV}#
               mountPath: /bitnami/mariadb
