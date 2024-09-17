@@ -17,6 +17,8 @@
 		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		
 		<result property="totalAcresToBeSeeded" column="total_acres_to_be_seeded" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="isInventoryCropInd" column="is_inventory_crop_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="isCropInsuranceEligibleInd" column="is_crop_insurance_eligible_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
 		
 	</resultMap>
 	
@@ -26,6 +28,8 @@
 			iu.inventory_field_guid,
 			iu.crop_commodity_id,
 			cc.commodity_name as crop_commodity_name,
+			cc.is_crop_insurance_eligible_ind, 
+			cc.is_inventory_crop_ind,
 			iu.is_unseeded_insurable_ind,
 			iu.acres_to_be_seeded,
 			iu.create_user,
