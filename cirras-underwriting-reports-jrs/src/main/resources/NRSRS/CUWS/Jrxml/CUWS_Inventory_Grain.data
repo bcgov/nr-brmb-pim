@@ -568,7 +568,7 @@ order by sort_column,
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{grain_from_prev_year_ind}.equalsIgnoreCase( "Y" ) ? "X" : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Y".equalsIgnoreCase($F{grain_from_prev_year_ind}) ? "X" : ""]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="354" y="34" width="65" height="15" uuid="0a8cccb1-b748-4999-92c0-417ec1606d88">
@@ -595,7 +595,7 @@ order by sort_column,
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{grain_from_prev_year_ind}.equalsIgnoreCase( "N" ) ? "X" : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA["N".equalsIgnoreCase($F{grain_from_prev_year_ind}) ? "X" : ""]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="469" y="34" width="65" height="15" uuid="36a25b6e-6b30-4085-a555-60840ec5b42d">
