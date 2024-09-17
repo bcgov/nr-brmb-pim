@@ -1,6 +1,6 @@
 {
   "name": "cirras-underwriting-api",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "scripts": {
     "version-now": "node -pe 'require(\"projects/cirras-underwriting-api/package.json\").version'",
     "version-rc": "cd projects/cirras-underwriting-api && npm version prerelease --preid=rc",
