@@ -907,7 +907,6 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 				  //Commodity Rollup
 				declaredYieldRollupForageDao.deleteForDeclaredYieldContract(dyDto.getDeclaredYieldContractGuid());
 				
-				
 				//Underwriting Comment
 				underwritingCommentDao.deleteForDeclaredYieldContractGuid(dyDto.getDeclaredYieldContractGuid());
 

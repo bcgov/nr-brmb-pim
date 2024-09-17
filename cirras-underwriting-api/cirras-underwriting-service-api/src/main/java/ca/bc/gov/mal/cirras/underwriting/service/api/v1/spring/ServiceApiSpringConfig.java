@@ -373,6 +373,7 @@ public class ServiceApiSpringConfig {
 		result.setDeclaredYieldFieldRollupDao(persistenceSpringConfig.declaredYieldFieldRollupDao());
 		result.setDeclaredYieldFieldDao(persistenceSpringConfig.declaredYieldFieldDao());
 		result.setDeclaredYieldContractCommodityForageDao(persistenceSpringConfig.declaredYieldContractCommodityForageDao());
+		result.setDeclaredYieldRollupForageDao(persistenceSpringConfig.declaredYieldRollupForageDao());
 		result.setDeclaredYieldFieldForageDao(persistenceSpringConfig.declaredYieldFieldForageDao());
 		
 		return result;
