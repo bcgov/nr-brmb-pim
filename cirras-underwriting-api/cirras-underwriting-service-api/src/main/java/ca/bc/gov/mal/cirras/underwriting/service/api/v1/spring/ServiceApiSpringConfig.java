@@ -282,6 +282,7 @@ public class ServiceApiSpringConfig {
 		result.setDeclaredYieldFieldRollupDao(persistenceSpringConfig.declaredYieldFieldRollupDao());
 		result.setDeclaredYieldContractCommodityDao(persistenceSpringConfig.declaredYieldContractCommodityDao());
 		result.setDeclaredYieldContractCommodityForageDao(persistenceSpringConfig.declaredYieldContractCommodityForageDao());
+		result.setDeclaredYieldRollupForageDao(persistenceSpringConfig.declaredYieldRollupForageDao());
 
 		result.setUnderwritingServiceHelper(underwritingServiceHelper());
 		
@@ -312,6 +313,7 @@ public class ServiceApiSpringConfig {
 		result.setDeclaredYieldFieldRollupDao(persistenceSpringConfig.declaredYieldFieldRollupDao());
 		result.setDeclaredYieldContractCommodityDao(persistenceSpringConfig.declaredYieldContractCommodityDao());
 		result.setDeclaredYieldContractCommodityForageDao(persistenceSpringConfig.declaredYieldContractCommodityForageDao());
+		result.setDeclaredYieldRollupForageDao(persistenceSpringConfig.declaredYieldRollupForageDao());
 		result.setInventoryContractCommodityDao(persistenceSpringConfig.inventoryContractCommodityDao());
 		result.setInventorySeededForageDao(persistenceSpringConfig.inventorySeededForageDao());
 		result.setUnderwritingCommentDao(persistenceSpringConfig.underwritingCommentDao());

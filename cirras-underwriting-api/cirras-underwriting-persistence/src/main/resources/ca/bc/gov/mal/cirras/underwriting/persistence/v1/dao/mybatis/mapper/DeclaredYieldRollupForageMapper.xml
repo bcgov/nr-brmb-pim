@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.DeclaredYieldRollupForageMapper">
+
+	<resultMap id="DeclaredYieldRollupForageDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldRollupForageDto">
+
+		<id property="declaredYieldRollupForageGuid" column="declared_yield_rollup_forage_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="declaredYieldContractGuid" column="declared_yield_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="commodityTypeCode" column="commodity_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="totalFieldAcres" column="total_field_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="totalBalesLoads" column="total_bales_loads" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="harvestedAcres" column="harvested_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="quantityHarvestedTons" column="quantity_harvested_tons" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="yieldPerAcre" column="yield_per_acre" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+		<result property="commodityTypeDescription" column="commodity_type_description" javaType="java.lang.String" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	
+	
+    <sql id="selectColumns">
+		select t.declared_yield_rollup_forage_guid, 
+			t.declared_yield_contract_guid, 
+			t.commodity_type_code, 
+			t.total_field_acres, 
+			t.total_bales_loads, 
+			t.harvested_acres, 
+			t.quantity_harvested_tons, 
+			t.yield_per_acre, 
+			t.create_user, 
+			t.create_date, 
+			t.update_user, 
+			t.update_date
+    </sql>
+    
+    
+	<select id="fetch" resultMap="DeclaredYieldRollupForageDtoMap">
+		<include refid="selectColumns"/>,
+			ctc.description as commodity_type_description
+			FROM declared_yield_rollup_forage t
+			JOIN commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code
+			WHERE t.declared_yield_rollup_forage_guid = #{declaredYieldRollupForageGuid}
+	</select>
+
+	<insert id="insert">
+		<selectKey keyProperty="declaredYieldRollupForageGuid" resultType="java.lang.String" order="BEFORE"> 
+			select replace(cast(gen_random_uuid() as text), '-', '')
+		</selectKey>
+
+		insert into declared_yield_rollup_forage(
+			declared_yield_rollup_forage_guid,
+			declared_yield_contract_guid,
+			commodity_type_code,
+			total_field_acres,
+			total_bales_loads,
+			harvested_acres,
+			quantity_harvested_tons,
+			yield_per_acre,
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date
+		) values (
+			#{declaredYieldRollupForageGuid},
+			#{dto.declaredYieldContractGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.commodityTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.totalFieldAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalBalesLoads, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.harvestedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.quantityHarvestedTons, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.yieldPerAcre, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+	</insert> 
+
+	<update id="update">
+		update declared_yield_rollup_forage
+		set total_field_acres = #{dto.totalFieldAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			total_bales_loads = #{dto.totalBalesLoads, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			harvested_acres = #{dto.harvestedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			quantity_harvested_tons = #{dto.quantityHarvestedTons, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			yield_per_acre = #{dto.yieldPerAcre, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where declared_yield_rollup_forage_guid = #{dto.declaredYieldRollupForageGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
+	</update> 
+
+	<delete id="delete">
+		delete from declared_yield_rollup_forage where declared_yield_rollup_forage_guid = #{declaredYieldRollupForageGuid}
+	</delete>
+	
+	<delete id="deleteForDeclaredYieldContract">
+		delete from declared_yield_rollup_forage where declared_yield_contract_guid = #{declaredYieldContractGuid}
+	</delete>
+	
+	<select id="selectForDeclaredYieldContract" resultMap="DeclaredYieldRollupForageDtoMap">
+		<include refid="selectColumns"/>,
+			ctc.description as commodity_type_description
+		from declared_yield_rollup_forage t
+		join commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code	
+		where t.declared_yield_contract_guid = #{declaredYieldContractGuid}
+		order by ctc.description
+	</select> 
+
+	<select id="selectToRecalculate" resultMap="DeclaredYieldRollupForageDtoMap">
+		<include refid="selectColumns"/>
+		FROM declared_yield_rollup_forage t
+		JOIN commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code	
+		JOIN declared_yield_contract dyc ON dyc.declared_yield_contract_guid = t.declared_yield_contract_guid
+		WHERE ctc.crop_commodity_id = #{cropCommodityId}
+		AND dyc.entered_yield_meas_unit_type_code = #{enteredYieldMeasUnitTypeCode}
+		AND dyc.crop_year BETWEEN #{effectiveCropYear} AND #{expiryCropYear}	
+	</select> 	
+</mapper>

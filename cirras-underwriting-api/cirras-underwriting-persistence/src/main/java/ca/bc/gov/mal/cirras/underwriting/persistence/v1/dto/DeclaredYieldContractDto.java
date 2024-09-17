@@ -34,6 +34,7 @@ public class DeclaredYieldContractDto extends BaseDto<DeclaredYieldContractDto> 
 	private List<DeclaredYieldContractCommodityDto> declaredYieldContractCommodities = new ArrayList<DeclaredYieldContractCommodityDto>();
 	private List<UnderwritingCommentDto> uwComments = new ArrayList<UnderwritingCommentDto>();
 	private List<DeclaredYieldContractCommodityForageDto> declaredYieldContractCommodityForageList = new ArrayList<DeclaredYieldContractCommodityForageDto>();
+	private List<DeclaredYieldRollupForageDto> declaredYieldRollupForageList = new ArrayList<DeclaredYieldRollupForageDto>();
 	
 	private String createUser;
 	private Date createDate;
@@ -91,6 +92,14 @@ public class DeclaredYieldContractDto extends BaseDto<DeclaredYieldContractDto> 
 			
 			for ( DeclaredYieldContractCommodityForageDto dyccfDto : dto.declaredYieldContractCommodityForageList ) {
 				this.declaredYieldContractCommodityForageList.add(dyccfDto.copy());
+			}
+		}	
+		
+		if ( dto.declaredYieldRollupForageList != null ) {			
+			this.declaredYieldRollupForageList = new ArrayList<>();
+			
+			for ( DeclaredYieldRollupForageDto dyccfDto : dto.declaredYieldRollupForageList ) {
+				this.declaredYieldRollupForageList.add(dyccfDto.copy());
 			}
 		}	
 		
@@ -301,6 +310,13 @@ public class DeclaredYieldContractDto extends BaseDto<DeclaredYieldContractDto> 
 	}
 	public void setDeclaredYieldContractCommodityForageList(List<DeclaredYieldContractCommodityForageDto> declaredYieldContractCommodityForageList) {
 		this.declaredYieldContractCommodityForageList = declaredYieldContractCommodityForageList;
+	}	
+	
+	public List<DeclaredYieldRollupForageDto> getDeclaredYieldRollupForageList() {
+		return declaredYieldRollupForageList;
+	}
+	public void setDeclaredYieldRollupForageList(List<DeclaredYieldRollupForageDto> declaredYieldRollupForageList) {
+		this.declaredYieldRollupForageList = declaredYieldRollupForageList;
 	}
 
 	public Integer getGrowerContractYearId() {
