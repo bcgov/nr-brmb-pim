@@ -61,6 +61,6 @@ public interface DopYieldContract<A extends AnnualField> extends Serializable {
 	public List<DopYieldContractCommodityForage> getDopYieldContractCommodityForageList();
 	public void setDopYieldContractCommodityForageList(List<DopYieldContractCommodityForage> dopYieldContractCommodityForageList);
 
-	public List<DopYieldRollupForage> getDopYieldRollupForageList();
-	public void setDopYieldRollupForageList(List<DopYieldRollupForage> dopYieldRollupForageList);
+	public List<DopYieldFieldRollupForage> getDopYieldFieldRollupForageList();
+	public void setDopYieldFieldRollupForageList(List<DopYieldFieldRollupForage> dopYieldFieldRollupForageList);
 }

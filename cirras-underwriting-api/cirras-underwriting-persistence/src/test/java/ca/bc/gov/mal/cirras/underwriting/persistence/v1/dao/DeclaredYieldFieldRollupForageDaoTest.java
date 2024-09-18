@@ -15,11 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldRollupForageDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerContractYearDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CommodityTypeCodeDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CropCommodityDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldRollupForageDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.spring.PersistenceSpringConfig;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
@@ -28,7 +28,7 @@ import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes= {TestConfig.class, PersistenceSpringConfig.class})
-public class DeclaredYieldRollupForageDaoTest {
+public class DeclaredYieldFieldRollupForageDaoTest {
 	
 	@Autowired 
 	private PersistenceSpringConfig persistenceSpringConfig;
@@ -39,7 +39,7 @@ public class DeclaredYieldRollupForageDaoTest {
 	private String declaredYieldContractGuid;
 	private String commodityTypeCode1 = "TESTCODE DYF";
 	private String commodityTypeCode2 = "TESTCODE DYF2";
-	private String declaredYieldRollupForageGuid;
+	private String declaredYieldFieldRollupForageGuid;
 	private Integer cropCommodityId = 88995566;
 	private Integer insurancePlanId = 5;
 
@@ -57,7 +57,7 @@ public class DeclaredYieldRollupForageDaoTest {
 	private void delete() throws NotFoundDaoException, DaoException{
 		
 		//DELETE Declared Yield Contract Commodity Forage
-		DeclaredYieldRollupForageDao dyccfDao = persistenceSpringConfig.declaredYieldRollupForageDao();
+		DeclaredYieldFieldRollupForageDao dyccfDao = persistenceSpringConfig.declaredYieldFieldRollupForageDao();
 		dyccfDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
 		
 		//DELETE Declared Yield Contract
@@ -96,7 +96,7 @@ public class DeclaredYieldRollupForageDaoTest {
 
 
 	@Test 
-	public void testDeclaredYieldRollupForage() throws Exception {
+	public void testDeclaredYieldFieldRollupForage() throws Exception {
 
 		String userId = "UNITTEST";
 
@@ -106,10 +106,10 @@ public class DeclaredYieldRollupForageDaoTest {
 		createCommodityTypeCode(commodityTypeCode1);
 		createCommodityTypeCode(commodityTypeCode2);
 		
-		DeclaredYieldRollupForageDao dao = persistenceSpringConfig.declaredYieldRollupForageDao();
+		DeclaredYieldFieldRollupForageDao dao = persistenceSpringConfig.declaredYieldFieldRollupForageDao();
 
 		// INSERT
-		DeclaredYieldRollupForageDto newDto = new DeclaredYieldRollupForageDto();
+		DeclaredYieldFieldRollupForageDto newDto = new DeclaredYieldFieldRollupForageDto();
 		newDto.setDeclaredYieldContractGuid(declaredYieldContractGuid);
 		newDto.setCommodityTypeCode(commodityTypeCode1);
 		newDto.setTotalFieldAcres(40.0);
@@ -119,16 +119,16 @@ public class DeclaredYieldRollupForageDaoTest {
 		newDto.setYieldPerAcre(1.0);
 
 		dao.insert(newDto, userId);
-		Assert.assertNotNull(newDto.getDeclaredYieldRollupForageGuid());
-		declaredYieldRollupForageGuid = newDto.getDeclaredYieldRollupForageGuid();
+		Assert.assertNotNull(newDto.getDeclaredYieldFieldRollupForageGuid());
+		declaredYieldFieldRollupForageGuid = newDto.getDeclaredYieldFieldRollupForageGuid();
 		
 		//SELECT for declared yield contract
-		List<DeclaredYieldRollupForageDto> dtos = dao.selectForDeclaredYieldContract(declaredYieldContractGuid);
+		List<DeclaredYieldFieldRollupForageDto> dtos = dao.selectForDeclaredYieldContract(declaredYieldContractGuid);
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(1, dtos.size());
 		
-		DeclaredYieldRollupForageDto dto = dtos.get(0);
-		Assert.assertEquals("DeclaredYieldRollupGuid", newDto.getDeclaredYieldRollupForageGuid(), dto.getDeclaredYieldRollupForageGuid());
+		DeclaredYieldFieldRollupForageDto dto = dtos.get(0);
+		Assert.assertEquals("DeclaredYieldRollupGuid", newDto.getDeclaredYieldFieldRollupForageGuid(), dto.getDeclaredYieldFieldRollupForageGuid());
 		Assert.assertEquals("DeclaredYieldContractGuid", newDto.getDeclaredYieldContractGuid(), dto.getDeclaredYieldContractGuid());
 		Assert.assertEquals("CommodityTypeCode", newDto.getCommodityTypeCode(), dto.getCommodityTypeCode());
 		Assert.assertEquals("TotalFieldAcres", newDto.getTotalFieldAcres(), dto.getTotalFieldAcres());
@@ -138,9 +138,9 @@ public class DeclaredYieldRollupForageDaoTest {
 		Assert.assertEquals("YieldPerAcre", newDto.getYieldPerAcre(), dto.getYieldPerAcre());
 		
 		//FETCH
-		DeclaredYieldRollupForageDto fetchedDto = dao.fetch(declaredYieldRollupForageGuid);
+		DeclaredYieldFieldRollupForageDto fetchedDto = dao.fetch(declaredYieldFieldRollupForageGuid);
 		
-		Assert.assertEquals("DeclaredYieldRollupGuid", newDto.getDeclaredYieldRollupForageGuid(), fetchedDto.getDeclaredYieldRollupForageGuid());
+		Assert.assertEquals("DeclaredYieldRollupGuid", newDto.getDeclaredYieldFieldRollupForageGuid(), fetchedDto.getDeclaredYieldFieldRollupForageGuid());
 		Assert.assertEquals("DeclaredYieldContractGuid", newDto.getDeclaredYieldContractGuid(), fetchedDto.getDeclaredYieldContractGuid());
 		Assert.assertEquals("CommodityTypeCode", newDto.getCommodityTypeCode(), fetchedDto.getCommodityTypeCode());
 		Assert.assertEquals("TotalFieldAcres", newDto.getTotalFieldAcres(), fetchedDto.getTotalFieldAcres());
@@ -159,7 +159,7 @@ public class DeclaredYieldRollupForageDaoTest {
 		dao.update(fetchedDto, userId);
 
 		//FETCH
-		DeclaredYieldRollupForageDto updatedDto = dao.fetch(declaredYieldRollupForageGuid);
+		DeclaredYieldFieldRollupForageDto updatedDto = dao.fetch(declaredYieldFieldRollupForageGuid);
 
 		Assert.assertEquals("TotalFieldAcres", fetchedDto.getTotalFieldAcres(), updatedDto.getTotalFieldAcres());
 		Assert.assertEquals("HarvestedAcres", fetchedDto.getHarvestedAcres(), updatedDto.getHarvestedAcres());
@@ -168,7 +168,7 @@ public class DeclaredYieldRollupForageDaoTest {
 		Assert.assertEquals("YieldPerAcre", fetchedDto.getYieldPerAcre(), updatedDto.getYieldPerAcre());
 
 		//INSERT second commodity
-		DeclaredYieldRollupForageDto newDto2 = new DeclaredYieldRollupForageDto();
+		DeclaredYieldFieldRollupForageDto newDto2 = new DeclaredYieldFieldRollupForageDto();
 		newDto2.setDeclaredYieldContractGuid(declaredYieldContractGuid);
 		newDto2.setCommodityTypeCode(commodityTypeCode2);
 		newDto2.setTotalFieldAcres(40.0);
@@ -185,7 +185,7 @@ public class DeclaredYieldRollupForageDaoTest {
 		Assert.assertEquals(2, dtos.size());
 		
 		//Check if all records have the correct declared yield contract association
-		for (DeclaredYieldRollupForageDto dyccfDto : dtos) {
+		for (DeclaredYieldFieldRollupForageDto dyccfDto : dtos) {
 			Assert.assertEquals(dyccfDto.getDeclaredYieldContractGuid(), declaredYieldContractGuid);
 			Assert.assertNotNull("CommodityTypeCode", dyccfDto.getCommodityTypeCode());
 			Assert.assertNotNull("TotalFieldAcres", dyccfDto.getTotalFieldAcres());
@@ -200,11 +200,11 @@ public class DeclaredYieldRollupForageDaoTest {
 		Assert.assertEquals(2, dtos.size());
 		
 		//DELETE
-		dao.delete(newDto2.getDeclaredYieldRollupForageGuid());
-		dao.delete(declaredYieldRollupForageGuid);
+		dao.delete(newDto2.getDeclaredYieldFieldRollupForageGuid());
+		dao.delete(declaredYieldFieldRollupForageGuid);
 		
 		//FETCH
-		DeclaredYieldRollupForageDto deletedDto = dao.fetch(declaredYieldRollupForageGuid);
+		DeclaredYieldFieldRollupForageDto deletedDto = dao.fetch(declaredYieldFieldRollupForageGuid);
 		Assert.assertNull(deletedDto);
 
 		//SELECT

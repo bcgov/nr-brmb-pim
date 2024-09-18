@@ -21,7 +21,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContrac
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldRollupForageDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.FieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.GrowerContractYearDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryContractCommodityDao;
@@ -104,7 +104,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	private DeclaredYieldFieldRollupDao declaredYieldFieldRollupDao;
 	private DeclaredYieldContractCommodityDao declaredYieldContractCommodityDao;
 	private DeclaredYieldContractCommodityForageDao declaredYieldContractCommodityForageDao;
-	private DeclaredYieldRollupForageDao declaredYieldRollupForageDao;
+	private DeclaredYieldFieldRollupForageDao declaredYieldFieldRollupForageDao;
 
 
 	// utils
@@ -219,8 +219,8 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 		this.declaredYieldContractCommodityForageDao = declaredYieldContractCommodityForageDao;
 	}
 
-	public void setDeclaredYieldRollupForageDao(DeclaredYieldRollupForageDao declaredYieldRollupForageDao) {
-		this.declaredYieldRollupForageDao = declaredYieldRollupForageDao;
+	public void setDeclaredYieldFieldRollupForageDao(DeclaredYieldFieldRollupForageDao declaredYieldFieldRollupForageDao) {
+		this.declaredYieldFieldRollupForageDao = declaredYieldFieldRollupForageDao;
 	}
 
 	public void setDeclaredYieldContractDao(DeclaredYieldContractDao declaredYieldContractDao) {
@@ -905,7 +905,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 				  //Commodity Totals
 				declaredYieldContractCommodityForageDao.deleteForDeclaredYieldContract(dyDto.getDeclaredYieldContractGuid());
 				  //Commodity Rollup
-				declaredYieldRollupForageDao.deleteForDeclaredYieldContract(dyDto.getDeclaredYieldContractGuid());
+				declaredYieldFieldRollupForageDao.deleteForDeclaredYieldContract(dyDto.getDeclaredYieldContractGuid());
 				
 				//Underwriting Comment
 				underwritingCommentDao.deleteForDeclaredYieldContractGuid(dyDto.getDeclaredYieldContractGuid());

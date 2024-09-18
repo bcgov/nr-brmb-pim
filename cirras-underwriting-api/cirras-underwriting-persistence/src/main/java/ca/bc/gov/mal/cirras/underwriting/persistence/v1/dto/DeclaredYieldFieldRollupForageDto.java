@@ -8,13 +8,13 @@ import org.slf4j.LoggerFactory;
 import ca.bc.gov.nrs.wfone.common.persistence.dto.BaseDto;
 import ca.bc.gov.nrs.wfone.common.persistence.utils.DtoUtils;
 
-public class DeclaredYieldRollupForageDto extends BaseDto<DeclaredYieldRollupForageDto> {
+public class DeclaredYieldFieldRollupForageDto extends BaseDto<DeclaredYieldFieldRollupForageDto> {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LoggerFactory.getLogger(DeclaredYieldRollupForageDto.class);
+	private static final Logger logger = LoggerFactory.getLogger(DeclaredYieldFieldRollupForageDto.class);
 
-	private String declaredYieldRollupForageGuid;
+	private String declaredYieldFieldRollupForageGuid;
 	private String declaredYieldContractGuid;
 	private String commodityTypeCode;
 	private Double totalFieldAcres;
@@ -30,12 +30,12 @@ public class DeclaredYieldRollupForageDto extends BaseDto<DeclaredYieldRollupFor
 	private String commodityTypeDescription;
 
 	
-	public DeclaredYieldRollupForageDto() {
+	public DeclaredYieldFieldRollupForageDto() {
 	}
 	
-	public DeclaredYieldRollupForageDto(DeclaredYieldRollupForageDto dto) {
+	public DeclaredYieldFieldRollupForageDto(DeclaredYieldFieldRollupForageDto dto) {
 
-		this.declaredYieldRollupForageGuid = dto.declaredYieldRollupForageGuid;
+		this.declaredYieldFieldRollupForageGuid = dto.declaredYieldFieldRollupForageGuid;
 		this.declaredYieldContractGuid = dto.declaredYieldContractGuid;
 		this.commodityTypeCode = dto.commodityTypeCode;
 		this.totalFieldAcres = dto.totalFieldAcres;
@@ -53,12 +53,12 @@ public class DeclaredYieldRollupForageDto extends BaseDto<DeclaredYieldRollupFor
 	
 
 	@Override
-	public boolean equalsBK(DeclaredYieldRollupForageDto other) {
+	public boolean equalsBK(DeclaredYieldFieldRollupForageDto other) {
 		throw new UnsupportedOperationException("Not Implemented");
 	}
 
 	@Override
-	public boolean equalsAll(DeclaredYieldRollupForageDto other) {
+	public boolean equalsAll(DeclaredYieldFieldRollupForageDto other) {
 		boolean result = false;
 		
 		if(other!=null) {
@@ -66,7 +66,7 @@ public class DeclaredYieldRollupForageDto extends BaseDto<DeclaredYieldRollupFor
 			result = true;
 			DtoUtils dtoUtils = new DtoUtils(getLogger());
 			
-			result = result&&dtoUtils.equals("declaredYieldRollupForageGuid", declaredYieldRollupForageGuid, other.declaredYieldRollupForageGuid);
+			result = result&&dtoUtils.equals("declaredYieldFieldRollupForageGuid", declaredYieldFieldRollupForageGuid, other.declaredYieldFieldRollupForageGuid);
 			result = result&&dtoUtils.equals("declaredYieldContractGuid", declaredYieldContractGuid, other.declaredYieldContractGuid);
 			result = result&&dtoUtils.equals("commodityTypeCode", commodityTypeCode, other.commodityTypeCode);
 			result = result&&dtoUtils.equals("totalFieldAcres", totalFieldAcres, other.totalFieldAcres, decimalPrecision);
@@ -85,16 +85,16 @@ public class DeclaredYieldRollupForageDto extends BaseDto<DeclaredYieldRollupFor
 	}
 
 	@Override
-	public DeclaredYieldRollupForageDto copy() {
-		return new DeclaredYieldRollupForageDto(this);
+	public DeclaredYieldFieldRollupForageDto copy() {
+		return new DeclaredYieldFieldRollupForageDto(this);
 	}
 	
-	public String getDeclaredYieldRollupForageGuid() {
-		return declaredYieldRollupForageGuid;
+	public String getDeclaredYieldFieldRollupForageGuid() {
+		return declaredYieldFieldRollupForageGuid;
 	}
 
-	public void setDeclaredYieldRollupForageGuid(String declaredYieldRollupForageGuid) {
-		this.declaredYieldRollupForageGuid = declaredYieldRollupForageGuid;
+	public void setDeclaredYieldFieldRollupForageGuid(String declaredYieldFieldRollupForageGuid) {
+		this.declaredYieldFieldRollupForageGuid = declaredYieldFieldRollupForageGuid;
 	}
 
 	public String getDeclaredYieldContractGuid() {

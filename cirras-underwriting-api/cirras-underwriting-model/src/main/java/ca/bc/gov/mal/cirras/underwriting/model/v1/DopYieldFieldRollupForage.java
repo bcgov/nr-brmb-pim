@@ -5,10 +5,10 @@ import java.io.Serializable;
 //
 // This is not going to be a resource.
 //
-public class DopYieldRollupForage implements Serializable {
+public class DopYieldFieldRollupForage implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String declaredYieldRollupForageGuid;
+	private String declaredYieldFieldRollupForageGuid;
 	private String declaredYieldContractGuid;
 	private String commodityTypeCode;
 	private Double totalFieldAcres;
@@ -20,12 +20,12 @@ public class DopYieldRollupForage implements Serializable {
 	private String commodityTypeDescription;
 
 	
-	public String getDeclaredYieldRollupForageGuid() {
-		return declaredYieldRollupForageGuid;
+	public String getDeclaredYieldFieldRollupForageGuid() {
+		return declaredYieldFieldRollupForageGuid;
 	}
 
-	public void setDeclaredYieldRollupForageGuid(String declaredYieldRollupForageGuid) {
-		this.declaredYieldRollupForageGuid = declaredYieldRollupForageGuid;
+	public void setDeclaredYieldFieldRollupForageGuid(String declaredYieldFieldRollupForageGuid) {
+		this.declaredYieldFieldRollupForageGuid = declaredYieldFieldRollupForageGuid;
 	}
 
 	public String getDeclaredYieldContractGuid() {

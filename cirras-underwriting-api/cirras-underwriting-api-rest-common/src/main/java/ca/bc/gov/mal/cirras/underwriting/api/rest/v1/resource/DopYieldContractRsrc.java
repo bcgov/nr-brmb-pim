@@ -13,7 +13,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceType
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodityForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollup;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldRollupForage;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollupForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContract;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
@@ -44,7 +44,7 @@ public class DopYieldContractRsrc extends BaseResource implements DopYieldContra
 	private List<DopYieldFieldRollup> dopYieldFieldRollupList = new ArrayList<DopYieldFieldRollup>();
 	private List<DopYieldContractCommodity> dopYieldContractCommodities = new ArrayList<DopYieldContractCommodity>();
 	private List<DopYieldContractCommodityForage> dopYieldContractCommodityForageList = new ArrayList<DopYieldContractCommodityForage>();
-	private List<DopYieldRollupForage> dopYieldRollupForageList = new ArrayList<DopYieldRollupForage>();
+	private List<DopYieldFieldRollupForage> dopYieldFieldRollupForageList = new ArrayList<DopYieldFieldRollupForage>();
 
  	public String getDeclaredYieldContractGuid() {
 		return declaredYieldContractGuid;
@@ -187,12 +187,12 @@ public class DopYieldContractRsrc extends BaseResource implements DopYieldContra
 		this.dopYieldContractCommodityForageList = dopYieldContractCommodityForageList;
 	}	
 	
-	public List<DopYieldRollupForage> getDopYieldRollupForageList() {
-		return dopYieldRollupForageList;
+	public List<DopYieldFieldRollupForage> getDopYieldFieldRollupForageList() {
+		return dopYieldFieldRollupForageList;
 	}
 	
-	public void setDopYieldRollupForageList(List<DopYieldRollupForage> dopYieldRollupForageList) {
-		this.dopYieldRollupForageList = dopYieldRollupForageList;
+	public void setDopYieldFieldRollupForageList(List<DopYieldFieldRollupForage> dopYieldFieldRollupForageList) {
+		this.dopYieldFieldRollupForageList = dopYieldFieldRollupForageList;
 	}
 	
 }

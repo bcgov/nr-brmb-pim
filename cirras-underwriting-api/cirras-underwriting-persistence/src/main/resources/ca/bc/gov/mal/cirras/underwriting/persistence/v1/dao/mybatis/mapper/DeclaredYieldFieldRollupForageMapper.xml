@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.DeclaredYieldRollupForageMapper">
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.DeclaredYieldFieldRollupForageMapper">
 
-	<resultMap id="DeclaredYieldRollupForageDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldRollupForageDto">
+	<resultMap id="DeclaredYieldFieldRollupForageDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupForageDto">
 
-		<id property="declaredYieldRollupForageGuid" column="declared_yield_rollup_forage_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<id property="declaredYieldFieldRollupForageGuid" column="declared_yield_rollup_forage_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="declaredYieldContractGuid" column="declared_yield_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="commodityTypeCode" column="commodity_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="totalFieldAcres" column="total_field_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
@@ -39,16 +39,16 @@
     </sql>
     
     
-	<select id="fetch" resultMap="DeclaredYieldRollupForageDtoMap">
+	<select id="fetch" resultMap="DeclaredYieldFieldRollupForageDtoMap">
 		<include refid="selectColumns"/>,
 			ctc.description as commodity_type_description
 			FROM declared_yield_rollup_forage t
 			JOIN commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code
-			WHERE t.declared_yield_rollup_forage_guid = #{declaredYieldRollupForageGuid}
+			WHERE t.declared_yield_rollup_forage_guid = #{declaredYieldFieldRollupForageGuid}
 	</select>
 
 	<insert id="insert">
-		<selectKey keyProperty="declaredYieldRollupForageGuid" resultType="java.lang.String" order="BEFORE"> 
+		<selectKey keyProperty="declaredYieldFieldRollupForageGuid" resultType="java.lang.String" order="BEFORE"> 
 			select replace(cast(gen_random_uuid() as text), '-', '')
 		</selectKey>
 
@@ -66,7 +66,7 @@
 			update_user, 
 			update_date
 		) values (
-			#{declaredYieldRollupForageGuid},
+			#{declaredYieldFieldRollupForageGuid},
 			#{dto.declaredYieldContractGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{dto.commodityTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{dto.totalFieldAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
@@ -90,18 +90,18 @@
 			yield_per_acre = #{dto.yieldPerAcre, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
 			update_date = now()
-		where declared_yield_rollup_forage_guid = #{dto.declaredYieldRollupForageGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
+		where declared_yield_rollup_forage_guid = #{dto.declaredYieldFieldRollupForageGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
 	</update> 
 
 	<delete id="delete">
-		delete from declared_yield_rollup_forage where declared_yield_rollup_forage_guid = #{declaredYieldRollupForageGuid}
+		delete from declared_yield_rollup_forage where declared_yield_rollup_forage_guid = #{declaredYieldFieldRollupForageGuid}
 	</delete>
 	
 	<delete id="deleteForDeclaredYieldContract">
 		delete from declared_yield_rollup_forage where declared_yield_contract_guid = #{declaredYieldContractGuid}
 	</delete>
 	
-	<select id="selectForDeclaredYieldContract" resultMap="DeclaredYieldRollupForageDtoMap">
+	<select id="selectForDeclaredYieldContract" resultMap="DeclaredYieldFieldRollupForageDtoMap">
 		<include refid="selectColumns"/>,
 			ctc.description as commodity_type_description
 		from declared_yield_rollup_forage t
@@ -110,7 +110,7 @@
 		order by ctc.description
 	</select> 
 
-	<select id="selectToRecalculate" resultMap="DeclaredYieldRollupForageDtoMap">
+	<select id="selectToRecalculate" resultMap="DeclaredYieldFieldRollupForageDtoMap">
 		<include refid="selectColumns"/>
 		FROM declared_yield_rollup_forage t
 		JOIN commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code	

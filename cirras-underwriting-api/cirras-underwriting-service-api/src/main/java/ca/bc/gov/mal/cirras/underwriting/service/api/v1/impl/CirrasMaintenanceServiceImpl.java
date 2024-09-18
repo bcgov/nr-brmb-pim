@@ -31,7 +31,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContrac
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldRollupForageDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GradeModifierDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GradeModifierTypeCodeDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.SeedingDeadlineDto;
@@ -45,7 +45,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContrac
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldRollupForageDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.GradeModifierDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.GradeModifierTypeCodeDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.SeedingDeadlineDao;
@@ -104,7 +104,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	private DeclaredYieldFieldRollupDao declaredYieldFieldRollupDao;
 	private DeclaredYieldFieldDao declaredYieldFieldDao;
 	private DeclaredYieldContractCommodityForageDao declaredYieldContractCommodityForageDao;
-	private DeclaredYieldRollupForageDao declaredYieldRollupForageDao;
+	private DeclaredYieldFieldRollupForageDao declaredYieldFieldRollupForageDao;
 	private DeclaredYieldFieldForageDao declaredYieldFieldForageDao;
 
 	public static final String MaximumResultsProperty = "maximum.results";
@@ -199,8 +199,8 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		this.declaredYieldContractCommodityForageDao = declaredYieldContractCommodityForageDao;
 	}
 	
-	public void setDeclaredYieldRollupForageDao(DeclaredYieldRollupForageDao declaredYieldRollupForageDao) {
-		this.declaredYieldRollupForageDao = declaredYieldRollupForageDao;
+	public void setDeclaredYieldFieldRollupForageDao(DeclaredYieldFieldRollupForageDao declaredYieldFieldRollupForageDao) {
+		this.declaredYieldFieldRollupForageDao = declaredYieldFieldRollupForageDao;
 	}
 
 	public void setDeclaredYieldFieldForageDao(DeclaredYieldFieldForageDao declaredYieldFieldForageDao) {
@@ -1156,7 +1156,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		}
 		
 		//Get rollup
-		List<DeclaredYieldRollupForageDto> dyrDto = declaredYieldRollupForageDao.selectToRecalculate(
+		List<DeclaredYieldFieldRollupForageDto> dyrDto = declaredYieldFieldRollupForageDao.selectToRecalculate(
 				yieldMeasUnitConversion.getCropCommodityId(), 
 				yieldMeasUnitConversion.getTargetYieldMeasUnitTypeCode(),
 				yieldMeasUnitConversion.getEffectiveCropYear(),
@@ -1165,7 +1165,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		
 		//Recalculate yield rollup
 		if(dyrDto != null && dyrDto.size() > 0) {
-			for (DeclaredYieldRollupForageDto dto : dyrDto) {
+			for (DeclaredYieldFieldRollupForageDto dto : dyrDto) {
 				//Convert it into entered units with the old conversion factor
 				dto.setQuantityHarvestedTons(calculateYieldMeasUnitConversion(oldConversionFactor, dto.getQuantityHarvestedTons(), true));
 				//Convert it into default units with the new conversion factor
@@ -1178,7 +1178,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 				}
 				dto.setYieldPerAcre(yieldPerAcre);
 				
-				declaredYieldRollupForageDao.update(dto, userId);
+				declaredYieldFieldRollupForageDao.update(dto, userId);
 			}
 		}		
 

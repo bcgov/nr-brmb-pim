@@ -34,7 +34,7 @@ public class DeclaredYieldContractDto extends BaseDto<DeclaredYieldContractDto> 
 	private List<DeclaredYieldContractCommodityDto> declaredYieldContractCommodities = new ArrayList<DeclaredYieldContractCommodityDto>();
 	private List<UnderwritingCommentDto> uwComments = new ArrayList<UnderwritingCommentDto>();
 	private List<DeclaredYieldContractCommodityForageDto> declaredYieldContractCommodityForageList = new ArrayList<DeclaredYieldContractCommodityForageDto>();
-	private List<DeclaredYieldRollupForageDto> declaredYieldRollupForageList = new ArrayList<DeclaredYieldRollupForageDto>();
+	private List<DeclaredYieldFieldRollupForageDto> declaredYieldFieldRollupForageList = new ArrayList<DeclaredYieldFieldRollupForageDto>();
 	
 	private String createUser;
 	private Date createDate;
@@ -95,11 +95,11 @@ public class DeclaredYieldContractDto extends BaseDto<DeclaredYieldContractDto> 
 			}
 		}	
 		
-		if ( dto.declaredYieldRollupForageList != null ) {			
-			this.declaredYieldRollupForageList = new ArrayList<>();
+		if ( dto.declaredYieldFieldRollupForageList != null ) {			
+			this.declaredYieldFieldRollupForageList = new ArrayList<>();
 			
-			for ( DeclaredYieldRollupForageDto dyccfDto : dto.declaredYieldRollupForageList ) {
-				this.declaredYieldRollupForageList.add(dyccfDto.copy());
+			for ( DeclaredYieldFieldRollupForageDto dyccfDto : dto.declaredYieldFieldRollupForageList ) {
+				this.declaredYieldFieldRollupForageList.add(dyccfDto.copy());
 			}
 		}	
 		
@@ -312,11 +312,11 @@ public class DeclaredYieldContractDto extends BaseDto<DeclaredYieldContractDto> 
 		this.declaredYieldContractCommodityForageList = declaredYieldContractCommodityForageList;
 	}	
 	
-	public List<DeclaredYieldRollupForageDto> getDeclaredYieldRollupForageList() {
-		return declaredYieldRollupForageList;
+	public List<DeclaredYieldFieldRollupForageDto> getDeclaredYieldFieldRollupForageList() {
+		return declaredYieldFieldRollupForageList;
 	}
-	public void setDeclaredYieldRollupForageList(List<DeclaredYieldRollupForageDto> declaredYieldRollupForageList) {
-		this.declaredYieldRollupForageList = declaredYieldRollupForageList;
+	public void setDeclaredYieldFieldRollupForageList(List<DeclaredYieldFieldRollupForageDto> declaredYieldFieldRollupForageList) {
+		this.declaredYieldFieldRollupForageList = declaredYieldFieldRollupForageList;
 	}
 
 	public Integer getGrowerContractYearId() {

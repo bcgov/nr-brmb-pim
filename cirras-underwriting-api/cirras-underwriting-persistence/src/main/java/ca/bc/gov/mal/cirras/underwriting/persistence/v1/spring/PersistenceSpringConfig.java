@@ -37,7 +37,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContrac
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldRollupForageDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.FieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.GradeModifierDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.GradeModifierTypeCodeDao;
@@ -82,7 +82,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.DeclaredYiel
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.DeclaredYieldFieldDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.DeclaredYieldFieldForageDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.DeclaredYieldFieldRollupDaoImpl;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.DeclaredYieldRollupForageDaoImpl;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.DeclaredYieldFieldRollupForageDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.FieldDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.GradeModifierDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.GradeModifierTypeCodeDaoImpl;
@@ -369,8 +369,8 @@ public class PersistenceSpringConfig {
 	}
 	
 	@Bean
-	public DeclaredYieldRollupForageDao declaredYieldRollupForageDao() { 
-		return new DeclaredYieldRollupForageDaoImpl(); 
+	public DeclaredYieldFieldRollupForageDao declaredYieldFieldRollupForageDao() { 
+		return new DeclaredYieldFieldRollupForageDaoImpl(); 
 	}
 	
 	@Bean

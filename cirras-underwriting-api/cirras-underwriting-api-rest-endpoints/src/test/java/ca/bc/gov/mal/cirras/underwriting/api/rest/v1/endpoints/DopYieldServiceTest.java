@@ -18,7 +18,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForageCut;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldGrain;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollup;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldRollupForage;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollupForage;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasDopYieldService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.test.EndpointsTest;
@@ -542,7 +542,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 		fieldC.setDopYieldFieldForageList(dopFields);
 		
 		
-		DopYieldRollupForage dyrfSilageCorn = createDopYieldRollupForage(
+		DopYieldFieldRollupForage dyrfSilageCorn = createDopYieldFieldRollupForage(
 				commodityTypeSilageCorn, 	// commodityTypeCode
 				(double)300, 				// totalFieldAcres
 				(double)200, 				// harvestedAcres
@@ -554,7 +554,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 		Double YieldPerAcreSilageCorn = (double)57.2;
 		Integer totalBalesSilageCorn = 420;
 		
-		DopYieldRollupForage dyrfAlfalfa = createDopYieldRollupForage(
+		DopYieldFieldRollupForage dyrfAlfalfa = createDopYieldFieldRollupForage(
 				commodityTypeAlfalfa, 
 				(double)400, 				// totalFieldAcres
 				(double)400, 				// harvestedAcres
@@ -566,7 +566,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 		Double YieldPerAcreAlfalfa = (double)28.1103;
 		Integer totalBalesAlfalfa = 555;
 
-		DopYieldRollupForage dyrfGrass = createDopYieldRollupForage(
+		DopYieldFieldRollupForage dyrfGrass = createDopYieldFieldRollupForage(
 				commodityTypeGrass, 
 				(double)100, 				// totalFieldAcres
 				(double)100, 				// harvestedAcres
@@ -579,7 +579,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 		Integer totalBalesGrass = 200;
 
 		//Commodity type that doesn't exist anymore
-		DopYieldRollupForage dyrfSpringAnnual = createDopYieldRollupForage(
+		DopYieldFieldRollupForage dyrfSpringAnnual = createDopYieldFieldRollupForage(
 				commodityTypeSpringAnnual, 
 				(double)400, 				// totalFieldAcres
 				(double)400, 				// harvestedAcres
@@ -593,21 +593,21 @@ public class DopYieldServiceTest extends EndpointsTest {
 		
 		dopYieldContract.setFields(fields);
 		
-		List<DopYieldRollupForage> dopYieldRollupForageList = new ArrayList<DopYieldRollupForage>();
+		List<DopYieldFieldRollupForage> dopYieldFieldRollupForageList = new ArrayList<DopYieldFieldRollupForage>();
 		
 		//Add commodity totals for grass and silage corn and one that is not in the fields anymore
-		dopYieldRollupForageList.add(dyrfSilageCorn);
-		dopYieldRollupForageList.add(dyrfGrass);
-		dopYieldRollupForageList.add(dyrfSpringAnnual);
+		dopYieldFieldRollupForageList.add(dyrfSilageCorn);
+		dopYieldFieldRollupForageList.add(dyrfGrass);
+		dopYieldFieldRollupForageList.add(dyrfSpringAnnual);
 		
-		dopYieldContract.setDopYieldRollupForageList(dopYieldRollupForageList);
+		dopYieldContract.setDopYieldFieldRollupForageList(dopYieldFieldRollupForageList);
 
 		DopYieldContract<? extends AnnualField> convertedDopYieldContract = dopService.calculateYieldRollupForageTest(dopYieldContract);
 		
 		Assert.assertNotNull(convertedDopYieldContract);
 		
-		Assert.assertNotNull(convertedDopYieldContract.getDopYieldRollupForageList());
-		Assert.assertEquals(3, convertedDopYieldContract.getDopYieldRollupForageList().size());
+		Assert.assertNotNull(convertedDopYieldContract.getDopYieldFieldRollupForageList());
+		Assert.assertEquals(3, convertedDopYieldContract.getDopYieldFieldRollupForageList().size());
 
 		//Set expected calculated values
 		dyrfSilageCorn.setQuantityHarvestedTons(quantityHarvestedSilageCorn);
@@ -620,17 +620,17 @@ public class DopYieldServiceTest extends EndpointsTest {
 		dyrfGrass.setYieldPerAcre(YieldPerAcreGrass);
 		dyrfGrass.setTotalBalesLoads(totalBalesGrass);
 		
-		for(DopYieldRollupForage dyrf : convertedDopYieldContract.getDopYieldRollupForageList()) {
+		for(DopYieldFieldRollupForage dyrf : convertedDopYieldContract.getDopYieldFieldRollupForageList()) {
 			
 			switch (dyrf.getCommodityTypeCode()) {
 			case commodityTypeSilageCorn:
-				checkDopYieldRollupForage(dyrfSilageCorn, dyrf);
+				checkDopYieldFieldRollupForage(dyrfSilageCorn, dyrf);
 				break;
 			case commodityTypeAlfalfa:
-				checkDopYieldRollupForage(dyrfAlfalfa, dyrf);
+				checkDopYieldFieldRollupForage(dyrfAlfalfa, dyrf);
 				break;
 			case commodityTypeGrass:
-				checkDopYieldRollupForage(dyrfGrass, dyrf);
+				checkDopYieldFieldRollupForage(dyrfGrass, dyrf);
 				break;
 			default:
 				Assert.fail("Unexpected commodity type: " + dyrf.getCommodityTypeCode());
@@ -668,7 +668,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 
 	}	
 	
-	private void checkDopYieldRollupForage(DopYieldRollupForage expected, DopYieldRollupForage actual) {
+	private void checkDopYieldFieldRollupForage(DopYieldFieldRollupForage expected, DopYieldFieldRollupForage actual) {
 		
 		Double actualQuantityHarvestedTons = actual.getQuantityHarvestedTons();
 		if(actual.getQuantityHarvestedTons() != null) {
@@ -778,7 +778,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 		return model;
 	}
 	
-	private DopYieldRollupForage createDopYieldRollupForage(
+	private DopYieldFieldRollupForage createDopYieldFieldRollupForage(
 			String commodityTypeCode, 
 			Double totalFieldAcres, 
 			Double harvestedAcres, 
@@ -786,7 +786,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 			Double quantityHarvestedTons, 
 			Double yieldPerAcre
 			) {
-		DopYieldRollupForage model = new DopYieldRollupForage();
+		DopYieldFieldRollupForage model = new DopYieldFieldRollupForage();
 		model.setCommodityTypeCode(commodityTypeCode);
 		model.setTotalFieldAcres(totalFieldAcres);
 		model.setHarvestedAcres(harvestedAcres);

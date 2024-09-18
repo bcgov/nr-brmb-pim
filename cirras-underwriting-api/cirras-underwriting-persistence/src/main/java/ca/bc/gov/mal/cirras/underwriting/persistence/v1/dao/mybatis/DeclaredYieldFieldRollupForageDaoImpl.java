@@ -9,33 +9,33 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldRollupForageDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.DeclaredYieldRollupForageMapper;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldRollupForageDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupForageDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.DeclaredYieldFieldRollupForageMapper;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupForageDto;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.BaseDao;
 
 
 @Repository
-public class DeclaredYieldRollupForageDaoImpl extends BaseDao implements DeclaredYieldRollupForageDao {
+public class DeclaredYieldFieldRollupForageDaoImpl extends BaseDao implements DeclaredYieldFieldRollupForageDao {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LoggerFactory.getLogger(DeclaredYieldRollupForageDaoImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(DeclaredYieldFieldRollupForageDaoImpl.class);
 
 	@Autowired
-	private DeclaredYieldRollupForageMapper mapper;
+	private DeclaredYieldFieldRollupForageMapper mapper;
 
 	@Override
-	public DeclaredYieldRollupForageDto fetch(String declaredYieldRollupForageGuid) throws DaoException {
+	public DeclaredYieldFieldRollupForageDto fetch(String declaredYieldFieldRollupForageGuid) throws DaoException {
 		logger.debug("<fetch");
 
-		DeclaredYieldRollupForageDto result = null;
+		DeclaredYieldFieldRollupForageDto result = null;
 
 		try {
 			Map<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put("declaredYieldRollupForageGuid", declaredYieldRollupForageGuid);
+			parameters.put("declaredYieldFieldRollupForageGuid", declaredYieldFieldRollupForageGuid);
 			result = this.mapper.fetch(parameters);
 			
 			if(result!=null) {
@@ -51,10 +51,10 @@ public class DeclaredYieldRollupForageDaoImpl extends BaseDao implements Declare
 
 	
 	@Override
-	public void insert(DeclaredYieldRollupForageDto dto, String userId) throws DaoException {
+	public void insert(DeclaredYieldFieldRollupForageDto dto, String userId) throws DaoException {
 		logger.debug("<insert");
 
-		String declaredYieldRollupForageGuid = null;
+		String declaredYieldFieldRollupForageGuid = null;
 		
 		try {
 			Map<String, Object> parameters = new HashMap<String, Object>();
@@ -67,20 +67,20 @@ public class DeclaredYieldRollupForageDaoImpl extends BaseDao implements Declare
 				throw new DaoException("Record not inserted: "+count);
 			}
 
-			declaredYieldRollupForageGuid = (String) parameters.get("declaredYieldRollupForageGuid");
-			dto.setDeclaredYieldRollupForageGuid(declaredYieldRollupForageGuid);
+			declaredYieldFieldRollupForageGuid = (String) parameters.get("declaredYieldFieldRollupForageGuid");
+			dto.setDeclaredYieldFieldRollupForageGuid(declaredYieldFieldRollupForageGuid);
 			
 			
 		} catch (RuntimeException e) {
 			handleException(e);
 		}
 
-		logger.debug(">insert " + declaredYieldRollupForageGuid);
+		logger.debug(">insert " + declaredYieldFieldRollupForageGuid);
 	}
 	
 
 	@Override
-	public void update(DeclaredYieldRollupForageDto dto, String userId) 
+	public void update(DeclaredYieldFieldRollupForageDto dto, String userId) 
 			throws DaoException, NotFoundDaoException {
 		logger.debug("<update");
 		
@@ -108,12 +108,12 @@ public class DeclaredYieldRollupForageDaoImpl extends BaseDao implements Declare
 	}
 
 	@Override
-	public void delete(String declaredYieldRollupForageGuid) throws DaoException, NotFoundDaoException {
+	public void delete(String declaredYieldFieldRollupForageGuid) throws DaoException, NotFoundDaoException {
 		logger.debug("<delete");
 
 		try {
 			Map<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put("declaredYieldRollupForageGuid", declaredYieldRollupForageGuid);
+			parameters.put("declaredYieldFieldRollupForageGuid", declaredYieldFieldRollupForageGuid);
 			int count = this.mapper.delete(parameters);
 
 			if(count==0) {
@@ -146,11 +146,11 @@ public class DeclaredYieldRollupForageDaoImpl extends BaseDao implements Declare
 	}	
 	
 	@Override
-	public List<DeclaredYieldRollupForageDto> selectForDeclaredYieldContract(String declaredYieldContractGuid) throws DaoException {
+	public List<DeclaredYieldFieldRollupForageDto> selectForDeclaredYieldContract(String declaredYieldContractGuid) throws DaoException {
 
 		logger.debug("<selectForDeclaredYieldContract");
 
-		List<DeclaredYieldRollupForageDto> dtos = null;
+		List<DeclaredYieldFieldRollupForageDto> dtos = null;
 
 		try {
 			Map<String, Object> parameters = new HashMap<String, Object>();
@@ -168,7 +168,7 @@ public class DeclaredYieldRollupForageDaoImpl extends BaseDao implements Declare
 	}
 	
 	@Override
-	public  List<DeclaredYieldRollupForageDto> selectToRecalculate(
+	public  List<DeclaredYieldFieldRollupForageDto> selectToRecalculate(
 	    		Integer cropCommodityId,
 	    		String enteredYieldMeasUnitTypeCode,
 	    		Integer effectiveCropYear,
@@ -177,7 +177,7 @@ public class DeclaredYieldRollupForageDaoImpl extends BaseDao implements Declare
 
 		logger.debug("<selectToRecalculate");
 
-		List<DeclaredYieldRollupForageDto> dtos = null;
+		List<DeclaredYieldFieldRollupForageDto> dtos = null;
 
 		try {
 			Map<String, Object> parameters = new HashMap<String, Object>();

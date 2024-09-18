@@ -38,7 +38,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.YieldMeasUnitConve
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodityForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForageCut;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldRollupForage;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollupForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.YieldMeasUnitConversion;
@@ -323,7 +323,7 @@ public class YieldMeasUnitConversionListEndpointForageTest extends EndpointsTest
 			DopYieldContractRsrc dopYieldContractRsrc) {
 		//Quantity Harvested ------------------------------
 		//Perennial
-		DopYieldRollupForage dyrf = getDopYieldRollupForage(commodityTypeCodePerennial, dopYieldContractRsrc.getDopYieldRollupForageList());
+		DopYieldFieldRollupForage dyrf = getDopYieldFieldRollupForage(commodityTypeCodePerennial, dopYieldContractRsrc.getDopYieldFieldRollupForageList());
 		Double actualQuantityHarvestedTons = dyrf.getQuantityHarvestedTons();
 		if(dyrf.getQuantityHarvestedTons() != null) {
 			actualQuantityHarvestedTons = BigDecimal.valueOf(dyrf.getQuantityHarvestedTons())
@@ -337,7 +337,7 @@ public class YieldMeasUnitConversionListEndpointForageTest extends EndpointsTest
 		}
 		
 		//Annual
-		dyrf = getDopYieldRollupForage(commodityTypeCodeAnnual, dopYieldContractRsrc.getDopYieldRollupForageList());
+		dyrf = getDopYieldFieldRollupForage(commodityTypeCodeAnnual, dopYieldContractRsrc.getDopYieldFieldRollupForageList());
 		actualQuantityHarvestedTons = dyrf.getQuantityHarvestedTons();
 		if(dyrf.getQuantityHarvestedTons() != null) {
 			actualQuantityHarvestedTons = BigDecimal.valueOf(dyrf.getQuantityHarvestedTons())
@@ -351,9 +351,9 @@ public class YieldMeasUnitConversionListEndpointForageTest extends EndpointsTest
 		}
 	}
 	
-	private DopYieldRollupForage getDopYieldRollupForage(String commodityTypeCode, List<DopYieldRollupForage> dyccfList) {
+	private DopYieldFieldRollupForage getDopYieldFieldRollupForage(String commodityTypeCode, List<DopYieldFieldRollupForage> dyccfList) {
 		
-		List<DopYieldRollupForage> dyrfs = dyccfList.stream().filter(x -> x.getCommodityTypeCode().equalsIgnoreCase(commodityTypeCode)) 
+		List<DopYieldFieldRollupForage> dyrfs = dyccfList.stream().filter(x -> x.getCommodityTypeCode().equalsIgnoreCase(commodityTypeCode)) 
 				.collect(Collectors.toList());
 		
 		Assert.assertEquals(1, dyrfs.size());
