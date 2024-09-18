@@ -28,11 +28,11 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: TOMCAT_PORT
-            - name: TOMCAT_MAX_THREADS
+            - name: MAX_THREADS
               valueFrom: 
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
-                  key: TOMCAT_MAX_THREADS
+                  key: MAX_THREADS
             - name: CONNECTION_TIMEOUT
               valueFrom:
                 configMapKeyRef:
