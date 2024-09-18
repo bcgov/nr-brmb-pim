@@ -98,6 +98,13 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: LOG_LEVEL
+          livenessProbe:
+            scheme: HTTP
+            path: /pub/cirras-underwriting/
+            port: #{TARGET_PORT}#
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 5
           resources:
             requests:
               cpu: 50m
