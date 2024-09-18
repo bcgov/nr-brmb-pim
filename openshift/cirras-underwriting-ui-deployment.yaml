@@ -99,9 +99,10 @@ spec:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: LOG_LEVEL
           livenessProbe:
-            scheme: HTTP
-            path: /pub/cirras-underwriting/
-            port: #{TARGET_PORT}#
+            httpGet:
+              scheme: HTTP
+              path: /pub/cirras-underwriting/
+              port: #{TARGET_PORT}#
             initialDelaySeconds: 60
             periodSeconds: 15
             timeoutSeconds: 5

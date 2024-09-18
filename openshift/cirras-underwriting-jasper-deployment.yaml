@@ -100,9 +100,10 @@ spec:
                   name: cirras-underwriting-jasper-config-#{ENV}#
                   key: JASPERREPORTS_UI_PASSWORD
           livenessProbe:
-            scheme: HTTP
-            path: /jasperserver/
-            port: 8080
+            httpGet:
+              scheme: HTTP
+              path: /jasperserver/
+              port: 8080
             initialDelaySeconds: 1200
             periodSeconds: 60
             timeoutSeconds: 15
