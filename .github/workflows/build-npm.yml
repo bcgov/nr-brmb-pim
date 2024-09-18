@@ -2,6 +2,7 @@ name: build npm-lib
 
 env:
   NPMRC: ${{ secrets.NPMRC }}
+  ARTIFACTORY_PATH: ca/bc/gov/mal/cirras/underwriting
 
 on:
   workflow_call:
@@ -15,10 +16,10 @@ on:
       EXPORT_MODULE:
           required: false
           type: string
-      DOWNLOAD_FILE:
+      API_TARGET:
           required: false
           type: string
-      DOWNLOAD_PATH:
+      SWAGGER_TARGET_PATH:
           required: false
           type: string
       NPM_ARTIFACT_PATH:
@@ -49,16 +50,27 @@ jobs:
         with:
           node-version: 14
 
+      - name: Extract version number
+        id: getVersion
+        run: |
+          export VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+(-SNAPSHOT)?'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )
+          echo "VERSION_NUMBER=$VERSION_NUMBER" >> $GITHUB_OUTPUT
+
       #NOTE: necessary to build client-war 
       - name: Add .npmrc file
         run: echo -e $NPMRC > ~/.npmrc
 
-      - name: download files from other jobs
-        if: ${{ inputs.DOWNLOAD_FILE }}
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ inputs.DOWNLOAD_FILE}}
-          path: ${{ inputs.DOWNLOAD_PATH}}
+      - name: download swagger file
+        run: |
+          [[ $(echo "${{ steps.getVersion.outputs.VERSION_NUMBER }}" | grep -o SNAPSHOT ) = SNAPSHOT ]] && URL="${{ vars.SNAPSHOT_URL }}" || ${{ vars.RELEASE_URL }}
+          jfrog rt dl \
+          --flat --limit=1 --sort-by=created \
+          --sort-order=desc \
+          --url=$URL \
+          --user=${{ secrets.OPENSHIFT_ACCOUNT }} \
+          --password=${{ secrets.OPENSHIFT_PASSWORD }} \
+          "${{ env.ARTIFACTORY_PATH }}/${{inputs.API_TARGET}}/${{ steps.getVersion.outputs.VERSION_NUMBER }}/${{inputs.API_TARGET}}-rest-endpoints-${{ steps.getVersion.outputs.VERSION_NUMBER }}-swagger.json" \
+          ${{inputs.SWAGGER_TARGET_PATH}}
       
       - name: npm install
         run: |
@@ -68,12 +80,6 @@ jobs:
           npm run build
           cd dist/${{ inputs.EXPORT_MODULE }}
           npm pack
-
-      - name: Extract version number
-        id: getVersion
-        run: |
-          export VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+(-SNAPSHOT)?'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )
-          echo "VERSION_NUMBER=$VERSION_NUMBER" >> $GITHUB_OUTPUT
 
       - name: Setup artifactory
         uses: jfrog/setup-jfrog-cli@v4

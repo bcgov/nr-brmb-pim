@@ -108,8 +108,8 @@ jobs:
 
           POSTGRES_RESOURCE_NAME: ${{ vars.POSTGRES_RESOURCE_NAME }}
 
-          MAX_THREADS: ${{ vars.MAX_THREADS }}
-          TARGET_PORT: ${{ vars.TARGET_PORT }}
+          TOMCAT_MAX_THREADS: ${{ vars.TOMCAT_MAX_THREADS }}
+          TOMCAT_PORT: ${{ vars.TOMCAT_PORT }}
           TIME_ZONE: ${{ vars.TIME_ZONE }}
 
           CIRRAS_POLICIES_API_URL: ${{ vars.CIRRAS_POLICIES_API_URL}}

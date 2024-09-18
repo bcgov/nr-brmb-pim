@@ -14,6 +14,7 @@ on:
         options:
           - cirras-underwriting-api
           - cirras-underwriting-war
+          - cirras-underwriting-ngclient-lib
 
 
 jobs:
@@ -24,21 +25,16 @@ jobs:
     with:
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-api
-      EXPORT_FILE: CIRRAS_UNDERWRITING_API_swagger.json
-      EXPORT_PATH: cirras-underwriting-api/cirras-underwriting-api-rest-endpoints/target/swagger.json
       JAVA_VERSION: 17
       TAG: ${{ inputs.TAG }}
 
   build-and-upload-npm-modules:
     uses: ./.github/workflows/build-npm.yml
-    if: ${{ inputs.COMPONENT == 'cirras-underwriting-api' }}
+    if: ${{ inputs.COMPONENT == 'cirras-underwriting-ngclient-lib' }}
     secrets: inherit
-    needs: build-underwriting-api
     with:
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-ngclient-lib
-      DOWNLOAD_FILE: CIRRAS_UNDERWRITING_API_swagger.json
-      DOWNLOAD_PATH: cirras-underwriting-ngclient-lib/cirras-underwriting-ngclient-lib/src/main/angular/src/swagger/
       EXPORT_MODULE: cirras-underwriting-api
       NPM_ARTIFACT_PATH: \@cirras/cirras-underwriting-api/-/@cirras
 
@@ -46,7 +42,6 @@ jobs:
     uses: ./.github/workflows/build-package.yml
     if: ${{ inputs.COMPONENT == 'cirras-underwriting-war' }}
     secrets: inherit
-    needs: build-and-upload-npm-modules
     with:
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-war

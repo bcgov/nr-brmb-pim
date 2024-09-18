@@ -9,18 +9,6 @@ on:
       MICROSERVICE_NAME:
         required: true
         type: string
-      EXPORT_FILE:
-        required: false
-        type: string
-      EXPORT_PATH:
-        required: false
-        type: string
-      DOWNLOAD_FILE:
-        required: false
-        type: string
-      DOWNLOAD_PATH:
-        required: false
-        type: string
       TOMCAT_PORT:
         required: false
         type: string
@@ -53,6 +41,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Extract version number
+        id: getVersion
+        run: echo "VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+(-SNAPSHOT)?'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )" >> $GITHUB_OUTPUT
+
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
@@ -67,13 +59,6 @@ jobs:
         #NOTE: necessary to build client-war 
       - name: Add .npmrc file
         run: echo -e $NPMRC > ~/.npmrc
-
-      - name: download files from other jobs
-        if: ${{ inputs.DOWNLOAD_FILE }}
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ inputs.DOWNLOAD_FILE}}
-          path: ${{ inputs.DOWNLOAD_PATH}}
           
       - name: Build with Maven and push to artifactory
         run: |
@@ -82,13 +67,6 @@ jobs:
           export RELEASE_URL=${{ vars.RELEASE_URL }}
           export SNAPSHOT_URL=${{ vars.SNAPSHOT_URL }}
           mvn --settings=settings.xml --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }}  -DopenshiftRepo.login=${{ secrets.OPENSHIFT_ACCOUNT }} -DopenshiftRepo.password=${{ secrets.OPENSHIFT_PASSWORD }} deploy
-      
-      - name: Export file between jobs
-        uses: actions/upload-artifact@v4
-        if: ${{ inputs.EXPORT_FILE }}
-        with:
-          name: ${{ inputs.EXPORT_FILE }}
-          path: ${{ inputs.EXPORT_PATH }}
 
       - name: Cache local Maven repository
         uses: actions/cache@v2
@@ -97,10 +75,6 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**war.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-
-      - name: Extract version number
-        id: getVersion
-        run: echo "VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+(-SNAPSHOT)?'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -123,7 +97,6 @@ jobs:
           tags: |
             type=schedule
             type=raw,value=${{ github.base_ref }}
-            type=raw,value=${{ inputs.TAG }}
             type=raw,value=latest
             type=ref,event=tag
             type=raw,value=${{ steps.getVersion.outputs.VERSION_NUMBER }}
