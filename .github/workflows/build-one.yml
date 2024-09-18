@@ -35,7 +35,8 @@ jobs:
     with:
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-ngclient-lib
-      EXPORT_MODULE: cirras-underwriting-api
+      API_TARGET: cirras-underwriting-api
+      SWAGGER_TARGET_PATH: cirras-underwriting-ngclient-lib/cirras-underwriting-ngclient-lib/src/main/angular/src/swagger/
       NPM_ARTIFACT_PATH: \@cirras/cirras-underwriting-api/-/@cirras
 
   build-underwriting-war:

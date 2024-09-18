@@ -13,7 +13,7 @@
   <Service name="Catalina">
     <Connector port="${TOMCAT_PORT}"
       protocol="org.apache.coyote.http11.Http11NioProtocol"
-      maxThreads="${MAX_THREADS}"
+      maxThreads="${TOMCAT_MAX_THREADS}"
         connectionTimeout="${CONNECTION_TIMEOUT}"
         compression="on"
         compressionMinSize="1024"

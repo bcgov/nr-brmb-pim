@@ -91,7 +91,7 @@ jobs:
           IMAGE_BY_DIGEST: ${{ steps.getDigest.outputs.IMAGE_BY_DIGEST }}
           SID: ${{ github.run_id }}
           LOG_LEVEL: ${{ vars.LOG_LEVEL }}
-          
+          CONNECTION_TIMEOUT: ${{ vars.CONNECTION_TIMEOUT }}
           
           WEBADE_CHECK_TOKEN_URL: ${{ vars.WEBADE_CHECK_TOKEN_URL }}
           WEBADE_GET_TOKEN_URL: ${{ vars.WEBADE_GET_TOKEN_URL }}

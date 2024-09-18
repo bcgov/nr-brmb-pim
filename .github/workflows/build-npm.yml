@@ -13,9 +13,6 @@ on:
       MICROSERVICE_NAME:
           required: true
           type: string
-      EXPORT_MODULE:
-          required: false
-          type: string
       API_TARGET:
           required: false
           type: string
@@ -78,7 +75,7 @@ jobs:
           npm install
           npm run generate
           npm run build
-          cd dist/${{ inputs.EXPORT_MODULE }}
+          cd dist/${{ inputs.API_TARGET }}
           npm pack
 
       - name: Setup artifactory
@@ -87,9 +84,9 @@ jobs:
       - name: Push Build to Artifactory
         run: |
           export VERSION_NUMBER=${{ steps.getVersion.outputs.VERSION_NUMBER }}
-          mv ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz  cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz
-          export BUILD_NAME="cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER"
-          export BUILD_MODULE="${{ inputs.EXPORT_MODULE}}"
+          mv ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.API_TARGET }}/cirras-${{ inputs.API_TARGET}}-$VERSION_NUMBER.tgz  cirras-${{ inputs.API_TARGET}}-$VERSION_NUMBER.tgz
+          export BUILD_NAME="cirras-${{ inputs.API_TARGET}}-$VERSION_NUMBER"
+          export BUILD_MODULE="${{ inputs.API_TARGET}}"
           
-          jf rt upload  --url ${{ vars.ARTIFACTORY_URL }} --user ${{ secrets.OPENSHIFT_ACCOUNT }} --password ${{ secrets.OPENSHIFT_PASSWORD }} --build-name $BUILD_NAME --module $BUILD_MODULE --target-props npm.version=$VERSION_NUMBER "cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz" ${{ vars.NPM_REPO }}/${{ inputs.NPM_ARTIFACT_PATH}}/${{inputs.EXPORT_MODULE}}-$VERSION_NUMBER.${{ github.run_number }}.tgz
+          jf rt upload  --url ${{ vars.ARTIFACTORY_URL }} --user ${{ secrets.OPENSHIFT_ACCOUNT }} --password ${{ secrets.OPENSHIFT_PASSWORD }} --build-name $BUILD_NAME --module $BUILD_MODULE --target-props npm.version=$VERSION_NUMBER "cirras-${{ inputs.API_TARGET}}-$VERSION_NUMBER.tgz" ${{ vars.NPM_REPO }}/${{ inputs.NPM_ARTIFACT_PATH}}/${{inputs.API_TARGET}}-$VERSION_NUMBER.${{ github.run_number }}.tgz
           
