@@ -1,17 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { FormArray } from '@angular/forms';
+import { DopYieldFieldRollupForage } from 'src/app/conversion/models-yield';
 
 @Component({
   selector: 'forage-dop-yield-summary-list',
   templateUrl: './forage-dop-yield-summary-list.component.html',
-  styleUrls: ['./forage-dop-yield-summary-list.component.scss']
+  styleUrls: ['./forage-dop-yield-summary-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 
-export class ForageDopYieldSummaryListComponent implements OnInit {
+export class ForageDopYieldSummaryListComponent {
 
-  constructor() { }
+  @Input() fieldRollupList: Array<DopYieldFieldRollupForage>;
+  @Input() fieldRollupFormArray: FormArray;
+  @Input() decimalPrecision: number;
+  @Input() isUnsaved: boolean;
 
-  ngOnInit(): void {
+  get totalFieldAcresTotal(): number {
+      return this.fieldRollupList.reduce((acc, curr) => acc + curr.totalFieldAcres || 0, 0);
   }
+
+  get harvestedAcresTotal(): number {
+      return this.fieldRollupList.reduce((acc, curr) => acc + curr.harvestedAcres || 0, 0);
+  }
+
+  // get harvestedAcresOverrideTotal(): number {
+  //     return this.commodities.reduce((acc, curr) => acc + curr.harvestedAcresOverride || 0, 0);
+  // }
 
 }

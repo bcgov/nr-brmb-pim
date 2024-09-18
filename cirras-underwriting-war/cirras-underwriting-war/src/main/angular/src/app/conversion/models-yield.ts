@@ -43,7 +43,7 @@ export interface DopYieldContract {
     dopYieldFieldRollupList?: Array<DopYieldFieldRollup>;
     dopYieldContractCommodities?: Array<DopYieldContractCommodity>;
     dopYieldContractCommodityForageList?: Array<DopYieldContractCommodityForage>;
-    dDopYieldRollupForage?: Array<DopYieldFieldRollupForage>;
+    dopYieldFieldRollupForageList?: Array<DopYieldFieldRollupForage>;
     etag?: string;
     type: string;
   }

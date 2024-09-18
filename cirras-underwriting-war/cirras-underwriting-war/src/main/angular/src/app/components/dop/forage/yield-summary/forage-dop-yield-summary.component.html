@@ -1,1 +1,20 @@
-<p>forage-dop-yield-summary works!</p>
+<div [formGroup]="fieldRollupFormGroup" style="display: contents;">
+    <div class="readonly border-right border-bottom border-left" style="padding-left: 6px;">
+        {{ fieldRollupFormGroup.value.commodityTypeDescription | titlecase }}
+    </div>
+    <div class="readonly border-right border-bottom center">
+        {{ fieldRollupFormGroup.value.totalFieldAcres | number: '1.0-1' }}
+    </div>
+    <div class="readonly border-right border-bottom center">
+        {{ fieldRollupFormGroup.value.harvestedAcres | number: '1.0-1' }}
+    </div>
+    <div class="fill border-right border-bottom">
+        {{ fieldRollupFormGroup.value.totalBalesLoads | number: '1.0-0' }}
+    </div>
+    <div class="readonly border-right border-bottom center">
+        {{ fieldRollupFormGroup.value.quantityHarvestedTons | number: '1.0-1' }}
+    </div>
+    <div class="readonly border-right border-bottom center">
+        {{ fieldRollupFormGroup.value.yieldPerAcre | number: '1.0-1' }}
+    </div>
+</div>

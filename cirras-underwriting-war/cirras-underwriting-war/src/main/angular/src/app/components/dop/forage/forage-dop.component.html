@@ -182,14 +182,18 @@
 
 
                 <!-- dop contract data  -->
-                <div class="plcy-inv-cntrct" style="grid-template-columns: 600px 790px;" >
+                <div class="plcy-inv-cntrct" style="grid-template-columns: 800px 790px;" >
                     <div>
-                        <!-- yield summary place holder -->
-                        <forage-dop-yield-summary-list></forage-dop-yield-summary-list>
+                        <!-- yield summary  -->
+                        <forage-dop-yield-summary-list
+                            *ngIf="dopYieldContract && dopYieldContract.dopYieldFieldRollupForageList"
+                            [fieldRollupList]="dopYieldContract.dopYieldFieldRollupForageList"
+                            [fieldRollupFormArray]="getViewModel().formGroup.controls.dopYieldFieldRollupForageList"
+                            [decimalPrecision]="decimalPrecision"
+                            [isUnsaved]="isUnsaved"></forage-dop-yield-summary-list>
                     </div>
     
                     <div>
-                        
                         <!-- commodity totals -->
                         <forage-dop-commodity-list
                             *ngIf="dopYieldContract && dopYieldContract.dopYieldContractCommodityForageList"
@@ -197,7 +201,6 @@
                             [commoditiesFormArray]="getViewModel().formGroup.controls.dopYieldContractCommodityForageList"
                             [decimalPrecision]="decimalPrecision"
                             [isUnsaved]="isUnsaved"></forage-dop-commodity-list>
-    
                     </div>
     
                 </div>
