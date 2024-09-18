@@ -5,7 +5,7 @@
 
 	<resultMap id="DeclaredYieldFieldRollupForageDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupForageDto">
 
-		<id property="declaredYieldFieldRollupForageGuid" column="declared_yield_rollup_forage_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<id property="declaredYieldFieldRollupForageGuid" column="declared_yield_field_rollup_forage_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="declaredYieldContractGuid" column="declared_yield_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="commodityTypeCode" column="commodity_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="totalFieldAcres" column="total_field_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
@@ -24,7 +24,7 @@
 	
 	
     <sql id="selectColumns">
-		select t.declared_yield_rollup_forage_guid, 
+		select t.declared_yield_field_rollup_forage_guid, 
 			t.declared_yield_contract_guid, 
 			t.commodity_type_code, 
 			t.total_field_acres, 
@@ -42,9 +42,9 @@
 	<select id="fetch" resultMap="DeclaredYieldFieldRollupForageDtoMap">
 		<include refid="selectColumns"/>,
 			ctc.description as commodity_type_description
-			FROM declared_yield_rollup_forage t
+			FROM declared_yield_field_rollup_forage t
 			JOIN commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code
-			WHERE t.declared_yield_rollup_forage_guid = #{declaredYieldFieldRollupForageGuid}
+			WHERE t.declared_yield_field_rollup_forage_guid = #{declaredYieldFieldRollupForageGuid}
 	</select>
 
 	<insert id="insert">
@@ -52,8 +52,8 @@
 			select replace(cast(gen_random_uuid() as text), '-', '')
 		</selectKey>
 
-		insert into declared_yield_rollup_forage(
-			declared_yield_rollup_forage_guid,
+		insert into declared_yield_field_rollup_forage(
+			declared_yield_field_rollup_forage_guid,
 			declared_yield_contract_guid,
 			commodity_type_code,
 			total_field_acres,
@@ -82,7 +82,7 @@
 	</insert> 
 
 	<update id="update">
-		update declared_yield_rollup_forage
+		update declared_yield_field_rollup_forage
 		set total_field_acres = #{dto.totalFieldAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			total_bales_loads = #{dto.totalBalesLoads, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
 			harvested_acres = #{dto.harvestedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
@@ -90,21 +90,21 @@
 			yield_per_acre = #{dto.yieldPerAcre, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
 			update_date = now()
-		where declared_yield_rollup_forage_guid = #{dto.declaredYieldFieldRollupForageGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
+		where declared_yield_field_rollup_forage_guid = #{dto.declaredYieldFieldRollupForageGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
 	</update> 
 
 	<delete id="delete">
-		delete from declared_yield_rollup_forage where declared_yield_rollup_forage_guid = #{declaredYieldFieldRollupForageGuid}
+		delete from declared_yield_field_rollup_forage where declared_yield_field_rollup_forage_guid = #{declaredYieldFieldRollupForageGuid}
 	</delete>
 	
 	<delete id="deleteForDeclaredYieldContract">
-		delete from declared_yield_rollup_forage where declared_yield_contract_guid = #{declaredYieldContractGuid}
+		delete from declared_yield_field_rollup_forage where declared_yield_contract_guid = #{declaredYieldContractGuid}
 	</delete>
 	
 	<select id="selectForDeclaredYieldContract" resultMap="DeclaredYieldFieldRollupForageDtoMap">
 		<include refid="selectColumns"/>,
 			ctc.description as commodity_type_description
-		from declared_yield_rollup_forage t
+		from declared_yield_field_rollup_forage t
 		join commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code	
 		where t.declared_yield_contract_guid = #{declaredYieldContractGuid}
 		order by ctc.description
@@ -112,7 +112,7 @@
 
 	<select id="selectToRecalculate" resultMap="DeclaredYieldFieldRollupForageDtoMap">
 		<include refid="selectColumns"/>
-		FROM declared_yield_rollup_forage t
+		FROM declared_yield_field_rollup_forage t
 		JOIN commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code	
 		JOIN declared_yield_contract dyc ON dyc.declared_yield_contract_guid = t.declared_yield_contract_guid
 		WHERE ctc.crop_commodity_id = #{cropCommodityId}

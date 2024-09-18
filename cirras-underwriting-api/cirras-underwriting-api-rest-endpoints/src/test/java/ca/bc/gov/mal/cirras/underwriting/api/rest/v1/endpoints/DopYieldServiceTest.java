@@ -444,8 +444,8 @@ public class DopYieldServiceTest extends EndpointsTest {
 	
 	
 	@Test
-	public void testCalculateYieldRollupForage() throws Exception {
-		logger.debug("<testCalculateYieldRollupForage");
+	public void testCalculateYieldFieldRollupForage() throws Exception {
+		logger.debug("<testCalculateYieldFieldRollupForage");
 		
 		if(skipTests) {
 			logger.warn("Skipping tests");
@@ -602,7 +602,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 		
 		dopYieldContract.setDopYieldFieldRollupForageList(dopYieldFieldRollupForageList);
 
-		DopYieldContract<? extends AnnualField> convertedDopYieldContract = dopService.calculateYieldRollupForageTest(dopYieldContract);
+		DopYieldContract<? extends AnnualField> convertedDopYieldContract = dopService.calculateYieldFieldRollupForageTest(dopYieldContract);
 		
 		Assert.assertNotNull(convertedDopYieldContract);
 		
@@ -638,7 +638,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 			}
 		}
 
-		logger.debug(">testCalculateYieldRollupForage");
+		logger.debug(">testCalculateYieldFieldRollupForage");
 	}
 	
 	

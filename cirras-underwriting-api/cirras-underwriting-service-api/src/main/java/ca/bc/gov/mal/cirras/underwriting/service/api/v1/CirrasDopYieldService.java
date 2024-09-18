@@ -103,6 +103,6 @@ public interface CirrasDopYieldService {
 			throws ServiceException, DaoException;	
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	public DopYieldContract<?> calculateYieldRollupForageTest(DopYieldContract<? extends AnnualField> dopYieldContract)
+	public DopYieldContract<?> calculateYieldFieldRollupForageTest(DopYieldContract<? extends AnnualField> dopYieldContract)
 			throws ServiceException, DaoException;	
 }

@@ -659,7 +659,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		
 		if (dopYieldContract.getFields() != null && dopYieldContract.getFields().size() > 0) {
 			// Convert units and calculate contract commodity values
-			calculateYieldRollupForage(declaredYieldContractGuid, dopYieldContract);
+			calculateYieldFieldRollupForage(declaredYieldContractGuid, dopYieldContract);
 			// Insert records
 			for (DopYieldFieldRollupForage dyrf : dopYieldContract.getDopYieldFieldRollupForageList()) {
 				DeclaredYieldFieldRollupForageDto dto = new DeclaredYieldFieldRollupForageDto();
@@ -673,22 +673,22 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 	
 	// This is only used in unit tests
-	public DopYieldContract<?> calculateYieldRollupForageTest(DopYieldContract<? extends AnnualField> dopYieldContract)
+	public DopYieldContract<?> calculateYieldFieldRollupForageTest(DopYieldContract<? extends AnnualField> dopYieldContract)
 			throws ServiceException, DaoException {
 
-		calculateYieldRollupForage(dopYieldContract.getDeclaredYieldContractGuid(), dopYieldContract);
+		calculateYieldFieldRollupForage(dopYieldContract.getDeclaredYieldContractGuid(), dopYieldContract);
 
 		return dopYieldContract;
 	}
 
 
 
-	private void calculateYieldRollupForage(String declaredYieldContractGuid,
+	private void calculateYieldFieldRollupForage(String declaredYieldContractGuid,
 			DopYieldContract<? extends AnnualField> dopYieldContract) {
 
-		logger.debug("<calculateYieldRollupForage");
+		logger.debug("<calculateYieldFieldRollupForage");
 		
-		List<DopYieldFieldRollupForage> dopNewYieldRollupForageList = new ArrayList<DopYieldFieldRollupForage>();
+		List<DopYieldFieldRollupForage> dopNewYieldFieldRollupForageList = new ArrayList<DopYieldFieldRollupForage>();
 
 		if (dopYieldContract.getFields() != null && dopYieldContract.getFields().size() > 0) {
 
@@ -704,8 +704,8 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 							List<DopYieldFieldRollupForage> dyrfAddedToNewList = new ArrayList<DopYieldFieldRollupForage>();
 							
 							//Check if the record has been added to the new list already
-							if (dopNewYieldRollupForageList != null && dopNewYieldRollupForageList.size() > 0) {
-								dyrfAddedToNewList = dopNewYieldRollupForageList.stream()
+							if (dopNewYieldFieldRollupForageList != null && dopNewYieldFieldRollupForageList.size() > 0) {
+								dyrfAddedToNewList = dopNewYieldFieldRollupForageList.stream()
 										.filter(x -> x.getCommodityTypeCode().equals(dopField.getCommodityTypeCode()))
 										.collect(Collectors.toList());
 							}
@@ -775,7 +775,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 									yieldPerAcre = dyrf.getQuantityHarvestedTons() / dyrf.getHarvestedAcres();
 								}
 								dyrf.setYieldPerAcre(yieldPerAcre);								
-								dopNewYieldRollupForageList.add(dyrf);
+								dopNewYieldFieldRollupForageList.add(dyrf);
 	
 							} else {
 								// commodity type already exists in the new list. Add the new values
@@ -797,9 +797,9 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 			}
 		}
 		
-		dopYieldContract.setDopYieldFieldRollupForageList(dopNewYieldRollupForageList);
+		dopYieldContract.setDopYieldFieldRollupForageList(dopNewYieldFieldRollupForageList);
 		
-		logger.debug(">calculateYieldRollupForage");
+		logger.debug(">calculateYieldFieldRollupForage");
 
 	}	
 	
