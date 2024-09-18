@@ -24,6 +24,9 @@ on:
       NPM_ARTIFACT_PATH:
           required: true
           type: string
+      TAG:
+          required: true
+          type: string
   
 jobs:
   build:
@@ -72,7 +75,7 @@ jobs:
       - name: Extract version number
         id: getVersion
         run: |
-          export VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )
+          export VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+(-SNAPSHOT)?'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )
           echo "VERSION_NUMBER=$VERSION_NUMBER" >> $GITHUB_OUTPUT
 
       - name: Setup artifactory

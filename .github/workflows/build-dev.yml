@@ -10,10 +10,13 @@ on:
           default: latest
 
 jobs:
+  
+
   build-underwriting-api:
     uses: ./.github/workflows/build-package.yml
     secrets: inherit
     with:
+      TAG: ${{ inputs.tag }}
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-api
       EXPORT_FILE: CIRRAS_UNDERWRITING_API_swagger.json
@@ -26,6 +29,7 @@ jobs:
     secrets: inherit
     needs: build-underwriting-api
     with:
+      TAG: ${{ inputs.tag }}
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-ngclient-lib
       DOWNLOAD_FILE: CIRRAS_UNDERWRITING_API_swagger.json
@@ -38,6 +42,6 @@ jobs:
     secrets: inherit
     needs: build-and-upload-npm-modules
     with:
+      TAG: ${{ inputs.tag }}
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-war
-      TAG: ${{ inputs.TAG }}
