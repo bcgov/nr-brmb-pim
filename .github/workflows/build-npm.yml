@@ -24,9 +24,6 @@ on:
       NPM_ARTIFACT_PATH:
           required: true
           type: string
-      TAG:
-          required: true
-          type: string
   
 jobs:
   build:
