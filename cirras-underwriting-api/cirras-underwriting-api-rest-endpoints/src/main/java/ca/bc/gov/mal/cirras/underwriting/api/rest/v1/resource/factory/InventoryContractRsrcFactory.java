@@ -345,7 +345,9 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setInventoryFieldGuid(dto.getInventoryFieldGuid());
 		model.setInventoryUnseededGuid(dto.getInventoryUnseededGuid());
 		model.setIsUnseededInsurableInd(dto.getIsUnseededInsurableInd());
-		
+		model.setIsCropInsuranceEligibleInd(dto.getIsCropInsuranceEligibleInd());
+		model.setIsInventoryCropInd(dto.getIsInventoryCropInd());
+
 		return model;
 	}
 	
@@ -526,7 +528,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 //		
 //		//return model;
 //	}		
-	
+
 	private void populateDefaultResource(InventoryContractRsrc resource, PolicyDto dto) {
 
 		resource.setContractId(dto.getContractId());
@@ -593,14 +595,20 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.GRAIN.getInsurancePlanId())) {
 			model.setInventoryUnseeded(createRolloverInventoryUnseeded(ifDto.getAcresToBeSeeded(), ifDto.getLastYearCropVarietyId(), ifDto.getIsGrainUnseededDefaultInd()));
 		}
-		
+
 		//Inventory seeded Forage
 		if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.FORAGE.getInsurancePlanId())) {
+			
 			List<InventorySeededForage> inventorySeededForageList = new ArrayList<InventorySeededForage>();
-			inventorySeededForageList.add(createRolloverInventorySeedeForage());
+			if ( ifDto.getInventorySeededForages() != null && ifDto.getInventorySeededForages().size() > 0 ) {
+				InventorySeededForageDto isfDto = ifDto.getInventorySeededForages().get(0);
+				inventorySeededForageList.add(createRolloverInventorySeededForage(isfDto));
+			} else {
+				inventorySeededForageList.add(createDefaultInventorySeededForage());
+			}
+			
 			model.setInventorySeededForages(inventorySeededForageList);
 		}
-		
 		
 		return model;
 	}
@@ -631,14 +639,65 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		//Inventory seeded Forage
 		if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.FORAGE.getInsurancePlanId())) {
 			List<InventorySeededForage> inventorySeededForageList = new ArrayList<InventorySeededForage>();
-			inventorySeededForageList.add(createRolloverInventorySeedeForage());
+			inventorySeededForageList.add(createDefaultInventorySeededForage());
 			model.setInventorySeededForages(inventorySeededForageList);
 		}
 		
 		return model;
 	}
 
-	private InventorySeededForage createRolloverInventorySeedeForage() {
+	private InventorySeededForage createRolloverInventorySeededForage(InventorySeededForageDto dto) {
+		InventorySeededForage model = new InventorySeededForage();
+
+		if ( "PERENNIAL".equals(dto.getCommodityTypeCode()) || "Pasture".equals(dto.getCommodityTypeCode()) || "Native Wetland".equals(dto.getCommodityTypeCode()) || "Forage Seed".equals(dto.getCommodityTypeCode())) {
+			model.setCropCommodityId(dto.getCropCommodityId());
+			model.setCropVarietyId(dto.getCropVarietyId());
+			model.setCropVarietyName(dto.getCropVarietyName());
+			model.setCommodityTypeCode(dto.getCommodityTypeCode());
+			model.setSeedingYear(dto.getSeedingYear());
+			model.setIsQuantityInsurableInd(dto.getIsQuantityInsurableInd());
+
+			// Calculate new Plant Insurability
+			String prevPlanIns = dto.getPlantInsurabilityTypeCode();
+			String rolloverPlantIns = null;
+			
+			if ("E1".equals(prevPlanIns) ) {
+				rolloverPlantIns = "E2";
+			}
+			else if ("E2".equals(prevPlanIns) ) {
+				rolloverPlantIns = null;
+			}
+			else if ("W1".equals(prevPlanIns) ) {
+				rolloverPlantIns = "W2";
+			}
+			else if ("W2".equals(prevPlanIns) ) {
+				rolloverPlantIns = "W3";
+			}
+			else if ("W3".equals(prevPlanIns) ) {
+				rolloverPlantIns = null;
+			}
+
+			model.setPlantInsurabilityTypeCode(rolloverPlantIns);		
+		
+		} else {
+			model.setCropCommodityId(null);
+			model.setCropVarietyId(null);
+			model.setCropVarietyName(null);
+			model.setCommodityTypeCode(null);
+			model.setSeedingYear(null);
+			model.setIsQuantityInsurableInd(false);
+			model.setPlantInsurabilityTypeCode(null);
+		}
+
+		model.setFieldAcres(dto.getFieldAcres());
+		model.setSeedingDate(null);                                   // Does not rollover.
+		model.setIsIrrigatedInd(dto.getIsIrrigatedInd());
+		model.setIsAwpEligibleInd(dto.getIsAwpEligibleInd());
+		
+		return model;
+	}
+
+	private InventorySeededForage createDefaultInventorySeededForage() {
 		InventorySeededForage model = new InventorySeededForage();
 
 		model.setCropCommodityId(null);
@@ -651,11 +710,12 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setIsIrrigatedInd(null);
 		model.setIsQuantityInsurableInd(null);
 		model.setPlantInsurabilityTypeCode(null);
-		model.setIsAwpEligibleInd(true); //Default = true
+		model.setIsAwpEligibleInd(true);             // Default true.
 
 		return model;
 	}
-
+	
+	
 	private InventoryUnseeded createRolloverInventoryUnseeded(Double acresToBeSeeded, Integer lastYearVarietyId, Boolean isGrainUnseededDefault) {
 		InventoryUnseeded model = new InventoryUnseeded();
 

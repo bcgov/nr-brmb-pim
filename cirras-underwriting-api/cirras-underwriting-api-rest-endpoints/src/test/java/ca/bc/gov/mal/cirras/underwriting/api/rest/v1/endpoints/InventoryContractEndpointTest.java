@@ -704,10 +704,9 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 			logger.debug(">testAddPlantingToExistingInventoryContract");
 		}
 
-		// TODO: Currently creates an InventoryContract, updates it and leaves it behind because delete hasn't been implemented yet.
 		@Test
 		public void testRecalculateCropCommodity() throws CirrasUnderwritingServiceException, ValidationException, Oauth2ClientException {
-			logger.debug("<testAddPlantingToExistingInventoryContract");
+			logger.debug("<testRecalculateCropCommodity");
 			
 			if(skipTests) {
 				logger.warn("Skipping tests");
@@ -773,10 +772,13 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 			fetchedInvContract.getCommodities().add(createNewInvCommodities(18, "CANOLA", 12.34, 8.22, 8.22));
 			fetchedInvContract.getFields().get(0).getPlantings().add(createSecondPlanting(fetchedInvContract.getFields().get(0).getFieldId()));
 			//Add a second Barley planting on a second field
-			fetchedInvContract.getFields().get(1).getPlantings().add(createNewPlantingOnSecondField(16, "BARLEY", 12.34, 2, fetchedInvContract.getFields().get(1)));
+			fetchedInvContract.getFields().get(1).getPlantings().add(createNewPlantingOnSecondField(16, "BARLEY", 12.34, 2, true, true, fetchedInvContract.getFields().get(1)));
 
-			fetchedInvContract.getCommodities().add(createNewInvCommodities(null, null, 25.0, 0.0, 0.0));
-			fetchedInvContract.getFields().get(1).getPlantings().add(createNewPlantingOnSecondField(null, null, 22.11, 3, fetchedInvContract.getFields().get(1)));
+			fetchedInvContract.getCommodities().add(createNewInvCommodities(null, null, 44.11, 0.0, 0.0)); //total of Lentil and cropId = null
+			fetchedInvContract.getFields().get(1).getPlantings().add(createNewPlantingOnSecondField(null, null, 22.11, 3, false, false, fetchedInvContract.getFields().get(1)));
+
+			fetchedInvContract.getCommodities().add(createNewInvCommodities(1010889, "LENTIL", 0.0, 15.0, 15.0)); //Unseeded should end up in OTHER (cropId = null)
+			fetchedInvContract.getFields().get(1).getPlantings().add(createNewPlantingOnSecondField(1010889, "LENTIL", 22.0, 4, false, true, fetchedInvContract.getFields().get(1)));
 
 			
 			updateInventoryContractData(service, topLevelEndpoints, fetchedInvContract.getCommodities(), fetchedInvContract.getFields(), fetchedInvContract);
@@ -789,6 +791,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 			
 			InventoryContractRsrc updatedInvContract = service.updateInventoryContract(fetchedInvContract.getInventoryContractGuid(), fetchedInvContract);
 
+			//------------------------------------------
 			//
 			// Check Updated Inventory Contract.
 			//
@@ -823,12 +826,6 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 					fetchedSortedCommodities.get(i).setTotalSpotLossAcres(38.45);
 				}
 				
-				//Update for unspecified
-				if(fetchedSortedCommodities.get(i).getCropCommodityId() == null) {
-					fetchedSortedCommodities.get(i).setTotalUnseededAcres(22.11);
-				}
-				
-				
 				checkInventoryContractCommodity(fetchedSortedCommodities.get(i), updatedCommodities.get(i));
 			}
 
@@ -837,7 +834,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 			
 			deleteInventoryContract();
 			
-			logger.debug(">testAddPlantingToExistingInventoryContract");
+			logger.debug(">testRecalculateCropCommodity");
 		}
 		
 
@@ -2697,7 +2694,9 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		invUnseeded.setInventoryFieldGuid(null);
 		invUnseeded.setInventoryUnseededGuid(null);
 		invUnseeded.setIsUnseededInsurableInd(true);
-
+		invUnseeded.setIsCropInsuranceEligibleInd(true);
+		invUnseeded.setIsInventoryCropInd(true);
+		
 		planting.setInventoryUnseeded(invUnseeded);
 
 		//InventorySeededGrain
@@ -2766,7 +2765,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 	}
 	
 	private InventoryField createNewPlantingOnSecondField(Integer cropId, String cropName, Double acresCropsToBeSeeded, Integer plantingNumber, 
-			AnnualFieldRsrc field) throws CirrasUnderwritingServiceException {
+			Boolean isCropInsuranceEligibleInd, Boolean isInventoryCropInd, AnnualFieldRsrc field) throws CirrasUnderwritingServiceException {
 
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
@@ -2797,6 +2796,8 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		invUnseeded.setInventoryFieldGuid(null);
 		invUnseeded.setInventoryUnseededGuid(null);
 		invUnseeded.setIsUnseededInsurableInd(true);
+		invUnseeded.setIsCropInsuranceEligibleInd(isCropInsuranceEligibleInd);
+		invUnseeded.setIsInventoryCropInd(isInventoryCropInd);
 
 		planting.setInventoryUnseeded(invUnseeded);
 
@@ -3112,6 +3113,8 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		invUnseeded.setInventoryFieldGuid(null);
 		invUnseeded.setInventoryUnseededGuid(null);
 		invUnseeded.setIsUnseededInsurableInd(true);
+		invUnseeded.setIsCropInsuranceEligibleInd(true);
+		invUnseeded.setIsInventoryCropInd(true);
 
 		planting.setInventoryUnseeded(invUnseeded);
 

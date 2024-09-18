@@ -43,5 +43,4 @@ jobs:
       TAG: ${{ inputs.tag }}
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-war
-      DOWNLOAD_FILE: cirras-underwriting-api-${{ inputs.tag }}.tgz
       DOWNLOAD_PATH: cirras-underwriting-war/cirras-underwriting-war/src/main/angular/

@@ -9,7 +9,7 @@ spec:
     kind: Deployment
     name: cirras-underwriting-ui-deployment-#{ENV}#
   minReplicas: 1
-  maxReplicas: #{MAX_APP_COUNT}#
+  maxReplicas: #{MAX_UI_COUNT}#
   metrics:
     # These define triggers based on % request value, not % limit value
     - type: Resource

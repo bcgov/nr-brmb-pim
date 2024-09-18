@@ -94,6 +94,8 @@ public class InventoryUnseededDaoTest {
 		newDto.setCropCommodityName("BARLEY");
 		newDto.setInventoryFieldGuid(inventoryFieldGuid);
 		newDto.setIsUnseededInsurableInd(true);
+		newDto.setIsCropInsuranceEligibleInd(true);
+		newDto.setIsInventoryCropInd(true);
 		
 		invUnseededDao.insert(newDto, userId);
 		Assert.assertNotNull(newDto.getInventoryUnseededGuid());
@@ -114,6 +116,8 @@ public class InventoryUnseededDaoTest {
 		Assert.assertEquals("CropCommodityName", newDto.getCropCommodityName(), fetchedDto.getCropCommodityName());
 		Assert.assertEquals("InventoryFieldGuid", newDto.getInventoryFieldGuid(), fetchedDto.getInventoryFieldGuid());
 		Assert.assertEquals("IsUnseededInsurableInd", newDto.getIsUnseededInsurableInd(), fetchedDto.getIsUnseededInsurableInd());
+		Assert.assertEquals("IsCropInsuranceEligibleInd", newDto.getIsCropInsuranceEligibleInd(), fetchedDto.getIsCropInsuranceEligibleInd());
+		Assert.assertEquals("IsInventoryCropInd", newDto.getIsInventoryCropInd(), fetchedDto.getIsInventoryCropInd());
 		
 		//UPDATE
 		fetchedDto.setAcresToBeSeeded(33.44);

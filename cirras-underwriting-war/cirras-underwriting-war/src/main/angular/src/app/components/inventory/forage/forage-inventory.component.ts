@@ -1518,7 +1518,7 @@ isFormValid() {
       
       if (inventorySeededForages && inventorySeededForages.value.fieldAcres 
         && inventorySeededForages.value.cropVarietyCtrl.cropVarietyId 
-        && planting.inventorySeededForages[0].linkedPlanting ) {
+        && planting && planting.inventorySeededForages[0] && planting.inventorySeededForages[0].linkedPlanting ) {
         
         // if the Underseeded Variety and/or Acres do not match the linked Seeded FORAGE Planting
         if (inventorySeededForages.value.fieldAcres!= planting.inventorySeededForages[0].linkedPlanting.acres ||
@@ -1547,7 +1547,7 @@ isFormValid() {
       
       if (inventorySeededForages && inventorySeededForages.value.fieldAcres 
         && inventorySeededForages.value.cropVarietyCtrl.cropVarietyId 
-        && planting.inventorySeededForages[0].linkedPlanting ) {
+        && planting && planting.inventorySeededForages[0] && planting.inventorySeededForages[0].linkedPlanting ) {
         
         // if the Underseeded Variety and/or Acres do not match the linked Seeded FORAGE Planting
         if (inventorySeededForages.value.fieldAcres!= planting.inventorySeededForages[0].linkedPlanting.acres ||

@@ -2,10 +2,10 @@
 <fileResource exportedWithPermissions="true" dataFile="Sample_CUWS_report.data">
     <folder>/NRSRS/CUWS/Jrxml</folder>
     <name>Sample_CUWS_report</name>
-    <version>2</version>
+    <version>1</version>
     <label>Sample_CUWS_report</label>
     <description></description>
-    <creationDate>2023-05-17T16:05:41.507-07:00</creationDate>
+    <creationDate>2024-06-11T12:20:22.779-07:00</creationDate>
     <updateDate>2023-05-25T14:48:00.639-07:00</updateDate>
     <fileType>jrxml</fileType>
 </fileResource>
