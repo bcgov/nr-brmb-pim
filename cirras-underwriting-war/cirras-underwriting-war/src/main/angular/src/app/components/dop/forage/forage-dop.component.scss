@@ -3,7 +3,7 @@
 
 .forage-dop-contract-info {
     display: grid; 
-    grid-template-columns: auto auto;
+    grid-template-columns: 230px 300px 230px auto;
 
     .cell {
         font-size: 15px;
@@ -38,5 +38,12 @@
         }
     
       }
+}
 
+.question-single{
+  width: 2030px;
+  border-radius: 5px 5px 5px 5px;
+  padding-top: 16px;
+  padding-left: 8px;    
+  margin-top: 16px;
 }
