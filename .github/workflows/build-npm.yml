@@ -81,12 +81,6 @@ jobs:
           export VERSION_NUMBER_NO_SNAPSHOT=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )
           echo "VERSION_NUMBER_NO_SNAPSHOT=$VERSION_NUMBER_NO_SNAPSHOT" >> $GITHUB_OUTPUT
 
-      - name: upload module
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{inputs.EXPORT_MODULE}}-${{ inputs.TAG }}.tgz
-          path: ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-${{ steps.getVersion.outputs.VERSION_NUMBER_NO_SNAPSHOT }}.tgz
-
       - name: Setup artifactory
         uses: jfrog/setup-jfrog-cli@v4
 
