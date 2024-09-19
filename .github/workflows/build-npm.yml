@@ -2,6 +2,7 @@ name: build npm-lib
 
 env:
   NPMRC: ${{ secrets.NPMRC }}
+  REPO_PREFIX: na12-pim-libs
   ARTIFACTORY_PATH: ca/bc/gov/mal/cirras/underwriting
 
 on:
@@ -62,14 +63,15 @@ jobs:
 
       - name: download swagger file
         run: |
-          [[ $(echo "${{ steps.getVersion.outputs.VERSION_NUMBER }}" | grep -o SNAPSHOT ) = SNAPSHOT ]] && URL="${{ vars.SNAPSHOT_URL }}" || ${{ vars.RELEASE_URL }}
+          [[ $(echo "${{ steps.getVersion.outputs.VERSION_NUMBER }}" | grep -o SNAPSHOT ) = SNAPSHOT ]] && REPO_SUFFIX="SNAPSHOT" || REPO_SUFFIX="RELEASE"
+          [[ $(echo "${{ steps.getVersion.outputs.VERSION_NUMBER }}" | grep -o SNAPSHOT ) = SNAPSHOT ]] && URL="${{ vars.SNAPSHOT_URL }}" || URL=${{ vars.RELEASE_URL }}
           jfrog rt dl \
           --flat --limit=1 --sort-by=created \
           --sort-order=desc \
           --url=$URL \
           --user=${{ secrets.OPENSHIFT_ACCOUNT }} \
           --password=${{ secrets.OPENSHIFT_PASSWORD }} \
-          "${{ env.ARTIFACTORY_PATH }}/${{inputs.API_TARGET}}/${{ steps.getVersion.outputs.VERSION_NUMBER }}/${{inputs.API_TARGET}}-rest-endpoints-${{ steps.getVersion.outputs.VERSION_NUMBER }}-swagger.json" \
+          "$REPO_PREFIX-$REPO_SUFFIX/${{ env.ARTIFACTORY_PATH }}/${{inputs.API_TARGET}}/${{ steps.getVersion.outputs.VERSION_NUMBER }}/${{inputs.API_TARGET}}-rest-endpoints-${{ steps.getVersion.outputs.VERSION_NUMBER }}-swagger.json" \
           ${{inputs.SWAGGER_TARGET_PATH}}
       
       - name: npm install
