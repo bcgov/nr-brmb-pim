@@ -10,7 +10,6 @@ on:
           - cirras-underwriting-api
           - cirras-underwriting-ui
           - cirras-underwriting-jasper
-          - cirras-underwriting-liquibase
       ENVIRONMENT_NAME:
         required: true
         type: choice
@@ -44,7 +43,7 @@ on:
         required: true
         type: string
       TAG:
-        required: false
+        required: true
         type: string
         default: latest
 
@@ -63,6 +62,23 @@ jobs:
       - name: Copy openshift yaml files
         run: mkdir staging && cp openshift/${{ inputs.MICROSERVICE_NAME }}*.yaml staging/
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ vars.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get digest of docker image
+        id: getDigest
+        if: ${{ inputs.ENVIRONMENT_NAME != 'cirras-underwriting-jasper'}}
+        run: |
+          export IMAGE='ghcr.io/${{github.repository_owner}}/${{ inputs.MICROSERVICE_NAME }}:${{ inputs.TAG }}'
+          docker pull $IMAGE
+          echo "IMAGE_BY_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $IMAGE)" >> $GITHUB_OUTPUT
+
+
+
       - name: Fill yaml files
         uses: cschleiden/replace-tokens@v1.2
         with:
@@ -72,9 +88,10 @@ jobs:
           ENV: ${{ inputs.ENVIRONMENT_NAME }}
           NAMESPACE: ${{ inputs.NAMESPACE }}
           TAG: ${{ inputs.TAG }}
+          IMAGE_BY_DIGEST: ${{ steps.getDigest.outputs.IMAGE_BY_DIGEST }}
           SID: ${{ github.run_id }}
           LOG_LEVEL: ${{ vars.LOG_LEVEL }}
-          
+          CONNECTION_TIMEOUT: ${{ vars.CONNECTION_TIMEOUT }}
           
           WEBADE_CHECK_TOKEN_URL: ${{ vars.WEBADE_CHECK_TOKEN_URL }}
           WEBADE_GET_TOKEN_URL: ${{ vars.WEBADE_GET_TOKEN_URL }}
@@ -91,8 +108,8 @@ jobs:
 
           POSTGRES_RESOURCE_NAME: ${{ vars.POSTGRES_RESOURCE_NAME }}
 
-          MAX_THREADS: ${{ vars.MAX_THREADS }}
-          TARGET_PORT: ${{ vars.TARGET_PORT }}
+          TOMCAT_MAX_THREADS: ${{ vars.TOMCAT_MAX_THREADS }}
+          TOMCAT_PORT: ${{ vars.TOMCAT_PORT }}
           TIME_ZONE: ${{ vars.TIME_ZONE }}
 
           CIRRAS_POLICIES_API_URL: ${{ vars.CIRRAS_POLICIES_API_URL}}
@@ -133,6 +150,10 @@ jobs:
           #Jasper variables
           JASPER_URL: https://cirras-underwriting-jasper-${{ inputs.ENVIRONMENT_NAME }}-${{ inputs.NAMESPACE }}.apps.silver.devops.gov.bc.ca/jasperserver/
           JASPER_USERNAME: ${{ vars.JASPER_USERNAME }}
+          JASPER_CPU_REQUEST: ${{ vars.JASPER_CPU_REQUEST }}
+          JASPER_CPU_LIMIT: ${{ vars.JASPER_CPU_LIMIT }}
+          JASPER_MEMORY_REQUEST: ${{ vars.JASPER_MEMORY_REQUEST }}
+          JASPER_MEMORY_LIMIT: ${{ vars.JASPER_MEMORY_LIMIT }}
           JASPER_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
           ALLOW_EMPTY_PASSWORD: true
           JASPERREPORTS_DATABASE_NAME: jasper${{ inputs.ENVIRONMENT_NAME }}
@@ -141,6 +162,7 @@ jobs:
           JASPERREPORTS_UI_USER: ${{ vars.JASPER_USERNAME }}
           JASPERREPORTS_UI_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
           JASPER_STORAGE_CAPACITY: 25Mi
+          MARIADB_MAX_LOG_BYTES: ${{ vars.MARIADB_MAX_LOG_BYTES }}
 
 
       
