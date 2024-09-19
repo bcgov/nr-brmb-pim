@@ -57,6 +57,9 @@ jobs:
       - name: Add .npmrc file
         run: echo -e $NPMRC > ~/.npmrc
 
+      - name: Setup artifactory
+        uses: jfrog/setup-jfrog-cli@v4
+
       - name: download swagger file
         run: |
           [[ $(echo "${{ steps.getVersion.outputs.VERSION_NUMBER }}" | grep -o SNAPSHOT ) = SNAPSHOT ]] && URL="${{ vars.SNAPSHOT_URL }}" || ${{ vars.RELEASE_URL }}
@@ -77,9 +80,6 @@ jobs:
           npm run build
           cd dist/${{ inputs.API_TARGET }}
           npm pack
-
-      - name: Setup artifactory
-        uses: jfrog/setup-jfrog-cli@v4
 
       - name: Push Build to Artifactory
         run: |
