@@ -68,7 +68,7 @@ jobs:
           jfrog rt dl \
           --flat --limit=1 --sort-by=created \
           --sort-order=desc \
-          --url=${{secrets.ARTIFACTORY_BASE_URL}}/artifactory \
+          --url=${{vars.ARTIFACTORY_BASE_URL}}/artifactory \
           --user=${{ secrets.OPENSHIFT_ACCOUNT }} \
           --password=${{ secrets.OPENSHIFT_PASSWORD }} \
           "${{ env.REPO_PREFIX }}-$REPO_SUFFIX/${{ env.ARTIFACTORY_PATH }}/${{inputs.API_TARGET}}-rest-endpoints/${{ steps.getVersion.outputs.VERSION_NUMBER }}/${{inputs.API_TARGET}}-rest-endpoints-${{ steps.getVersion.outputs.VERSION_NUMBER }}-swagger.json" \
