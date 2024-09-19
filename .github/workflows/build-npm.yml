@@ -71,7 +71,7 @@ jobs:
           --url=$URL \
           --user=${{ secrets.OPENSHIFT_ACCOUNT }} \
           --password=${{ secrets.OPENSHIFT_PASSWORD }} \
-          "$REPO_PREFIX-$REPO_SUFFIX/${{ env.ARTIFACTORY_PATH }}/${{inputs.API_TARGET}}-rest-endpoints/${{ steps.getVersion.outputs.VERSION_NUMBER }}/${{inputs.API_TARGET}}-rest-endpoints-${{ steps.getVersion.outputs.VERSION_NUMBER }}-swagger.json" \
+          "${{ env.REPO_PREFIX }}-$REPO_SUFFIX/${{ env.ARTIFACTORY_PATH }}/${{inputs.API_TARGET}}-rest-endpoints/${{ steps.getVersion.outputs.VERSION_NUMBER }}/${{inputs.API_TARGET}}-rest-endpoints-${{ steps.getVersion.outputs.VERSION_NUMBER }}-swagger.json" \
           ${{inputs.SWAGGER_TARGET_PATH}}
       
       - name: npm install
