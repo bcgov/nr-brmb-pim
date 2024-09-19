@@ -63,7 +63,7 @@ jobs:
 
       - name: download swagger file
         run: |
-          [[ $(echo "${{ steps.getVersion.outputs.VERSION_NUMBER }}" | grep -o SNAPSHOT ) = SNAPSHOT ]] && REPO_SUFFIX="SNAPSHOT" || REPO_SUFFIX="RELEASE"
+          [[ $(echo "${{ steps.getVersion.outputs.VERSION_NUMBER }}" | grep -o SNAPSHOT ) = SNAPSHOT ]] && REPO_SUFFIX="snapshot" || REPO_SUFFIX="release"
           [[ $(echo "${{ steps.getVersion.outputs.VERSION_NUMBER }}" | grep -o SNAPSHOT ) = SNAPSHOT ]] && URL="${{ vars.SNAPSHOT_URL }}" || URL=${{ vars.RELEASE_URL }}
           jfrog rt dl \
           --flat --limit=1 --sort-by=created \
