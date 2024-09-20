@@ -2,5 +2,6 @@
 {
   "databaseChangeLog": [
 { "changeSet": {"author":"mhostettler","id":"86","changes": [
-  {"sqlFile": {"relativeToChangelogFile": "true", "path": "dml/cuws.insert.declared_yield_rollup_forage.sql"}}
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "dml/cuws.insert.declared_yield_rollup_forage.sql"}},
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "dml/cuws.update.declared_yield_contract_cmdty_forage.sql"}}
   ] } }]}
