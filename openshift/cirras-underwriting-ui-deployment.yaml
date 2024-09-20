@@ -20,7 +20,7 @@ spec:
             '#{IMAGE_BY_DIGEST}#'
           imagePullPolicy: Always
           ports:
-            - containerPort: #{TARGET_PORT}#
+            - containerPort: #{TOMCAT_PORT}#
               protocol: TCP
           env:
             - name: TOMCAT_PORT
