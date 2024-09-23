@@ -39,6 +39,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodityForag
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForageCut;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldGrain;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollupForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryCoverageTotalForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
@@ -328,6 +329,24 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		Assert.assertTrue(alfaalfaChecked);
 		Assert.assertTrue(silageCornChecked);
 
+		//Check commodity totals
+		alfaalfaChecked = false;
+		silageCornChecked = false;
+		for (DopYieldFieldRollupForage dyrf : newDyc.getDopYieldFieldRollupForageList()) {
+			Assert.assertNotNull(dyrf.getCommodityTypeDescription());
+			Assert.assertEquals(dyrf.getCommodityTypeDescription(), dyrf.getCommodityTypeCode());
+			Assert.assertTrue("Unexpected Commodity Type" + dyrf.getCommodityTypeCode(), dyrf.getCommodityTypeCode().equals(ctcAlfalfa) || dyrf.getCommodityTypeCode().equals(ctcSilageCorn));
+			if(dyrf.getCommodityTypeCode().equals(ctcAlfalfa)) {
+				Assert.assertEquals((double)100, dyrf.getTotalFieldAcres().doubleValue(), 0.1);
+				alfaalfaChecked = true;
+			} else if(dyrf.getCommodityTypeCode().equals(ctcSilageCorn)) {
+				Assert.assertEquals((double)200, dyrf.getTotalFieldAcres().doubleValue(), 0.1);
+				silageCornChecked = true;
+			} 
+		}
+		Assert.assertTrue(alfaalfaChecked);
+		Assert.assertTrue(silageCornChecked);
+		
 		Boolean checkedPlanting1 = false;
 		Boolean checkedPlanting2 = false;
 		Boolean checkedPlanting3 = false;
@@ -411,7 +430,9 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		cal.set(2022, Calendar.JANUARY, 15);
 		Date dopDate = cal.getTime();
 		
-		createExpectedList((double)11440.0000, (double)57.2);
+		createExpectedContractCommodityList((double)11440.0000, (double)57.2);
+		
+		createExpectedYieldRollupList((double)11440.0000, (double)57.2, 420);
 		
 		createContractAndInventory();
 		
@@ -451,6 +472,10 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		//Commodity totals list
 		Assert.assertNotNull(newDyc.getDopYieldContractCommodityForageList());
 		Assert.assertEquals(3, newDyc.getDopYieldContractCommodityForageList().size());
+
+		//Rollup list
+		Assert.assertNotNull(newDyc.getDopYieldFieldRollupForageList());
+		Assert.assertEquals(3, newDyc.getDopYieldFieldRollupForageList().size());
 
 		newDyc.setDeclarationOfProductionDate(dopDate);
 		newDyc.setDefaultYieldMeasUnitTypeCode("TON");
@@ -499,6 +524,9 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		//Check Commodity Totals
 		checkDopYieldContractCommodities(fetchedDyc.getDopYieldContractCommodityForageList());
 		
+		//Check Yield Rollup
+		checkDopYieldRollup(fetchedDyc.getDopYieldFieldRollupForageList());
+		
 		//Check dop forage and cuts
 		checkDopYieldFieldForage(newDyc.getFields(), 
 				fetchedDyc.getFields(),
@@ -525,13 +553,17 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		cut.setWeight(100000.0);
 		cut.setMoisturePercent(75.0);
 		
-		createExpectedList((double)10065, (double)50.325);
+		createExpectedContractCommodityList((double)10065, (double)50.325);
+		createExpectedYieldRollupList((double)10065, (double)50.325, 370);
 
 		//UPDATE DOP ***********************************************
 		DopYieldContractRsrc updatedDyc = service.updateDopYieldContract(fetchedDyc);
 
 		//Check Commodity Totals
 		checkDopYieldContractCommodities(updatedDyc.getDopYieldContractCommodityForageList());
+
+		//Check Yield Rollup
+		checkDopYieldRollup(updatedDyc.getDopYieldFieldRollupForageList());
 
 		//Check dop forage and cuts
 		checkDopYieldFieldForage(fetchedDyc.getFields(), 
@@ -624,12 +656,31 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		
 		return model;
 	}
-	
-	private List<DopYieldContractCommodityForage> expecteDopYieldContractCommodityForageList;
-	
-	private void createExpectedList(Double quantityHarvestedTonsSilageCorn, Double yieldPerAcreSilageCorn) {
+
+	private DopYieldFieldRollupForage createDopYieldFieldRollupForage(
+			String commodityTypeCode, 
+			Double totalFieldAcres, 
+			Double harvestedAcres, 
+			Double quantityHarvestedTons, 
+			Double yieldPerAcre, 
+			Integer totalBalesLoads
+			) {
+
+		DopYieldFieldRollupForage model = new DopYieldFieldRollupForage();
+		model.setCommodityTypeCode(commodityTypeCode);
+		model.setTotalFieldAcres(totalFieldAcres);
+		model.setTotalBalesLoads(totalBalesLoads);
+		model.setHarvestedAcres(harvestedAcres);
+		model.setQuantityHarvestedTons(quantityHarvestedTons);
+		model.setYieldPerAcre(yieldPerAcre);
 		
-		expecteDopYieldContractCommodityForageList = new ArrayList<DopYieldContractCommodityForage>();
+		return model;
+	}	
+	private List<DopYieldContractCommodityForage> expectedDopYieldContractCommodityForageList;
+	
+	private void createExpectedContractCommodityList(Double quantityHarvestedTonsSilageCorn, Double yieldPerAcreSilageCorn) {
+		
+		expectedDopYieldContractCommodityForageList = new ArrayList<DopYieldContractCommodityForage>();
 		
 		DopYieldContractCommodityForage dyccfSilageCorn = createDopYieldContractCommodityForage(
 				ctcSilageCorn, 				// commodityTypeCode
@@ -658,23 +709,68 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 				(double)100000, 			// quantityHarvestedTonsOverride
 				(double)1250);		 		// yieldPerAcre
 
-		expecteDopYieldContractCommodityForageList.add(dyccfSilageCorn);
-		expecteDopYieldContractCommodityForageList.add(dyccfAlfalfa);
-		expecteDopYieldContractCommodityForageList.add(dyccfGrass);
+		expectedDopYieldContractCommodityForageList.add(dyccfSilageCorn);
+		expectedDopYieldContractCommodityForageList.add(dyccfAlfalfa);
+		expectedDopYieldContractCommodityForageList.add(dyccfGrass);
 		
 	}
 	
+	private List<DopYieldFieldRollupForage> expectedDopYieldFieldRollupForageList;
+	
+	private void createExpectedYieldRollupList(Double quantityHarvestedTonsSilageCorn, Double yieldPerAcreSilageCorn, Integer totalBalesSilageCorn) {
+		
+		expectedDopYieldFieldRollupForageList = new ArrayList<DopYieldFieldRollupForage>();
+		
+		DopYieldFieldRollupForage dyrfSilageCorn = createDopYieldFieldRollupForage(
+				ctcSilageCorn, 				// commodityTypeCode
+				(double)300, 				// totalFieldAcres
+				(double)200, 				// harvestedAcres
+				quantityHarvestedTonsSilageCorn, // quantityHarvestedTons
+				yieldPerAcreSilageCorn,		// yieldPerAcre
+				totalBalesSilageCorn);		// totalBales
+		
+		DopYieldFieldRollupForage dyrfAlfalfa = createDopYieldFieldRollupForage(
+				ctcAlfalfa, 
+				(double)400, 				// totalFieldAcres
+				(double)400, 				// harvestedAcres
+				(double)11244.1176,			// quantityHarvestedTons
+				(double)28.1103,			// yieldPerAcre
+				555);						// totalBales
+		
+		DopYieldFieldRollupForage dyrfGrass = createDopYieldFieldRollupForage(
+				ctcGrass, 
+				(double)100, 				// totalFieldAcres
+				(double)100, 				// harvestedAcres
+				(double)4705.8824,			// quantityHarvestedTons
+				(double)47.0588,				// yieldPerAcre
+				200);						// totalBales
+		
 
+		expectedDopYieldFieldRollupForageList.add(dyrfSilageCorn);
+		expectedDopYieldFieldRollupForageList.add(dyrfAlfalfa);
+		expectedDopYieldFieldRollupForageList.add(dyrfGrass);
+		
+	}
 	
 	private void checkDopYieldContractCommodities(List<DopYieldContractCommodityForage> dopYieldContractCommodityForageList) {
 		
 			for(DopYieldContractCommodityForage actual : dopYieldContractCommodityForageList) {
 				
-				DopYieldContractCommodityForage expected = getDopYieldContractCommodityForage(actual.getCommodityTypeCode(), expecteDopYieldContractCommodityForageList);
+				DopYieldContractCommodityForage expected = getDopYieldContractCommodityForage(actual.getCommodityTypeCode(), expectedDopYieldContractCommodityForageList);
 				
 				checkDopYieldContractCommodityForage(expected, actual);
 			}
 		}
+	
+	private void checkDopYieldRollup(List<DopYieldFieldRollupForage> dopYieldFieldRollupForageList) {
+		
+			for(DopYieldFieldRollupForage actual : dopYieldFieldRollupForageList) {
+				
+				DopYieldFieldRollupForage expected = getDopYieldFieldRollupForage(actual.getCommodityTypeCode(), expectedDopYieldFieldRollupForageList);
+				
+				checkDopYieldFieldRollupForage(expected, actual);
+			}
+		}	
 
 	private void checkDopYieldContractCommodityForage(DopYieldContractCommodityForage expected, DopYieldContractCommodityForage actual) {
 		
@@ -698,6 +794,31 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		Assert.assertEquals("HarvestedAcresOverride", expected.getHarvestedAcresOverride(), actual.getHarvestedAcresOverride());
 		Assert.assertEquals("QuantityHarvestedTons", expected.getQuantityHarvestedTons(), actualQuantityHarvestedTons);
 		Assert.assertEquals("QuantityHarvestedTonsOverride", expected.getQuantityHarvestedTonsOverride(), actual.getQuantityHarvestedTonsOverride());
+		Assert.assertEquals("YieldPerAcre", expected.getYieldPerAcre(), actualYieldPerAcre);
+
+	}
+	
+	private void checkDopYieldFieldRollupForage(DopYieldFieldRollupForage expected, DopYieldFieldRollupForage actual) {
+		
+		Double actualQuantityHarvestedTons = actual.getQuantityHarvestedTons();
+		if(actual.getQuantityHarvestedTons() != null) {
+			actualQuantityHarvestedTons = BigDecimal.valueOf(actual.getQuantityHarvestedTons())
+	                .setScale(4, BigDecimal.ROUND_HALF_UP)
+	                .doubleValue();
+		}
+		
+		Double actualYieldPerAcre = actual.getYieldPerAcre();
+		if(actual.getQuantityHarvestedTons() != null) {
+			actualYieldPerAcre = BigDecimal.valueOf(actual.getYieldPerAcre())
+	                .setScale(4, BigDecimal.ROUND_HALF_UP)
+	                .doubleValue();
+		}
+		
+		Assert.assertEquals("CommodityTypeCode", expected.getCommodityTypeCode(), actual.getCommodityTypeCode());
+		Assert.assertEquals("TotalFieldAcres", expected.getTotalFieldAcres(), actual.getTotalFieldAcres());
+		Assert.assertEquals("HarvestedAcres", expected.getHarvestedAcres(), actual.getHarvestedAcres());
+		Assert.assertEquals("TotalBalesLoads", expected.getTotalBalesLoads(), actual.getTotalBalesLoads());
+		Assert.assertEquals("QuantityHarvestedTons", expected.getQuantityHarvestedTons(), actualQuantityHarvestedTons);
 		Assert.assertEquals("YieldPerAcre", expected.getYieldPerAcre(), actualYieldPerAcre);
 
 	}
@@ -1041,6 +1162,16 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		return dyccfs.get(0);
 	}
 
+	private DopYieldFieldRollupForage getDopYieldFieldRollupForage(String commodityTypeCode, List<DopYieldFieldRollupForage> dyccfList) {
+		
+		List<DopYieldFieldRollupForage> dyrfs = dyccfList.stream().filter(x -> x.getCommodityTypeCode().equalsIgnoreCase(commodityTypeCode)) 
+				.collect(Collectors.toList());
+		
+		Assert.assertEquals(1, dyrfs.size());
+		
+		return dyrfs.get(0);
+	}
+	
 	public void checkInventoryCoverageTotalForage(InventoryCoverageTotalForage expected, InventoryCoverageTotalForage actual) {
 		Assert.assertEquals("CropCommodityId", expected.getCropCommodityId(), actual.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", expected.getCropCommodityName(), actual.getCropCommodityName());

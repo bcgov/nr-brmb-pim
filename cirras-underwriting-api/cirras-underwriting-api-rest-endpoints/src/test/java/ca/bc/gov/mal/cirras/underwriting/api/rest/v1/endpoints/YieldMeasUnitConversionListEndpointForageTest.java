@@ -38,6 +38,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.YieldMeasUnitConve
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodityForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForageCut;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollupForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.YieldMeasUnitConversion;
@@ -281,6 +282,13 @@ public class YieldMeasUnitConversionListEndpointForageTest extends EndpointsTest
                 .doubleValue();
 		Assert.assertEquals("WeightDefaultUnit Annual", expectedWeightDefaultUnit, cut.getWeightDefaultUnit());
 
+		checkContractCommodityForage(quantityHarvestedTonsPerennial, quantityHarvestedTonsAnnual, dopYieldContractRsrc);
+		checkRollupForage(quantityHarvestedTonsPerennial, quantityHarvestedTonsAnnual, dopYieldContractRsrc);
+
+	}
+
+	private void checkContractCommodityForage(double quantityHarvestedTonsPerennial, double quantityHarvestedTonsAnnual,
+			DopYieldContractRsrc dopYieldContractRsrc) {
 		//Quantity Harvested ------------------------------
 		//Perennial
 		DopYieldContractCommodityForage dycc = getDopYieldContractCommodityForage(commodityTypeCodePerennial, dopYieldContractRsrc.getDopYieldContractCommodityForageList());
@@ -309,7 +317,48 @@ public class YieldMeasUnitConversionListEndpointForageTest extends EndpointsTest
 			Assert.assertEquals("YieldPerAcre Annual", yieldPerAcre, dycc.getYieldPerAcre().doubleValue(), delta);
 		
 		}
+	}
+	
+	private void checkRollupForage(double quantityHarvestedTonsPerennial, double quantityHarvestedTonsAnnual,
+			DopYieldContractRsrc dopYieldContractRsrc) {
+		//Quantity Harvested ------------------------------
+		//Perennial
+		DopYieldFieldRollupForage dyrf = getDopYieldFieldRollupForage(commodityTypeCodePerennial, dopYieldContractRsrc.getDopYieldFieldRollupForageList());
+		Double actualQuantityHarvestedTons = dyrf.getQuantityHarvestedTons();
+		if(dyrf.getQuantityHarvestedTons() != null) {
+			actualQuantityHarvestedTons = BigDecimal.valueOf(dyrf.getQuantityHarvestedTons())
+	                .setScale(4, BigDecimal.ROUND_HALF_UP)
+	                .doubleValue();
+			Assert.assertEquals("QuantityHarvestedTons Perennial", quantityHarvestedTonsPerennial, actualQuantityHarvestedTons.doubleValue(), delta);
+			
+			double yieldPerAcre = dyrf.getQuantityHarvestedTons() / fieldAcres;
+			Assert.assertEquals("YieldPerAcre Perennial", yieldPerAcre, dyrf.getYieldPerAcre().doubleValue(), delta);
+			
+		}
+		
+		//Annual
+		dyrf = getDopYieldFieldRollupForage(commodityTypeCodeAnnual, dopYieldContractRsrc.getDopYieldFieldRollupForageList());
+		actualQuantityHarvestedTons = dyrf.getQuantityHarvestedTons();
+		if(dyrf.getQuantityHarvestedTons() != null) {
+			actualQuantityHarvestedTons = BigDecimal.valueOf(dyrf.getQuantityHarvestedTons())
+	                .setScale(4, BigDecimal.ROUND_HALF_UP)
+	                .doubleValue();
+			Assert.assertEquals("QuantityHarvestedTons Annual", quantityHarvestedTonsAnnual, actualQuantityHarvestedTons.doubleValue(), delta);
 
+			double yieldPerAcre = dyrf.getQuantityHarvestedTons() / fieldAcres;
+			Assert.assertEquals("YieldPerAcre Annual", yieldPerAcre, dyrf.getYieldPerAcre().doubleValue(), delta);
+		
+		}
+	}
+	
+	private DopYieldFieldRollupForage getDopYieldFieldRollupForage(String commodityTypeCode, List<DopYieldFieldRollupForage> dyccfList) {
+		
+		List<DopYieldFieldRollupForage> dyrfs = dyccfList.stream().filter(x -> x.getCommodityTypeCode().equalsIgnoreCase(commodityTypeCode)) 
+				.collect(Collectors.toList());
+		
+		Assert.assertEquals(1, dyrfs.size());
+		
+		return dyrfs.get(0);
 	}
 
 	@Test
