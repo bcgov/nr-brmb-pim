@@ -73,7 +73,7 @@ jobs:
       - name: update IMAGE NAME variable if needed
         id: updateImageName
         run: |
-          export IMAGE_NAME="ghcr.io/${{github.repository_owner}}/$([ "${{inputs.MICROSERVICE_NAME}}" == "cirras-underwriting-ui" ] && echo 'cirras-underwriting-war' || echo 'cirras-underwriting-api')"
+          export IMAGE_NAME="$([ "${{inputs.MICROSERVICE_NAME}}" == "cirras-underwriting-ui" ] && echo 'cirras-underwriting-war' || echo 'cirras-underwriting-api')"
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_OUTPUT
 
       - name: Get digest of docker image
