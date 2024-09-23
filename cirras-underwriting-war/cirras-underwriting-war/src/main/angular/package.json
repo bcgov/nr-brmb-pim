@@ -65,7 +65,7 @@
     "ngx-trim": "^1.0.1",
     "puppeteer": "^1.14.0",
     "rxjs": "^6.3.3",
-    "sass": "^1.62.0",
+    "sass": "^1.78.0",
     "scroll-into-view-if-needed": "^2.2.31",
     "vanilla-text-mask": "^5.1.1",
     "wicg-inert": "^3.1.2",
