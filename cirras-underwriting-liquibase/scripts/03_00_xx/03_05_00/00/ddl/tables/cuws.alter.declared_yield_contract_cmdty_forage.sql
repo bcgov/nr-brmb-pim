@@ -12,7 +12,7 @@ ALTER TABLE cuws.declared_yield_contract_cmdty_forage
 DROP COLUMN quantity_harvested_tons_override;
 
 
-COMMENT ON COLUMN cuws.declared_yield_contract_cmdty_forage.total_bales_loads IS 'Total Bales Loads is the number of bales or loads harvested on the field';
+COMMENT ON COLUMN cuws.declared_yield_contract_cmdty_forage.total_bales_loads IS 'Total Bales Loads is the number of bales or loads harvested on the farm';
 
 COMMENT ON COLUMN cuws.declared_yield_contract_cmdty_forage.weight IS 'Weight is the total weight in the selected units';
 
