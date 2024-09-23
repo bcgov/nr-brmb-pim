@@ -180,8 +180,6 @@ jobs:
 
       - name: Apply .yaml files to openshift
         run: |
-          sed -i "s/'''/\"/g" staging/${{inputs.MICROSERVICE_NAME}}-deployment.yaml
-          cat staging/${{inputs.MICROSERVICE_NAME}}-deployment.yaml
           for file in staging/*
           do
             oc apply -f "$file"
