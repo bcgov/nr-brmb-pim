@@ -7,14 +7,23 @@
         [ngClass]="!fieldHiddenOnPrintoutInd && yieldField.isHiddenOnPrintoutInd ? 'inventory-border-exclude-printout' : 'inventory-border'">
         {{ yieldFieldFormGroup.value.cropVarietyName | titlecase }}
     </div>
+    <div class="inventory-cell" style="width: 80px;"
+        [ngClass]="!fieldHiddenOnPrintoutInd && yieldField.isHiddenOnPrintoutInd ? 'inventory-border-exclude-printout' : 'inventory-border'">
+        {{ yieldFieldFormGroup.value.fieldAcres }}
+    </div>
+    <div style="width:100px;"
+        [ngClass]="!fieldHiddenOnPrintoutInd && yieldField.isHiddenOnPrintoutInd ? 'inventory-border-exclude-printout' : 'inventory-border'">
+        {{ yieldFieldFormGroup.value.seedingYear ? yieldFieldFormGroup.value.seedingYear : "" }}  
+        {{ yieldFieldFormGroup.value.seedingDate ? (yieldFieldFormGroup.value.seedingDate | date) : "" }}
+    </div>
     <div style="width:80px;"
         [ngClass]="!fieldHiddenOnPrintoutInd && yieldField.isHiddenOnPrintoutInd ? 'inventory-border-exclude-printout' : 'inventory-border'">
         <mat-checkbox formControlName="isQuantityInsurableInd">
         </mat-checkbox>
     </div>
-    <div class="inventory-cell" style="width: 80px;"
+    <div style="width:140px;"
         [ngClass]="!fieldHiddenOnPrintoutInd && yieldField.isHiddenOnPrintoutInd ? 'inventory-border-exclude-printout' : 'inventory-border'">
-        {{ yieldFieldFormGroup.value.fieldAcres }}
+        {{ getPlantInsurabilityDescription(yieldFieldFormGroup.value.plantInsurabilityTypeCode) }} 
     </div>
     <div class="planting-container" [ngStyle]="setCutStyles()"
         [ngClass]="!fieldHiddenOnPrintoutInd && yieldField.isHiddenOnPrintoutInd ? 'inventory-border-exclude-printout' : 'inventory-border'">

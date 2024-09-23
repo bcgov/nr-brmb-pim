@@ -11,10 +11,10 @@
   </GlobalNamingResources>
 
   <Service name="Catalina">
-    <Connector port="${TOMCAT_PORT}"
+    <Connector port="8443"
       protocol="org.apache.coyote.http11.Http11NioProtocol"
-      maxThreads="${MAX_THREADS}"
-        connectionTimeout="${CONNECTION_TIMEOUT}"
+      maxThreads="100"
+        connectionTimeout="30000"
         compression="on"
         compressionMinSize="1024"
         noCompressionUserAgents="gozilla, traviata"

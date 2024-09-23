@@ -4,9 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       TAG:
-        type: string
-        description: Tag to apply to build (i.e. 2.3.0-SNAPSHOT)
-        required: true
+          required: true
+          type: string
+          description: Additional tag to apply to images being built
+          default: latest
 
 jobs:
   
@@ -18,8 +19,6 @@ jobs:
       TAG: ${{ inputs.tag }}
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-api
-      EXPORT_FILE: CIRRAS_UNDERWRITING_API_swagger.json
-      EXPORT_PATH: cirras-underwriting-api/cirras-underwriting-api-rest-endpoints/target/swagger.json
       JAVA_VERSION: 17
 
   build-and-upload-npm-modules:
@@ -27,12 +26,10 @@ jobs:
     secrets: inherit
     needs: build-underwriting-api
     with:
-      TAG: ${{ inputs.tag }}
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-ngclient-lib
-      DOWNLOAD_FILE: CIRRAS_UNDERWRITING_API_swagger.json
-      DOWNLOAD_PATH: cirras-underwriting-ngclient-lib/cirras-underwriting-ngclient-lib/src/main/angular/src/swagger/
-      EXPORT_MODULE: cirras-underwriting-api
+      API_TARGET: cirras-underwriting-api
+      SWAGGER_TARGET_PATH: cirras-underwriting-ngclient-lib/cirras-underwriting-ngclient-lib/src/main/angular/src/swagger/swagger.json
       NPM_ARTIFACT_PATH: \@cirras/cirras-underwriting-api/-/@cirras
 
   build-underwriting-war:
@@ -43,5 +40,3 @@ jobs:
       TAG: ${{ inputs.tag }}
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-war
-      DOWNLOAD_FILE: cirras-underwriting-api-${{ inputs.tag }}.tgz
-      DOWNLOAD_PATH: cirras-underwriting-war/cirras-underwriting-war/src/main/angular/

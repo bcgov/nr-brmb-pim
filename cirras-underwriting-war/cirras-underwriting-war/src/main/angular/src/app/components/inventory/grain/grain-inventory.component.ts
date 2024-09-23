@@ -498,6 +498,18 @@ ngOnChanges2(changes: SimpleChanges) {
     return commodityName
   }
 
+  getCommodity(cropCommodityId){
+
+    let cmdty = null
+
+    if (this.cropCommodityList && this.cropCommodityList.collection && this.cropCommodityList.collection.length > 0) {
+
+      cmdty = this.cropCommodityList.collection.find(x => x.cropCommodityId == cropCommodityId)
+
+    }
+    
+    return cmdty
+  }
 
   hasAcres(cAcres) {
     if (!cAcres) {
@@ -569,6 +581,11 @@ ngOnChanges2(changes: SimpleChanges) {
             updPlanting.lastYearCropVarietyId = parseInt( formField.value.plantings.value[i].lastYearCropCommodityVarietyId.split('_')[1] ) || null
             updPlanting.inventoryUnseeded.acresToBeSeeded = ( isNaN( tmpAcres) ? null : tmpAcres)
             updPlanting.inventoryUnseeded.cropCommodityId = formField.value.plantings.value[i].cropCommodityId
+            //Get isCropInsuranceEligibleInd and isInventoryCropInd the commodity list of the selected commodity and set it.
+            //This is needed to calculate the commodity totals in the backend.
+            let cmdty = self.getCommodity(formField.value.plantings.value[i].cropCommodityId)
+            updPlanting.inventoryUnseeded.isCropInsuranceEligibleInd = cmdty && cmdty.isCropInsuranceEligibleInd ? cmdty.isCropInsuranceEligibleInd : false
+            updPlanting.inventoryUnseeded.isInventoryCropInd = cmdty && cmdty.isInventoryCropInd ? cmdty.isInventoryCropInd : false
             updPlanting.inventoryUnseeded.isUnseededInsurableInd = formField.value.plantings.value[i].isUnseededInsurableInd
             updPlanting.isHiddenOnPrintoutInd = formField.value.plantings.value[i].isHiddenOnPrintoutInd
             updPlanting.inventoryUnseeded.deletedByUserInd = formField.value.plantings.value[i].deletedByUserInd         

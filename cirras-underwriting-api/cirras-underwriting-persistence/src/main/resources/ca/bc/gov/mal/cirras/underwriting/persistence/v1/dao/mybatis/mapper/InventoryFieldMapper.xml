@@ -264,8 +264,18 @@
 			ifd.inventory_field_guid
 	</select> 
 
-
 	<select id="selectForRollover" resultMap="InventoryFieldDtoMap">
+		<choose>
+			<when test="isGrainRollover">
+				<include refid="selectForRolloverGrain"/>
+			</when>
+			<otherwise>
+				<include refid="selectForRolloverForage"/>
+			</otherwise>
+		</choose>
+	</select> 
+
+    <sql id="selectForRolloverGrain">
 		-- All plantings for this field
 		WITH plantings AS (
 			SELECT	inv.inventory_field_guid,
@@ -321,7 +331,24 @@
 						  WHERE (isg2.seeded_acres > 0 and p.underseeded_crop_variety_id is null) or p.underseeded_crop_variety_id is not null)
 		GROUP BY p.field_id
 		ORDER BY planting_number
-	</select> 
+	</sql>
+
+    <sql id="selectForRolloverForage">
+		SELECT  inv.field_id, 
+				inv.planting_number,
+				null AS last_year_crop_commodity_id, 
+				null AS last_year_crop_commodity_name, 
+				null AS acres_to_be_seeded,
+				null AS last_year_crop_variety_id,
+				null AS last_year_crop_variety_name,
+				null AS is_grain_unseeded_default_ind,
+				inv.is_hidden_on_printout_ind
+		FROM inventory_field inv
+		WHERE inv.field_id = #{fieldId}
+		  AND inv.crop_year = #{cropYear}
+		  AND inv.insurance_plan_id = #{insurancePlanId}
+		ORDER BY inv.planting_number
+	</sql>
 
 	<select id="selectForField" resultMap="InventoryFieldDtoMap">
 		<include refid="selectColumns"/>

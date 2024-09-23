@@ -183,6 +183,29 @@
 		where isf.inventory_field_guid = #{inventoryFieldGuid}
 		order by cv.variety_name, isf.seeding_year, isf.seeding_date
 	</select> 
+
+	<select id="selectForRollover" resultMap="InventorySeededForageDtoMap">
+		select  
+			isf.crop_commodity_id, 
+			isf.crop_variety_id,
+			cv.variety_name as crop_variety_name, 
+			isf.commodity_type_code, 
+			isf.field_acres, 
+			isf.seeding_year, 
+			isf.is_irrigated_ind, 
+			isf.is_quantity_insurable_ind, 
+			isf.plant_insurability_type_code, 
+			isf.is_awp_eligible_ind
+		from inventory_seeded_forage isf
+		join inventory_field ifd on ifd.inventory_field_guid = isf.inventory_field_guid
+		left join crop_variety cv on cv.crop_variety_id = isf.crop_variety_id
+		where ifd.field_id = #{fieldId}
+		  and ifd.crop_year = #{cropYear}
+		  and ifd.insurance_plan_id = #{insurancePlanId}
+		  and ifd.planting_number = #{plantingNumber}
+		order by cv.variety_name, isf.seeding_year, isf.seeding_date
+	</select>
+
 	
 	<select id="selectForDeclaredYield" resultMap="InventorySeededForageDtoMap">
 		<include refid="selectColumns"/>

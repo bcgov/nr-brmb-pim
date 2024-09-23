@@ -14,7 +14,7 @@ metadata:
       fieldsType: FieldsV1
 immutable: false
 data:
-  TOMCAT_PORT: '#{TARGET_PORT}#'
+  TOMCAT_PORT: '#{TOMCAT_PORT}#'
   TOMCAT_MAX_THREADS: '#{TOMCAT_MAX_THREADS}#'
   CONNECTION_TIMEOUT: '#{CONNECTION_TIMEOUT}#'
   BASE_URL: '#{BASE_URL}#'

@@ -9,18 +9,6 @@ on:
       MICROSERVICE_NAME:
         required: true
         type: string
-      EXPORT_FILE:
-        required: false
-        type: string
-      EXPORT_PATH:
-        required: false
-        type: string
-      DOWNLOAD_FILE:
-        required: false
-        type: string
-      DOWNLOAD_PATH:
-        required: false
-        type: string
       TOMCAT_PORT:
         required: false
         type: string
@@ -53,16 +41,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Extract version number
+        id: getVersion
+        run: echo "VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+(-SNAPSHOT)?'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )" >> $GITHUB_OUTPUT
+
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           java-version: ${{ inputs.JAVA_VERSION }}
           distribution: 'adopt'
-
-      # - uses: jfrog/setup-jfrog-cli@v3
-      #   env:
-      #     JF_URL: ${{ secrets.ARTIFACTORY_URL }}
-      #     JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_ACCESS_TOKEN }}
 
       - name: Set up nodejs
         uses: actions/setup-node@v4
@@ -72,13 +59,6 @@ jobs:
         #NOTE: necessary to build client-war 
       - name: Add .npmrc file
         run: echo -e $NPMRC > ~/.npmrc
-
-      - name: download files from other jobs
-        if: ${{ inputs.DOWNLOAD_FILE }}
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ inputs.DOWNLOAD_FILE}}
-          path: ${{ inputs.DOWNLOAD_PATH}}
           
       - name: Build with Maven and push to artifactory
         run: |
@@ -87,13 +67,6 @@ jobs:
           export RELEASE_URL=${{ vars.RELEASE_URL }}
           export SNAPSHOT_URL=${{ vars.SNAPSHOT_URL }}
           mvn --settings=settings.xml --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }}  -DopenshiftRepo.login=${{ secrets.OPENSHIFT_ACCOUNT }} -DopenshiftRepo.password=${{ secrets.OPENSHIFT_PASSWORD }} deploy
-      
-      - name: Export file between jobs
-        uses: actions/upload-artifact@v4
-        if: ${{ inputs.EXPORT_FILE }}
-        with:
-          name: ${{ inputs.EXPORT_FILE }}
-          path: ${{ inputs.EXPORT_PATH }}
 
       - name: Cache local Maven repository
         uses: actions/cache@v2
@@ -102,10 +75,6 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**war.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-
-      - name: Extract version number
-        id: getVersion
-        run: echo "VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+(-SNAPSHOT)?'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -133,20 +102,6 @@ jobs:
             type=raw,value=${{ steps.getVersion.outputs.VERSION_NUMBER }}
             type=raw,value=${{ inputs.TAG }}
             ${{ toJson(github.event.pull_request.number) == '{}' && format( 'type=raw,value=pr-{0}', github.event.pull_request.number) || '' }} 
-
-      # NOTE: switch to using parameterized server.xml, instead of fixing configs at build time
-      # - name: Configure server.xml
-      #   uses: cschleiden/replace-tokens@v1.2
-      #   with:
-      #     files: ${{ inputs.MICROSERVICE_NAME }}/deploy-tools/server.xml
-      #   env:
-      #     TOMCAT_PORT: ${{ inputs.TOMCAT_PORT }}
-      #     MAX_THREADS: ${{ inputs.TOMCAT_MAX_THREADS }}
-      #     CONNECTION_TIMEOUT: ${{ vars.DEFAULT_TIMEOUT }}
-      #     COMPRESSION_MIN_SIZE: ${{ vars.COMPRESSION_MIN_SIZE }}
-      #     NO_COMPRESSION_USER_AGENTS: ${{ vars.NO_COMPRESSION_USER_AGENTS }}
-      #     COMPRESSION_MIME_TYPES: ${{ vars.COMPRESSION_MIME_TYPES }}
-
 
       - name: Build and push
         uses: docker/build-push-action@v5
