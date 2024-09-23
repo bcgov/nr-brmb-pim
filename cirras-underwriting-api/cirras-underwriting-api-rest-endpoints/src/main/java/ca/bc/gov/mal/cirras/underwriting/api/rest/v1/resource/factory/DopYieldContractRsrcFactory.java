@@ -26,6 +26,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodityForag
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForageCut;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollup;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollupForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldGrain;
@@ -36,6 +37,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContrac
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededForageDto;
@@ -95,6 +97,19 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory implements 
 
 			resource.setDopYieldContractCommodityForageList(dopYieldContractCommodityForageList);
 		}
+		
+		// Declared Yield Rollup FORAGE
+		if (!dycDto.getDeclaredYieldFieldRollupForageList().isEmpty()) {
+			List<DopYieldFieldRollupForage> dopYieldFieldRollupForageList = new ArrayList<DopYieldFieldRollupForage>();
+
+			for (DeclaredYieldFieldRollupForageDto dyrfDto : dycDto.getDeclaredYieldFieldRollupForageList()) {
+				DopYieldFieldRollupForage dyrfModel = createDopYieldFieldRollupForage(dyrfDto);
+				dopYieldFieldRollupForageList.add(dyrfModel);
+			}
+
+			resource.setDopYieldFieldRollupForageList(dopYieldFieldRollupForageList);
+		}
+
 
 		
 		String eTag = getEtag(resource);
@@ -191,6 +206,18 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory implements 
 			}
 
 			resource.setDopYieldContractCommodityForageList(dopYieldContractCommodityForageList);
+		}	
+		
+		// Declared Yield Rollup FORAGE
+		if (!dto.getDeclaredYieldFieldRollupForageList().isEmpty()) {
+			List<DopYieldFieldRollupForage> dopYieldFieldRollupForageList = new ArrayList<DopYieldFieldRollupForage>();
+
+			for (DeclaredYieldFieldRollupForageDto dyrfDto : dto.getDeclaredYieldFieldRollupForageList()) {
+				DopYieldFieldRollupForage dyrfModel = createDopYieldFieldRollupForage(dyrfDto);
+				dopYieldFieldRollupForageList.add(dyrfModel);
+			}
+
+			resource.setDopYieldFieldRollupForageList(dopYieldFieldRollupForageList);
 		}
 		
 		String eTag = getEtag(resource);
@@ -237,6 +264,22 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory implements 
 			dopForageCommodities.add(dto);
 		}
 		return dopForageCommodities;
+	}
+	
+	@Override
+	public List<DeclaredYieldFieldRollupForageDto> getDopForageRollupCommoditiesFromInventorySeeded(
+			List<InventorySeededForageDto> dtos) throws FactoryException {
+		
+		List<DeclaredYieldFieldRollupForageDto> dopForageRollups = new ArrayList<DeclaredYieldFieldRollupForageDto>();
+		for (InventorySeededForageDto isfDto : dtos) {
+			
+			DeclaredYieldFieldRollupForageDto dto = new DeclaredYieldFieldRollupForageDto();
+			dto.setCommodityTypeCode(isfDto.getCommodityTypeCode());
+			dto.setCommodityTypeDescription(isfDto.getCommodityTypeDescription());
+			dto.setTotalFieldAcres(isfDto.getTotalFieldAcres());
+			dopForageRollups.add(dto);
+		}
+		return dopForageRollups;
 	}
 	
 	
@@ -336,6 +379,22 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory implements 
 		model.setHarvestedAcresOverride(dto.getHarvestedAcresOverride());
 		model.setQuantityHarvestedTons(dto.getQuantityHarvestedTons());
 		model.setQuantityHarvestedTonsOverride(dto.getQuantityHarvestedTonsOverride());
+		model.setYieldPerAcre(dto.getYieldPerAcre());
+		model.setCommodityTypeDescription(dto.getCommodityTypeDescription());
+
+		return model;
+	}
+	
+	private DopYieldFieldRollupForage createDopYieldFieldRollupForage(DeclaredYieldFieldRollupForageDto dto) {
+		DopYieldFieldRollupForage model = new DopYieldFieldRollupForage();
+		
+		model.setDeclaredYieldFieldRollupForageGuid(dto.getDeclaredYieldFieldRollupForageGuid());
+		model.setDeclaredYieldContractGuid(dto.getDeclaredYieldContractGuid());
+		model.setCommodityTypeCode(dto.getCommodityTypeCode());
+		model.setTotalFieldAcres(dto.getTotalFieldAcres());
+		model.setTotalBalesLoads(dto.getTotalBalesLoads());
+		model.setHarvestedAcres(dto.getHarvestedAcres());
+		model.setQuantityHarvestedTons(dto.getQuantityHarvestedTons());
 		model.setYieldPerAcre(dto.getYieldPerAcre());
 		model.setCommodityTypeDescription(dto.getCommodityTypeDescription());
 
@@ -527,6 +586,20 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory implements 
 		dto.setQuantityHarvestedTonsOverride(model.getQuantityHarvestedTonsOverride());
 		dto.setYieldPerAcre(model.getYieldPerAcre());
 		
+	}
+	
+
+	@Override
+	public void updateDto(DeclaredYieldFieldRollupForageDto dto, DopYieldFieldRollupForage model) {
+
+		dto.setDeclaredYieldContractGuid(model.getDeclaredYieldContractGuid());
+		dto.setCommodityTypeCode(model.getCommodityTypeCode());
+		dto.setTotalFieldAcres(model.getTotalFieldAcres());
+		dto.setTotalBalesLoads(model.getTotalBalesLoads());
+		dto.setHarvestedAcres(model.getHarvestedAcres());
+		dto.setQuantityHarvestedTons(model.getQuantityHarvestedTons());
+		dto.setYieldPerAcre(model.getYieldPerAcre());
+
 	}
 	
 	@Override
