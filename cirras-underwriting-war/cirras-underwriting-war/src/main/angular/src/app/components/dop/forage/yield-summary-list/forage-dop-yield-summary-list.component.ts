@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormArray } from '@angular/forms';
 import { DopYieldFieldRollupForage } from 'src/app/conversion/models-yield';
 
@@ -6,7 +6,8 @@ import { DopYieldFieldRollupForage } from 'src/app/conversion/models-yield';
   selector: 'forage-dop-yield-summary-list',
   templateUrl: './forage-dop-yield-summary-list.component.html',
   styleUrls: ['./forage-dop-yield-summary-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 
 
@@ -14,7 +15,6 @@ export class ForageDopYieldSummaryListComponent {
 
   @Input() fieldRollupList: Array<DopYieldFieldRollupForage>;
   @Input() fieldRollupFormArray: FormArray;
-  @Input() decimalPrecision: number;
   @Input() isUnsaved: boolean;
 
   get totalFieldAcresTotal(): number {
@@ -24,9 +24,4 @@ export class ForageDopYieldSummaryListComponent {
   get harvestedAcresTotal(): number {
       return this.fieldRollupList.reduce((acc, curr) => acc + curr.harvestedAcres || 0, 0);
   }
-
-  // get harvestedAcresOverrideTotal(): number {
-  //     return this.commodities.reduce((acc, curr) => acc + curr.harvestedAcresOverride || 0, 0);
-  // }
-
 }

@@ -182,14 +182,13 @@
 
 
                 <!-- dop contract data  -->
-                <div class="plcy-inv-cntrct" style="grid-template-columns: 800px 790px;" >
+                <div class="plcy-inv-cntrct" style="grid-template-columns: 900px 790px;" >
                     <div>
                         <!-- yield summary  -->
                         <forage-dop-yield-summary-list
                             *ngIf="dopYieldContract && dopYieldContract.dopYieldFieldRollupForageList"
                             [fieldRollupList]="dopYieldContract.dopYieldFieldRollupForageList"
                             [fieldRollupFormArray]="getViewModel().formGroup.controls.dopYieldFieldRollupForageList"
-                            [decimalPrecision]="decimalPrecision"
                             [isUnsaved]="isUnsaved"></forage-dop-yield-summary-list>
                     </div>
     

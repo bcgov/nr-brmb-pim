@@ -58,7 +58,7 @@ export function convertToYieldMeasUnit(yieldMeasUnitRes: YieldMeasUnitTypeCodeRs
       fields: dopContract.fields,
       dopYieldFieldRollupList: dopContract.dopYieldFieldRollupList,
       dopYieldContractCommodities: dopContract.dopYieldContractCommodities,
-      //dopYieldFieldRollupForageList: dopContract.dopYieldFieldRollupForageList,
+      dopYieldFieldRollupForageList: dopContract.dopYieldFieldRollupForageList,
       dopYieldContractCommodityForageList: dopContract.dopYieldContractCommodityForageList,
       uwComments: dopContract.uwComments,
 

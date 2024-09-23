@@ -1,8 +1,8 @@
 <div class="plcy-inv-cmdty-totals-header"
-    style="grid-template-columns: 100px 100px 115px 115px 160px 75px; padding-left: 10px;">
+    style="grid-template-columns: 140px 100px 115px 115px 160px 75px; padding-left: 10px;">
 
     <div *ngIf="isUnsaved" class="table-header border-top border-left border-right"
-        style="grid-column-start: 1; grid-column-end: 8;">
+        style="grid-column-start: 1; grid-column-end: 7;">
         <span #el matTooltip="" style="margin-left:10px;">
             <mat-icon
                 [ngStyle]="{'color':'orangered', 'font-size':'large', 'padding-top': '4px'}">warning_amber</mat-icon>
@@ -39,19 +39,19 @@
     </div>
 
     <div class="grain-unsdd-inv-tot-cmdty-container"
-        style="grid-template-columns: 100px 100px 115px 115px 160px 75px; margin-left: 0px;">
-        <forage-dop-yield-summary *ngFor="let commodity of commodities" [commodity]="commodity"
-            [commoditiesFormArray]="commoditiesFormArray" [decimalPrecision]="decimalPrecision"
+        style="grid-template-columns: 140px 100px 115px 115px 160px 75px; margin-left: 0px;">
+        <forage-dop-yield-summary *ngFor="let fieldRollup of fieldRollupList" [fieldRollup]="fieldRollup"
+            [fieldRollupFormArray]="fieldRollupFormArray"
             style="display: contents;"></forage-dop-yield-summary>
 
         <div class="readonly border-right border-bottom border-left" style="padding-left: 6px;">
             {{ 'Total' }}
         </div>
-        <div class="readonly border-right border-bottom center">
-            <!-- {{ totalFieldAcresTotal | number: '1.0-1' }} -->
+        <div class="readonly border-right border-bottom" style="justify-content: center;" >
+            {{ totalFieldAcresTotal | number: '1.0-1' }}
         </div>
-        <div class="readonly border-right border-bottom center">
-            <!-- {{ harvestedAcresTotal | number: '1.0-1' }} -->
+        <div class="readonly border-right border-bottom" style="justify-content: center;">
+            {{ harvestedAcresTotal | number: '1.0-1' }}
         </div>
         <div class="readonly border-right border-bottom center">
         </div>

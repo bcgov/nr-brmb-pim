@@ -1,5 +1,4 @@
-import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { DopYieldFieldRollupForage } from 'src/app/conversion/models-yield';
@@ -10,19 +9,17 @@ import { makeNumberOnly } from 'src/app/utils';
   selector: 'forage-dop-yield-summary',
   templateUrl: './forage-dop-yield-summary.component.html',
   styleUrls: ['./forage-dop-yield-summary.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class ForageDopYieldSummaryComponent{
 
   @Input() fieldRollup: DopYieldFieldRollupForage;
   @Input() fieldRollupFormArray: FormArray;
-  @Input() decimalPrecision: number;
 
   fieldRollupFormGroup: FormGroup;
 
-  constructor(private fb: FormBuilder,
-      private store: Store<RootState>,
-      private decimalPipe: DecimalPipe) {
+  constructor(private fb: FormBuilder) {
   }
 
   ngOnInit(): void {
@@ -43,20 +40,4 @@ export class ForageDopYieldSummaryComponent{
   numberOnly(event): boolean {
       return makeNumberOnly(event);
   }
-
-  // updateHarvestedAcresOverride(): void {
-  //     let harvestedAcresOverride = this.commodityFormGroup.value.harvestedAcresOverride;
-  //     harvestedAcresOverride = this.decimalPipe.transform(harvestedAcresOverride, '1.0-1')?.replace(',', '');
-  //     this.commodity.harvestedAcresOverride = parseFloat(harvestedAcresOverride) || null;
-
-  //     this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
-  // }
-
-  // updateQuantityHarvestedTonsOverride(): void {
-  //     let quantityHarvestedTonsOverride = this.commodityFormGroup.value.quantityHarvestedTonsOverride;
-  //     quantityHarvestedTonsOverride = this.decimalPipe.transform(quantityHarvestedTonsOverride, `1.0-${this.decimalPrecision}`)?.replace(',', '');
-  //     this.commodity.quantityHarvestedTonsOverride = parseFloat(quantityHarvestedTonsOverride) || null;
-
-  //     this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
-  // }
 }
