@@ -71,7 +71,7 @@ jobs:
 
       - name: Get digest of docker image
         id: getDigest
-        if: ${{ inputs.ENVIRONMENT_NAME != 'cirras-underwriting-jasper'}}
+        if: ${{ inputs.MICROSERVICE_NAME != 'cirras-underwriting-jasper'}}
         run: |
           export IMAGE="ghcr.io/${{github.repository_owner}}/$([ "${{inputs.MICROSERVICE_NAME}}" == "cirras-underwriting-ui" ] && echo "cirras-underwriting-war" || echo "cirras-underwriting-api"):${{ inputs.TAG }}"
           docker pull $IMAGE
