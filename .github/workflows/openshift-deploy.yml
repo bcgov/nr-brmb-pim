@@ -73,7 +73,7 @@ jobs:
         id: getDigest
         if: ${{ inputs.ENVIRONMENT_NAME != 'cirras-underwriting-jasper'}}
         run: |
-          export IMAGE='ghcr.io/${{github.repository_owner}}/$([ "${{inputs.MICROSERVICE_NAME}}" == "cirras-underwriting-ui" ] && echo "cirras-underwriting-war" || echo "cirras-underwriting-api"):${{ inputs.TAG }}'
+          export IMAGE="ghcr.io/${{github.repository_owner}}/$([ "${{inputs.MICROSERVICE_NAME}}" == "cirras-underwriting-ui" ] && echo "cirras-underwriting-war" || echo "cirras-underwriting-api"):${{ inputs.TAG }}"
           docker pull $IMAGE
           echo "IMAGE_BY_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $IMAGE)" >> $GITHUB_OUTPUT
 
