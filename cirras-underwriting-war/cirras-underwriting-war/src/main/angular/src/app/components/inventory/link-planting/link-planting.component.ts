@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
@@ -185,11 +185,16 @@ export class LinkPlantingComponent implements OnInit {
     }    
 
     this.hasSaveStarted = true
-    
+
     // call the api to get the forage inventory for that policy
-    this.http.get<InventoryContract>(inventoryContractLink, this.httpOptions).subscribe({
-      next: data => {
-          this.processForageInventoryContractData(inventoryContractLink, data)
+    this.http.get<InventoryContract>(inventoryContractLink, {headers: this.httpOptions.headers, observe: "response"}).subscribe({
+      next: resp => {
+        let invContract = resp.body
+        if (resp.headers && invContract) {
+            invContract.etag = resp.headers.get("ETag")
+          }
+          
+          this.processForageInventoryContractData(inventoryContractLink, invContract)
       },
       error: error => {
           this.handleApiError(error)
@@ -400,8 +405,14 @@ export class LinkPlantingComponent implements OnInit {
   }
 
   updateForageInventory(inventoryContractLink, inventoryContractData, operationType) {
-    
-    this.http.put<any>(inventoryContractLink, inventoryContractData)
+
+    let httpReqHeaders = {
+     headers: new HttpHeaders({
+        'If-Match': inventoryContractData.etag ? inventoryContractData.etag : ""
+      })
+    }
+
+    this.http.put<any>(inventoryContractLink, inventoryContractData, httpReqHeaders)
       .subscribe({
           next: data => {
 
@@ -456,10 +467,15 @@ export class LinkPlantingComponent implements OnInit {
     inventoryContractLink = inventoryContractLink + "/inventoryContracts/" + this.dataReceived.linkedForageInventoryContractGuid 
 
     // call the api to get the forage inventory for that policy
-    this.http.get<InventoryContract>(inventoryContractLink, this.httpOptions).subscribe({
-      next: data1 => {
+    this.http.get<InventoryContract>(inventoryContractLink, {headers: this.httpOptions.headers, observe: "response"}).subscribe({
+      next: resp => {
         
-        let inventoryContract = this.removeForagePlanting(data1, deletePlanting)
+        let respInvContract = resp.body
+        if (resp.headers && respInvContract) {
+          respInvContract.etag = resp.headers.get("ETag")
+        }
+
+        let inventoryContract = this.removeForagePlanting(respInvContract, deletePlanting)
 
         // call update forage inventory api
         this.updateForageInventory(inventoryContractLink, inventoryContract, 'RemoveLink')
@@ -468,7 +484,7 @@ export class LinkPlantingComponent implements OnInit {
       error: error => {
           this.handleApiError(error)
       }
-    })  
+    })
   }
 
   removeForagePlanting(data, shouldDeletePlanting) {

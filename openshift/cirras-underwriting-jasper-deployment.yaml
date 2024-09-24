@@ -53,17 +53,19 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-jasper-config-#{ENV}#
                   key: JASPERREPORTS_DATABASE_NAME  
+            - name: MARIADB_EXTRA_FLAGS
+              value: '--innodb_log_file_size=#{MARIADB_MAX_LOG_BYTES}#'
           volumeMounts:
             - name: mariadb-#{ENV}#
               mountPath: /bitnami/mariadb
         - name: jasperreports-#{ENV}#
           resources:
             requests:
-              cpu: 400m
-              memory: 800Mi
+              cpu: #{JASPER_CPU_REQUEST}#
+              memory: #{JASPER_MEMORY_REQUEST}#
             limits:
-              cpu: 800m
-              memory: 1600Mi 
+              cpu: #{JASPER_CPU_LIMIT}#
+              memory: #{JASPER_MEMORY_LIMIT}#
           image: >-
             docker.io/bitnami/jasperreports-archived:latest
           ports:
@@ -103,7 +105,4 @@ spec:
             - name: jasper-#{ENV}#
               mountPath: /bitnami/jasperreports
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
+    type: Recreate

@@ -223,6 +223,30 @@ public class InventorySeededForageDaoImpl extends BaseDao implements InventorySe
 	}
 
 	@Override
+	public List<InventorySeededForageDto> selectForRollover(Integer fieldId, Integer cropYear, Integer insurancePlanId, Integer plantingNumber) throws DaoException {
+		logger.debug("<selectForRollover");
+		
+		List<InventorySeededForageDto> dtos = null;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			
+			parameters.put("fieldId", fieldId);
+			parameters.put("cropYear", cropYear);
+			parameters.put("insurancePlanId", insurancePlanId);
+			parameters.put("plantingNumber", plantingNumber);
+						
+			dtos = this.mapper.selectForRollover(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectForRollover " + dtos);
+		return dtos;
+	}
+	
+	@Override
 	public List<InventorySeededForageDto> selectForDeclaredYield(String inventoryFieldGuid) throws DaoException {
 		logger.debug("<selectForDeclaredYield");
 

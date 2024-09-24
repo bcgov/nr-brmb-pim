@@ -10,7 +10,6 @@ on:
           - cirras-underwriting-api
           - cirras-underwriting-ui
           - cirras-underwriting-jasper
-          - cirras-underwriting-liquibase
       ENVIRONMENT_NAME:
         required: true
         type: choice
@@ -44,7 +43,7 @@ on:
         required: true
         type: string
       TAG:
-        required: false
+        required: true
         type: string
         default: latest
 
@@ -63,6 +62,23 @@ jobs:
       - name: Copy openshift yaml files
         run: mkdir staging && cp openshift/${{ inputs.MICROSERVICE_NAME }}*.yaml staging/
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ vars.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get digest of docker image
+        id: getDigest
+        if: ${{ inputs.MICROSERVICE_NAME != 'cirras-underwriting-jasper'}}
+        run: |
+          export IMAGE="ghcr.io/${{github.repository_owner}}/$([ "${{inputs.MICROSERVICE_NAME}}" == "cirras-underwriting-ui" ] && echo "cirras-underwriting-war" || echo "cirras-underwriting-api"):${{ inputs.TAG }}"
+          docker pull $IMAGE
+          echo "IMAGE_BY_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $IMAGE)" >> $GITHUB_OUTPUT
+
+
+
       - name: Fill yaml files
         uses: cschleiden/replace-tokens@v1.2
         with:
@@ -72,9 +88,10 @@ jobs:
           ENV: ${{ inputs.ENVIRONMENT_NAME }}
           NAMESPACE: ${{ inputs.NAMESPACE }}
           TAG: ${{ inputs.TAG }}
+          IMAGE_BY_DIGEST: ${{ steps.getDigest.outputs.IMAGE_BY_DIGEST }}
           SID: ${{ github.run_id }}
           LOG_LEVEL: ${{ vars.LOG_LEVEL }}
-          MAX_APP_COUNT: ${{ vars.MAX_APP_COUNT }}
+          CONNECTION_TIMEOUT: ${{ vars.CONNECTION_TIMEOUT }}
           
           WEBADE_CHECK_TOKEN_URL: ${{ vars.WEBADE_CHECK_TOKEN_URL }}
           WEBADE_GET_TOKEN_URL: ${{ vars.WEBADE_GET_TOKEN_URL }}
@@ -83,10 +100,16 @@ jobs:
 
 
           #API variables
+          API_CPU_REQUEST: ${{ vars.API_CPU_REQUEST }}
+          API_CPU_LIMIT: ${{ vars.API_CPU_LIMIT }}
+          API_MEMORY_REQUEST: ${{ vars.API_MEMORY_REQUEST }}
+          API_MEMORY_LIMIT: ${{ vars.API_MEMORY_LIMIT }}
+          MAX_API_COUNT: ${{ vars.MAX_APP_COUNT }}
+
           POSTGRES_RESOURCE_NAME: ${{ vars.POSTGRES_RESOURCE_NAME }}
 
-          MAX_THREADS: ${{ vars.MAX_THREADS }}
-          TARGET_PORT: ${{ vars.TARGET_PORT }}
+          TOMCAT_MAX_THREADS: ${{ vars.TOMCAT_MAX_THREADS }}
+          TOMCAT_PORT: ${{ vars.TOMCAT_PORT }}
           TIME_ZONE: ${{ vars.TIME_ZONE }}
 
           CIRRAS_POLICIES_API_URL: ${{ vars.CIRRAS_POLICIES_API_URL}}
@@ -108,6 +131,7 @@ jobs:
 
           
           #Frontend variables
+          MAX_UI_COUNT: ${{ vars.MAX_UI_COUNT }}
           BASE_URL: https://cirras-underwriting-ui-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/pub/cirras-underwriting/
           CIRRAS_UNDERWRITING_REST_URI: https://cirras-underwriting-api-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/cirras-underwriting-api/v1
           WEBADE_CIRRAS_UNDERWRITING_UI_SECRET: ${{secrets.WEBADE_CIRRAS_UNDERWRITING_UI_SECRET}}
@@ -124,8 +148,12 @@ jobs:
 
 
           #Jasper variables
-          JASPER_URL: https://cirras-underwriting-jasper-${{ inputs.ENVIRONMENT_NAME }}-${{ inputs.NAMESPACE }}.apps.silver.devops.gov.bc.ca/jasperserver/
+          JASPER_URL: cirras-underwriting-jasper-${{ inputs.ENVIRONMENT_NAME }}-${{ inputs.NAMESPACE }}.apps.silver.devops.gov.bc.ca
           JASPER_USERNAME: ${{ vars.JASPER_USERNAME }}
+          JASPER_CPU_REQUEST: ${{ vars.JASPER_CPU_REQUEST }}
+          JASPER_CPU_LIMIT: ${{ vars.JASPER_CPU_LIMIT }}
+          JASPER_MEMORY_REQUEST: ${{ vars.JASPER_MEMORY_REQUEST }}
+          JASPER_MEMORY_LIMIT: ${{ vars.JASPER_MEMORY_LIMIT }}
           JASPER_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
           ALLOW_EMPTY_PASSWORD: true
           JASPERREPORTS_DATABASE_NAME: jasper${{ inputs.ENVIRONMENT_NAME }}
@@ -134,6 +162,7 @@ jobs:
           JASPERREPORTS_UI_USER: ${{ vars.JASPER_USERNAME }}
           JASPERREPORTS_UI_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
           JASPER_STORAGE_CAPACITY: 25Mi
+          MARIADB_MAX_LOG_BYTES: ${{ vars.MARIADB_MAX_LOG_BYTES }}
 
 
       

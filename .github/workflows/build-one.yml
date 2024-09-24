@@ -1,0 +1,49 @@
+name: Build single component
+
+on:
+  workflow_dispatch:
+    inputs:
+      TAG:
+        required: true
+        type: string
+        description: Additional tag to apply to images being built
+        default: latest
+      COMPONENT:
+        required: true
+        type: choice
+        options:
+          - cirras-underwriting-api
+          - cirras-underwriting-war
+          - cirras-underwriting-ngclient-lib
+
+
+jobs:
+  build-underwriting-api: 
+    uses: ./.github/workflows/build-package.yml
+    if: ${{ inputs.COMPONENT == 'cirras-underwriting-api' }}
+    secrets: inherit
+    with:
+      ENVIRONMENT: DEV
+      MICROSERVICE_NAME: cirras-underwriting-api
+      JAVA_VERSION: 17
+      TAG: ${{ inputs.TAG }}
+
+  build-and-upload-npm-modules:
+    uses: ./.github/workflows/build-npm.yml
+    if: ${{ inputs.COMPONENT == 'cirras-underwriting-ngclient-lib' }}
+    secrets: inherit
+    with:
+      ENVIRONMENT: DEV
+      MICROSERVICE_NAME: cirras-underwriting-ngclient-lib
+      API_TARGET: cirras-underwriting-api
+      SWAGGER_TARGET_PATH: cirras-underwriting-ngclient-lib/cirras-underwriting-ngclient-lib/src/main/angular/src/swagger/swagger.json
+      NPM_ARTIFACT_PATH: \@cirras/cirras-underwriting-api/-/@cirras
+
+  build-underwriting-war:
+    uses: ./.github/workflows/build-package.yml
+    if: ${{ inputs.COMPONENT == 'cirras-underwriting-war' }}
+    secrets: inherit
+    with:
+      ENVIRONMENT: DEV
+      MICROSERVICE_NAME: cirras-underwriting-war
+      TAG: ${{ inputs.TAG }}

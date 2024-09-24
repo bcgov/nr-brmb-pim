@@ -38,7 +38,7 @@
 	, cfd.contracted_field_detail_id
 	, ifd.planting_number
 	, ifd.inventory_field_guid
-    , INITCAP(cc_lastYear.commodity_name) as last_year_commodity_name
+    , INITCAP(COALESCE(cv_lastYear.variety_name, cc_lastYear.commodity_name)) as last_year_commodity_variety_name
     -- unseeded
     , iu.acres_to_be_seeded
 	, INITCAP(cc_unseeded.commodity_name) as unseeded_commodity_name
@@ -60,6 +60,7 @@ join inventory_field ifd on ifd.field_id = f.field_id
 						and ifd.insurance_plan_id = gcy.insurance_plan_id
 						and ifd.crop_year = afd.crop_year
 left join crop_commodity cc_lastYear on cc_lastYear.crop_commodity_id = ifd.last_year_crop_commodity_id
+left join crop_variety cv_lastYear on cv_lastYear.crop_variety_id = ifd.last_year_crop_variety_id
 left join crop_variety cv_underseeded on cv_underseeded.crop_variety_id = ifd.underseeded_crop_variety_id
 left join inventory_unseeded iu on iu.inventory_field_guid = ifd.inventory_field_guid
 left join crop_commodity cc_unseeded on cc_unseeded.crop_commodity_id = iu.crop_commodity_id
@@ -128,11 +129,11 @@ offset $P{p_record_offset}]]>
 		<property name="com.jaspersoft.studio.field.name" value="inventory_field_guid"/>
 		<property name="com.jaspersoft.studio.field.label" value="inventory_field_guid"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_field"/>
-		<fieldDescription><![CDATA[Inventory Field GUID is the primary key used to identify a table record. ]]></fieldDescription>
+		<fieldDescription><![CDATA[Inventory Field GUID is the primary key used to identify a table record.]]></fieldDescription>
 	</field>
-	<field name="last_year_commodity_name" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="last_year_commodity_name"/>
-		<property name="com.jaspersoft.studio.field.label" value="last_year_commodity_name"/>
+	<field name="last_year_commodity_variety_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="last_year_commodity_variety_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="last_year_commodity_variety_name"/>
 	</field>
 	<field name="acres_to_be_seeded" class="java.lang.Double">
 		<property name="com.jaspersoft.studio.field.name" value="acres_to_be_seeded"/>
@@ -147,7 +148,7 @@ offset $P{p_record_offset}]]>
 		<property name="com.jaspersoft.studio.field.name" value="is_unseeded_insurable_ind"/>
 		<property name="com.jaspersoft.studio.field.label" value="is_unseeded_insurable_ind"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_unseeded"/>
-		<fieldDescription><![CDATA[Is Unseeded Insurable Ind determines if the specified field inventory is insurable for Unseeded Coverage in CIRRAS (Y) or not (N). ]]></fieldDescription>
+		<fieldDescription><![CDATA[Is Unseeded Insurable Ind determines if the specified field inventory is insurable for Unseeded Coverage in CIRRAS (Y) or not (N).]]></fieldDescription>
 	</field>
 	<field name="seeded_commodity_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="seeded_commodity_name"/>
@@ -250,7 +251,7 @@ offset $P{p_record_offset}]]>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8" isBold="true" isItalic="true"/>
 					</textElement>
-					<text><![CDATA[*Crops To Be Seeded]]></text>
+					<text><![CDATA[*Intended Crop]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="280" y="0" width="45" height="35" uuid="94efe966-df14-4bf6-8de8-8a495725b493">
@@ -745,7 +746,7 @@ offset $P{p_record_offset}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{last_year_commodity_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{last_year_commodity_variety_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="378" y="0" width="60" height="15" uuid="0cb1f41c-38ed-422a-a025-84d334183e88"/>

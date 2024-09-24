@@ -2280,6 +2280,16 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			if (prevYearPlantings != null && prevYearPlantings.size() > 0) {
 				// Rollover plantings
 				cfdDto.setPlantings(prevYearPlantings);
+
+				if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.FORAGE.getInsurancePlanId())) {
+					// Load InventorySeededForage from last year.
+					for ( InventoryFieldDto prevYearPlanting : prevYearPlantings ) {
+						List<InventorySeededForageDto> prevYearIsfDtos = inventorySeededForageDao.selectForRollover(cfdDto.getFieldId(),
+								cfdDto.getCropYear() - 1, cfdDto.getInsurancePlanId(), prevYearPlanting.getPlantingNumber());
+						prevYearPlanting.setInventorySeededForages(prevYearIsfDtos);
+					}
+				}
+
 				annualField = inventoryContractFactory.addRolloverAnnualField(insurancePlanId, cfdDto, authentication);
 			} else {
 				// Create default planting for the field
