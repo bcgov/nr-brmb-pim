@@ -40,3 +40,23 @@
     }
   }
 
+
+  #hidden-totals-warning {
+    display: grid; 
+    grid-auto-rows: minmax( 2em, auto );
+    grid-template-columns: 26px 260px;
+    
+    position: absolute;
+    top: 60px;
+    right: 16px;
+    height: 30px;
+
+    div {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      color: orange;
+      font-size: 14px; 
+    }
+
+  }

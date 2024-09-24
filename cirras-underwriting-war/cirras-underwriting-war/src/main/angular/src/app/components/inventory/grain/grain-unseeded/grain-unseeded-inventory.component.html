@@ -41,7 +41,16 @@
             </button>
         </div>
     </div>
-        
+    
+    <div id="hidden-totals-warning">
+        <div *ngIf="hasYieldData == false && hasDataChanged == true; else noWarningDiv">
+            <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
+        </div>
+        <div *ngIf="hasYieldData == false && hasDataChanged == true; else noWarningDiv" class="unsaved-changes">
+            Hidden fields are included in acre totals
+        </div>
+    </div>
+
     <cirras-grower-contract-header
         [growerContract]="growerContract"
     ></cirras-grower-contract-header>  
