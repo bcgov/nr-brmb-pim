@@ -144,37 +144,55 @@
                     [fields]="dopYieldContract.fields"
                     [fieldsFormArray]="getViewModel().formGroup.controls.fields"></forage-dop-field-list>
     
-                <!-- dop contract data  -->
-                <div class="plcy-inv-cntrct" style="grid-template-columns: 600px 790px;" >
-                    <div class="question" style="border: 1px solid #E1CF7B; background: #FEFAEC;">
-                        
-    
-                        <div class="forage-dop-contract-info">
-                            <div class="cell">Baler/Wagon Make & Model:</div>
-                            <div class="fill">
-                                <mat-form-field appearance="fill">
-                                    <input matInput formControlName="balerWagonInfo" 
-                                            maxlength="128"
-                                            (blur)="updateBalerWagonInfo()">
-                                </mat-form-field>
-                                <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
-                            </div>
-                            <div class="cell">Total Number of Livestock:</div>  
-                            <div class="fill">
-                                <mat-form-field appearance="fill">
-                                    <input matInput matInputCommified formControlName="totalLivestock" 
-                                            maxlength="5"
-                                            (keypress)="numberOnly($event)"
-                                            (blur)="updateTotalLivestock()">
-                                </mat-form-field>
-                                <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
-                            </div>
-                        </div>
 
+
+
+
+                <div class="question-single" style="border: 1px solid #E1CF7B; background: #FEFAEC;">
+                    
+
+                    <div class="forage-dop-contract-info">
+                        <div class="cell">Baler/Wagon Make & Model:</div>
+                        <div class="fill">
+                            <mat-form-field appearance="fill">
+                                <input matInput formControlName="balerWagonInfo" 
+                                        maxlength="128"
+                                        (blur)="updateBalerWagonInfo()">
+                            </mat-form-field>
+                            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
+                        </div>
+                        <div class="cell">Total Number of Livestock:</div>  
+                        <div class="fill">
+                            <mat-form-field appearance="fill">
+                                <input matInput matInputCommified formControlName="totalLivestock" 
+                                        maxlength="5"
+                                        (keypress)="numberOnly($event)"
+                                        (blur)="updateTotalLivestock()">
+                            </mat-form-field>
+                            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+                <!-- dop contract data  -->
+                <div class="plcy-inv-cntrct" style="grid-template-columns: 900px 790px;" >
+                    <div>
+                        <!-- yield summary  -->
+                        <forage-dop-yield-summary-list
+                            *ngIf="dopYieldContract && dopYieldContract.dopYieldFieldRollupForageList"
+                            [fieldRollupList]="dopYieldContract.dopYieldFieldRollupForageList"
+                            [fieldRollupFormArray]="getViewModel().formGroup.controls.dopYieldFieldRollupForageList"
+                            [isUnsaved]="isUnsaved"></forage-dop-yield-summary-list>
                     </div>
     
                     <div>
-                        
                         <!-- commodity totals -->
                         <forage-dop-commodity-list
                             *ngIf="dopYieldContract && dopYieldContract.dopYieldContractCommodityForageList"
@@ -182,7 +200,6 @@
                             [commoditiesFormArray]="getViewModel().formGroup.controls.dopYieldContractCommodityForageList"
                             [decimalPrecision]="decimalPrecision"
                             [isUnsaved]="isUnsaved"></forage-dop-commodity-list>
-    
                     </div>
     
                 </div>

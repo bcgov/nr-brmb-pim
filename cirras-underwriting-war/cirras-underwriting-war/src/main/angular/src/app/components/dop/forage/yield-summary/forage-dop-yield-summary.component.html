@@ -1,0 +1,20 @@
+<div [formGroup]="fieldRollupFormGroup" style="display: contents;">
+    <div class="readonly border-right border-bottom border-left" style="padding-left: 6px;">
+        {{ fieldRollupFormGroup.value.commodityTypeDescription | titlecase }}
+    </div>
+    <div class="readonly border-right border-bottom" style="justify-content: center;">
+        {{ fieldRollupFormGroup.value.totalFieldAcres | number: '1.0-1' }}
+    </div>
+    <div class="readonly border-right border-bottom" style="justify-content: center;">
+        {{ fieldRollupFormGroup.value.harvestedAcres | number: '1.0-1' }}
+    </div>
+    <div class="fill border-right border-bottom" style="justify-content: center;">
+        {{ fieldRollupFormGroup.value.totalBalesLoads | number: '1.0-0' }}
+    </div>
+    <div class="readonly border-right border-bottom" style="justify-content: center;">
+        {{ fieldRollupFormGroup.value.quantityHarvestedTons | number: '1.0-1' }}
+    </div>
+    <div class="readonly border-right border-bottom" style="justify-content: center;">
+        {{ fieldRollupFormGroup.value.yieldPerAcre | number: '1.0-1' }}
+    </div>
+</div>

@@ -43,6 +43,7 @@ export interface DopYieldContract {
     dopYieldFieldRollupList?: Array<DopYieldFieldRollup>;
     dopYieldContractCommodities?: Array<DopYieldContractCommodity>;
     dopYieldContractCommodityForageList?: Array<DopYieldContractCommodityForage>;
+    dopYieldFieldRollupForageList?: Array<DopYieldFieldRollupForage>;
     etag?: string;
     type: string;
   }
@@ -56,6 +57,18 @@ export interface DopYieldFieldRollup {
     estimatedYieldPerAcreTonnes?: number;
     estimatedYieldPerAcreBushels?: number;
     cropCommodityName?: string;
+}
+
+export interface DopYieldFieldRollupForage {
+	declaredYieldFieldRollupForageGuid?: string;
+	declaredYieldContractGuid?: string;
+	commodityTypeCode?: string;
+	totalFieldAcres?: number;
+	totalBalesLoads?: number;
+	harvestedAcres?: number;
+	quantityHarvestedTons?: number;
+	yieldPerAcre?: number;
+	commodityTypeDescription?: string;
 }
 
 export interface DopYieldContractCommodity {
