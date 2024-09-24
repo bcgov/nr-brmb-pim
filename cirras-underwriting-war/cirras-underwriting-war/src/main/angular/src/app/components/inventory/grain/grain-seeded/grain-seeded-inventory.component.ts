@@ -1238,4 +1238,16 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     }
   }
 
+  isVarietyWarningVisible(fieldIndex, plantingIndex, invSeededIndex) {
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
+    const invSeeded = pltg.controls['inventorySeededGrains'].value.controls[invSeededIndex]
+
+    if (invSeeded.controls['commodityTypeCode'].value ==  "Polish Canola" ) {
+      
+        return true
+    }
+
+    return false
+  }
 }
