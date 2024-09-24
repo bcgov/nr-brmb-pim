@@ -3,6 +3,6 @@
   "databaseChangeLog": [
 { "changeSet": {"author":"mhostettler","id":"85","changes": [
   {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_rollup_forage.sql"}},
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.alter.declared_yield_contract_cmdty_forage.sql"}},
   {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
-  
   ] } }]}
