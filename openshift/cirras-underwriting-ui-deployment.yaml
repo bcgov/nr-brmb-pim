@@ -16,8 +16,7 @@ spec:
     spec:
       containers:
         - name: container
-          image: >-
-            '#{IMAGE_BY_DIGEST}#'
+          image: '#{IMAGE_BY_DIGEST}#'
           imagePullPolicy: Always
           ports:
             - containerPort: #{TOMCAT_PORT}#
