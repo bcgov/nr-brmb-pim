@@ -662,7 +662,11 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			String rolloverPlantIns = null;
 			
 			if ("E1".equals(prevPlanIns) ) {
-				rolloverPlantIns = "E2";
+				if ( Boolean.TRUE.equals(dto.getIsIrrigatedInd()) ) {
+					rolloverPlantIns = "W1";
+				} else {
+					rolloverPlantIns = "E2";					
+				}
 			}
 			else if ("E2".equals(prevPlanIns) ) {
 				rolloverPlantIns = null;
