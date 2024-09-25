@@ -140,6 +140,8 @@ import { ForageDopContainer } from "./containers/dop/forage-dop-container.compon
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { MatInputCommifiedDirective } from "./directives/input-comified.directive";
+import { ForageDopYieldSummaryListComponent } from "./components/dop/forage/yield-summary-list/forage-dop-yield-summary-list.component";
+import { ForageDopYieldSummaryComponent } from './components/dop/forage/yield-summary/forage-dop-yield-summary.component';
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -241,7 +243,9 @@ if (!environment.production || !environment.restrict_imports) {
        ForageDopYieldFieldCutComponent,
        ForageDopCommodityListComponent,
        ForageDopCommodityComponent,
-       ForageDopContainer
+       ForageDopContainer,
+       ForageDopYieldSummaryListComponent,
+       ForageDopYieldSummaryComponent
     ],
     imports: [
         CirrasUnderwritingAPIServiceModule,

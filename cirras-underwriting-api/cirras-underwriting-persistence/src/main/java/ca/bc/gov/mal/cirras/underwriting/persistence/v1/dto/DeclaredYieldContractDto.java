@@ -34,6 +34,7 @@ public class DeclaredYieldContractDto extends BaseDto<DeclaredYieldContractDto> 
 	private List<DeclaredYieldContractCommodityDto> declaredYieldContractCommodities = new ArrayList<DeclaredYieldContractCommodityDto>();
 	private List<UnderwritingCommentDto> uwComments = new ArrayList<UnderwritingCommentDto>();
 	private List<DeclaredYieldContractCommodityForageDto> declaredYieldContractCommodityForageList = new ArrayList<DeclaredYieldContractCommodityForageDto>();
+	private List<DeclaredYieldFieldRollupForageDto> declaredYieldFieldRollupForageList = new ArrayList<DeclaredYieldFieldRollupForageDto>();
 	
 	private String createUser;
 	private Date createDate;
@@ -91,6 +92,14 @@ public class DeclaredYieldContractDto extends BaseDto<DeclaredYieldContractDto> 
 			
 			for ( DeclaredYieldContractCommodityForageDto dyccfDto : dto.declaredYieldContractCommodityForageList ) {
 				this.declaredYieldContractCommodityForageList.add(dyccfDto.copy());
+			}
+		}	
+		
+		if ( dto.declaredYieldFieldRollupForageList != null ) {			
+			this.declaredYieldFieldRollupForageList = new ArrayList<>();
+			
+			for ( DeclaredYieldFieldRollupForageDto dyccfDto : dto.declaredYieldFieldRollupForageList ) {
+				this.declaredYieldFieldRollupForageList.add(dyccfDto.copy());
 			}
 		}	
 		
@@ -301,6 +310,13 @@ public class DeclaredYieldContractDto extends BaseDto<DeclaredYieldContractDto> 
 	}
 	public void setDeclaredYieldContractCommodityForageList(List<DeclaredYieldContractCommodityForageDto> declaredYieldContractCommodityForageList) {
 		this.declaredYieldContractCommodityForageList = declaredYieldContractCommodityForageList;
+	}	
+	
+	public List<DeclaredYieldFieldRollupForageDto> getDeclaredYieldFieldRollupForageList() {
+		return declaredYieldFieldRollupForageList;
+	}
+	public void setDeclaredYieldFieldRollupForageList(List<DeclaredYieldFieldRollupForageDto> declaredYieldFieldRollupForageList) {
+		this.declaredYieldFieldRollupForageList = declaredYieldFieldRollupForageList;
 	}
 
 	public Integer getGrowerContractYearId() {

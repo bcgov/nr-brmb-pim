@@ -345,7 +345,9 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setInventoryFieldGuid(dto.getInventoryFieldGuid());
 		model.setInventoryUnseededGuid(dto.getInventoryUnseededGuid());
 		model.setIsUnseededInsurableInd(dto.getIsUnseededInsurableInd());
-		
+		model.setIsCropInsuranceEligibleInd(dto.getIsCropInsuranceEligibleInd());
+		model.setIsInventoryCropInd(dto.getIsInventoryCropInd());
+
 		return model;
 	}
 	

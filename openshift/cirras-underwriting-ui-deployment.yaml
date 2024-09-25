@@ -16,13 +16,27 @@ spec:
     spec:
       containers:
         - name: container
-          image: >-
-            ghcr.io/bcgov/cirras-underwriting-war:#{TAG}#
+          image: '#{IMAGE_BY_DIGEST}#'
           imagePullPolicy: Always
           ports:
-            - containerPort: #{TARGET_PORT}#
+            - containerPort: #{TOMCAT_PORT}#
               protocol: TCP
           env:
+            - name: TOMCAT_PORT
+              valueFrom: 
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: TOMCAT_PORT
+            - name: TOMCAT_MAX_THREADS
+              valueFrom: 
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: TOMCAT_MAX_THREADS
+            - name: CONNECTION_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: CONNECTION_TIMEOUT
             - name: BASE_URL
               valueFrom:
                 configMapKeyRef:
@@ -96,7 +110,7 @@ spec:
             - name: LOG_LEVEL
               valueFrom:
                 configMapKeyRef:
-                  name: cirras-underwriting-api-config-#{ENV}#
+                  name: cirras-underwriting-ui-config-#{ENV}#
                   key: LOG_LEVEL
           resources:
             requests:

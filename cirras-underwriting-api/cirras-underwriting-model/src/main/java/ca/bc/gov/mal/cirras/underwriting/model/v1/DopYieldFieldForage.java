@@ -2,6 +2,7 @@ package ca.bc.gov.mal.cirras.underwriting.model.v1;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 //
 // This is not going to be a resource.
@@ -27,6 +28,9 @@ public class DopYieldFieldForage implements Serializable {
 	private Integer fieldId;
 	private Integer cropYear;
 	private Boolean isHiddenOnPrintoutInd;
+	private String plantInsurabilityTypeCode;
+	private Integer seedingYear;
+	private Date seedingDate;
 	
 	// DECLARED_YIELD_FIELD_FORAGE
 	private List<DopYieldFieldForageCut> dopYieldFieldForageCuts = new ArrayList<DopYieldFieldForageCut>(); 
@@ -138,4 +142,28 @@ public class DopYieldFieldForage implements Serializable {
 	public void setIsHiddenOnPrintoutInd(Boolean isHiddenOnPrintoutInd) {
 		this.isHiddenOnPrintoutInd = isHiddenOnPrintoutInd;
 	}
+	
+	public String getPlantInsurabilityTypeCode() {
+		return plantInsurabilityTypeCode;
+	}
+
+	public void setPlantInsurabilityTypeCode(String plantInsurabilityTypeCode) {
+		this.plantInsurabilityTypeCode = plantInsurabilityTypeCode;
+	}
+	
+	public Integer getSeedingYear() {
+		return seedingYear;
+	}
+
+	public void setSeedingYear(Integer seedingYear) {
+		this.seedingYear = seedingYear;
+	}
+	
+	public Date getSeedingDate() {
+		return seedingDate;
+	}
+
+	public void setSeedingDate(Date seedingDate) {
+		this.seedingDate = seedingDate;
+	}	
 }

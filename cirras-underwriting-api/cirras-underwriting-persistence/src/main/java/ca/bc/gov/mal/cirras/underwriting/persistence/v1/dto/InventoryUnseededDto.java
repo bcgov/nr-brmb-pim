@@ -29,6 +29,9 @@ public class InventoryUnseededDto extends BaseDto<InventoryUnseededDto> {
 	private Date updateDate;
 
 	private Double totalAcresToBeSeeded;
+	//Commodity properties
+	private Boolean isCropInsuranceEligibleInd;
+	private Boolean isInventoryCropInd;
 	
 	public InventoryUnseededDto() {
 	}
@@ -48,6 +51,8 @@ public class InventoryUnseededDto extends BaseDto<InventoryUnseededDto> {
 		this.updateDate = dto.updateDate;
 
 		this.totalAcresToBeSeeded = dto.totalAcresToBeSeeded;
+		this.isInventoryCropInd = dto.isInventoryCropInd;
+		this.isCropInsuranceEligibleInd = dto.isCropInsuranceEligibleInd;
 	}
 	
 
@@ -158,6 +163,22 @@ public class InventoryUnseededDto extends BaseDto<InventoryUnseededDto> {
 	}
 	public void setTotalAcresToBeSeeded(Double totalAcresToBeSeeded) {
 		this.totalAcresToBeSeeded = totalAcresToBeSeeded;
+	}
+
+	public Boolean getIsInventoryCropInd() {
+		return isInventoryCropInd;
+	}
+
+	public void setIsInventoryCropInd(Boolean isInventoryCropInd) {
+		this.isInventoryCropInd = isInventoryCropInd;
+	}
+
+	public Boolean getIsCropInsuranceEligibleInd() {
+		return isCropInsuranceEligibleInd;
+	}
+
+	public void setIsCropInsuranceEligibleInd(Boolean isCropInsuranceEligibleInd) {
+		this.isCropInsuranceEligibleInd = isCropInsuranceEligibleInd;
 	}
 
 }

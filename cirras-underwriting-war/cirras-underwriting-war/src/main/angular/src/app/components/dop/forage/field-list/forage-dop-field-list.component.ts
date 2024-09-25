@@ -27,19 +27,19 @@ export class ForageDopFieldListComponent {
 
     setFieldHeaderStyles() {
         return {
-            width: `${320 * this.numCuts + 1210}px`
+            width: `${320 * this.numCuts + 1450}px`
         };
     }
 
     setWrapperStyles() {
         return {
-            width: `${320 * this.numCuts + 1170}px`
+            width: `${320 * this.numCuts + 1410}px`
         };
     }
 
     setFieldStyles() {
         return {
-            width: `${320 * this.numCuts + 1150}px`
+            width: `${320 * this.numCuts + 1390}px`
         };
     }
 }
