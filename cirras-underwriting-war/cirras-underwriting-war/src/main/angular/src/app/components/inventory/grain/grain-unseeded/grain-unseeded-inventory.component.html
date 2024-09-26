@@ -33,8 +33,9 @@
         <div>
             <button 
                 *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
-                mat-raised-button color="primary" 
-                class="button-large-text" 
+                mat-raised-button
+                [color]="isHiddenFieldInTotals ? 'secondary' : 'primary'"
+                [ngClass]="isHiddenFieldInTotals ? 'header-button-red' : 'button-large-text'"
                 [disabled]="!hasDataChanged && inventoryContract?.inventoryContractGuid" 
                 (click)="onSave()">
                     Save
@@ -43,10 +44,10 @@
     </div>
     
     <div id="hidden-totals-warning">
-        <div *ngIf="hasYieldData == false && hasDataChanged == true; else noWarningDiv">
+        <div *ngIf="hasYieldData == false && isHiddenFieldInTotals">
             <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
         </div>
-        <div *ngIf="hasYieldData == false && hasDataChanged == true; else noWarningDiv" class="unsaved-changes">
+        <div *ngIf="hasYieldData == false && isHiddenFieldInTotals">
             Hidden fields are included in acre totals
         </div>
     </div>
@@ -232,7 +233,7 @@
                                                 (keydown)="navigateUpDown($event, 1)"
                                                 (keypress)="numberOnly($event)" 
                                                 (keyup)="calculateSumTotals()"
-                                                (blur)="roundUpAcres(fieldIndex, plantingIndex)"
+                                                (blur)="roundUpAcres(fieldIndex, plantingIndex); checkForHiddenFieldInTotals();"
                                                 maxlength="10"
                                                 >
                                     </mat-form-field>
@@ -275,7 +276,7 @@
                                     <mat-icon 
                                         matTooltip="Hide on printout" 
                                         svgIcon="{{ isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'visibility_off' : 'visibility' }}" 
-                                        (click)="toggleHiddenOnPrintout(fieldIndex, plantingIndex)"></mat-icon>
+                                        (click)="toggleHiddenOnPrintout(fieldIndex, plantingIndex); checkForHiddenFieldInTotals()"></mat-icon>
 
                                 </div>
 
