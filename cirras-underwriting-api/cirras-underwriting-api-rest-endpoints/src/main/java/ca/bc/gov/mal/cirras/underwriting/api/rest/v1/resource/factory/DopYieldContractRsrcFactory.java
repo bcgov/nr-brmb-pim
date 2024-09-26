@@ -260,6 +260,8 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory implements 
 			DeclaredYieldContractCommodityForageDto dto = new DeclaredYieldContractCommodityForageDto();
 			dto.setCommodityTypeCode(isfDto.getCommodityTypeCode());
 			dto.setCommodityTypeDescription(isfDto.getCommodityTypeDescription());
+			dto.setCropCommodityId(isfDto.getCropCommodityId());
+			dto.setPlantDurationTypeCode(isfDto.getPlantDurationTypeCode());
 			dto.setTotalFieldAcres(isfDto.getTotalFieldAcres());
 			dopForageCommodities.add(dto);
 		}
@@ -376,11 +378,15 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory implements 
 		model.setCommodityTypeCode(dto.getCommodityTypeCode());
 		model.setTotalFieldAcres(dto.getTotalFieldAcres());
 		model.setHarvestedAcres(dto.getHarvestedAcres());
-		model.setHarvestedAcresOverride(dto.getHarvestedAcresOverride());
+		model.setTotalBalesLoads(dto.getTotalBalesLoads());
+		model.setWeight(dto.getWeight());
+		model.setWeightDefaultUnit(dto.getWeightDefaultUnit());
+		model.setMoisturePercent(dto.getMoisturePercent());
 		model.setQuantityHarvestedTons(dto.getQuantityHarvestedTons());
-		model.setQuantityHarvestedTonsOverride(dto.getQuantityHarvestedTonsOverride());
 		model.setYieldPerAcre(dto.getYieldPerAcre());
 		model.setCommodityTypeDescription(dto.getCommodityTypeDescription());
+		model.setCropCommodityId(dto.getCropCommodityId());
+		model.setPlantDurationTypeCode(dto.getPlantDurationTypeCode());
 
 		return model;
 	}
@@ -581,9 +587,11 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory implements 
 		dto.setCommodityTypeCode(model.getCommodityTypeCode());
 		dto.setTotalFieldAcres(model.getTotalFieldAcres());
 		dto.setHarvestedAcres(model.getHarvestedAcres());
-		dto.setHarvestedAcresOverride(model.getHarvestedAcresOverride());
+		dto.setTotalBalesLoads(model.getTotalBalesLoads());
+		dto.setWeight(model.getWeight());
+		dto.setWeightDefaultUnit(model.getWeightDefaultUnit());
+		dto.setMoisturePercent(model.getMoisturePercent());
 		dto.setQuantityHarvestedTons(model.getQuantityHarvestedTons());
-		dto.setQuantityHarvestedTonsOverride(model.getQuantityHarvestedTonsOverride());
 		dto.setYieldPerAcre(model.getYieldPerAcre());
 		
 	}

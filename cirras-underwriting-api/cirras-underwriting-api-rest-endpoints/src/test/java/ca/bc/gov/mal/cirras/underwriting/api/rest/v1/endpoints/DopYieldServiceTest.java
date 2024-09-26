@@ -123,7 +123,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 
 		//Create dop Yield Contract
 		DopYieldContractRsrc dopYieldContract = createYieldContract(insurancePlanIdGrain, defaultMeasurementUnitCodeGrain);
-		
+
 		List<AnnualFieldRsrc> fields = new ArrayList<AnnualFieldRsrc>();
 		
 		double barleyPedigreedTotalYield = 0;
@@ -243,6 +243,8 @@ public class DopYieldServiceTest extends EndpointsTest {
 	private static final String commodityTypeAlfalfa = "Alfalfa";
 	private static final String commodityTypeGrass = "Grass"; 
 	private static final String commodityTypeSpringAnnual = "Spring Annual";
+	private static final Integer cropIdForage = 65;
+	private static final Integer cropIdSilageCorn = 71;
 	private static final String annual = InventoryServiceEnums.PlantDurationType.ANNUAL.toString();
 	private static final String perennial = InventoryServiceEnums.PlantDurationType.PERENNIAL.toString();
 	
@@ -260,7 +262,8 @@ public class DopYieldServiceTest extends EndpointsTest {
 
 		//Create dop Yield Contract
 		DopYieldContractRsrc dopYieldContract = createYieldContract(insurancePlanIdForage, defaultMeasurementUnitCodeForage);
-		
+		dopYieldContract.setEnteredYieldMeasUnitTypeCode(defaultMeasurementUnitCodeForage);
+
 		List<AnnualFieldRsrc> fields = new ArrayList<AnnualFieldRsrc>();
 
 		List<DopYieldFieldForage> dopFields = new ArrayList<DopYieldFieldForage>();
@@ -343,53 +346,68 @@ public class DopYieldServiceTest extends EndpointsTest {
 
 		
 		fieldC.setDopYieldFieldForageList(dopFields);
-		
-		
+	
 		DopYieldContractCommodityForage dyccfSilageCorn = createDopYieldContractCommodityForage(
 				commodityTypeSilageCorn, 	// commodityTypeCode
 				(double)300, 				// totalFieldAcres
 				(double)200, 				// harvestedAcres
-				null, 						// harvestedAcresOverride
+				100, 						// totalBales
+				(double)50,					// weight
+				(double)50,					// weightDefaultUnit
+				(double)75, 				// moisturePercent
 				null,						// quantityHarvestedTons
-				null, 						// quantityHarvestedTonsOverride
-				null);		 				// yieldPerAcre
+				null,						// yieldPerAcre
+				cropIdSilageCorn,			// cropCommodityId
+				annual);		 			// plantDurationTypeCode
 		
-		Double quantityHarvestedSilageCorn = (double)11440;
-		Double YieldPerAcreSilageCorn = (double)57.2;
+		Double quantityHarvestedSilageCorn = (double)1250;
+		Double YieldPerAcreSilageCorn = (double)6.25;
 		
 		DopYieldContractCommodityForage dyccfAlfalfa = createDopYieldContractCommodityForage(
 				commodityTypeAlfalfa, 
 				(double)400, 				// totalFieldAcres
 				(double)400, 				// harvestedAcres
-				null, 						// harvestedAcresOverride
+				200, 						// totalBales
+				(double)100, 				// weight
+				(double)100,				// weightDefaultUnit
+				(double)80, 				// moisturePercent
 				null,						// quantityHarvestedTons
-				null, 						// quantityHarvestedTonsOverride
-				null); 						// yieldPerAcre
+				null,						// yieldPerAcre
+				cropIdForage,				// cropCommodityId
+				perennial);		 			// plantDurationTypeCode
 
-		Double quantityHarvestedAlfalfa = (double)11244.1176;
-		Double YieldPerAcreAlfalfa = (double)28.1103;
+		Double quantityHarvestedAlfalfa = (double)4705.8824;
+		Double YieldPerAcreAlfalfa = (double)11.7647;
 
 		DopYieldContractCommodityForage dyccfGrass = createDopYieldContractCommodityForage(
 				commodityTypeGrass, 
 				(double)100, 				// totalFieldAcres
 				(double)100, 				// harvestedAcres
-				(double)80, 				// harvestedAcresOverride
+				null, 						// totalBales
+				null, 						// weight
+				null,						// weightDefaultUnit
+				null, 						// moisturePercent
 				null,						// quantityHarvestedTons
-				(double)100000, 			// quantityHarvestedTonsOverride
-				null);		 				// yieldPerAcre
+				null,						// yieldPerAcre
+				cropIdForage,				// cropCommodityId
+				perennial);		 			// plantDurationTypeCode
 
-		Double quantityHarvestedGrass = (double)4705.8824;
-		Double YieldPerAcreGrass = (double)1250;
+		Double quantityHarvestedGrass = null;
+		Double YieldPerAcreGrass = null;
 
 		//Commodity type that doesn't exist anymore
 		DopYieldContractCommodityForage dyccfSpringAnnual = createDopYieldContractCommodityForage(
 				commodityTypeSpringAnnual, 
 				(double)400, 				// totalFieldAcres
 				(double)400, 				// harvestedAcres
-				null, 						// harvestedAcresOverride
-				(double)1500, 				// quantityHarvestedTons
-				null, 						// quantityHarvestedTonsOverride
-				(double)145); 				// yieldPerAcre
+				null, 						// totalBales
+				null, 						// weight
+				null,						// weightDefaultUnit
+				null, 						// moisturePercent
+				(double)1500,				// quantityHarvestedTons
+				(double)145,				// yieldPerAcre
+				cropIdForage,				// cropCommodityId
+				perennial);		 			// plantDurationTypeCode
 		
 		fields.add(fieldA);
 		fields.add(fieldB);
@@ -401,7 +419,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 		
 		//Add commodity totals for grass and silage corn and one that is not in the fields anymore
 		dopYieldContractCommodityForageList.add(dyccfSilageCorn);
-		dopYieldContractCommodityForageList.add(dyccfGrass);
+		dopYieldContractCommodityForageList.add(dyccfAlfalfa);
 		dopYieldContractCommodityForageList.add(dyccfSpringAnnual);
 		
 		dopYieldContract.setDopYieldContractCommodityForageList(dopYieldContractCommodityForageList);
@@ -457,7 +475,8 @@ public class DopYieldServiceTest extends EndpointsTest {
 
 		//Create dop Yield Contract
 		DopYieldContractRsrc dopYieldContract = createYieldContract(insurancePlanIdForage, defaultMeasurementUnitCodeForage);
-		
+		dopYieldContract.setEnteredYieldMeasUnitTypeCode(defaultMeasurementUnitCodeForage);
+
 		List<AnnualFieldRsrc> fields = new ArrayList<AnnualFieldRsrc>();
 
 		List<DopYieldFieldForage> dopFields = new ArrayList<DopYieldFieldForage>();
@@ -661,9 +680,11 @@ public class DopYieldServiceTest extends EndpointsTest {
 		Assert.assertEquals("CommodityTypeCode", expected.getCommodityTypeCode(), actual.getCommodityTypeCode());
 		Assert.assertEquals("TotalFieldAcres", expected.getTotalFieldAcres(), actual.getTotalFieldAcres());
 		Assert.assertEquals("HarvestedAcres", expected.getHarvestedAcres(), actual.getHarvestedAcres());
-		Assert.assertEquals("HarvestedAcresOverride", expected.getHarvestedAcresOverride(), actual.getHarvestedAcresOverride());
+		Assert.assertEquals("TotalBalesLoads", expected.getTotalBalesLoads(), actual.getTotalBalesLoads());
+		Assert.assertEquals("Weight", expected.getWeight(), actual.getWeight());
+		Assert.assertEquals("WeightDefaultUnit", expected.getWeightDefaultUnit(), actual.getWeightDefaultUnit());
+		Assert.assertEquals("MoisturePercent", expected.getMoisturePercent(), actual.getMoisturePercent());
 		Assert.assertEquals("QuantityHarvestedTons", expected.getQuantityHarvestedTons(), actualQuantityHarvestedTons);
-		Assert.assertEquals("QuantityHarvestedTonsOverride", expected.getQuantityHarvestedTonsOverride(), actual.getQuantityHarvestedTonsOverride());
 		Assert.assertEquals("YieldPerAcre", expected.getYieldPerAcre(), actualYieldPerAcre);
 
 	}	
@@ -761,19 +782,28 @@ public class DopYieldServiceTest extends EndpointsTest {
 			String commodityTypeCode, 
 			Double totalFieldAcres, 
 			Double harvestedAcres, 
-			Double harvestedAcresOverride, 
+			Integer totalBales, 
+			Double weight, 
+			Double weightDefaultUnit, 
+			Double moisturePercent,
 			Double quantityHarvestedTons, 
-			Double quantityHarvestedTonsOverride, 
-			Double yieldPerAcre
+			Double yieldPerAcre,
+			Integer cropCommodityId, 
+			String plantDurationTypeCode
 			) {
 		DopYieldContractCommodityForage model = new DopYieldContractCommodityForage();
 		model.setCommodityTypeCode(commodityTypeCode);
 		model.setTotalFieldAcres(totalFieldAcres);
 		model.setHarvestedAcres(harvestedAcres);
-		model.setHarvestedAcresOverride(harvestedAcresOverride);
+		model.setTotalBalesLoads(totalBales);
+		model.setWeight(weight);
+		model.setWeightDefaultUnit(weightDefaultUnit);
+		model.setMoisturePercent(moisturePercent);
 		model.setQuantityHarvestedTons(quantityHarvestedTons);
-		model.setQuantityHarvestedTonsOverride(quantityHarvestedTonsOverride);
 		model.setYieldPerAcre(yieldPerAcre);
+		model.setCropCommodityId(cropCommodityId);
+		model.setPlantDurationTypeCode(plantDurationTypeCode);
+
 		
 		return model;
 	}

@@ -10,9 +10,11 @@
 		<result property="commodityTypeCode" column="commodity_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="totalFieldAcres" column="total_field_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="harvestedAcres" column="harvested_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
-		<result property="harvestedAcresOverride" column="harvested_acres_override" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="totalBalesLoads" column="total_bales_loads" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="weight" column="weight" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="weightDefaultUnit" column="weight_default_unit" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="moisturePercent" column="moisture_percent" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="quantityHarvestedTons" column="quantity_harvested_tons" javaType="java.lang.Double" jdbcType="NUMERIC" />
-		<result property="quantityHarvestedTonsOverride" column="quantity_harvested_tons_override" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="yieldPerAcre" column="yield_per_acre" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
@@ -20,6 +22,8 @@
 		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		
 		<result property="commodityTypeDescription" column="commodity_type_description" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="cropCommodityId" column="crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="plantDurationTypeCode" column="plant_duration_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
 		
 	</resultMap>
 	
@@ -30,9 +34,11 @@
 			t.commodity_type_code, 
 			t.total_field_acres, 
 			t.harvested_acres, 
-			t.harvested_acres_override, 
+			t.total_bales_loads, 
+			t.weight, 
+			t.weight_default_unit, 
+			t.moisture_percent, 
 			t.quantity_harvested_tons, 
-			t.quantity_harvested_tons_override, 
 			t.yield_per_acre, 
 			t.create_user, 
 			t.create_date, 
@@ -43,9 +49,12 @@
     
 	<select id="fetch" resultMap="DeclaredYieldContractCommodityForageDtoMap">
 		<include refid="selectColumns"/>,
-			ctc.description as commodity_type_description
+			ctc.description as commodity_type_description,
+			ctc.crop_commodity_id,
+			c.plant_duration_type_code
 			FROM declared_yield_contract_cmdty_forage t
 			JOIN commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code
+			JOIN crop_commodity c ON c.crop_commodity_id = ctc.crop_commodity_id
 			WHERE t.declared_yield_contract_cmdty_forage_guid = #{declaredYieldContractCmdtyForageGuid}
 	</select>
 
@@ -60,9 +69,11 @@
 			commodity_type_code,
 			total_field_acres,
 			harvested_acres,
-			harvested_acres_override,
+			total_bales_loads,
+			weight,
+			weight_default_unit,
+			moisture_percent,
 			quantity_harvested_tons,
-			quantity_harvested_tons_override,
 			yield_per_acre,
 			create_user, 
 			create_date, 
@@ -74,9 +85,11 @@
 			#{dto.commodityTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{dto.totalFieldAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.harvestedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
-			#{dto.harvestedAcresOverride, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalBalesLoads, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.weight, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.weightDefaultUnit, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.moisturePercent, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.quantityHarvestedTons, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
-			#{dto.quantityHarvestedTonsOverride, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.yieldPerAcre, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
 			now(),
@@ -88,10 +101,12 @@
 	<update id="update">
 		update declared_yield_contract_cmdty_forage
 		set total_field_acres = #{dto.totalFieldAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
-			harvested_acres = #{dto.harvestedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
-			harvested_acres_override = #{dto.harvestedAcresOverride, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			harvested_acres = #{dto.harvestedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			total_bales_loads = #{dto.totalBalesLoads, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			weight = #{dto.weight, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			weight_default_unit = #{dto.weightDefaultUnit, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			moisture_percent = #{dto.moisturePercent, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			quantity_harvested_tons = #{dto.quantityHarvestedTons, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
-			quantity_harvested_tons_override = #{dto.quantityHarvestedTonsOverride, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			yield_per_acre = #{dto.yieldPerAcre, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
 			update_date = now()
@@ -108,17 +123,23 @@
 	
 	<select id="selectForDeclaredYieldContract" resultMap="DeclaredYieldContractCommodityForageDtoMap">
 		<include refid="selectColumns"/>,
-			ctc.description as commodity_type_description
+			ctc.description as commodity_type_description,
+			ctc.crop_commodity_id,
+			c.plant_duration_type_code
 		from declared_yield_contract_cmdty_forage t
-		join commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code	
+		join commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code
+		join crop_commodity c ON c.crop_commodity_id = ctc.crop_commodity_id	
 		where t.declared_yield_contract_guid = #{declaredYieldContractGuid}
 		order by ctc.description
 	</select> 
 
 	<select id="selectToRecalculate" resultMap="DeclaredYieldContractCommodityForageDtoMap">
-		<include refid="selectColumns"/>
+		<include refid="selectColumns"/>,
+			ctc.crop_commodity_id,
+			c.plant_duration_type_code
 		FROM declared_yield_contract_cmdty_forage t
-		JOIN commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code	
+		JOIN commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code
+		JOIN crop_commodity c ON c.crop_commodity_id = ctc.crop_commodity_id	
 		JOIN declared_yield_contract dyc ON dyc.declared_yield_contract_guid = t.declared_yield_contract_guid
 		WHERE ctc.crop_commodity_id = #{cropCommodityId}
 		AND dyc.entered_yield_meas_unit_type_code = #{enteredYieldMeasUnitTypeCode}
