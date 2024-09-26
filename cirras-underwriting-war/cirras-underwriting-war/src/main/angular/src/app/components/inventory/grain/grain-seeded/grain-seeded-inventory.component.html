@@ -45,10 +45,10 @@
         </div>
 
         <div id="hidden-totals-warning">
-            <div *ngIf="hasYieldData == false && isHiddenFieldInTotals">
+            <div *ngIf="isHiddenFieldInTotals">
                 <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
             </div>
-            <div *ngIf="hasYieldData == false && isHiddenFieldInTotals">
+            <div *ngIf="isHiddenFieldInTotals">
                 Hidden fields are included in acre totals
             </div>
         </div>
