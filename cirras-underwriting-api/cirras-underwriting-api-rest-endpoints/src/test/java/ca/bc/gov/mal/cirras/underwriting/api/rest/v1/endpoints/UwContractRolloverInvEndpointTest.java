@@ -681,12 +681,17 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 
 		// Add InventorySeededForage to Planting 1
 		invField.getInventorySeededForages().remove(0);
-		createInventorySeededForage(invField, "PERENNIAL", 65, 118, "ALFALFA/GRASS", "E1", true, true, true, 11.2, 2015);
+		createInventorySeededForage(invField, "PERENNIAL", 65, 118, "ALFALFA/GRASS", "E1", true, true, true, 11.2, 2015);  // IsIrrigated=true, so E1 rolls over to W1.
 
 		// Add Planting 2 and InventorySeededForage
 		invField = createPlanting(field, 2, cropYear2, 5, true);
 		createInventorySeededForage(invField, "Dbl Crop Barley", 65, 221, "DBL CROP BARLEY", "W1", false, false, true, 33.4, 2020);
 
+		// Add Planting 3 and InventorySeededForage
+		invField = createPlanting(field, 3, cropYear2, 5, false);
+		createInventorySeededForage(invField, "PERENNIAL", 65, 118, "ALFALFA/GRASS", "E1", true, false, true, 11.2, 2015);  // IsIrrigated=false, so E1 rolls over to E2.
+		
+		
 		// add comment
 		UnderwritingComment uwComment = new UnderwritingComment();
 		List<UnderwritingComment> uwComments = new ArrayList<UnderwritingComment>();
@@ -755,7 +760,7 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 		Assert.assertEquals(1, rolledOverField.getDisplayOrder().intValue());
 		
 		Assert.assertNotNull(rolledOverField.getPlantings());
-		Assert.assertEquals(2, rolledOverField.getPlantings().size());
+		Assert.assertEquals(3, rolledOverField.getPlantings().size());
 
 		// Check Comment
 		Assert.assertNotNull(rolledOverField.getUwComments());
@@ -800,7 +805,7 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 		Assert.assertEquals("SeedingYear", 2015, forage.getSeedingYear().intValue());
 		Assert.assertTrue("IsIrrigatedInd", forage.getIsIrrigatedInd());
 		Assert.assertTrue("IsQuantityInsurableInd", forage.getIsQuantityInsurableInd());
-		Assert.assertEquals("PlantInsurabilityTypeCode", "E2", forage.getPlantInsurabilityTypeCode()); // E1 rolls over as E2.
+		Assert.assertEquals("PlantInsurabilityTypeCode", "W1", forage.getPlantInsurabilityTypeCode()); // E1 rolls over as W1 because isIrrigatedInd is true.
 		Assert.assertTrue("IsAwpEligibleInd", forage.getIsAwpEligibleInd());
 
 		// Check Planting 2
@@ -838,6 +843,43 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 		Assert.assertFalse("IsQuantityInsurableInd", forage.getIsQuantityInsurableInd());
 		Assert.assertNull("PlantInsurabilityTypeCode", forage.getPlantInsurabilityTypeCode());
 		Assert.assertFalse("IsAwpEligibleInd", forage.getIsAwpEligibleInd());
+
+		// Check Planting 3
+		invField = rolledOverField.getPlantings().get(2);
+		
+		Assert.assertNull(invField.getInventoryUnseeded());
+		Assert.assertNotNull(invField.getInventorySeededForages());
+		Assert.assertEquals(1, invField.getInventorySeededForages().size());
+		Assert.assertEquals(cropYear1, invField.getCropYear());
+		Assert.assertEquals(fieldId, invField.getFieldId());
+		Assert.assertEquals(5, invField.getInsurancePlanId().intValue());
+		Assert.assertFalse(invField.getIsHiddenOnPrintoutInd());
+		Assert.assertNull(invField.getLastYearCropCommodityId());
+		Assert.assertNull(invField.getLastYearCropCommodityName());
+		Assert.assertNull(invField.getLastYearCropVarietyId());
+		Assert.assertNull(invField.getLastYearCropVarietyName());
+		Assert.assertEquals(3, invField.getPlantingNumber().intValue());
+		Assert.assertNull(invField.getUnderseededAcres());
+		Assert.assertNull(invField.getUnderseededCropVarietyId());
+		Assert.assertNull(invField.getUnderseededCropVarietyName());
+		Assert.assertNull(invField.getUnderseededInventorySeededForageGuid());
+			
+
+		forage = invField.getInventorySeededForages().get(0);
+		Assert.assertNull("InventorySeededForageGuid", forage.getInventorySeededForageGuid());
+		Assert.assertNull("InventoryFieldGuid", forage.getInventoryFieldGuid());
+		Assert.assertEquals("CropCommodityId", 65, forage.getCropCommodityId().intValue());
+		Assert.assertEquals("CropVarietyId", 118, forage.getCropVarietyId().intValue());
+		Assert.assertEquals("CropVarietyName", "ALFALFA/GRASS", forage.getCropVarietyName());
+		Assert.assertEquals("CommodityTypeCode", "PERENNIAL", forage.getCommodityTypeCode());
+		Assert.assertEquals("FieldAcres", Double.valueOf(11.2), forage.getFieldAcres());
+		Assert.assertNull("SeedingDate", forage.getSeedingDate());
+		Assert.assertEquals("SeedingYear", 2015, forage.getSeedingYear().intValue());
+		Assert.assertFalse("IsIrrigatedInd", forage.getIsIrrigatedInd());
+		Assert.assertTrue("IsQuantityInsurableInd", forage.getIsQuantityInsurableInd());
+		Assert.assertEquals("PlantInsurabilityTypeCode", "E2", forage.getPlantInsurabilityTypeCode()); // E1 rolls over as E2.
+		Assert.assertTrue("IsAwpEligibleInd", forage.getIsAwpEligibleInd());
+		
 		
 		logger.debug(">testRolloverForageInventoryContract");
 	}
