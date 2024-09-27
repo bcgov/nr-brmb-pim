@@ -33,12 +33,22 @@
             <div>
                 <button 
                     *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
-                    mat-raised-button color="primary" 
-                    class="button-large-text" 
+                    mat-raised-button 
+                    [color]="isHiddenFieldInTotals ? 'secondary' : 'primary'"
+                    [ngClass]="isHiddenFieldInTotals ? 'header-button-red' : 'button-large-text'"
                     [disabled]="!hasDataChanged && inventoryContract?.inventoryContractGuid" 
                     (click)="onSave()">
                         Save
                 </button>
+            </div>
+        </div>
+
+        <div id="hidden-totals-warning">
+            <div *ngIf="isHiddenFieldInTotals">
+                <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
+            </div>
+            <div *ngIf="isHiddenFieldInTotals">
+                Hidden fields are included in acre totals
             </div>
         </div>
         
@@ -236,7 +246,7 @@
                                                     <input matInput matInputCommified formControlName="fieldAcres"
                                                             (keypress)="numberOnly($event)" 
                                                             (keydown)="navigateUpDown($event, 3)"
-                                                            (blur)="roundUpAcres(fieldIndex, plantingIndex, invSeededIndex)"
+                                                            (blur)="roundUpAcres(fieldIndex, plantingIndex, invSeededIndex); checkForHiddenFieldInTotals();"
                                                             maxlength="10">
                                                 </mat-form-field>
                                                 <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Field Acres is writeable">edit</mat-icon>
@@ -316,7 +326,8 @@
                                                 <mat-checkbox 
                                                     *ngIf="isQuantityInsurable(fieldIndex, plantingIndex, invSeededIndex)" 
                                                     formControlName="isQuantityInsurableInd" 
-                                                    (change)="isChecked()">
+                                                    (change)="isChecked()"
+                                                    (focusout)="checkForHiddenFieldInTotals()">
                                                 </mat-checkbox>
                                             </div>
 
@@ -328,7 +339,8 @@
                                                 <mat-select 
                                                     formControlName="plantInsurabilityTypeCode" 
                                                     (focus)="setPlantInsurability(fieldIndex, plantingIndex, invSeededIndex)"
-                                                    (selectionChange)="isMyFormDirty()">
+                                                    (selectionChange)="isMyFormDirty()"
+                                                    (blur)="checkForHiddenFieldInTotals()">
                                                     <mat-option [value]="null"></mat-option>
                                                     <mat-option *ngFor="let option of getPlantInsurabilityOptions(fieldIndex, plantingIndex, invSeededIndex)" [value]="option.code"
                                                     >{{ option.description | titlecase }}</mat-option>
@@ -356,7 +368,8 @@
                                                 <mat-checkbox 
                                                     *ngIf="isUnseededInsurable(fieldIndex, plantingIndex, invSeededIndex)" 
                                                     formControlName="isUnseededInsurableInd" 
-                                                    [checked]="isChecked()" >
+                                                    [checked]="isChecked()" 
+                                                    (focusout)="checkForHiddenFieldInTotals()">
                                                 </mat-checkbox>
                                             </div>
 
@@ -389,7 +402,7 @@
                                                 <mat-icon 
                                                     matTooltip="Hide on printout" 
                                                     svgIcon="{{ isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'visibility_off' : 'visibility' }}" 
-                                                    (click)="toggleHiddenOnPrintout(fieldIndex, plantingIndex)"></mat-icon>
+                                                    (click)="toggleHiddenOnPrintout(fieldIndex, plantingIndex); checkForHiddenFieldInTotals()"></mat-icon>
 
                                             </div>
 

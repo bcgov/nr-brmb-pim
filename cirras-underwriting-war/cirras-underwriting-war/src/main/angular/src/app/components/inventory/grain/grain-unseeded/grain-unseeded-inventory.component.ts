@@ -51,6 +51,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
   }
 
   filteredCommodityVarietyOptions: CropCommodityVarietyOptionsType[];
+  isHiddenFieldInTotals = false;
 
   ngOnInit(): void {
     super.ngOnInit()
@@ -67,7 +68,8 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
   ngOnChanges3(changes: SimpleChanges) {
 
     if ( changes.inventoryContract && this.inventoryContract && this.inventoryContract.commodities ) {
-      this.addAllCommodities()
+      this.addAllCommodities();
+      this.checkForHiddenFieldInTotals()
     }
   }
 
@@ -427,5 +429,28 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
     }
   }
 
+  checkForHiddenFieldInTotals() {
+    // raises a flag if there is a field with acres that is marked as hidden 
+    
+    const frmMain = this.viewModel.formGroup as FormGroup
+    const formFields: FormArray = frmMain.controls.fields as FormArray
+
+    for (let i = 0; i < formFields.controls.length; i++){
+      let frmField = formFields.controls[i] as FormArray
+	  
+      for (let k = 0; k < frmField.value.plantings.controls.length; k++){
+        let frmPlanting = frmField.value.plantings.controls[k] as FormArray
+
+        let acresToBeSeeded = !isNaN( parseFloat(frmPlanting.value.acresToBeSeeded)) ?  parseFloat(frmPlanting.value.acresToBeSeeded) : 0
+
+        if (frmPlanting.value.isHiddenOnPrintoutInd && acresToBeSeeded > 0 ) {
+          this.isHiddenFieldInTotals = true
+          return 
+        }
+      }
+	  }
+
+    this.isHiddenFieldInTotals = false // default
+  }
 
 }
