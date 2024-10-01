@@ -9,7 +9,6 @@ on:
         options:
           - dev
           - qa
-          - int
           - dlvr
           - test
           - prod
