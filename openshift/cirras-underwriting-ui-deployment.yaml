@@ -112,6 +112,8 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-ui-config-#{ENV}#
                   key: LOG_LEVEL
+            - name: APPLICATION_ENVIRONMENT_NAME      
+              value: #{ENV}#
           resources:
             requests:
               cpu: 50m
