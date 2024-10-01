@@ -20,7 +20,7 @@
     json = json.append("\"version\":\"").append(properties.getProperty("application.version", "")).append("\"").append(",");
     // json = json.append("\"buildNumber\":\"").append(properties.getProperty("build.number", "")).append("\"").append(",");
     //json = json.append("\"environment\":\"").append(properties.getProperty("default.application.environment", "")).append("\"").append(",");
-	json = json.append("\"environment\":\"").append(EnvironmentVariable.getVariable("APPLICATION_ENVIRONMENT_NAME"), "")).append("\"").append(",");
+	json = json.append("\"environment\":\"").append(EnvironmentVariable.getVariable("APPLICATION_ENVIRONMENT_NAME"), "").append("\"").append(",");
     json = json.append("\"baseUrl\":\"").append(baseUrl).append("\"");
     json = json.append("},");
 
