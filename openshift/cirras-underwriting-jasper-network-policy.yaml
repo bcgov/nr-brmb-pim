@@ -14,9 +14,9 @@ spec:
     - from:
       - podSelector:
           matchLabels:
-            app: cirras-underwriting-jasper-qa
+            app: cirras-underwriting-jasper-#{ENV}#
       - podSelector:
           matchLabels:
-            app: cirras-underwriting-api-qa
+            app: cirras-underwriting-api-#{ENV}#
   policyTypes:
     - Ingress
