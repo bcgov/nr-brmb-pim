@@ -40,9 +40,9 @@ public interface CirrasDopYieldService {
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	byte[] generateDopReport(
-		String cropYear,
-		String insurancePlanId, 
-		String officeId,
+		Integer cropYear,
+		Integer insurancePlanId, 
+		Integer officeId,
 		String policyStatusCode,
 		String policyNumber,
 		String growerInfo,

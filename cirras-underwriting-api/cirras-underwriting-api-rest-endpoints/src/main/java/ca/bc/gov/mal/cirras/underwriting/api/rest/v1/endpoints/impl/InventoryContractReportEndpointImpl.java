@@ -61,9 +61,9 @@ public class InventoryContractReportEndpointImpl extends BaseEndpointsImpl imple
 			}
 			
 			byte[] result = cirrasInventoryService.generateInvReport(
-					toString(cropYear),
-					toString(insurancePlanId),
-					toString(officeId),
+					toInteger(cropYear),
+					toInteger(insurancePlanId),
+					toInteger(officeId),
 					toString(policyStatusCode),
 					toString(policyNumber),
 					toString(growerInfo),

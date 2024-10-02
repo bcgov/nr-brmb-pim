@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -426,7 +427,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 
 	@Override
-	public byte[] generateDopReport(String cropYear, String insurancePlanId, String officeId, String policyStatusCode,
+	public byte[] generateDopReport(Integer cropYear, Integer insurancePlanId, Integer officeId, String policyStatusCode,
 			String policyNumber, String growerInfo, String sortColumn, String policyIds, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException {
 
@@ -452,26 +453,26 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 
 			// Ignore crop year if the policy number contains the year (i.e. 111111-21)
 			if (policyNumber != null && policyNumber.indexOf("-") > -1 && policyNumber.length() > 6) {
-				cropYear = "";
+				cropYear = null;
 			}
 
-			Map<String, String> queryParams = new HashMap<String, String>();
+			Map<String, Object> queryParams = new HashMap<String, Object>();
 
-			queryParams.put("p_crop_year", notNull(cropYear, ""));
-			queryParams.put("p_insurance_plan_id", notNull(insurancePlanId, ""));
-			queryParams.put("p_office_id", notNull(officeId, ""));
-			queryParams.put("p_policy_status_code", notNull(policyStatusCode, ""));
-			queryParams.put("p_policy_number", notNull(policyNumber, ""));
-			queryParams.put("p_grower_info", notNull(growerInfo, ""));
-			queryParams.put("p_grower_phone_number", notNull(growerPhoneNumber, ""));
-			queryParams.put("p_sort_column", notNull(sortColumn, "policyNumber"));
-			queryParams.put("p_policy_ids", notNull(policyIds, ""));
+			if (cropYear != null) queryParams.put("p_crop_year", cropYear);
+			if (insurancePlanId != null) queryParams.put("p_insurance_plan_id", insurancePlanId);
+			if (officeId != null) queryParams.put("p_office_id", officeId);
+			if (StringUtils.isNotBlank(policyStatusCode)) queryParams.put("p_policy_status_code", policyStatusCode);
+			if (StringUtils.isNotBlank(policyNumber)) queryParams.put("p_policy_number", policyNumber);
+			if (StringUtils.isNotBlank(growerInfo)) queryParams.put("p_grower_info", growerInfo);
+			if (StringUtils.isNotBlank(growerPhoneNumber)) queryParams.put("p_grower_phone_number", growerPhoneNumber);
+			if (StringUtils.isNotBlank(sortColumn)) queryParams.put("p_sort_column", sortColumn);
+			if (StringUtils.isNotBlank(policyIds)) queryParams.put("p_policy_ids", policyIds);
 
 			// Pick the jasper report to run based on plan.
-			if ( InsurancePlans.GRAIN.getInsurancePlanId().toString().equals(insurancePlanId) ) {
+			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(insurancePlanId) ) {
 				result = jasperReportService.generateDopGrainReport(queryParams);
 
-			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().toString().equals(insurancePlanId) ) {
+			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(insurancePlanId) ) {
 				result = jasperReportService.generateDopForageReport(queryParams);
 			
 			} else {

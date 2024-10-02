@@ -157,9 +157,9 @@ public interface CirrasInventoryService {
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	byte[] generateInvReport(
-		String cropYear,
-		String insurancePlanId, 
-		String officeId,
+		Integer cropYear,
+		Integer insurancePlanId, 
+		Integer officeId,
 		String policyStatusCode,
 		String policyNumber,
 		String growerInfo,
