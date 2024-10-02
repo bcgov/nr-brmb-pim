@@ -24,6 +24,8 @@ public interface InventorySeededForageMapper {
 	int deleteForInventoryContract(Map<String, Object> parameters);
 	
 	List<InventorySeededForageDto> select(Map<String, Object> parameters);
+
+	List<InventorySeededForageDto> selectForRollover(Map<String, Object> parameters);
 	
 	List<InventorySeededForageDto> selectForDeclaredYield(Map<String, Object> parameters);
 

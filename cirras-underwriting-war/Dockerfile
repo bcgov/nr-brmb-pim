@@ -1,7 +1,7 @@
 FROM tomcat:9.0.86-jre8
 
-COPY ./cirras-underwriting-war/target/cirras-underwriting-war-3.2.0-SNAPSHOT.war .
-COPY ./cirras-underwriting-war/src/main/resources/log4j2.xml .
+COPY ./cirras-underwriting-war/target/cirras-underwriting-war-3.4.0.war .
+COPY ./deploy-tools/log4j2.xml .
 COPY ./deploy-tools/server.xml .
 
 ENV TOMCAT_HOME=/usr/local/tomcat \

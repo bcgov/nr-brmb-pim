@@ -1,16 +1,28 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { ParamMap } from '@angular/router';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { BaseComponent } from '../../common/base/base.component';
 import { ManageLandComponentModel } from './manage-land.component.model';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
 import { LegalLand, RiskAreaList } from 'src/app/conversion/models';
 import { MANAGE_LEGAL_LAND_COMPONENT_ID } from 'src/app/store/land-management/land-management.state';
 import { addNewLegalLand, deleteLegalLand, getLegalLand, getRiskAreaList, updateLegalLand } from 'src/app/store/land-management/land-management.actions';
-import { FormArray, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { areNotEqual, makeNumberOnly } from 'src/app/utils';
 import { PRIMARY_LAND_IDENTIFIER_TYPE_CODE, PRIMARY_REFERENCE_TYPE_CODE } from 'src/app/utils/constants';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { LegalLandRiskArea } from '@cirras/cirras-underwriting-api';
+import { DomSanitizer, Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { RootState } from 'src/app/store';
+import { MatDialog } from '@angular/material/dialog';
+import { ApplicationStateService } from 'src/app/services/application-state.service';
+import { SecurityUtilService } from 'src/app/services/security-util.service';
+import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { ConnectionService } from 'ngx-connection-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Overlay } from '@angular/cdk/overlay';
+import { HttpClient } from '@angular/common/http';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'manage-land',
@@ -21,6 +33,26 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
 
   @Input() legalLand: LegalLand
   @Input() riskAreaList: RiskAreaList
+
+  constructor(protected router: Router,
+    protected route: ActivatedRoute,
+    protected sanitizer: DomSanitizer,
+    protected store: Store<RootState>,
+    protected fb: FormBuilder,
+    protected dialog: MatDialog,
+    protected applicationStateService: ApplicationStateService,
+    public securityUtilService: SecurityUtilService,                
+    protected tokenService: TokenService,
+    protected connectionService: ConnectionService,
+    protected snackbarService: MatSnackBar,
+    protected overlay: Overlay,
+    protected cdr: ChangeDetectorRef,
+    protected appConfigService: AppConfigService,
+    protected http: HttpClient,
+    protected titleService: Title,
+    protected decimalPipe: DecimalPipe) {
+    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
+  }
 
   legalLandId: string
   

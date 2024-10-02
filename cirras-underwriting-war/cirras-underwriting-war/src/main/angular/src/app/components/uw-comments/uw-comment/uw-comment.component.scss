@@ -1,0 +1,42 @@
+div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 8px;
+}
+
+.justify-center {
+    justify-content: center;
+    text-align: center;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.entire {
+    ::ng-deep .mat-form-field {
+        width: 100%;
+    }
+
+    ::ng-deep .mat-form-field-wrapper {
+        padding-bottom: 0;
+    }
+
+    ::ng-deep .mat-form-field-infix {
+        padding: 0;
+        border-top: 0;
+    }
+}
+
+:host:nth-child(even) {
+    div {
+        div {
+            background-color: #F2F2F2;
+        }
+    }
+}
+
+textarea.mat-input-element.cdk-textarea-autosize {
+    overflow: auto;
+}

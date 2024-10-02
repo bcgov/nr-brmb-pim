@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { BaseComponent } from '../../common/base/base.component';
 import { YieldConversionComponentModel } from './yield-conversion.component.model';
 import { YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
@@ -7,20 +7,53 @@ import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
 import { YieldMeasUnitConversionList } from 'src/app/conversion/models-maintenance';
 import { ClearYieldConversion, LoadYieldConversion, SaveYieldConversion } from 'src/app/store/maintenance/maintenance.actions';
-import { FormArray } from '@angular/forms';
+import { FormArray, FormBuilder } from '@angular/forms';
 import { areNotEqual, makeNumberOnly } from 'src/app/utils';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { YieldConversionUnitsContainer } from 'src/app/containers/maintenance/yield-conversion-units-container.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DomSanitizer, Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { RootState } from 'src/app/store';
+import { MatDialog } from '@angular/material/dialog';
+import { ApplicationStateService } from 'src/app/services/application-state.service';
+import { SecurityUtilService } from 'src/app/services/security-util.service';
+import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { ConnectionService } from 'ngx-connection-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Overlay } from '@angular/cdk/overlay';
+import { HttpClient } from '@angular/common/http';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'yield-conversion',
   templateUrl: './yield-conversion.component.html',
-  styleUrls: ['./yield-conversion.component.scss']
+  styleUrls: ['./yield-conversion.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss']
 })
 export class YieldConversionComponent extends BaseComponent implements OnChanges  {
 
   @Input() yieldMeasUnitList: YieldMeasUnitTypeCodeList;
   @Input() yieldMeasUnitConversionList: YieldMeasUnitConversionList
+
+  constructor(protected router: Router,
+    protected route: ActivatedRoute,
+    protected sanitizer: DomSanitizer,
+    protected store: Store<RootState>,
+    protected fb: FormBuilder,
+    protected dialog: MatDialog,
+    protected applicationStateService: ApplicationStateService,
+    public securityUtilService: SecurityUtilService,                
+    protected tokenService: TokenService,
+    protected connectionService: ConnectionService,
+    protected snackbarService: MatSnackBar,
+    protected overlay: Overlay,
+    protected cdr: ChangeDetectorRef,
+    protected appConfigService: AppConfigService,
+    protected http: HttpClient,
+    protected titleService: Title,
+    protected decimalPipe: DecimalPipe) {
+    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
+  }
 
   componentId = MAINTENANCE_COMPONENT_ID;
 
@@ -33,6 +66,9 @@ export class YieldConversionComponent extends BaseComponent implements OnChanges
   hasDataChanged = false;
 
   etag = "";
+
+  selectedInsurancePlanId = null
+  selectedUnits = null
 
   initModels() {
     this.viewModel = new YieldConversionComponentModel(this.sanitizer, this.fb);
@@ -47,7 +83,8 @@ export class YieldConversionComponent extends BaseComponent implements OnChanges
   }
 
   loadPage() {
-    
+    let frmConversionList: FormArray = this.viewModel.formGroup.controls.yieldMeasUnitConversionList as FormArray
+    frmConversionList.clear()
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -58,14 +95,12 @@ export class YieldConversionComponent extends BaseComponent implements OnChanges
 
       if (this.yieldMeasUnitList && this.yieldMeasUnitList.collection && this.yieldMeasUnitList.collection.length  > 0) {
 
-        const selectedInsurancePlanId = this.viewModel.formGroup.controls.selectedInsurancePlanId.value;
-
-        if ( selectedInsurancePlanId ) {
+        if ( this.selectedInsurancePlanId ) {
           
-          this.defaultUnitForPlan = this.getDefaultUnitForPlan(selectedInsurancePlanId) 
+          this.defaultUnitForPlan = this.getDefaultUnitForPlan(this.selectedInsurancePlanId) 
 
           // populate the Units dropdown based on yieldMeasUnitList
-          this.getUnitOptionsForPlan(selectedInsurancePlanId)       
+          this.getUnitOptionsForPlan(this.selectedInsurancePlanId)       
         }
       }
     }
@@ -127,26 +162,28 @@ export class YieldConversionComponent extends BaseComponent implements OnChanges
     } )
   }
 
-  onPlanChange() {
-    const selectedInsurancePlanId = this.viewModel.formGroup.controls.selectedInsurancePlanId.value;
+  onPlanChange(value) {
+    this.selectedInsurancePlanId = value;
+    this.selectedUnits = null
 
     this.store.dispatch(ClearYieldConversion())
 
-    if (selectedInsurancePlanId) {
-      this.store.dispatch( LoadYieldMeasUnitList(this.componentId, selectedInsurancePlanId) )
+    if (this.selectedInsurancePlanId) {
+      this.store.dispatch( LoadYieldMeasUnitList(this.componentId, this.selectedInsurancePlanId) )
     }
   }
 
-  onUnitChange() {
-    this.reloadUnitConversionList()
+  onUnitChange(value) {
+    this.reloadUnitConversionList(value)
   }
 
-  reloadUnitConversionList() {
-    const selectedInsurancePlanId = this.viewModel.formGroup.controls.selectedInsurancePlanId.value;
-    const selectedUnits = this.viewModel.formGroup.controls.selectedUnits.value;
+  reloadUnitConversionList(value) {
+    this.selectedUnits = value;
 
-    if (selectedInsurancePlanId && selectedUnits) {
-      this.store.dispatch( LoadYieldConversion(this.componentId, selectedInsurancePlanId, this.defaultUnitForPlan, selectedUnits ))
+    this.store.dispatch(ClearYieldConversion())
+
+    if (this.selectedInsurancePlanId && this.selectedUnits) {
+      this.store.dispatch( LoadYieldConversion(this.componentId, this.selectedInsurancePlanId, this.defaultUnitForPlan, this.selectedUnits ))
     }
   }
 
@@ -182,13 +219,15 @@ export class YieldConversionComponent extends BaseComponent implements OnChanges
   }
 
   onCancel() {
-    // reload the page
-    this.reloadUnitConversionList()
-    this.hasDataChanged = false   
+    if ( confirm("Are you sure you want to clear all unsaved changes on the screen? There is no way to undo this action.") ) {
+      // reload the page
+      this.reloadUnitConversionList(this.selectedUnits)
+      this.hasDataChanged = false   
 
-    // this is supposed to let the user know that they are going to loose their changes, 
-    // if they click on the side menu links
-    this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false ));
+      // this is supposed to let the user know that they are going to loose their changes, 
+      // if they click on the side menu links
+      this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false ));
+    }
   }
 
 
@@ -201,15 +240,12 @@ export class YieldConversionComponent extends BaseComponent implements OnChanges
     if ( !this.isFormValid() ){
       return
     }
-    
-    const selectedInsurancePlanId = this.viewModel.formGroup.controls.selectedInsurancePlanId.value;
-    const selectedUnits = this.viewModel.formGroup.controls.selectedUnits.value;
 
     // prepare the updated seeding deadlines 
     const newUnitConversionList: YieldMeasUnitConversionList = this.getUpdatedUnitConversionList()
 
     // save
-    this.store.dispatch(SaveYieldConversion(MAINTENANCE_COMPONENT_ID, selectedInsurancePlanId, this.defaultUnitForPlan, selectedUnits, newUnitConversionList))
+    this.store.dispatch(SaveYieldConversion(MAINTENANCE_COMPONENT_ID, this.selectedInsurancePlanId, this.defaultUnitForPlan, this.selectedUnits, newUnitConversionList))
     
     this.hasDataChanged = false   
 
@@ -255,9 +291,6 @@ export class YieldConversionComponent extends BaseComponent implements OnChanges
       this.etag = ""
     }
 
-    const selectedInsurancePlanId = this.viewModel.formGroup.controls.selectedInsurancePlanId.value;
-    const selectedUnits = this.viewModel.formGroup.controls.selectedUnits.value;
-
     const frmUnitConversionList: FormArray = this.viewModel.formGroup.controls.yieldMeasUnitConversionList as FormArray
 
     var self = this
@@ -284,7 +317,7 @@ export class YieldConversionComponent extends BaseComponent implements OnChanges
         }
         
         if ( !origUnitConversion.targetYieldMeasUnitTypeCode && frmUC.value.conversionFactor) {
-          origUnitConversion.targetYieldMeasUnitTypeCode = selectedUnits
+          origUnitConversion.targetYieldMeasUnitTypeCode = this.selectedUnits
         }
        
         if ( !origUnitConversion.versionNumber && frmUC.value.conversionFactor) {
@@ -297,9 +330,7 @@ export class YieldConversionComponent extends BaseComponent implements OnChanges
   }
 
   getSelectedPlanName() {
-    const selectedInsurancePlanId = this.viewModel.formGroup.controls.selectedInsurancePlanId.value
-    
-    let el = this.insurancePlansDefault.find( x => x.code == selectedInsurancePlanId )
+    let el = this.insurancePlansDefault.find( x => x.code == this.selectedInsurancePlanId )
 
     if (el) {
       return el.description
@@ -307,12 +338,19 @@ export class YieldConversionComponent extends BaseComponent implements OnChanges
       return ""
     }
   }
-  
+
+  getSelectedConversionName() {
+    let el = this.yieldMeasUnitOptions.find( x => x.yieldMeasUnitTypeCode == this.selectedUnits )
+
+    if (el) {
+      return el.description
+    } else {
+      return
+    }
+  }
+
   onViewYieldUnits() {
-
-    const selectedInsurancePlanId = this.viewModel.formGroup.controls.selectedInsurancePlanId.value
-
-    if (!selectedInsurancePlanId ) {
+    if (!this.selectedInsurancePlanId ) {
       alert("Please select Insurance Plan.")
       return
     }

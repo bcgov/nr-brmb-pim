@@ -10,6 +10,7 @@ on:
           - cirras-underwriting-api
           - cirras-underwriting-ui
           - cirras-underwriting-jasper
+          - cirras-underwriting-liquibase
       ENVIRONMENT_NAME:
         required: true
         type: choice
@@ -71,16 +72,24 @@ jobs:
           ENV: ${{ inputs.ENVIRONMENT_NAME }}
           NAMESPACE: ${{ inputs.NAMESPACE }}
           TAG: ${{ inputs.TAG }}
+          SID: ${{ github.run_id }}
+          LOG_LEVEL: ${{ vars.LOG_LEVEL }}
+          
           
           WEBADE_CHECK_TOKEN_URL: ${{ vars.WEBADE_CHECK_TOKEN_URL }}
           WEBADE_GET_TOKEN_URL: ${{ vars.WEBADE_GET_TOKEN_URL }}
+          POSTGRES_USERNAME: ${{ vars.POSTGRES_USERNAME}}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+
 
           #API variables
-          POSTGRES_USERNAME: ${{ vars.POSTGRES_USERNAME }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_MAXACTIVE: '10'
+          API_CPU_REQUEST: ${{ vars.API_CPU_REQUEST }}
+          API_CPU_LIMIT: ${{ vars.API_CPU_LIMIT }}
+          API_MEMORY_REQUEST: ${{ vars.API_MEMORY_REQUEST }}
+          API_MEMORY_LIMIT: ${{ vars.API_MEMORY_LIMIT }}
+          MAX_API_COUNT: ${{ vars.MAX_APP_COUNT }}
+
           POSTGRES_RESOURCE_NAME: ${{ vars.POSTGRES_RESOURCE_NAME }}
-          
 
           MAX_THREADS: ${{ vars.MAX_THREADS }}
           TARGET_PORT: ${{ vars.TARGET_PORT }}
@@ -89,18 +98,25 @@ jobs:
           CIRRAS_POLICIES_API_URL: ${{ vars.CIRRAS_POLICIES_API_URL}}
           CIRRAS_UNDERWRITING_REST_CLIENT_ID: ${{ vars.CIRRAS_UNDERWRITING_REST_CLIENT_ID }}
           CIRRAS_UNDERWRITING_REST_SECRET: ${{ secrets.CIRRAS_UNDERWRITING_REST_SECRET }}
-          
-          JASPER_URL: cirras-underwriting-jasper-${{ vars.LICENSE_PLATE }}-${{inputs.ENVIRONMENT_NAME}}.apps.silver.devops.gov.bc.ca
-          JASPER_USERNAME: ${{ vars.JASPER_USERNAME }}
-          JASPER_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
 
           WEBADE_USERNAME: ${{ vars.WEBADE_USERNAME }}
           WEBADE_PASSWORD: ${{ secrets.WEBADE_PASSWORD }}
           WEBADE_MAXACTIVE: ${{ vars.WEBADE_MAXACTIVE }}
 
+
+          #DB/Liquibase variables:
+          POSTGRES_READ_ONLY_PASSWORD: ${{ secrets.POSTGRES_READONLY_PASSWORD }}
+          POSTGRES_PROXY_USER_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_ADMIN_USERNAME: ${{ secrets.POSTGRES_ADMIN_USERNAME }}
+          POSTGRES_ADMIN_PASSWORD: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
+          POSTGRES_MAXACTIVE: '10'
+          CHANGELOG_FILE: changelog.json
+
+          
           #Frontend variables
+          MAX_UI_COUNT: ${{ vars.MAX_UI_COUNT }}
           BASE_URL: https://cirras-underwriting-ui-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/pub/cirras-underwriting/
-          CIRRAS_UNDERWRITING_REST_URI: https://cirras-underwriting-api-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/cirras-underwriting-api/v1
+          CIRRAS_UNDERWRITING_REST_URI: https://cirras-underwriting-api-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/cirras-underwriting-api/v1
           WEBADE_CIRRAS_UNDERWRITING_UI_SECRET: ${{secrets.WEBADE_CIRRAS_UNDERWRITING_UI_SECRET}}
 
           ACTIVE_PORT: ${{ vars.TARGET_PORT }}
@@ -112,12 +128,27 @@ jobs:
           WEBADE_OAUTH2_SCOPES: ${{ vars.WEBADE_OAUTH2_SCOPES }}
 
           WEB_PATH: ${{ vars.WEB_PATH }}
+
+
+          #Jasper variables
+          JASPER_URL: https://cirras-underwriting-jasper-${{ inputs.ENVIRONMENT_NAME }}-${{ inputs.NAMESPACE }}.apps.silver.devops.gov.bc.ca/jasperserver/
+          JASPER_USERNAME: ${{ vars.JASPER_USERNAME }}
+          JASPER_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
+          ALLOW_EMPTY_PASSWORD: true
+          JASPERREPORTS_DATABASE_NAME: jasper${{ inputs.ENVIRONMENT_NAME }}
+          JASPERREPORTS_DATABASE_USER: ${{ secrets.JASPER_DATABASE_USER }}
+          JASPERREPORTS_DATABASE_PASSWORD: ${{ secrets.JASPER_DATABASE_PASSWORD }}
+          JASPERREPORTS_UI_USER: ${{ vars.JASPER_USERNAME }}
+          JASPERREPORTS_UI_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
+          JASPER_STORAGE_CAPACITY: 25Mi
+
+
       
       - name: Authenticate and set context
         uses: redhat-actions/oc-login@v1
         with:
-          openshift_server_url: ${{secrets.openshift_server_url}}
-          openshift_token: ${{secrets.openshift_token}}
+          openshift_server_url: ${{secrets.OPENSHIFT_SERVER_URL}}
+          openshift_token: ${{secrets.OPENSHIFT_TOKEN}}
           namespace: ${{ inputs.NAMESPACE }}
 
       - name: Apply .yaml files to openshift

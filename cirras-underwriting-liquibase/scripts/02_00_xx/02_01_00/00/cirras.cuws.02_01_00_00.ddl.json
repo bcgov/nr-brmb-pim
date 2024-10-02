@@ -1,0 +1,6 @@
+
+{
+    "databaseChangeLog": [
+{ "changeSet": {"author":"mhostettler","id":"53","changes": [{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.ddl.update.crop_commodity.sql"}}] } }
+
+    ]}

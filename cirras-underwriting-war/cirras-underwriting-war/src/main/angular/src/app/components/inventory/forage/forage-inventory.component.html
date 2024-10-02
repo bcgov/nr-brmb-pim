@@ -32,10 +32,10 @@
             </div>
             <div>
                 <button 
-                    *ngIf="securityUtilService.canEditInventory()" 
+                    *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
                     mat-raised-button color="primary" 
                     class="button-large-text" 
-                    [disabled]="!hasDataChanged" 
+                    [disabled]="!hasDataChanged && inventoryContract?.inventoryContractGuid" 
                     (click)="onSave()">
                         Save
                 </button>
@@ -46,6 +46,16 @@
     [growerContract]="growerContract"
     ></cirras-grower-contract-header>  
 
+    <div *ngIf="hasYieldData == true" class="message-container">
+        <!-- The policy has yield message -->
+        <div class="has-yield-warning">
+            <mat-icon>warning</mat-icon>            
+            <span class="warning-message">
+                Inventory edits are not permitted when a policy has DOP data.  
+                If you need to update the inventory, delete the DOP data first.</span> 
+        </div>
+    </div>
+    
     <form [formGroup]="getViewModel().formGroup" (keydown.enter)="$event.preventDefault()">
 
         <div class="plcy-inv-form-header" [ngStyle]="setFormSeededStyles()">
@@ -77,7 +87,7 @@
                     mat-raised-button color="secondary" 
                     class="header-button-red"  
                     (click)="onDeleteInventory()">
-                    <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Delete Inventory
+                    <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset Inventory
                 </button>
             </div>
         </div>
@@ -393,13 +403,14 @@
                             class="inventory-cell" 
                             [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border-exclude-printout  border-right-exclude-printout' : 'inventory-border'" 
                             style="width:90px">
-                            <span *ngIf="isThereAnyComment(field); else noCommentsBlock">
-                                <mat-icon matTooltip="Comments" (click)="onLoadComments(field)" svgIcon="insert_comment"></mat-icon>
-                            </span>
-
-                            <ng-template #noCommentsBlock>
-                                <mat-icon matTooltip="Comments" (click)="onLoadComments(field)" svgIcon="mode_comment"></mat-icon>
-                            </ng-template>
+                            <uw-comments-button
+                                [underwritingCommentTypeCode]="'INV'"
+                                [annualFieldDetailId]="field.value.annualFieldDetailId"
+                                [fieldId]="field.value.fieldId"
+                                [fieldName]="field.value.fieldLabel"
+                                [legalLocation]="field.value.otherLegalDescription"
+                                [uwComments]="field.value.uwComments"
+                                (onDone)="onInventoryCommentsDone(field.value.fieldId, $event)"></uw-comments-button>
 
                             <mat-icon matTooltip="View History">history</mat-icon>
                             <mat-icon class="delete-icon"

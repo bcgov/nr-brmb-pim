@@ -1,0 +1,14 @@
+{
+    "databaseChangeLog": [
+
+
+{ "changeSet": {"author":"mhostettler","id":"37","changes": [
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.commodity_type_variety_xref.sql"}},
+{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.ddl.update.inventory_seeded_grain.sql"}},
+{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.ddl.update.inventory_contract_commodity.sql"}},
+{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.seeding_deadline.sql"}},
+{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.ddl.update.inventory_field.sql"}},
+{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.contracted_field_detail.sql"}},
+{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}] } }
+]}
+

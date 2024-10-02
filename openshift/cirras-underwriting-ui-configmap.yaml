@@ -3,6 +3,9 @@ apiVersion: v1
 metadata:
   name: cirras-underwriting-ui-config-#{ENV}#
   namespace: '#{NAMESPACE}#'
+  labels:
+    app: cirras-underwriting-api-#{ENV}#
+    project: brmb-pim-#{ENV}#
   managedFields:
     - manager: Mozilla
       operation: Update
@@ -23,3 +26,4 @@ data:
   WEBADE_OAUTH2_SCOPES: '#{WEBADE_OAUTH2_SCOPES}#'
   ACTIVE_PORT: '#{ACTIVE_PORT}#'
   WEB_PATH: '#{WEB_PATH}#'
+  LOG_LEVEL: '#{LOG_LEVEL}#'

@@ -9,10 +9,10 @@
                 {{ (growerContract && growerContract.policyNumber) ? growerContract.policyNumber : "" }}   
             </div>
             <!-- unsaved messages -->
-             <div *ngIf="hasDataChanged == true; else noWarningDiv">
+             <div *ngIf="isUnsaved; else noWarningDiv">
                 <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
             </div>
-            <div *ngIf="hasDataChanged == true; else noWarningDiv" class="unsaved-changes">
+            <div *ngIf="isUnsaved; else noWarningDiv" class="unsaved-changes">
                 Unsaved Changes 
             </div>
             <ng-template #noWarningDiv>
@@ -26,7 +26,7 @@
             </div>
             <div class="vertical-line"></div>
             <div matTooltip="Changes must be saved before download is possible.">
-                <button mat-raised-button color="secondary" [disabled]="hasDataChanged == true"
+                <button mat-raised-button color="secondary" [disabled]="isUnsaved"
                 class="button-large-text" (click)="onPrint()">
                     <mat-icon class="button-mat-icon">download</mat-icon>Download
                 </button>
@@ -36,7 +36,7 @@
                     *ngIf="securityUtilService.canEditDop()" 
                     mat-raised-button color="primary" 
                     class="button-large-text" 
-                    [disabled]="!hasDataChanged" 
+                    [disabled]="!isUnsaved" 
                     (click)="onSave()">
                         Save
                 </button>
@@ -60,31 +60,57 @@
                         <input matInput 
                             [matDatepicker]="picker"
                             formControlName="declarationOfProductionDate" 
-                            (dateChange)="isMyFormDirty()">
+                            (dateChange)="updateDeclarationOfProductionDate()"
+                            (input)="updateDeclarationOfProductionDate()">
                         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="plcy-frm-hdr-dropdown" matTooltip="Units">
                     <!-- Units:  -->
-                    <mat-form-field appearance="fill">
-                        <mat-select formControlName="yieldMeasUnitTypeCode" (selectionChange)="yieldMeasUnitTypeSelectionChanged()">
-                            <mat-option *ngFor="let option of yieldMeasUnitOptions" [value]="option.yieldMeasUnitTypeCode"
+                    <mat-form-field *ngIf="yieldMeasUnitList && yieldMeasUnitList.collection" appearance="fill">
+                        <mat-select
+                            formControlName="yieldMeasUnitTypeCode"
+                            (selectionChange)="updateEnteredYieldMeasUnitTypeCode()">
+                            <mat-option *ngFor="let option of yieldMeasUnitList.collection" [value]="option.yieldMeasUnitTypeCode"
                             >{{ option.description | titlecase }}</mat-option>
                         </mat-select>
                         </mat-form-field>
                 </div>
                 <div>
-                    <span *ngIf="isThereAnyDopComment(); else noDopComments">
-                        <button mat-raised-button color="secondary" class="header-button" (click)="onLoadDopComments()">
-                            <mat-icon class="button-mat-icon" svgIcon="insert_comment"></mat-icon>DOP Comments
-                        </button>
-                    </span>
-                    <ng-template #noDopComments>
-                        <button mat-raised-button color="secondary" class="header-button" (click)="onLoadDopComments()">
-                            <mat-icon class="button-mat-icon" svgIcon="mode_comment"></mat-icon>DOP Comments
-                        </button>
-                    </ng-template>
+                    <!-- add cut -->
+                    <button
+                        mat-raised-button 
+                        color="secondary" 
+                        class="header-button"  
+                        matTooltip="Add New Cut"
+                        [disabled]="!isNewCutBtnEnabled()"
+                        (click)="onAddNewCut()">
+                        New Cut
+                    </button>
+                </div>
+                <div>
+                    <!-- remove cut -->
+                    <button
+                        mat-raised-button 
+                        color="secondary" 
+                        class="header-button"  
+                        matTooltip="Remove Last Cut"
+                        [disabled]="!isRemoveCutBtnEnabled()"
+                        (click)="onRemoveLastCut()">
+                        Remove Cut
+                    </button>
+                </div>
+                <div>
+                    <uw-comments-button
+                        [underwritingCommentTypeCode]="'DOP'"
+                        [growerContractYearId]="dopYieldContract?.growerContractYearId"
+                        [declaredYieldContractGuid]="dopYieldContract?.declaredYieldContractGuid"
+                        [policyNumber]="growerContract?.policyNumber"
+                        [growerName]="growerContract?.growerName"
+                        [growerNumber]="growerContract?.growerNumber"
+                        [uwComments]="dopYieldContract?.uwComments"
+                        (onDone)="onDopCommentsDone($event)"></uw-comments-button>
                 </div>
                 <div>
                     <button
@@ -98,15 +124,14 @@
                 </div>
                 <div class="vertical-line"></div>
                 <div>
-                    <!-- TODO: uncomment after delete DOP backend is ready -->
-                    <!-- <button *ngIf="securityUtilService.canDeleteDop() && 
+                    <button *ngIf="securityUtilService.canDeleteDop() && 
                                     dopYieldContract && 
                                     dopYieldContract.declaredYieldContractGuid" 
                                     mat-raised-button color="secondary" 
                                     class="header-button-red" 
                                     (click)="onDeleteDop()">
-                        <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Delete DOP
-                    </button> -->
+                        <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset DOP
+                    </button>
                 </div>
             </div>
 
@@ -114,139 +139,13 @@
             <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
 
                 <!-- field data -->
-    
-                <div class="plcy-inv-field-box" style="width: 1450px;">
-                    <div class="inventory-header border-left" style="width:45px" matTooltip="Field Order">F.O.</div>
-                    <div class="inventory-header" style="width:90px">Field ID</div>
-                    <div class="inventory-header" style="width:164px;">Field Name</div>  
-                    <div class="inventory-header" style="width:156px">Legal Location</div> 
-                    <div class="inventory-header" style="width:120px">Commodity Type</div>
-                    <div class="inventory-header" style="width:180px">Variety</div>
-                    <div class="inventory-header" style="width:80px">Quantity <br /> Insurable</div>
-                    <div class="inventory-header" style="width:80px">Acres</div>
-
-                    <div class="inventory-header" style="width:120px">Cut 1 <br /> # Bales/Loads</div>
-                    <div class="inventory-header" style="width:120px">Cut 1 <br /> Weight</div>
-                    <div class="inventory-header" style="width:80px">Cut 1 <br /> % Moisture</div>
-
-                    <div class="inventory-header" style="width:80px;">Manage Planting</div>
-                    <div class="inventory-header" style="width:75px;">Manage Field</div>
-                </div>
-    
-    
-                <div class="plcy-inv-fld-tbl-inner-wrapper flex-y-grow" style="width: 1410px;">
-    
-                    <div class="plcy-inv-field-container-yellow" 
-                        style="width: 1390px;" >
-      
-                        <div class="plcy-inv-field-box" 
-                            *ngFor="let field of getViewModel().formGroup.controls.fields['controls']; index as fieldIndex"
-                            [formGroup]="field">
-    
-                            <div class="inventory-cell inventory-border border-left" style="width:45px">{{field.value.displayOrder}}</div>
-                            <div class="inventory-cell inventory-border" style="width:90px;">{{field.value.fieldId}}</div> 
-                            <div class="inventory-cell inventory-border"  style="width:164px;">{{field.value.fieldLabel}}</div>
-                            <div class="inventory-cell inventory-border" style="width:156px;"> {{ field.value.otherLegalDescription }} </div>
-                            
-                            <div class="planting-container" [ngStyle]="setPlantingStyles()">
-                                
-                                <div *ngFor="let dopYieldField of field.value.dopYieldFieldForageList['controls']; index as dopYieldFieldIndex;"   
-                                    [formGroup]="dopYieldField"    
-                                    style="display:contents;"> 
-    
-                                    <div class="inventory-cell inventory-border" style="width:120px;">
-                                        {{ dopYieldField.value.commodityTypeDescription | titlecase }}
-                                    </div>
-                                    <div class="inventory-cell inventory-border" style="width:180px;">
-                                        {{ dopYieldField.value.cropVarietyName | titlecase }}
-                                    </div>                            
-                                    <div class="inventory-border" style="width:80px;">
-                                        <mat-checkbox formControlName="isQuantityInsurableInd" (change)="isMyFormDirty()">
-                                        </mat-checkbox>
-                                    </div>
-                                    <div class="inventory-cell inventory-border" style="width:80px;">
-                                        {{ dopYieldField.value.fieldAcres }}
-                                    </div>
-                                    
-
-                                    <!-- TODO: check if the cut is marked for deletion. If yes, then don't show it -->
-
-                                    <div class="planting-container" [ngStyle]="setCutStyles()">
-                                        <div *ngFor="let dopYieldFieldForageCut of dopYieldField.value.dopYieldFieldForageCuts['controls']; index as cutIndex"   
-                                            [formGroup]="dopYieldFieldForageCut"    
-                                            style="display:contents;">  
-
-                                        <div class="inventory-fill inventory-border" style="width:120px;">
-                                            
-                                            <mat-form-field appearance="fill">
-                                                <input matInput matInputCommified formControlName="totalBalesLoads" 
-                                                        maxlength="4"
-                                                        (keypress)="numberOnly($event)" 
-                                                        (keyup)="isMyFormDirty()"
-                                                        (blur)="roundUpCutBales(dopYieldFieldForageCut)">
-                                            </mat-form-field>
-                                            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Bale/Loads is writeable. Expecting an integer.">edit</mat-icon>
-                                            
-                                        </div>
-
-                                        <div class="inventory-fill inventory-border" style="width:120px;">
-                                            
-                                            <mat-form-field appearance="fill">
-                                                <input matInput matInputCommified formControlName="weight" 
-                                                        maxlength="14"
-                                                        (keypress)="numberOnly($event)" 
-                                                        (keyup)="isMyFormDirty()"
-                                                        (blur)="roundUpCutWeight(dopYieldFieldForageCut)">
-                                            </mat-form-field>
-                                            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Weight is writeable. Expecting up to 2 decimals.">edit</mat-icon>
-
-                                        </div>
-
-                                        <div class="inventory-fill inventory-border" style="width:80px;">
-                                            
-                                            <mat-form-field appearance="fill">
-                                                <input matInput matInputCommified formControlName="moisturePercent" 
-                                                        maxlength="3"
-                                                        (keypress)="numberOnly($event)" 
-                                                        (keyup)="isMyFormDirty()"
-                                                        (blur)="roundUpCutMoisturePercent(dopYieldFieldForageCut)">
-                                            </mat-form-field>
-                                            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Percent Moisture is writeable. Expecting an integer percentage.">edit</mat-icon>
-                                        </div>
-
-                                        </div>
-                                        
-                                    </div>
-
-                                    <div class="border-bottom border-right " style="width:80px; align-items:center;">
-                                        <mat-icon 
-                                            *ngIf="securityUtilService.canEditDop()"
-                                            (click)="onDeleteFieldYield(dopYieldField, dopYieldFieldIndex)"
-                                            style="margin-left: 4px; margin-right: 4px;"
-                                            matTooltip="Clear Field Values" 
-                                            svgIcon="cancel"></mat-icon>
-                                    </div>                                    
-                                </div>
-                            </div> 
-    
-                            <div class="inventory-cell inventory-border" style="width:75px">
-                                <span *ngIf="isThereAnyComment(field); else noCommentsBlock">
-                                    <mat-icon matTooltip="Comments" (click)="onLoadComments(field)" svgIcon="insert_comment"></mat-icon>
-                                </span>
-                                <ng-template #noCommentsBlock>
-                                    <mat-icon matTooltip="Comments" (click)="onLoadComments(field)" svgIcon="mode_comment"></mat-icon>
-                                </ng-template>
-    
-                                <mat-icon matTooltip="View History" style="margin-left: 4px; margin-right: 4px;">history</mat-icon>
-                            </div>
-    
-                        </div>
-    
-                    </div>   
-                </div>
+                <forage-dop-field-list
+                    *ngIf="dopYieldContract && dopYieldContract.fields"
+                    [fields]="dopYieldContract.fields"
+                    [fieldsFormArray]="getViewModel().formGroup.controls.fields"></forage-dop-field-list>
     
                 <!-- dop contract data  -->
-                <div class="plcy-inv-cntrct" style="grid-template-columns: 500px 900px" >
+                <div class="plcy-inv-cntrct" style="grid-template-columns: 600px 790px;" >
                     <div class="question" style="border: 1px solid #E1CF7B; background: #FEFAEC;">
                         
     
@@ -256,7 +155,7 @@
                                 <mat-form-field appearance="fill">
                                     <input matInput formControlName="balerWagonInfo" 
                                             maxlength="128"
-                                            (keyup)="isMyFormDirty()">
+                                            (blur)="updateBalerWagonInfo()">
                                 </mat-form-field>
                                 <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
                             </div>
@@ -265,9 +164,8 @@
                                 <mat-form-field appearance="fill">
                                     <input matInput matInputCommified formControlName="totalLivestock" 
                                             maxlength="5"
-                                            (keypress)="numberOnly($event)" 
-                                            (keyup)="isMyFormDirty()"
-                                            (blur)="roundUptotalLivestock()">
+                                            (keypress)="numberOnly($event)"
+                                            (blur)="updateTotalLivestock()">
                                 </mat-form-field>
                                 <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
                             </div>
@@ -278,7 +176,13 @@
                     <div>
                         
                         <!-- commodity totals -->
-
+                        <forage-dop-commodity-list
+                            *ngIf="dopYieldContract && dopYieldContract.dopYieldContractCommodityForageList"
+                            [commodities]="dopYieldContract.dopYieldContractCommodityForageList"
+                            [commoditiesFormArray]="getViewModel().formGroup.controls.dopYieldContractCommodityForageList"
+                            [decimalPrecision]="decimalPrecision"
+                            [isUnsaved]="isUnsaved"></forage-dop-commodity-list>
+    
                     </div>
     
                 </div>

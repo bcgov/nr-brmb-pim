@@ -1,0 +1,16 @@
+
+{
+    "databaseChangeLog": [
+        { "changeSet": {"author":"mhostettler","id":"73","changes": [
+            {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.application_release.sql"}},
+            {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.underwriting_year.sql"}},
+            {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.seeding_deadline.sql"}},
+            {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.grade_modifier.sql"}},
+            {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.grade_modifier_type_code.sql"}},
+            {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
+        ] } }
+    ]
+}
+
+
+

@@ -32,7 +32,7 @@ export class MatInputCommifiedDirective {
   }
 
   private formatValue(value: string | null) {
-    if (value !== null) {
+    if (value !== null && value !== undefined) {
       this.elementRef.nativeElement.value = numberWithCommas(value);
     } else {
       this.elementRef.nativeElement.value = '';

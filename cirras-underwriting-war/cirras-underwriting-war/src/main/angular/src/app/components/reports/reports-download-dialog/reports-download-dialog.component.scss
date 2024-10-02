@@ -1,0 +1,7 @@
+.mat-form-field {
+    display: block;
+
+    ::ng-deep .mat-form-field-flex {
+        background-color: transparent;
+    }
+}

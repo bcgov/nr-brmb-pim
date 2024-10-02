@@ -2,7 +2,7 @@
 
 .mat-table {
     display: block;
-    font-family: Tahoma, Verdana;
+    font-family: $font-family-main;
   }
   
   .mat-row,
@@ -22,23 +22,20 @@
     word-wrap: break-word;
   }
 
-  .mat-column-growerName {
-    // flex: 0 0 50%;
-
-    word-wrap: break-word !important;
-    white-space: unset !important;
-    flex: 0 0 30%; // !important;
-    width: 30%; // !important;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-  
-    word-break: break-word;
-  
-    -ms-hyphens: auto;
-    -moz-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-
+  .mat-column-otherDescription {
+    width: 19%;
+  }
+  .mat-column-primaryPropertyIdentifier {
+    width: 13%;
+  }
+  .mat-column-legalDescription {
+    width: 36%;
+  }
+  .mat-column-totalAcres {
+    width: 12%;
+  }
+  .mat-column-isActive {
+    width: 12%;
   }
 
   h1{
@@ -59,3 +56,41 @@
     font-size: 20px !important;
     width: 220px;
   }
+
+.button-mat-icon {
+  margin-right: 4px;
+}
+
+.search-and-filters {
+
+  .field {
+    &:has(input[aria-label="Legal Location"]) {
+      width: 300px !important;
+      flex-basis: 300px !important;
+    }
+    &:has(input[aria-label="Land Identifier"]) {
+      width: 220px !important;
+      flex-basis: 220px !important;
+    }
+    &:has(input[aria-label="Grower Information"]) {
+      width: 220px !important;
+      flex-basis: 220px !important;
+    }
+    &:has(select[aria-label="Datasets"]) {
+      width: 150px !important;
+      flex-basis: 150px !important;
+    }
+    button[color="primary"] {
+      width: 109px;
+      .mat-icon {
+        height: 20px;
+        width: 20px;
+        vertical-align: sub;
+      }
+    }
+  }
+}
+
+.table-wrapper {
+  border-top: 0;
+}

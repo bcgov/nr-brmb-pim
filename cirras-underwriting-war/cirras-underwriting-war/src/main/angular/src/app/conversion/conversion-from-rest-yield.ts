@@ -51,11 +51,14 @@ export function convertToYieldMeasUnit(yieldMeasUnitRes: YieldMeasUnitTypeCodeRs
       defaultYieldMeasUnitTypeCode: dopContract.defaultYieldMeasUnitTypeCode,
 
       grainFromOtherSourceInd: dopContract.grainFromOtherSourceInd,
+      balerWagonInfo: dopContract.balerWagonInfo,
+      totalLivestock: dopContract.totalLivestock,
       insurancePlanId: dopContract.insurancePlanId,
       
       fields: dopContract.fields,
       dopYieldFieldRollupList: dopContract.dopYieldFieldRollupList,
       dopYieldContractCommodities: dopContract.dopYieldContractCommodities,
+      dopYieldContractCommodityForageList: dopContract.dopYieldContractCommodityForageList,
       uwComments: dopContract.uwComments,
 
       etag: etag, 

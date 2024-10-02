@@ -39,6 +39,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ContractedFieldDetai
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.CropCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.FieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.GrowerContractYearDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryContractCommodityDao;
@@ -140,6 +141,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	private LegalLandFieldXrefDao legalLandFieldXrefDao;
 	private InsurancePlanDao insurancePlanDao;
 	private DeclaredYieldFieldDao declaredYieldFieldDao;
+	private DeclaredYieldFieldForageDao declaredYieldFieldForageDao;
 	private DeclaredYieldContractDao declaredYieldContractDao;
 	private CropCommodityDao cropCommodityDao;
 	private GrowerContractYearDao growerContractYearDao;
@@ -266,6 +268,10 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		this.declaredYieldFieldDao = declaredYieldFieldDao;
 	}
 
+	public void setDeclaredYieldFieldForageDao(DeclaredYieldFieldForageDao declaredYieldFieldForageDao) {
+		this.declaredYieldFieldForageDao = declaredYieldFieldForageDao;
+	}	
+	
 	public void setDeclaredYieldContractDao(DeclaredYieldContractDao declaredYieldContractDao) {
 		this.declaredYieldContractDao = declaredYieldContractDao;
 	}
@@ -687,6 +693,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				break;
 			case LandUpdateTypes.ADD_EXISTING_LAND: // Existing Legal Land - Existing Field
 				addExistingLand(annualField, inventoryContract, userId, contractsToRecalculate);
+				deleteDopData(annualField, inventoryContract);
 				updateFieldData = true;
 				break;
 			case LandUpdateTypes.RENAME_LEGAL_LOCATION:
@@ -723,6 +730,16 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				updateContractedFieldDetails(annualField, userId);
 			}
 		}
+	}
+
+	private void deleteDopData(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract) throws NotFoundDaoException, DaoException {
+
+		if ( inventoryContract.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.FORAGE.toString()) ) { 
+			declaredYieldFieldForageDao.deleteForFieldAndYear(annualField.getFieldId(), inventoryContract.getCropYear());
+		} else if ( inventoryContract.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.GRAIN.toString()) ) {
+			declaredYieldFieldDao.deleteForFieldAndYear(annualField.getFieldId(), inventoryContract.getCropYear());
+		}
+		
 	}
 
 	private void deleteField(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract,
@@ -2256,6 +2273,16 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			if (prevYearPlantings != null && prevYearPlantings.size() > 0) {
 				// Rollover plantings
 				cfdDto.setPlantings(prevYearPlantings);
+
+				if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.FORAGE.getInsurancePlanId())) {
+					// Load InventorySeededForage from last year.
+					for ( InventoryFieldDto prevYearPlanting : prevYearPlantings ) {
+						List<InventorySeededForageDto> prevYearIsfDtos = inventorySeededForageDao.selectForRollover(cfdDto.getFieldId(),
+								cfdDto.getCropYear() - 1, cfdDto.getInsurancePlanId(), prevYearPlanting.getPlantingNumber());
+						prevYearPlanting.setInventorySeededForages(prevYearIsfDtos);
+					}
+				}
+
 				annualField = inventoryContractFactory.addRolloverAnnualField(insurancePlanId, cfdDto, authentication);
 			} else {
 				// Create default planting for the field
@@ -2472,8 +2499,14 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 					} else {
 					
 						//Check for DOP Data
-						// TODO: Add FORAGE DOP. Implemented in PIM-1396
-						int totalDopRecords = declaredYieldFieldDao.getTotalDopRecordsWithYield(fieldId, destPolicyDto.getCropYear(), destPolicyDto.getInsurancePlanId());
+						int totalDopRecords = 0;
+
+						if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(destPolicyDto.getInsurancePlanId()) ) { 
+							totalDopRecords = declaredYieldFieldDao.getTotalDopRecordsWithYield(fieldId, destPolicyDto.getCropYear(), destPolicyDto.getInsurancePlanId());
+						} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(destPolicyDto.getInsurancePlanId()) ) {
+							totalDopRecords = declaredYieldFieldForageDao.getTotalDopRecordsWithYield(fieldId, destPolicyDto.getCropYear(), destPolicyDto.getInsurancePlanId());
+						}
+
 						if (totalDopRecords > 0) {
 							errors.add(AddFieldValidation.TRANSFER_POLICY_HAS_DOP_MSG);
 						}

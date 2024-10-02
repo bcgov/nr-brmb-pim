@@ -34,7 +34,7 @@ jobs:
         uses: actions/checkout@v4
       
       - name: copy crunchydb files
-        run: mkdir staging && cp crunchy-postgres/charts/crunchy-postgres staging/crunchy-postgres
+        run: mkdir staging && cp -r crunchy-postgres/charts/crunchy-postgres staging/crunchy-postgres
       
       - name: Fill properties files
         uses: cschleiden/replace-tokens@v1.2
@@ -42,11 +42,11 @@ jobs:
           files: staging/**/*
         env:
           ENV: ${{ inputs.ENVIRONMENT_NAME }}
-          DB_STORAGE: 600Mi
-          DB_MAX_CPU: 200m
-          DB_MAX_MEMORY: 384Mi
-          DB_REPLICAS: 2
-          BOUNCER_REPLICAS: 2
+          DB_STORAGE: ${{ vars.DB_STORAGE }}
+          DB_MAX_CPU: ${{ vars.DB_MAX_CPU }}
+          DB_MAX_MEMORY: ${{ vars.DB_MAX_MEMORY}}
+          DB_REPLICAS: ${{ vars.DB_INSTANCE_HA_REPLICAS }}
+          BOUNCER_REPLICAS: ${{ vars.DB_LOADBALANCER_HA_REPLICAS}}
       
       - name: install helm
         run: |
@@ -64,8 +64,13 @@ jobs:
       - name: zip and install helm chart
         run: |
           cd staging && tar -czvf crunchy-postgres.tar.gz crunchy-postgres
-          if [[ $(helm status crunchy-postgres-${{inputs.ENVIRONMENT_NAME}}) == *"not found"* ]]; then
-            helm install crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} .\crunchy-postgres.tar.gz
+          export STATUS_OUT=$(helm status crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} 2>&1 >/dev/null)
+          if [[ $STATUS_OUT == *"not found"* ]]; then
+            echo "Attempting helm install"
+            helm install crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} ./crunchy-postgres.tar.gz
+            exit 0
           else
-            helm upgrade crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} .\crunchy-postgres.tar.gz
+            echo "Attempting helm upgrade"
+            helm upgrade crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} ./crunchy-postgres.tar.gz
+            exit 0
           fi

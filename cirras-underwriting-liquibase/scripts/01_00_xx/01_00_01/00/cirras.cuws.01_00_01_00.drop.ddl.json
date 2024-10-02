@@ -1,0 +1,9 @@
+
+
+{
+    "databaseChangeLog": [
+{ "changeSet": {"author":"mhostettler","id":"35","changes": [
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/temp_tables/cuws.ddl.drop_planting_2022_staging.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/temp_tables/cuws.ddl.drop_property_identifier_staging.sql"}}] } }
+    ]}
+

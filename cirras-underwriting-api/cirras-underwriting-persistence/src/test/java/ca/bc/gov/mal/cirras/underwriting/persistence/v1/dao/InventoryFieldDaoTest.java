@@ -98,8 +98,10 @@ public class InventoryFieldDaoTest {
 		newDto.setCropYear(cropYear);
 		newDto.setFieldId(fieldId2);
 		newDto.setInsurancePlanId(insurancePlanId);
-		newDto.setLastYearCropCommodityId(20);
-		newDto.setLastYearCropCommodityName("FALL RYE");
+		newDto.setLastYearCropCommodityId(65);
+		newDto.setLastYearCropCommodityName("FORAGE");
+		newDto.setLastYearCropVarietyId(220);
+		newDto.setLastYearCropVarietyName("CLOVER/GRASS");
 		newDto.setIsHiddenOnPrintoutInd(false);
 		newDto.setUnderseededAcres(14.4);
 		newDto.setUnderseededCropVarietyId(1010513);
@@ -130,6 +132,8 @@ public class InventoryFieldDaoTest {
 		Assert.assertEquals("InsurancePlanId", newDto.getInsurancePlanId(), fetchedDto.getInsurancePlanId());
 		Assert.assertEquals("LastYearCropCommodityId", newDto.getLastYearCropCommodityId(), fetchedDto.getLastYearCropCommodityId());
 		Assert.assertEquals("LastYearCropCommodityName", newDto.getLastYearCropCommodityName(), fetchedDto.getLastYearCropCommodityName());
+		Assert.assertEquals("LastYearCropVarietyId", newDto.getLastYearCropVarietyId(), fetchedDto.getLastYearCropVarietyId());
+		Assert.assertEquals("LastYearCropVarietyName", newDto.getLastYearCropVarietyName(), fetchedDto.getLastYearCropVarietyName());
 		Assert.assertEquals("IsHiddenOnPrintoutInd", newDto.getIsHiddenOnPrintoutInd(), fetchedDto.getIsHiddenOnPrintoutInd());
 		Assert.assertEquals("UnderseededAcres", newDto.getUnderseededAcres(), fetchedDto.getUnderseededAcres());
 		Assert.assertEquals("UnderseededCropVarietyId", newDto.getUnderseededCropVarietyId(), fetchedDto.getUnderseededCropVarietyId());
@@ -141,8 +145,10 @@ public class InventoryFieldDaoTest {
 		fetchedDto.setCropYear(cropYear);
 		fetchedDto.setFieldId(fieldId2);
 		fetchedDto.setInsurancePlanId(insurancePlanId);
-		fetchedDto.setLastYearCropCommodityId(16);
-		fetchedDto.setLastYearCropCommodityName("BARLEY");
+		fetchedDto.setLastYearCropCommodityId(71);
+		fetchedDto.setLastYearCropCommodityName("SILAGE CORN");
+		fetchedDto.setLastYearCropVarietyId(1010863);
+		fetchedDto.setLastYearCropVarietyName("SILAGE CORN - UNSPECIFIED");
 		fetchedDto.setIsHiddenOnPrintoutInd(true);
 		fetchedDto.setUnderseededAcres(15.5);
 		fetchedDto.setUnderseededCropVarietyId(1010430);
@@ -161,6 +167,8 @@ public class InventoryFieldDaoTest {
 		Assert.assertEquals("InsurancePlanId", fetchedDto.getInsurancePlanId(), updatedDto.getInsurancePlanId());
 		Assert.assertEquals("LastYearCropCommodityId", fetchedDto.getLastYearCropCommodityId(), updatedDto.getLastYearCropCommodityId());
 		Assert.assertEquals("LastYearCropCommodityName", fetchedDto.getLastYearCropCommodityName(), updatedDto.getLastYearCropCommodityName());
+		Assert.assertEquals("LastYearCropVarietyId", fetchedDto.getLastYearCropVarietyId(), updatedDto.getLastYearCropVarietyId());
+		Assert.assertEquals("LastYearCropVarietyName", fetchedDto.getLastYearCropVarietyName(), updatedDto.getLastYearCropVarietyName());
 		Assert.assertEquals("IsHiddenOnPrintoutInd", fetchedDto.getIsHiddenOnPrintoutInd(), updatedDto.getIsHiddenOnPrintoutInd());
 		Assert.assertEquals("UnderseededAcres", fetchedDto.getUnderseededAcres(), updatedDto.getUnderseededAcres());
 		Assert.assertEquals("UnderseededCropVarietyId", fetchedDto.getUnderseededCropVarietyId(), updatedDto.getUnderseededCropVarietyId());
@@ -179,6 +187,8 @@ public class InventoryFieldDaoTest {
 		newDto2.setInsurancePlanId(insurancePlanId);
 		newDto2.setLastYearCropCommodityId(20);
 		newDto2.setLastYearCropCommodityName("FALL RYE");
+		newDto2.setLastYearCropVarietyId(null);
+		newDto2.setLastYearCropVarietyName(null);
 		newDto2.setIsHiddenOnPrintoutInd(false);
 		newDto2.setUnderseededAcres(15.5);
 		newDto2.setUnderseededCropVarietyId(1010430);
@@ -450,9 +460,9 @@ public class InventoryFieldDaoTest {
 		Assert.assertNull(deletedDto);
 
 	}
-	
+
 	@Test 
-	public void testSelectForRollover() throws Exception {
+	public void testSelectForRolloverGrain() throws Exception {
 
 		FieldDao dao = persistenceSpringConfig.fieldDao();
 		FieldDto fieldDto = new FieldDto();
@@ -493,8 +503,8 @@ public class InventoryFieldDaoTest {
 		invFieldDto.setLastYearCropCommodityName("FALL RYE");
 		invFieldDto.setIsHiddenOnPrintoutInd(true);
 		invFieldDto.setUnderseededAcres(14.4);
-		invFieldDto.setUnderseededCropVarietyId(1010513);
-		invFieldDto.setUnderseededCropVarietyName("BRASETTO");
+		invFieldDto.setUnderseededCropVarietyId(119);
+		invFieldDto.setUnderseededCropVarietyName("ALFALFA");
 		invFieldDto.setPlantingNumber(1);
 
 		
@@ -519,8 +529,8 @@ public class InventoryFieldDaoTest {
 		
 		//INSERT
 		//Add seeded grain to inv field 1
-		createSeededGrain("Forage Oat", 24, 1010570, inventoryFieldGuid1, false, 30.0, userId); //Oat
-		createSeededGrain("CPSW", 26, 1010602, inventoryFieldGuid1, true, 0.0, userId); 	//Wheat
+		createSeededGrain("Forage Oat", 24, 1010570, inventoryFieldGuid1, false, 0.0, userId); //Oat
+		createSeededGrain("CPSW", 26, 1010602, inventoryFieldGuid1, true, 30.0, userId); 	//Wheat
 
 		//Add seeded grain to inv field 2
 		createSeededGrain(null, null, null, inventoryFieldGuid2, false, 20.0, userId);  //No Commodity
@@ -532,11 +542,12 @@ public class InventoryFieldDaoTest {
 		Assert.assertNotNull(dtos);
 		
 		//Expected
-		//Three records
-		//Oat: 45 acres
+		//Four records
+		//Oat: 15 acres
 		//Canola: 10 acres
 		//No Commodity: 20 acres
-		Assert.assertEquals("total records", 3, dtos.size());
+		//Alfalfa: 14.4 acres because it's underseeded
+		Assert.assertEquals("total records", 4, dtos.size());
 
 		Integer plantingNumber = 0;
 		for (InventoryFieldDto ifDto : dtos) {
@@ -546,20 +557,36 @@ public class InventoryFieldDaoTest {
 			Assert.assertTrue(ifDto.getIsHiddenOnPrintoutInd());
 			Integer lastYearCmdtyId = ifDto.getLastYearCropCommodityId();
 			//Check if commodity is oat or canola
-			Assert.assertTrue("commodity id not 24 or 18 or none", lastYearCmdtyId == null || lastYearCmdtyId.equals(24) || lastYearCmdtyId.equals(18));
+			Assert.assertTrue("commodity id not 24 or 18 or 65 or none", lastYearCmdtyId == null || lastYearCmdtyId.equals(24) || lastYearCmdtyId.equals(18) || lastYearCmdtyId.equals(65));
 			//Check acres according to commodity
 			if(lastYearCmdtyId == null) {
 				//No Commodity
 				Assert.assertNull(ifDto.getLastYearCropCommodityName());
+				Assert.assertNull(ifDto.getLastYearCropVarietyName());
+				Assert.assertNull(ifDto.getLastYearCropVarietyId());
 				Assert.assertEquals("No Commodity not correct acres", (Double)20.0, ifDto.getAcresToBeSeeded());
+				Assert.assertNull("IsGrainUnseededDefaultInd", ifDto.getIsGrainUnseededDefaultInd());
 			} else if (lastYearCmdtyId.equals(24)) {
 				//Oat
 				Assert.assertEquals("OAT", ifDto.getLastYearCropCommodityName());
-				Assert.assertEquals("Oat not correct acres", (Double)45.0, ifDto.getAcresToBeSeeded());
+				Assert.assertNull(ifDto.getLastYearCropVarietyName());
+				Assert.assertNull(ifDto.getLastYearCropVarietyId());
+				Assert.assertEquals("Oat not correct acres", (Double)15.0, ifDto.getAcresToBeSeeded());
+				Assert.assertNull("IsGrainUnseededDefaultInd", ifDto.getIsGrainUnseededDefaultInd());
 			} else if (lastYearCmdtyId.equals(18)) {
 				//Canola
 				Assert.assertEquals("CANOLA", ifDto.getLastYearCropCommodityName());
+				Assert.assertNull(ifDto.getLastYearCropVarietyName());
+				Assert.assertNull(ifDto.getLastYearCropVarietyId());
 				Assert.assertEquals("Canola not correct acres", (Double)10.0, ifDto.getAcresToBeSeeded());
+				Assert.assertNull("IsGrainUnseededDefaultInd", ifDto.getIsGrainUnseededDefaultInd());
+			} else if (lastYearCmdtyId.equals(65)) {
+				//Forage - From underseeded Alfalfa
+				Assert.assertEquals("ALFALFA", ifDto.getLastYearCropVarietyName());
+				Assert.assertEquals(119, ifDto.getLastYearCropVarietyId().intValue());
+				Assert.assertEquals("FORAGE", ifDto.getLastYearCropCommodityName());
+				Assert.assertEquals("FORAGE not correct acres", (Double)14.4, ifDto.getAcresToBeSeeded());
+				Assert.assertFalse("IsGrainUnseededDefaultInd", ifDto.getIsGrainUnseededDefaultInd());
 			}
 		}
 
@@ -582,11 +609,12 @@ public class InventoryFieldDaoTest {
 		Assert.assertNotNull(dtos);
 		
 		//Expected
-		//Three records
-		//Oat: 45 acres
+		//Four records
+		//Oat: 15 acres
 		//Canola: 10 acres
 		//No Commodity: 20 acres
-		Assert.assertEquals("total records", 3, dtos.size());
+		//Alfalfa: 14.4 acres because it's underseeded		
+		Assert.assertEquals("total records", 4, dtos.size());
 
 		plantingNumber = 0;
 		for (InventoryFieldDto ifDto : dtos) {
@@ -596,7 +624,7 @@ public class InventoryFieldDaoTest {
 			Assert.assertFalse(ifDto.getIsHiddenOnPrintoutInd());   // Rolled-over as false because of the third planting.
 			Integer lastYearCmdtyId = ifDto.getLastYearCropCommodityId();
 			//Check if commodity is oat or canola
-			Assert.assertTrue("commodity id not 24 or 18 or none", lastYearCmdtyId == null || lastYearCmdtyId.equals(24) || lastYearCmdtyId.equals(18));
+			Assert.assertTrue("commodity id not 24 or 18 or 65 or none", lastYearCmdtyId == null || lastYearCmdtyId.equals(24) || lastYearCmdtyId.equals(18) || lastYearCmdtyId.equals(65));
 			//Check acres according to commodity
 			if(lastYearCmdtyId == null) {
 				//No Commodity
@@ -605,11 +633,17 @@ public class InventoryFieldDaoTest {
 			} else if (lastYearCmdtyId.equals(24)) {
 				//Oat
 				Assert.assertEquals("OAT", ifDto.getLastYearCropCommodityName());
-				Assert.assertEquals("Oat not correct acres", (Double)45.0, ifDto.getAcresToBeSeeded());
+				Assert.assertEquals("Oat not correct acres", (Double)15.0, ifDto.getAcresToBeSeeded());
 			} else if (lastYearCmdtyId.equals(18)) {
 				//Canola
 				Assert.assertEquals("CANOLA", ifDto.getLastYearCropCommodityName());
 				Assert.assertEquals("Canola not correct acres", (Double)10.0, ifDto.getAcresToBeSeeded());
+			} else if (lastYearCmdtyId.equals(65)) {
+				//Forage - From underseeded Alfalfa
+				Assert.assertEquals("ALFALFA", ifDto.getLastYearCropVarietyName());
+				Assert.assertEquals(119, ifDto.getLastYearCropVarietyId().intValue());
+				Assert.assertEquals("FORAGE", ifDto.getLastYearCropCommodityName());
+				Assert.assertEquals("FORAGE not correct acres", (Double)14.4, ifDto.getAcresToBeSeeded());
 			}
 		}
 		
@@ -619,6 +653,12 @@ public class InventoryFieldDaoTest {
 		List<InventorySeededGrainDto> seededGrainDtos = invSeededGrainDao.select(inventoryFieldGuid1);
 		Assert.assertTrue("seeded records not deleted", seededGrainDtos == null || seededGrainDtos.size() == 0);
 
+		//Remove underseeded information
+		InventoryFieldDto ifUpdDto = invFieldDao.fetch(inventoryFieldGuid1);
+		ifUpdDto.setUnderseededAcres(null);
+		ifUpdDto.setUnderseededCropVarietyId(null);
+		invFieldDao.update(ifUpdDto, userId);
+		
 		//Rollover when there is no seeded data.
 		dtos = invFieldDao.selectForRollover(fieldId2, cropYear, insurancePlanId);
 		Assert.assertNotNull(dtos);
@@ -669,6 +709,94 @@ public class InventoryFieldDaoTest {
 	}	
 
 	@Test 
+	public void testSelectForRolloverForage() throws Exception {
+
+		Integer cropYear = 2020;
+		Integer insurancePlanId = 5;
+		
+		//INSERT Field
+		createField(userId);
+
+		
+		InventoryFieldDao invFieldDao = persistenceSpringConfig.inventoryFieldDao();
+
+		// INSERT
+		InventoryFieldDto newDto = new InventoryFieldDto();
+
+		newDto.setCropYear(cropYear);
+		newDto.setFieldId(fieldId2);
+		newDto.setInsurancePlanId(insurancePlanId);
+		newDto.setLastYearCropCommodityId(null);
+		newDto.setLastYearCropCommodityName(null);
+		newDto.setLastYearCropVarietyId(null);
+		newDto.setLastYearCropVarietyName(null);
+		newDto.setIsHiddenOnPrintoutInd(false);
+		newDto.setUnderseededAcres(null);
+		newDto.setUnderseededCropVarietyId(null);
+		newDto.setUnderseededCropVarietyName(null);
+		newDto.setUnderseededInventorySeededForageGuid(null);
+		newDto.setPlantingNumber(1);
+
+		
+		invFieldDao.insert(newDto, userId);
+		Assert.assertNotNull(newDto.getInventoryFieldGuid());
+
+		// INSERT
+		InventoryFieldDto newDto2 = new InventoryFieldDto();
+
+		newDto2.setCropYear(cropYear);
+		newDto2.setFieldId(fieldId2);
+		newDto2.setInsurancePlanId(insurancePlanId);
+		newDto2.setLastYearCropCommodityId(null);
+		newDto2.setLastYearCropCommodityName(null);
+		newDto2.setLastYearCropVarietyId(null);
+		newDto2.setLastYearCropVarietyName(null);
+		newDto2.setIsHiddenOnPrintoutInd(true);
+		newDto2.setUnderseededAcres(null);
+		newDto2.setUnderseededCropVarietyId(null);
+		newDto2.setUnderseededCropVarietyName(null);
+		newDto2.setUnderseededInventorySeededForageGuid(null);
+		newDto2.setPlantingNumber(2);
+		
+		invFieldDao.insert(newDto2, userId);
+		Assert.assertNotNull(newDto2.getInventoryFieldGuid());
+		
+		
+		//Select for rollover
+		List<InventoryFieldDto> dtos = invFieldDao.selectForRollover(fieldId2, cropYear, insurancePlanId);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(2, dtos.size());
+		
+		Assert.assertEquals("FieldId", newDto.getFieldId(), dtos.get(0).getFieldId());
+		Assert.assertEquals("PlantingNumber", newDto.getPlantingNumber(), dtos.get(0).getPlantingNumber());
+		Assert.assertNull("LastYearCropCommodityId", dtos.get(0).getLastYearCropCommodityId());
+		Assert.assertNull("LastYearCropCommodityName", dtos.get(0).getLastYearCropCommodityName());
+		Assert.assertNull("AcresToBeSeeded", dtos.get(0).getAcresToBeSeeded());
+		Assert.assertNull("LastYearCropVarietyId", dtos.get(0).getLastYearCropVarietyId());
+		Assert.assertNull("LastYearCropVarietyName", dtos.get(0).getLastYearCropVarietyName());
+		Assert.assertNull("IsGrainUnseededDefaultInd", dtos.get(0).getIsGrainUnseededDefaultInd());
+		Assert.assertEquals("IsHiddenOnPrintoutInd", newDto.getIsHiddenOnPrintoutInd(), dtos.get(0).getIsHiddenOnPrintoutInd());
+
+		Assert.assertEquals("FieldId", newDto2.getFieldId(), dtos.get(1).getFieldId());
+		Assert.assertEquals("PlantingNumber", newDto2.getPlantingNumber(), dtos.get(1).getPlantingNumber());
+		Assert.assertNull("LastYearCropCommodityId", dtos.get(1).getLastYearCropCommodityId());
+		Assert.assertNull("LastYearCropCommodityName", dtos.get(1).getLastYearCropCommodityName());
+		Assert.assertNull("AcresToBeSeeded", dtos.get(1).getAcresToBeSeeded());
+		Assert.assertNull("LastYearCropVarietyId", dtos.get(1).getLastYearCropVarietyId());
+		Assert.assertNull("LastYearCropVarietyName", dtos.get(1).getLastYearCropVarietyName());
+		Assert.assertNull("IsGrainUnseededDefaultInd", dtos.get(1).getIsGrainUnseededDefaultInd());
+		Assert.assertEquals("IsHiddenOnPrintoutInd", newDto2.getIsHiddenOnPrintoutInd(), dtos.get(1).getIsHiddenOnPrintoutInd());
+						
+		invFieldDao.delete(newDto.getInventoryFieldGuid());
+		invFieldDao.delete(newDto2.getInventoryFieldGuid());
+		
+		//SELECT
+		dtos = invFieldDao.selectForRollover(fieldId2, cropYear, insurancePlanId);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size());
+	}
+	
+	@Test 
 	public void testSelectForDeclaredYield() throws Exception {
 
 		String userId = "JUNIT_TEST";
@@ -688,8 +816,10 @@ public class InventoryFieldDaoTest {
 		invFieldDto.setCropYear(cropYear);
 		invFieldDto.setFieldId(fieldId2);
 		invFieldDto.setInsurancePlanId(insurancePlanId);
-		invFieldDto.setLastYearCropCommodityId(20);
-		invFieldDto.setLastYearCropCommodityName("FALL RYE");
+		invFieldDto.setLastYearCropCommodityId(65);
+		invFieldDto.setLastYearCropCommodityName("FORAGE");
+		invFieldDto.setLastYearCropVarietyId(220);
+		invFieldDto.setLastYearCropVarietyName("CLOVER/GRASS");
 		invFieldDto.setIsHiddenOnPrintoutInd(false);
 		invFieldDto.setUnderseededAcres(14.4);
 		invFieldDto.setUnderseededCropVarietyId(1010513);
@@ -709,6 +839,8 @@ public class InventoryFieldDaoTest {
 		invField2Dto.setInsurancePlanId(insurancePlanId);
 		invField2Dto.setLastYearCropCommodityId(18);
 		invField2Dto.setLastYearCropCommodityName("CANOLA");
+		invField2Dto.setLastYearCropVarietyId(null);
+		invField2Dto.setLastYearCropVarietyName(null);
 		invField2Dto.setIsHiddenOnPrintoutInd(false);
 		invField2Dto.setPlantingNumber(2);
 		invFieldDao.insert(invField2Dto, userId);
@@ -739,6 +871,8 @@ public class InventoryFieldDaoTest {
 		Assert.assertEquals("InsurancePlanId", invFieldDto.getInsurancePlanId(), ifYieldDto.getInsurancePlanId());
 		Assert.assertEquals("LastYearCropCommodityId", invFieldDto.getLastYearCropCommodityId(), ifYieldDto.getLastYearCropCommodityId());
 		Assert.assertEquals("LastYearCropCommodityName", invFieldDto.getLastYearCropCommodityName(), ifYieldDto.getLastYearCropCommodityName());
+		Assert.assertEquals("LastYearCropVarietyId", invFieldDto.getLastYearCropVarietyId(), ifYieldDto.getLastYearCropVarietyId());
+		Assert.assertEquals("LastYearCropVarietyName", invFieldDto.getLastYearCropVarietyName(), ifYieldDto.getLastYearCropVarietyName());
 		Assert.assertEquals("IsHiddenOnPrintoutInd", invFieldDto.getIsHiddenOnPrintoutInd(), ifYieldDto.getIsHiddenOnPrintoutInd());
 		Assert.assertEquals("UnderseededAcres", invFieldDto.getUnderseededAcres(), ifYieldDto.getUnderseededAcres());
 		Assert.assertEquals("UnderseededCropVarietyId", invFieldDto.getUnderseededCropVarietyId(), ifYieldDto.getUnderseededCropVarietyId());
@@ -804,6 +938,8 @@ public class InventoryFieldDaoTest {
 		newDto.setInsurancePlanId(insurancePlanId);
 		newDto.setLastYearCropCommodityId(null);
 		newDto.setLastYearCropCommodityName(null);
+		newDto.setLastYearCropVarietyId(null);
+		newDto.setLastYearCropVarietyName(null);
 		newDto.setIsHiddenOnPrintoutInd(false);
 		newDto.setUnderseededAcres(underseededAcres);
 		newDto.setUnderseededCropVarietyId(underseededCropVarietyId);

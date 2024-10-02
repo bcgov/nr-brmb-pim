@@ -1,0 +1,19 @@
+{
+    "databaseChangeLog": [
+
+{ "changeSet": {"author":"mhostettler","id":"43","changes": [
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.grade_modifier_type_code.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.grade_modifier.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.yield_meas_unit_type_code.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.yield_meas_unit_conversion.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.yield_meas_unit_plan_xref.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_contract.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_field.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_field_rollup.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_contract_commodity.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.ddl.update.underwriting_comment.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
+]
+     } }
+    ]}
+

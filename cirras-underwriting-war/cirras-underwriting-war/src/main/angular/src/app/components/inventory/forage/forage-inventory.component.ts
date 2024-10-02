@@ -1,15 +1,14 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { BaseComponent } from 'src/app/components/common/base/base.component';
 import { AnnualField, CropCommodityList, InventoryContract, UwContract } from 'src/app/conversion/models';
 import { ForageInventoryComponentModel } from './forage-inventory.component.model';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
-import { ParamMap } from '@angular/router';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN, PLANT_DURATION, UW_COMMENT_TYPE_CODE } from 'src/app/utils/constants';
 import { CropVarietyCommodityType, InventorySeededForage, InventoryUnseeded, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { addUwCommentsObject, areDatesNotEqual, areNotEqual, getUniqueKey, makeNumberOnly, makeTitleCase } from 'src/app/utils';
 import { AddNewFormField, CropVarietyOptionsType, addAnnualFieldObject, addPlantingObject, addSeededForagesObject, deleteFormField, deleteNewFormField, dragField, fieldHasInventory, getInventorySeededForagesObjForSave, isLinkedFieldCommon, isLinkedPlantingCommon, isThereAnyCommentForField, linkedFieldTooltipCommon, linkedPlantingTooltipCommon, navigateUpDownTextbox, openAddEditLandPopup, roundUpDecimalAcres, updateComments } from '../inventory-common';
-import { FieldUwComment, UnderwritingCommentsComponent } from '../../underwriting-comments/underwriting-comments.component';
 import { AddNewInventoryContract, DeleteInventoryContract, GetInventoryReport, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { AddLandPopupData } from '../add-land/add-land.component';
@@ -18,6 +17,18 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { RemoveFieldPopupData } from '../remove-field/remove-field.component';
 import {ViewEncapsulation } from '@angular/core';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
+import { DomSanitizer, Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { RootState } from 'src/app/store';
+import { MatDialog } from '@angular/material/dialog';
+import { ApplicationStateService } from 'src/app/services/application-state.service';
+import { SecurityUtilService } from 'src/app/services/security-util.service';
+import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { ConnectionService } from 'ngx-connection-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Overlay } from '@angular/cdk/overlay';
+import { HttpClient } from '@angular/common/http';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'forage-inventory',
@@ -31,6 +42,26 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   @Input() inventoryContract: InventoryContract;
   @Input() cropCommodityList: CropCommodityList;
   @Input() growerContract: UwContract;
+
+  constructor(protected router: Router,
+    protected route: ActivatedRoute,
+    protected sanitizer: DomSanitizer,
+    protected store: Store<RootState>,
+    protected fb: FormBuilder,
+    protected dialog: MatDialog,
+    protected applicationStateService: ApplicationStateService,
+    public securityUtilService: SecurityUtilService,                
+    protected tokenService: TokenService,
+    protected connectionService: ConnectionService,
+    protected snackbarService: MatSnackBar,
+    protected overlay: Overlay,
+    protected cdr: ChangeDetectorRef,
+    protected appConfigService: AppConfigService,
+    protected http: HttpClient,
+    protected titleService: Title,
+    protected decimalPipe: DecimalPipe) {
+    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
+  }
 
   cropVarietyOptions = [];
   filteredVarietyOptions: CropVarietyOptionsType[];  
@@ -87,6 +118,20 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   }
 
   ngOnChanges2(changes: SimpleChanges) {
+
+    if ( changes.growerContract && this.growerContract ) {
+
+      this.hasYieldData = false
+
+      // check for yield data
+      for (let i = 0; i< this.growerContract.links.length; i++ ) {
+
+        if ( this.growerContract.links[i].href.toLocaleLowerCase().indexOf("dopyieldcontracts") > -1  ) {
+          this.hasYieldData = true
+          break
+        } 
+      }
+    }
 
     if ( changes.inventoryContract && this.inventoryContract ) {
       this.cropYear = this.inventoryContract.cropYear
@@ -145,7 +190,8 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
         // add plantings to the form
         fldPlantings.push( self.fb.group( 
           addPlantingObject(pltg.cropYear, pltg.fieldId, pltg.insurancePlanId, pltg.inventoryFieldGuid, 
-            pltg.lastYearCropCommodityId, pltg.lastYearCropCommodityName, pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, 
+            pltg.lastYearCropCommodityId, pltg.lastYearCropCommodityName, pltg.lastYearCropVarietyId, pltg.lastYearCropVarietyName,
+            pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, 
             pltg.inventoryUnseeded, null, new FormArray ([]), pltgInventorySeededForages ) ) )
         }
 
@@ -154,7 +200,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
     } else { //empty plantings array
 
       fldPlantings.push( this.fb.group( 
-        addPlantingObject( this.cropYear, field.fieldId , this.insurancePlanId, '', '', '', 1, false, null, <InventoryUnseeded>{}, new FormArray ([]), new FormArray ([]))
+        addPlantingObject( this.cropYear, field.fieldId , this.insurancePlanId, '', '', '', '', '', 1, false, null, <InventoryUnseeded>{}, new FormArray ([]), new FormArray ([]))
        ))
 
     }
@@ -383,11 +429,6 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
     return styles;
   }
 
-
-  isThereAnyComment(field) {
-    return isThereAnyCommentForField(field) 
-  }
-
   isAddPlantingVisible(planting, invSeededIndex) {
 
     // if the planting row is empty do not show Add New Planting button
@@ -608,7 +649,8 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
           field.value.plantings.push( self.fb.group( 
 
             addPlantingObject(planting.value.cropYear, planting.value.fieldId, planting.value.insurancePlanId, null , 
-              planting.value.lastYearCropCommodityId, planting.value.lastYearCropCommodityName, planting.value.plantingNumber + 1, false, null,
+              planting.value.lastYearCropCommodityId, planting.value.lastYearCropCommodityName, planting.value.lastYearCropVarietyId, planting.value.lastYearCropVarietyName,
+              planting.value.plantingNumber + 1, false, null,
               <InventoryUnseeded>{}, new FormArray ([]) , pltgInventorySeededForages)
 
           ) )          
@@ -617,37 +659,15 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
     }
   }
 
-  onLoadComments(field) {
-  
-    const dataToSend : FieldUwComment = {
-      fieldId: field.value.fieldId,
-      annualFieldDetailId: field.value.annualFieldDetailId,
-      uwCommentTypeCode: UW_COMMENT_TYPE_CODE.INVENTORY_GENERAL,
-      uwComments: field.value.uwComments 
-    }
+  onInventoryCommentsDone(fieldId: number, uwComments: UnderwritingComment[]) {
 
-    const dialogRef = this.dialog.open(UnderwritingCommentsComponent, {
-      width: '800px',
-      data: dataToSend
-    });
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
 
-    dialogRef.afterClosed().subscribe(result => {
+    updateComments(fieldId, uwComments, flds)
 
-      if (result && result.event == 'Update'){
-
-        const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
-
-        updateComments(result.data, flds);
-
-        this.cdr.detectChanges()
-        
-      } else if (result && result.event == 'Cancel'){
-        // do nothing
-      }
-    });
+    this.cdr.detectChanges()
 
   }
-
 
   onCancel() {
     if ( confirm("Are you sure you want to clear all unsaved changes on the screen? There is no way to undo this action.") ) {
@@ -1498,7 +1518,7 @@ isFormValid() {
       
       if (inventorySeededForages && inventorySeededForages.value.fieldAcres 
         && inventorySeededForages.value.cropVarietyCtrl.cropVarietyId 
-        && planting.inventorySeededForages[0].linkedPlanting ) {
+        && planting && planting.inventorySeededForages[0] && planting.inventorySeededForages[0].linkedPlanting ) {
         
         // if the Underseeded Variety and/or Acres do not match the linked Seeded FORAGE Planting
         if (inventorySeededForages.value.fieldAcres!= planting.inventorySeededForages[0].linkedPlanting.acres ||
@@ -1527,7 +1547,7 @@ isFormValid() {
       
       if (inventorySeededForages && inventorySeededForages.value.fieldAcres 
         && inventorySeededForages.value.cropVarietyCtrl.cropVarietyId 
-        && planting.inventorySeededForages[0].linkedPlanting ) {
+        && planting && planting.inventorySeededForages[0] && planting.inventorySeededForages[0].linkedPlanting ) {
         
         // if the Underseeded Variety and/or Acres do not match the linked Seeded FORAGE Planting
         if (inventorySeededForages.value.fieldAcres!= planting.inventorySeededForages[0].linkedPlanting.acres ||

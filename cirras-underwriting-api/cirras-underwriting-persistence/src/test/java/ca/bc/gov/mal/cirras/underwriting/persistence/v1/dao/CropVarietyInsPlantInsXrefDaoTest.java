@@ -344,6 +344,8 @@ public class CropVarietyInsPlantInsXrefDaoTest {
 		invFieldDto.setInsurancePlanId(insurancePlanId);
 		invFieldDto.setLastYearCropCommodityId(20);
 		invFieldDto.setLastYearCropCommodityName("FALL RYE");
+		invFieldDto.setLastYearCropVarietyId(null);
+		invFieldDto.setLastYearCropVarietyName(null);
 		invFieldDto.setIsHiddenOnPrintoutInd(false);
 		invFieldDto.setPlantingNumber(1);
 		invFieldDto.setUnderseededCropVarietyId(null);

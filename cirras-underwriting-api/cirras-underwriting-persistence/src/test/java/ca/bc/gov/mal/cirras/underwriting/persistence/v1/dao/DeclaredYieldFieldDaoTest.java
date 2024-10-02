@@ -35,14 +35,21 @@ public class DeclaredYieldFieldDaoTest {
 	@Autowired 
 	private PersistenceSpringConfig persistenceSpringConfig;
 
-	private Integer gcyId1 = 90000001;
 	private Integer contractId1 = 90000002;
-	private Integer cropYear1 = 2020;
+
+	private Integer gcyId1 = 90000001;
+	private Integer cropYear1 = 2019;
+
+	private Integer gcyId2 = 90000201;
+	private Integer cropYear2 = 2020;
 
 	private Integer fieldId1 = 99999999;
 	private Integer annualFieldDetailId1 = 90000003;
 	private Integer contractedFieldDetailId1 = 90000004;
-	
+
+	private Integer annualFieldDetailId2 = 90000203;
+	private Integer contractedFieldDetailId2 = 90000204;
+
 	@Before
 	public void prepareTests() throws NotFoundDaoException, DaoException{
 		delete();
@@ -57,11 +64,15 @@ public class DeclaredYieldFieldDaoTest {
 		deleteDeclaredYieldField();
 		deleteSeededGrain();
 		deleteInventoryField();
-		deleteDeclaredYieldContract();
-		deleteContractedFieldDetail();
-		deleteAnnualFieldDetail();
+		deleteDeclaredYieldContract(contractId1, cropYear1);
+		deleteDeclaredYieldContract(contractId1, cropYear2);
+		deleteContractedFieldDetail(contractedFieldDetailId1);
+		deleteContractedFieldDetail(contractedFieldDetailId2);
+		deleteAnnualFieldDetail(annualFieldDetailId1);
+		deleteAnnualFieldDetail(annualFieldDetailId2);
 		deleteField();		
-		deleteGrowerContractYear();
+		deleteGrowerContractYear(gcyId1);
+		deleteGrowerContractYear(gcyId2);
 	}
 
 	private void deleteDeclaredYieldField() throws NotFoundDaoException, DaoException {
@@ -84,9 +95,9 @@ public class DeclaredYieldFieldDaoTest {
 		
 	}
 	
-	private void deleteDeclaredYieldContract() throws NotFoundDaoException, DaoException {
+	private void deleteDeclaredYieldContract(Integer contractId, Integer cropYear) throws NotFoundDaoException, DaoException {
 		DeclaredYieldContractDao dao = persistenceSpringConfig.declaredYieldContractDao();
-		DeclaredYieldContractDto dto = dao.getByContractAndYear(contractId1, cropYear1);
+		DeclaredYieldContractDto dto = dao.getByContractAndYear(contractId, cropYear);
 		
 		if ( dto != null ) {
 			dao.delete(dto.getDeclaredYieldContractGuid());			
@@ -94,13 +105,13 @@ public class DeclaredYieldFieldDaoTest {
 	}
 
 	
-	private void deleteAnnualFieldDetail() throws NotFoundDaoException, DaoException {
+	private void deleteAnnualFieldDetail(Integer annualFieldDetailId) throws NotFoundDaoException, DaoException {
 
 		AnnualFieldDetailDao dao = persistenceSpringConfig.annualFieldDetailDao();
-		AnnualFieldDetailDto dto = dao.fetch(annualFieldDetailId1);
+		AnnualFieldDetailDto dto = dao.fetch(annualFieldDetailId);
 
 		if ( dto != null ) {
-			dao.delete(annualFieldDetailId1);			
+			dao.delete(annualFieldDetailId);			
 		}
 		
 	}
@@ -114,22 +125,22 @@ public class DeclaredYieldFieldDaoTest {
 		}	
 	}
 
-	private void deleteGrowerContractYear() throws NotFoundDaoException, DaoException {
+	private void deleteGrowerContractYear(Integer gcyId) throws NotFoundDaoException, DaoException {
 		GrowerContractYearDao dao = persistenceSpringConfig.growerContractYearDao();
-		GrowerContractYearDto dto = dao.fetch(gcyId1);
+		GrowerContractYearDto dto = dao.fetch(gcyId);
 		if (dto != null) {
-			dao.delete(gcyId1);
+			dao.delete(gcyId);
 		}		
 	}
 	
-	private void deleteContractedFieldDetail() throws NotFoundDaoException, DaoException {
+	private void deleteContractedFieldDetail(Integer contractedFieldDetailId) throws NotFoundDaoException, DaoException {
 
 		ContractedFieldDetailDao dao = persistenceSpringConfig.contractedFieldDetailDao();
-		ContractedFieldDetailDto dto = dao.fetch(contractedFieldDetailId1);
+		ContractedFieldDetailDto dto = dao.fetch(contractedFieldDetailId);
 		
 		if (dto != null) {
 			
-			dao.delete(contractedFieldDetailId1);
+			dao.delete(contractedFieldDetailId);
 		}
 	}
 	
@@ -149,13 +160,13 @@ public class DeclaredYieldFieldDaoTest {
 		DeclaredYieldFieldDao declaredYieldFieldDao = persistenceSpringConfig.declaredYieldFieldDao();
 		
 		//INSERT Field and contract data
-		createGrowerContractYear(userId);
+		createGrowerContractYear(userId, gcyId1, cropYear1);
 		createField(userId);
 		
-		createAnnualFieldDetail(userId);
-		createContractedFieldDetail(userId);
+		createAnnualFieldDetail(userId, cropYear1, annualFieldDetailId1);
+		createContractedFieldDetail(userId, gcyId1, annualFieldDetailId1, contractedFieldDetailId1);
 
-		createDeclaredYieldContract(userId);
+		createDeclaredYieldContract(userId, cropYear1);
 
 		// INSERT parent InventoryField
 		InventoryFieldDto invFieldDto = new InventoryFieldDto();
@@ -165,6 +176,8 @@ public class DeclaredYieldFieldDaoTest {
 		invFieldDto.setInsurancePlanId(insurancePlanId);
 		invFieldDto.setLastYearCropCommodityId(cropCommodityId);
 		invFieldDto.setLastYearCropCommodityName("FALL RYE");
+		invFieldDto.setLastYearCropVarietyId(null);
+		invFieldDto.setLastYearCropVarietyName(null);
 		invFieldDto.setIsHiddenOnPrintoutInd(false);
 		invFieldDto.setPlantingNumber(plantingNumber);
 
@@ -281,16 +294,16 @@ public class DeclaredYieldFieldDaoTest {
 		
 		DeclaredYieldFieldDao declaredYieldFieldDao = persistenceSpringConfig.declaredYieldFieldDao();
 
-		createGrowerContractYear(userId);
+		createGrowerContractYear(userId, gcyId1, cropYear1);
 		createField(userId);
 		
-		createAnnualFieldDetail(userId);
-		createContractedFieldDetail(userId);
+		createAnnualFieldDetail(userId, cropYear1, annualFieldDetailId1);
+		createContractedFieldDetail(userId, gcyId1, annualFieldDetailId1, contractedFieldDetailId1);
 
-		String declaredYieldContractGuid = createDeclaredYieldContract(userId);
+		String declaredYieldContractGuid = createDeclaredYieldContract(userId, cropYear1);
 		
-		String invFieldGuid1 = createInventoryField(1, userId);
-		String invFieldGuid2 = createInventoryField(2, userId);
+		String invFieldGuid1 = createInventoryField(1, userId, cropYear1);
+		String invFieldGuid2 = createInventoryField(2, userId, cropYear1);
 		
 		//INSERT Planting 1
 		DeclaredYieldFieldDto newDto = new DeclaredYieldFieldDto();
@@ -331,8 +344,71 @@ public class DeclaredYieldFieldDaoTest {
 		
 	}
 	
+	@Test 
+	public void testDeleteForFieldAndYear() throws Exception {
+
+		String userId = "UNITTEST";
+		
+		DeclaredYieldFieldDao declaredYieldFieldDao = persistenceSpringConfig.declaredYieldFieldDao();
+
+		createField(userId);
+		
+		//2019
+		createGrowerContractYear(userId, gcyId1, cropYear1);
+		createAnnualFieldDetail(userId, cropYear1, annualFieldDetailId1);
+		createContractedFieldDetail(userId, gcyId1, annualFieldDetailId1, contractedFieldDetailId1);
+		createDeclaredYieldContract(userId, cropYear1);
+		String invFieldGuid1 = createInventoryField(1, userId, cropYear1);
+
+		//2020
+		createGrowerContractYear(userId, gcyId2, cropYear2);
+		createAnnualFieldDetail(userId, cropYear2, annualFieldDetailId2);
+		createContractedFieldDetail(userId, gcyId2, annualFieldDetailId2, contractedFieldDetailId2);
+		createDeclaredYieldContract(userId, cropYear2);
+		String invFieldGuid2 = createInventoryField(2, userId, cropYear2);
+		
+		//INSERT Planting 2019
+		DeclaredYieldFieldDto newDto = new DeclaredYieldFieldDto();
+
+		newDto.setEstimatedYieldPerAcre(111.222);
+		newDto.setEstimatedYieldPerAcreDefaultUnit(333.444);
+		newDto.setInventoryFieldGuid(invFieldGuid1);
+		newDto.setUnharvestedAcresInd(true);
+		
+		declaredYieldFieldDao.insert(newDto, userId);
+
+		//INSERT Planting 2020
+		newDto = new DeclaredYieldFieldDto();
+
+		newDto.setEstimatedYieldPerAcre(12.34);
+		newDto.setEstimatedYieldPerAcreDefaultUnit(56.78);
+		newDto.setInventoryFieldGuid(invFieldGuid2);
+		newDto.setUnharvestedAcresInd(false);
+		
+		declaredYieldFieldDao.insert(newDto, userId);
+		
+		//GET BY INVENTORY FIELD
+		DeclaredYieldFieldDto fetchedDto = declaredYieldFieldDao.getByInventoryField(invFieldGuid1);
+		Assert.assertNotNull(fetchedDto);
+
+		fetchedDto = declaredYieldFieldDao.getByInventoryField(invFieldGuid2);
+		Assert.assertNotNull(fetchedDto);
+		
+		//DELETE 2020 data
+		declaredYieldFieldDao.deleteForFieldAndYear(fieldId1, cropYear2);
+		
+		//GET BY INVENTORY FIELD
+		fetchedDto = declaredYieldFieldDao.getByInventoryField(invFieldGuid1);
+		Assert.assertNotNull(fetchedDto);
+
+		fetchedDto = declaredYieldFieldDao.getByInventoryField(invFieldGuid2);
+		Assert.assertNull(fetchedDto);
+		
+		delete();
+		
+	}
 	
-	private void createGrowerContractYear(String userId) throws DaoException {
+	private void createGrowerContractYear(String userId, Integer gcyId, Integer cropYear) throws DaoException {
 		GrowerContractYearDao dao = persistenceSpringConfig.growerContractYearDao();
 		GrowerContractYearDto newDto = new GrowerContractYearDto();
 		
@@ -342,11 +418,11 @@ public class DeclaredYieldFieldDaoTest {
 		Date dataSyncTransDate = cal.getTime();
 		
 		//INSERT
-		newDto.setGrowerContractYearId(gcyId1);
+		newDto.setGrowerContractYearId(gcyId);
 		newDto.setContractId(contractId1);
 		newDto.setGrowerId(null);
 		newDto.setInsurancePlanId(4);
-		newDto.setCropYear(cropYear1);
+		newDto.setCropYear(cropYear);
 		newDto.setDataSyncTransDate(dataSyncTransDate);
 
 		dao.insert(newDto, userId);
@@ -369,48 +445,50 @@ public class DeclaredYieldFieldDaoTest {
 		fieldDao.insertDataSync(newFieldDto, userId);
 	}
 
-	private void createAnnualFieldDetail(String userId) throws DaoException { 
+	private void createAnnualFieldDetail(String userId, Integer cropYear, Integer annualFieldDetailId) throws DaoException { 
 		AnnualFieldDetailDao dao = persistenceSpringConfig.annualFieldDetailDao();
 		AnnualFieldDetailDto newDto = new AnnualFieldDetailDto();
 
 		//INSERT Annual Field Detail record
-		newDto.setAnnualFieldDetailId(annualFieldDetailId1);
+		newDto.setAnnualFieldDetailId(annualFieldDetailId);
 		newDto.setLegalLandId(null);
 		newDto.setFieldId(fieldId1);
-		newDto.setCropYear(cropYear1);
+		newDto.setCropYear(cropYear);
 
 		dao.insertDataSync(newDto, userId);
 		
 	}
 	
-	private void createContractedFieldDetail(String userId) throws DaoException {
+	private void createContractedFieldDetail(String userId, Integer gcyId, Integer annualFieldDetailId, Integer contractedFieldDetailId) throws DaoException {
 		
 		ContractedFieldDetailDao contractedFieldDetailDao = persistenceSpringConfig.contractedFieldDetailDao();
 
 		// INSERT
 		ContractedFieldDetailDto newDto = new ContractedFieldDetailDto();
 
-		newDto.setAnnualFieldDetailId(annualFieldDetailId1);
-		newDto.setContractedFieldDetailId(contractedFieldDetailId1);
+		newDto.setAnnualFieldDetailId(annualFieldDetailId);
+		newDto.setContractedFieldDetailId(contractedFieldDetailId);
 		newDto.setDisplayOrder(1);
-		newDto.setGrowerContractYearId(gcyId1);
+		newDto.setGrowerContractYearId(gcyId);
 
 		contractedFieldDetailDao.insertDataSync(newDto, userId);
 		
 	}
 
-	private String createInventoryField(Integer plantingNumber, String userId) throws DaoException { 
+	private String createInventoryField(Integer plantingNumber, String userId, Integer cropYear) throws DaoException { 
 		
 		InventoryFieldDao invFieldDao = persistenceSpringConfig.inventoryFieldDao();
 
 		// INSERT InventoryField
 		InventoryFieldDto invFieldDto = new InventoryFieldDto();
 
-		invFieldDto.setCropYear(cropYear1);
+		invFieldDto.setCropYear(cropYear);
 		invFieldDto.setFieldId(fieldId1);
 		invFieldDto.setInsurancePlanId(4);
 		invFieldDto.setLastYearCropCommodityId(null);
 		invFieldDto.setLastYearCropCommodityName(null);
+		invFieldDto.setLastYearCropVarietyId(null);
+		invFieldDto.setLastYearCropVarietyName(null);
 		invFieldDto.setIsHiddenOnPrintoutInd(false);
 		invFieldDto.setPlantingNumber(plantingNumber);
 		invFieldDto.setUnderseededAcres(null);
@@ -456,7 +534,7 @@ public class DeclaredYieldFieldDaoTest {
 		
 	}
 	
-	private String createDeclaredYieldContract(String userId) throws DaoException {
+	private String createDeclaredYieldContract(String userId, Integer cropYear) throws DaoException {
 
 		// Dop Date
 		Calendar cal = Calendar.getInstance();
@@ -469,7 +547,7 @@ public class DeclaredYieldFieldDaoTest {
 		DeclaredYieldContractDto newDto = new DeclaredYieldContractDto();
 
 		newDto.setContractId(contractId1);
-		newDto.setCropYear(cropYear1);
+		newDto.setCropYear(cropYear);
 		newDto.setDeclarationOfProductionDate(dopDate);
 		newDto.setDefaultYieldMeasUnitTypeCode("TONNE");
 		newDto.setEnteredYieldMeasUnitTypeCode("BUSHEL");

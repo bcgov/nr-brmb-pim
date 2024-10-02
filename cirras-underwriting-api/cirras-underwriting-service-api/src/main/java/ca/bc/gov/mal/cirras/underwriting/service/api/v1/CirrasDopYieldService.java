@@ -97,4 +97,8 @@ public interface CirrasDopYieldService {
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public DopYieldContract<? extends AnnualField> calculateYieldRollupTest(
 			DopYieldContract<? extends AnnualField> dopYieldContract) throws ServiceException, DaoException;
+	
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
+	public DopYieldContract<?> calculateYieldContractCommodityForageTest(DopYieldContract<? extends AnnualField> dopYieldContract)
+			throws ServiceException, DaoException;	
 }

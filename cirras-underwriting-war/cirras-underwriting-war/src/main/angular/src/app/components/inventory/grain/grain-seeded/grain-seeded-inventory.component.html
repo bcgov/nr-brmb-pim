@@ -42,6 +42,16 @@
             [growerContract]="growerContract"
         ></cirras-grower-contract-header>  
 
+        <div *ngIf="hasYieldData == true" class="message-container">
+            <!-- The policy has yield message -->
+            <div class="has-yield-warning">
+                <mat-icon>warning</mat-icon>            
+                <span class="warning-message">
+                    Inventory edits are not permitted when a policy has DOP data.  
+                    If you need to update the inventory, delete the DOP data first.</span> 
+            </div>
+        </div>
+
         <form [formGroup]="getViewModel().formGroup" (keydown.enter)="$event.preventDefault()" >
  
         <div class="plcy-inv-form-header" [ngStyle]="setFormSeededStyles()">
@@ -84,21 +94,8 @@
                     mat-raised-button color="secondary" 
                     class="header-button-red"  
                     (click)="onDeleteInventory()">
-                    <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Delete Inventory
+                    <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset Inventory
                 </button>
-            </div>
-        </div>
-
-        <div *ngIf="hasYieldData == true" class="message-container">
-            <!-- The policy has yield message   -->
-            <div class="has-yield-warning">
-            
-                <span #el matTooltip="" style="margin-left: 10px; margin-right: 20px;">
-                    <mat-icon [ngStyle]="{'color':'blue', 'font-size':'xx-large'}">warning</mat-icon>
-                </span>
-                <span style="font-size: large; color:blue">
-                    The policy has yield data and inventory edits are not permitted. 
-                    If you need to update the inventory, delete the DOP data first.</span> 
             </div>
         </div>
 
@@ -187,6 +184,7 @@
                                 <input matInput type="text"
                                         formControlName="fieldLabel"
                                         (keydown)="navigateUpDown($event, 1)"
+                                        (blur)="isMyFormDirty()"
                                         maxlength="28">
                             </mat-form-field> 
                             <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Field Name is writeable">edit</mat-icon>
@@ -228,7 +226,7 @@
                                                         : 'inventory-border-exclude-printout border-left-exclude-printout' )
                                                     :  'inventory-border' )" >
 
-                                    <span style="padding-top: 6px; padding-left: 4px;">{{ planting.value.lastYearCropCommodityName | titlecase }}</span>
+                                    <span style="padding-top: 6px; padding-left: 4px;">{{ planting.value.lastYearCropCommodityVarietyName | titlecase }}</span>
                                 </div>
                                 
                                 <div *ngIf="planting.value.deletedByUserInd != true" > 
@@ -286,7 +284,7 @@
                                                 <mat-form-field 
                                                     *ngIf="inventorySeededGrains.value.commodityTypeOptions 
                                                             && inventorySeededGrains.value.commodityTypeOptions.length > 1; else elseBlockCmdtyType" appearance="fill" >
-                                                    <mat-select formControlName="commodityTypeCode">
+                                                    <mat-select formControlName="commodityTypeCode" (selectionChange)="isMyFormDirty()">
                                                         <mat-option *ngFor="let option of inventorySeededGrains.value.commodityTypeOptions" [value]="option.commodityTypeCode"
                                                         >{{ option.commodityTypeDesc | titlecase }}</mat-option>
                                                     </mat-select>
@@ -350,6 +348,7 @@
                                                     [matDatepicker]="picker"
                                                     formControlName="seededDate" 
                                                     (dateChange)="onDateChange(fieldIndex, plantingIndex, invSeededIndex)"
+                                                    (dateInput)="isMyFormDirty()"
                                                     (blur)="validateSeededDate($event, fieldIndex, plantingIndex, invSeededIndex)">
                                                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                                                 <mat-datepicker #picker></mat-datepicker>
@@ -490,13 +489,14 @@
                             class="inventory-cell" 
                             [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border-exclude-printout  border-right-exclude-printout' : 'inventory-border'" 
                             style="width:75px">
-                            <span *ngIf="isThereAnyComment(field); else noCommentsBlock">
-                                <mat-icon matTooltip="Comments" (click)="onLoadComments(field)" svgIcon="insert_comment"></mat-icon>
-                            </span>
-
-                            <ng-template #noCommentsBlock>
-                                <mat-icon matTooltip="Comments" (click)="onLoadComments(field)" svgIcon="mode_comment"></mat-icon>
-                            </ng-template>
+                            <uw-comments-button
+                                [underwritingCommentTypeCode]="'INV'"
+                                [annualFieldDetailId]="field.value.annualFieldDetailId"
+                                [fieldId]="field.value.fieldId"
+                                [fieldName]="field.value.fieldLabel"
+                                [legalLocation]="field.value.otherLegalDescription"
+                                [uwComments]="field.value.uwComments"
+                                (onDone)="onInventoryCommentsDone(field.value.fieldId, $event)"></uw-comments-button>
 
                             <mat-icon matTooltip="View History">history</mat-icon>
                             <mat-icon class="delete-icon"
@@ -544,15 +544,15 @@
             <div class="plcy-inv-cntrct" style="grid-template-columns: 650px 600px" >
                 <div class="question" style="border: 1px solid #B8CFB8; background: #F1F7F1;">
                     Do you expect to have grain stored from previous crop years on August 1st?
-
-                    <mat-radio-group class="plcy-grain-sdd-inv inv-radio-group" formControlName="grainFromPrevYearInd"> 
-                        <mat-radio-button class="plcy-grain-sdd-inv inv-radio-button" [value]="true"> 
-                            Yes
-                        </mat-radio-button>
-                        <mat-radio-button class="plcy-grain-sdd-inv inv-radio-button" [value]="false">
-                            No
-                        </mat-radio-button>
-                    </mat-radio-group>
+                    <div class="inventory-fill" style="padding-top: 20px;">
+                        <mat-form-field appearance="fill" style="width: 100px;">
+                            <mat-select formControlName="grainFromPrevYearInd" (selectionChange)="isMyFormDirty()">
+                                <mat-option [value]=""></mat-option>
+                                <mat-option [value]="true">Yes</mat-option>
+                                <mat-option [value]="false">No</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
                 </div>
 
                 <div>

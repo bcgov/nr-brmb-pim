@@ -21,6 +21,7 @@ public class CropVarietyInsurabilityDto extends BaseDto<CropVarietyInsurabilityD
 	private Boolean isPlantInsurableInd;
 	private Boolean isAwpEligibleInd;
 	private Boolean isUnderseedingEligibleInd;
+	private Boolean isGrainUnseededDefaultInd;
 	 
 	private String createUser;
 	private Date createDate;
@@ -49,6 +50,7 @@ public class CropVarietyInsurabilityDto extends BaseDto<CropVarietyInsurabilityD
 		this.isPlantInsurableInd = dto.isPlantInsurableInd;
 		this.isAwpEligibleInd = dto.isAwpEligibleInd;
 		this.isUnderseedingEligibleInd = dto.isUnderseedingEligibleInd;
+		this.isGrainUnseededDefaultInd = dto.isGrainUnseededDefaultInd;
 		this.createUser = dto.createUser;
 		this.createDate = dto.createDate;
 		this.updateUser = dto.updateUser;
@@ -84,6 +86,7 @@ public class CropVarietyInsurabilityDto extends BaseDto<CropVarietyInsurabilityD
 			result = result&&dtoUtils.equals("isPlantInsurableInd", isPlantInsurableInd, other.isPlantInsurableInd);
 			result = result&&dtoUtils.equals("isAwpEligibleInd", isAwpEligibleInd, other.isAwpEligibleInd);
 			result = result&&dtoUtils.equals("isUnderseedingEligibleInd", isUnderseedingEligibleInd, other.isUnderseedingEligibleInd);
+			result = result&&dtoUtils.equals("isGrainUnseededDefaultInd", isGrainUnseededDefaultInd, other.isGrainUnseededDefaultInd);
 
 		}
 		
@@ -155,6 +158,14 @@ public class CropVarietyInsurabilityDto extends BaseDto<CropVarietyInsurabilityD
 
 	public void setIsUnderseedingEligibleInd(Boolean isUnderseedingEligibleInd) {
 		this.isUnderseedingEligibleInd = isUnderseedingEligibleInd;
+	}
+
+	public Boolean getIsGrainUnseededDefaultInd() {
+		return isGrainUnseededDefaultInd;
+	}
+
+	public void setIsGrainUnseededDefaultInd(Boolean isGrainUnseededDefaultInd) {
+		this.isGrainUnseededDefaultInd = isGrainUnseededDefaultInd;
 	}
 
 	public String getCreateUser() {

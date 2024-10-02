@@ -35,7 +35,7 @@
                 *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
                 mat-raised-button color="primary" 
                 class="button-large-text" 
-                [disabled]="!hasDataChanged" 
+                [disabled]="!hasDataChanged && inventoryContract?.inventoryContractGuid" 
                 (click)="onSave()">
                     Save
             </button>
@@ -45,6 +45,16 @@
     <cirras-grower-contract-header
         [growerContract]="growerContract"
     ></cirras-grower-contract-header>  
+
+    <div *ngIf="hasYieldData == true" class="message-container">
+        <!-- The policy has yield message -->
+        <div class="has-yield-warning">
+            <mat-icon>warning</mat-icon>            
+            <span class="warning-message">
+                Inventory edits are not permitted when a policy has DOP data.  
+                If you need to update the inventory, delete the DOP data first.</span> 
+        </div>
+    </div>
 
     <form [formGroup]="getViewModel().formGroup">
 
@@ -77,21 +87,8 @@
                     mat-raised-button color="secondary" 
                     class="header-button-red"  
                     (click)="onDeleteInventory()">
-                    <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Delete Inventory
+                    <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset Inventory
                 </button>
-            </div>
-        </div>
-
-        <div *ngIf="hasYieldData == true" class="message-container">
-            <!-- The policy has yield message   -->
-            <div class="has-yield-warning">
-            
-                <span #el matTooltip="" style="margin-left: 10px; margin-right: 20px;">
-                    <mat-icon [ngStyle]="{'color':'blue', 'font-size':'xx-large'}">warning</mat-icon>
-                </span>
-                <span style="font-size: large; color:blue">
-                    The policy has yield data and inventory edits are not permitted. 
-                    If you need to update the inventory, delete the DOP data first.</span> 
             </div>
         </div>
 
@@ -99,7 +96,7 @@
 
             <!-- inventory table header -->
 
-            <div class="plcy-inv-field-box" style="width: 1236px;">
+            <div class="plcy-inv-field-box" style="width: 1306px;">
                 <div class="inventory-header border-left" style="width:40px">
                     <mat-icon class="button-mat-icon" matTooltip="Drag this icon up or down to change the field order">drag_handle</mat-icon>
                 </div>
@@ -107,17 +104,17 @@
                 <div class="inventory-header" style="width:115px">Field ID</div>
                 <div class="inventory-header" style="width:164px;">Field Name</div>  
                 <div class="inventory-header" style="width:156px;">Legal Location</div> 
-                <div class="inventory-header" style="width:120px">Last Year's Crop</div>
+                <div class="inventory-header" style="width:190px">Last Year's Crop</div>
 
                 <div class="inventory-header" style="width:106px" matTooltip="Acres are rounded to the nearest tenth after the decimal point">Acres To Seed</div>
-                <div class="inventory-header" style="width:190px">Crops To Be Seeded</div>
+                <div class="inventory-header" style="width:190px">Intended Crop</div>
                 <div class="inventory-header" style="width:100px">Unseeded</div>
                 <div class="inventory-header" style="width:90px;">Manage Planting</div>
                 <div class="inventory-header" style="width:90px;">Manage Field</div>
             </div>
 
 
-            <div class="plcy-inv-fld-tbl-inner-wrapper flex-y-grow" style="width: 1236px;">
+            <div class="plcy-inv-fld-tbl-inner-wrapper flex-y-grow" style="width: 1306px;">
 
                 <div cdkDropList class="plcy-inv-field-container-blue" [ngStyle]="setStyles()" 
                     (cdkDropListDropped)="drop($event)">
@@ -166,6 +163,7 @@
                                 <input matInput type="text"
                                         formControlName="fieldLabel"
                                         (keydown)="navigateUpDown($event, 1)"
+                                        (blur)="isMyFormDirty()"
                                         maxlength="28">
                             </mat-form-field>        
                             <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Field Name is writeable">edit</mat-icon>
@@ -187,20 +185,35 @@
                                 style="display:contents;"> 
 
                                 <div *ngIf="planting.value.deletedByUserInd != true" 
-                                    class="inventory-cell" style="width:120px;"
+                                    class="inventory-fill" style="width:190px;"
                                     [ngClass]="isFieldHiddenOnPrintout(fieldIndex) 
                                         ? 'inventory-border' 
                                         : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) 
                                             ? 'inventory-border-exclude-printout border-left-exclude-printout' 
                                             :  'inventory-border' )">
-                                    {{ planting.value.lastYearCropCommodityName | titlecase }}
+                                    <mat-form-field appearance="fill">
+                                        <input
+                                            type="text"
+                                            matInput
+                                            formControlName="lastYearCropCommodityVarietyName"
+                                            [matAutocomplete]="autoCmdtyVrty"
+                                            (focus)="commodityVarietyFocus(fieldIndex, plantingIndex)"
+                                            (keyup)="searchCommodityVariety($event.target.value)">
+                                        <mat-autocomplete #autoCmdtyVrty="matAutocomplete"
+                                            [displayWith]="displayCommodityVarietyFn"
+                                            (optionSelected)="commodityVarietySelected($event, fieldIndex, plantingIndex)">
+                                            <mat-option *ngFor="let option of filteredCommodityVarietyOptions" [value]="option.cropCommodityVarietyName">
+                                                {{ option.cropCommodityVarietyName | titlecase }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
                                     <mat-icon 
-                                        style="padding-left:10px;" 
                                         *ngIf="isLinkedPlanting(field.value.fieldId, planting.value.inventoryFieldGuid)"
                                         [matTooltip]="linkedPlantingTooltip(field.value.fieldId, planting.value.inventoryFieldGuid)"
                                         >
                                             link
-                                    </mat-icon>                                                                                    
+                                    </mat-icon>
+                                    <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Last Year's Crop is writeable">edit</mat-icon>
                                 </div>
                                 <div *ngIf="planting.value.deletedByUserInd != true"  
                                     class="inventory-fill" style="width:106px;"
@@ -221,7 +234,7 @@
                                     class="inventory-fill" style="width:190px;"
                                     [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
                                     <mat-form-field appearance="fill">
-                                    <mat-select formControlName="cropCommodityId" >
+                                    <mat-select formControlName="cropCommodityId" (selectionChange)="isMyFormDirty()">
                                         <mat-option *ngFor="let option of cropCommodityOptions" [value]="option.cropCommodityId"
                                         >{{ option.commodityName | titlecase }}</mat-option>
                                     </mat-select>
@@ -230,7 +243,7 @@
                                 
                                 <div *ngIf="planting.value.deletedByUserInd != true" style="width:100px;"
                                     [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
-                                    <mat-checkbox formControlName="isUnseededInsurableInd" [checked]="isChecked(field.value.isUnseededInsurableInd)" >
+                                    <mat-checkbox formControlName="isUnseededInsurableInd" [checked]="isChecked(field.value.isUnseededInsurableInd)">
                                     </mat-checkbox>
                                 </div>
                                     
@@ -263,12 +276,14 @@
                         <div *ngIf="field.value.deletedByUserInd == false" 
                             class="inventory-cell" style="width:90px"
                             [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border-exclude-printout  border-right-exclude-printout' : 'inventory-border'" >
-                            <span *ngIf="isThereAnyComment(field); else noCommentsBlock">
-                                <mat-icon matTooltip="Comments" (click)="onLoadComments(field)" svgIcon="insert_comment"></mat-icon>
-                            </span>
-                            <ng-template #noCommentsBlock>
-                                <mat-icon matTooltip="Comments" (click)="onLoadComments(field)" svgIcon="mode_comment"></mat-icon>
-                            </ng-template>
+                            <uw-comments-button
+                                [underwritingCommentTypeCode]="'INV'"
+                                [annualFieldDetailId]="field.value.annualFieldDetailId"
+                                [fieldId]="field.value.fieldId"
+                                [fieldName]="field.value.fieldLabel"
+                                [legalLocation]="field.value.otherLegalDescription"
+                                [uwComments]="field.value.uwComments"
+                                (onDone)="onInventoryCommentsDone(field.value.fieldId, $event)"></uw-comments-button>
 
                             <mat-icon matTooltip="View History" style="margin-left: 4px; margin-right: 4px;">history</mat-icon>
                             <mat-icon class="delete-icon"
@@ -281,7 +296,7 @@
                     </div>
 
                     <div class="plcy-inv-field-box" style="background-color: white;">
-                        <div class="inventory-header border-left" style="width: 638px; justify-content: right;">
+                        <div class="inventory-header border-left" style="width: 708px; justify-content: right;">
                                 <span style="margin-right:4px"> 
                                     Total eligible unseeded acres:
                                 </span>                
@@ -302,15 +317,15 @@
                     <p style="font-weight: 500;">Do you expect to make significant changes to your farm management this year?</p>
                     <div class="grain-unsdd-inv-cntrct-container" >   
                         <div>
-                            <mat-checkbox formControlName="fertilizerInd" labelPosition="before">Fertilizer</mat-checkbox>
+                            <mat-checkbox formControlName="fertilizerInd" labelPosition="before" (change)="isMyFormDirty()">Fertilizer</mat-checkbox>
                         </div>
-                        <div><mat-checkbox formControlName="herbicideInd" labelPosition="before">Herbicide</mat-checkbox></div>
+                        <div><mat-checkbox formControlName="herbicideInd" labelPosition="before" (change)="isMyFormDirty()">Herbicide</mat-checkbox></div>
 
-                        <div><mat-checkbox formControlName="tilliageInd" labelPosition="before">Tilliage</mat-checkbox></div>
+                        <div><mat-checkbox formControlName="tilliageInd" labelPosition="before" (change)="isMyFormDirty()">Tilliage</mat-checkbox></div>
                         <div class="comment-fill">
                             <mat-checkbox labelPosition="before" style="margin-right:10px;" formControlName="otherChangesInd" (change)="otherChangesIndClicked()">Other</mat-checkbox>                
                             <mat-form-field appearance="fill">
-                                <input matInput formControlName="otherChangesComment" maxlength="128">
+                                <input matInput formControlName="otherChangesComment" maxlength="128" (blur)="isMyFormDirty()">
                                 <mat-hint *ngIf="changeCommentRequired()" style="color: red">Required</mat-hint>
                             </mat-form-field>
                         </div>

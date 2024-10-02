@@ -1,22 +1,35 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { BaseComponent } from '../../common/base/base.component';
 import { GradeModifiersComponentModel } from './grade-modifiers.component.model';
 import { GradeModifierList, GradeModifierTypeList, UnderwritingYearList } from 'src/app/conversion/models-maintenance';
 import { loadGradeModifierTypes, loadGradeModifiers, loadUwYears, saveGradeModifiers } from 'src/app/store/maintenance/maintenance.actions';
 import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { makeNumberOnly } from 'src/app/utils';
 import { CROP_COMMODITY_TYPE_CONST, CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { GradeModifierTypesContainer } from 'src/app/containers/maintenance/grade-modifier-types-container.component';
 import { CropCommodityList } from 'src/app/conversion/models';
 import { ClearCropCommodity, LoadCropCommodityList } from 'src/app/store/crop-commodity/crop-commodity.actions';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DomSanitizer, Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { RootState } from 'src/app/store';
+import { MatDialog } from '@angular/material/dialog';
+import { ApplicationStateService } from 'src/app/services/application-state.service';
+import { SecurityUtilService } from 'src/app/services/security-util.service';
+import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { ConnectionService } from 'ngx-connection-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Overlay } from '@angular/cdk/overlay';
+import { HttpClient } from '@angular/common/http';
+import { DecimalPipe } from '@angular/common';
 
 
 @Component({
   selector: 'grade-modifiers',
   templateUrl: './grade-modifiers.component.html',
-  styleUrls: ['./grade-modifiers.component.scss']
+  styleUrls: ['./grade-modifiers.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss']
 })
 export class GradeModifiersComponent extends BaseComponent implements OnChanges  {
 
@@ -24,6 +37,27 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
   @Input() gradeModifierList: GradeModifierList   // TODO: Reconcile with yield model.
   @Input() cropCommodityList: CropCommodityList
   @Input() gradeModifierTypeList: GradeModifierTypeList
+  @Input() isUnsaved: boolean;
+
+  constructor(protected router: Router,
+    protected route: ActivatedRoute,
+    protected sanitizer: DomSanitizer,
+    protected store: Store<RootState>,
+    protected fb: FormBuilder,
+    protected dialog: MatDialog,
+    protected applicationStateService: ApplicationStateService,
+    public securityUtilService: SecurityUtilService,                
+    protected tokenService: TokenService,
+    protected connectionService: ConnectionService,
+    protected snackbarService: MatSnackBar,
+    protected overlay: Overlay,
+    protected cdr: ChangeDetectorRef,
+    protected appConfigService: AppConfigService,
+    protected http: HttpClient,
+    protected titleService: Title,
+    protected decimalPipe: DecimalPipe) {
+    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
+  }
 
   hasDataChanged = false;
   uwYearOptions = [];
@@ -52,13 +86,10 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
   }
 
   loadPage() {
-    let defaultCropYear = new Date().getFullYear();
-    let defaultCropCommodityId = CROP_COMMODITY_UNSPECIFIED.ID
-
     this.loadUwCropYear()
-    this.loadGrainCommodities(defaultCropYear)
-    this.loadGradeModifierTypeList(defaultCropYear)
-    this.loadGradeModifiersForCropYear(defaultCropYear, defaultCropCommodityId)
+    this.loadGrainCommodities(this.selectedCropYear)
+    this.loadGradeModifierTypeList(this.selectedCropYear)
+    this.loadGradeModifiersForCropYear(this.selectedCropYear, this.selectedCropCommodityId)
   }
   
 
@@ -150,12 +181,6 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
       // clear the crop options
       this.cropCommodityOptions = []
 
-      // add an empty crop commodity
-      this.cropCommodityOptions.push ({
-        commodityName: CROP_COMMODITY_UNSPECIFIED.NAME,
-        cropCommodityId: CROP_COMMODITY_UNSPECIFIED.ID
-      })
-
       this.cropCommodityList.collection.forEach( ccm => self.cropCommodityOptions.push 
         ({
           commodityName: ccm.commodityName,
@@ -192,59 +217,57 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
     this.viewModel.formGroup.valueChanges.subscribe(val => {this.isMyFormDirty()})
   }
 
-  uwYearsChange(event) {
+  uwYearsChange(value) {
+    let cropCommodityId = this.viewModel.formGroup.controls.selectedCropCommodityId.value
+    let doChangeYear: boolean = false
 
-    if (event.value) {
-
-      let cropCommodityId = this.viewModel.formGroup.controls.selectedCropCommodityId.value
-      let doChangeYear: boolean = false
-
-      if (this.hasDataChanged) {
-        if (confirm("There are unsaved changes on the page which will be lost. Do you still wish to proceed? ")) {
-          doChangeYear = true
-        }
-      } else {
-        doChangeYear = true
-      }
-
-      if ( doChangeYear ) {
-        this.selectedCropYear = event.value
-        this.loadGrainCommodities(event.value)
-        this.loadGradeModifierTypeList(event.value)      
-        this.loadGradeModifiersForCropYear(event.value, cropCommodityId)
-
-        this.hasDataChanged = false   
-        this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false))
-      } else {
-        // Set drop-down back to old value.
-        this.viewModel.formGroup.controls.selectedCropYear.setValue(this.selectedCropYear)
-      }
+    if (this.hasDataChanged) {
+      doChangeYear = confirm("There are unsaved changes on the page which will be lost. Do you still wish to proceed? ")
+    } else {
+      doChangeYear = true
     }
+
+    if ( doChangeYear ) {
+      this.selectedCropYear = value
+      this.loadGrainCommodities(value)
+      this.loadGradeModifierTypeList(value)      
+      this.loadGradeModifiersForCropYear(value, cropCommodityId)
+
+      this.hasDataChanged = false   
+      this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false))
+    } else {
+      this.selectedCropYear = this.viewModel.formGroup.controls.selectedCropYear.value
+      this.uwYearOptions = [...this.uwYearOptions]; // force refresh
+    }
+
+    this.viewModel.formGroup.controls.selectedCropYear.setValue(this.selectedCropYear)
   }
 
-  selectedCropCommodityIdChange(event) {
+  selectedCropCommodityIdChange(value) {
 
     let cropYear = this.viewModel.formGroup.controls.selectedCropYear.value
 
     if (this.hasDataChanged) {
       if (confirm("There are unsaved changes on the page which will be lost. Do you still wish to proceed? ")) {
-        this.selectedCropCommodityId = event.value
-        this.loadGradeModifiersForCropYear( cropYear, event.value )
+        this.selectedCropCommodityId = value
+        this.loadGradeModifiersForCropYear( cropYear, value )
         this.hasDataChanged = false   
         this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false))
     
       } else {
         // Set drop-down back to old value.
         this.viewModel.formGroup.controls.selectedCropCommodityId.setValue(this.selectedCropCommodityId)
+        this.cropCommodityOptions = [...this.cropCommodityOptions]; // force refresh
       }
 
     } else {
-      this.selectedCropCommodityId = event.value
-      this.loadGradeModifiersForCropYear( cropYear, event.value )
+      this.selectedCropCommodityId = value
+      this.loadGradeModifiersForCropYear( cropYear, value )
       this.hasDataChanged = false   
       this.store.dispatch(setFormStateUnsaved(MAINTENANCE_COMPONENT_ID, false))
     }
 
+    this.viewModel.formGroup.controls.selectedCropCommodityId.setValue(this.selectedCropCommodityId)
   }
 
   loadUwCropYear() {
@@ -262,7 +285,7 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
       cropCommodityIdStr = cropCommodityId.toString()
     }
 
-    this.store.dispatch(loadGradeModifiers(MAINTENANCE_COMPONENT_ID, cropYear.toString(), INSURANCE_PLAN.GRAIN.toString(), cropCommodityIdStr ))
+    this.store.dispatch(loadGradeModifiers(MAINTENANCE_COMPONENT_ID, cropYear?.toString(), INSURANCE_PLAN.GRAIN.toString(), cropCommodityIdStr ))
 
   }
 
@@ -273,7 +296,7 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
 
     this.store.dispatch(LoadCropCommodityList(MAINTENANCE_COMPONENT_ID,
         INSURANCE_PLAN.GRAIN.toString(),
-        cropYear.toString(),
+        cropYear?.toString(),
         CROP_COMMODITY_TYPE_CONST.YIELD,
         "N")
       )

@@ -71,7 +71,8 @@ export class InventorySelectorComponent implements OnInit{
                                                     "Y" ))
  
          
-          if (this.router.url.indexOf ( ResourcesRoutes.INVENTORY_GRAIN_SEEDED) > -1 ) {
+          if (this.router.url.indexOf ( ResourcesRoutes.INVENTORY_GRAIN_SEEDED) > -1 
+          || this.router.url.indexOf ( ResourcesRoutes.INVENTORY_GRAIN_UNSEEDED) > -1 ) {
              
             this.store.dispatch(LoadUnderSeededCropCommodityList(this.componentId,
               INSURANCE_PLAN.FORAGE.toString(), 

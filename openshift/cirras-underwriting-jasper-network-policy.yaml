@@ -9,8 +9,14 @@ spec:
       app: cirras-underwriting-jasper-#{ENV}#
   ingress:
     - from:
-        - podSelector: {}
-        - ipBlock:
-            cidr: 216.232.132.75/32
+      - ipBlock:
+          cidr: 216.232.132.75/32
+    - from:
+      - podSelector:
+          matchLabels:
+            app: cirras-underwriting-jasper-qa
+      - podSelector:
+          matchLabels:
+            app: cirras-underwriting-api-qa
   policyTypes:
     - Ingress

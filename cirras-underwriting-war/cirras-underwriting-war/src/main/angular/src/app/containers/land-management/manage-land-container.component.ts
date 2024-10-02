@@ -1,14 +1,18 @@
 
 
-import {Component} from "@angular/core";
+import {ChangeDetectorRef, Component} from "@angular/core";
 import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
 import {BaseContainer} from "../base/base-container.component";
-import {select} from "@ngrx/store";
+import {select, Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import { ErrorState, LoadState } from "src/app/store/application/application.state";
 import { selectLegalLandListErrorState, selectLegalLandListLoadState } from "src/app/store/application/application.selectors";
 import { selectLandList, selectLegalLand, selectRiskAreaList } from "src/app/store/land-management/land-management.selectors";
 import { MANAGE_LEGAL_LAND_COMPONENT_ID } from "src/app/store/land-management/land-management.state";
+import { RootState } from "src/app/store";
+import { Router } from "@angular/router";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ApplicationStateService } from "src/app/services/application-state.service";
 
 @Component({
     selector: "manage-land-container",
@@ -32,5 +36,15 @@ export class ManageLandComponentContainer extends BaseContainer {
         return [
             MANAGE_LEGAL_LAND_COMPONENT_ID
         ];
+    }
+
+    constructor(
+        protected store: Store<RootState>,
+        protected router: Router,
+        public snackBar: MatSnackBar,
+        protected applicationStateService: ApplicationStateService,
+        protected cdr: ChangeDetectorRef
+    ) {
+        super(store, router, snackBar, applicationStateService, cdr);
     }
 }

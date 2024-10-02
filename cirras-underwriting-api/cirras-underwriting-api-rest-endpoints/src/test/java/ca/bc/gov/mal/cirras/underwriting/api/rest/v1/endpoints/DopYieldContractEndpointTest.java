@@ -1435,11 +1435,36 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 			return;
 		}
 
-		byte[] reportContent = service.generateDopReport(topLevelEndpoints, null, null, null, null, null, null, null, null);
+		// Test 1: Generate Forage report.
+		byte[] reportContent = service.generateDopReport(topLevelEndpoints, "2024", "5", "4", null, null, null, null, null);
 		
 		Assert.assertNotNull(reportContent);
 		
 		logger.debug(">testGenerateDopReport - Returned " + reportContent.length + " bytes");	
+
+		// Test 2: Generate Grain report
+		reportContent = service.generateDopReport(topLevelEndpoints, "2024", "4", null, null, null, null, null, null);
+		
+		Assert.assertNotNull(reportContent);
+		
+		logger.debug(">testGenerateDopReport - Returned " + reportContent.length + " bytes");	
+		
+		// Test 3: Omit Insurance Plan: Report generation should fail.
+		try {
+			reportContent = service.generateDopReport(topLevelEndpoints, "2024", null, null, null, null, null, null, null);
+			Assert.fail("Report generated for missing insurance plan id ");
+		} catch ( CirrasUnderwritingServiceException e ) {
+			// Ok.
+		}
+
+		// Test 4: Invalid Insurance Plan: Report generation should fail.
+		try {
+			reportContent = service.generateDopReport(topLevelEndpoints, "2024", "2", null, null, null, null, null, null);
+			Assert.fail("Report generated for invalid insurance plan id ");
+		} catch ( CirrasUnderwritingServiceException e ) {
+			// Ok.
+		}
+		
 	}
 	
 	
@@ -1899,6 +1924,7 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		invf.setInventoryUnseeded(iu);
 		invf.setIsHiddenOnPrintoutInd(false);
 		invf.setLastYearCropCommodityId(null);
+		invf.setLastYearCropVarietyId(null);
 		invf.setPlantingNumber(2);
 		invf.setUnderseededAcres(null);
 		invf.setUnderseededCropVarietyId(null);

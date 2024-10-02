@@ -18,6 +18,7 @@ spec:
         - name: container
           image: >-
             ghcr.io/bcgov/cirras-underwriting-war:#{TAG}#
+          imagePullPolicy: Always
           ports:
             - containerPort: #{TARGET_PORT}#
               protocol: TCP
@@ -92,12 +93,17 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-ui-config-#{ENV}#
                   key: WEB_PATH
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: LOG_LEVEL
           resources:
             requests:
-              cpu: 100m
+              cpu: 50m
               memory: 200Mi
             limits:
-              cpu: 200m
+              cpu: 150m
               memory: 400Mi 
   strategy:
     type: RollingUpdate

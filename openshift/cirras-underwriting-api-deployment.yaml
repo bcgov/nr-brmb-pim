@@ -18,6 +18,7 @@ spec:
       containers:
         - name: container
           image: 'ghcr.io/bcgov/cirras-underwriting-api:#{TAG}#'
+          imagePullPolicy: Always
           ports:
             - containerPort: #{TARGET_PORT}#
               protocol: TCP
@@ -112,13 +113,18 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: TIME_ZONE
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: LOG_LEVEL
           resources:
             requests:
-              cpu: 100m
-              memory: 200Mi
+              cpu: #{API_CPU_REQUEST}#
+              memory: #{API_MEMORY_REQUEST}#
             limits:
-              cpu: 200m
-              memory: 400Mi 
+              cpu: #{API_CPU_LIMIT}#
+              memory: #{API_MEMORY_LIMIT}# 
   strategy:
     type: RollingUpdate
     rollingUpdate:

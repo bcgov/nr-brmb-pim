@@ -2,7 +2,7 @@
 
 .mat-table {
     display: block;
-    font-family: Tahoma, Verdana;
+    font-family: $font-family-main;
   }
   
   .mat-row,
@@ -49,10 +49,77 @@
     font-weight: bold !important;
   }
 
-  .button-large-text {
-    font-size: 20px !important;
-    width: 180px;
+.search-and-filters {
+
+  .field {
+    &:has(select[aria-label="Plan"]) {
+      width: 150px !important;
+      flex-basis: 150px !important;
+    }
+    &:has(select[aria-label="Crop Year"]) {
+      width: 150px !important;
+      flex-basis: 150px !important;
+    }
+    &:has(select[aria-label="Policy Status"]) {
+      width: 150px !important;
+      flex-basis: 150px !important;
+    }
+    &:has(select[aria-label="Office"]) {
+      width: 150px !important;
+      flex-basis: 150px !important;
+    }
+    &:has(select[aria-label="Report Type"]) {
+      width: 150px !important;
+      flex-basis: 150px !important;
+    }
+    button[color="primary"] {
+      width: 109px;
+      .mat-icon {
+        height: 20px;
+        width: 20px;
+        vertical-align: sub;
+      }
+    }
   }
 
+  .field {
+    &.search-input:has(input[aria-label="Grower Information"]) {
+      width: 220px !important;
+      flex-basis: 220px !important;
+    }
+    &.search-input:has(input[aria-label="Policy Number"]) {
+      width: 116px !important;
+      flex-basis: 116px !important;
+    }
+  }
+}
 
-  
+.summary-buttons {
+  p {
+    width: 230px;
+    display: flex;
+    justify-content: right;
+
+    span {
+      margin-right: 16px;
+    }
+  }
+}
+
+.table-search-header:nth-child(3) {
+  background-color: transparent;
+
+  .search-and-filters {
+    margin: 12px 0px 12px 0px;
+  }
+}
+
+.table-search-header .search-and-filters {
+  .input-clear-button {
+    margin-left: 191px !important;
+  }
+}
+
+.table-wrapper {
+  border-top: 0;
+}

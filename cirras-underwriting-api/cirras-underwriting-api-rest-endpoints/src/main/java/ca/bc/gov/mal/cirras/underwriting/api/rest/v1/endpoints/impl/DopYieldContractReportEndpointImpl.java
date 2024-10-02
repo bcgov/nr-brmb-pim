@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
+import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.DopYieldContractReportEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.parameters.validation.ParameterValidator;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.InventoryContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasDopYieldService;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
 
 public class DopYieldContractReportEndpointImpl extends BaseEndpointsImpl implements DopYieldContractReportEndpoint {
 
@@ -49,6 +51,16 @@ public class DopYieldContractReportEndpointImpl extends BaseEndpointsImpl implem
 		}
 		
 		try {
+
+			String outputFileName = null;
+			if ( InsurancePlans.GRAIN.getInsurancePlanId().toString().equals(toString(insurancePlanId)) ) {
+				outputFileName = "dop_grain.pdf";
+			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().toString().equals(toString(insurancePlanId)) ) {
+				outputFileName = "dop_forage.pdf";				
+			} else {
+				throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
+			}
+			
 			
 			byte[] result = cirrasDopYieldService.generateDopReport(
 					toString(cropYear),
@@ -62,7 +74,7 @@ public class DopYieldContractReportEndpointImpl extends BaseEndpointsImpl implem
 					getFactoryContext(), 
 					getWebAdeAuthentication());
 			
-			response = Response.ok(result, "application/pdf").header("Content-Disposition", "attachment; filename=dop.pdf").build();
+			response = Response.ok(result, "application/pdf").header("Content-Disposition", "attachment; filename=" + outputFileName).build();
 
 		} catch (NotFoundException e) {
 			response = Response.status(Status.NOT_FOUND).build();

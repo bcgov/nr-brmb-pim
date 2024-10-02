@@ -1,0 +1,27 @@
+<div class="plcy-inv-field-box" [ngStyle]="setFieldHeaderStyles()">
+    <div class="inventory-header border-left" style="width: 45px;" matTooltip="Field Order">F.O.</div>
+    <div class="inventory-header" style="width:90px">Field ID</div>
+    <div class="inventory-header" style="width:164px;">Field Name</div>
+    <div class="inventory-header" style="width:156px">Legal Location</div>
+    <div class="inventory-header" style="width:120px">Commodity Type</div>
+    <div class="inventory-header" style="width:180px">Variety</div>
+    <div class="inventory-header" style="width:80px">Quantity <br /> Insurable</div>
+    <div class="inventory-header" style="width:80px">Acres</div>
+
+    <div *ngFor="let cutNum of getArrayOfCutNumbers();">
+        <div class="inventory-header" style="width:120px">Cut {{ cutNum }} <br /> # Bales/Loads</div>
+        <div class="inventory-header" style="width:120px">Cut {{ cutNum }} <br /> Weight</div>
+        <div class="inventory-header" style="width:80px">Cut {{ cutNum }} <br /> % Moisture</div>
+    </div>
+
+    <div class="inventory-header" style="width:80px;">Hide on Printout</div>
+    <div class="inventory-header" style="width:80px;">Manage Planting</div>
+    <div class="inventory-header" style="width:75px;">Manage Field</div>
+</div>
+
+<div class="plcy-inv-fld-tbl-inner-wrapper flex-y-grow" [ngStyle]="setWrapperStyles()">
+    <div class="plcy-inv-field-container-yellow" [ngStyle]="setFieldStyles()">
+        <forage-dop-field *ngFor="let field of fields" [field]="field"
+            [fieldsFormArray]="fieldsFormArray"></forage-dop-field>
+    </div>
+</div>

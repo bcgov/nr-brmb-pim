@@ -22,4 +22,10 @@ public interface DeclaredYieldContractCommodityForageDao extends Serializable {
     
     List<DeclaredYieldContractCommodityForageDto> selectForDeclaredYieldContract(String declaredYieldContractGuid) throws DaoException;
 
+    List<DeclaredYieldContractCommodityForageDto> selectToRecalculate(
+    		Integer cropCommodityId,
+    		String enteredYieldMeasUnitTypeCode,
+    		Integer effectiveCropYear,
+    		Integer expiryCropYear
+    		) throws DaoException;
 }

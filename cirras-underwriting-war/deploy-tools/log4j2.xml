@@ -14,13 +14,14 @@
         <TimeBasedTriggeringPolicy />
       </Policies>
     </RollingFile>
-
-
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+    </Console>
   </Appenders>
   <Loggers>
-
-    <Root level="DEBUG">
+    <Root level="${env:LOG_LEVEL}">
       <AppenderRef ref="file"/>
-          </Root>
+      <AppenderRef ref="Console" />
+    </Root>
   </Loggers>
 </Configuration>

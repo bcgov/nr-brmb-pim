@@ -319,6 +319,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory implements 
 		model.setWeight(dto.getWeight());
 		model.setWeightDefaultUnit(dto.getWeightDefaultUnit());
 		model.setMoisturePercent(dto.getMoisturePercent());
+		model.setDeletedByUserInd(false);
 		
 		return model;
 
@@ -444,6 +445,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory implements 
 		model.setFieldId(ifDto.getFieldId());
 		model.setInsurancePlanId(ifDto.getInsurancePlanId());
 		model.setInventoryFieldGuid(ifDto.getInventoryFieldGuid());
+		model.setIsHiddenOnPrintoutInd(ifDto.getIsHiddenOnPrintoutInd());
 		
 		// InventorySeededForageDto
 		List<InventorySeededForageDto> isfList = ifDto.getInventorySeededForages();
@@ -456,6 +458,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory implements 
 				model.setCommodityTypeDescription(isfDto.getCommodityTypeDescription());
 				model.setCropVarietyName(isfDto.getCropVarietyName());
 				model.setCropVarietyId(isfDto.getCropVarietyId());
+				model.setCropCommodityId(isfDto.getCropCommodityId());
 				model.setIsQuantityInsurableInd(isfDto.getIsQuantityInsurableInd());
 				model.setFieldAcres(isfDto.getFieldAcres());
 				model.setPlantDurationTypeCode(isfDto.getPlantDurationTypeCode());
@@ -498,6 +501,31 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory implements 
 		dto.setGrowerContractYearId(model.getGrowerContractYearId());
 	}
 
+	@Override
+	public void updateDto(DeclaredYieldFieldForageDto dto, DopYieldFieldForageCut model) {
+
+		dto.setCutNumber(model.getCutNumber());
+		dto.setTotalBalesLoads(model.getTotalBalesLoads());
+		dto.setWeight(model.getWeight());
+		dto.setWeightDefaultUnit(model.getWeightDefaultUnit());
+		dto.setMoisturePercent(model.getMoisturePercent());
+		
+	}
+
+	@Override
+	public void updateDto(DeclaredYieldContractCommodityForageDto dto, DopYieldContractCommodityForage model) {
+
+		dto.setDeclaredYieldContractGuid(model.getDeclaredYieldContractGuid());
+		dto.setCommodityTypeCode(model.getCommodityTypeCode());
+		dto.setTotalFieldAcres(model.getTotalFieldAcres());
+		dto.setHarvestedAcres(model.getHarvestedAcres());
+		dto.setHarvestedAcresOverride(model.getHarvestedAcresOverride());
+		dto.setQuantityHarvestedTons(model.getQuantityHarvestedTons());
+		dto.setQuantityHarvestedTonsOverride(model.getQuantityHarvestedTonsOverride());
+		dto.setYieldPerAcre(model.getYieldPerAcre());
+		
+	}
+	
 	@Override
 	public void updateDto(DeclaredYieldFieldDto dto, DopYieldFieldGrain model) {
 

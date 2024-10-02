@@ -131,6 +131,17 @@ public class InventoryContractDaoTest {
 		Assert.assertEquals("InvUpdateTimestamp", updatedDto.getUpdateDate(), updatedDto.getInvUpdateTimestamp()); //Compare with updated date
 		Assert.assertEquals("InvUpdateUser", fetchedDto.getInvUpdateUser(), updatedDto.getInvUpdateUser());
 
+		//UPDATE GrainFromPrevYearInd to NULL
+		updatedDto.setGrainFromPrevYearInd(null);
+
+		dao.update(updatedDto, userId2);
+
+		//FETCH
+		updatedDto = dao.fetch(inventoryContractGuid);
+		
+		Assert.assertNull("GrainFromPrevYearInd NULL", updatedDto.getGrainFromPrevYearInd());
+
+		
 		//DELETE
 		dao.delete(inventoryContractGuid);
 		
@@ -561,6 +572,8 @@ public class InventoryContractDaoTest {
 		newDto.setInsurancePlanId(insurancePlanId);
 		newDto.setLastYearCropCommodityId(20);
 		newDto.setLastYearCropCommodityName("FALL RYE");
+		newDto.setLastYearCropVarietyId(null);
+		newDto.setLastYearCropVarietyName(null);
 		newDto.setIsHiddenOnPrintoutInd(false);
 		newDto.setUnderseededAcres(14.4);
 		newDto.setUnderseededCropVarietyId(1010513);

@@ -1,6 +1,7 @@
 
-import { ChangeDetectionStrategy, Component, Input, SimpleChanges} from '@angular/core';
-import { FormArray, FormControl, FormGroup, } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, SimpleChanges} from '@angular/core';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { GrainInventoryComponent } from "../grain-inventory.component";
 import { makeTitleCase } from 'src/app/utils'; 
 import { CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
@@ -9,6 +10,18 @@ import { CropVarietyOptionsType, roundUpDecimalAcres } from '../../inventory-com
 import { AddPlantingPopupData, LinkPlantingComponent } from '../../link-planting/link-planting.component';
 import { LoadInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import {ViewEncapsulation } from '@angular/core';
+import { DomSanitizer, Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { RootState } from 'src/app/store';
+import { MatDialog } from '@angular/material/dialog';
+import { ApplicationStateService } from 'src/app/services/application-state.service';
+import { SecurityUtilService } from 'src/app/services/security-util.service';
+import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { ConnectionService } from 'ngx-connection-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Overlay } from '@angular/cdk/overlay';
+import { HttpClient } from '@angular/common/http';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'grain-seeded-inventory',
@@ -19,9 +32,27 @@ import {ViewEncapsulation } from '@angular/core';
 })
 
 export class GrainSeededInventoryComponent extends GrainInventoryComponent { 
-
-  @Input() underSeededCropCommodityList: CropCommodityList;
  
+  constructor(protected router: Router,
+    protected route: ActivatedRoute,
+    protected sanitizer: DomSanitizer,
+    protected store: Store<RootState>,
+    protected fb: FormBuilder,
+    protected dialog: MatDialog,
+    protected applicationStateService: ApplicationStateService,
+    public securityUtilService: SecurityUtilService,                
+    protected tokenService: TokenService,
+    protected connectionService: ConnectionService,
+    protected snackbarService: MatSnackBar,
+    protected overlay: Overlay,
+    protected cdr: ChangeDetectorRef,
+    protected appConfigService: AppConfigService,
+    protected http: HttpClient,
+    protected titleService: Title,
+    protected decimalPipe: DecimalPipe) {
+    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
+  }
+
   filteredVarietyOptions: CropVarietyOptionsType[];  
 
   underSeededVarietyOptions = [];
@@ -123,6 +154,8 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     }
 
     this.geInvSeededTotals()
+
+    this.isMyFormDirty()
   }
 
   clearCommoditySelection(fieldIndex, plantingIndex, invSeededIndex){
@@ -607,6 +640,8 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     }
 
     this.geInvSeededTotals()
+
+    this.isMyFormDirty()
   }
 
   resetInvSeededGrainForDelete(invSeededGrainControls) {
@@ -725,6 +760,8 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     let acres = invSeeded.controls['seededAcres'].value
 
     invSeeded.controls['seededAcres'].setValue(roundUpDecimalAcres(acres))
+
+    this.isMyFormDirty()
   }
 
   roundUpUnderSeededAcres(fieldIndex, plantingIndex, invSeededIndex){
@@ -735,6 +772,8 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     let acres = invSeeded.controls['underSeededAcres'].value
 
     invSeeded.controls['underSeededAcres'].setValue(roundUpDecimalAcres(acres))
+
+    this.isMyFormDirty()
   }
 
   validateVariety(option, value, fieldIndex, plantingIndex, invSeededIndex){
@@ -780,6 +819,8 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
 
       }
     }
+
+    this.isMyFormDirty()
   }
 
   validateUnderSeededVariety(option, fieldIndex, plantingIndex, invSeededIndex){

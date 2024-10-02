@@ -1,4 +1,4 @@
-import {Directive, HostListener, Injectable, OnDestroy} from "@angular/core";
+import {ChangeDetectorRef, Directive, HostListener, Injectable, OnDestroy} from "@angular/core";
 import {Router} from "@angular/router";
 import {select, Store} from "@ngrx/store";
 import {RootState} from "../../store";
@@ -19,7 +19,8 @@ export class BaseContainer implements OnDestroy {
         protected store: Store<RootState>,
         protected router: Router,
         public snackBar: MatSnackBar,
-        protected applicationStateService: ApplicationStateService
+        protected applicationStateService: ApplicationStateService,
+        protected cdr: ChangeDetectorRef
     ) {
         this.unsavedForms$ = this.store.pipe(select(selectFormStatesUnsaved(this.getAssociatedComponentIds())));
         if (this.unsavedForms$) {

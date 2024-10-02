@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
 
 @Component({
@@ -9,11 +10,16 @@ import { getCodeOptions } from 'src/app/utils/code-table-utils';
   styleUrls: ['./plant-insurability.component.scss']
 })
 export class PlantInsurabilityComponent implements OnInit {
+  dialogType = DIALOG_TYPE.INFO;
 
   dataReceived: any;
   varietyPlantInsForm: FormGroup;
 
   plantInsurabilityOptions = getCodeOptions("plant_insurability_type_code");  
+
+  get titleLabel() {
+    return `Edit Plant Insurability for ${this.dataReceived?.varietyName}`;
+  }
 
   constructor(
     public dialogRef: MatDialogRef<PlantInsurabilityComponent>,

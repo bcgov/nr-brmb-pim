@@ -1,22 +1,33 @@
 
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Input, OnChanges, SimpleChanges, Directive, } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { ParamMap } from '@angular/router';
+import { Input, OnChanges, SimpleChanges, Directive, ChangeDetectorRef, } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { CropVarietyCommodityType, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { CropCommodityList, InventoryContract, UwContract } from 'src/app/conversion/models';
 import { AddNewInventoryContract, DeleteInventoryContract, GetInventoryReport, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
-import { addUwCommentsObject, areDatesNotEqual, areNotEqual, isBaseCommodity, makeNumberOnly } from 'src/app/utils';
+import { addUwCommentsObject, areDatesNotEqual, areNotEqual, areNullableBooleanNotEqual, isBaseCommodity, makeNumberOnly } from 'src/app/utils';
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN, UW_COMMENT_TYPE_CODE } from 'src/app/utils/constants';
 import { BaseComponent } from '../../common/base/base.component';
-import { FieldUwComment, UnderwritingCommentsComponent } from '../../underwriting-comments/underwriting-comments.component';
 import { AddLandPopupData } from '../add-land/add-land.component';
 import { GrainInventoryComponentModel } from './grain-inventory.component.model';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { AddNewFormField, addAnnualFieldObject, addPlantingObject, addSeededGrainsObject, deleteFormField, deleteNewFormField, dragField, fieldHasInventory, isLinkedFieldCommon, isLinkedPlantingCommon, isThereAnyCommentForField, linkedFieldTooltipCommon, linkedPlantingTooltipCommon, navigateUpDownTextbox, openAddEditLandPopup, updateComments } from '../inventory-common';
 import { RemoveFieldPopupData } from '../remove-field/remove-field.component';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
+import { DomSanitizer, Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { RootState } from 'src/app/store';
+import { MatDialog } from '@angular/material/dialog';
+import { ApplicationStateService } from 'src/app/services/application-state.service';
+import { SecurityUtilService } from 'src/app/services/security-util.service';
+import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { ConnectionService } from 'ngx-connection-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Overlay } from '@angular/cdk/overlay';
+import { HttpClient } from '@angular/common/http';
+import { DecimalPipe } from '@angular/common';
 
 @Directive()
 export class GrainInventoryComponent extends BaseComponent implements OnChanges {
@@ -24,10 +35,33 @@ export class GrainInventoryComponent extends BaseComponent implements OnChanges 
 
   @Input() inventoryContract: InventoryContract;
   @Input() cropCommodityList: CropCommodityList;
+  @Input() underSeededCropCommodityList: CropCommodityList;
   @Input() growerContract: UwContract;
+
+  constructor(protected router: Router,
+    protected route: ActivatedRoute,
+    protected sanitizer: DomSanitizer,
+    protected store: Store<RootState>,
+    protected fb: FormBuilder,
+    protected dialog: MatDialog,
+    protected applicationStateService: ApplicationStateService,
+    public securityUtilService: SecurityUtilService,                
+    protected tokenService: TokenService,
+    protected connectionService: ConnectionService,
+    protected snackbarService: MatSnackBar,
+    protected overlay: Overlay,
+    protected cdr: ChangeDetectorRef,
+    protected appConfigService: AppConfigService,
+    protected http: HttpClient,
+    protected titleService: Title,
+    protected decimalPipe: DecimalPipe) {
+    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
+  }
 
   cropCommodityOptions = [];
   cropVarietyOptions = [];
+  lastYearsCropGrainCommodityOptions = [];
+  lastYearsCropForageVarietyOptions = [];
   commodityTotals = [];
 
   sumCommodityTotalUnseededAcres = 0;
@@ -67,6 +101,18 @@ getViewModel(): GrainInventoryComponentModel  { //
     return <GrainInventoryComponentModel>this.viewModel;
 }
 
+get lastYearsCropOptions() {
+  const lastYearsCropOptions = []
+  lastYearsCropOptions.push({
+    cropCommodityVarietyId: '0_0',
+    cropCommodityVarietyName: CROP_COMMODITY_UNSPECIFIED.NAME,
+    isUnseededInsurableInd: null
+  });
+  lastYearsCropOptions.push(...this.lastYearsCropGrainCommodityOptions);
+  lastYearsCropOptions.push(...this.lastYearsCropForageVarietyOptions);
+  return lastYearsCropOptions;
+}
+
 ngAfterViewInit() {
   super.ngAfterViewInit();
 }
@@ -82,8 +128,6 @@ ngOnChanges(changes: SimpleChanges) {
       });
   }
   this.ngOnChanges2(changes);
-
-  this.viewModel.formGroup.valueChanges.subscribe(val => {this.isMyFormDirty()})
 }
 
 ngOnChanges2(changes: SimpleChanges) {
@@ -130,7 +174,7 @@ ngOnChanges2(changes: SimpleChanges) {
     if (changes.cropCommodityList && this.cropCommodityList && this.cropCommodityList.collection && this.cropCommodityList.collection.length ) {
       // clear the crop options
       this.cropCommodityOptions = []
-      this.cropVarietyOptions = [] 
+      this.cropVarietyOptions = []
 
       // add an empty crop commodity
       this.cropCommodityOptions.push ({
@@ -145,10 +189,17 @@ ngOnChanges2(changes: SimpleChanges) {
         cropVarietyCommodityTypes: <CropVarietyCommodityType>[]
       })
 
+      this.lastYearsCropGrainCommodityOptions = []
       this.cropCommodityList.collection.forEach( ccm => this.getCropCommodityCodeOptions(ccm) )
 
       this.insurancePlanId = this.cropCommodityList.collection[0].insurancePlanId
 
+    }
+
+    // populate commodity and variety lists
+    if (changes.underSeededCropCommodityList && this.underSeededCropCommodityList && this.underSeededCropCommodityList.collection && this.underSeededCropCommodityList.collection.length ) {
+      this.lastYearsCropForageVarietyOptions = []
+      this.underSeededCropCommodityList.collection.forEach( ccm => this.getUnderSeededCropCommodityCodeOptions(ccm) )
     }
 
 
@@ -192,7 +243,8 @@ ngOnChanges2(changes: SimpleChanges) {
         // add plantings to the form
         fldPlantings.push( self.fb.group( 
           addPlantingObject(pltg.cropYear, pltg.fieldId, pltg.insurancePlanId, pltg.inventoryFieldGuid, 
-            pltg.lastYearCropCommodityId, pltg.lastYearCropCommodityName, pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, 
+            pltg.lastYearCropCommodityId, pltg.lastYearCropCommodityName, pltg.lastYearCropVarietyId, pltg.lastYearCropVarietyName,
+            pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, 
             pltg.underseededInventorySeededForageGuid, pltg.inventoryUnseeded, pltgInventorySeededGrains, new FormArray([]) ) ) )
         }
 
@@ -216,7 +268,30 @@ ngOnChanges2(changes: SimpleChanges) {
     
     let fld: FormArray = this.viewModel.formGroup.controls.fields as FormArray
 
-    fld.push( this.fb.group( addAnnualFieldObject(field, fldPlantings, fldComments) ) )
+    const formGroup = this.fb.group( addAnnualFieldObject(field, fldPlantings, fldComments) )
+
+    // detect when a field is added
+    // also detect when other legal description is changed
+    formGroup.controls.landUpdateType.valueChanges.subscribe((value) => {
+      if (value) {
+        self.hasDataChanged = true;
+        self.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, self.hasDataChanged));
+      }
+    });
+
+    // detect when comments are added or deleted
+    formGroup.controls.uwComments.valueChanges.subscribe(() => {
+      self.hasDataChanged = true;
+      self.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, self.hasDataChanged));
+    });
+
+    // detect when a field is deleted
+    formGroup.controls.deletedByUserInd.valueChanges.subscribe(() => {
+      self.hasDataChanged = true;
+      self.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, self.hasDataChanged));
+    });
+
+    fld.push(formGroup)
   }
 
 
@@ -226,7 +301,24 @@ ngOnChanges2(changes: SimpleChanges) {
       cropCommodityId: opt.cropCommodityId
     })
 
+    this.lastYearsCropGrainCommodityOptions.push ({
+      cropCommodityVarietyId: `${opt.cropCommodityId}_0`,
+      cropCommodityVarietyName: opt.commodityName,
+      isUnseededInsurableInd: true
+    })
+
     opt.cropVariety.forEach( cv => this.getCropVarietyCodeOptions(cv) )
+  }
+
+  getUnderSeededCropCommodityCodeOptions(uCmdty) {
+    const self = this;
+    uCmdty.cropVariety.forEach(uVrty => {
+      self.lastYearsCropForageVarietyOptions.push ({
+        cropCommodityVarietyId: `${uCmdty.cropCommodityId}_${uVrty.cropVarietyId}`,
+        cropCommodityVarietyName: uVrty.varietyName,
+        isUnseededInsurableInd: uVrty.isGrainUnseededDefaultInd
+      })
+    });
   }
 
   getCropVarietyCodeOptions(opt) {
@@ -435,7 +527,6 @@ ngOnChanges2(changes: SimpleChanges) {
     updatedInventoryContract.tilliageInd = this.viewModel.formGroup.controls.tilliageInd.value
     updatedInventoryContract.otherChangesInd =  this.viewModel.formGroup.controls.otherChangesInd.value
     updatedInventoryContract.otherChangesComment = this.viewModel.formGroup.controls.otherChangesComment.value
-
     updatedInventoryContract.grainFromPrevYearInd = this.viewModel.formGroup.controls.grainFromPrevYearInd.value
 
     var self = this;   
@@ -474,6 +565,8 @@ ngOnChanges2(changes: SimpleChanges) {
     
           if (updPlanting) {
             // update exisitng unseeded values (also covers delete when there is more than 1 planting)
+            updPlanting.lastYearCropCommodityId = parseInt( formField.value.plantings.value[i].lastYearCropCommodityVarietyId.split('_')[0] ) || null
+            updPlanting.lastYearCropVarietyId = parseInt( formField.value.plantings.value[i].lastYearCropCommodityVarietyId.split('_')[1] ) || null
             updPlanting.inventoryUnseeded.acresToBeSeeded = ( isNaN( tmpAcres) ? null : tmpAcres)
             updPlanting.inventoryUnseeded.cropCommodityId = formField.value.plantings.value[i].cropCommodityId
             updPlanting.inventoryUnseeded.isUnseededInsurableInd = formField.value.plantings.value[i].isUnseededInsurableInd
@@ -566,6 +659,8 @@ ngOnChanges2(changes: SimpleChanges) {
                   isHiddenOnPrintoutInd: formField.value.plantings.value[i].isHiddenOnPrintoutInd,
                   lastYearCropCommodityId: formField.value.plantings.value[i].lastYearCropCommodityId,
                   lastYearCropCommodityName: formField.value.plantings.value[i].lastYearCropCommodityName,
+                  lastYearCropVarietyId: formField.value.plantings.value[i].lastYearCropVarietyId,
+                  lastYearCropVarietyName: formField.value.plantings.value[i].lastYearCropVarietyName,
                   plantingNumber: formField.value.plantings.value[i].plantingNumber,
                   underseededAcres:                 formField.value.plantings.value[i].inventorySeededGrains.value[0].underSeededAcres,
                   underseededCropVarietyId:         formField.value.plantings.value[i].inventorySeededGrains.value[0].underSeededVrtyCtrl.cropVarietyId,
@@ -625,6 +720,8 @@ ngOnChanges2(changes: SimpleChanges) {
                         isHiddenOnPrintoutInd: formField.value.plantings.value[i].isHiddenOnPrintoutInd,
                         lastYearCropCommodityId: formField.value.plantings.value[i].lastYearCropCommodityId,
                         lastYearCropCommodityName: formField.value.plantings.value[i].lastYearCropCommodityName,
+                        lastYearCropVarietyId: formField.value.plantings.value[i].lastYearCropVarietyId,
+                        lastYearCropVarietyName: formField.value.plantings.value[i].lastYearCropVarietyName,
                         plantingNumber: formField.value.plantings.value[i].plantingNumber,
                         underseededAcres:                 formField.value.plantings.value[i].inventorySeededGrains.value[0].underSeededAcres,
                         underseededCropVarietyId:         formField.value.plantings.value[i].inventorySeededGrains.value[0].underSeededVrtyCtrl.cropVarietyId,
@@ -831,6 +928,9 @@ ngOnChanges2(changes: SimpleChanges) {
       // add new
       this.store.dispatch(AddNewInventoryContract(INVENTORY_COMPONENT_ID, this.policyId, newInventoryContract))
     }
+
+    this.hasDataChanged = false
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, this.hasDataChanged ));
   }
 
   onAddPlanting(planting) {
@@ -852,42 +952,26 @@ ngOnChanges2(changes: SimpleChanges) {
         field.value.plantings.push( self.fb.group( 
 
           addPlantingObject(planting.value.cropYear, planting.value.fieldId, planting.value.insurancePlanId, planting.value.inventoryFieldGuid, 
-            planting.value.lastYearCropCommodityId, planting.value.lastYearCropCommodityName, planting.value.plantingNumber + 1, false, null,
+            planting.value.lastYearCropCommodityId, planting.value.lastYearCropCommodityName, planting.value.lastYearCropVarietyId, planting.value.lastYearCropVarietyName,
+            planting.value.plantingNumber + 1, false, null,
             <InventoryUnseeded>{}, pltgInventorySeededGrains, new FormArray ([]) )
 
-         ) )          
+         ) )
+         
+         self.isMyFormDirty()
       }
     })
   }
 
-  onLoadComments(field) {
-  
-    const dataToSend : FieldUwComment = {
-      fieldId: field.value.fieldId,
-      annualFieldDetailId: field.value.annualFieldDetailId,
-      uwCommentTypeCode: UW_COMMENT_TYPE_CODE.INVENTORY_GENERAL,
-      uwComments: field.value.uwComments 
-    }
+  onInventoryCommentsDone(fieldId: number, uwComments: UnderwritingComment[]) {
 
-    const dialogRef = this.dialog.open(UnderwritingCommentsComponent, {
-      width: '800px',
-      data: dataToSend
-    });
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
 
-    dialogRef.afterClosed().subscribe(result => {
+    updateComments(fieldId, uwComments, flds)
 
-      if (result && result.event == 'Update'){
+    this.cdr.detectChanges()
 
-        const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
-
-        updateComments(result.data, flds);
-
-        this.cdr.detectChanges()
-
-      } else if (result && result.event == 'Cancel'){
-        // do nothing
-      }
-    });
+    this.isMyFormDirty()
 
   }
 
@@ -902,6 +986,10 @@ ngOnChanges2(changes: SimpleChanges) {
         // prepare the new inventory contract
         this.store.dispatch(RolloverInventoryContract(this.componentId, this.policyId))
       }
+
+      this.hasDataChanged = false
+      this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, this.hasDataChanged ));
+
       displaySuccessSnackbar(this.snackbarService, "Unsaved changes have been cleared successfully.")
     }
     
@@ -987,12 +1075,7 @@ onDeleteField(field) {
 
   
   addEmptyPlantingObject (fieldId) {
-    return addPlantingObject( this.cropYear, fieldId, this.insurancePlanId, '', '', '', 1, false, null, <InventoryUnseeded>{}, new FormArray ([]), new FormArray ([]))
-  }
-
-
-  isThereAnyComment(field) {
-    return isThereAnyCommentForField(field) 
+    return addPlantingObject( this.cropYear, fieldId, this.insurancePlanId, '', '', '', '', '', 1, false, null, <InventoryUnseeded>{}, new FormArray ([]), new FormArray ([]))
   }
 
   
@@ -1003,7 +1086,6 @@ onDeleteField(field) {
 
       this.hasDataChanged = this.isMyFormReallyDirty()
       this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, this.hasDataChanged ));
-      
     }
 
   }
@@ -1022,7 +1104,7 @@ onDeleteField(field) {
          areNotEqual (this.inventoryContract.tilliageInd, frmMain.controls.tilliageInd.value) ||
          areNotEqual (this.inventoryContract.otherChangesInd, frmMain.controls.otherChangesInd.value) ||          
          areNotEqual (this.inventoryContract.otherChangesComment, frmMain.controls.otherChangesComment.value) ||          
-         areNotEqual (this.inventoryContract.grainFromPrevYearInd, frmMain.controls.grainFromPrevYearInd.value) ) {
+         areNullableBooleanNotEqual (this.inventoryContract.grainFromPrevYearInd, frmMain.controls.grainFromPrevYearInd.value) ) {
         
         return true
     }
@@ -1085,9 +1167,14 @@ onDeleteField(field) {
           let originalPlanting = originalField.plantings.find( p => p.plantingNumber == frmPlanting.value.plantingNumber)
 
           if (originalPlanting) {
+
+            const lastYearCropCommodityId = parseInt( frmPlanting.value.lastYearCropCommodityVarietyId.split('_')[0] ) || null
+            const lastYearCropVarietyId = parseInt( frmPlanting.value.lastYearCropCommodityVarietyId.split('_')[1] ) || null
             
             // the planting was found in the original resource, check if anything has changed
             if ( frmPlanting.value.deletedByUserInd == true ||
+                areNotEqual(lastYearCropCommodityId, originalPlanting.lastYearCropCommodityId) ||
+                areNotEqual(lastYearCropVarietyId, originalPlanting.lastYearCropVarietyId) ||
                 areNotEqual(frmPlanting.value.acresToBeSeeded, originalPlanting.inventoryUnseeded.acresToBeSeeded) ||
                 areNotEqual(frmPlanting.value.cropCommodityId, originalPlanting.inventoryUnseeded.cropCommodityId) ||
                 areNotEqual(frmPlanting.value.isUnseededInsurableInd, originalPlanting.inventoryUnseeded.isUnseededInsurableInd) ||
@@ -1231,6 +1318,7 @@ onDeleteField(field) {
     let fields = this.getViewModel().formGroup.controls.fields as FormArray
     dragField(event, fields)
 
+    this.isMyFormDirty()
   }
 
   onDeleteInventory() {

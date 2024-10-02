@@ -106,8 +106,10 @@ public class SeedingDeadlineListEndpointTest extends EndpointsTest {
 					.collect(Collectors.toList());
 			
 			if(resources != null && resources.size() > 0) {
-				//DELETE
-				service.deleteUnderwritingYear(resources.get(0));
+
+				//FETCH then DELETE.
+				UnderwritingYearRsrc uwYearRsrc = service.getUnderwritingYear(resources.get(0));				
+				service.deleteUnderwritingYear(uwYearRsrc);
 			}
 		}
 	}
@@ -173,10 +175,17 @@ public class SeedingDeadlineListEndpointTest extends EndpointsTest {
 		
 		//Create Underwriting Year
 		createUnderwritingYear(cropYear);
+
+		// Fetch seeding deadlines
+		SeedingDeadlineListRsrc seedingDeadlineList = service.getSeedingDeadlines(
+				topLevelEndpoints, 
+				cropYear.toString()
+		);
+
+		Assert.assertNotNull(seedingDeadlineList);
+		Assert.assertEquals(0, seedingDeadlineList.getCollection().size());
 		
 		//Add 2 seeding deadlines
-		SeedingDeadlineListRsrc seedingDeadlineList = new SeedingDeadlineListRsrc();
-		
 		SeedingDeadline seedingDeadline1 = createSeedingDeadline(commodityTypeCode1);
 		SeedingDeadline seedingDeadline2 = createSeedingDeadline(commodityTypeCode2);
 

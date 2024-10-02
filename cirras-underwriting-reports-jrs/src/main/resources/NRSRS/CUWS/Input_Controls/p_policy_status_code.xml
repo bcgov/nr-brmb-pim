@@ -2,10 +2,10 @@
 <inputControl exportedWithPermissions="true">
     <folder>/NRSRS/CUWS/Input_Controls</folder>
     <name>p_policy_status_code</name>
-    <version>0</version>
+    <version>1</version>
     <label>p_policy_status_code</label>
     <description></description>
-    <creationDate>2023-06-06T16:02:47.249-07:00</creationDate>
+    <creationDate>2024-06-11T12:20:22.584-07:00</creationDate>
     <updateDate>2023-06-06T16:02:47.249-07:00</updateDate>
     <type>2</type>
     <mandatory>false</mandatory>

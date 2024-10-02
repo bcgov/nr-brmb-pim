@@ -1,0 +1,26 @@
+
+{
+    "databaseChangeLog": [
+{ "changeSet": {"author":"mhostettler","id":"54","changes": [
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.plant_insurability_type_code.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.land_identifier_type_code.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.primary_reference_type_code.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.inventory_seeded_forage.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.inventory_coverage_total_forage.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.inventory.contract.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.crop_variety_insurability.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.crop_variety_ins_plant_ins_xref.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.legal_land.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.field.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.annual_field_detail.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.contracted_field_detail.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.legal_land_field_xref.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.risk_area.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.legal_land_risk_area_xref.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.inventory_field.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/temp_tables/cuws.ddl.create_legal_land_staging.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/cuws.create_sequences.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
+] } }]}
+
+

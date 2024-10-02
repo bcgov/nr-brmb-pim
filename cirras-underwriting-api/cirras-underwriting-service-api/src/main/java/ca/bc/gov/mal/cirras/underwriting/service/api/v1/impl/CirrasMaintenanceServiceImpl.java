@@ -12,6 +12,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.CommodityTypeCodeList;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.CropVarietyInsurability;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.CropVarietyInsurabilityList;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.CropVarietyPlantInsurability;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodityForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.GradeModifier;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.GradeModifierList;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.GradeModifierType;
@@ -26,7 +27,9 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CommodityTypeCodeDto
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CropVarietyInsPlantInsXrefDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CropVarietyInsurabilityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GradeModifierDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GradeModifierTypeCodeDto;
@@ -37,7 +40,9 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.CommodityTypeCodeDao
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.CropVarietyInsPlantInsXrefDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.CropVarietyInsurabilityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.GradeModifierDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.GradeModifierTypeCodeDao;
@@ -62,6 +67,7 @@ import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.GradeModif
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.SeedingDeadlineFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UnderwritingYearFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.YieldMeasUnitConversionFactory;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.ModelValidator;
 
 
@@ -95,6 +101,8 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	private DeclaredYieldContractCommodityDao declaredYieldContractCommodityDao;
 	private DeclaredYieldFieldRollupDao declaredYieldFieldRollupDao;
 	private DeclaredYieldFieldDao declaredYieldFieldDao;
+	private DeclaredYieldContractCommodityForageDao declaredYieldContractCommodityForageDao;
+	private DeclaredYieldFieldForageDao declaredYieldFieldForageDao;
 
 	public static final String MaximumResultsProperty = "maximum.results";
 
@@ -182,6 +190,14 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 
 	public void setDeclaredYieldFieldDao(DeclaredYieldFieldDao declaredYieldFieldDao) {
 		this.declaredYieldFieldDao = declaredYieldFieldDao;
+	}
+
+	public void setDeclaredYieldContractCommodityForageDao(DeclaredYieldContractCommodityForageDao declaredYieldContractCommodityForageDao) {
+		this.declaredYieldContractCommodityForageDao = declaredYieldContractCommodityForageDao;
+	}
+
+	public void setDeclaredYieldFieldForageDao(DeclaredYieldFieldForageDao declaredYieldFieldForageDao) {
+		this.declaredYieldFieldForageDao = declaredYieldFieldForageDao;
 	}
 		
 	@Override
@@ -1008,7 +1024,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 						deleteYieldMeasUnitConversion(yieldMeasUnitConversion);
 					} else {
 						//insert or update
-						updateYieldMeasUnitConversion(yieldMeasUnitConversion, userId);
+						updateYieldMeasUnitConversion(insurancePlanId, yieldMeasUnitConversion, userId);
 					}
 				}
 				
@@ -1041,6 +1057,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	}
 	
 	private void updateYieldMeasUnitConversion(
+			Integer insurancePlanId,
 			YieldMeasUnitConversion yieldMeasUnitConversion, 
 			String userId
 		) throws DaoException {
@@ -1066,12 +1083,14 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 				//Only save and recalculate existing yield if the conversion factor changed
 				if(Double.compare(dto.getConversionFactor(), yieldMeasUnitConversion.getConversionFactor()) != 0){
 					
+					Double oldConversionFactor = dto.getConversionFactor();
+					
 					yieldMeasUnitConversionFactory.updateDto(dto, yieldMeasUnitConversion);
 
 					yieldMeasUnitConversionDao.update(dto, userId);
 					
 					//Recalculate existing Yield
-					recalculateYield(yieldMeasUnitConversion, userId);
+					recalculateYield(insurancePlanId, yieldMeasUnitConversion, oldConversionFactor, userId);
 				}
 			}
 
@@ -1081,9 +1100,77 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 
 	}
 
-	// TODO: Add FORAGE DOP. Implemented in PIM-1392
-	private void recalculateYield(YieldMeasUnitConversion yieldMeasUnitConversion, String userId) throws DaoException {
+	private void recalculateYield(Integer insurancePlanId, YieldMeasUnitConversion yieldMeasUnitConversion, Double oldConversionFactor, String userId) throws DaoException {
 		logger.debug("<recalculateYield");
+		
+		if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(insurancePlanId) ) {
+			recalculateYieldGrain(yieldMeasUnitConversion, userId);
+		} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(insurancePlanId) ) {
+			recalculateYieldForage(yieldMeasUnitConversion, oldConversionFactor, userId);
+		}
+		
+		logger.debug(">recalculateYield");
+		
+	}
+
+	private void recalculateYieldForage(YieldMeasUnitConversion yieldMeasUnitConversion, Double oldConversionFactor, String userId) throws DaoException {
+		logger.debug("<recalculateYieldForage");
+		
+		//Get contract commodities
+		List<DeclaredYieldContractCommodityForageDto> dyccDto = declaredYieldContractCommodityForageDao.selectToRecalculate(
+				yieldMeasUnitConversion.getCropCommodityId(), 
+				yieldMeasUnitConversion.getTargetYieldMeasUnitTypeCode(),
+				yieldMeasUnitConversion.getEffectiveCropYear(),
+				yieldMeasUnitConversion.getExpiryCropYear()
+				);
+		
+		//Recalculate
+		if(dyccDto != null && dyccDto.size() > 0) {
+			for (DeclaredYieldContractCommodityForageDto dto : dyccDto) {
+				//Convert it into entered units with the old conversion factor
+				dto.setQuantityHarvestedTons(calculateYieldMeasUnitConversion(oldConversionFactor, dto.getQuantityHarvestedTons(), true));
+				//Convert it into default units with the new conversion factor
+				dto.setQuantityHarvestedTons(calculateYieldMeasUnitConversion(yieldMeasUnitConversion.getConversionFactor(), dto.getQuantityHarvestedTons(), false));
+				
+				//Set yield per acre if harvested tons is not overwritten
+				if(dto.getQuantityHarvestedTonsOverride() == null) {
+					//Take override harvested acres if it's not null
+					Double harvestedAcresForCalculation = dto.getHarvestedAcresOverride() == null ? dto.getHarvestedAcres() : dto.getHarvestedAcresOverride();
+
+					Double yieldPerAcre = (double)0;
+					if(harvestedAcresForCalculation > 0) {
+						yieldPerAcre = dto.getQuantityHarvestedTons() / harvestedAcresForCalculation;
+					}
+					dto.setYieldPerAcre(yieldPerAcre);
+				}
+				
+				declaredYieldContractCommodityForageDao.update(dto, userId);
+			}
+		}
+
+		//Get Fields
+		List<DeclaredYieldFieldForageDto> dyfDto = declaredYieldFieldForageDao.selectToRecalculate(
+				yieldMeasUnitConversion.getCropCommodityId(), 
+				yieldMeasUnitConversion.getTargetYieldMeasUnitTypeCode(),
+				yieldMeasUnitConversion.getEffectiveCropYear(),
+				yieldMeasUnitConversion.getExpiryCropYear()
+				);
+		
+		//Recalculate
+		if(dyfDto != null && dyfDto.size() > 0) {
+			for (DeclaredYieldFieldForageDto dto : dyfDto) {
+				dto.setWeightDefaultUnit(calculateYieldMeasUnitConversion(yieldMeasUnitConversion.getConversionFactor(), dto.getWeight(), false));
+				declaredYieldFieldForageDao.update(dto, userId);
+			}
+		}
+		
+		logger.debug(">recalculateYieldForage");
+		
+	}
+	
+	
+	private void recalculateYieldGrain(YieldMeasUnitConversion yieldMeasUnitConversion, String userId) throws DaoException {
+		logger.debug("<recalculateYieldGrain");
 		
 		//Get contract commodities
 		List<DeclaredYieldContractCommodityDto> dyccDto = declaredYieldContractCommodityDao.selectToRecalculate(
@@ -1139,15 +1226,14 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 			}
 		}
 		
-		logger.debug(">recalculateYield");
+		logger.debug(">recalculateYieldGrain");
 		
 	}
 	
 	// Calculate srcValue converted to the target yield meas unit specified by conversionFactor
 	// If srcValue is null, targetValue is null.
 	// Otherwise the calculated targetValue is returned.
-	private Double calculateYieldMeasUnitConversion(Double conversionFactor, Double srcValue,
-			boolean multiply) {
+	private Double calculateYieldMeasUnitConversion(Double conversionFactor, Double srcValue, boolean multiply) {
 
 		//multiply = true if source units is default units
 		

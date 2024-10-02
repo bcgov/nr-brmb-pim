@@ -35,8 +35,6 @@ public class AnnualFieldRolloverInvEndpointTest extends EndpointsTest {
 	};
 	
 	
-	
-
 	@Test
 	public void testAnnualFieldsRolloverInventoryFromPreviousYear() throws CirrasUnderwritingServiceException, Oauth2ClientException {
 		logger.debug("<testAnnualFieldsRolloverInventoryFromPreviousYear");
@@ -83,6 +81,8 @@ public class AnnualFieldRolloverInvEndpointTest extends EndpointsTest {
 		for (InventoryField invField: rolledoverField.getPlantings()) {
 			Assert.assertFalse("is hidden on printout ind is not false", invField.getIsHiddenOnPrintoutInd());
 
+			// TODO: Update to include variety (PIM-1466).
+			
 			Integer lastYearCmdtyId = invField.getLastYearCropCommodityId();
 			//Check if commodity is oat or canola
 			Assert.assertTrue("commodity id ("+lastYearCmdtyId+") not 24, 18 or 16", lastYearCmdtyId.equals(24) || lastYearCmdtyId.equals(18) || lastYearCmdtyId.equals(16));

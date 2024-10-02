@@ -1,0 +1,14 @@
+{
+  "databaseChangeLog": [
+
+
+    { "changeSet": {"author":"mhostettler","id":"30","changes": [
+        {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.legal_land.sql"}},
+        {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.ddl.update.underwriting_comment.sql"}},
+        {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.ddl.update_inventory_seeded_grain.sql"}},
+        {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/temp_tables/cuws.ddl.create_planting_2022_staging.sql"}},
+        {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/temp_tables/cuws.ddl.create_property_identifier_staging.sql"}}] } }
+          ]
+}
+
+

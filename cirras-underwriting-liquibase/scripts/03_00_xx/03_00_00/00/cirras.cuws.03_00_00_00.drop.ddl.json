@@ -1,0 +1,7 @@
+
+
+{
+    "databaseChangeLog": [
+{ "changeSet": {"author":"mhostettler","id":"72","changes": [{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/temp_tables/cuws.ddl.drop_legal_land_staging.sql"}}] } }]}
+
+

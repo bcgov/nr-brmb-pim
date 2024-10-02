@@ -98,7 +98,7 @@ export interface InventoryContract {
   tilliageInd?: boolean;
   otherChangesInd?: boolean;
   otherChangesComment?: string;
-  grainFromPrevYearInd?: boolean;
+  grainFromPrevYearInd?: boolean | null;
   invUpdateTimestamp?: string;
   invUpdateUser?: string;
   policyNumber?: string;
@@ -153,6 +153,7 @@ export interface CropVariety {
   isPlantInsurableInd?: boolean;
   isAwpEligibleInd?: boolean;
   isUnderseedingEligibleInd?: boolean;
+  isGrainUnseededDefaultInd?: boolean;
   cropVarietyCommodityTypes?: Array<CropVarietyCommodityType>;
   cropVarietyPlantInsurabilities?: Array<CropVarietyPlantInsurability>;
 }

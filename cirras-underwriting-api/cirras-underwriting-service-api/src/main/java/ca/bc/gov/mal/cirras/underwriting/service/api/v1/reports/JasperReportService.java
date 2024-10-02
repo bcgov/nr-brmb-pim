@@ -6,8 +6,10 @@ public interface JasperReportService
 {
 	byte[] generateSampleCuwsReport() throws JasperReportServiceException;
 
-	byte[] generateDopReport(Map<String, String> paramMap) throws JasperReportServiceException;
+	byte[] generateDopGrainReport(Map<String, String> paramMap) throws JasperReportServiceException;
 
+	byte[] generateDopForageReport(Map<String, String> paramMap) throws JasperReportServiceException;
+	
 	byte[] generateInvForageReport(Map<String, String> paramMap) throws JasperReportServiceException;
 
 	byte[] generateInvGrainReport(Map<String, String> paramMap) throws JasperReportServiceException;

@@ -179,7 +179,7 @@ public class CropVarietyInsurabilityListEndpointTest extends EndpointsTest {
 		CropVarietyInsurability cropVarietyInsurability1 = getCropVarietyInsurability(insurabilityList, cropVarietyId1);
 		Assert.assertNotNull(cropVarietyInsurability1);
 		
-		setCropVarietyInsurability(cropVarietyInsurability1, true, false, true, false, true);
+		setCropVarietyInsurability(cropVarietyInsurability1, true, false, true, false, true, false);
 		
 		//Add plant insurabilities
 		cropVarietyInsurability1.getCropVarietyPlantInsurabilities().add(getNewCropVarietyPlantInsurability(plantInsurabilityTypeCode1, plantInsurabilityTypeDesc1, cropVarietyInsurability1.getCropVarietyInsurabilityGuid(), cropVarietyInsurability1.getCropVarietyId() ));
@@ -206,7 +206,7 @@ public class CropVarietyInsurabilityListEndpointTest extends EndpointsTest {
 		assertPlantInsurabilities(plantInsurabilityTypeCode2, cropVarietyInsurability1.getCropVarietyPlantInsurabilities(), insertedRecord.getCropVarietyPlantInsurabilities());
 		
 		//Update same
-		setCropVarietyInsurability(insertedRecord, false, true, false, true, false);
+		setCropVarietyInsurability(insertedRecord, false, true, false, true, false, true);
 		
 		//Add new plant insurablity and remove an existing one
 		insertedRecord.getCropVarietyPlantInsurabilities().add(getNewCropVarietyPlantInsurability(plantInsurabilityTypeCode3, plantInsurabilityTypeDesc3, cropVarietyInsurability1.getCropVarietyInsurabilityGuid(), cropVarietyInsurability1.getCropVarietyId()));
@@ -302,7 +302,7 @@ public class CropVarietyInsurabilityListEndpointTest extends EndpointsTest {
 		CropVarietyInsurability cropVarietyInsurability1 = getCropVarietyInsurability(insurabilityList, cropVarietyId1);
 		Assert.assertNotNull(cropVarietyInsurability1);
 		
-		setCropVarietyInsurability(cropVarietyInsurability1, true, true, true, true, true);
+		setCropVarietyInsurability(cropVarietyInsurability1, true, true, true, true, true, true);
 		
 		//Add plant insurability
 		cropVarietyInsurability1.getCropVarietyPlantInsurabilities().add(getNewCropVarietyPlantInsurability(plantInsurabilityTypeCode1, plantInsurabilityTypeDesc1, cropVarietyInsurability1.getCropVarietyInsurabilityGuid(), cropVarietyInsurability1.getCropVarietyId() ));
@@ -321,7 +321,7 @@ public class CropVarietyInsurabilityListEndpointTest extends EndpointsTest {
 		Assert.assertEquals(1, cropVarietyInsurability1.getCropVarietyPlantInsurabilities().size());
 		
 		//Update to false
-		setCropVarietyInsurability(cropVarietyInsurability1, false, false, false, false, false);
+		setCropVarietyInsurability(cropVarietyInsurability1, false, false, false, false, false, false);
 
 		//remove plant insurability
 		CropVarietyPlantInsurability plantInsurabilityToDelete = getCropVarietyPlantInsurability(cropVarietyInsurability1.getCropVarietyPlantInsurabilities(), plantInsurabilityTypeCode1);
@@ -618,7 +618,8 @@ public class CropVarietyInsurabilityListEndpointTest extends EndpointsTest {
 			Boolean isUnseededInsurableInd,
 			Boolean isPlantInsurableInd,
 			Boolean isAwpEligibleInd,
-			Boolean isUnderseedingEligibleInd
+			Boolean isUnderseedingEligibleInd, 
+			Boolean isGrainUnseededDefaultInd
 		) {
 		
 		model.setIsQuantityInsurableInd(isQuantityInsurableInd);
@@ -626,6 +627,7 @@ public class CropVarietyInsurabilityListEndpointTest extends EndpointsTest {
 		model.setIsPlantInsurableInd(isPlantInsurableInd);
 		model.setIsAwpEligibleInd(isAwpEligibleInd);
 		model.setIsUnderseedingEligibleInd(isUnderseedingEligibleInd);
+		model.setIsGrainUnseededDefaultInd(isGrainUnseededDefaultInd);
 	}
 	
 	private CropVarietyPlantInsurability getNewCropVarietyPlantInsurability(
@@ -694,7 +696,8 @@ public class CropVarietyInsurabilityListEndpointTest extends EndpointsTest {
 		Assert.assertEquals("IsPlantInsurableInd", expected.getIsPlantInsurableInd(), actual.getIsPlantInsurableInd());
 		Assert.assertEquals("IsAwpEligibleInd", expected.getIsAwpEligibleInd(), actual.getIsAwpEligibleInd());
 		Assert.assertEquals("IsUnderseedingEligibleInd", expected.getIsUnderseedingEligibleInd(), actual.getIsUnderseedingEligibleInd());
-		
+		Assert.assertEquals("IsGrainUnseededDefaultInd", expected.getIsGrainUnseededDefaultInd(), actual.getIsGrainUnseededDefaultInd());
+
 		assertValidationFlags(actual, expectValues);
 	}
 	

@@ -16,6 +16,8 @@ public class InventoryField implements Serializable {
 	private Integer fieldId;
 	private Integer lastYearCropCommodityId;
 	private String lastYearCropCommodityName;
+	private Integer lastYearCropVarietyId;
+	private String lastYearCropVarietyName;
 	private Integer cropYear;
 	private Integer plantingNumber;
 	private Boolean isHiddenOnPrintoutInd;
@@ -68,7 +70,21 @@ public class InventoryField implements Serializable {
 	public void setLastYearCropCommodityName(String lastYearCropCommodityName) {
 		this.lastYearCropCommodityName = lastYearCropCommodityName;
 	}
-	
+
+	public Integer getLastYearCropVarietyId() {
+		return lastYearCropVarietyId;
+	}
+	public void setLastYearCropVarietyId(Integer lastYearCropVarietyId) {
+		this.lastYearCropVarietyId = lastYearCropVarietyId;
+	}
+
+	public String getLastYearCropVarietyName() {
+		return lastYearCropVarietyName;
+	}
+	public void setLastYearCropVarietyName(String lastYearCropVarietyName) {
+		this.lastYearCropVarietyName = lastYearCropVarietyName;
+	}
+		
 	public Integer getCropYear() {
 		return cropYear;
 	}
