@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -39,7 +40,7 @@ public class JasperReportServiceImpl implements JasperReportService
 	@Override
 	public byte[] generateSampleCuwsReport() throws JasperReportServiceException
 	{
-		byte[] reportContent = generateJasperReport("Sample_CUWS_Report", "pdf", null);		
+		byte[] reportContent = generateJasperReportInMemory("Sample_CUWS_Report", new HashMap<String, Object>());
 		return reportContent;
 	}
 
@@ -70,6 +71,11 @@ public class JasperReportServiceImpl implements JasperReportService
 
 	private byte[] generateJasperReportInMemory(String reportName, Map<String, Object> paramMap) throws JasperReportServiceException
 	{
+		// Check config settings.
+		if ( cirrasUnderwritingDataSource == null ) {
+			throw new JasperReportServiceException("cirrasUnderwritingDataSource is not set");
+		}
+		
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
 		try {
@@ -89,6 +95,8 @@ public class JasperReportServiceImpl implements JasperReportService
 		return byteArrayOutputStream.toByteArray();
 	}
 
+	//PIM-1557: Jasper reports are now generated from within UW API. So this method for accessing the Jasper Server is no longer used, and may 
+	//          be removed in a future release.
 	private byte[] generateJasperReport(String reportName, String reportFormat, Map<String, String> paramMap) throws JasperReportServiceException
 	{
 		// Check config settings.

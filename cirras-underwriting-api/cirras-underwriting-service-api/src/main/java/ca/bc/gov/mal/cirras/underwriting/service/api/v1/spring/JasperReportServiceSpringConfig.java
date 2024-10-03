@@ -44,9 +44,12 @@ public class JasperReportServiceSpringConfig
 		
 		result = new JasperReportServiceImpl();
 
+		//PIM-1557: These three properties are for accessing the Jasper Server, which is no longer
+		//          being used. They are still in place for now, but it's safe to set to null.
 		result.setReportServiceUrl(reportServiceUrl);
 		result.setReportServicePassword(reportServicePassword);
 		result.setReportServiceUsername(reportServiceUsername);
+
 		result.setCirrasUnderwritingDataSource(cirrasUnderwritingDataSource);
 
 		return result;
