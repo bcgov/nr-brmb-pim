@@ -4,7 +4,8 @@
     <name>CUWS_DOP_Forage_Sub</name>
     <label>CUWS_DOP_Forage_Sub</label>
     <description></description>
-    <creationDate>2024-06-11T12:13:30.772-07:00</creationDate>
-    <updateDate>2024-05-09T13:57:37.591-07:00</updateDate>
+    <creationDate>2024-09-23T22:09:03.000Z</creationDate>
+    <updateDate>2024-05-09T20:57:37.000Z</updateDate>
     <resource>CUWS_DOP_Forage_Plantings.jrxml</resource>
+    <resource>CUWS_DOP_Forage_Totals.jrxml</resource>
 </folder>

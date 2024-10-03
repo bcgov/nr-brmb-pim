@@ -4,22 +4,10 @@
     <name>CUWS</name>
     <label>CUWS</label>
     <description></description>
-    <creationDate>2024-06-11T12:13:30.582-07:00</creationDate>
-    <updateDate>2023-05-15T16:17:09.479-07:00</updateDate>
+    <creationDate>2024-09-23T22:09:03.000Z</creationDate>
+    <updateDate>2023-05-15T23:17:09.000Z</updateDate>
     <folder>Images</folder>
     <folder>Input_Controls</folder>
     <folder>Jrxml</folder>
     <folder>Reports</folder>
-    <permission>
-        <permissionMask>2</permissionMask>
-        <recipient recipientType="role">ROLE_LOCAL_NRSRS_CUWS</recipient>
-    </permission>
-    <permission>
-        <permissionMask>0</permissionMask>
-        <recipient recipientType="role">ROLE_WEBADE_JASPER_USER</recipient>
-    </permission>
-    <permission>
-        <permissionMask>0</permissionMask>
-        <recipient recipientType="role">ROLE_LOCAL_NRSRS_USER</recipient>
-    </permission>
 </folder>
