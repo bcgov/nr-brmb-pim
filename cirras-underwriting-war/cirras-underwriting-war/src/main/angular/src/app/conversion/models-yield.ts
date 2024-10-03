@@ -163,9 +163,13 @@ export interface DopYieldContractCommodityForage {
     commodityTypeCode?: string;
     totalFieldAcres?: number;
     harvestedAcres?: number;
-    harvestedAcresOverride?: number;
+    totalBalesLoads?: number;
+    weight?: number;
+    weightDefaultUnit?: number;
+    moisturePercent?: number;
     quantityHarvestedTons?: number;
-    quantityHarvestedTonsOverride?: number;
     yieldPerAcre?: number;
     commodityTypeDescription?: string;
+    cropCommodityId?: number;
+    plantDurationTypeCode?: string;
 }

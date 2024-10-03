@@ -1,18 +1,18 @@
 <div class="plcy-inv-cmdty-totals-header"
-    style="grid-template-columns: 100px 100px 115px 115px 160px 115px 75px; padding-left: 10px;">
+    style="grid-template-columns: 100px 100px 115px 115px 115px 160px 115px 75px; padding-left: 10px;">
 
     <div *ngIf="isUnsaved" class="table-header border-top border-left border-right"
-        style="grid-column-start: 1; grid-column-end: 8;">
+        style="grid-column-start: 1; grid-column-end: 9;">
         <span #el matTooltip="" style="margin-left:10px;">
             <mat-icon
                 [ngStyle]="{'color':'orangered', 'font-size':'large', 'padding-top': '4px'}">warning_amber</mat-icon>
         </span>
         <span style="color:orangered; font-size: 14px;">
-            The Commodity Totals are going to be re-calculated on save.
+            Quantity Harvested and Yield/ac are calculated on save.
         </span>
     </div>
 
-    <div class="table-header border-top border-left border-right" style="grid-column-start: 1; grid-column-end: 8;">
+    <div class="table-header border-top border-left border-right" style="grid-column-start: 1; grid-column-end: 9;">
         Commodity Totals
     </div>
 
@@ -27,15 +27,17 @@
         matTooltip="Acres are rounded to the nearest tenth after the decimal point.">
         Harvested Acres
     </div>
-    <div class="border-right header border-top border-bottom"
-        matTooltip="Acres are rounded to the nearest tenth after the decimal point.">
-        Override Acres
+    <div class="border-right header border-top border-bottom">
+        # Bales/Loads
+    </div>
+    <div class="header border-top border-bottom border-left border-right">
+        Weight
+    </div>
+    <div class="header border-top border-bottom border-left border-right">
+        % Moisture
     </div>
     <div class="header border-top border-bottom border-left border-right">
         Quantity Harvested (tons)
-    </div>
-    <div class="header border-top border-bottom border-left border-right">
-        Quantity Override
     </div>
     <div class="header border-top border-bottom border-left border-right">
         Yield/ac
@@ -57,7 +59,6 @@
             {{ harvestedAcresTotal | number: '1.0-1' }}
         </div>
         <div class="readonly border-right border-bottom center">
-            {{ harvestedAcresOverrideTotal | number }}
         </div>
         <div class="readonly border-right border-bottom center">
         </div>

@@ -33,11 +33,15 @@ export class ForageDopCommodityComponent implements OnInit {
             commodityTypeCode: [this.commodity.commodityTypeCode],
             totalFieldAcres: [this.commodity.totalFieldAcres],
             harvestedAcres: [this.commodity.harvestedAcres],
-            harvestedAcresOverride: [this.commodity.harvestedAcresOverride],
+            totalBalesLoads: [this.commodity.totalBalesLoads],
+            weight: [this.commodity.weight],
+            weightDefaultUnit: [this.commodity.weightDefaultUnit],
+            moisturePercent: [this.commodity.moisturePercent],
             quantityHarvestedTons: [this.commodity.quantityHarvestedTons],
-            quantityHarvestedTonsOverride: [this.commodity.quantityHarvestedTonsOverride],
             yieldPerAcre: [this.commodity.yieldPerAcre],
-            commodityTypeDescription: [this.commodity.commodityTypeDescription]
+            commodityTypeDescription: [this.commodity.commodityTypeDescription],
+            cropCommodityId: [this.commodity.cropCommodityId],
+            plantDurationTypeCode: [this.commodity.plantDurationTypeCode]
         });
         this.commoditiesFormArray.push(this.commodityFormGroup);
     }
@@ -46,19 +50,28 @@ export class ForageDopCommodityComponent implements OnInit {
         return makeNumberOnly(event);
     }
 
-    updateHarvestedAcresOverride(): void {
-        let harvestedAcresOverride = this.commodityFormGroup.value.harvestedAcresOverride;
-        harvestedAcresOverride = this.decimalPipe.transform(harvestedAcresOverride, '1.0-1')?.replace(',', '');
-        this.commodity.harvestedAcresOverride = parseFloat(harvestedAcresOverride) || null;
+    updateTotalBalesLoads(): void {
+        let totalBalesLoads = this.commodityFormGroup.value.totalBalesLoads;
+        totalBalesLoads = this.decimalPipe.transform(totalBalesLoads, '1.0-0')?.replace(',', '');
+        this.commodity.totalBalesLoads = parseFloat(totalBalesLoads) || null;
 
         this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
     }
 
-    updateQuantityHarvestedTonsOverride(): void {
-        let quantityHarvestedTonsOverride = this.commodityFormGroup.value.quantityHarvestedTonsOverride;
-        quantityHarvestedTonsOverride = this.decimalPipe.transform(quantityHarvestedTonsOverride, `1.0-${this.decimalPrecision}`)?.replace(',', '');
-        this.commodity.quantityHarvestedTonsOverride = parseFloat(quantityHarvestedTonsOverride) || null;
+    updateWeight(): void {
+        let weight = this.commodityFormGroup.value.weight;
+        weight = this.decimalPipe.transform(weight, `1.0-${this.decimalPrecision}`)?.replace(',', '');
+        this.commodity.weight = parseFloat(weight) || null;
 
         this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
     }
+
+    updateMoisturePercent(): void {
+        let moisturePercent = this.commodityFormGroup.value.moisturePercent;
+        moisturePercent = this.decimalPipe.transform(moisturePercent, '1.0-0')?.replace(',', '');
+        this.commodity.moisturePercent = parseFloat(moisturePercent) || null;
+
+        this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
+    }
+
 }
