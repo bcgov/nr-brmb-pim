@@ -5,8 +5,8 @@
     <version>1</version>
     <label>CUWS_Inventory_Forage</label>
     <description></description>
-    <creationDate>2024-06-11T12:20:23.170-07:00</creationDate>
-    <updateDate>2023-08-15T12:26:59.304-07:00</updateDate>
+    <creationDate>2024-09-27T21:19:20.000Z</creationDate>
+    <updateDate>2023-08-15T19:26:59.000Z</updateDate>
     <mainReport>
         <uri>/NRSRS/CUWS/Jrxml/CUWS_Inventory_Forage.jrxml</uri>
     </mainReport>
@@ -49,8 +49,8 @@
             <version>1</version>
             <label>SCAP_BCID_Can_Lockup.png</label>
             <description></description>
-            <creationDate>2024-06-11T12:20:23.170-07:00</creationDate>
-            <updateDate>2023-08-15T12:26:59.304-07:00</updateDate>
+            <creationDate>2024-09-27T21:19:20.000Z</creationDate>
+            <updateDate>2023-08-15T19:26:59.000Z</updateDate>
             <referenceUri>/NRSRS/CUWS/Images/SCAP_BCID_Can_Lockup.png</referenceUri>
         </localResource>
     </resource>
