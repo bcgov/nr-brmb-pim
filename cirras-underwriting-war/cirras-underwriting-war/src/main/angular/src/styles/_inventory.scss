@@ -37,6 +37,27 @@
   // *******************************************
   // css used mainly in the inventory screens
   // *******************************************
+
+  .header-button{
+    border-radius: 5px;
+    border: 1px solid #C2C2C2;
+
+    font-size: 17px;
+    font-weight: 400;
+    text-align: left;
+    color: #424242 !important;
+  }
+  
+  .header-button-red{
+    border-radius: 5px;
+    border: 1px solid #DBB7B7 !important;
+
+    font-size: 17px;
+    font-weight: 400;
+    text-align: left;
+    color: #A12622 !important;
+  }
+
   .plcy-inv-cntrct {
     padding: 10px 0;
     margin: 10px 0;
@@ -350,26 +371,6 @@
       margin-bottom: 6px;
     }
   
-    .header-button{
-      border-radius: 5px;
-      border: 1px solid #C2C2C2;
-  
-      font-size: 17px;
-      font-weight: 400;
-      text-align: left;
-      color: #424242 !important;
-    }
-    
-    .header-button-red{
-      border-radius: 5px;
-      border: 1px solid #DBB7B7;
-  
-      font-size: 17px;
-      font-weight: 400;
-      text-align: left;
-      color: #A12622 !important;
-    }
-  
     .vertical-line {
       margin-top: 6px;
       border-left: 2px solid #ccc;
@@ -587,5 +588,25 @@
   .plcy-inv-field-container-yellow>div:nth-child(2n+1) // this is responsible for the alternating row colors
   {
     background: #FEFAEC; // yellow
+  }
+  
+
+  #hidden-totals-warning {
+    display: grid; 
+    grid-auto-rows: minmax( 2em, auto );
+    grid-template-columns: 26px 584px;
+    
+    position: absolute;
+    top: 60px;
+    right: 16px;
+    height: 30px;
+
+    div {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      color: orange;
+      font-size: 14px; 
+    }
   }
   

@@ -5,8 +5,8 @@
     <version>1</version>
     <label>CUWS_DOP</label>
     <description></description>
-    <creationDate>2024-06-11T12:20:22.883-07:00</creationDate>
-    <updateDate>2023-06-08T14:51:57.205-07:00</updateDate>
+    <creationDate>2024-09-27T21:19:19.000Z</creationDate>
+    <updateDate>2023-06-08T21:51:57.000Z</updateDate>
     <mainReport>
         <uri>/NRSRS/CUWS/Jrxml/CUWS_DOP</uri>
     </mainReport>
@@ -49,8 +49,8 @@
             <version>1</version>
             <label>SCAP_BCID_Can_Lockup.png</label>
             <description></description>
-            <creationDate>2024-06-11T12:20:22.883-07:00</creationDate>
-            <updateDate>2023-06-08T14:51:57.205-07:00</updateDate>
+            <creationDate>2024-09-27T21:19:19.000Z</creationDate>
+            <updateDate>2023-06-08T21:51:57.000Z</updateDate>
             <referenceUri>/NRSRS/CUWS/Images/SCAP_BCID_Can_Lockup.png</referenceUri>
         </localResource>
     </resource>

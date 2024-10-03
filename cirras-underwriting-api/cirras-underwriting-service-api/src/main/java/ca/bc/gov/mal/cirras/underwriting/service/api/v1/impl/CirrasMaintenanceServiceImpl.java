@@ -1139,18 +1139,13 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 				//Convert it into default units with the new conversion factor
 				dto.setQuantityHarvestedTons(calculateYieldMeasUnitConversion(yieldMeasUnitConversion.getConversionFactor(), dto.getQuantityHarvestedTons(), false));
 				
-				//Set yield per acre if harvested tons is not overwritten
-				if(dto.getQuantityHarvestedTonsOverride() == null) {
-					//Take override harvested acres if it's not null
-					Double harvestedAcresForCalculation = dto.getHarvestedAcresOverride() == null ? dto.getHarvestedAcres() : dto.getHarvestedAcresOverride();
-
-					Double yieldPerAcre = (double)0;
-					if(harvestedAcresForCalculation > 0) {
-						yieldPerAcre = dto.getQuantityHarvestedTons() / harvestedAcresForCalculation;
-					}
-					dto.setYieldPerAcre(yieldPerAcre);
+				//Set yield per acre
+				Double yieldPerAcre = (double)0;
+				if(dto.getHarvestedAcres() > 0 && dto.getQuantityHarvestedTons() != null) {
+					yieldPerAcre = dto.getQuantityHarvestedTons() / dto.getHarvestedAcres();
 				}
-				
+				dto.setYieldPerAcre(yieldPerAcre);
+
 				declaredYieldContractCommodityForageDao.update(dto, userId);
 			}
 		}

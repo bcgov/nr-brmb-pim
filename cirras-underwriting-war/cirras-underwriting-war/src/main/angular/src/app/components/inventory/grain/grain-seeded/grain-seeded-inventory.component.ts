@@ -58,6 +58,8 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
   underSeededVarietyOptions = [];
   filteredUnderSeededVarietyOptions: CropVarietyOptionsType[];  
 
+  isHiddenFieldInTotals = false;
+
   ngOnChanges(changes: SimpleChanges) {
     super.ngOnChanges(changes);
   
@@ -81,9 +83,8 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     if ( changes.inventoryContract && this.inventoryContract && this.inventoryContract.commodities ) {
       this.addAllCommodities()
       this.geInvSeededTotals()
+      this.checkForHiddenFieldInTotals()
     }
-
-
   }
 
   // crop variety search
@@ -1250,4 +1251,36 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
 
     return false
   }
+
+  checkForHiddenFieldInTotals() {
+
+    // raises a flag if there is an insured field with acres that is marked as hidden 
+    const frmMain = this.viewModel.formGroup as FormGroup
+    const formFields: FormArray = frmMain.controls.fields as FormArray
+
+    for (let i = 0; i < formFields.controls.length; i++){
+      let frmField = formFields.controls[i] as FormArray
+      	  
+      for (let k = 0; k < frmField.value.plantings.controls.length; k++){
+        let frmPlanting = frmField.value.plantings.controls[k] as FormArray
+        
+        // now check inventory seeded grains 
+        for (let n = 0; n < frmPlanting.value.inventorySeededGrains.controls.length; n++) {
+                  
+          let frmInvSeededGrains = frmPlanting.value.inventorySeededGrains.controls[n] as FormArray
+    
+          let seededAcres = !isNaN( parseFloat(frmInvSeededGrains.value.seededAcres)) ?  parseFloat(frmInvSeededGrains.value.seededAcres) : 0
+
+          if ( frmPlanting.value.isHiddenOnPrintoutInd && seededAcres > 0 && (frmInvSeededGrains.value.isQuantityInsurableInd || frmInvSeededGrains.value.isSpotLossInsurableInd) ) {
+            
+            this.isHiddenFieldInTotals = true
+            return
+          }
+        }
+      }
+	  }
+
+    this.isHiddenFieldInTotals = false // default
+  }
+
 }

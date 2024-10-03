@@ -4,8 +4,8 @@
     <name>Input_Controls</name>
     <label>Input_Controls</label>
     <description></description>
-    <creationDate>2024-06-11T12:13:30.677-07:00</creationDate>
-    <updateDate>2023-05-15T16:17:32.884-07:00</updateDate>
+    <creationDate>2024-09-23T22:09:03.000Z</creationDate>
+    <updateDate>2023-05-15T23:17:32.000Z</updateDate>
     <folder>Data_Types</folder>
     <resource>p_crop_year</resource>
     <resource>p_grower_info</resource>
@@ -17,8 +17,4 @@
     <resource>p_policy_status_code</resource>
     <resource>p_sort_column</resource>
     <resource>p_top_planting_limit</resource>
-    <permission>
-        <permissionMask>32</permissionMask>
-        <recipient recipientType="role">ROLE_LOCAL_NRSRS_CUWS</recipient>
-    </permission>
 </folder>

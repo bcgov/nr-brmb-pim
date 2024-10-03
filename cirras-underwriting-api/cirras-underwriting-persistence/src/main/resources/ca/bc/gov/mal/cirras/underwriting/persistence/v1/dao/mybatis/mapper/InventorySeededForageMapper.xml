@@ -222,6 +222,8 @@
 	<select id="selectForDopContractCommodityTotals" resultMap="InventorySeededForageDtoMap">
 		SELECT  ctc.description AS commodity_type_description, 
 				isf.commodity_type_code, 
+				cc.crop_commodity_id,
+				cc.plant_duration_type_code,
 				sum(field_acres) as total_field_acres
 		FROM inventory_seeded_forage isf
 		JOIN inventory_field inv ON inv.inventory_field_guid = isf.inventory_field_guid
@@ -229,10 +231,11 @@
 		JOIN contracted_field_detail cfd ON cfd.annual_field_detail_id = afd.annual_field_detail_id
 		JOIN grower_contract_year gcy ON gcy.grower_contract_year_id = cfd.grower_contract_year_id AND gcy.insurance_plan_id = inv.insurance_plan_id
 		JOIN commodity_type_code ctc ON ctc.commodity_type_code = isf.commodity_type_code
+		JOIN crop_commodity cc on cc.crop_commodity_id = ctc.crop_commodity_id
 		WHERE gcy.contract_id = #{contractId}
 		AND gcy.crop_year = #{cropYear}
 		AND isf.is_quantity_insurable_ind = 'Y'
-		GROUP BY ctc.description, isf.commodity_type_code
+		GROUP BY ctc.description, isf.commodity_type_code, cc.crop_commodity_id, cc.plant_duration_type_code
 		ORDER BY ctc.description
 	</select>
 	

@@ -5,8 +5,8 @@
     <version>1</version>
     <label>CUWS_Inventory_Grain</label>
     <description></description>
-    <creationDate>2024-06-11T12:20:23.327-07:00</creationDate>
-    <updateDate>2024-05-02T15:52:39.250-07:00</updateDate>
+    <creationDate>2024-09-27T21:19:20.000Z</creationDate>
+    <updateDate>2024-05-02T22:52:39.000Z</updateDate>
     <mainReport>
         <uri>/NRSRS/CUWS/Jrxml/CUWS_Inventory_Grain</uri>
     </mainReport>
@@ -52,8 +52,8 @@
             <version>1</version>
             <label>SCAP_BCID_Can_Lockup.png</label>
             <description></description>
-            <creationDate>2024-06-11T12:20:23.327-07:00</creationDate>
-            <updateDate>2024-01-26T11:52:11.990-08:00</updateDate>
+            <creationDate>2024-09-27T21:19:20.000Z</creationDate>
+            <updateDate>2024-01-26T19:52:11.000Z</updateDate>
             <referenceUri>/NRSRS/CUWS/Images/SCAP_BCID_Can_Lockup.png</referenceUri>
         </localResource>
     </resource>
@@ -66,8 +66,8 @@
             <version>1</version>
             <label>CUWS_Inv_Grain_Acres_To_Seed.jrxml</label>
             <description></description>
-            <creationDate>2024-06-11T12:20:23.327-07:00</creationDate>
-            <updateDate>2024-04-30T14:37:40.588-07:00</updateDate>
+            <creationDate>2024-09-27T21:19:20.000Z</creationDate>
+            <updateDate>2024-04-30T21:37:40.000Z</updateDate>
             <referenceUri>/NRSRS/CUWS/Jrxml/CUWS_Inv_Grain/CUWS_Inv_Grain_Acres_To_Seed.jrxml</referenceUri>
         </localResource>
     </resource>
@@ -80,8 +80,8 @@
             <version>1</version>
             <label>CUWS_Inv_Grain_Acres_Seeded.jrxml</label>
             <description></description>
-            <creationDate>2024-06-11T12:20:23.327-07:00</creationDate>
-            <updateDate>2024-04-30T14:41:55.076-07:00</updateDate>
+            <creationDate>2024-09-27T21:19:20.000Z</creationDate>
+            <updateDate>2024-04-30T21:41:55.000Z</updateDate>
             <referenceUri>/NRSRS/CUWS/Jrxml/CUWS_Inv_Grain/CUWS_Inv_Grain_Acres_Seeded.jrxml</referenceUri>
         </localResource>
     </resource>
@@ -94,8 +94,8 @@
             <version>1</version>
             <label>CUWS_Inv_Grain_Plantings.jrxml</label>
             <description></description>
-            <creationDate>2024-06-11T12:20:23.327-07:00</creationDate>
-            <updateDate>2024-05-02T15:52:39.250-07:00</updateDate>
+            <creationDate>2024-09-27T21:19:20.000Z</creationDate>
+            <updateDate>2024-05-02T22:52:39.000Z</updateDate>
             <referenceUri>/NRSRS/CUWS/Jrxml/CUWS_Inv_Grain/CUWS_Inv_Grain_Plantings.jrxml</referenceUri>
         </localResource>
     </resource>

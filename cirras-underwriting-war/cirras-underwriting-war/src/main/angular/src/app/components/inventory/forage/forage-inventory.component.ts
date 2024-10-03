@@ -76,6 +76,8 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   //plantInsurabilityOptions = getCodeOptions("plant_insurability_type_code");
   plantInsurabilityOptions = []
 
+  isHiddenFieldInTotals = false;
+
   initModels() {
     this.viewModel = new ForageInventoryComponentModel(this.sanitizer, this.fb, this.inventoryContract);
   }
@@ -146,6 +148,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
         // setup the plant insurability options for each field based on the variety
         this.setInitialPlantInsurabilityOptions()
+        this.checkForHiddenFieldInTotals()
     }
 
     // populate commodity and variety lists
@@ -320,6 +323,9 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
           cropVarietyCommodityTypes: <CropVarietyCommodityType>[]      
         })
 
+        // clear plant insurability
+        invSeeded.controls['plantInsurabilityTypeCode'].setValue(null) 
+
       } else {
 
         let selectedCropVarietyId = invSeeded.controls['cropVarietyCtrl'].value.cropVarietyId
@@ -346,6 +352,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
       }
     }
 
+    this.checkForHiddenFieldInTotals()
     this.isMyFormDirty()
   }
 
@@ -1390,15 +1397,19 @@ isFormValid() {
 
   isQuantityInsurable(fieldIndex, plantingIndex, invSeededIndex) {
 
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
+    const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex];
+
     let variety = this.getVariety(fieldIndex, plantingIndex, invSeededIndex);
 
     // Only show Quantity Ins checkbox if variety is quantity insurable
     if(variety && variety.isQuantityInsurableInd) {
       return true
+    } else {
+      invSeeded.controls['isQuantityInsurableInd'].setValue(false)
+      return false
     }
-
-    return false
-
   }
 
   isUnseededInsurable(fieldIndex, plantingIndex, invSeededIndex) {
@@ -1673,6 +1684,41 @@ isFormValid() {
     }
 
     return true // all plantings are hidden
+  }
+
+  checkForHiddenFieldInTotals() {
+
+    // raises a flag if there is an insured field with acres that is marked as hidden 
+    const frmMain = this.viewModel.formGroup as FormGroup
+    const formFields: FormArray = frmMain.controls.fields as FormArray
+
+    for (let i = 0; i < formFields.controls.length; i++){
+      let frmField = formFields.controls[i] as FormArray
+      	  
+      for (let k = 0; k < frmField.value.plantings.controls.length; k++){
+        let frmPlanting = frmField.value.plantings.controls[k] as FormArray
+        
+        // now check inventory seeded forages 
+        for (let n = 0; n < frmPlanting.value.inventorySeededForages.controls.length; n++) {
+                  
+          let inventorySeededForages = frmPlanting.value.inventorySeededForages.controls[n] as FormArray
+    
+          let fieldAcres = !isNaN( parseFloat(inventorySeededForages.value.fieldAcres)) ?  parseFloat(inventorySeededForages.value.fieldAcres) : 0
+
+          if ( frmPlanting.value.isHiddenOnPrintoutInd && fieldAcres > 0 && 
+                (inventorySeededForages.value.isQuantityInsurableInd || inventorySeededForages.value.isUnseededInsurableInd ||
+                  inventorySeededForages.value.plantInsurabilityTypeCode
+                ) 
+             ) {
+            
+            this.isHiddenFieldInTotals = true
+            return
+          }
+        }
+      }
+	  }
+    
+    this.isHiddenFieldInTotals = false // default
   }
 }
 
