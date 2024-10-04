@@ -7,6 +7,7 @@ import { RootState } from "src/app/store";
 import { setFormStateUnsaved } from "src/app/store/application/application.actions";
 import { DOP_COMPONENT_ID } from "src/app/store/dop/dop.state";
 import { makeNumberOnly } from "src/app/utils";
+import { PLANT_DURATION } from "src/app/utils/constants";
 
 @Component({
     selector: 'forage-dop-commodity',
@@ -60,11 +61,24 @@ export class ForageDopCommodityComponent implements OnInit {
 
     updateWeight(): void {
         let weight = this.commodityFormGroup.value.weight;
-        weight = this.decimalPipe.transform(weight, `1.0-${this.decimalPrecision}`)?.replace(',', '');
+        weight = this.decimalPipe.transform(weight, '1.0-2')?.replace(',', '');
         this.commodity.weight = parseFloat(weight) || null;
+
+        let moisturePercent = this.commodity.moisturePercent;
+        switch (this.commodity.plantDurationTypeCode) {
+            case PLANT_DURATION.ANNUAL:
+                moisturePercent = 0;
+                break;
+            case PLANT_DURATION.PERENNIAL:
+                moisturePercent = 15;
+                break;
+        }
+        this.commodity.moisturePercent = moisturePercent;
+        this.commodityFormGroup.patchValue({ moisturePercent: moisturePercent });
 
         this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
     }
+
 
     updateMoisturePercent(): void {
         let moisturePercent = this.commodityFormGroup.value.moisturePercent;
