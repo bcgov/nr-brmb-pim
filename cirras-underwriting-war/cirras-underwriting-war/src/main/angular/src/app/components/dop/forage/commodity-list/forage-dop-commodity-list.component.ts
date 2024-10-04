@@ -21,8 +21,4 @@ export class ForageDopCommodityListComponent {
     get harvestedAcresTotal(): number {
         return this.commodities.reduce((acc, curr) => acc + curr.harvestedAcres || 0, 0);
     }
-
-    get harvestedAcresOverrideTotal(): number {
-        return this.commodities.reduce((acc, curr) => acc + curr.harvestedAcresOverride || 0, 0);
-    }
 }
