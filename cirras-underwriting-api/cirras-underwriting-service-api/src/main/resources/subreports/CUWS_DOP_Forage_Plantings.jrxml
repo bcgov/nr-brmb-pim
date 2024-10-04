@@ -27,11 +27,11 @@
 	, INITCAP(cv.variety_name) as variety_name
 	, cc.plant_duration_type_code
 	, isf.field_acres
-	, isf.seeding_year
-	, isf.seeding_date
 	, isf.is_irrigated_ind
 	, isf.is_quantity_insurable_ind
 	, isf.inventory_seeded_forage_guid
+	, isf.plant_insurability_type_code
+	, pitc.description as plant_insurability_type_desc
 from grower_contract_year gcy
 join inventory_contract ic on ic.contract_id = gcy.contract_id
                           and ic.crop_year = gcy.crop_year
@@ -45,6 +45,7 @@ join inventory_field ifd on ifd.field_id = f.field_id
 join inventory_seeded_forage isf on isf.inventory_field_guid = ifd.inventory_field_guid
 left join crop_commodity cc on cc.crop_commodity_id = isf.crop_commodity_id
 left join crop_variety cv on cv.crop_variety_id = isf.crop_variety_id
+left join plant_insurability_type_code pitc on pitc.plant_insurability_type_code = isf.plant_insurability_type_code
 where ifd.is_hidden_on_printout_ind = 'N'
   and gcy.contract_id = $P{p_contract_id}
   and gcy.crop_year = $P{p_crop_year}
@@ -132,18 +133,6 @@ offset $P{p_record_offset}]]>
 		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_seeded_forage"/>
 		<fieldDescription><![CDATA[Field Acres is the number of acres utilized by the planted crop]]></fieldDescription>
 	</field>
-	<field name="seeding_year" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="seeding_year"/>
-		<property name="com.jaspersoft.studio.field.label" value="seeding_year"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_seeded_forage"/>
-		<fieldDescription><![CDATA[Seeding Year is the year on which the commodity was seeded]]></fieldDescription>
-	</field>
-	<field name="seeding_date" class="java.util.Date">
-		<property name="com.jaspersoft.studio.field.name" value="seeding_date"/>
-		<property name="com.jaspersoft.studio.field.label" value="seeding_date"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_seeded_forage"/>
-		<fieldDescription><![CDATA[Seeding Date is the date on which the commodity was seeded]]></fieldDescription>
-	</field>
 	<field name="is_irrigated_ind" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="is_irrigated_ind"/>
 		<property name="com.jaspersoft.studio.field.label" value="is_irrigated_ind"/>
@@ -162,6 +151,8 @@ offset $P{p_record_offset}]]>
 		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_seeded_forage"/>
 		<fieldDescription><![CDATA[Inventory Seeded Forage GUID is the primary key used to identify the record]]></fieldDescription>
 	</field>
+	<field name="plant_insurability_type_code" class="java.lang.String"/>
+	<field name="plant_insurability_type_desc" class="java.lang.String"/>
 	<group name="Group2" isReprintHeaderOnEachPage="true">
 		<groupHeader>
 			<band height="60">
@@ -205,25 +196,7 @@ offset $P{p_record_offset}]]>
 					<text><![CDATA[Legal Description]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="170" y="0" width="40" height="60" backcolor="#FFFFFF" uuid="d447ba77-1a62-4423-9d7f-3e78acee544d">
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<box>
-						<pen lineWidth="0.75"/>
-						<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
-					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Acres]]></text>
-				</staticText>
-				<staticText>
-					<reportElement mode="Transparent" x="210" y="0" width="35" height="60" backcolor="#FFFFFF" uuid="84a68032-ac0b-48c5-a1b9-e106eabd2cf3">
+					<reportElement mode="Transparent" x="240" y="0" width="40" height="60" backcolor="#FFFFFF" uuid="d447ba77-1a62-4423-9d7f-3e78acee544d">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -239,10 +212,29 @@ offset $P{p_record_offset}]]>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Date Seeded]]></text>
+					<text><![CDATA[Acres]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="245" y="0" width="70" height="60" backcolor="#FFFFFF" uuid="724fc21d-4519-4236-9620-38c8144a670d">
+					<reportElement mode="Transparent" x="280" y="0" width="35" height="60" backcolor="#FFFFFF" uuid="84a68032-ac0b-48c5-a1b9-e106eabd2cf3">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.75"/>
+						<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Plant Cove-rage]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="170" y="0" width="70" height="60" backcolor="#FFFFFF" uuid="724fc21d-4519-4236-9620-38c8144a670d">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -482,7 +474,7 @@ offset $P{p_record_offset}]]>
 				<textFieldExpression><![CDATA[$F{legal_description}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="ContainerHeight" x="170" y="0" width="40" height="15" uuid="e8623bb0-167b-4baf-a0e6-aed733c67b64">
+				<reportElement stretchType="ContainerHeight" x="240" y="0" width="40" height="15" uuid="e8623bb0-167b-4baf-a0e6-aed733c67b64">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -500,7 +492,7 @@ offset $P{p_record_offset}]]>
 				<textFieldExpression><![CDATA[$F{field_acres} == null ? "" : ((double)$F{field_acres}.intValue() == $F{field_acres}.doubleValue() ? $F{field_acres}.intValue() + "" : $F{field_acres}.toString()  )]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="ContainerHeight" x="210" y="0" width="35" height="15" uuid="e2ce0cd5-ce91-43d9-964f-28dce3455e4d">
+				<reportElement stretchType="ContainerHeight" x="280" y="0" width="35" height="15" uuid="e2ce0cd5-ce91-43d9-964f-28dce3455e4d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -515,10 +507,10 @@ offset $P{p_record_offset}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["ANNUAL".equals($F{plant_duration_type_code}) ? (new SimpleDateFormat("MMM dd").format($F{seeding_date}) ) : $F{seeding_year}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{plant_insurability_type_desc}.replace("Establishment", "Est")).replace("Winter Survival", "WS")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="ContainerHeight" x="245" y="0" width="70" height="15" uuid="33930eec-0f04-4d7f-904d-e0c7d13a7201">
+				<reportElement stretchType="ContainerHeight" x="170" y="0" width="70" height="15" uuid="33930eec-0f04-4d7f-904d-e0c7d13a7201">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>

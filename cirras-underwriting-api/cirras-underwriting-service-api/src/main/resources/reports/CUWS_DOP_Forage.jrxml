@@ -199,7 +199,7 @@ order by sort_column,
 	<group name="Group1" isStartNewPage="true" isResetPageNumber="true">
 		<groupExpression><![CDATA[$F{policy_id} + $F{contract_id} + $F{policy_number} + $F{crop_year} + $F{grower_number} + $F{grower_name} + $F{inventory_contract_guid} + $F{inv_update_timestamp} + $F{total_plantings} + $F{sort_column}]]></groupExpression>
 		<groupHeader>
-			<band height="150">
+			<band height="152">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<staticText>
 					<reportElement x="150" y="60" width="270" height="25" uuid="332f662d-4ae2-4410-9ad4-3efe1bc14e73">
@@ -212,7 +212,7 @@ order by sort_column,
 					<text><![CDATA[Schedule D12 and D10]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="115" y="85" width="340" height="25" uuid="98ad1049-cf1b-4918-b378-50376403883d">
+					<reportElement x="100" y="85" width="320" height="25" uuid="98ad1049-cf1b-4918-b378-50376403883d">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -247,10 +247,11 @@ order by sort_column,
 					<text><![CDATA[Crop Year:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="275" y="110" width="50" height="15" uuid="1d589998-4569-4e5a-bedf-65bb8d57bad6">
+					<reportElement x="275" y="110" width="45" height="15" uuid="1d589998-4569-4e5a-bedf-65bb8d57bad6">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" size="9" isBold="true"/>
@@ -258,9 +259,10 @@ order by sort_column,
 					<text><![CDATA[Policy:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="275" y="130" width="50" height="15" uuid="82f3337c-2037-47e0-876a-5fda9da4abed">
+					<reportElement x="275" y="130" width="45" height="15" uuid="82f3337c-2037-47e0-876a-5fda9da4abed">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" size="9" isBold="true"/>
@@ -290,7 +292,7 @@ order by sort_column,
 					<textFieldExpression><![CDATA[$F{crop_year}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="330" y="110" width="94" height="15" uuid="c75c324b-9830-41d9-8320-70224c96cf2e">
+					<reportElement x="325" y="110" width="94" height="15" uuid="c75c324b-9830-41d9-8320-70224c96cf2e">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -301,7 +303,7 @@ order by sort_column,
 					<textFieldExpression><![CDATA[$F{policy_number}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="330" y="130" width="106" height="15" uuid="3cb5ae56-2f99-4c3a-8e79-817fd8107e42">
+					<reportElement x="325" y="130" width="106" height="15" uuid="3cb5ae56-2f99-4c3a-8e79-817fd8107e42">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -330,6 +332,19 @@ order by sort_column,
 					</textElement>
 					<text><![CDATA[Ministry of Agriculture and Food]]></text>
 				</staticText>
+				<subreport>
+					<reportElement x="431" y="16" width="124" height="129" uuid="9a628058-e2b5-4c53-b8f9-bf3daf13d4e4">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<subreportParameter name="p_contract_id">
+						<subreportParameterExpression><![CDATA[$F{contract_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_crop_year">
+						<subreportParameterExpression><![CDATA[$F{crop_year}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["subreports/CUWS_DOP_Forage_Totals.jasper"]]></subreportExpression>
+				</subreport>
 			</band>
 		</groupHeader>
 		<groupFooter>
