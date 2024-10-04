@@ -101,16 +101,16 @@ getViewModel(): GrainInventoryComponentModel  { //
     return <GrainInventoryComponentModel>this.viewModel;
 }
 
-get lastYearsCropOptions() {
-  const lastYearsCropOptions = []
-  lastYearsCropOptions.push({
+get grainCropForageVrtyOptions() {
+  const grainCropForageVrtyOptions = []
+  grainCropForageVrtyOptions.push({
     cropCommodityVarietyId: '0_0',
     cropCommodityVarietyName: CROP_COMMODITY_UNSPECIFIED.NAME,
     isUnseededInsurableInd: null
   });
-  lastYearsCropOptions.push(...this.lastYearsCropGrainCommodityOptions);
-  lastYearsCropOptions.push(...this.lastYearsCropForageVarietyOptions);
-  return lastYearsCropOptions;
+  grainCropForageVrtyOptions.push(...this.lastYearsCropGrainCommodityOptions);
+  grainCropForageVrtyOptions.push(...this.lastYearsCropForageVarietyOptions);
+  return grainCropForageVrtyOptions;
 }
 
 ngAfterViewInit() {
@@ -304,7 +304,8 @@ ngOnChanges2(changes: SimpleChanges) {
     this.lastYearsCropGrainCommodityOptions.push ({
       cropCommodityVarietyId: `${opt.cropCommodityId}_0`,
       cropCommodityVarietyName: opt.commodityName,
-      isUnseededInsurableInd: true
+      isUnseededInsurableInd: true,
+      insurancePlanId: opt.insurancePlanId
     })
 
     opt.cropVariety.forEach( cv => this.getCropVarietyCodeOptions(cv) )
@@ -316,7 +317,8 @@ ngOnChanges2(changes: SimpleChanges) {
       self.lastYearsCropForageVarietyOptions.push ({
         cropCommodityVarietyId: `${uCmdty.cropCommodityId}_${uVrty.cropVarietyId}`,
         cropCommodityVarietyName: uVrty.varietyName,
-        isUnseededInsurableInd: uVrty.isGrainUnseededDefaultInd
+        isUnseededInsurableInd: uVrty.isGrainUnseededDefaultInd,
+        insurancePlanId: uVrty.insurancePlanId
       })
     });
   }
