@@ -501,12 +501,13 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			// Get sum of acres of commodities that have a acres to be seeded value and are
 			// not deleted
 			// It's possible that commodities are not specified
-			// Only commodities that are crop insurance eligible AND inventory crops are stored indiviually
+			// Only commodities that are crop insurance eligible AND inventory crops are stored individually
 			// all other commodities are saved as OTHER
 			if (inventoryContractCommodity.getCropCommodityId() == null) {
 				unseededAcres = field.getPlantings().stream()
 						.filter(x -> (x.getInventoryUnseeded().getCropCommodityId() == null
 										|| (x.getInventoryUnseeded().getCropCommodityId() != null
+										&& x.getInventoryUnseeded().getCropVarietyId() == null //Only Grain commodities are in unseeded totals
 										&& (Boolean.FALSE.equals(x.getInventoryUnseeded().getIsCropInsuranceEligibleInd())
 											|| Boolean.FALSE.equals(x.getInventoryUnseeded().getIsInventoryCropInd()))))
 								&& x.getInventoryUnseeded().getAcresToBeSeeded() != null
@@ -518,6 +519,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				unseededAcres = field.getPlantings().stream()
 						.filter(x -> x.getInventoryUnseeded().getCropCommodityId() != null 
 								&& x.getInventoryUnseeded().getCropCommodityId().equals(inventoryContractCommodity.getCropCommodityId())
+								&& x.getInventoryUnseeded().getCropVarietyId() == null //Only Grain commodities are in unseeded totals
 								&& Boolean.TRUE.equals(x.getInventoryUnseeded().getIsCropInsuranceEligibleInd())
 								&& Boolean.TRUE.equals(x.getInventoryUnseeded().getIsInventoryCropInd())
 								&& x.getInventoryUnseeded().getAcresToBeSeeded() != null

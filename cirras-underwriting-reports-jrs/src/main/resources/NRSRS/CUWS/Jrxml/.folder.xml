@@ -4,8 +4,8 @@
     <name>Jrxml</name>
     <label>Jrxml</label>
     <description></description>
-    <creationDate>2024-06-11T12:13:30.706-07:00</creationDate>
-    <updateDate>2024-06-11T14:28:28.920-07:00</updateDate>
+    <creationDate>2024-09-23T22:09:03.000Z</creationDate>
+    <updateDate>2024-06-11T21:28:28.000Z</updateDate>
     <folder>CUWS_DOP_Forage_Sub</folder>
     <folder>CUWS_Inv_Grain</folder>
     <resource>CUWS_DOP</resource>
@@ -13,8 +13,4 @@
     <resource>CUWS_Inventory_Forage.jrxml</resource>
     <resource>CUWS_Inventory_Grain</resource>
     <resource>Sample_CUWS_report</resource>
-    <permission>
-        <permissionMask>32</permissionMask>
-        <recipient recipientType="role">ROLE_LOCAL_NRSRS_CUWS</recipient>
-    </permission>
 </folder>

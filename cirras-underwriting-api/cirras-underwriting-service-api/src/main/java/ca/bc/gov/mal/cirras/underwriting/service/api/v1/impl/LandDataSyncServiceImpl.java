@@ -1087,7 +1087,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 					List<InventoryContractCommodityDto> invCommodityDtos = inventoryContractCommodityDao.select(dtoInvContractList.getInventoryContractGuid());
 					
 					//Update Unseeded Acres
-					updateUnseededInventoryCommodity(operation, userId, dtoUnseededList, dtoInvContractList, invCommodityDtos);
+					updateUnseededInventoryCommodity(operation, userId, dtoUnseededList, dtoInvContractList, invCommodityDtos, cfdDto.getInsurancePlanId());
 					//Update Seeded and Spot Loss Acres
 					updateSeededGrainInventoryCommodity(operation, userId, dtoSeededGrainList, dtoInvContractList, invCommodityDtos);
 				}
@@ -1204,7 +1204,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	
 	private void updateUnseededInventoryCommodity(String operation, String userId,
 			List<InventoryUnseededDto> dtoUnseededList, InventoryContractDto dtoInvContractList,
-			List<InventoryContractCommodityDto> invCommodityDtos) throws DaoException, NotFoundDaoException {
+			List<InventoryContractCommodityDto> invCommodityDtos, Integer insurancePlanId) throws DaoException, NotFoundDaoException {
 
 		logger.debug("<updateUnseededInventoryCommodity");
 		
@@ -1212,66 +1212,70 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 			
 			for(InventoryUnseededDto dtoUnseeded : dtoUnseededList) {
 				
-				List<InventoryContractCommodityDto> filteredCommodityDto = null;
-				if (invCommodityDtos != null && !invCommodityDtos.isEmpty()) {
-
-					// It's possible that commodities are not specified (pedigree is always false for unseeded)
-					if (dtoUnseeded.getCropCommodityId() == null) {
-						filteredCommodityDto = invCommodityDtos.stream().filter(x -> x.getCropCommodityId() == null
-											&& x.getIsPedigreeInd() == false)
-								.collect(Collectors.toList());
-					} else {
-						filteredCommodityDto = invCommodityDtos.stream()
-								.filter(x -> x.getCropCommodityId() != null
-										&& x.getCropCommodityId().equals(dtoUnseeded.getCropCommodityId())
-										&& x.getIsPedigreeInd() == false)
-								.collect(Collectors.toList());
-					}
-				}
-			
-				if (filteredCommodityDto == null || filteredCommodityDto.isEmpty()) {
-					if(operation.equals(addToTotal)) {
-						// Insert new record if needs to be added total
-						logger.debug("Contract Commodity Insert: (Unseeded) " + dtoUnseeded.getCropCommodityId());
-
-						insertInventoryContractCommodity(userId, dtoInvContractList, invCommodityDtos, dtoUnseeded.getCropCommodityId(),
-								(double)0, (double)0, dtoUnseeded.getTotalAcresToBeSeeded(), false);
-
-					}
-				} else {
-					logger.debug("Contract Commodity Update: " + dtoUnseeded.getCropCommodityId());
-					// Update existing record
-					InventoryContractCommodityDto commodityDto = filteredCommodityDto.get(0);
-					
-					Double currentTotalAcres = notNull(commodityDto.getTotalUnseededAcres(), (double)0);
-					Double newAcres = notNull(dtoUnseeded.getTotalAcresToBeSeeded(), (double)0);
-					
-					if(operation.equals(addToTotal)) {
-						Double newTotalUnseededAcres = currentTotalAcres + newAcres;
-						commodityDto.setTotalUnseededAcres(newTotalUnseededAcres);
-						inventoryContractCommodityDao.update(commodityDto, userId);
-					} else {
-						
-						//Existing values
-						Double currentTotalSeededAcres = notNull(commodityDto.getTotalSeededAcres(), (double)0);
-						Double currentTotalSpotLossAcres = notNull(commodityDto.getTotalSpotLossAcres(), (double)0);
-						Double currentTotalUnseededOverrideAcres = notNull(commodityDto.getTotalUnseededAcresOverride(), (double)0);
-						//New value
-						Double newTotalUnseededAcres = (double)Math.max(0, currentTotalAcres - newAcres);  //returns 0 or higher
-						
-						//Only delete if all values are 0
-						if(currentTotalSeededAcres == 0 
-								&& currentTotalSpotLossAcres == 0 
-								&& currentTotalUnseededOverrideAcres == 0
-								&& newTotalUnseededAcres == 0) {
-						
-							//Last of the commodity has been removed from contract, delete inventory contract commodity record
-							inventoryContractCommodityDao.delete(commodityDto.getInventoryContractCommodityGuid());
-							invCommodityDtos.remove(commodityDto);
+				//Only rollup to contract level if the commodity is of the same plan or empty
+				if(dtoUnseeded.getCropInsurancePlanId() == null || dtoUnseeded.getCropInsurancePlanId().equals(insurancePlanId)) {
+				
+					List<InventoryContractCommodityDto> filteredCommodityDto = null;
+					if (invCommodityDtos != null && !invCommodityDtos.isEmpty()) {
+	
+						// It's possible that commodities are not specified (pedigree is always false for unseeded)
+						if (dtoUnseeded.getCropCommodityId() == null) {
+							filteredCommodityDto = invCommodityDtos.stream().filter(x -> x.getCropCommodityId() == null
+												&& x.getIsPedigreeInd() == false)
+									.collect(Collectors.toList());
 						} else {
-							//Subtract from total or delete commodity total
+							filteredCommodityDto = invCommodityDtos.stream()
+									.filter(x -> x.getCropCommodityId() != null
+											&& x.getCropCommodityId().equals(dtoUnseeded.getCropCommodityId())
+											&& x.getIsPedigreeInd() == false)
+									.collect(Collectors.toList());
+						}
+					}
+				
+					if (filteredCommodityDto == null || filteredCommodityDto.isEmpty()) {
+						if(operation.equals(addToTotal)) {
+							// Insert new record if needs to be added total
+							logger.debug("Contract Commodity Insert: (Unseeded) " + dtoUnseeded.getCropCommodityId());
+	
+							insertInventoryContractCommodity(userId, dtoInvContractList, invCommodityDtos, dtoUnseeded.getCropCommodityId(),
+									(double)0, (double)0, dtoUnseeded.getTotalAcresToBeSeeded(), false);
+	
+						}
+					} else {
+						logger.debug("Contract Commodity Update: " + dtoUnseeded.getCropCommodityId());
+						// Update existing record
+						InventoryContractCommodityDto commodityDto = filteredCommodityDto.get(0);
+						
+						Double currentTotalAcres = notNull(commodityDto.getTotalUnseededAcres(), (double)0);
+						Double newAcres = notNull(dtoUnseeded.getTotalAcresToBeSeeded(), (double)0);
+						
+						if(operation.equals(addToTotal)) {
+							Double newTotalUnseededAcres = currentTotalAcres + newAcres;
 							commodityDto.setTotalUnseededAcres(newTotalUnseededAcres);
 							inventoryContractCommodityDao.update(commodityDto, userId);
+						} else {
+							
+							//Existing values
+							Double currentTotalSeededAcres = notNull(commodityDto.getTotalSeededAcres(), (double)0);
+							Double currentTotalSpotLossAcres = notNull(commodityDto.getTotalSpotLossAcres(), (double)0);
+							Double currentTotalUnseededOverrideAcres = notNull(commodityDto.getTotalUnseededAcresOverride(), (double)0);
+							//New value
+							Double newTotalUnseededAcres = (double)Math.max(0, currentTotalAcres - newAcres);  //returns 0 or higher
+							
+							//Only delete if all values are 0
+							if(currentTotalSeededAcres == 0 
+									&& currentTotalSpotLossAcres == 0 
+									&& currentTotalUnseededOverrideAcres == 0
+									&& newTotalUnseededAcres == 0) {
+							
+								//Last of the commodity has been removed from contract, delete inventory contract commodity record
+								inventoryContractCommodityDao.delete(commodityDto.getInventoryContractCommodityGuid());
+								invCommodityDtos.remove(commodityDto);
+							} else {
+								//Subtract from total or delete commodity total
+								commodityDto.setTotalUnseededAcres(newTotalUnseededAcres);
+								inventoryContractCommodityDao.update(commodityDto, userId);
+							}
 						}
 					}
 				}
@@ -1415,6 +1419,8 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 				dto.setAcresToBeSeeded(null);
 				dto.setCropCommodityId(null);
 				dto.setCropCommodityName(null);
+				dto.setCropVarietyId(null);
+				dto.setCropVarietyName(null);
 				dto.setIsUnseededInsurableInd(false);
 				dto.setInventoryUnseededGuid(null);
 				dto.setInventoryFieldGuid(inventoryFieldGuid);

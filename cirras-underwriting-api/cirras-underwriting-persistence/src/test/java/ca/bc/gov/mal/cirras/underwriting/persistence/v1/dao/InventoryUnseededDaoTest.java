@@ -59,12 +59,13 @@ public class InventoryUnseededDaoTest {
 	@Test 
 	public void testInventoryUnseeded() throws Exception {
 
-		Integer fieldId = 21949;
 		Integer cropYear = 2020;
 		Integer insurancePlanId = 4;
 		String inventoryFieldGuid;
 		String inventoryUnseededGuid;
 		String userId = "UNITTEST";
+
+		createField();
 		
 		InventoryFieldDao invFieldDao = persistenceSpringConfig.inventoryFieldDao();
 		InventoryUnseededDao invUnseededDao = persistenceSpringConfig.inventoryUnseededDao();
@@ -73,7 +74,7 @@ public class InventoryUnseededDaoTest {
 		InventoryFieldDto invFieldDto = new InventoryFieldDto();
 
 		invFieldDto.setCropYear(cropYear);
-		invFieldDto.setFieldId(fieldId);
+		invFieldDto.setFieldId(fieldId2);
 		invFieldDto.setInsurancePlanId(insurancePlanId);
 		invFieldDto.setLastYearCropCommodityId(20);
 		invFieldDto.setLastYearCropCommodityName("FALL RYE");
@@ -92,6 +93,8 @@ public class InventoryUnseededDaoTest {
 		newDto.setAcresToBeSeeded(11.22);
 		newDto.setCropCommodityId(16);
 		newDto.setCropCommodityName("BARLEY");
+		newDto.setCropVarietyId(1010907);
+		newDto.setCropVarietyName("GADSBY");
 		newDto.setInventoryFieldGuid(inventoryFieldGuid);
 		newDto.setIsUnseededInsurableInd(true);
 		newDto.setIsCropInsuranceEligibleInd(true);
@@ -114,6 +117,8 @@ public class InventoryUnseededDaoTest {
 		Assert.assertEquals("AcresToBeSeeded", newDto.getAcresToBeSeeded(), fetchedDto.getAcresToBeSeeded());
 		Assert.assertEquals("CropCommodityId", newDto.getCropCommodityId(), fetchedDto.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", newDto.getCropCommodityName(), fetchedDto.getCropCommodityName());
+		Assert.assertEquals("CropVarietyId", newDto.getCropVarietyId(), fetchedDto.getCropVarietyId());
+		Assert.assertEquals("CropVarietyName", newDto.getCropVarietyName(), fetchedDto.getCropVarietyName());
 		Assert.assertEquals("InventoryFieldGuid", newDto.getInventoryFieldGuid(), fetchedDto.getInventoryFieldGuid());
 		Assert.assertEquals("IsUnseededInsurableInd", newDto.getIsUnseededInsurableInd(), fetchedDto.getIsUnseededInsurableInd());
 		Assert.assertEquals("IsCropInsuranceEligibleInd", newDto.getIsCropInsuranceEligibleInd(), fetchedDto.getIsCropInsuranceEligibleInd());
@@ -123,6 +128,9 @@ public class InventoryUnseededDaoTest {
 		fetchedDto.setAcresToBeSeeded(33.44);
 		fetchedDto.setCropCommodityId(18);
 		fetchedDto.setCropCommodityName("CANOLA");
+		fetchedDto.setCropVarietyId(1010487);
+		fetchedDto.setCropVarietyName("L120");
+		
 		fetchedDto.setInventoryFieldGuid(inventoryFieldGuid);
 		fetchedDto.setIsUnseededInsurableInd(false);
 
@@ -135,6 +143,8 @@ public class InventoryUnseededDaoTest {
 		Assert.assertEquals("AcresToBeSeeded", fetchedDto.getAcresToBeSeeded(), updatedDto.getAcresToBeSeeded());
 		Assert.assertEquals("CropCommodityId", fetchedDto.getCropCommodityId(), updatedDto.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", fetchedDto.getCropCommodityName(), updatedDto.getCropCommodityName());
+		Assert.assertEquals("CropVarietyId", fetchedDto.getCropVarietyId(), updatedDto.getCropVarietyId());
+		Assert.assertEquals("CropVarietyName", fetchedDto.getCropVarietyName(), updatedDto.getCropVarietyName());
 		Assert.assertEquals("InventoryFieldGuid", fetchedDto.getInventoryFieldGuid(), updatedDto.getInventoryFieldGuid());
 		Assert.assertEquals("IsUnseededInsurableInd", fetchedDto.getIsUnseededInsurableInd(), updatedDto.getIsUnseededInsurableInd());
 		
@@ -158,28 +168,11 @@ public class InventoryUnseededDaoTest {
 	@Test 
 	public void testDeleteForField() throws Exception {
 
-		FieldDao dao = persistenceSpringConfig.fieldDao();
-		FieldDto fieldDto = new FieldDto();
-		
-		
-		String fieldLabel = "Test Field Label";
-		Integer activeFromCropYear = 2011;
-		Integer activeToCropYear = 2022;
-
 		String userId = "JUNIT_TEST";
 
-		//INSERT
-		fieldDto.setFieldId(fieldId2);
-		fieldDto.setFieldLabel(fieldLabel);
-		fieldDto.setActiveFromCropYear(activeFromCropYear);
-		fieldDto.setActiveToCropYear(activeToCropYear);
+		FieldDao dao = persistenceSpringConfig.fieldDao();
 
-		dao.insertDataSync(fieldDto, userId);
-		
-		//FETCH
-		FieldDto fetchedDto = dao.fetch(fieldId2);
-		
-		Assert.assertNotNull(fetchedDto);
+		createField();
 
 		//Add inventory field
 		Integer cropYear = 2020;
@@ -242,6 +235,33 @@ public class InventoryUnseededDaoTest {
 		Assert.assertNull(deletedDto);
 
 	}
+
+	private void createField() throws DaoException {
+
+		String userId = "JUNIT_TEST";
+
+		FieldDao dao = persistenceSpringConfig.fieldDao();
+
+		FieldDto fieldDto = new FieldDto();
+		
+		String fieldLabel = "Test Field Label";
+		Integer activeFromCropYear = 2011;
+		Integer activeToCropYear = 2022;
+
+
+		//INSERT
+		fieldDto.setFieldId(fieldId2);
+		fieldDto.setFieldLabel(fieldLabel);
+		fieldDto.setActiveFromCropYear(activeFromCropYear);
+		fieldDto.setActiveToCropYear(activeToCropYear);
+
+		dao.insertDataSync(fieldDto, userId);
+		
+		//FETCH
+		FieldDto fetchedDto = dao.fetch(fieldId2);
+		
+		Assert.assertNotNull(fetchedDto);
+	}
 	
 	@Test 
 	public void testSelectForContractField() throws Exception {
@@ -287,9 +307,12 @@ public class InventoryUnseededDaoTest {
 		List<InventoryUnseededDto> iuDtoList = invUnseededDao.selectTotalsForFieldYearPlan(fieldId2, cropYear, insurancePlanId);
 
 		for (InventoryUnseededDto iuDto : iuDtoList) {
+
 			if(iuDto.getCropCommodityId() == null) {
 				Assert.assertEquals("total acres wrong (other)", iuDto.getTotalAcresToBeSeeded(), (Double)9.1);
+				Assert.assertNull("InsurancePlanId", iuDto.getCropInsurancePlanId());
 			} else {
+				Assert.assertEquals("InsurancePlanId", insurancePlanId, iuDto.getCropInsurancePlanId());
 				if(iuDto.getCropCommodityId().equals(16)) { //Barley
 					Assert.assertEquals("total acres wrong (" + iuDto.getCropCommodityId() + ")", iuDto.getTotalAcresToBeSeeded(), (Double)35.0);
 				} else if (iuDto.getCropCommodityId().equals(21)) { //Field Pea
