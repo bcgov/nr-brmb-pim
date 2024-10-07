@@ -566,7 +566,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 			updateInventoryCommodityData(fetchedInvContract);
 			//Add a new crop commodity
 			fetchedInvContract.getCommodities().add(createNewInvCommodities(18, "CANOLA", 12.34, 8.22, 8.22));
-			fetchedInvContract.getFields().get(0).getPlantings().add(createSecondPlanting(fetchedInvContract.getFields().get(0).getFieldId()));
+			fetchedInvContract.getFields().get(0).getPlantings().add(createAdditionalPlanting(fetchedInvContract.getFields().get(0).getFieldId(), 2));
 
 
 			updateInventoryContractData(service, topLevelEndpoints, fetchedInvContract.getCommodities(), fetchedInvContract.getFields(), fetchedInvContract);
@@ -668,7 +668,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 			//------------------------------------------
 			//Add second planting
 			fetchedInvContract.getCommodities().add(createNewInvCommodities(18, "CANOLA", 12.34, 8.22, 8.22));
-			fetchedInvContract.getFields().get(0).getPlantings().add(createSecondPlanting(fetchedInvContract.getFields().get(0).getFieldId()));
+			fetchedInvContract.getFields().get(0).getPlantings().add(createAdditionalPlanting(fetchedInvContract.getFields().get(0).getFieldId(), 2));
 
 			updateInventoryContractData(service, topLevelEndpoints, fetchedInvContract.getCommodities(), fetchedInvContract.getFields(), fetchedInvContract);
 			
@@ -731,6 +731,11 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 
 			createNewPlantingsUpdateFields(invContract);
 			
+			//Add Forage plantings (adding it to first field despite the method name)
+			//Don't expect any rollup to contract level
+			invContract.getFields().get(0).getPlantings().add(createNewPlantingOnSecondField(1010893, "FORAGE SEED", 1010998, "TIMOTHY", 50.00, 2, true, true, invContract.getFields().get(0)));
+			invContract.getFields().get(0).getPlantings().add(createNewPlantingOnSecondField(65, "FORAGE", 119, "ALFALFA", 74.00, 3, true, true, invContract.getFields().get(0)));
+
 			updateNewInventoryContract(invContract);
 
 			//------------------------------------------
@@ -752,6 +757,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 
 			// InventoryContractCommodity
 			List<InventoryContractCommodity> fetchedCommodities = fetchedInvContract.getCommodities();
+			//Forage commodities should not create a commodity totals record
 			Assert.assertEquals(invContract.getCommodities().size(), fetchedCommodities.size());
 
 			for ( int i = 0; i < invContract.getCommodities().size(); i++) {
@@ -770,15 +776,15 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 			
 			//Add second planting and crop commodity
 			fetchedInvContract.getCommodities().add(createNewInvCommodities(18, "CANOLA", 12.34, 8.22, 8.22));
-			fetchedInvContract.getFields().get(0).getPlantings().add(createSecondPlanting(fetchedInvContract.getFields().get(0).getFieldId()));
+			fetchedInvContract.getFields().get(0).getPlantings().add(createAdditionalPlanting(fetchedInvContract.getFields().get(0).getFieldId(), 4));
 			//Add a second Barley planting on a second field
-			fetchedInvContract.getFields().get(1).getPlantings().add(createNewPlantingOnSecondField(16, "BARLEY", 12.34, 2, true, true, fetchedInvContract.getFields().get(1)));
+			fetchedInvContract.getFields().get(1).getPlantings().add(createNewPlantingOnSecondField(16, "BARLEY", null, null, 12.34, 2, true, true, fetchedInvContract.getFields().get(1)));
 
 			fetchedInvContract.getCommodities().add(createNewInvCommodities(null, null, 44.11, 0.0, 0.0)); //total of Lentil and cropId = null
-			fetchedInvContract.getFields().get(1).getPlantings().add(createNewPlantingOnSecondField(null, null, 22.11, 3, false, false, fetchedInvContract.getFields().get(1)));
+			fetchedInvContract.getFields().get(1).getPlantings().add(createNewPlantingOnSecondField(null, null, null, null, 22.11, 3, false, false, fetchedInvContract.getFields().get(1)));
 
 			fetchedInvContract.getCommodities().add(createNewInvCommodities(1010889, "LENTIL", 0.0, 15.0, 15.0)); //Unseeded should end up in OTHER (cropId = null)
-			fetchedInvContract.getFields().get(1).getPlantings().add(createNewPlantingOnSecondField(1010889, "LENTIL", 22.0, 4, false, true, fetchedInvContract.getFields().get(1)));
+			fetchedInvContract.getFields().get(1).getPlantings().add(createNewPlantingOnSecondField(1010889, "LENTIL", null, null, 22.0, 4, false, true, fetchedInvContract.getFields().get(1)));
 
 			
 			updateInventoryContractData(service, topLevelEndpoints, fetchedInvContract.getCommodities(), fetchedInvContract.getFields(), fetchedInvContract);
@@ -2764,7 +2770,9 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 	
 	}
 	
-	private InventoryField createNewPlantingOnSecondField(Integer cropId, String cropName, Double acresCropsToBeSeeded, Integer plantingNumber, 
+	private InventoryField createNewPlantingOnSecondField(Integer cropId, String cropName, 
+			Integer cropVarietyId, String cropVarietyName, 
+			Double acresCropsToBeSeeded, Integer plantingNumber, 
 			Boolean isCropInsuranceEligibleInd, Boolean isInventoryCropInd, AnnualFieldRsrc field) throws CirrasUnderwritingServiceException {
 
 		Calendar cal = Calendar.getInstance();
@@ -2793,6 +2801,8 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		invUnseeded.setAcresToBeSeeded(acresCropsToBeSeeded);
 		invUnseeded.setCropCommodityId(cropId);
 		invUnseeded.setCropCommodityName(cropName);
+		invUnseeded.setCropVarietyId(cropVarietyId);
+		invUnseeded.setCropVarietyName(cropVarietyName);
 		invUnseeded.setInventoryFieldGuid(null);
 		invUnseeded.setInventoryUnseededGuid(null);
 		invUnseeded.setIsUnseededInsurableInd(true);
@@ -3082,7 +3092,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		return planting;
 	}	
 
-	private InventoryField createSecondPlanting(Integer fieldId) throws CirrasUnderwritingServiceException {
+	private InventoryField createAdditionalPlanting(Integer fieldId, Integer plantingNumber) throws CirrasUnderwritingServiceException {
 
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
@@ -3100,7 +3110,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		planting.setLastYearCropVarietyId(null);
 		planting.setLastYearCropVarietyName(null);
 		planting.setIsHiddenOnPrintoutInd(false);
-		planting.setPlantingNumber(2);
+		planting.setPlantingNumber(plantingNumber);
 		planting.setUnderseededAcres(15.5);
 		planting.setUnderseededCropVarietyId(119);
 		planting.setUnderseededCropVarietyName("ALFALFA");
