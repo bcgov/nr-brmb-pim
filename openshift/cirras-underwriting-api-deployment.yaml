@@ -140,8 +140,7 @@ spec:
               memory: #{API_MEMORY_REQUEST}#
             limits:
               cpu: #{API_CPU_LIMIT}#
-              memory: 800Mi
-#              memory: #{API_MEMORY_LIMIT}# 
+              memory: #{API_MEMORY_LIMIT}#
   strategy:
     type: RollingUpdate
     rollingUpdate:
