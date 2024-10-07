@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.HashMap;
@@ -77,11 +78,16 @@ public class JasperReportServiceImpl implements JasperReportService
 		}
 		
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
+		InputStream reportInputStream = null;
+		Connection dbConn = null;
+		
 		try {
 			ClassPathResource reportResource = new ClassPathResource("reports/" + reportName + ".jasper");
-			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportResource.getInputStream());
-			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, paramMap, cirrasUnderwritingDataSource.getConnection());
+			reportInputStream = reportResource.getInputStream();
+			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportInputStream);
+
+			dbConn = cirrasUnderwritingDataSource.getConnection();
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, paramMap, dbConn);
 
 			JRPdfExporter exporter = new JRPdfExporter();
 			exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
@@ -90,6 +96,22 @@ public class JasperReportServiceImpl implements JasperReportService
 			exporter.exportReport();
 		} catch (JRException | IOException | SQLException e) {
 			throw new JasperReportServiceException(e.getMessage(), e);
+		} finally {
+			if ( dbConn != null )  {
+				try {
+					dbConn.close();
+				} catch ( SQLException e ) {
+					logger.warn("An error occured when releasing the database connection for the report", e);
+				}
+			}
+			
+			if ( reportInputStream != null ) {
+				try {
+					reportInputStream.close();
+				} catch (IOException e) {
+					logger.warn("An error occured when releasing the jasper report input stream", e);
+				}
+			}
 		}
 
 		return byteArrayOutputStream.toByteArray();
