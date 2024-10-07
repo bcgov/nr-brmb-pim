@@ -51,6 +51,14 @@ export class ForageDopCommodityComponent implements OnInit {
         return makeNumberOnly(event);
     }
 
+    updateHarvestedAcres(): void {
+        let harvestedAcres = this.commodityFormGroup.value.harvestedAcres;
+        harvestedAcres = this.decimalPipe.transform(harvestedAcres, '1.0-1')?.replace(',', '');
+        this.commodity.harvestedAcres = parseFloat(harvestedAcres) || null;
+
+        this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
+    }
+
     updateTotalBalesLoads(): void {
         let totalBalesLoads = this.commodityFormGroup.value.totalBalesLoads;
         totalBalesLoads = this.decimalPipe.transform(totalBalesLoads, '1.0-0')?.replace(',', '');
