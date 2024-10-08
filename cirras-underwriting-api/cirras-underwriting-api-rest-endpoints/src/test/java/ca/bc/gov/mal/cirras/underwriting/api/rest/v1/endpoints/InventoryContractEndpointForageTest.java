@@ -658,7 +658,7 @@ public class InventoryContractEndpointForageTest extends EndpointsTest {
 		} catch ( CirrasUnderwritingServiceException e ) {
 			// Ok.
 		}
-	}
+	}	
 	
 	public void checkInventoryCoverageTotalForage(InventoryCoverageTotalForage expected, InventoryCoverageTotalForage actual) {
 		Assert.assertEquals("CropCommodityId", expected.getCropCommodityId(), actual.getCropCommodityId());
