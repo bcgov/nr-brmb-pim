@@ -5,8 +5,13 @@
     <div class="readonly border-right border-bottom center">
         {{ commodityFormGroup.value.totalFieldAcres | number: '1.0-1' }}
     </div>
-    <div class="readonly border-right border-bottom center">
-        {{ commodityFormGroup.value.harvestedAcres | number: '1.0-1' }}
+    <div class="fill border-right border-bottom center">
+        <mat-form-field appearance="fill">
+            <input matInput matInputCommified formControlName="harvestedAcres" maxlength="10"
+                (keypress)="numberOnly($event)" (blur)="updateHarvestedAcres()" />
+        </mat-form-field>
+        <mat-icon style="padding-right: 10px; font-size: 18px; margin-top: 6px;"
+            matTooltip="Harvested Acres is writeable">edit</mat-icon>
     </div>
     <div class="fill number border-right border-bottom">
         <mat-form-field appearance="fill">
