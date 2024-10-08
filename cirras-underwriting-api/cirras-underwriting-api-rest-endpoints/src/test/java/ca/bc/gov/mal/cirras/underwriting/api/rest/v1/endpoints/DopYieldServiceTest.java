@@ -350,7 +350,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 		DopYieldContractCommodityForage dyccfSilageCorn = createDopYieldContractCommodityForage(
 				commodityTypeSilageCorn, 	// commodityTypeCode
 				(double)300, 				// totalFieldAcres
-				(double)200, 				// harvestedAcres
+				(double)250, 				// harvestedAcres
 				100, 						// totalBales
 				(double)50,					// weight
 				(double)50,					// weightDefaultUnit
@@ -361,12 +361,12 @@ public class DopYieldServiceTest extends EndpointsTest {
 				annual);		 			// plantDurationTypeCode
 		
 		Double quantityHarvestedSilageCorn = (double)1250;
-		Double YieldPerAcreSilageCorn = (double)6.25;
+		Double YieldPerAcreSilageCorn = (double)5;
 		
 		DopYieldContractCommodityForage dyccfAlfalfa = createDopYieldContractCommodityForage(
 				commodityTypeAlfalfa, 
 				(double)400, 				// totalFieldAcres
-				(double)400, 				// harvestedAcres
+				(double)500, 				// harvestedAcres
 				200, 						// totalBales
 				(double)100, 				// weight
 				(double)100,				// weightDefaultUnit
@@ -377,12 +377,12 @@ public class DopYieldServiceTest extends EndpointsTest {
 				perennial);		 			// plantDurationTypeCode
 
 		Double quantityHarvestedAlfalfa = (double)4705.8824;
-		Double YieldPerAcreAlfalfa = (double)11.7647;
+		Double YieldPerAcreAlfalfa = (double)9.4118;
 
 		DopYieldContractCommodityForage dyccfGrass = createDopYieldContractCommodityForage(
 				commodityTypeGrass, 
 				(double)100, 				// totalFieldAcres
-				(double)100, 				// harvestedAcres
+				null,		 				// harvestedAcres
 				null, 						// totalBales
 				null, 						// weight
 				null,						// weightDefaultUnit
