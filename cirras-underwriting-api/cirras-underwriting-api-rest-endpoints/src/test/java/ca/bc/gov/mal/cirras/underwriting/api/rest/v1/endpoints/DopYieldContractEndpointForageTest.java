@@ -431,7 +431,7 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		cal.set(2022, Calendar.JANUARY, 15);
 		Date dopDate = cal.getTime();
 		
-		createExpectedContractCommodityList((double)100000, (double)1250, 6.25, (double)200000, 4705.8824, 11.7647);
+		createExpectedContractCommodityList((double)100000, (double)1250, (double)5, (double)200000, 4705.8824, 9.4118);
 		
 		createExpectedYieldRollupList((double)11440.0000, (double)57.2, 420);
 		
@@ -554,7 +554,7 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		cut.setMoisturePercent(75.0);
 		
 		//Add updated contract commodities
-		createExpectedContractCommodityList((double)200000, (double)2500, 12.5, (double)100000, 2352.9412, 5.8824);
+		createExpectedContractCommodityList((double)200000, (double)2500, (double)10, (double)100000, 2352.9412, 4.7059);
 		fetchedDyc.setDopYieldContractCommodityForageList(expectedDopYieldContractCommodityForageList);
 		
 		createExpectedYieldRollupList((double)10065, (double)50.325, 370);
@@ -704,8 +704,8 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		//entered in LBS
 		Double defaultWeightSilageCorn = weightSilageCorn / 2000;
 		Double defaultWeightAlfalfa = weightAlfalfa / 2000;
-		Double harvestedAcresSilageCorn = (double)200;
-		Double harvestedAcresAlfalfa = (double)400;
+		Double harvestedAcresSilageCorn = (double)250;
+		Double harvestedAcresAlfalfa = (double)500;
 		
 		expectedDopYieldContractCommodityForageList = new ArrayList<DopYieldContractCommodityForage>();
 		
@@ -739,7 +739,7 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		DopYieldContractCommodityForage dyccfGrass = createDopYieldContractCommodityForage(
 				ctcGrass, 
 				(double)100, 				// totalFieldAcres
-				(double)100, 				// harvestedAcres
+				null,		 				// harvestedAcres
 				null, 						// totalBales
 				null, 						// weight
 				null,						// weightDefaultUnit
