@@ -774,7 +774,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 							
 							//Add to Yield Contract Commodity Forage list ******************************************
 							addContractCommodityForageToList(declaredYieldContractGuid,
-									dopNewYieldContractCommodityForageList, dopField, totalFieldAcres, harvestedAcres);
+									dopNewYieldContractCommodityForageList, dopField, totalFieldAcres);
 						}
 					}
 				}
@@ -843,7 +843,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 
 	private void addContractCommodityForageToList(String declaredYieldContractGuid,
 			List<DopYieldContractCommodityForage> dopNewYieldContractCommodityForageList, DopYieldFieldForage dopField,
-			Double totalFieldAcres, Double harvestedAcres) {
+			Double totalFieldAcres) {
 		
 		List<DopYieldContractCommodityForage> dyccfAddedToNewList = new ArrayList<DopYieldContractCommodityForage>();
 		//Check if the record has been added to the new list already
@@ -861,7 +861,6 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 			dyccf.setDeclaredYieldContractGuid(declaredYieldContractGuid);
 			dyccf.setCommodityTypeCode(dopField.getCommodityTypeCode());
 			dyccf.setTotalFieldAcres(totalFieldAcres);
-			dyccf.setHarvestedAcres(harvestedAcres);
 			
 			dopNewYieldContractCommodityForageList.add(dyccf);
 
@@ -869,7 +868,6 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 			// commodity type already exists in the new list. Add the new values
 			dyccf = dyccfAddedToNewList.get(0);
 			dyccf.setTotalFieldAcres(totalFieldAcres + dyccf.getTotalFieldAcres());
-			dyccf.setHarvestedAcres(harvestedAcres + dyccf.getHarvestedAcres());
 		}
 	}
 
@@ -888,6 +886,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 				if(existingContractCommodity != null) {
 					newContractCommodity.setCropCommodityId(existingContractCommodity.getCropCommodityId());
 					newContractCommodity.setPlantDurationTypeCode(existingContractCommodity.getPlantDurationTypeCode());
+					newContractCommodity.setHarvestedAcres(existingContractCommodity.getHarvestedAcres());
 					newContractCommodity.setTotalBalesLoads(existingContractCommodity.getTotalBalesLoads());
 					newContractCommodity.setWeight(existingContractCommodity.getWeight());
 					newContractCommodity.setWeightDefaultUnit(convertDopYieldFieldAcresWeight(existingContractCommodity.getWeight(), existingContractCommodity.getCropCommodityId(), dopYieldContract, ymucMap));
@@ -916,7 +915,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 				//Calculate yield/acre
 				newContractCommodity.setQuantityHarvestedTons(calculatedQuantityHarvest);
 				Double yieldPerAcre = null;
-				if(newContractCommodity.getHarvestedAcres() > 0 && calculatedQuantityHarvest != null) {
+				if(newContractCommodity.getHarvestedAcres() != null && newContractCommodity.getHarvestedAcres() > 0 && calculatedQuantityHarvest != null) {
 					yieldPerAcre = calculatedQuantityHarvest / newContractCommodity.getHarvestedAcres();
 				}
 				newContractCommodity.setYieldPerAcre(yieldPerAcre);
