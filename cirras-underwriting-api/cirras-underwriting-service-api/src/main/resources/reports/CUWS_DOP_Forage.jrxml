@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.4.3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_DOP_Forage" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="50100802-6b63-4521-9855-0feecd4e6a17">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="484"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="511"/>
+	<parameter name="p_crop_year" class="java.lang.Integer"/>
+	<parameter name="p_insurance_plan_id" class="java.lang.Integer"/>
+	<parameter name="p_office_id" class="java.lang.Integer"/>
+	<parameter name="p_policy_status_code" class="java.lang.String"/>
+	<parameter name="p_policy_number" class="java.lang.String"/>
+	<parameter name="p_grower_info" class="java.lang.String"/>
+	<parameter name="p_grower_phone_number" class="java.lang.String"/>
+	<parameter name="p_sort_column" class="java.lang.String"/>
+	<parameter name="p_policy_ids" class="java.lang.String"/>
+	<parameter name="p_top_planting_limit" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[22]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select t.policy_id
+	, t.contract_id
+	, t.policy_number
+	, t.crop_year
+	, t.grower_number
+	, t.grower_name
+	, t.inventory_contract_guid
+	, t.inv_update_timestamp
+	, count(t.inventory_field_guid) as total_plantings
+	, case when $P{p_sort_column} = 'growerName' then t.grower_name
+	       when $P{p_sort_column} = 'policyNumber' then t.policy_number
+	       else t.policy_number
+           end as sort_column
+from (
+	select p.policy_id
+		, p.contract_id
+		, p.policy_number
+		, p.crop_year
+		, g.grower_number
+		, g.grower_name
+		, ic.inventory_contract_guid
+		, ic.inv_update_timestamp
+		, ifd.inventory_field_guid
+	from policy p
+	join grower g on g.grower_id = p.grower_id
+	join grower_contract_year gcy on gcy.contract_id = p.contract_id 
+								 and gcy.crop_year = p.crop_year
+	join inventory_contract ic on ic.contract_id = gcy.contract_id
+							  and ic.crop_year = gcy.crop_year
+	join contracted_field_detail cfd on cfd.grower_contract_year_id = gcy.grower_contract_year_id
+	join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+	join field f on afd.field_id = f.field_id
+	left join legal_land ll on ll.legal_land_id = afd.legal_land_id
+	join inventory_field ifd on ifd.field_id = f.field_id
+							and ifd.insurance_plan_id = gcy.insurance_plan_id
+							and ifd.crop_year = afd.crop_year
+	join inventory_seeded_forage isf on isf.inventory_field_guid = ifd.inventory_field_guid
+	where ifd.is_hidden_on_printout_ind = 'N'
+	  and $P{p_policy_ids} is not null and char_length($P{p_policy_ids}) > 0
+	  and p.policy_id::text in (select regexp_split_to_table($P{p_policy_ids}, ','))
+	union
+	--POLICY AND FIELDS WITH FILTER
+	select distinct p.policy_id
+		, p.contract_id
+		, p.policy_number
+		, p.crop_year
+		, g.grower_number
+		, g.grower_name
+		, ic.inventory_contract_guid
+		, ic.inv_update_timestamp
+		, ifd.inventory_field_guid
+	from policy p
+	join grower g on g.grower_id = p.grower_id
+	join grower_contract_year gcy on gcy.contract_id = p.contract_id 
+								 and gcy.crop_year = p.crop_year
+	join inventory_contract ic on ic.contract_id = gcy.contract_id
+							  and ic.crop_year = gcy.crop_year
+	join contracted_field_detail cfd on cfd.grower_contract_year_id = gcy.grower_contract_year_id
+	join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+	join field f on afd.field_id = f.field_id
+	left join legal_land ll on ll.legal_land_id = afd.legal_land_id
+	join inventory_field ifd on ifd.field_id = f.field_id
+							and ifd.insurance_plan_id = gcy.insurance_plan_id
+							and ifd.crop_year = afd.crop_year
+	join inventory_seeded_forage isf on isf.inventory_field_guid = ifd.inventory_field_guid
+	left join grower_contact gc on gc.grower_id = g.grower_id 
+	left join contact c on c.contact_id = gc.contact_id
+	left join contact_email ce on ce.contact_id = c.contact_id
+	left join contact_phone cp on cp.contact_id = c.contact_id
+	where ifd.is_hidden_on_printout_ind = 'N'
+		and ($P{p_policy_ids} is null or char_length($P{p_policy_ids}) = 0)
+		and
+		(
+			case
+				when $P{p_crop_year} is not null then p.crop_year = $P{p_crop_year}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_insurance_plan_id} is not null then p.insurance_plan_id = $P{p_insurance_plan_id}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_policy_status_code} is not null and char_length($P{p_policy_status_code}) > 0 then p.policy_status_code = $P{p_policy_status_code}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_office_id} is not null then p.office_id = $P{p_office_id}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_policy_number} is not null and char_length($P{p_policy_number}) > 0 then p.policy_number like $P{p_policy_number}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_grower_info} is not null and char_length($P{p_grower_info}) > 0 
+				then 
+					g.grower_number::text like $P{p_grower_info}
+					or upper(g.grower_name) like $P{p_grower_info}
+					or upper(ce.email_address) like $P{p_grower_info}
+					or
+					(
+						case
+						when $P{p_grower_phone_number} is not null and char_length($P{p_grower_phone_number}) > 0 
+						then 
+							cp.phone_number like $P{p_grower_phone_number}
+						else false
+					end
+					)
+				else true
+			end
+		)
+) t
+group by t.policy_id
+	   , t.contract_id
+	   , t.policy_number
+	   , t.crop_year
+	   , t.grower_number
+	   , t.grower_name
+	   , t.inventory_contract_guid
+	   , t.inv_update_timestamp
+order by sort_column,
+	     t.policy_number]]>
+	</queryString>
+	<field name="policy_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="policy_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="policy_id"/>
+	</field>
+	<field name="contract_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="contract_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="contract_id"/>
+	</field>
+	<field name="policy_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="policy_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="policy_number"/>
+	</field>
+	<field name="crop_year" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="crop_year"/>
+		<property name="com.jaspersoft.studio.field.label" value="crop_year"/>
+	</field>
+	<field name="grower_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="grower_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_number"/>
+	</field>
+	<field name="grower_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_name"/>
+	</field>
+	<field name="inventory_contract_guid" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inventory_contract_guid"/>
+		<property name="com.jaspersoft.studio.field.label" value="inventory_contract_guid"/>
+	</field>
+	<field name="inv_update_timestamp" class="java.util.Date">
+		<property name="com.jaspersoft.studio.field.name" value="inv_update_timestamp"/>
+		<property name="com.jaspersoft.studio.field.label" value="inv_update_timestamp"/>
+	</field>
+	<field name="total_plantings" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="total_plantings"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_plantings"/>
+	</field>
+	<field name="sort_column" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sort_column"/>
+		<property name="com.jaspersoft.studio.field.label" value="sort_column"/>
+	</field>
+	<group name="Group1" isStartNewPage="true" isResetPageNumber="true">
+		<groupExpression><![CDATA[$F{policy_id} + $F{contract_id} + $F{policy_number} + $F{crop_year} + $F{grower_number} + $F{grower_name} + $F{inventory_contract_guid} + $F{inv_update_timestamp} + $F{total_plantings} + $F{sort_column}]]></groupExpression>
+		<groupHeader>
+			<band height="152">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<staticText>
+					<reportElement x="150" y="60" width="270" height="25" uuid="332f662d-4ae2-4410-9ad4-3efe1bc14e73">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="SansSerif" size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Schedule D12 and D10]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="100" y="85" width="320" height="25" uuid="98ad1049-cf1b-4918-b378-50376403883d">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="SansSerif" size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Declaration of Production - Forage]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="110" width="60" height="15" uuid="24101033-57e9-4c99-acfa-90d5c8b18e40">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Name:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="130" width="60" height="15" uuid="dfc23ccc-7b13-4285-817d-8ec1fe426329">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Crop Year:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="275" y="110" width="45" height="15" uuid="1d589998-4569-4e5a-bedf-65bb8d57bad6">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Policy:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="275" y="130" width="45" height="15" uuid="82f3337c-2037-47e0-876a-5fda9da4abed">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Updated:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="60" y="110" width="208" height="15" uuid="10afbe4b-32da-46fe-aa02-4bd954b808e3">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{grower_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="60" y="130" width="120" height="15" uuid="074e0a28-2b4e-41fe-b937-569e2ff05cac">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{crop_year}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="325" y="110" width="94" height="15" uuid="c75c324b-9830-41d9-8320-70224c96cf2e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{policy_number}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="325" y="130" width="106" height="15" uuid="3cb5ae56-2f99-4c3a-8e79-817fd8107e42">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("MMM dd, yyyy").format($F{inv_update_timestamp})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="10" width="164" height="42" uuid="80f6406d-7984-4350-91ff-19855a6fe126">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="SansSerif" size="12" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Production Insurance" + "\n" + "Agriculture Wildlife Program"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="41" width="164" height="15" uuid="8dda3f72-86e3-4e85-8cd9-d563caf6d668">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="SansSerif"/>
+					</textElement>
+					<text><![CDATA[Ministry of Agriculture and Food]]></text>
+				</staticText>
+				<subreport>
+					<reportElement x="431" y="16" width="124" height="129" uuid="9a628058-e2b5-4c53-b8f9-bf3daf13d4e4">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<subreportParameter name="p_contract_id">
+						<subreportParameterExpression><![CDATA[$F{contract_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_crop_year">
+						<subreportParameterExpression><![CDATA[$F{crop_year}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["subreports/CUWS_DOP_Forage_Totals.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="151">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<staticText>
+					<reportElement x="0" y="0" width="100" height="15" uuid="a122f2e5-cb87-4521-8db2-c04343242026">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Baler / Wagon]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="15" width="100" height="15" uuid="8483df81-8eef-4ea1-b330-e9046c3ea255">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Make and Model]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="0" y="30" width="100" height="15" uuid="2c9389c9-5087-4022-8eb7-c9e0ec0f0d4b">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="140" y="15" width="120" height="15" uuid="6a16a8d2-2444-4b40-87ea-771cac16159f">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total # of Livestock]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="280" y="15" width="140" height="15" uuid="78faf678-055b-4925-bfc0-d8a9c108c38d">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Acres Harvested]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="455" y="15" width="100" height="15" uuid="56dfe57f-5195-43f2-b267-5a7cf43b8174">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Bales/Loads]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="150" y="30" width="100" height="15" uuid="bd3c8d68-3921-4472-aefe-e13fa1cc7caa">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="300" y="30" width="100" height="15" uuid="6a4761e5-e0a5-43f2-86f9-9f6b6f846b25">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="455" y="30" width="100" height="15" uuid="532d7ce0-d6b8-49ff-9911-52599c7ab3ac">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="0" y="50" width="554" height="30" uuid="5c6351f6-edf3-42f2-973f-d5d8b1107adc">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[I declare that the above is a true, accurate, and complete record of all forage produced, harvested, sold, and which otherwise came into possession of or was disposed of by the insured, whether insured or not.]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="100" width="175" height="1" uuid="10336133-cca1-489e-9aa6-d9680eb99522">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+				</line>
+				<staticText>
+					<reportElement x="0" y="102" width="90" height="20" uuid="7aab3bab-3df7-44f9-9350-5d075fdacf9d">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Insured(s) Signature]]></text>
+				</staticText>
+				<line>
+					<reportElement x="225" y="100" width="105" height="1" uuid="8b8e2fec-dd9f-4cf7-a1da-ee4155d748e0">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+				</line>
+				<staticText>
+					<reportElement x="225" y="101" width="80" height="20" uuid="d3a7bcb7-ee71-4c65-8dfb-127d2f084529">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Date]]></text>
+				</staticText>
+				<line>
+					<reportElement x="375" y="100" width="180" height="1" uuid="b7a319b6-f16e-48eb-a87f-e8665d8acfe1">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+				</line>
+				<staticText>
+					<reportElement x="375" y="101" width="180" height="20" uuid="f86a7dd4-20d2-467a-98b7-6ff068deb21f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Production Insurance Representative Initials]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="131" width="134" height="20" uuid="25b7af15-7596-4ceb-aa79-5ee1964428ba">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Additional forms appended?]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="149" y="134" width="15" height="15" uuid="1a66a897-fa6b-42d4-8579-b603a2e51833">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{total_plantings} > $P{p_top_planting_limit} ? "X" : ""]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="169" y="134" width="20" height="15" uuid="ec46a5be-0a43-4221-a567-37dd35650f7f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Yes]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="211" y="134" width="15" height="15" uuid="abe2afd8-b285-4d4e-86b6-c603ac80d1ee">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				</textField>
+				<staticText>
+					<reportElement x="231" y="134" width="188" height="15" uuid="686e182a-76d8-43fc-b53f-1d573348d41b">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[No (if yes, number of additional forms:_____)]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="126" width="555" height="1" uuid="08aa5cef-b149-439b-8022-a414724e8bab">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="1.0"/>
+					</graphicElement>
+				</line>
+			</band>
+			<band height="76" splitType="Immediate">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[$F{total_plantings} > $P{p_top_planting_limit}]]></printWhenExpression>
+				<break>
+					<reportElement x="0" y="0" width="100" height="1" uuid="032e6fea-ca08-4491-819f-fc86575735fc">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+				</break>
+				<subreport>
+					<reportElement x="0" y="1" width="555" height="75" uuid="b4a9295f-55b8-4c5b-8de0-c8603f008209">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<subreportParameter name="p_crop_year">
+						<subreportParameterExpression><![CDATA[$F{crop_year}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_contract_id">
+						<subreportParameterExpression><![CDATA[$F{contract_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_record_limit">
+						<subreportParameterExpression><![CDATA[100000]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_record_offset">
+						<subreportParameterExpression><![CDATA[$P{p_top_planting_limit}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["subreports/CUWS_DOP_Forage_Plantings.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<pageHeader>
+		<band height="40" splitType="Prevent">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+			<staticText>
+				<reportElement x="0" y="0" width="60" height="15" uuid="f68e456a-d0d9-4faf-9b33-2df28b179c4e">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="60" height="15" uuid="b967e019-5f92-48de-b386-47a76b71694d">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Crop Year:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="60" y="0" width="208" height="15" uuid="e7098a7a-03dd-4e8c-9b89-bc8c95e24a31">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grower_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="20" width="120" height="15" uuid="0c81279d-a63f-40c4-ac2c-cf951127f14f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{crop_year}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="275" y="0" width="50" height="15" uuid="200e6fdf-a811-4abb-b398-d6b8ded78235">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Policy:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="275" y="20" width="50" height="15" uuid="b40c7e1d-c96f-42ff-9efd-0d74a9d36d67">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Updated:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="330" y="0" width="94" height="15" uuid="073f7f43-c79a-4281-aef4-e7d03929046d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{policy_number}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="20" width="106" height="15" uuid="2d59e566-741c-4d7b-8f68-e47247c597a4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("MMM dd, yyyy").format($F{inv_update_timestamp})]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="75" splitType="Prevent">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="75" uuid="20a9a46a-db10-4726-81d4-367044fd9609">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="p_crop_year">
+					<subreportParameterExpression><![CDATA[$F{crop_year}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_contract_id">
+					<subreportParameterExpression><![CDATA[$F{contract_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_record_limit">
+					<subreportParameterExpression><![CDATA[$P{p_top_planting_limit}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_record_offset">
+					<subreportParameterExpression><![CDATA[0]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subreports/CUWS_DOP_Forage_Plantings.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="43" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<image>
+				<reportElement x="0" y="0" width="320" height="43" uuid="b8bdb2d0-aa84-45f2-894b-3b4ccad1a0bb">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["images/SCAP_BCID_Can_Lockup.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="490" y="10" width="30" height="20" uuid="ead7fda9-a960-4a3b-93ae-d0560d7ce8bb"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER} + "/"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="Group1">
+				<reportElement x="520" y="10" width="34" height="20" uuid="d920e2f5-dd6e-46f7-9372-c001c423d3ba"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

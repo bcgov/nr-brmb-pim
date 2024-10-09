@@ -1,18 +1,33 @@
 package ca.bc.gov.mal.cirras.underwriting.service.api.v1.reports;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
+import javax.sql.DataSource;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 
 public class JasperReportServiceImpl implements JasperReportService
 {
@@ -21,40 +36,89 @@ public class JasperReportServiceImpl implements JasperReportService
 	private String reportServiceUrl;
 	private String reportServiceUsername;
 	private String reportServicePassword;
+	private DataSource cirrasUnderwritingDataSource;
 
 	@Override
 	public byte[] generateSampleCuwsReport() throws JasperReportServiceException
 	{
-		byte[] reportContent = generateJasperReport("Sample_CUWS_Report", "pdf", null);		
+		byte[] reportContent = generateJasperReportInMemory("Sample_CUWS_Report", new HashMap<String, Object>());
 		return reportContent;
 	}
 
 	@Override
-	public byte[] generateDopGrainReport(Map<String, String> paramMap) throws JasperReportServiceException {
-		byte[] reportContent = generateJasperReport("CUWS_DOP", "pdf", paramMap);		
+	public byte[] generateDopGrainReport(Map<String, Object> paramMap) throws JasperReportServiceException {
+		byte[] reportContent = generateJasperReportInMemory("CUWS_DOP", paramMap);		
 		return reportContent;
 	}
 
 	@Override
-	public byte[] generateDopForageReport(Map<String, String> paramMap) throws JasperReportServiceException {
-		byte[] reportContent = generateJasperReport("CUWS_DOP_Forage", "pdf", paramMap);		
+	public byte[] generateDopForageReport(Map<String, Object> paramMap) throws JasperReportServiceException {
+		byte[] reportContent = generateJasperReportInMemory("CUWS_DOP_Forage", paramMap);		
 		return reportContent;
 	}
 	
 	
 	@Override
-	public byte[] generateInvForageReport(Map<String, String> paramMap) throws JasperReportServiceException {
-		byte[] reportContent = generateJasperReport("CUWS_Inventory_Forage", "pdf", paramMap);		
+	public byte[] generateInvForageReport(Map<String, Object> paramMap) throws JasperReportServiceException {
+		byte[] reportContent = generateJasperReportInMemory("CUWS_Inventory_Forage", paramMap);		
 		return reportContent;
 	}
 
 	@Override
-	public byte[] generateInvGrainReport(Map<String, String> paramMap) throws JasperReportServiceException {
-		byte[] reportContent = generateJasperReport("CUWS_Inventory_Grain", "pdf", paramMap);		
+	public byte[] generateInvGrainReport(Map<String, Object> paramMap) throws JasperReportServiceException {
+		byte[] reportContent = generateJasperReportInMemory("CUWS_Inventory_Grain", paramMap);		
 		return reportContent;
 	}
-	
-	
+
+	private byte[] generateJasperReportInMemory(String reportName, Map<String, Object> paramMap) throws JasperReportServiceException
+	{
+		// Check config settings.
+		if ( cirrasUnderwritingDataSource == null ) {
+			throw new JasperReportServiceException("cirrasUnderwritingDataSource is not set");
+		}
+		
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		InputStream reportInputStream = null;
+		Connection dbConn = null;
+		
+		try {
+			ClassPathResource reportResource = new ClassPathResource("reports/" + reportName + ".jasper");
+			reportInputStream = reportResource.getInputStream();
+			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportInputStream);
+
+			dbConn = cirrasUnderwritingDataSource.getConnection();
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, paramMap, dbConn);
+
+			JRPdfExporter exporter = new JRPdfExporter();
+			exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+			exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(byteArrayOutputStream));
+
+			exporter.exportReport();
+		} catch (JRException | IOException | SQLException e) {
+			throw new JasperReportServiceException(e.getMessage(), e);
+		} finally {
+			if ( dbConn != null )  {
+				try {
+					dbConn.close();
+				} catch ( SQLException e ) {
+					logger.warn("An error occured when releasing the database connection for the report", e);
+				}
+			}
+			
+			if ( reportInputStream != null ) {
+				try {
+					reportInputStream.close();
+				} catch (IOException e) {
+					logger.warn("An error occured when releasing the jasper report input stream", e);
+				}
+			}
+		}
+
+		return byteArrayOutputStream.toByteArray();
+	}
+
+	//PIM-1557: Jasper reports are now generated from within UW API. So this method for accessing the Jasper Server is no longer used, and may 
+	//          be removed in a future release.
 	private byte[] generateJasperReport(String reportName, String reportFormat, Map<String, String> paramMap) throws JasperReportServiceException
 	{
 		// Check config settings.
@@ -176,5 +240,10 @@ public class JasperReportServiceImpl implements JasperReportService
 	public void setReportServiceUrl(String reportServiceUrl)
 	{
 		this.reportServiceUrl = reportServiceUrl;
+	}
+
+	@Override
+	public void setCirrasUnderwritingDataSource(DataSource cirrasUnderwritingDataSource) {
+		this.cirrasUnderwritingDataSource = cirrasUnderwritingDataSource;
 	}
 }
