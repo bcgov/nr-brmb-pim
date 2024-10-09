@@ -101,16 +101,16 @@ getViewModel(): GrainInventoryComponentModel  { //
     return <GrainInventoryComponentModel>this.viewModel;
 }
 
-get lastYearsCropOptions() {
-  const lastYearsCropOptions = []
-  lastYearsCropOptions.push({
+get grainCropForageVrtyOptions() {
+  const grainCropForageVrtyOptions = []
+  grainCropForageVrtyOptions.push({
     cropCommodityVarietyId: '0_0',
     cropCommodityVarietyName: CROP_COMMODITY_UNSPECIFIED.NAME,
     isUnseededInsurableInd: null
   });
-  lastYearsCropOptions.push(...this.lastYearsCropGrainCommodityOptions);
-  lastYearsCropOptions.push(...this.lastYearsCropForageVarietyOptions);
-  return lastYearsCropOptions;
+  grainCropForageVrtyOptions.push(...this.lastYearsCropGrainCommodityOptions);
+  grainCropForageVrtyOptions.push(...this.lastYearsCropForageVarietyOptions);
+  return grainCropForageVrtyOptions;
 }
 
 ngAfterViewInit() {
@@ -179,7 +179,8 @@ ngOnChanges2(changes: SimpleChanges) {
       // add an empty crop commodity
       this.cropCommodityOptions.push ({
         commodityName: CROP_COMMODITY_UNSPECIFIED.NAME,
-        cropCommodityId: CROP_COMMODITY_UNSPECIFIED.ID
+        cropCommodityId: CROP_COMMODITY_UNSPECIFIED.ID,
+        insurancePlanId: null,
       })
 
       this.cropVarietyOptions.push ({
@@ -298,13 +299,15 @@ ngOnChanges2(changes: SimpleChanges) {
   getCropCommodityCodeOptions (opt) {
     this.cropCommodityOptions.push ({
       commodityName: opt.commodityName,
-      cropCommodityId: opt.cropCommodityId
+      cropCommodityId: opt.cropCommodityId,
+      insurancePlanId: opt.insurancePlanId
     })
 
     this.lastYearsCropGrainCommodityOptions.push ({
       cropCommodityVarietyId: `${opt.cropCommodityId}_0`,
       cropCommodityVarietyName: opt.commodityName,
-      isUnseededInsurableInd: true
+      isUnseededInsurableInd: true,
+      insurancePlanId: opt.insurancePlanId
     })
 
     opt.cropVariety.forEach( cv => this.getCropVarietyCodeOptions(cv) )
@@ -316,7 +319,8 @@ ngOnChanges2(changes: SimpleChanges) {
       self.lastYearsCropForageVarietyOptions.push ({
         cropCommodityVarietyId: `${uCmdty.cropCommodityId}_${uVrty.cropVarietyId}`,
         cropCommodityVarietyName: uVrty.varietyName,
-        isUnseededInsurableInd: uVrty.isGrainUnseededDefaultInd
+        isUnseededInsurableInd: uVrty.isGrainUnseededDefaultInd,
+        insurancePlanId: uVrty.insurancePlanId
       })
     });
   }
@@ -427,9 +431,14 @@ ngOnChanges2(changes: SimpleChanges) {
             let cmdty = self.commodityTotals.find(elem => elem.cropCommodityId == pltgCropCommodityId)
             cmdty.totalUnseededAcres += pltgAcres
           } else {
-            // if it is not insured cmdty then sum acres towards OTHER cmdty
-            let otherCmdty = self.commodityTotals.find(elem => elem.cropCommodityId == CROP_COMMODITY_UNSPECIFIED.ID)
-            otherCmdty.totalUnseededAcres += pltgAcres
+
+            const insPlanId = self.cropCommodityOptions.find(el => el.cropCommodityId == pltgCropCommodityId)?.insurancePlanId
+
+            if (!pltgCropCommodityId || (insPlanId && insPlanId == INSURANCE_PLAN.GRAIN)) {
+              // if it is not insured cmdty then sum acres towards OTHER cmdty but only for GRAIN commodities
+              let otherCmdty = self.commodityTotals.find(elem => elem.cropCommodityId == CROP_COMMODITY_UNSPECIFIED.ID)
+              otherCmdty.totalUnseededAcres += pltgAcres
+            }
           }
 
           // calculate sumCommodityTotalUnseededAcres
@@ -581,6 +590,7 @@ ngOnChanges2(changes: SimpleChanges) {
             updPlanting.lastYearCropVarietyId = parseInt( formField.value.plantings.value[i].lastYearCropCommodityVarietyId.split('_')[1] ) || null
             updPlanting.inventoryUnseeded.acresToBeSeeded = ( isNaN( tmpAcres) ? null : tmpAcres)
             updPlanting.inventoryUnseeded.cropCommodityId = formField.value.plantings.value[i].cropCommodityId
+            updPlanting.inventoryUnseeded.cropVarietyId = formField.value.plantings.value[i].cropVarietyId
             //Get isCropInsuranceEligibleInd and isInventoryCropInd the commodity list of the selected commodity and set it.
             //This is needed to calculate the commodity totals in the backend.
             let cmdty = self.getCommodity(formField.value.plantings.value[i].cropCommodityId)
@@ -668,6 +678,7 @@ ngOnChanges2(changes: SimpleChanges) {
                     acresToBeSeeded:        (isNaN( tmpAcres) ? null : tmpAcres),
                     cropCommodityId:        formField.value.plantings.value[i].cropCommodityId,
                     cropCommodityName:      formField.value.plantings.value[i].cropCommodityName,
+                    cropVarietyId:        formField.value.plantings.value[i].cropVarietyId,
                     deletedByUserInd:       formField.value.plantings.value[i].deletedByUserInd,
                     inventoryFieldGuid:     null, 
                     inventoryUnseededGuid:  null,
@@ -1194,6 +1205,7 @@ onDeleteField(field) {
                 areNotEqual(lastYearCropVarietyId, originalPlanting.lastYearCropVarietyId) ||
                 areNotEqual(frmPlanting.value.acresToBeSeeded, originalPlanting.inventoryUnseeded.acresToBeSeeded) ||
                 areNotEqual(frmPlanting.value.cropCommodityId, originalPlanting.inventoryUnseeded.cropCommodityId) ||
+                areNotEqual(frmPlanting.value.cropVarietyId, originalPlanting.inventoryUnseeded.cropVarietyId) ||
                 areNotEqual(frmPlanting.value.isUnseededInsurableInd, originalPlanting.inventoryUnseeded.isUnseededInsurableInd) ||
                 areNotEqual(frmPlanting.value.isHiddenOnPrintoutInd, originalPlanting.isHiddenOnPrintoutInd)  
               ) {
