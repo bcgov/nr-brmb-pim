@@ -531,11 +531,13 @@ public class InventoryFieldDaoTest {
 		//Add seeded grain to inv field 1
 		createSeededGrain("Forage Oat", 24, 1010570, inventoryFieldGuid1, false, 0.0, userId); //Oat
 		createSeededGrain("CPSW", 26, 1010602, inventoryFieldGuid1, true, 30.0, userId); 	//Wheat
+		createSeededGrain("Forage Seed", 1010893, 1010999, inventoryFieldGuid1, true, 28.0, userId); 	//BROME (Forage Commodity)
 
 		//Add seeded grain to inv field 2
 		createSeededGrain(null, null, null, inventoryFieldGuid2, false, 20.0, userId);  //No Commodity
 		createSeededGrain("Forage Oat", 24, 1010570, inventoryFieldGuid2, true, 15.0, userId);  //Oat
 		createSeededGrain("Argentine Canola", 18, 1010471, inventoryFieldGuid2, true, 10.0, userId); //Canola
+//		createSeededGrain("Argentine Canola", 18, 1010471, inventoryFieldGuid2, true, 10.0, userId); //Canola
 
 		//SELECT For Rollover
 		List<InventoryFieldDto> dtos = invFieldDao.selectForRollover(fieldId2, cropYear, insurancePlanId);
