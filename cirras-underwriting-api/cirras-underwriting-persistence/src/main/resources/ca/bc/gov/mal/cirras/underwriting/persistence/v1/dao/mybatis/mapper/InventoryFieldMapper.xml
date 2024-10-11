@@ -282,8 +282,15 @@
 					inv.field_id,
 					inv.is_hidden_on_printout_ind,
 					inv.underseeded_crop_variety_id,
-					inv.underseeded_acres
+					inv.underseeded_acres,
+					v.variety_name AS underseeded_crop_variety_name,
+					cv.crop_commodity_id AS underseeded_crop_commodity_id,
+					cv.commodity_name AS underseeded_crop_commodity_name,
+					cvi.is_grain_unseeded_default_ind AS underseeded_is_grain_unseeded_default_ind
 			FROM inventory_field inv
+			LEFT JOIN crop_variety v ON v.crop_variety_id = inv.underseeded_crop_variety_id
+			LEFT JOIN crop_commodity cv ON cv.crop_commodity_id = v.crop_commodity_id
+			LEFT JOIN crop_variety_insurability cvi ON cvi.crop_variety_id = v.crop_variety_id
 			WHERE inv.field_id = #{fieldId}
 			  AND inv.crop_year = #{cropYear}
 			  AND inv.insurance_plan_id = #{insurancePlanId}
@@ -291,8 +298,8 @@
 		-- Only returns records if seeded acres > 0 exists for this field.
 		SELECT  p.field_id, 
 				ROW_NUMBER() OVER() AS planting_number,
-				CASE WHEN p.underseeded_crop_variety_id IS NULL THEN isg.crop_commodity_id ELSE v.crop_commodity_id END AS last_year_crop_commodity_id,
-				CASE WHEN p.underseeded_crop_variety_id IS NULL THEN c.commodity_name ELSE cv.commodity_name END AS last_year_crop_commodity_name,
+				CASE WHEN p.underseeded_crop_variety_id IS NULL THEN isg.crop_commodity_id ELSE p.underseeded_crop_commodity_id END AS last_year_crop_commodity_id,
+				CASE WHEN p.underseeded_crop_variety_id IS NULL THEN c.commodity_name ELSE p.underseeded_crop_commodity_name END AS last_year_crop_commodity_name,
 				CASE WHEN p.underseeded_crop_variety_id IS NULL THEN 
 					--Only set variety if last years crop was forage
 					CASE WHEN c.insurance_plan_id = 5 THEN
@@ -305,13 +312,22 @@
 				CASE WHEN p.underseeded_crop_variety_id IS NULL THEN 
 					--Only set variety if last years crop was forage
 					CASE WHEN c.insurance_plan_id = 5 THEN
-						vv.variety_name 
+						v.variety_name 
 					ELSE
 						NULL
 					END
-				ELSE v.variety_name 
+				ELSE p.underseeded_crop_variety_name 
 				END AS last_year_crop_variety_name,
-				vi.is_grain_unseeded_default_ind,
+				CASE WHEN p.underseeded_crop_variety_id IS NULL THEN 
+					--Only set variety if last years crop was forage
+					CASE WHEN c.insurance_plan_id = 5 THEN
+						vi.is_grain_unseeded_default_ind
+					ELSE
+						NULL
+					END
+				ELSE p.underseeded_is_grain_unseeded_default_ind
+				END AS is_grain_unseeded_default_ind,
+
 				CASE WHEN p.underseeded_crop_variety_id IS NULL THEN SUM(isg.seeded_acres) ELSE SUM(p.underseeded_acres) END AS acres_to_be_seeded,
 				-- Rollover for is_hidden_on_printout_ind is based on ALL plantings, 
 				-- not just those with seeded acres > 0. Set to Y if all plantings are Y, 
@@ -323,14 +339,13 @@
 					  WHERE isg2.seeded_acres > 0) as isg 
 			ON isg.inventory_field_guid = p.inventory_field_guid
 		LEFT JOIN crop_commodity c ON c.crop_commodity_id = isg.crop_commodity_id
-		LEFT JOIN crop_variety vv ON vv.crop_variety_id = isg.crop_variety_id
-		LEFT JOIN crop_variety v ON v.crop_variety_id = p.underseeded_crop_variety_id
-		LEFT JOIN crop_commodity cv ON cv.crop_commodity_id = v.crop_commodity_id
+		LEFT JOIN crop_variety v ON v.crop_variety_id = isg.crop_variety_id
 		LEFT JOIN crop_variety_insurability vi ON vi.crop_variety_id = v.crop_variety_id
-		WHERE ((isg.seeded_acres > 0 and v.crop_variety_id is null and isg.inventory_seeded_grain_guid is not null) or p.underseeded_crop_variety_id is not null)
-		GROUP BY p.field_id, isg.crop_commodity_id, c.commodity_name, p.underseeded_crop_variety_id, v.variety_name
-				, v.crop_commodity_id, cv.commodity_name, vi.is_grain_unseeded_default_ind
-				, isg.crop_variety_id, vv.variety_name, c.insurance_plan_id
+		WHERE ((isg.seeded_acres > 0 and p.underseeded_crop_variety_id is null and isg.inventory_seeded_grain_guid is not null) or p.underseeded_crop_variety_id is not null)
+		GROUP BY p.field_id, isg.crop_commodity_id, c.commodity_name
+				, isg.crop_variety_id, v.variety_name, c.insurance_plan_id, vi.is_grain_unseeded_default_ind
+				, p.underseeded_crop_variety_id, p.underseeded_crop_variety_name
+				, p.underseeded_crop_commodity_id, p.underseeded_crop_commodity_name, p.underseeded_is_grain_unseeded_default_ind
 		UNION
 		-- Only returns if no seeded acres > 0 exists for this field.
 		SELECT  p.field_id, 
