@@ -1141,7 +1141,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 				
 				//Set yield per acre
 				Double yieldPerAcre = (double)0;
-				if(dto.getHarvestedAcres() > 0 && dto.getQuantityHarvestedTons() != null) {
+				if(dto.getHarvestedAcres() != null && dto.getHarvestedAcres() > 0 && dto.getQuantityHarvestedTons() != null) {
 					yieldPerAcre = dto.getQuantityHarvestedTons() / dto.getHarvestedAcres();
 				}
 				dto.setYieldPerAcre(yieldPerAcre);
@@ -1168,7 +1168,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 				
 				//Set yield per acre
 				Double yieldPerAcre = (double)0;
-				if(dto.getHarvestedAcres() > 0) {
+				if(dto.getHarvestedAcres() != null && dto.getHarvestedAcres() > 0) {
 					yieldPerAcre = dto.getQuantityHarvestedTons() / dto.getHarvestedAcres();
 				}
 				dto.setYieldPerAcre(yieldPerAcre);
