@@ -12,12 +12,6 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[($P{REPORT_CONTEXT} != null) ? "repo:" : ""]]></defaultValueExpression>
-	</parameter>
-	<parameter name="SUBREPORT_EXT" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[($P{REPORT_CONTEXT} != null) ? ".jrxml" : ".jasper"]]></defaultValueExpression>
-	</parameter>
 	<parameter name="p_crop_year" class="java.lang.Integer"/>
 	<parameter name="p_contract_id" class="java.lang.Integer"/>
 	<parameter name="p_record_limit" class="java.lang.Integer">
@@ -142,8 +136,8 @@ offset $P{p_record_offset}]]>
 		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_unseeded"/>
 	</field>
 	<field name="unseeded_commodity_variety_name" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="unseeded_commodity_name"/>
-		<property name="com.jaspersoft.studio.field.label" value="unseeded_commodity_name"/>
+		<property name="com.jaspersoft.studio.field.name" value="unseeded_commodity_variety_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="unseeded_commodity_variety_name"/>
 	</field>
 	<field name="is_unseeded_insurable_ind" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="is_unseeded_insurable_ind"/>
