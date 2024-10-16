@@ -41,10 +41,10 @@
     , INITCAP(COALESCE(cv_lastYear.variety_name, cc_lastYear.commodity_name)) as last_year_commodity_variety_name
     -- unseeded
     , iu.acres_to_be_seeded
-	, INITCAP(cc_unseeded.commodity_name) as unseeded_commodity_name
+	, INITCAP(COALESCE(cv_unseeded.variety_name, cc_unseeded.commodity_name)) as unseeded_commodity_variety_name
     , iu.is_unseeded_insurable_ind
     -- seeded
-    , INITCAP(cc_seeded.commodity_name) as seeded_commodity_name
+    , INITCAP(cc_seeded.commodity_name) as seeded_commodity_name	
 	, INITCAP(cv.variety_name) as seeded_variety_name
     , isg.seeded_acres
     , isg.seeding_date
@@ -64,6 +64,7 @@ left join crop_variety cv_lastYear on cv_lastYear.crop_variety_id = ifd.last_yea
 left join crop_variety cv_underseeded on cv_underseeded.crop_variety_id = ifd.underseeded_crop_variety_id
 left join inventory_unseeded iu on iu.inventory_field_guid = ifd.inventory_field_guid
 left join crop_commodity cc_unseeded on cc_unseeded.crop_commodity_id = iu.crop_commodity_id
+left join crop_variety cv_unseeded on cv_unseeded.crop_variety_id = iu.crop_variety_id
 left join inventory_seeded_grain isg on isg.inventory_field_guid = ifd.inventory_field_guid
 left join crop_commodity cc_seeded on cc_seeded.crop_commodity_id = isg.crop_commodity_id
 left join crop_variety cv on cv.crop_variety_id = isg.crop_variety_id
@@ -140,7 +141,7 @@ offset $P{p_record_offset}]]>
 		<property name="com.jaspersoft.studio.field.label" value="acres_to_be_seeded"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_unseeded"/>
 	</field>
-	<field name="unseeded_commodity_name" class="java.lang.String">
+	<field name="unseeded_commodity_variety_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="unseeded_commodity_name"/>
 		<property name="com.jaspersoft.studio.field.label" value="unseeded_commodity_name"/>
 	</field>
@@ -798,7 +799,7 @@ offset $P{p_record_offset}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{unseeded_commodity_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{unseeded_commodity_variety_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="520" y="0" width="35" height="15" uuid="810d9c2e-93b0-442f-bf69-b711cb5e5eff"/>
