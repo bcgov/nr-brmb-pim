@@ -280,7 +280,7 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 				Assert.assertEquals("CLOVER/GRASS", invField.getLastYearCropVarietyName());
 				Assert.assertEquals(220, invField.getLastYearCropVarietyId().intValue());
 				Assert.assertEquals("FORAGE", invField.getLastYearCropCommodityName());
-				Assert.assertEquals("FORAGE CLOVER/GRASS not correct acres", (Double)50.0, invField.getInventoryUnseeded().getAcresToBeSeeded());
+				Assert.assertEquals("FORAGE CLOVER/GRASS not correct acres", (Double)90.0, invField.getInventoryUnseeded().getAcresToBeSeeded());
 				Assert.assertFalse("IsGrainUnseededDefaultInd", invField.getInventoryUnseeded().getIsUnseededInsurableInd());
 			} else if (lastYearCmdtyId.equals(1010893)) {
 				//FORAGE SEED - Brome
@@ -363,13 +363,17 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 	INSERT INTO cuws.inventory_field(inventory_field_guid, insurance_plan_id, field_id, last_year_crop_commodity_id, crop_year, planting_number, underseeded_crop_variety_id, underseeded_acres, create_user, create_date, update_user, update_date, is_hidden_on_printout_ind)
 	VALUES ('AbcDeFg12394039485-7', 4, 123456999, null, 2021, 7, 220, 50, 'admin', now(), 'admin', now(), 'Y');
 
+	INSERT INTO cuws.inventory_field(inventory_field_guid, insurance_plan_id, field_id, last_year_crop_commodity_id, crop_year, planting_number, underseeded_crop_variety_id, underseeded_acres, create_user, create_date, update_user, update_date, is_hidden_on_printout_ind)
+	VALUES ('AbcDeFg12394039485-8', 4, 123456999, null, 2021, 8, 220, 40, 'admin', now(), 'admin', now(), 'Y');
+
+
 	--Plantings
 	INSERT INTO cuws.inventory_seeded_grain (inventory_seeded_grain_guid, inventory_field_guid, crop_commodity_id, crop_variety_id, commodity_type_code, is_quantity_insurable_ind, is_replaced_ind, is_pedigree_ind, seeding_date, seeded_acres, is_spot_loss_insurable_ind, create_user, create_date, update_user, update_date)
 	VALUES (replace(cast(gen_random_uuid() as text), '-', ''), 'AbcDeFg12394039485-1', 24,  1010570,  'Forage Oat',  'N',  'N',  'N',  null,  25, 'N', 'admin', now(), 'admin', now());
 	INSERT INTO cuws.inventory_seeded_grain (inventory_seeded_grain_guid, inventory_field_guid, crop_commodity_id, crop_variety_id, commodity_type_code, is_quantity_insurable_ind, is_replaced_ind, is_pedigree_ind, seeding_date, seeded_acres, is_spot_loss_insurable_ind, create_user, create_date, update_user, update_date)
 	VALUES (replace(cast(gen_random_uuid() as text), '-', ''), 'AbcDeFg12394039485-1', 26,  1010603,  'CPSW',  'N',  'Y',  'N',  null,  0, 'N', 'admin', now(), 'admin', now());
 	INSERT INTO cuws.inventory_seeded_grain (inventory_seeded_grain_guid, inventory_field_guid, crop_commodity_id, crop_variety_id, commodity_type_code, is_quantity_insurable_ind, is_replaced_ind, is_pedigree_ind, seeding_date, seeded_acres, is_spot_loss_insurable_ind, create_user, create_date, update_user, update_date)
-	VALUES (replace(cast(gen_random_uuid() as text), '-', ''), 'AbcDeFg12394039485-2', 18,  1010471,  'Argentine Canola',  'N',  'N',  'N',  null,  40, 'N', 'admin', now(), 'admin', now());
+	VALUES (replace(cast(gen_random_uuid() as text), '-', ''), 'AbcDeFg12394039485-2', 18,  1010940,  'Polish Canola',  'N',  'N',  'N',  null,  40, 'N', 'admin', now(), 'admin', now());
 	INSERT INTO cuws.inventory_seeded_grain (inventory_seeded_grain_guid, inventory_field_guid, crop_commodity_id, crop_variety_id, commodity_type_code, is_quantity_insurable_ind, is_replaced_ind, is_pedigree_ind, seeding_date, seeded_acres, is_spot_loss_insurable_ind, create_user, create_date, update_user, update_date)
 	VALUES (replace(cast(gen_random_uuid() as text), '-', ''), 'AbcDeFg12394039485-3', null,  null,  null,  'N',  'N',  'N',  null,  30, 'N', 'admin', now(), 'admin', now());
 	INSERT INTO cuws.inventory_seeded_grain (inventory_seeded_grain_guid, inventory_field_guid, crop_commodity_id, crop_variety_id, commodity_type_code, is_quantity_insurable_ind, is_replaced_ind, is_pedigree_ind, seeding_date, seeded_acres, is_spot_loss_insurable_ind, create_user, create_date, update_user, update_date)
@@ -381,9 +385,12 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 	--Variety: BROME Commodity: FORAGE SEED
 	INSERT INTO cuws.inventory_seeded_grain (inventory_seeded_grain_guid, inventory_field_guid, crop_commodity_id, crop_variety_id, commodity_type_code, is_quantity_insurable_ind, is_replaced_ind, is_pedigree_ind, seeding_date, seeded_acres, is_spot_loss_insurable_ind, create_user, create_date, update_user, update_date)
 	VALUES (replace(cast(gen_random_uuid() as text), '-', ''), 'AbcDeFg12394039485-6', 1010893,  1010999, 'Forage Seed',  'N',  'Y',  'N',  null,  28, 'N', 'admin', now(), 'admin', now());
-	--Variety: TIMOTHY Commodity: FORAGE SEED
+	--Variety: TIMOTHY Commodity: FORAGE SEED -> Underseeded with Clover/Grass
 	INSERT INTO cuws.inventory_seeded_grain (inventory_seeded_grain_guid, inventory_field_guid, crop_commodity_id, crop_variety_id, commodity_type_code, is_quantity_insurable_ind, is_replaced_ind, is_pedigree_ind, seeding_date, seeded_acres, is_spot_loss_insurable_ind, create_user, create_date, update_user, update_date)
 	VALUES (replace(cast(gen_random_uuid() as text), '-', ''), 'AbcDeFg12394039485-7', 1010893,  1010998, 'Forage Seed',  'N',  'Y',  'N',  null,  17.5, 'N', 'admin', now(), 'admin', now());
+	--Grain commodity with underseeded Clover/Grass -> Should merge with AbcDeFg12394039485-7
+	INSERT INTO cuws.inventory_seeded_grain (inventory_seeded_grain_guid, inventory_field_guid, crop_commodity_id, crop_variety_id, commodity_type_code, is_quantity_insurable_ind, is_replaced_ind, is_pedigree_ind, seeding_date, seeded_acres, is_spot_loss_insurable_ind, create_user, create_date, update_user, update_date)
+	VALUES (replace(cast(gen_random_uuid() as text), '-', ''), 'AbcDeFg12394039485-8', 18,  1010471,  'Argentine Canola',  'N',  'N',  'N',  null,  40, 'N', 'admin', now(), 'admin', now());
 
 	*****************
 	DELETE STATEMENTS

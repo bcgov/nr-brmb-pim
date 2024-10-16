@@ -500,17 +500,21 @@ public class InventoryFieldDaoTest {
 		String inventoryFieldGuid2 = createInventoryField(cropYear, fieldId2, insurancePlanId, true, null, null, null, null, 2, userId);
 		createSeededGrain("CPSW", 26, 1010602, inventoryFieldGuid2, true, 30.0, userId); 	//Wheat
 		String inventoryFieldGuid3 = createInventoryField(cropYear, fieldId2, insurancePlanId, true, null, null, null, null, 3, userId);
-		createSeededGrain("Forage Seed", 1010893, 1010999, inventoryFieldGuid3, true, 28.0, userId); 	//Variety: BROME Commodity: FORAGE SEED (Forage Commodity)
+		createSeededGrain("HRSW", 26, 1010617, inventoryFieldGuid3, true, 20.0, userId); 	//Wheat
+		String inventoryFieldGuid4 = createInventoryField(cropYear, fieldId2, insurancePlanId, true, null, null, null, null, 4, userId);
+		createSeededGrain("Forage Seed", 1010893, 1010999, inventoryFieldGuid4, true, 28.0, userId); 	//Variety: BROME Commodity: FORAGE SEED (Forage Commodity)
 
 		//Add seeded grain to inv field 2
-		String inventoryFieldGuid4 = createInventoryField(cropYear, fieldId2, insurancePlanId, true, null, null, null, null, 4, userId);
-		createSeededGrain(null, null, null, inventoryFieldGuid4, false, 20.0, userId);  //No Commodity
 		String inventoryFieldGuid5 = createInventoryField(cropYear, fieldId2, insurancePlanId, true, null, null, null, null, 5, userId);
-		createSeededGrain("Forage Oat", 24, 1010570, inventoryFieldGuid5, true, 15.0, userId);  //Oat
+		createSeededGrain(null, null, null, inventoryFieldGuid5, false, 20.0, userId);  //No Commodity
 		String inventoryFieldGuid6 = createInventoryField(cropYear, fieldId2, insurancePlanId, true, null, null, null, null, 6, userId);
-		createSeededGrain("Argentine Canola", 18, 1010471, inventoryFieldGuid6, true, 10.0, userId); //Canola
-		String inventoryFieldGuid7 = createInventoryField(cropYear, fieldId2, insurancePlanId, true, 50.0, 220, "CLOVER/GRASS", null, 7, userId);
-		createSeededGrain("Forage Seed", 1010893, 1010998, inventoryFieldGuid7, true, 17.5, userId); 	//Variety: TIMOTHY Commodity: FORAGE SEED (Forage Commodity)
+		createSeededGrain("Forage Oat", 24, 1010570, inventoryFieldGuid6, true, 15.0, userId);  //Oat
+		String inventoryFieldGuid7 = createInventoryField(cropYear, fieldId2, insurancePlanId, true, null, null, null, null, 7, userId);
+		createSeededGrain("Argentine Canola", 18, 1010471, inventoryFieldGuid7, true, 10.0, userId); //Canola
+		String inventoryFieldGuid8 = createInventoryField(cropYear, fieldId2, insurancePlanId, true, 50.0, 220, "CLOVER/GRASS", null, 8, userId);
+		createSeededGrain("Forage Seed", 1010893, 1010998, inventoryFieldGuid8, true, 17.5, userId); 	//Variety: TIMOTHY Commodity: FORAGE SEED (Forage Commodity)
+		String inventoryFieldGuid9 = createInventoryField(cropYear, fieldId2, insurancePlanId, true, 50.0, 220, "CLOVER/GRASS", null, 9, userId);
+		createSeededGrain("Argentine Canola", 18, 1010471, inventoryFieldGuid9, true, 17.5, userId); 	//Canola Underseeded
 
 		//SELECT For Rollover
 		List<InventoryFieldDto> dtos = invFieldDao.selectForRollover(fieldId2, cropYear, insurancePlanId);
@@ -519,12 +523,12 @@ public class InventoryFieldDaoTest {
 		//Expected
 		//Seven records
 		//Alfalfa: 14.4 acres because it's underseeded to Forage Oat
-		//Wheat: 30 acres
+		//Wheat: 50 acres
 		//FORAGE SEED - Brome: 28 acres
 		//No Commodity: 20 acres
 		//Oat: 15 acres
 		//Canola: 10 acres
-		//Clover/Grass: 50 acres because Forage Seed - Timothy is underseeded to Clover/Grass
+		//Clover/Grass: 100 acres because Forage Seed - Timothy is underseeded to Clover/Grass
 		
 		Assert.assertEquals("total records", 7, dtos.size());
 
@@ -561,7 +565,7 @@ public class InventoryFieldDaoTest {
 				Assert.assertEquals("WHEAT", ifDto.getLastYearCropCommodityName());
 				Assert.assertNull(ifDto.getLastYearCropVarietyName());
 				Assert.assertNull(ifDto.getLastYearCropVarietyId());
-				Assert.assertEquals("WHEAT not correct acres", (Double)30.0, ifDto.getAcresToBeSeeded());
+				Assert.assertEquals("WHEAT not correct acres", (Double)50.0, ifDto.getAcresToBeSeeded());
 				Assert.assertNull("IsGrainUnseededDefaultInd", ifDto.getIsGrainUnseededDefaultInd());
 			} else if (lastYearCmdtyId.equals(18)) {
 				//Canola
@@ -582,7 +586,7 @@ public class InventoryFieldDaoTest {
 				Assert.assertEquals("CLOVER/GRASS", ifDto.getLastYearCropVarietyName());
 				Assert.assertEquals(220, ifDto.getLastYearCropVarietyId().intValue());
 				Assert.assertEquals("FORAGE", ifDto.getLastYearCropCommodityName());
-				Assert.assertEquals("FORAGE CLOVER/GRASS not correct acres", (Double)50.0, ifDto.getAcresToBeSeeded());
+				Assert.assertEquals("FORAGE CLOVER/GRASS not correct acres", (Double)100.0, ifDto.getAcresToBeSeeded());
 				Assert.assertFalse("IsGrainUnseededDefaultInd", ifDto.getIsGrainUnseededDefaultInd());
 			} else if (lastYearCmdtyId.equals(1010893)) {
 				//FORAGE SEED - Brome
@@ -595,7 +599,7 @@ public class InventoryFieldDaoTest {
 		}
 
 		//Add another record with no seeded data.
-		String inventoryFieldGuid8 = createInventoryField(cropYear, fieldId2, insurancePlanId, false, null, null, null, null, 8, userId);
+		String inventoryFieldGuid10 = createInventoryField(cropYear, fieldId2, insurancePlanId, false, null, null, null, null, 10, userId);
 
 		//SELECT For Rollover
 		dtos = invFieldDao.selectForRollover(fieldId2, cropYear, insurancePlanId);
@@ -628,10 +632,13 @@ public class InventoryFieldDaoTest {
 		checkDeletedSeededGrain(inventoryFieldGuid5, invSeededGrainDao);
 		checkDeletedSeededGrain(inventoryFieldGuid6, invSeededGrainDao);
 		checkDeletedSeededGrain(inventoryFieldGuid7, invSeededGrainDao);
+		checkDeletedSeededGrain(inventoryFieldGuid8, invSeededGrainDao);
+		checkDeletedSeededGrain(inventoryFieldGuid9, invSeededGrainDao);
 
 		//Remove underseeded information
 		removeUnderseededData(userId, invFieldDao, inventoryFieldGuid1);
-		removeUnderseededData(userId, invFieldDao, inventoryFieldGuid7);
+		removeUnderseededData(userId, invFieldDao, inventoryFieldGuid8);
+		removeUnderseededData(userId, invFieldDao, inventoryFieldGuid9);
 
 		
 		//Rollover when there is no seeded data.
@@ -653,7 +660,7 @@ public class InventoryFieldDaoTest {
 		Assert.assertNull(ifDto.getAcresToBeSeeded());
 		
 		// Delete additional planting.
-		invFieldDao.delete(inventoryFieldGuid8);
+		invFieldDao.delete(inventoryFieldGuid10);
 
 		//Rollover when there is no seeded data.
 		dtos = invFieldDao.selectForRollover(fieldId2, cropYear, insurancePlanId);
