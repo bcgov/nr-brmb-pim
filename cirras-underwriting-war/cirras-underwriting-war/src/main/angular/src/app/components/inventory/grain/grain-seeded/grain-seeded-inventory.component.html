@@ -258,7 +258,7 @@
                                                 <mat-select 
                                                     formControlName="cropCommodityId" 
                                                     (selectionChange)="cropCommodityChange($event, fieldIndex, plantingIndex, invSeededIndex)">
-                                                    <mat-option *ngFor="let option of cropCommodityOptions" [value]="option.cropCommodityId"
+                                                    <mat-option *ngFor="let option of seededCommodityOptions" [value]="option.cropCommodityId"
                                                     >{{ option.commodityName | titlecase }}</mat-option>
                                                 </mat-select>
                                                 </mat-form-field>
@@ -287,7 +287,7 @@
                                                     <mat-autocomplete #autoVrty="matAutocomplete"  
                                                         [displayWith]="displayVarietyFn"
                                                         (optionSelected)="varietySelected($event, fieldIndex, plantingIndex, invSeededIndex)">
-                                                    <mat-option *ngFor="let option of filteredVarietyOptions" [value]="option">
+                                                    <mat-option *ngFor="let option of filteredSeededVarietyOptions" [value]="option">
                                                         {{ option.varietyName | titlecase }}
                                                     </mat-option>
                                                     </mat-autocomplete>
