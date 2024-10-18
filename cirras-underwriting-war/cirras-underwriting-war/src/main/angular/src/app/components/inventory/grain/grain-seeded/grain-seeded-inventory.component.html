@@ -395,6 +395,7 @@
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
 
                                                 <mat-checkbox 
+                                                    *ngIf="isSeededCommodityQuantityInsurable(fieldIndex, plantingIndex, invSeededIndex)"
                                                     formControlName="isQuantityInsurableInd" 
                                                     (change)="isChecked($event, fieldIndex, plantingIndex, invSeededIndex);checkForHiddenFieldInTotals();">
                                                 </mat-checkbox>
@@ -404,6 +405,7 @@
                                                 class="border-bottom border-left" style="width:94px;"
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
                                                 <mat-checkbox 
+                                                    *ngIf="isSeededCommoditySpotLossInsurable(fieldIndex, plantingIndex, invSeededIndex)"
                                                     formControlName="isSpotLossInsurableInd" 
                                                     (change)="isChecked($event, fieldIndex, plantingIndex, invSeededIndex);checkForHiddenFieldInTotals();">
                                                 </mat-checkbox>

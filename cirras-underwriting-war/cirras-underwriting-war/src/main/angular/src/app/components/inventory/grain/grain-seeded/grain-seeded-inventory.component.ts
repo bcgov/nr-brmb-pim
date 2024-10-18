@@ -98,6 +98,29 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     }
   }
 
+
+  getSeededCommodityOptionById(cropCommodityId) {
+    
+    if ( cropCommodityId && this.seededCommodityOptions && this.seededCommodityOptions.length > 0 ) {
+      return this.seededCommodityOptions.find(el => el.cropCommodityId == cropCommodityId)
+    }
+
+    return null
+  }
+
+  // TODO: Remove?
+  getSeededCommodityOption(fieldIndex: any, plantingIndex: any, invSeededIndex: any) {
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
+    const invSeeded = pltg.controls['inventorySeededGrains'].value.controls[invSeededIndex]
+
+    let selectedCropCommodityId = invSeeded.controls['cropCommodityId'].value;
+    let cmdty = this.getSeededCommodityOptionById(selectedCropCommodityId)
+
+    return cmdty
+  }
+
+
   // crop variety search
   searchVariety(value, fieldIndex, plantingIndex, invSeededIndex) {
   
@@ -152,14 +175,14 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
       this.filteredSeededVarietyOptions = this.seededVarietyOptions.filter(option => option.cropCommodityId == event.value )
 
       // check insurable qty 
-      // TODO
-      invSeeded.controls['isQuantityInsurableInd'].setValue(true)
+      let seededCommodityOption = this.getSeededCommodityOptionById(event.value)
+      invSeeded.controls['isQuantityInsurableInd'].setValue(seededCommodityOption && seededCommodityOption.isQuantityInsurableInd)
+      invSeeded.controls['isSpotLossInsurableInd'].setValue(false)
 
     } else {
 
       this.filteredSeededVarietyOptions = this.seededVarietyOptions.slice()
 
-      // TODO
       invSeeded.controls['isPedigreeInd'].setValue(false)
       invSeeded.controls['isQuantityInsurableInd'].setValue(false)
       invSeeded.controls['isSpotLossInsurableInd'].setValue(false)
@@ -183,7 +206,6 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     invSeeded.controls['commodityTypeCode'].setValue(null)
     invSeeded.controls['commodityTypeDesc'].setValue('')
 
-    // TODO
     invSeeded.controls['isPedigreeInd'].setValue(false)
     invSeeded.controls['isQuantityInsurableInd'].setValue(false)
     invSeeded.controls['isSpotLossInsurableInd'].setValue(false)
@@ -235,8 +257,9 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
       }
 
       // check quantity Insurable checkbox
-      // TODO
-      invSeeded.controls['isQuantityInsurableInd'].setValue(true)
+      let seededCommodityOption = this.getSeededCommodityOptionById(tempCropCmdtyId)
+      invSeeded.controls['isQuantityInsurableInd'].setValue(seededCommodityOption && seededCommodityOption.isQuantityInsurableInd)
+      invSeeded.controls['isSpotLossInsurableInd'].setValue(false)
 
     } else {
       // clear selected commodity type
@@ -244,7 +267,6 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
       invSeeded.controls['commodityTypeCode'].setValue(null)
       invSeeded.controls['commodityTypeDesc'].setValue('')
 
-      // TODO
       invSeeded.controls['isPedigreeInd'].setValue(false)
       invSeeded.controls['isQuantityInsurableInd'].setValue(false)
       invSeeded.controls['isSpotLossInsurableInd'].setValue(false)
@@ -266,6 +288,8 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
       commodityName: CROP_COMMODITY_UNSPECIFIED.NAME,
       cropCommodityId: CROP_COMMODITY_UNSPECIFIED.ID,
       insurancePlanId: null,
+      isQuantityInsurableInd: false,
+      isSpotLossInsurableInd: false
     })
 
     this.seededVarietyOptions.push ({
@@ -282,7 +306,9 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
         this.seededCommodityOptions.push ({
           commodityName: cmdty.commodityName,
           cropCommodityId: cmdty.cropCommodityId,
-          insurancePlanId: cmdty.insurancePlanId
+          insurancePlanId: cmdty.insurancePlanId,
+          isQuantityInsurableInd: true,    // Always true for GRAIN
+          isSpotLossInsurableInd: true     // Always true for GRAIN
         })
     
         cmdty.cropVariety.forEach( vrty => {
@@ -303,7 +329,9 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
         this.seededCommodityOptions.push ({
           commodityName: uCmdty.commodityName,
           cropCommodityId: uCmdty.cropCommodityId,
-          insurancePlanId: uCmdty.insurancePlanId
+          insurancePlanId: uCmdty.insurancePlanId,
+          isQuantityInsurableInd: false,                                      // Always false for FORAGE
+          isSpotLossInsurableInd: (uCmdty.commodityName == 'FORAGE SEED')     // Only allowed for FORAGE SEED
         })
     
         uCmdty.cropVariety.forEach( uVrty => {
@@ -538,6 +566,47 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     })
   }
 
+
+  isSeededCommodityQuantityInsurable(fieldIndex, plantingIndex, invSeededIndex) {
+
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
+    const invSeeded = pltg.controls['inventorySeededGrains'].value.controls[invSeededIndex]
+
+    let selectedCropCommodityId = invSeeded.controls['cropCommodityId'].value;
+    let seededCommodityOption = this.getSeededCommodityOptionById(selectedCropCommodityId)
+
+    // Only show Quantity Ins checkbox if commodity is quantity insurable
+    if ( seededCommodityOption && seededCommodityOption.isQuantityInsurableInd ) {
+      return true
+    } else {
+      invSeeded.controls['isQuantityInsurableInd'].setValue(false)
+      return false
+    }
+
+  }
+
+
+  isSeededCommoditySpotLossInsurable(fieldIndex, plantingIndex, invSeededIndex) {
+
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
+    const invSeeded = pltg.controls['inventorySeededGrains'].value.controls[invSeededIndex]
+
+    let selectedCropCommodityId = invSeeded.controls['cropCommodityId'].value;
+    let seededCommodityOption = this.getSeededCommodityOptionById(selectedCropCommodityId)
+
+    // Only show Spot Loss Ins checkbox if commodity is spot loss insurable
+    if ( seededCommodityOption && seededCommodityOption.isSpotLossInsurableInd ) {
+      return true
+    } else {
+      invSeeded.controls['isSpotLossInsurableInd'].setValue(false)
+      return false
+    }
+
+  }
+
+
   isChecked(event, fieldIndex, plantingIndex, invSeededIndex) {
 
     if ( event.checked ){
@@ -551,7 +620,7 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
         // do nothing
       } else {
         alert ("Crop must be selected")
-        // TODO
+
         invSeeded.controls['isPedigreeInd'].setValue(false)
         invSeeded.controls['isQuantityInsurableInd'].setValue(false)
         invSeeded.controls['isSpotLossInsurableInd'].setValue(false)
@@ -897,10 +966,11 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
         })
 
       } else {
-        // check quantity Insurable checkbox
-        // TODO
-        invSeeded.controls['isQuantityInsurableInd'].setValue(true)
 
+        // check quantity Insurable checkbox
+        let seededCommodityOption = this.getSeededCommodityOptionById(invSeeded.controls['cropCommodityId'].value)
+        invSeeded.controls['isQuantityInsurableInd'].setValue(seededCommodityOption && seededCommodityOption.isQuantityInsurableInd)
+        invSeeded.controls['isSpotLossInsurableInd'].setValue(false)
       }
     }
 
