@@ -109,19 +109,6 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     return null
   }
 
-  // TODO: Remove?
-  getSeededCommodityOption(fieldIndex: any, plantingIndex: any, invSeededIndex: any) {
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
-    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
-    const invSeeded = pltg.controls['inventorySeededGrains'].value.controls[invSeededIndex]
-
-    let selectedCropCommodityId = invSeeded.controls['cropCommodityId'].value;
-    let cmdty = this.getSeededCommodityOptionById(selectedCropCommodityId)
-
-    return cmdty
-  }
-
-
   // crop variety search
   searchVariety(value, fieldIndex, plantingIndex, invSeededIndex) {
   
