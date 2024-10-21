@@ -88,10 +88,11 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
       this.populateUnderseededVarieties();
     }
 
-    // TODO?
-      
     // create commodity totals table
-    if ( changes.inventoryContract && this.inventoryContract && this.inventoryContract.commodities ) {
+    if ( changes.inventoryContract && this.inventoryContract && this.inventoryContract.commodities && 
+      this.cropCommodityList && this.cropCommodityList.collection && this.cropCommodityList.collection.length &&
+      this.underSeededCropCommodityList && this.underSeededCropCommodityList.collection && this.underSeededCropCommodityList.collection.length
+    ) {
       this.addAllCommodities()
       this.geInvSeededTotals()
       this.checkForHiddenFieldInTotals()
@@ -422,7 +423,7 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
   }
 
    // GET COMMODITIES to prepare the commodity totals table
-  
+
    addAllCommodities() {
     // first add all commodities
     // then update them based on what's coming from the backend
@@ -460,6 +461,38 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
         isVisible:                      [false],
       } ) )
     } )
+
+    // Add FORAGE SEED, as the only Forage commodity that could be insurable and appear in the commodity totals.
+    let forageSeedCmdty = this.underSeededCropCommodityList.collection.find(el => el.commodityName == "FORAGE SEED")
+    if (forageSeedCmdty) {
+
+      cmdtiesFA.push( this.fb.group( {
+        cropCommodityId:                [forageSeedCmdty.cropCommodityId],
+        cropCommodityName:              [forageSeedCmdty.commodityName],
+        inventoryContractCommodityGuid: [ ],
+        inventoryContractGuid:          [ ],
+        totalSeededAcres:               [0], 
+        totalSpotLossAcres:             [0],
+        isPedigreeInd:                  [false],
+        totalUnseededAcres:             [0],
+        totalUnseededAcresOverride:     [],
+        isVisible:                     [false],
+      } ) )
+
+      // add pedigreed commodity
+      cmdtiesFA.push( this.fb.group( {
+        cropCommodityId:                [forageSeedCmdty.cropCommodityId],
+        cropCommodityName:              [forageSeedCmdty.commodityName + " Pedigreed"],
+        inventoryContractCommodityGuid: [ ],
+        inventoryContractGuid:          [ ],
+        totalSeededAcres:               [0], 
+        totalSpotLossAcres:             [0],
+        isPedigreeInd:                  [true],
+        totalUnseededAcres:             [0],
+        totalUnseededAcresOverride:     [],
+        isVisible:                      [false],
+      } ) )
+    }
 
     this.inventoryContract.commodities.forEach( cmdt => this.updateCommodity( cmdt ) )
 
@@ -974,6 +1007,7 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
       }
     }
 
+    this.geInvSeededTotals()
     this.isMyFormDirty()
   }
 

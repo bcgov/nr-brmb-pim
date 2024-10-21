@@ -152,6 +152,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
           cmdtyFC.controls.inventoryContractCommodityGuid.setValue(cmdty.inventoryContractCommodityGuid)
           cmdtyFC.controls.inventoryContractGuid.setValue(cmdty.inventoryContractGuid)
           cmdtyFC.controls.totalSeededAcres.setValue(cmdty.totalSeededAcres)
+          cmdtyFC.controls.totalSpotLossAcres.setValue(cmdty.totalSpotLossAcres)
           cmdtyFC.controls.totalUnseededAcres.setValue(cmdty.totalUnseededAcres)
           cmdtyFC.controls.totalUnseededAcresOverride.setValue(cmdty.totalUnseededAcresOverride)
         }
