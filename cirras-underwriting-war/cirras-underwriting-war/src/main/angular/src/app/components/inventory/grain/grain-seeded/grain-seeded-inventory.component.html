@@ -258,7 +258,7 @@
                                                 <mat-select 
                                                     formControlName="cropCommodityId" 
                                                     (selectionChange)="cropCommodityChange($event, fieldIndex, plantingIndex, invSeededIndex)">
-                                                    <mat-option *ngFor="let option of cropCommodityOptions" [value]="option.cropCommodityId"
+                                                    <mat-option *ngFor="let option of seededCommodityOptions" [value]="option.cropCommodityId"
                                                     >{{ option.commodityName | titlecase }}</mat-option>
                                                 </mat-select>
                                                 </mat-form-field>
@@ -287,7 +287,7 @@
                                                     <mat-autocomplete #autoVrty="matAutocomplete"  
                                                         [displayWith]="displayVarietyFn"
                                                         (optionSelected)="varietySelected($event, fieldIndex, plantingIndex, invSeededIndex)">
-                                                    <mat-option *ngFor="let option of filteredVarietyOptions" [value]="option">
+                                                    <mat-option *ngFor="let option of filteredSeededVarietyOptions" [value]="option">
                                                         {{ option.varietyName | titlecase }}
                                                     </mat-option>
                                                     </mat-autocomplete>
@@ -395,6 +395,7 @@
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
 
                                                 <mat-checkbox 
+                                                    *ngIf="isSeededCommodityQuantityInsurable(fieldIndex, plantingIndex, invSeededIndex)"
                                                     formControlName="isQuantityInsurableInd" 
                                                     (change)="isChecked($event, fieldIndex, plantingIndex, invSeededIndex);checkForHiddenFieldInTotals();">
                                                 </mat-checkbox>
@@ -404,6 +405,7 @@
                                                 class="border-bottom border-left" style="width:94px;"
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
                                                 <mat-checkbox 
+                                                    *ngIf="isSeededCommoditySpotLossInsurable(fieldIndex, plantingIndex, invSeededIndex)"
                                                     formControlName="isSpotLossInsurableInd" 
                                                     (change)="isChecked($event, fieldIndex, plantingIndex, invSeededIndex);checkForHiddenFieldInTotals();">
                                                 </mat-checkbox>
