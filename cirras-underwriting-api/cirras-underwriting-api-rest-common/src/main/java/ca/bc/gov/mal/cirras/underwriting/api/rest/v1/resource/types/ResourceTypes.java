@@ -217,5 +217,13 @@ public class ResourceTypes extends BaseResourceTypes {
 	public static final String YIELD_MEAS_UNIT_CONVERSION_LIST = NAMESPACE + YIELD_MEAS_UNIT_CONVERSION_LIST_NAME;
 	public static final String SAVE_YIELD_MEAS_UNIT_CONVERSION_LIST = NAMESPACE + "saveYieldMeasUnitConversionList";
 
+	//Verified Yield Contract
+	public static final String VERIFIED_YIELD_CONTRACT_NAME = "verifiedYieldContract";
+	public static final String VERIFIED_YIELD_CONTRACT = NAMESPACE + VERIFIED_YIELD_CONTRACT_NAME;
+	public static final String ROLLOVER_VERIFIED_YIELD_CONTRACT = NAMESPACE + "rolloverVerifiedYieldContract";
+	public static final String CREATE_VERIFIED_YIELD_CONTRACT = NAMESPACE + "createVerifiedYieldContract";
+	public static final String UPDATE_VERIFIED_YIELD_CONTRACT = NAMESPACE + "updateVerifiedYieldContract";
+	public static final String DELETE_VERIFIED_YIELD_CONTRACT = NAMESPACE + "deleteVerifiedYieldContract";
+	
 }
 

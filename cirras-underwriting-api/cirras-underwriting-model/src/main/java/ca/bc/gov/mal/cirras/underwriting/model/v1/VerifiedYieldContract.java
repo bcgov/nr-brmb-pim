@@ -8,28 +8,31 @@ public interface VerifiedYieldContract<A extends AnnualField> extends Serializab
 
  	public String getVerifiedYieldContractGuid();
 	public void setVerifiedYieldContractGuid(String verifiedYieldContractGuid);
- 
+
+ 	public String getDeclaredYieldContractGuid();
+	public void setDeclaredYieldContractGuid(String declaredYieldContractGuid);		
+	
  	public Integer getContractId();
 	public void setContractId(Integer contractId);
  
  	public Integer getCropYear();
 	public void setCropYear(Integer cropYear);
-  
- 	public Date getVerifiedUpdateTimestamp();
-	public void setVerifiedUpdateTimestamp(Date verifiedUpdateTimestamp);
+	
+ 	public Date getVerifiedYieldUpdateTimestamp();
+	public void setVerifiedYieldUpdateTimestamp(Date verifiedYieldUpdateTimestamp);
  
- 	public String getVerifiedUpdateUser();
-	public void setVerifiedUpdateUser(String verifiedUpdateUser);
+ 	public String getVerifiedYieldUpdateUser();
+	public void setVerifiedYieldUpdateUser(String verifiedYieldUpdateUser);
   
  	public String getDefaultYieldMeasUnitTypeCode();
 	public void setDefaultYieldMeasUnitTypeCode(String defaultYieldMeasUnitTypeCode);
  
 	public Integer getInsurancePlanId();
 	public void setInsurancePlanId(Integer insurancePlanId);
-			
-	public List<VerifiedYieldContractCommodity> getVerifiedYieldContractCommodities();
-	public void setVerifiedYieldContractCommodities(List<VerifiedYieldContractCommodity> verifiedYieldContractCommodities);
-	
+				
 	public Integer getGrowerContractYearId();
 	public void setGrowerContractYearId(Integer growerContractYearId);	
+
+	public List<VerifiedYieldContractCommodity> getVerifiedYieldContractCommodities();
+	public void setVerifiedYieldContractCommodities(List<VerifiedYieldContractCommodity> verifiedYieldContractCommodities);
 }

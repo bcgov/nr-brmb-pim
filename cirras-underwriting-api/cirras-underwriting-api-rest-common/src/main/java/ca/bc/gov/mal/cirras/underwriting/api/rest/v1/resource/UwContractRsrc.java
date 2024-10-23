@@ -46,6 +46,7 @@ public class UwContractRsrc extends BaseResource implements UwContract<UwContrac
 	// other
 	private String inventoryContractGuid;
 	private String declaredYieldContractGuid;
+	private String verifiedYieldContractGuid;
 	private Integer totalDopEligibleInventory;
 
 	private List<UwContractRsrc> linkedPolicies = new ArrayList<UwContractRsrc>();
@@ -229,6 +230,14 @@ public class UwContractRsrc extends BaseResource implements UwContract<UwContrac
 		this.declaredYieldContractGuid = declaredYieldContractGuid;
 	}
 	
+	public String getVerifiedYieldContractGuid() {
+		return verifiedYieldContractGuid;
+	}
+
+	public void setVerifiedYieldContractGuid(String verifiedYieldContractGuid) {
+		this.verifiedYieldContractGuid = verifiedYieldContractGuid;
+	}
+
 	public Integer getTotalDopEligibleInventory() {
 		return totalDopEligibleInventory;
 	}

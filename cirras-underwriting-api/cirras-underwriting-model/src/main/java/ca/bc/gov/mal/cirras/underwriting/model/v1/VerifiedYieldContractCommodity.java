@@ -8,23 +8,21 @@ import java.io.Serializable;
 public class VerifiedYieldContractCommodity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	// TODO: Check against db names.
 	private String verifiedYieldContractCommodityGuid;
 	private String verifiedYieldContractGuid;
 	private Integer cropCommodityId;
-	private Boolean isPedigreeInd;
+	private Boolean isPedigreeInd;   // TODO: Do we need this?
 	private Double harvestedAcres;
 	private Double harvestedAcresOverride;
 	private Double storedYieldDefaultUnit;
 	private Double soldYieldDefaultUnit;
+	private Double productionGuarantee;
 	private Double harvestedYield;
 	private Double harvestedYieldOverride;
-	private Double harvestedYieldPerAcre;
-	private String gradeModifierTypeCode;  // TODO: Do we need this?
+	private Double yieldPerAcre;
 
 	private String cropCommodityName;
 	private Double totalInsuredAcres;
-	private Double productionGuarantee;
 	
 	public String getVerifiedYieldContractCommodityGuid() {
 		return verifiedYieldContractCommodityGuid;
@@ -82,6 +80,13 @@ public class VerifiedYieldContractCommodity implements Serializable {
 		this.soldYieldDefaultUnit = soldYieldDefaultUnit;
 	}
 
+	public Double getProductionGuarantee() {
+		return productionGuarantee;
+	}
+	public void setProductionGuarantee(Double productionGuarantee) {
+		this.productionGuarantee = productionGuarantee;
+	}	
+	
 	public Double getHarvestedYield() {
 		return harvestedYield;
 	}
@@ -96,18 +101,11 @@ public class VerifiedYieldContractCommodity implements Serializable {
 		this.harvestedYieldOverride = harvestedYieldOverride;
 	}
 
-	public Double getHarvestedYieldPerAcre() {
-		return harvestedYieldPerAcre;
+	public Double getYieldPerAcre() {
+		return yieldPerAcre;
 	}
-	public void setHarvestedYieldPerAcre(Double harvestedYieldPerAcre) {
-		this.harvestedYieldPerAcre = harvestedYieldPerAcre;
-	}
-
-	public String getGradeModifierTypeCode() {
-		return gradeModifierTypeCode;
-	}
-	public void setGradeModifierTypeCode(String gradeModifierTypeCode) {
-		this.gradeModifierTypeCode = gradeModifierTypeCode;
+	public void setYieldPerAcre(Double yieldPerAcre) {
+		this.yieldPerAcre = yieldPerAcre;
 	}
 
 	public String getCropCommodityName() {
@@ -122,13 +120,6 @@ public class VerifiedYieldContractCommodity implements Serializable {
 	}
 	public void setTotalInsuredAcres(Double totalInsuredAcres) {
 		this.totalInsuredAcres = totalInsuredAcres;
-	}
-
-	public Double getProductionGuarantee() {
-		return productionGuarantee;
-	}
-	public void setProductionGuarantee(Double productionGuarantee) {
-		this.productionGuarantee = productionGuarantee;
 	}
 		
 }
