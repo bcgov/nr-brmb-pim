@@ -2,6 +2,7 @@ CREATE TABLE cuws.verified_yield_contract_commodity(
     verified_yield_contract_commodity_guid    varchar(32)       NOT NULL,
     verified_yield_contract_guid              varchar(32)       NOT NULL,
     crop_commodity_id                         numeric(9, 0)     NOT NULL,
+	is_pedigree_ind                           varchar(1)        NOT NULL,
     harvested_acres                           numeric(14, 4),
     harvested_acres_override                  numeric(14, 4),
     stored_yield_default_unit                 numeric(14, 4),
@@ -24,6 +25,8 @@ COMMENT ON COLUMN cuws.verified_yield_contract_commodity.verified_yield_contract
 COMMENT ON COLUMN cuws.verified_yield_contract_commodity.verified_yield_contract_guid IS 'Verified Yield Contract GUID  is the primary key used to identify the record'
 ;
 COMMENT ON COLUMN cuws.verified_yield_contract_commodity.crop_commodity_id IS 'Crop Commodity Id is a unique Id of a commodity from cirr_crop_types.crpt_id'
+;
+COMMENT ON COLUMN cuws.verified_yield_contract_commodity.is_pedigree_ind IS 'Is Pedigree Ind determines if the yield is for a pedigree crop (Y) or (N).'
 ;
 COMMENT ON COLUMN cuws.verified_yield_contract_commodity.harvested_acres IS 'Harvested Acres is the Harvested Acres for the Commodity from the Declaration of Production sheet.'
 ;
