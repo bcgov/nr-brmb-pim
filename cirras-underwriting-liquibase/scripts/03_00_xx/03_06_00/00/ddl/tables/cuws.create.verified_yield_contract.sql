@@ -38,10 +38,6 @@ COMMENT ON COLUMN cuws.verified_yield_contract.update_date IS 'Update Date is th
 COMMENT ON TABLE cuws.verified_yield_contract IS 'The table contains general verified yield data for a contract.'
 ;
 
-
-CREATE UNIQUE INDEX uk_vyc ON cuws.verified_yield_contract(contract_id, crop_year)
- TABLESPACE pg_default
-;
 CREATE INDEX ix_vyc_gcy ON cuws.verified_yield_contract(contract_id, crop_year)
  TABLESPACE pg_default
 ;
@@ -52,6 +48,10 @@ CREATE INDEX ix_vyc_ymutc ON cuws.verified_yield_contract(default_yield_meas_uni
 ;
 ALTER TABLE cuws.verified_yield_contract ADD 
     CONSTRAINT pk_vyc PRIMARY KEY (verified_yield_contract_guid) USING INDEX TABLESPACE pg_default 
+;
+
+ALTER TABLE cuws.verified_yield_contract ADD 
+    CONSTRAINT uk_vyc UNIQUE (contract_id, crop_year) USING INDEX TABLESPACE pg_default 
 ;
 
 ALTER TABLE cuws.verified_yield_contract ADD CONSTRAINT fk_vyc_gcy 
@@ -68,3 +68,5 @@ ALTER TABLE cuws.verified_yield_contract ADD CONSTRAINT fk_vyc_dyc
     FOREIGN KEY (declared_yield_contract_guid)
     REFERENCES cuws.declared_yield_contract(declared_yield_contract_guid)
 ;
+
+

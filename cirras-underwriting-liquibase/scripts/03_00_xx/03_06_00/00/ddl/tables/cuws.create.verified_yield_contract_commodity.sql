@@ -2,7 +2,7 @@ CREATE TABLE cuws.verified_yield_contract_commodity(
     verified_yield_contract_commodity_guid    varchar(32)       NOT NULL,
     verified_yield_contract_guid              varchar(32)       NOT NULL,
     crop_commodity_id                         numeric(9, 0)     NOT NULL,
-	is_pedigree_ind                           varchar(1)        NOT NULL,
+    is_pedigree_ind                           varchar(1)        NOT NULL,
     harvested_acres                           numeric(14, 4),
     harvested_acres_override                  numeric(14, 4),
     stored_yield_default_unit                 numeric(14, 4),
@@ -17,8 +17,6 @@ CREATE TABLE cuws.verified_yield_contract_commodity(
     update_date                               timestamp(0)      NOT NULL
 ) TABLESPACE pg_default
 ;
-
-
 
 COMMENT ON COLUMN cuws.verified_yield_contract_commodity.verified_yield_contract_commodity_guid IS 'Verified Yield Contract Commodity GUID  is the primary key used to identify the record'
 ;
@@ -60,11 +58,12 @@ CREATE INDEX ix_vycc_cco ON cuws.verified_yield_contract_commodity(crop_commodit
 ;
 CREATE INDEX ix_vycc_vyc ON cuws.verified_yield_contract_commodity(verified_yield_contract_guid)
 ;
-CREATE UNIQUE INDEX uk_vycc ON cuws.verified_yield_contract_commodity(verified_yield_contract_guid, crop_commodity_id)
- TABLESPACE pg_default
-;
 ALTER TABLE cuws.verified_yield_contract_commodity ADD 
     CONSTRAINT pk_vycc PRIMARY KEY (verified_yield_contract_commodity_guid) USING INDEX TABLESPACE pg_default 
+;
+
+ALTER TABLE cuws.verified_yield_contract_commodity ADD 
+    CONSTRAINT uk_vycc UNIQUE (verified_yield_contract_guid, crop_commodity_id, is_pedigree_ind) USING INDEX TABLESPACE pg_default 
 ;
 
 ALTER TABLE cuws.verified_yield_contract_commodity ADD CONSTRAINT fk_vycc_vyc 
