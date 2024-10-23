@@ -1,0 +1,8 @@
+
+{
+  "databaseChangeLog": [
+{ "changeSet": {"author":"mhostettler","id":"87","changes": [
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.verified_yield_contract.sql"}},
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.verified_yield_contract_commodity.sql"}},
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
+  ] } }]}
