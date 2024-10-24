@@ -197,8 +197,8 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
         fldPlantings.push( self.fb.group( 
           addPlantingObject(pltg.cropYear, pltg.fieldId, pltg.insurancePlanId, pltg.inventoryFieldGuid, 
             pltg.lastYearCropCommodityId, pltg.lastYearCropCommodityName, pltg.lastYearCropVarietyId, pltg.lastYearCropVarietyName,
-            pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, 
-            pltg.inventoryUnseeded, null, new FormArray ([]), pltgInventorySeededForages ) ) )
+            pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, null,
+            pltg.inventoryUnseeded, new FormArray ([]), pltgInventorySeededForages ) ) )
         }
 
       )
