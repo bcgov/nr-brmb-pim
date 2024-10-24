@@ -1203,11 +1203,19 @@ onDeleteField(field) {
             if ( frmPlanting.value.deletedByUserInd == true ||
                 areNotEqual(lastYearCropCommodityId, originalPlanting.lastYearCropCommodityId) ||
                 areNotEqual(lastYearCropVarietyId, originalPlanting.lastYearCropVarietyId) ||
-                areNotEqual(frmPlanting.value.acresToBeSeeded, originalPlanting.inventoryUnseeded.acresToBeSeeded) ||
-                areNotEqual(frmPlanting.value.cropCommodityId, originalPlanting.inventoryUnseeded.cropCommodityId) ||
-                areNotEqual(frmPlanting.value.cropVarietyId, originalPlanting.inventoryUnseeded.cropVarietyId) ||
-                areNotEqual(frmPlanting.value.isUnseededInsurableInd, originalPlanting.inventoryUnseeded.isUnseededInsurableInd) ||
                 areNotEqual(frmPlanting.value.isHiddenOnPrintoutInd, originalPlanting.isHiddenOnPrintoutInd)  
+              ) {
+
+                  return true
+              }
+
+              if ( originalPlanting.inventoryUnseeded && 
+                  (frmPlanting.value.deletedByUserInd == true ||
+                    areNotEqual(frmPlanting.value.acresToBeSeeded, originalPlanting.inventoryUnseeded.acresToBeSeeded) ||
+                    areNotEqual(frmPlanting.value.cropCommodityId, originalPlanting.inventoryUnseeded.cropCommodityId) ||
+                    areNotEqual(frmPlanting.value.cropVarietyId, originalPlanting.inventoryUnseeded.cropVarietyId) ||
+                    areNotEqual(frmPlanting.value.isUnseededInsurableInd, originalPlanting.inventoryUnseeded.isUnseededInsurableInd)   
+                  )
               ) {
 
                   return true
