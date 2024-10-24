@@ -4,9 +4,15 @@ import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFa
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.VerifiedYieldContractFactory;
@@ -25,19 +31,18 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 
 		populateDefaultResource(resource, policyDto, dycDto);
 		
-		// Declared Yield Contract Commodity
-		// TODO
-/*		if (!dycDto.getDeclaredYieldContractCommodities().isEmpty()) {
-			List<DopYieldContractCommodity> dopContractCommodities = new ArrayList<DopYieldContractCommodity>();
+		// Verified Yield Contract Commodity
+		if (!dycDto.getDeclaredYieldContractCommodities().isEmpty()) {
+			List<VerifiedYieldContractCommodity> vyContractCommodities = new ArrayList<VerifiedYieldContractCommodity>();
 
 			for (DeclaredYieldContractCommodityDto dyccDto : dycDto.getDeclaredYieldContractCommodities()) {
-				DopYieldContractCommodity dyccModel = createDopYieldContractCommodities(dyccDto);
-				dopContractCommodities.add(dyccModel);
+				VerifiedYieldContractCommodity vyccModel = createDefaultVerifiedYieldContractCommodity(dyccDto);
+				vyContractCommodities.add(vyccModel);
 			}
 
-			resource.setDopYieldContractCommodities(dopContractCommodities);
+			resource.setVerifiedYieldContractCommodities(vyContractCommodities);
 		}
-*/						
+						
 		String eTag = getEtag(resource);
 		resource.setETag(eTag);
 
@@ -58,27 +63,25 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 	}
    	
 	
-// TODO
-/*
-	private DopYieldContractCommodity createDopYieldContractCommodities(DeclaredYieldContractCommodityDto dto) {
-		DopYieldContractCommodity model = new DopYieldContractCommodity();
-		
-		model.setDeclaredYieldContractCommodityGuid(dto.getDeclaredYieldContractCommodityGuid());
-		model.setDeclaredYieldContractGuid(dto.getDeclaredYieldContractGuid());
+	private VerifiedYieldContractCommodity createDefaultVerifiedYieldContractCommodity(DeclaredYieldContractCommodityDto dto) {
+		VerifiedYieldContractCommodity model = new VerifiedYieldContractCommodity();
+
 		model.setCropCommodityId(dto.getCropCommodityId());
 		model.setCropCommodityName(dto.getCropCommodityName());
-		model.setIsPedigreeInd(dto.getIsPedigreeInd());
 		model.setHarvestedAcres(dto.getHarvestedAcres());
-		model.setStoredYield(dto.getStoredYield());
-		model.setStoredYieldDefaultUnit(dto.getStoredYieldDefaultUnit());
-		model.setSoldYield(dto.getSoldYield());
+		model.setHarvestedAcresOverride(null);
+		model.setHarvestedYield(null);   // Calculated later
+		model.setHarvestedYieldOverride(null);
+		model.setIsPedigreeInd(dto.getIsPedigreeInd());
+		model.setProductionGuarantee(null); // TODO: Will be implemented later.
 		model.setSoldYieldDefaultUnit(dto.getSoldYieldDefaultUnit());
-		model.setGradeModifierTypeCode(dto.getGradeModifierTypeCode());
-
+		model.setStoredYieldDefaultUnit(dto.getStoredYieldDefaultUnit());
 		model.setTotalInsuredAcres(dto.getTotalInsuredAcres());
+		model.setVerifiedYieldContractCommodityGuid(null);
+		model.setVerifiedYieldContractGuid(null);
+		model.setYieldPerAcre(null); // Calculated later
 
 		return model;
 	}
-*/		
 	
 }

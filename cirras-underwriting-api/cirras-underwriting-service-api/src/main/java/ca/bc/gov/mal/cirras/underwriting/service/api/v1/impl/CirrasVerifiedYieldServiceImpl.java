@@ -145,11 +145,12 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				throw new NotFoundException("Did not find the dop: " + policyDto.getDeclaredYieldContractGuid());
 			}
 
-			// TODO
-			//loadDopYieldContractCommodities(dycDto);
-
+			loadDopYieldContractCommodities(dycDto);
+			
 			result = verifiedYieldContractFactory.getDefaultVerifiedYieldContract(policyDto, dycDto, factoryContext, authentication);
 
+			// TODO: Run calcs.
+			
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);
 		}
@@ -158,52 +159,15 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		return result;
 	}
 
-	// TODO
-/*	private void loadDopYieldContractCommodities(DeclaredYieldContractDto dto) throws DaoException {
-		
-		if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
-			if (dto.getDeclaredYieldContractGuid() == null) {
-				getInventoryContractCommodities(dto);
-			} else {
-				List<DeclaredYieldContractCommodityDto> dopCommodities = declaredYieldContractCommodityDao.selectForDeclaredYieldContract(dto.getDeclaredYieldContractGuid());
-				dto.setDeclaredYieldContractCommodities(dopCommodities);
-			}
-		} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
-			if (dto.getDeclaredYieldContractGuid() == null) {
-				getInventoryContractCommodityTypes(dto);
-			} else {
-				List<DeclaredYieldContractCommodityForageDto> dopForageCommodities = declaredYieldContractCommodityForageDao.selectForDeclaredYieldContract(dto.getDeclaredYieldContractGuid());
-				dto.setDeclaredYieldContractCommodityForageList(dopForageCommodities);
+	private void loadDopYieldContractCommodities(DeclaredYieldContractDto dto) throws DaoException {
 
-				List<DeclaredYieldFieldRollupForageDto> dopForageRollup = declaredYieldFieldRollupForageDao.selectForDeclaredYieldContract(dto.getDeclaredYieldContractGuid());
-				dto.setDeclaredYieldFieldRollupForageList(dopForageRollup);
-			}
-		} else {
-			throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
+		if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
+			List<DeclaredYieldContractCommodityDto> dopCommodities = declaredYieldContractCommodityDao.selectForDeclaredYieldContract(dto.getDeclaredYieldContractGuid());
+			dto.setDeclaredYieldContractCommodities(dopCommodities);
+		} else { 
+			throw new ServiceException("Insurance Plan must be GRAIN");
 		}
 	}
-*/	
-
-	// TODO
-/*	private void getInventoryContractCommodities(DeclaredYieldContractDto dto) throws DaoException {
-		
-		List<InventoryContractCommodityDto> dtos = inventoryContractCommodityDao.selectForDopContract(dto.getContractId(), dto.getCropYear());
-		List<DeclaredYieldContractCommodityDto> dopCommodities = dopYieldContractFactory.getDopCommoditiesFromInventoryCommodities(dtos);
-		dto.setDeclaredYieldContractCommodities(dopCommodities);
-
-	}
-*/
-
-
-	
-	
-	
-	
-	
-		
-
-
-
 
 
 	// TODO
