@@ -1,16 +1,16 @@
--- Database: cirras${ENV}
+-- Database: pituw${ENV}
 
--- DROP DATABASE "cirras${ENV}";
+-- DROP DATABASE "pituw${ENV}";
 
-CREATE DATABASE "cirras${ENV}"
+CREATE DATABASE "pituw${ENV}"
     WITH 
     OWNER = postgres
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
 
-COMMENT ON DATABASE "cirras${ENV}"
-    IS 'cirras${ENV} database containing schemas used by cirras applications and services.';
+COMMENT ON DATABASE "pituw${ENV}"
+    IS 'pituw${ENV} database containing schemas used by production insurance applications and services.';
 
-GRANT TEMPORARY, CONNECT ON DATABASE "cirras${ENV}" TO PUBLIC;
+GRANT TEMPORARY, CONNECT ON DATABASE "pituw${ENV}" TO PUBLIC;
 
-GRANT ALL ON DATABASE "cirras${ENV}" TO postgres;
+GRANT ALL ON DATABASE "pituw${ENV}" TO postgres;
