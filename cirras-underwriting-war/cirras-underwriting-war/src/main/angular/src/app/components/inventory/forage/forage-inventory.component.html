@@ -285,7 +285,7 @@
                                                             matTooltip="Please enter seeding year" 
                                                             (keypress)="numberOnly($event)" 
                                                             (keydown)="navigateUpDown($event, 3)"
-                                                            (blur)="isMyFormDirty()"
+                                                            (blur)="clearPlantInsurability(fieldIndex, plantingIndex, invSeededIndex)"
                                                             maxlength="4">
                                                 </mat-form-field>
 
