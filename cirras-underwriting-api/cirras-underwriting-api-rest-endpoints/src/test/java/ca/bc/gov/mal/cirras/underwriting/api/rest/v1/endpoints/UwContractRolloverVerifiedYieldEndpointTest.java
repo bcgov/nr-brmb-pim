@@ -250,13 +250,7 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 		Assert.assertNull(vyContract.getVerifiedYieldUpdateTimestamp());
 
 		// Check VerifiedYieldContractCommodities
-		Assert.assertEquals(2, vyContract.getVerifiedYieldContractCommodities().size());
-
-/*
- * 			createDopYieldContractCommodity(16, "BARLEY", 11.22, false, 66.77, 88.99);
-			createDopYieldContractCommodity(18, "CANOLA", 33.44, true, 55.66, 77.88);
-		
- */
+		Assert.assertEquals(3, vyContract.getVerifiedYieldContractCommodities().size());
 		
 		VerifiedYieldContractCommodity vycc = vyContract.getVerifiedYieldContractCommodities().get(0);
 
@@ -264,7 +258,7 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 		Assert.assertEquals("BARLEY", vycc.getCropCommodityName());
 		Assert.assertEquals(Double.valueOf(11.22), vycc.getHarvestedAcres());
 		Assert.assertEquals(null, vycc.getHarvestedAcresOverride());
-		Assert.assertEquals(null, vycc.getHarvestedYield()); // TODO
+		Assert.assertEquals(Double.valueOf(155.76), vycc.getHarvestedYield());
 		Assert.assertEquals(null, vycc.getHarvestedYieldOverride());
 		Assert.assertEquals(false, vycc.getIsPedigreeInd());
 		Assert.assertEquals(null, vycc.getProductionGuarantee());
@@ -273,7 +267,8 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 		Assert.assertEquals(Double.valueOf(23.45), vycc.getTotalInsuredAcres());
 		Assert.assertEquals(null, vycc.getVerifiedYieldContractCommodityGuid());
 		Assert.assertEquals(null, vycc.getVerifiedYieldContractGuid());
-		Assert.assertEquals(null, vycc.getYieldPerAcre()); // TODO
+		Assert.assertEquals(13.8824, vycc.getYieldPerAcre(), 0.00005);
+
 		
 		vycc = vyContract.getVerifiedYieldContractCommodities().get(1);
 
@@ -281,7 +276,7 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 		Assert.assertEquals("CANOLA", vycc.getCropCommodityName());
 		Assert.assertEquals(Double.valueOf(33.44), vycc.getHarvestedAcres());
 		Assert.assertEquals(null, vycc.getHarvestedAcresOverride());
-		Assert.assertEquals(null, vycc.getHarvestedYield()); // TODO
+		Assert.assertEquals(Double.valueOf(133.54), vycc.getHarvestedYield());
 		Assert.assertEquals(null, vycc.getHarvestedYieldOverride());
 		Assert.assertEquals(true, vycc.getIsPedigreeInd());
 		Assert.assertEquals(null, vycc.getProductionGuarantee());
@@ -290,7 +285,24 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 		Assert.assertEquals(null, vycc.getTotalInsuredAcres());
 		Assert.assertEquals(null, vycc.getVerifiedYieldContractCommodityGuid());
 		Assert.assertEquals(null, vycc.getVerifiedYieldContractGuid());
-		Assert.assertEquals(null, vycc.getYieldPerAcre()); // TODO
+		Assert.assertEquals(3.9934, vycc.getYieldPerAcre(), 0.00005);
+
+		vycc = vyContract.getVerifiedYieldContractCommodities().get(2);
+
+		Assert.assertEquals(Integer.valueOf(20), vycc.getCropCommodityId());
+		Assert.assertEquals("FALL RYE", vycc.getCropCommodityName());
+		Assert.assertEquals(null, vycc.getHarvestedAcres());
+		Assert.assertEquals(null, vycc.getHarvestedAcresOverride());
+		Assert.assertEquals(null, vycc.getHarvestedYield());
+		Assert.assertEquals(null, vycc.getHarvestedYieldOverride());
+		Assert.assertEquals(false, vycc.getIsPedigreeInd());
+		Assert.assertEquals(null, vycc.getProductionGuarantee());
+		Assert.assertEquals(null, vycc.getSoldYieldDefaultUnit());
+		Assert.assertEquals(null, vycc.getStoredYieldDefaultUnit());
+		Assert.assertEquals(null, vycc.getTotalInsuredAcres());
+		Assert.assertEquals(null, vycc.getVerifiedYieldContractCommodityGuid());
+		Assert.assertEquals(null, vycc.getVerifiedYieldContractGuid());
+		Assert.assertEquals(null, vycc.getYieldPerAcre());
 		
 		logger.debug(">testRolloverGrainVerifiedYieldContract");
 	}
@@ -547,60 +559,6 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 		}
 	}
 
-	// TODO: Remove?
-	private InventoryField createInventoryField(Integer cropYear, Integer fieldId, Integer insurancePlanId, Integer plantingNumber) {
-
-		InventoryField inv = new InventoryField();
-		inv.setCropYear(cropYear);
-		inv.setFieldId(fieldId);
-		inv.setInsurancePlanId(insurancePlanId);
-		inv.setInventoryFieldGuid(null);
-		inv.setIsHiddenOnPrintoutInd(false);
-		inv.setLastYearCropCommodityId(null);
-		inv.setLastYearCropCommodityName(null);
-		inv.setLastYearCropVarietyId(null);
-		inv.setLastYearCropVarietyName(null);
-		inv.setPlantingNumber(plantingNumber);
-		inv.setUnderseededAcres(null);
-		inv.setUnderseededCropVarietyId(null);
-		inv.setUnderseededCropVarietyName(null);
-		inv.setUnderseededInventorySeededForageGuid(null);
-		
-		return inv;
-		
-	}
-
-	// TODO: Remove?
-	private InventorySeededGrain createInventorySeededGrain(String commodityTypeCode, 
-			                                                String commodityTypeDesc, 
-			                                                Integer cropCommodityId,
-			                                                String cropCommodityName, 
-			                                                Integer cropVarietyId, 
-			                                                String cropVarietyName, 
-			                                                Boolean isPedigreeInd, 
-			                                                Double seededAcres, 
-			                                                Date seededDate) {
-		
-		InventorySeededGrain isg = new InventorySeededGrain();
-		isg.setCommodityTypeCode(commodityTypeCode);
-		isg.setCommodityTypeDesc(commodityTypeDesc);
-		isg.setCropCommodityId(cropCommodityId);
-		isg.setCropCommodityName(cropCommodityName);
-		isg.setCropVarietyId(cropVarietyId);
-		isg.setCropVarietyName(cropVarietyName);
-		isg.setInventoryFieldGuid(null);
-		isg.setInventorySeededGrainGuid(null);
-		isg.setIsPedigreeInd(isPedigreeInd);
-		isg.setIsQuantityInsurableInd(true);
-		isg.setIsReplacedInd(false);
-		isg.setIsSpotLossInsurableInd(true);
-		isg.setSeededAcres(seededAcres);
-		isg.setSeededDate(seededDate);
-
-		return isg;
-	}
-
-	// TODO: Remove?
 	private InventoryContractCommodity createInventoryContractCommodity(Integer cropCommodityId, String cropCommodityName, Boolean isPedigreeInd, Double totalSeededAcres, Double totalSpotLossAcres, Double totalUnseededAcres) {
 
 		InventoryContractCommodity icc = new InventoryContractCommodity();
@@ -667,6 +625,9 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 			resource.getDopYieldContractCommodities().add(dycc);
 			
 			dycc = createDopYieldContractCommodity(18, "CANOLA", 33.44, true, 55.66, 77.88);
+			resource.getDopYieldContractCommodities().add(dycc);
+
+			dycc = createDopYieldContractCommodity(20, "FALL RYE", null, false, null, null);
 			resource.getDopYieldContractCommodities().add(dycc);
 			
 		} else if ( insurancePlanId.equals(InsurancePlans.FORAGE.getInsurancePlanId() ) ) {

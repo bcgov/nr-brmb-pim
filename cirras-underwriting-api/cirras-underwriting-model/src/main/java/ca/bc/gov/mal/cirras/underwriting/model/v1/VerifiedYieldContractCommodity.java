@@ -11,7 +11,7 @@ public class VerifiedYieldContractCommodity implements Serializable {
 	private String verifiedYieldContractCommodityGuid;
 	private String verifiedYieldContractGuid;
 	private Integer cropCommodityId;
-	private Boolean isPedigreeInd;   // TODO: Do we need this?
+	private Boolean isPedigreeInd;
 	private Double harvestedAcres;
 	private Double harvestedAcresOverride;
 	private Double storedYieldDefaultUnit;

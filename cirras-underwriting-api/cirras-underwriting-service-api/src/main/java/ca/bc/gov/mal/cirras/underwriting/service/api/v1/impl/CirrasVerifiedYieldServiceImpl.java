@@ -1,64 +1,21 @@
 package ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl;
 
 import java.util.Properties;
-import java.util.stream.Collectors;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContract;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodity;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodityForage;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForage;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForageCut;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldGrain;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollup;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollupForage;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.YieldMeasUnitTypeCode;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.YieldMeasUnitTypeCodeList;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ContractedFieldDetailDao;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldForageDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupForageDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryContractCommodityDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryFieldDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventorySeededForageDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventorySeededGrainDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.PolicyDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.UnderwritingCommentDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.YieldMeasUnitConversionDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.YieldMeasUnitTypeCodeDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldForageDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupForageDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededForageDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingCommentDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.YieldMeasUnitConversionDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.YieldMeasUnitTypeCodeDto;
-import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.ConflictException;
 import ca.bc.gov.nrs.wfone.common.service.api.ForbiddenException;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
@@ -66,15 +23,8 @@ import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasDopYieldService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasVerifiedYieldService;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.DopYieldContractFactory;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.InventoryContractFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.VerifiedYieldContractFactory;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.YieldMeasUnitTypeCodeFactory;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.reports.JasperReportService;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.reports.JasperReportServiceException;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.ModelValidator;
 
@@ -149,7 +99,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			
 			result = verifiedYieldContractFactory.getDefaultVerifiedYieldContract(policyDto, dycDto, factoryContext, authentication);
 
-			// TODO: Run calcs.
+			calculateVerifiedYieldContractCommodities(result);
 			
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);
@@ -169,50 +119,38 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		}
 	}
 
+	private void calculateVerifiedYieldContractCommodities(VerifiedYieldContract<? extends AnnualField> verifiedYieldContract) {
+		if ( verifiedYieldContract.getVerifiedYieldContractCommodities() != null && !verifiedYieldContract.getVerifiedYieldContractCommodities().isEmpty() ) {
+			for ( VerifiedYieldContractCommodity vycc : verifiedYieldContract.getVerifiedYieldContractCommodities() ) {
 
-	// TODO
-/*	private void updateDeclaredYieldContractCommodity(String declaredYieldContractGuid,
-			DopYieldContract<? extends AnnualField> dopYieldContract, DopYieldContractCommodity dopContractCommodity,
-			Map<String, YieldMeasUnitConversionDto> ymucMap, String userId) throws DaoException {
+				// Calculate Harvested Yield
+				Double harvestedYield = null;
+				if ( vycc.getSoldYieldDefaultUnit() != null || vycc.getStoredYieldDefaultUnit() != null ) {
+					harvestedYield = notNull(vycc.getSoldYieldDefaultUnit(), 0.0) + notNull(vycc.getStoredYieldDefaultUnit(), 0.0);
+				}
+				
+				vycc.setHarvestedYield(harvestedYield);
 
-		logger.debug("<updateDeclaredYieldContractCommodity");
+				// Calculated Yield per Acre
+				Double yieldPerAcre = null;
+				
+				Double effectiveAcres = notNull(vycc.getHarvestedAcresOverride(), vycc.getHarvestedAcres());
+				Double effectiveYield = notNull(vycc.getHarvestedYieldOverride(), vycc.getHarvestedYield());
 
-		// Calculate default units
-		if (dopContractCommodity.getSoldYield() == null || dopContractCommodity.getSoldYield() == 0) {
-			dopContractCommodity.setSoldYieldDefaultUnit(dopContractCommodity.getSoldYield());
-		} else {
-			dopContractCommodity.setSoldYieldDefaultUnit(
-					convertEstimatedYield(dopYieldContract, dopYieldContract.getDefaultYieldMeasUnitTypeCode(),
-							dopContractCommodity.getCropCommodityId(), dopContractCommodity.getSoldYield(), ymucMap));
+				if ( effectiveAcres != null && effectiveYield != null ) {
+					if ( effectiveAcres == 0.0 ) {
+						yieldPerAcre = 0.0;
+					} else {
+						yieldPerAcre = effectiveYield / effectiveAcres;
+					}
+				}
+				
+				vycc.setYieldPerAcre(yieldPerAcre);
+			}
 		}
-
-		if (dopContractCommodity.getStoredYield() == null || dopContractCommodity.getStoredYield() == 0) {
-			dopContractCommodity.setStoredYieldDefaultUnit(dopContractCommodity.getStoredYield());
-		} else {
-			dopContractCommodity.setStoredYieldDefaultUnit(
-					convertEstimatedYield(dopYieldContract, dopYieldContract.getDefaultYieldMeasUnitTypeCode(),
-							dopContractCommodity.getCropCommodityId(), dopContractCommodity.getStoredYield(), ymucMap));
-		}
-
-		DeclaredYieldContractCommodityDto dto = null;
-
-		if (dopContractCommodity.getDeclaredYieldContractCommodityGuid() != null) {
-			dto = declaredYieldContractCommodityDao.fetch(dopContractCommodity.getDeclaredYieldContractCommodityGuid());
-		}
-
-		if (dto == null) {
-			// Insert if it doesn't exist
-			insertDeclaredYieldContractCommodity(declaredYieldContractGuid, dopContractCommodity, userId);
-		} else {
-			dopYieldContractFactory.updateDto(dto, dopContractCommodity);
-
-			declaredYieldContractCommodityDao.update(dto, userId);
-		}
-
-		logger.debug(">updateDeclaredYieldContractCommodity");
 	}
-*/
-
+	
+	
 	@Override
 	public VerifiedYieldContract<? extends AnnualField> getVerifiedYieldContract(String verifiedYieldContractGuid,
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
