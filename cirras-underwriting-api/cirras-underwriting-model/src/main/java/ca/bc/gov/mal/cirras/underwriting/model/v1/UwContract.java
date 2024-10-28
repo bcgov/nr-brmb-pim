@@ -70,6 +70,9 @@ public interface UwContract<U extends UwContract<?>> extends Serializable {
 
 	public String getDeclaredYieldContractGuid();
 	public void setDeclaredYieldContractGuid(String declaredYieldContractGuid);
+
+	public String getVerifiedYieldContractGuid();
+	public void setVerifiedYieldContractGuid(String verifiedYieldContractGuid);
 	
 	public Integer getTotalDopEligibleInventory();
 	public void setTotalDopEligibleInventory(Integer totalDopEligibleInventory);
