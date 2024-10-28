@@ -6,6 +6,10 @@ DLVR:	pituwdlvr
 TEST:	pituwtest
 PROD:	pituwprod
 
+--Before running the rename statement, shutdown these apis:
+	- UW API
+	- Jasper API
+
 --Rename sql has to be run: ALTER DATABASE old_database_name RENAME TO new_database_name;
 
 DEV:	ALTER DATABASE cirrasdev RENAME TO pituwdev;
