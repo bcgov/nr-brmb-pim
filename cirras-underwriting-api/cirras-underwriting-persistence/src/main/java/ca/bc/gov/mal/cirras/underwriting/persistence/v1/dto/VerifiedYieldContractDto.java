@@ -1,6 +1,8 @@
 package ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +25,7 @@ public class VerifiedYieldContractDto extends BaseDto<VerifiedYieldContractDto> 
 	private Date verifiedYieldUpdateTimestamp;
 	private String verifiedYieldUpdateUser;
 	
-// TODO	
-//	private List<VerifiedYieldContractCommodityDto> verifiedYieldContractCommodities = new ArrayList<VerifiedYieldContractCommodityDto>();
+	private List<VerifiedYieldContractCommodityDto> verifiedYieldContractCommodities = new ArrayList<VerifiedYieldContractCommodityDto>();
 	
 	private String createUser;
 	private Date createDate;
@@ -48,20 +49,15 @@ public class VerifiedYieldContractDto extends BaseDto<VerifiedYieldContractDto> 
 		this.defaultYieldMeasUnitTypeCode = dto.defaultYieldMeasUnitTypeCode;
 		this.verifiedYieldUpdateTimestamp = dto.verifiedYieldUpdateTimestamp;
 		this.verifiedYieldUpdateUser = dto.verifiedYieldUpdateUser;
-
 		
-// TODO		
-/*		if ( dto.verifiedYieldContractCommodities != null ) {			
+		if ( dto.verifiedYieldContractCommodities != null ) {			
 			this.verifiedYieldContractCommodities = new ArrayList<>();
 			
 			for ( VerifiedYieldContractCommodityDto vyccDto : dto.verifiedYieldContractCommodities ) {
 				this.verifiedYieldContractCommodities.add(vyccDto.copy());
 			}
 		}	
-*/		
-
-		
-				
+						
 		this.createUser = dto.createUser;
 		this.createDate = dto.createDate;
 		this.updateUser = dto.updateUser;
@@ -155,6 +151,13 @@ public class VerifiedYieldContractDto extends BaseDto<VerifiedYieldContractDto> 
 	}
 	public void setVerifiedYieldUpdateUser(String verifiedYieldUpdateUser) {
 		this.verifiedYieldUpdateUser = verifiedYieldUpdateUser;
+	}
+
+	public List<VerifiedYieldContractCommodityDto> getVerifiedYieldContractCommodities() {
+		return verifiedYieldContractCommodities;
+	}
+	public void setVerifiedYieldContractCommodities(List<VerifiedYieldContractCommodityDto> verifiedYieldContractCommodities) {
+		this.verifiedYieldContractCommodities = verifiedYieldContractCommodities;
 	}
 
 	public String getCreateUser() {
