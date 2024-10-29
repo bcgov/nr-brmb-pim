@@ -137,8 +137,8 @@ export const LINK_PLANTING_TYPE = {
 
 export const PLANT_INSURABILITY_TYPE_CODE ={
     Establishment1: "E1",
-    // Establishment2: "E2",
-    // WinterSurvival1: "W1",
-    // WinterSurvival2: "W2",
-    // WinterSurvival3: "W3",
+    Establishment2: "E2",
+    WinterSurvival1: "W1",
+    WinterSurvival2: "W2",
+    WinterSurvival3: "W3",
 }
