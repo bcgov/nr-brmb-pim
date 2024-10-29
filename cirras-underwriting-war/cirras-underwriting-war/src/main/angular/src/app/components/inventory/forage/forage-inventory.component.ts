@@ -347,7 +347,8 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
         } else {
           invSeeded.controls['seedingDate'].setValue(null)
           invSeeded.controls['acresToBeSeeded'].setValue(null)
-          // populate plant insurability is done on focus of the plant insurability dropdown 
+          // check plant insurability in case something was selected there 
+          this.checkPlantInsurability(fieldIndex, plantingIndex, invSeededIndex)
         }
       }
     }
@@ -393,15 +394,6 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
     let year = -1;
   
-    if (invSeeded.controls['seedingDate'] && invSeeded.controls['seedingDate'].value && invSeeded.controls['seedingDate'].value.toString() != 'Invalid Date' ) {
-      let seedingDate = invSeeded.controls['seedingDate'].value 
-      const dateObject = typeof seedingDate === 'string' ? new Date(seedingDate) : seedingDate;
-      year = dateObject.getFullYear();
-      if (year > -1) {
-        return year
-      }
-    }
-
     if (invSeeded.controls['seedingYear'] && invSeeded.controls['seedingYear'].value) {
       year = invSeeded.controls['seedingYear'].value
     }
@@ -440,7 +432,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
       variety.cropVarietyPlantInsurabilities.forEach( p => {
         // add the year logic
-        if (self.shouldIncludePlantInsurabilityByYearSdd(yearSdd, p.plantInsurabilityTypeCode)) {
+        if (self.isPlantInsurabilityAllowed(yearSdd, p.plantInsurabilityTypeCode)) {
           options.push({
             code:         p.plantInsurabilityTypeCode,
             description:  p.description
@@ -452,7 +444,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
     return options
   }
 
-  shouldIncludePlantInsurabilityByYearSdd(yearSdd, pitc){
+  isPlantInsurabilityAllowed(yearSdd, pitc){
     //Insurability is only enabled if there is a seeded year/date
     if (yearSdd < 0) {
       return false 
@@ -513,13 +505,34 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
     }
   }
 
-  clearPlantInsurability(fieldIndex, plantingIndex, invSeededIndex) {
+  checkPlantInsurability(fieldIndex, plantingIndex, invSeededIndex) {
     const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
     const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex];
 
-    invSeeded.controls['plantInsurabilityTypeCode'].setValue(null) 
-    this.isMyFormDirty()
+    let cropVarietyId = invSeeded.controls['cropVarietyCtrl'].value.cropVarietyId
+    let seedingYear = invSeeded.controls['seedingYear'].value
+    let plantInsurabilityTypeCode = invSeeded.controls['plantInsurabilityTypeCode'].value
+
+    let isPitcAllowed = false 
+    
+    if ( cropVarietyId && seedingYear && plantInsurabilityTypeCode) {
+
+      let variety = this.getVarietyById(cropVarietyId)
+      if ( variety && variety.isPlantInsurableInd == true) {
+
+        let elem = variety.cropVarietyPlantInsurabilities.find( x => x.plantInsurabilityTypeCode == plantInsurabilityTypeCode)
+ 
+        if (elem && this.isPlantInsurabilityAllowed(seedingYear,plantInsurabilityTypeCode)) {
+          isPitcAllowed = true
+        }
+      }
+    } 
+    
+    if ( isPitcAllowed ==  false) {
+      invSeeded.controls['plantInsurabilityTypeCode'].setValue(null) 
+    }
+    
   }
 
 
