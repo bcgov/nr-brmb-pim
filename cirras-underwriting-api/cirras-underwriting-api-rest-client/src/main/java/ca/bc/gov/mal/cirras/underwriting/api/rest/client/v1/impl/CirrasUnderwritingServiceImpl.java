@@ -42,6 +42,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.RiskAreaListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SeedingDeadlineListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.YieldMeasUnitConversionListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.YieldMeasUnitTypeCodeListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
@@ -691,6 +692,23 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 		
 	}
 
+	//////////////////////////////////////////////////////
+	// Verified Yield Contract
+	//////////////////////////////////////////////////////
+	@Override
+	public VerifiedYieldContractRsrc rolloverVerifiedYieldContract(UwContractRsrc resource) throws CirrasUnderwritingServiceException {
+
+		GenericRestDAO<VerifiedYieldContractRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(VerifiedYieldContractRsrc.class);
+		
+		try {
+			Response<VerifiedYieldContractRsrc> response = dao.Process(ResourceTypes.ROLLOVER_VERIFIED_YIELD_CONTRACT, this.getTransformer(), resource, getWebClient());
+			return response.getResource();
+		} catch (RestDAOException rde) {
+			throw new CirrasUnderwritingServiceException(rde);
+		}
+		
+	}
+	
 	//////////////////////////////////////////////////////
 	// Yield Measurement Unit Type Code
 	//////////////////////////////////////////////////////	
