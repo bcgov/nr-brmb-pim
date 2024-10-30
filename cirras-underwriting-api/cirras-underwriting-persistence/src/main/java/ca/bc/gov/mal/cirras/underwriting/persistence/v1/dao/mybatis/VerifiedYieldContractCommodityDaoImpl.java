@@ -166,35 +166,4 @@ public class VerifiedYieldContractCommodityDaoImpl extends BaseDao implements Ve
 		logger.debug(">selectForVerifiedYieldContract " + dtos);
 		return dtos;
 	}
-	
-	@Override
-	public  List<VerifiedYieldContractCommodityDto> selectToRecalculate(
-	    		Integer cropCommodityId,
-	    		String enteredYieldMeasUnitTypeCode,
-	    		Integer effectiveCropYear,
-	    		Integer expiryCropYear
-				) throws DaoException {
-
-		logger.debug("<selectToRecalculate");
-
-		List<VerifiedYieldContractCommodityDto> dtos = null;
-
-		try {
-			Map<String, Object> parameters = new HashMap<String, Object>();
-			
-			parameters.put("cropCommodityId", cropCommodityId);
-			parameters.put("enteredYieldMeasUnitTypeCode", enteredYieldMeasUnitTypeCode);
-			parameters.put("effectiveCropYear", effectiveCropYear);
-			parameters.put("expiryCropYear", expiryCropYear);
-						
-			dtos = this.mapper.selectToRecalculate(parameters);
-
-		} catch (RuntimeException e) {
-			handleException(e);
-		}
-
-		logger.debug(">selectToRecalculate " + dtos);
-		return dtos;
-	}
-			
 }

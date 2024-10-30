@@ -19,7 +19,4 @@ public interface VerifiedYieldContractCommodityMapper {
     
     List<VerifiedYieldContractCommodityDto> selectForVerifiedYieldContract(Map<String, Object> parameters);
 
-    // TODO: Do we need this?
-    List<VerifiedYieldContractCommodityDto> selectToRecalculate(Map<String, Object> parameters);
-
 }

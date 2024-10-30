@@ -143,14 +143,4 @@
 		order by cc.commodity_name, t.is_pedigree_ind
 	</select> 
 
-<!-- TODO: Do we need this?
-	<select id="selectToRecalculate" resultMap="DeclaredYieldContractCommodityDtoMap">
-		<include refid="selectColumns"/>
-		FROM declared_yield_contract_commodity t
-		JOIN declared_yield_contract dyc ON dyc.declared_yield_contract_guid = t.declared_yield_contract_guid
-		WHERE t.crop_commodity_id = #{cropCommodityId}
-		AND dyc.entered_yield_meas_unit_type_code = #{enteredYieldMeasUnitTypeCode}
-		AND dyc.crop_year BETWEEN #{effectiveCropYear} AND #{expiryCropYear}	
-	</select> 	
--->
 </mapper>

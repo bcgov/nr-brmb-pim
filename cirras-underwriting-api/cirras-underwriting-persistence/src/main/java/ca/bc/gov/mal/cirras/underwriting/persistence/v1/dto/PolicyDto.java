@@ -43,6 +43,7 @@ public class PolicyDto extends BaseDto<PolicyDto> {
 
 	private String inventoryContractGuid;
 	private String declaredYieldContractGuid;
+	private String verifiedYieldContractGuid;
 	private Integer totalDopEligibleInventory;
 	
 	public PolicyDto() {
@@ -75,6 +76,7 @@ public class PolicyDto extends BaseDto<PolicyDto> {
 
 		this.inventoryContractGuid = dto.inventoryContractGuid;
 		this.declaredYieldContractGuid = dto.declaredYieldContractGuid;
+		this.verifiedYieldContractGuid = dto.verifiedYieldContractGuid;
 		this.totalDopEligibleInventory = dto.totalDopEligibleInventory;
 	}
 	
@@ -299,6 +301,14 @@ public class PolicyDto extends BaseDto<PolicyDto> {
 	
 	public void setDeclaredYieldContractGuid(String declaredYieldContractGuid) {
 		this.declaredYieldContractGuid = declaredYieldContractGuid;
+	}
+
+	public String getVerifiedYieldContractGuid() {
+		return verifiedYieldContractGuid;
+	}
+
+	public void setVerifiedYieldContractGuid(String verifiedYieldContractGuid) {
+		this.verifiedYieldContractGuid = verifiedYieldContractGuid;
 	}
 	
 	public Integer getTotalDopEligibleInventory() {

@@ -21,12 +21,4 @@ public interface VerifiedYieldContractCommodityDao extends Serializable {
     void deleteForVerifiedYieldContract(String verifiedYieldContractGuid) throws DaoException, NotFoundDaoException;
     
     List<VerifiedYieldContractCommodityDto> selectForVerifiedYieldContract(String verifiedYieldContractGuid) throws DaoException;
-
-    // TODO: Do we need this?
-    List<VerifiedYieldContractCommodityDto> selectToRecalculate(
-    		Integer cropCommodityId,
-    		String enteredYieldMeasUnitTypeCode,
-    		Integer effectiveCropYear,
-    		Integer expiryCropYear
-    		) throws DaoException;
 }
