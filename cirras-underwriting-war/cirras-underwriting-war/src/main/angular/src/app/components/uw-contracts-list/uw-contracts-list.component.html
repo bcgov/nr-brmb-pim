@@ -202,7 +202,10 @@
                                 <mat-icon title="Declaration of Production" svgIcon="dop"></mat-icon>
                             </a> 
 
-                            <!-- <mat-icon title="Yield" svgIcon="tractor"></mat-icon> -->
+                            <a *ngIf="userCanAccessVerifiedYield(item)" (click)="goToLink(item, 'verifiedYield')">
+                                <mat-icon title="Verified Yield" svgIcon="scale"></mat-icon>
+                            </a> 
+                            
                         </td>
                       </ng-container>
 
