@@ -24,16 +24,16 @@ import { ApplicationStateService } from "src/app/services/application-state.serv
 @Component({
     selector: "grain-vy-container",
     template: `
-        <grain-verified-yield
+        <verified-yield
             [growerContract]="growerContract$ | async"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
             [isUnsaved]="isUnsaved$ | async"
-        ></grain-verified-yield>`, 
+        ></verified-yield>`, 
     providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
 })
 
-export class GrainVerifiedYieldContainer extends BaseContainer implements OnInit {
+export class VerifiedYieldContainer extends BaseContainer implements OnInit {
 
     growerContract$: Observable<UwContract> = this.store.pipe(select(selectGrowerContract()));
     

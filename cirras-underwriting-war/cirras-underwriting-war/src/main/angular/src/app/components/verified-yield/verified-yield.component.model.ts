@@ -1,9 +1,9 @@
 import {DomSanitizer} from "@angular/platform-browser";
 import {FormBuilder, FormArray} from "@angular/forms";
-import {BaseComponentModel} from "../../common/base/base.component.model";
+import {BaseComponentModel} from "../common/base/base.component.model";
 
 
-export class GrainVerifiedYieldComponentModel extends BaseComponentModel {
+export class VerifiedYieldComponentModel extends BaseComponentModel {
     
 
     constructor(protected sanitizer: DomSanitizer,
@@ -24,8 +24,8 @@ export class GrainVerifiedYieldComponentModel extends BaseComponentModel {
         });
     }
 
-    public clone(): GrainVerifiedYieldComponentModel {
-        let clonedModel: GrainVerifiedYieldComponentModel = new GrainVerifiedYieldComponentModel(this.sanitizer, this.fb);
+    public clone(): VerifiedYieldComponentModel {
+        let clonedModel: VerifiedYieldComponentModel = new VerifiedYieldComponentModel(this.sanitizer, this.fb);
         return clonedModel;
     }
 }

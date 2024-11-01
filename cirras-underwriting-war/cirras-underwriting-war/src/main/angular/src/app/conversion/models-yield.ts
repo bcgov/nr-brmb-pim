@@ -173,3 +173,37 @@ export interface DopYieldContractCommodityForage {
     cropCommodityId?: number;
     plantDurationTypeCode?: string;
 }
+
+
+export interface VerifiedYieldContract {
+    links?: Array<RelLink>;
+    verifiedYieldContractGuid?: string;
+    declaredYieldContractGuid?: string;
+    contractId?: number;
+    cropYear?: number;
+    verifiedYieldUpdateTimestamp?: Date;
+    verifiedYieldUpdateUser?: string;
+    defaultYieldMeasUnitTypeCode?: string;
+    insurancePlanId?: number;
+    growerContractYearId?: number;
+    verifiedYieldContractCommodities?: Array<VerifiedYieldContractCommodity>;
+    etag?: string;
+    type: string;
+  }
+
+  export interface VerifiedYieldContractCommodity {
+    verifiedYieldContractCommodityGuid?: string;
+	verifiedYieldContractGuid?: string;
+	cropCommodityId?: number;
+	isPedigreeInd?: boolean;
+	harvestedAcres?: number;
+	harvestedAcresOverride?: number;
+	storedYieldDefaultUnit?: number;
+	soldYieldDefaultUnit?: number;
+	productionGuarantee?: number;
+	harvestedYield?: number;
+	harvestedYieldOverride?: number;
+	yieldPerAcre?: number;
+    cropCommodityName?: string;
+    totalInsuredAcres?: number;
+  }

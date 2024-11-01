@@ -20,7 +20,7 @@ import { ForageVarietyInsurabilityContainer } from "./containers/maintenance/for
 import { YieldConversionContainer } from "./containers/maintenance/yield-conversion-container.component";
 import { DeactivateGuard } from "./services/util/DeactivateGuard";
 import { ForageDopContainer } from "./containers/dop/forage-dop-container.component";
-import { GrainVerifiedYieldContainer } from "./containers/verified-yield/grain-verified-yield-container.component";
+import { VerifiedYieldContainer } from "./containers/verified-yield/verified-yield-container.component";
 
 const routesDesktop: Routes = [
     { path: R.LANDING, component: UwContractsListContainer, data: {scopes: [ROUTE_SCOPES.LANDING]},  pathMatch: "full" },
@@ -74,7 +74,7 @@ const routesDesktop: Routes = [
     { path: R.VERIFIED_YIELD_GRAIN, 
       children: [
       { 
-        path: ':insurancePlanId/:cropYear/:policyId/:verifiedYieldContractGuid', component: GrainVerifiedYieldContainer, data: {scopes: [ROUTE_SCOPES.VERIFIED_YEILD]},
+        path: ':insurancePlanId/:cropYear/:policyId/:verifiedYieldContractGuid', component: VerifiedYieldContainer, data: {scopes: [ROUTE_SCOPES.VERIFIED_YEILD]},
         canActivate: [ResourcesAuthGuard],
         canDeactivate: [DeactivateGuard]
       },

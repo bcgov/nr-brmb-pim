@@ -82,6 +82,18 @@
             </div>
 
            <!-- TODO -->
+
+           <div>
+            <!-- commodity totals -->
+            <verified-yield-commodity-list
+                *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodityList"
+                [commodities]="verifiedYieldContract.verifiedYieldContractCommodityList"
+                [commoditiesFormArray]="getViewModel().formGroup.controls.verifiedYieldContractCommodityList"
+                [decimalPrecision]="decimalPrecision"
+                [isUnsaved]="isUnsaved"></verified-yield-commodity-list>
+            </div>
+
+
         </form>
         </div>
     </div>

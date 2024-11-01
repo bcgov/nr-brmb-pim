@@ -1,7 +1,6 @@
 import {Action} from "@ngrx/store";
 import { DopYieldContract, YieldMeasUnitTypeCodeList } from "src/app/conversion/models-yield";
 import {ErrorState} from "../application/application.state";
-import { UnderwritingComment } from "@cirras/cirras-underwriting-api/model/models";
 
 export const LOAD_DOP = "LOAD_DOP";
 export const LOAD_DOP_SUCCESS = "LOAD_DOP_SUCCESS";

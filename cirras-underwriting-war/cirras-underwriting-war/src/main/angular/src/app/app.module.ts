@@ -142,8 +142,9 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/
 import { MatInputCommifiedDirective } from "./directives/input-comified.directive";
 import { ForageDopYieldSummaryListComponent } from "./components/dop/forage/yield-summary-list/forage-dop-yield-summary-list.component";
 import { ForageDopYieldSummaryComponent } from './components/dop/forage/yield-summary/forage-dop-yield-summary.component';
-import { GrainVerifiedYieldComponent } from './components/verified-yield/grain/grain-verified-yield.component';
-import { GrainVerifiedYieldContainer } from "./containers/verified-yield/grain-verified-yield-container.component";
+import { VerifiedYieldComponent } from './components/verified-yield/verified-yield.component';
+import { VerifiedYieldContainer } from "./containers/verified-yield/verified-yield-container.component";
+import { VerifiedYieldCommodityListComponent } from './components/verified-yield/commodity-list/commodity-list.component';
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -248,8 +249,9 @@ if (!environment.production || !environment.restrict_imports) {
        ForageDopContainer,
        ForageDopYieldSummaryListComponent,
        ForageDopYieldSummaryComponent,
-       GrainVerifiedYieldComponent,
-       GrainVerifiedYieldContainer
+       VerifiedYieldComponent,
+       VerifiedYieldContainer,
+       VerifiedYieldCommodityListComponent
     ],
     imports: [
         CirrasUnderwritingAPIServiceModule,

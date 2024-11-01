@@ -27,6 +27,9 @@ import { landManagementReducer, manageLegalLandReducer } from "./land-management
 import { maintenanceReducer } from "./maintenance/maintenance.reducer";
 import { MaintenanceState } from "./maintenance/maintenance.state";
 import { MaintenanceEffects } from "./maintenance/maintenance.effects";
+import { VerifiedYieldState } from "./verified-yield/verified-yield.state";
+import { verifiedYieldReducer } from "./verified-yield/verified-yield.reducer";
+import { VerifiedYieldEffects } from "./verified-yield/verified-yield.effects";
 
 
 export const rootReducers: ActionReducerMap<any> = {
@@ -38,6 +41,7 @@ export const rootReducers: ActionReducerMap<any> = {
     cropCommodityList: cropCommodityReducer,
     growerContract: growerContractInfoReducer,
     dop: dopReducer,
+    verifiedYield: verifiedYieldReducer,
     landSearch: landManagementReducer,
     searchLand: pageSearchReducer,
     manageLegalLand: manageLegalLandReducer,
@@ -54,6 +58,7 @@ export interface RootState {
     cropCommodityList?: CropCommodityState;
     growerContract?: GrowerContractState;
     dop?:   DopState;
+    verifiedYield?: VerifiedYieldState;
     manageLegalLand?: ManageLegalLandState;
     maintenance?: MaintenanceState;
 }
@@ -70,6 +75,7 @@ export const rootEffects: any[] = [
     CropCommodityEffects,
     GrowerContractInfoEffects,
     DopEffects,
+    VerifiedYieldEffects,
     LandListEffects,
     MaintenanceEffects
 ];
