@@ -31,6 +31,7 @@ public class VerifiedYieldContractDaoTest {
 	private Integer contractId = 888888888;
 	private Integer cropYear = 2020;
 	private String declaredYieldContractGuid;
+	private String verifiedYieldContractGuid;
 
 	@Before
 	public void prepareTests() throws NotFoundDaoException, DaoException{
@@ -44,6 +45,12 @@ public class VerifiedYieldContractDaoTest {
 	
 	private void delete() throws NotFoundDaoException, DaoException{
 
+		VerifiedYieldContractDao vycDao = persistenceSpringConfig.verifiedYieldContractDao();
+		VerifiedYieldContractDto vycDto = vycDao.fetch(verifiedYieldContractGuid);
+		if (vycDto != null) {
+			vycDao.delete(verifiedYieldContractGuid);
+		}
+		
 		DeclaredYieldContractDao dycDao = persistenceSpringConfig.declaredYieldContractDao();
 		DeclaredYieldContractDto dycDto = dycDao.fetch(declaredYieldContractGuid);
 		if (dycDto != null) {
@@ -61,7 +68,6 @@ public class VerifiedYieldContractDaoTest {
 	@Test
 	public void testVerifiedYieldContract() throws Exception {
 
-		String verifiedYieldContractGuid;
 		String userId = "UNITTEST";
 
 		createGrowerContractYear();

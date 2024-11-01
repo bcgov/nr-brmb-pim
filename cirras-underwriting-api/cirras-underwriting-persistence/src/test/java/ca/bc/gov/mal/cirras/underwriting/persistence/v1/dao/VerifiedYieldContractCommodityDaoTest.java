@@ -53,6 +53,13 @@ public class VerifiedYieldContractCommodityDaoTest {
 	
 	private void delete() throws NotFoundDaoException, DaoException{
 
+		// Delete VerifiedYieldContractCommodity
+		VerifiedYieldContractCommodityDao vyccDao = persistenceSpringConfig.verifiedYieldContractCommodityDao();
+		List<VerifiedYieldContractCommodityDto> vyccDtos = vyccDao.selectForVerifiedYieldContract(verifiedYieldContractGuid);
+		if ( vyccDtos != null && !vyccDtos.isEmpty() ) {
+			vyccDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
+		}
+		
 		// Delete VerifiedYieldContract
 		VerifiedYieldContractDao vycDao = persistenceSpringConfig.verifiedYieldContractDao();
 		VerifiedYieldContractDto vycDto = vycDao.fetch(verifiedYieldContractGuid);
