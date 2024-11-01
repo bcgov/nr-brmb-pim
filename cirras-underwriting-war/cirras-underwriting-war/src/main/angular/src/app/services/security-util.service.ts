@@ -64,6 +64,14 @@ export class SecurityUtilService {
         return this.doesUserHaveScopes ([SCOPES_UI.DELETE_DOP_YIELD_CONTRACT] ) 
     }
 
+    canEditVerifiedYield() {
+        return this.doesUserHaveScopes([SCOPES_UI.CREATE_VERIFIED_YIELD_CONTRACT, SCOPES_UI.UPDATE_VERIFIED_YIELD_CONTRACT]) 
+    }
+
+    canDeleteVerifiedYield() {
+        return this.doesUserHaveScopes ([SCOPES_UI.DELETE_VERIFIED_YIELD_CONTRACT] ) 
+    }
+
     canEditLegalLand() {
         return this.doesUserHaveScopes([SCOPES_UI.CREATE_LEGAL_LAND, SCOPES_UI.UPDATE_LEGAL_LAND])  
     }
