@@ -1,0 +1,6 @@
+
+{
+  "databaseChangeLog": [
+{ "changeSet": {"author":"mhostettler","id":"88","changes": [
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "dml/cuws.insert.verified_yield_amendment_code.sql"}}
+  ] } }]}
