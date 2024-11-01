@@ -495,6 +495,8 @@ public class PolicyDaoTest {
 		Assert.assertEquals("CropYear", newDto.getCropYear(), fetchedDto.getCropYear());
 		Assert.assertEquals("DataSyncTransDate 1", newDto.getDataSyncTransDate(), fetchedDto.getDataSyncTransDate());
 		Assert.assertNull("InventoryContractGuid", fetchedDto.getInventoryContractGuid());
+		Assert.assertNull("DeclaredYieldContractGuid", fetchedDto.getDeclaredYieldContractGuid());
+		Assert.assertNull("VerifiedYieldContractGuid", fetchedDto.getVerifiedYieldContractGuid());
 		
 		//UPDATE
 		dataSyncTransDate = addSeconds(dateTime, -60);
@@ -524,6 +526,8 @@ public class PolicyDaoTest {
 		Assert.assertEquals("CropYear", fetchedDto.getCropYear(), updatedDto.getCropYear());
 		Assert.assertEquals("DataSyncTransDate 2", fetchedDto.getDataSyncTransDate(), updatedDto.getDataSyncTransDate());
 		Assert.assertNull("InventoryContractGuid", updatedDto.getInventoryContractGuid());
+		Assert.assertNull("DeclaredYieldContractGuid", updatedDto.getDeclaredYieldContractGuid());
+		Assert.assertNull("VerifiedYieldContractGuid", updatedDto.getVerifiedYieldContractGuid());
 
 		//Expect NO update becaus the transaction date is before the latest update
 		userId = "JUNIT_TEST_NO_UPDATE";

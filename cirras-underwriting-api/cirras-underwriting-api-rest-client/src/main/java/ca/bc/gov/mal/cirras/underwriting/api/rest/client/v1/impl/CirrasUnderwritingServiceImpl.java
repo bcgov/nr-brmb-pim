@@ -708,6 +708,21 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 		}
 		
 	}
+
+	@Override
+	public VerifiedYieldContractRsrc getVerifiedYieldContract(UwContractRsrc resource) throws CirrasUnderwritingServiceException {
+
+		GenericRestDAO<VerifiedYieldContractRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(VerifiedYieldContractRsrc.class);
+		
+		try {
+			Response<VerifiedYieldContractRsrc> response = dao.Process(ResourceTypes.VERIFIED_YIELD_CONTRACT, this.getTransformer(), resource, getWebClient());
+			return response.getResource();
+		} catch (RestDAOException rde) {
+			throw new CirrasUnderwritingServiceException(rde);
+		}
+		
+	}
+
 	
 	//////////////////////////////////////////////////////
 	// Yield Measurement Unit Type Code

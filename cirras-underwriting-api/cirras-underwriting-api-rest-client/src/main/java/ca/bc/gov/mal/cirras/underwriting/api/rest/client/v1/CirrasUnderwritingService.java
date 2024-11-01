@@ -178,6 +178,8 @@ public interface CirrasUnderwritingService {
 	// Verified Yield Contract
 	//////////////////////////////////////////////////////
 	VerifiedYieldContractRsrc rolloverVerifiedYieldContract(UwContractRsrc resource) throws CirrasUnderwritingServiceException;
+
+	VerifiedYieldContractRsrc getVerifiedYieldContract(UwContractRsrc resource) throws CirrasUnderwritingServiceException;
 	
 	
 	//////////////////////////////////////////////////////
