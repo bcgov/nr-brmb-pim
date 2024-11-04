@@ -32,10 +32,9 @@ spec:
         vault.hashicorp.com/agent-inject-secret-env: a12541-nonprod/data/#{ENV}#/secrets #TODO MH: Maybe without data/
         # - The template Vault Agent should use for rendering a secret:
         vault.hashicorp.com/agent-inject-template-env: |
-          {{- with secret "a12541-nonprod/data/#{ENV}#/secrets" }} 
-          {{- range $k, $v := .Data.data }}
-          {{ $k }}={{ $v }}{{ end -}}
-          {{- end  }}
+          {{- with secret "a12541-nonprod/data/#{ENV}#/secrets" -}}
+            export POSTGRES_PASSWORD="{{ .Data.data.POSTGRES_PASSWORD }}"
+          {{- end }}          
     spec:
       serviceAccountName: a12541-vault
       containers:
