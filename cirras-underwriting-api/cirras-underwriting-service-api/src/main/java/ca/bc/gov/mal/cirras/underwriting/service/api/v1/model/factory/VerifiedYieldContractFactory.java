@@ -8,12 +8,19 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 
 public interface VerifiedYieldContractFactory {
 
 	VerifiedYieldContract<? extends AnnualField> getDefaultVerifiedYieldContract(
 			PolicyDto policyDto,
 			DeclaredYieldContractDto dycDto,
+			FactoryContext context, 
+			WebAdeAuthentication authentication
+		) throws FactoryException;
+
+	VerifiedYieldContract<? extends AnnualField> getVerifiedYieldContract(
+			VerifiedYieldContractDto dto, 
 			FactoryContext context, 
 			WebAdeAuthentication authentication
 		) throws FactoryException;
