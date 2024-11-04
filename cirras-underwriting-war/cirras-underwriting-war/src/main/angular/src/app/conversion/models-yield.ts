@@ -181,7 +181,7 @@ export interface VerifiedYieldContract {
     declaredYieldContractGuid?: string;
     contractId?: number;
     cropYear?: number;
-    verifiedYieldUpdateTimestamp?: Date;
+    verifiedYieldUpdateTimestamp?: string;
     verifiedYieldUpdateUser?: string;
     defaultYieldMeasUnitTypeCode?: string;
     insurancePlanId?: number;

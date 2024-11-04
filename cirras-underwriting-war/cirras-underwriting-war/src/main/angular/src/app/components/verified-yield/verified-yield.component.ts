@@ -4,7 +4,7 @@ import { UwContract } from 'src/app/conversion/models';
 import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
-import { DopYieldContract, GradeModifierList, YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
+import { DopYieldContract, GradeModifierList, VerifiedYieldContract, YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
 import { getInsurancePlanName, makeNumberOnly, setHttpHeaders } from 'src/app/utils';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import {ViewEncapsulation } from '@angular/core';
@@ -24,22 +24,26 @@ import { HttpClient } from '@angular/common/http';
 import { DecimalPipe } from '@angular/common';
 import { VerifiedYieldComponentModel } from './verified-yield.component.model';
 import { LoadVerifiedYieldContract, RolloverVerifiedYieldContract } from 'src/app/store/verified-yield/verified-yield.actions';
+import { VERIFIED_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
 
 @Component({
   selector: 'verified-yield',
   templateUrl: './verified-yield.component.html',
-  styleUrls: ['./verified-yield.component.scss']
+  styleUrls: ['./verified-yield.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class VerifiedYieldComponent extends BaseComponent {
 
   @Input() growerContract: UwContract;
   @Input() isUnsaved: boolean;
+  @Input() verifiedYieldContract: VerifiedYieldContract;
 
   policyId: string;
   verifiedYieldContractGuid: string;
   cropYear: string;
   insurancePlanId: string;
-  componentId = DOP_COMPONENT_ID; //TODO replace with VERIFIED_YIELD_COMPONENT_ID once the store is ready
+  componentId = VERIFIED_COMPONENT_ID; 
 
 
   constructor(protected router: Router,
@@ -81,22 +85,36 @@ export class VerifiedYieldComponent extends BaseComponent {
           this.cropYear = params.get("cropYear") ? params.get("cropYear") : "";
           this.insurancePlanId = params.get("insurancePlanId") ? params.get("insurancePlanId") : "";
 
-          // this.store.dispatch(ClearDopYieldContract());
-
           this.store.dispatch(LoadGrowerContract(this.componentId, this.policyId))
 
           if (this.verifiedYieldContractGuid.length > 0) {
-            // get the already existing dop yield contract
+            // get the already existing verified yield contract
             this.store.dispatch(LoadVerifiedYieldContract(this.componentId, this.verifiedYieldContractGuid ))
           } else {
-            // prepare the new dop yield contract
+            // prepare the new verified yield contract
             this.store.dispatch(RolloverVerifiedYieldContract(this.componentId, this.policyId))
           }
 
       }
     );
 
-    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, false ));
+    this.store.dispatch(setFormStateUnsaved(this.componentId, false ));
+  }
+
+  // ngOnChanges(changes: SimpleChanges) {
+  //   super.ngOnChanges(changes);
+
+  //   if (this.verifiedYieldContract) {
+  //     // any changes that need to be set up
+      
+  //   }
+
+  // }
+
+
+  getInsPlanName(insurancePlanId){
+
+    return getInsurancePlanName(insurancePlanId)
   }
 
   onCancel(){
@@ -105,7 +123,6 @@ export class VerifiedYieldComponent extends BaseComponent {
 
   setFormStyles(){
     return {
-      // 'grid-template-columns':  'auto 148px 110px 100px 128px 186px 146px 12px 155px'
       'grid-template-columns':  'auto 146px 12px 155px'
     }
   }

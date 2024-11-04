@@ -22,6 +22,7 @@ import { ADD_UW_YEAR, ADD_UW_YEAR_ERROR, LOAD_VARIETY_INSURABILITY, LOAD_VARIETY
   LOAD_UW_YEARS_ERROR, LOAD_UW_YEARS_SUCCESS, SAVE_GRADE_MODIFIERS, SAVE_GRADE_MODIFIERS_SUCCESS, SAVE_GRADE_MODIFIER_TYPES, SAVE_GRADE_MODIFIER_TYPES_SUCCESS, 
   SAVE_SEDING_DEADLINES, SAVE_SEDING_DEADLINES_SUCCESS, SAVE_VARIETY_INSURABILITY, SAVE_VARIETY_INSURABILITY_SUCCESS, LOAD_YIELD_CONVERSION_SUCCESS, SAVE_YIELD_CONVERSION, SAVE_YIELD_CONVERSION_SUCCESS } from "../maintenance/maintenance.actions";
 import { MAINTENANCE_COMPONENT_ID } from "../maintenance/maintenance.state";
+import { DELETE_VERIFIED_YIELD_ERROR, LOAD_VERIFIED_YIELD_ERROR, LOAD_VERIFIED_YIELD_SUCCESS } from "../verified-yield/verified-yield.actions";
 
 
 export function applicationReducer(state: ApplicationState = getDefaultApplicationState(), action: Action): ApplicationState {
@@ -37,6 +38,7 @@ export function applicationReducer(state: ApplicationState = getDefaultApplicati
     case LOAD_GROWER_CONTRACT_SUCCESS:
     case REPORT_PRINT_UW_CONTRACTS_SUCCESS:
     case LOAD_DOP_SUCCESS:
+    case LOAD_VERIFIED_YIELD_SUCCESS:
     case SEARCH_LAND_SUCCESS:
     case GET_LEGAL_LAND_SUCCESS:
     case LOAD_UW_YEARS_SUCCESS:
@@ -60,6 +62,7 @@ export function applicationReducer(state: ApplicationState = getDefaultApplicati
     case REPORT_PRINT_UW_CONTRACTS_ERROR:
     case LOAD_DOP_ERROR:
     case DELETE_DOP_ERROR:
+    case LOAD_VERIFIED_YIELD_ERROR:
     case SEARCH_LAND_ERROR:
     case GET_LEGAL_LAND_ERROR:
 

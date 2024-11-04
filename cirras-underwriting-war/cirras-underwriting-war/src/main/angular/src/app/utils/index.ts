@@ -540,7 +540,7 @@ export function setHttpHeaders(authToken) {
         item.insurancePlanId.toString(), 
         item.cropYear.toString(),
         item.policyId.toString(),
-        (item.declaredYieldContractGuid ) ? item.declaredYieldContractGuid.toString() : '' 
+        (item.verifiedYieldContractGuid ) ? item.verifiedYieldContractGuid.toString() : '' 
         ]);
 
     break;

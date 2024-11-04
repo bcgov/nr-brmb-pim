@@ -1,16 +1,16 @@
 <div class="plcy-inv-cmdty-totals-header"
     style="grid-template-columns: 140px 100px 115px 115px 115px 115px 115px 75px; padding-left: 10px;">
 
-    <div *ngIf="isUnsaved" class="table-header border-top border-left border-right"
+    <!-- <div *ngIf="isUnsaved" class="table-header border-top border-left border-right"
         style="grid-column-start: 1; grid-column-end: 9;">
         <span #el matTooltip="" style="margin-left:10px;">
             <mat-icon
                 [ngStyle]="{'color':'orangered', 'font-size':'large', 'padding-top': '4px'}">warning_amber</mat-icon>
         </span>
-        <span style="color:orangered; font-size: 14px;"><!-- TODO -->
+        <span style="color:orangered; font-size: 14px;">
             Quantity Harvested and Yield/ac are calculated on save.
         </span>
-    </div>
+    </div> -->
 
     <div class="table-header border-top border-left border-right" style="grid-column-start: 1; grid-column-end: 9;">
         Commodity Totals
@@ -47,15 +47,15 @@
     <!-- <div class="header border-top border-bottom border-right">
         Action
     </div> -->
-t
+
 <!-- TODO -->
-    <!-- <div class="grain-unsdd-inv-tot-cmdty-container"
+    <div class="grain-unsdd-inv-tot-cmdty-container"
         style="grid-template-columns: 140px 100px 115px 115px 115px 115px 115px 75px; margin-left: 0px;">
         <forage-dop-commodity *ngFor="let commodity of commodities" [commodity]="commodity"
             [commoditiesFormArray]="commoditiesFormArray" [decimalPrecision]="decimalPrecision"
             style="display: contents;"></forage-dop-commodity>
 
-        <div class="readonly border-right border-bottom border-left" style="padding-left: 6px;">
+        <!-- <div class="readonly border-right border-bottom border-left" style="padding-left: 6px;">
             {{ 'Total' }}
         </div>
         <div class="readonly border-right border-bottom center">
@@ -73,7 +73,7 @@ t
         <div class="readonly border-right border-bottom center">
         </div>
         <div class="readonly border-right border-bottom center">
-        </div>
-    </div> -->
+        </div> -->
+    </div>
 
 </div>

@@ -1,4 +1,4 @@
-import { DopYieldContractRsrc, YieldMeasUnitTypeCodeListRsrc, YieldMeasUnitTypeCodeRsrc } from "@cirras/cirras-underwriting-api";
+import { DopYieldContractRsrc, VerifiedYieldContractRsrc, YieldMeasUnitTypeCodeListRsrc, YieldMeasUnitTypeCodeRsrc } from "@cirras/cirras-underwriting-api";
 import { DopYieldContract, VerifiedYieldContract, YieldMeasUnitTypeCode, YieldMeasUnitTypeCodeList } from "./models-yield";
 
 const EMPTY_ARRAY = [];

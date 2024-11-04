@@ -17,7 +17,7 @@ export class VerifiedYieldComponentModel extends BaseComponentModel {
             // declarationOfProductionDate: [''],
             // balerWagonInfo: [''],
             // totalLivestock: [''],
-            fields: new FormArray([]), // subform responsible for the field / commodity grid 
+            verifiedYieldContractCommodities: new FormArray([]), // subform responsible for the commodities grid 
             // dopYieldContractCommodityForageList: new FormArray([]),
             // dopYieldFieldRollupForageList: new FormArray([]),
 

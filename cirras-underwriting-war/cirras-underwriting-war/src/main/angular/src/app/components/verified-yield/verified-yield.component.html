@@ -8,8 +8,7 @@
         <div class="policy-header-container">
             <div class="grower-header">
                 {{ ( (growerContract && growerContract.growerName) ? growerContract.growerName : "" ) | titlecase}} 
-                <!-- TODO: get the Insurance Plan from verifiedYieldContract -->
-                <!-- ({{ ((dopYieldContract && dopYieldContract.insurancePlanId) ? getInsPlanName(dopYieldContract.insurancePlanId) : "" ) | titlecase }}) -->
+                ({{ ((verifiedYieldContract && verifiedYieldContract.insurancePlanId) ? getInsPlanName(verifiedYieldContract.insurancePlanId) : "" ) | titlecase }})
                 {{ (growerContract && growerContract.policyNumber) ? growerContract.policyNumber : "" }}   
             </div>
             <!-- unsaved messages -->
@@ -53,7 +52,7 @@
             <div class="plcy-inv-form-header" [ngStyle]="setFormStyles()">
                 <div>
                     <h2>Veriried Yield</h2>
-                    <p>Last Updated: <!-- TODO: {{ ((dopYieldContract && dopYieldContract.dopUpdateTimestamp) ? dopYieldContract.dopUpdateTimestamp : "" ) | date }} --> </p>
+                    <p>Last Updated: {{ ((verifiedYieldContract && verifiedYieldContract.verifiedYieldUpdateTimestamp) ? verifiedYieldContract.verifiedYieldUpdateTimestamp : "" ) | date }} </p>
                 </div>            
                
                 <div>
@@ -86,10 +85,9 @@
            <div>
             <!-- commodity totals -->
             <verified-yield-commodity-list
-                *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodityList"
-                [commodities]="verifiedYieldContract.verifiedYieldContractCommodityList"
-                [commoditiesFormArray]="getViewModel().formGroup.controls.verifiedYieldContractCommodityList"
-                [decimalPrecision]="decimalPrecision"
+                *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodities"
+                [commodities]="verifiedYieldContract.verifiedYieldContractCommodities"
+                [commoditiesFormArray]="getViewModel().formGroup.controls.verifiedYieldContractCommodities"
                 [isUnsaved]="isUnsaved"></verified-yield-commodity-list>
             </div>
 
