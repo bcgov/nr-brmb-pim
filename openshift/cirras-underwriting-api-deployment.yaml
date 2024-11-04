@@ -110,11 +110,6 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: POSTGRES_USERNAME
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-api-config-#{ENV}#
-                  key: POSTGRES_PASSWORD
             - name: POSTGRES_MAXACTIVE
               valueFrom:
                 configMapKeyRef:
