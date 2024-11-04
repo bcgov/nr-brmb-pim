@@ -41,7 +41,7 @@ spec:
       containers:
         - name: container
           image: '#{IMAGE_BY_DIGEST}#'
-          args: ['sh', '-c', 'source /vault/secrets/env && catalina.sh run']
+          #args: ['sh', '-c', 'source /vault/secrets/env && catalina.sh run']
           imagePullPolicy: Always
           ports:
             - containerPort: #{TOMCAT_PORT}#
