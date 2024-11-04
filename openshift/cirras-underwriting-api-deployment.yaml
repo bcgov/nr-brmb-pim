@@ -21,7 +21,7 @@ spec:
         vault.hashicorp.com/agent-pre-populate-only: 'true' # this makes sure the secret vault will only change during pod restart
         vault.hashicorp.com/auth-path: auth/k8s-silver  # Must match cluster. Use one of: k8s-silver, k8s-gold, k8s-golddr, k8s-emerald
         vault.hashicorp.com/namespace: platform-services
-        vault.hashicorp.com/role: a12541-nonprod  # licenseplate-nonprod or licenseplate-prod are your options
+        vault.hashicorp.com/role: #{LICENSE_PLATE}#-nonprod  # licenseplate-nonprod or licenseplate-prod are your options
         # TODO MH: 
         # replace a12541 with a variable from openshift-deploy.yaml
         # ALL occurences of nonprod needs to be 'prod' for prod deployments and nonprod for all others. Maybe use variable from openshift-deploy.yaml?
@@ -29,14 +29,16 @@ spec:
         # Configure how to retrieve and populate the secrets from Vault:
         # - The name of the secret is any unique string after vault.hashicorp.com/agent-inject-secret-<name>
         # - The value is the path in Vault where the secret is located.
-        vault.hashicorp.com/agent-inject-secret-env: a12541-nonprod/data/#{ENV}#/secrets #TODO MH: Maybe without data/
+        vault.hashicorp.com/agent-inject-secret-env: #{LICENSE_PLATE}#-nonprod/data/#{ENV}#/secrets
         # - The template Vault Agent should use for rendering a secret:
         vault.hashicorp.com/agent-inject-template-env: |
-          {{- with secret "a12541-nonprod/data/#{ENV}#/secrets" -}}
+          {{- with secret "#{LICENSE_PLATE}#-nonprod/data/#{ENV}#/secrets" -}}
             export POSTGRES_PASSWORD="{{ .Data.data.POSTGRES_PASSWORD }}"
+            export CIRRAS_UNDERWRITING_REST_SECRET="{{ .Data.data.CIRRAS_UNDERWRITING_REST_SECRET }}"
+            export JASPER_PASSWORD="{{ .Data.data.JASPER_PASSWORD }}"
           {{- end }}          
     spec:
-      serviceAccountName: a12541-vault
+      serviceAccountName: #{LICENSE_PLATE}#-vault
       containers:
         - name: container
           image: '#{IMAGE_BY_DIGEST}#'
@@ -80,11 +82,6 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: WEBADE_USERNAME
-            - name: WEBADE_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-api-config-#{ENV}#
-                  key: WEBADE_PASSWORD
             - name: WEBADE_MAXACTIVE
               valueFrom:
                 configMapKeyRef:
@@ -120,11 +117,6 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: CIRRAS_UNDERWRITING_REST_CLIENT_ID
-            - name: CIRRAS_UNDERWRITING_REST_SECRET
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-api-config-#{ENV}#
-                  key: CIRRAS_UNDERWRITING_REST_SECRET
             - name: CIRRAS_POLICIES_API_URL
               valueFrom:
                 configMapKeyRef:
@@ -140,11 +132,6 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: JASPER_USERNAME
-            - name: JASPER_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-api-config-#{ENV}#
-                  key: JASPER_PASSWORD
             - name: TZ
               valueFrom:
                 configMapKeyRef:
