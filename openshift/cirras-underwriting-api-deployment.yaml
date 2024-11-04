@@ -37,6 +37,7 @@ spec:
           {{ $k }}={{ $v }}{{ end -}}
           {{- end  }}
     spec:
+      serviceAccountName: a12541-vault
       containers:
         - name: container
           image: '#{IMAGE_BY_DIGEST}#'
