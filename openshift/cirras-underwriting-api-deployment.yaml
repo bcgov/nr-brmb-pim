@@ -44,7 +44,7 @@ spec:
           command:
             ['sh', '-c']
           args:
-            ['source /vault/secrets/env && catalina.sh']
+            ['. /vault/secrets/env && catalina.sh run']
           imagePullPolicy: Always
           ports:
             - containerPort: #{TOMCAT_PORT}#
