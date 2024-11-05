@@ -31,15 +31,15 @@
             <div> 
                 <!-- Placeholder for a Download button  -->
             </div>
-            <div>
-                <button 
+            <div> <!-- TODO -->
+                <!-- <button 
                     *ngIf="securityUtilService.canEditVerifiedYield()" 
                     mat-raised-button color="primary" 
                     class="button-large-text" 
                     [disabled]="!isUnsaved" 
                     (click)="onSave()">
                         Save
-                </button>
+                </button> -->
             </div>
         </div>        
             
@@ -51,7 +51,7 @@
 
             <div class="plcy-inv-form-header" [ngStyle]="setFormStyles()">
                 <div>
-                    <h2>Veriried Yield</h2>
+                    <h2>Verified Yield</h2>
                     <p>Last Updated: {{ ((verifiedYieldContract && verifiedYieldContract.verifiedYieldUpdateTimestamp) ? verifiedYieldContract.verifiedYieldUpdateTimestamp : "" ) | date }} </p>
                 </div>            
                
@@ -80,9 +80,7 @@
                 </div>
             </div>
 
-           <!-- TODO -->
-
-           <div>
+           <div style="margin-top: 8px;">
             <!-- commodity totals -->
             <verified-yield-commodity-list
                 *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodities"

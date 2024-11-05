@@ -144,8 +144,8 @@ import { ForageDopYieldSummaryListComponent } from "./components/dop/forage/yiel
 import { ForageDopYieldSummaryComponent } from './components/dop/forage/yield-summary/forage-dop-yield-summary.component';
 import { VerifiedYieldComponent } from './components/verified-yield/verified-yield.component';
 import { VerifiedYieldContainer } from "./containers/verified-yield/verified-yield-container.component";
-import { VerifiedYieldCommodityListComponent } from './components/verified-yield/commodity-list/commodity-list.component';
-import { VerifiedYieldCommodityComponent } from './components/verified-yield/commodity/commodity.component';
+import { VerifiedYieldCommodityListComponent } from './components/verified-yield/commodity-list/verified-yield-commodity-list.component';
+import { VerifiedYieldCommodityComponent } from './components/verified-yield/commodity/verified-yield-commodity.component';
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.

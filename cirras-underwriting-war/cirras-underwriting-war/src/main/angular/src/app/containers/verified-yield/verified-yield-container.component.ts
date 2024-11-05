@@ -26,7 +26,7 @@ import { selectVerifiedYieldContract } from "src/app/store/verified-yield/verifi
     template: `
         <verified-yield
             [growerContract]="growerContract$ | async"
-            [verifiedYieldContract]="verifiedYieldContract$ | async"
+            [verifiedYieldContract]="verifiedYieldContract"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
             [isUnsaved]="isUnsaved$ | async"
