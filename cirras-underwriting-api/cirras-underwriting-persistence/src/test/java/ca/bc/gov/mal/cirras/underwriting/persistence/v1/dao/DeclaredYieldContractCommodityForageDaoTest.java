@@ -114,9 +114,11 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		newDto.setCommodityTypeCode(commodityTypeCode1);
 		newDto.setTotalFieldAcres(40.0);
 		newDto.setHarvestedAcres(15.0);
-		newDto.setHarvestedAcresOverride(10.0);
+		newDto.setTotalBalesLoads(15);
+		newDto.setWeight(20.5);
+		newDto.setWeightDefaultUnit(30.1);
+		newDto.setMoisturePercent(15.1);
 		newDto.setQuantityHarvestedTons(18.0);
-		newDto.setQuantityHarvestedTonsOverride(14.0);
 		newDto.setYieldPerAcre(1.0);
 
 		dao.insert(newDto, userId);
@@ -134,9 +136,11 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		Assert.assertEquals("CommodityTypeCode", newDto.getCommodityTypeCode(), dto.getCommodityTypeCode());
 		Assert.assertEquals("TotalFieldAcres", newDto.getTotalFieldAcres(), dto.getTotalFieldAcres());
 		Assert.assertEquals("HarvestedAcres", newDto.getHarvestedAcres(), dto.getHarvestedAcres());
-		Assert.assertEquals("HarvestedAcresOverride", newDto.getHarvestedAcresOverride(), dto.getHarvestedAcresOverride());
+		Assert.assertEquals("TotalBalesLoads", newDto.getTotalBalesLoads(), dto.getTotalBalesLoads());
+		Assert.assertEquals("Weight", newDto.getWeight(), dto.getWeight());
+		Assert.assertEquals("WeightDefaultUnit", newDto.getWeightDefaultUnit(), dto.getWeightDefaultUnit());
+		Assert.assertEquals("MoisturePercent", newDto.getMoisturePercent(), dto.getMoisturePercent());
 		Assert.assertEquals("QuantityHarvestedTons", newDto.getQuantityHarvestedTons(), dto.getQuantityHarvestedTons());
-		Assert.assertEquals("QuantityHarvestedTonsOverride", newDto.getQuantityHarvestedTonsOverride(), dto.getQuantityHarvestedTonsOverride());
 		Assert.assertEquals("YieldPerAcre", newDto.getYieldPerAcre(), dto.getYieldPerAcre());
 		
 		//FETCH
@@ -147,17 +151,21 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		Assert.assertEquals("CommodityTypeCode", newDto.getCommodityTypeCode(), fetchedDto.getCommodityTypeCode());
 		Assert.assertEquals("TotalFieldAcres", newDto.getTotalFieldAcres(), fetchedDto.getTotalFieldAcres());
 		Assert.assertEquals("HarvestedAcres", newDto.getHarvestedAcres(), fetchedDto.getHarvestedAcres());
-		Assert.assertEquals("HarvestedAcresOverride", newDto.getHarvestedAcresOverride(), fetchedDto.getHarvestedAcresOverride());
+		Assert.assertEquals("TotalBalesLoads", newDto.getTotalBalesLoads(), fetchedDto.getTotalBalesLoads());
+		Assert.assertEquals("Weight", newDto.getWeight(), fetchedDto.getWeight());
+		Assert.assertEquals("WeightDefaultUnit", newDto.getWeightDefaultUnit(), fetchedDto.getWeightDefaultUnit());
+		Assert.assertEquals("MoisturePercent", newDto.getMoisturePercent(), fetchedDto.getMoisturePercent());
 		Assert.assertEquals("QuantityHarvestedTons", newDto.getQuantityHarvestedTons(), fetchedDto.getQuantityHarvestedTons());
-		Assert.assertEquals("QuantityHarvestedTonsOverride", newDto.getQuantityHarvestedTonsOverride(), fetchedDto.getQuantityHarvestedTonsOverride());
 		Assert.assertEquals("YieldPerAcre", newDto.getYieldPerAcre(), fetchedDto.getYieldPerAcre());
 
 		//UPDATE
 		fetchedDto.setTotalFieldAcres(40.5);
 		fetchedDto.setHarvestedAcres(15.5);
-		fetchedDto.setHarvestedAcresOverride(10.5);
+		fetchedDto.setTotalBalesLoads(30);
+		fetchedDto.setWeight(21.5);
+		fetchedDto.setWeightDefaultUnit(31.1);
+		fetchedDto.setMoisturePercent(21.1);
 		fetchedDto.setQuantityHarvestedTons(18.5);
-		fetchedDto.setQuantityHarvestedTonsOverride(14.5);
 		fetchedDto.setYieldPerAcre(1.5);
 
 		dao.update(fetchedDto, userId);
@@ -167,9 +175,11 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 
 		Assert.assertEquals("TotalFieldAcres", fetchedDto.getTotalFieldAcres(), updatedDto.getTotalFieldAcres());
 		Assert.assertEquals("HarvestedAcres", fetchedDto.getHarvestedAcres(), updatedDto.getHarvestedAcres());
-		Assert.assertEquals("HarvestedAcresOverride", fetchedDto.getHarvestedAcresOverride(), updatedDto.getHarvestedAcresOverride());
+		Assert.assertEquals("TotalBalesLoads", fetchedDto.getTotalBalesLoads(), updatedDto.getTotalBalesLoads());
+		Assert.assertEquals("Weight", fetchedDto.getWeight(), updatedDto.getWeight());
+		Assert.assertEquals("WeightDefaultUnit", fetchedDto.getWeightDefaultUnit(), updatedDto.getWeightDefaultUnit());
+		Assert.assertEquals("MoisturePercent", fetchedDto.getMoisturePercent(), updatedDto.getMoisturePercent());
 		Assert.assertEquals("QuantityHarvestedTons", fetchedDto.getQuantityHarvestedTons(), updatedDto.getQuantityHarvestedTons());
-		Assert.assertEquals("QuantityHarvestedTonsOverride", fetchedDto.getQuantityHarvestedTonsOverride(), updatedDto.getQuantityHarvestedTonsOverride());
 		Assert.assertEquals("YieldPerAcre", fetchedDto.getYieldPerAcre(), updatedDto.getYieldPerAcre());
 
 		//INSERT second commodity
@@ -178,9 +188,11 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		newDto2.setCommodityTypeCode(commodityTypeCode2);
 		newDto2.setTotalFieldAcres(40.0);
 		newDto2.setHarvestedAcres(15.0);
-		newDto2.setHarvestedAcresOverride(10.0);
+		newDto2.setTotalBalesLoads(20);
+		newDto2.setWeight(31.5);
+		newDto2.setWeightDefaultUnit(21.1);
+		newDto2.setMoisturePercent(51.1);
 		newDto2.setQuantityHarvestedTons(18.0);
-		newDto2.setQuantityHarvestedTonsOverride(14.0);
 		newDto2.setYieldPerAcre(1.0);
 
 		dao.insert(newDto2, userId);

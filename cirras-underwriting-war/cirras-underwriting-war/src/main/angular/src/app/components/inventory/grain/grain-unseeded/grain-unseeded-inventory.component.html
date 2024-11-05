@@ -33,15 +33,25 @@
         <div>
             <button 
                 *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
-                mat-raised-button color="primary" 
-                class="button-large-text" 
+                mat-raised-button
+                [color]="isHiddenFieldInTotals ? 'secondary' : 'primary'"
+                [ngClass]="isHiddenFieldInTotals ? 'header-button-red' : 'button-large-text'"
                 [disabled]="!hasDataChanged && inventoryContract?.inventoryContractGuid" 
                 (click)="onSave()">
                     Save
             </button>
         </div>
     </div>
-        
+    
+    <div id="hidden-totals-warning">
+        <div *ngIf="isHiddenFieldInTotals">
+            <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
+        </div>
+        <div *ngIf="isHiddenFieldInTotals">
+            Hidden fields are included in acre totals
+        </div>
+    </div>
+
     <cirras-grower-contract-header
         [growerContract]="growerContract"
     ></cirras-grower-contract-header>  
@@ -191,18 +201,19 @@
                                         : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) 
                                             ? 'inventory-border-exclude-printout border-left-exclude-printout' 
                                             :  'inventory-border' )">
-                                    <mat-form-field appearance="fill">
+                                    <mat-form-field appearance="fill"  
+                                        [ngStyle]="{'background-color': shouldHighlightLastYearCropVariety(fieldIndex, plantingIndex) ? 'yellow' : '' }">
                                         <input
                                             type="text"
                                             matInput
                                             formControlName="lastYearCropCommodityVarietyName"
                                             [matAutocomplete]="autoCmdtyVrty"
-                                            (focus)="commodityVarietyFocus(fieldIndex, plantingIndex)"
-                                            (keyup)="searchCommodityVariety($event.target.value)">
+                                            (focus)="lastYearCommodityVarietyFocus(fieldIndex, plantingIndex)"
+                                            (keyup)="searchLastYearCommodityVariety($event.target.value)"
+                                            (blur)="validateLastYearCommodityVariety(autoCmdtyVrty, $event.target.value, fieldIndex, plantingIndex)">
                                         <mat-autocomplete #autoCmdtyVrty="matAutocomplete"
-                                            [displayWith]="displayCommodityVarietyFn"
-                                            (optionSelected)="commodityVarietySelected($event, fieldIndex, plantingIndex)">
-                                            <mat-option *ngFor="let option of filteredCommodityVarietyOptions" [value]="option.cropCommodityVarietyName">
+                                            [displayWith]="displayCommodityVarietyFn">
+                                            <mat-option *ngFor="let option of filteredLastYearCommodityVarietyOptions" [value]="option.cropCommodityVarietyName">
                                                 {{ option.cropCommodityVarietyName | titlecase }}
                                             </mat-option>
                                         </mat-autocomplete>
@@ -223,7 +234,7 @@
                                                 (keydown)="navigateUpDown($event, 1)"
                                                 (keypress)="numberOnly($event)" 
                                                 (keyup)="calculateSumTotals()"
-                                                (blur)="roundUpAcres(fieldIndex, plantingIndex)"
+                                                (blur)="roundUpAcres(fieldIndex, plantingIndex); checkForHiddenFieldInTotals();"
                                                 maxlength="10"
                                                 >
                                     </mat-form-field>
@@ -233,17 +244,32 @@
                                 <div *ngIf="planting.value.deletedByUserInd != true" 
                                     class="inventory-fill" style="width:190px;"
                                     [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
-                                    <mat-form-field appearance="fill">
-                                    <mat-select formControlName="cropCommodityId" (selectionChange)="isMyFormDirty()">
-                                        <mat-option *ngFor="let option of cropCommodityOptions" [value]="option.cropCommodityId"
-                                        >{{ option.commodityName | titlecase }}</mat-option>
-                                    </mat-select>
+                                    <mat-form-field appearance="fill"
+                                        [ngStyle]="{'background-color': shouldHighlightCropVariety(fieldIndex, plantingIndex) ? 'yellow' : '' }">
+                                        <input
+                                            type="text"
+                                            matInput
+                                            formControlName="cropCommodityVarietyName"
+                                            [matAutocomplete]="autoCurrentCmdtyVrty"
+                                            (focus)="commodityVarietyFocus(fieldIndex, plantingIndex)"
+                                            (keyup)="searchCommodityVariety($event.target.value)"
+                                            (blur)="validateCommodityVariety(autoCurrentCmdtyVrty, $event.target.value, fieldIndex, plantingIndex)">
+                                        <mat-autocomplete #autoCurrentCmdtyVrty="matAutocomplete"
+                                            [displayWith]="displayCommodityVarietyFn">
+                                            <mat-option *ngFor="let option of filteredCommodityVarietyOptions" [value]="option.cropCommodityVarietyName">
+                                                {{ option.cropCommodityVarietyName | titlecase }}
+                                            </mat-option>
+                                        </mat-autocomplete>
                                     </mat-form-field>
+                                    <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Intended Crop is writeable">edit</mat-icon>
                                 </div>
                                 
                                 <div *ngIf="planting.value.deletedByUserInd != true" style="width:100px;"
                                     [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
-                                    <mat-checkbox formControlName="isUnseededInsurableInd" [checked]="isChecked(field.value.isUnseededInsurableInd)">
+                                    <mat-checkbox 
+                                        *ngIf="isUnseededInsurableVisible( fieldIndex, plantingIndex)" 
+                                        formControlName="isUnseededInsurableInd" 
+                                        [checked]="isChecked(field.value.isUnseededInsurableInd)">
                                     </mat-checkbox>
                                 </div>
                                     
@@ -266,7 +292,7 @@
                                     <mat-icon 
                                         matTooltip="Hide on printout" 
                                         svgIcon="{{ isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'visibility_off' : 'visibility' }}" 
-                                        (click)="toggleHiddenOnPrintout(fieldIndex, plantingIndex)"></mat-icon>
+                                        (click)="toggleHiddenOnPrintout(fieldIndex, plantingIndex); checkForHiddenFieldInTotals()"></mat-icon>
 
                                 </div>
 

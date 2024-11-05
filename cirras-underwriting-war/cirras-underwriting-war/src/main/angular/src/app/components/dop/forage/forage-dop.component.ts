@@ -391,7 +391,7 @@ export class ForageDopComponent extends BaseComponent {
 
           // Percent Moisture: validate range 0 - 100
           if (moisturePercent < 0 || moisturePercent > 100) {
-            alert("Percent Moisture should be between 0 and 100")
+            alert("Percent Moisture for Cuts should be between 0 and 100")
             return false
           }
         }
@@ -402,6 +402,25 @@ export class ForageDopComponent extends BaseComponent {
     if (!this.dopYieldContract.enteredYieldMeasUnitTypeCode) {
       alert("Please select a unit for Yield")
       return false
+    }
+
+    // For commodity totals: if either totalBalesLoads or weight is entered then all three values are mandatory.  
+    for (const cmdty of this.dopYieldContract.dopYieldContractCommodityForageList) {
+      // If either totalBalesLoads or weight is entered then all three values are mandatory. 
+      // However since the moisture percent has a default value, it might happen that only the moisture percent is saved for a cut. 
+      const totalBalesLoads = cmdty.totalBalesLoads;
+      const weight = cmdty.weight;
+      const moisturePercent = cmdty.moisturePercent;
+      if ((totalBalesLoads || weight) && (!totalBalesLoads || !weight || moisturePercent == null)) {
+        alert("Saving partial information for a commodity in Commodity Totals table is not possible. Please enter all 3 values: Bales/Load, Weight and Percent Moisture.")
+        return false
+      }
+
+      // Percent Moisture: validate range 0 - 100
+      if (moisturePercent < 0 || moisturePercent > 100) {
+        alert("Percent Moisture in in Commodity Totals table  should be between 0 and 100")
+        return false
+      }
     }
 
     return true

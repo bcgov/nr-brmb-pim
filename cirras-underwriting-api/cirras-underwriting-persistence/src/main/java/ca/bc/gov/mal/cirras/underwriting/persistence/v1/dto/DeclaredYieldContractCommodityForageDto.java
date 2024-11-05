@@ -18,9 +18,11 @@ public class DeclaredYieldContractCommodityForageDto extends BaseDto<DeclaredYie
 	private String declaredYieldContractGuid;
 	private String commodityTypeCode;
 	private Double harvestedAcres;
-	private Double harvestedAcresOverride;
+	private Integer totalBalesLoads;
+	private Double weight;
+	private Double weightDefaultUnit;
+	private Double moisturePercent;
 	private Double quantityHarvestedTons;
-	private Double quantityHarvestedTonsOverride;
 	private Double yieldPerAcre;
 	private String createUser;
 	private Date createDate;
@@ -29,6 +31,8 @@ public class DeclaredYieldContractCommodityForageDto extends BaseDto<DeclaredYie
 
 	private String commodityTypeDescription;
 	private Double totalFieldAcres;
+	private Integer cropCommodityId;
+	private String plantDurationTypeCode;
 
 	
 	public DeclaredYieldContractCommodityForageDto() {
@@ -41,9 +45,11 @@ public class DeclaredYieldContractCommodityForageDto extends BaseDto<DeclaredYie
 		this.commodityTypeCode = dto.commodityTypeCode;
 		this.totalFieldAcres = dto.totalFieldAcres;
 		this.harvestedAcres = dto.harvestedAcres;
-		this.harvestedAcresOverride = dto.harvestedAcresOverride;
+		this.totalBalesLoads = dto.totalBalesLoads;
+		this.weight = dto.weight;
+		this.weightDefaultUnit = dto.weightDefaultUnit;
+		this.moisturePercent = dto.moisturePercent;
 		this.quantityHarvestedTons = dto.quantityHarvestedTons;
-		this.quantityHarvestedTonsOverride = dto.quantityHarvestedTonsOverride;
 		this.yieldPerAcre = dto.yieldPerAcre;
 		this.createUser = dto.createUser;
 		this.createDate = dto.createDate;
@@ -51,6 +57,9 @@ public class DeclaredYieldContractCommodityForageDto extends BaseDto<DeclaredYie
 		this.updateDate = dto.updateDate;
 
 		this.commodityTypeDescription = dto.commodityTypeDescription;
+		this.cropCommodityId = dto.cropCommodityId;
+		this.plantDurationTypeCode = dto.plantDurationTypeCode;
+
 	}
 	
 
@@ -73,9 +82,11 @@ public class DeclaredYieldContractCommodityForageDto extends BaseDto<DeclaredYie
 			result = result&&dtoUtils.equals("commodityTypeCode", commodityTypeCode, other.commodityTypeCode);
 			result = result&&dtoUtils.equals("totalFieldAcres", totalFieldAcres, other.totalFieldAcres, decimalPrecision);
 			result = result&&dtoUtils.equals("harvestedAcres", harvestedAcres, other.harvestedAcres, decimalPrecision);
-			result = result&&dtoUtils.equals("harvestedAcresOverride", harvestedAcresOverride, other.harvestedAcresOverride, decimalPrecision);
+			result = result&&dtoUtils.equals("totalBalesLoads", totalBalesLoads, other.totalBalesLoads);
+			result = result&&dtoUtils.equals("weight", weight, other.weight, decimalPrecision);
+			result = result&&dtoUtils.equals("weightDefaultUnit", weightDefaultUnit, other.weightDefaultUnit, decimalPrecision);
+			result = result&&dtoUtils.equals("moisturePercent", moisturePercent, other.moisturePercent, decimalPrecision);
 			result = result&&dtoUtils.equals("quantityHarvestedTons", quantityHarvestedTons, other.quantityHarvestedTons, decimalPrecision);
-			result = result&&dtoUtils.equals("quantityHarvestedTonsOverride", quantityHarvestedTonsOverride, other.quantityHarvestedTonsOverride, decimalPrecision);
 			result = result&&dtoUtils.equals("yieldPerAcre", yieldPerAcre, other.yieldPerAcre, decimalPrecision);
 		}
 		
@@ -132,28 +143,44 @@ public class DeclaredYieldContractCommodityForageDto extends BaseDto<DeclaredYie
 		this.harvestedAcres = harvestedAcres;
 	}
 
-	public Double getHarvestedAcresOverride() {
-		return harvestedAcresOverride;
+	public Integer getTotalBalesLoads() {
+		return totalBalesLoads;
 	}
 
-	public void setHarvestedAcresOverride(Double harvestedAcresOverride) {
-		this.harvestedAcresOverride = harvestedAcresOverride;
+	public void setTotalBalesLoads(Integer totalBalesLoads) {
+		this.totalBalesLoads = totalBalesLoads;
 	}
 
+	public Double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Double weight) {
+		this.weight = weight;
+	}
+
+	public Double getWeightDefaultUnit() {
+		return weightDefaultUnit;
+	}
+
+	public void setWeightDefaultUnit(Double weightDefaultUnit) {
+		this.weightDefaultUnit = weightDefaultUnit;
+	}
+
+	public Double getMoisturePercent() {
+		return moisturePercent;
+	}
+
+	public void setMoisturePercent(Double moisturePercent) {
+		this.moisturePercent = moisturePercent;
+	}
+	
 	public Double getQuantityHarvestedTons() {
 		return quantityHarvestedTons;
 	}
 
 	public void setQuantityHarvestedTons(Double quantityHarvestedTons) {
 		this.quantityHarvestedTons = quantityHarvestedTons;
-	}
-
-	public Double getQuantityHarvestedTonsOverride() {
-		return quantityHarvestedTonsOverride;
-	}
-
-	public void setQuantityHarvestedTonsOverride(Double quantityHarvestedTonsOverride) {
-		this.quantityHarvestedTonsOverride = quantityHarvestedTonsOverride;
 	}
 
 	public Double getYieldPerAcre() {
@@ -202,6 +229,22 @@ public class DeclaredYieldContractCommodityForageDto extends BaseDto<DeclaredYie
 
 	public void setCommodityTypeDescription(String commodityTypeDescription) {
 		this.commodityTypeDescription = commodityTypeDescription;
+	}
+	
+ 	public Integer getCropCommodityId() {
+		return cropCommodityId;
+	}
+
+	public void setCropCommodityId(Integer cropCommodityId) {
+		this.cropCommodityId = cropCommodityId;
+	}
+	
+	public String getPlantDurationTypeCode() {
+		return plantDurationTypeCode;
+	}
+
+	public void setPlantDurationTypeCode(String plantDurationTypeCode) {
+		this.plantDurationTypeCode = plantDurationTypeCode;
 	}
 
 }

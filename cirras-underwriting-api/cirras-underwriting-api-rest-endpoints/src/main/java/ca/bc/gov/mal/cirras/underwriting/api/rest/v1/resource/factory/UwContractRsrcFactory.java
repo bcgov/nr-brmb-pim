@@ -21,6 +21,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UwContractEndpoin
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UwContractListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UwContractRolloverDopYieldEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UwContractRolloverInvEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UwContractRolloverVerifiedYieldEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UwContractValidateAddFieldEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UwContractValidateRemoveFieldEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UwContractValidateRenameLegalEndpoint;
@@ -201,6 +202,7 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 		resource.setGrowerPrimaryPhone(dto.getGrowerPrimaryPhone());
 		resource.setInventoryContractGuid(dto.getInventoryContractGuid());
 		resource.setDeclaredYieldContractGuid(dto.getDeclaredYieldContractGuid());
+		resource.setVerifiedYieldContractGuid(null); // TODO: Set from dto.
 		resource.setTotalDopEligibleInventory(dto.getTotalDopEligibleInventory());
 
 		// TODO: Add remaining fields for resource (or remove from resource if not needed):
@@ -280,6 +282,29 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 			}
 		}
 
+		//Add verified yield url if there is a dop contract
+		if (resource.getDeclaredYieldContractGuid() != null ) {
+
+			if (resource.getVerifiedYieldContractGuid() != null && authentication.hasAuthority(Scopes.GET_VERIFIED_YIELD_CONTRACT)) {
+				// TODO: Add link to GET endpoint.
+//				String result = UriBuilder
+//					.fromUri(baseUri)
+//					.path(VerifiedYieldContractEndpoint.class)
+//					.build(resource.getVerifiedYieldContractGuid()).toString();
+//				resource.getLinks().add(new RelLink(ResourceTypes.VERIFIED_YIELD_CONTRACT, result, "GET"));
+			}
+			else if(resource.getVerifiedYieldContractGuid() == null 
+				&& resource.getPolicyId() != null 
+				&& resource.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.GRAIN.toString())
+				&& authentication.hasAuthority(Scopes.CREATE_VERIFIED_YIELD_CONTRACT)) {
+				// Verified Yield does not exist, but could be rolled over.
+				String result = UriBuilder
+						.fromUri(baseUri)
+						.path(UwContractRolloverVerifiedYieldEndpoint.class)
+						.build(resource.getPolicyId()).toString();
+				resource.getLinks().add(new RelLink(ResourceTypes.ROLLOVER_VERIFIED_YIELD_CONTRACT, result, "GET"));
+			}
+		}
 
 		// TODO: Should perhaps be checking plan based on UnderwritingCommodity table or something rather than hard-coding.
 		if (resource.getPolicyId() != null 

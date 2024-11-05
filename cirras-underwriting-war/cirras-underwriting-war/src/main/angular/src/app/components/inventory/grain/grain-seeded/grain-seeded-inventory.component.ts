@@ -53,10 +53,15 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
   }
 
-  filteredVarietyOptions: CropVarietyOptionsType[];  
+  seededCommodityOptions = [];
+
+  seededVarietyOptions = [];
+  filteredSeededVarietyOptions: CropVarietyOptionsType[];  
 
   underSeededVarietyOptions = [];
   filteredUnderSeededVarietyOptions: CropVarietyOptionsType[];  
+
+  isHiddenFieldInTotals = false;
 
   ngOnChanges(changes: SimpleChanges) {
     super.ngOnChanges(changes);
@@ -65,6 +70,13 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
   }
 
   ngOnChanges3(changes: SimpleChanges) {
+
+    // populate seeded commodities and varieties
+    if ((changes.cropCommodityList && this.cropCommodityList && this.cropCommodityList.collection && this.cropCommodityList.collection.length) || 
+      (changes.underSeededCropCommodityList && this.underSeededCropCommodityList && this.underSeededCropCommodityList.collection && this.underSeededCropCommodityList.collection.length )) {
+
+        this.populateSeededCommodityAndVarietyOptions();
+    }
 
     // populate underseeded varieties
     if (changes.underSeededCropCommodityList && 
@@ -76,14 +88,25 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
       this.populateUnderseededVarieties();
     }
 
-      
     // create commodity totals table
-    if ( changes.inventoryContract && this.inventoryContract && this.inventoryContract.commodities ) {
+    if ( changes.inventoryContract && this.inventoryContract && this.inventoryContract.commodities && 
+      this.cropCommodityList && this.cropCommodityList.collection && this.cropCommodityList.collection.length &&
+      this.underSeededCropCommodityList && this.underSeededCropCommodityList.collection && this.underSeededCropCommodityList.collection.length
+    ) {
       this.addAllCommodities()
       this.geInvSeededTotals()
+      this.checkForHiddenFieldInTotals()
+    }
+  }
+
+
+  getSeededCommodityOptionById(cropCommodityId) {
+    
+    if ( cropCommodityId && this.seededCommodityOptions && this.seededCommodityOptions.length > 0 ) {
+      return this.seededCommodityOptions.find(el => el.cropCommodityId == cropCommodityId)
     }
 
-
+    return null
   }
 
   // crop variety search
@@ -101,16 +124,16 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
 
         if (selectedCropCommodityId != CROP_COMMODITY_UNSPECIFIED.ID) {
 
-          this.filteredVarietyOptions = 
-            this.cropVarietyOptions.filter(option => 
+          this.filteredSeededVarietyOptions = 
+            this.seededVarietyOptions.filter(option => 
                                             ( option.varietyName.toLowerCase().includes(filterValue) 
                                               && option.cropCommodityId == selectedCropCommodityId) )
         } else {
-          this.filteredVarietyOptions = this.cropVarietyOptions.filter(option => option.varietyName.toLowerCase().includes(filterValue) )
+          this.filteredSeededVarietyOptions = this.seededVarietyOptions.filter(option => option.varietyName.toLowerCase().includes(filterValue) )
         }
         
       } else {
-        this.filteredVarietyOptions = this.cropVarietyOptions.slice()
+        this.filteredSeededVarietyOptions = this.seededVarietyOptions.slice()
       }
   }
 
@@ -137,14 +160,16 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     invSeeded.controls['commodityTypeOptions'].setValue([])
     
     if (event.value) {
-      this.filteredVarietyOptions = this.cropVarietyOptions.filter(option => option.cropCommodityId == event.value )
+      this.filteredSeededVarietyOptions = this.seededVarietyOptions.filter(option => option.cropCommodityId == event.value )
 
       // check insurable qty 
-      invSeeded.controls['isQuantityInsurableInd'].setValue(true)
+      let seededCommodityOption = this.getSeededCommodityOptionById(event.value)
+      invSeeded.controls['isQuantityInsurableInd'].setValue(seededCommodityOption && seededCommodityOption.isQuantityInsurableInd)
+      invSeeded.controls['isSpotLossInsurableInd'].setValue(false)
 
     } else {
 
-      this.filteredVarietyOptions = this.cropVarietyOptions.slice()
+      this.filteredSeededVarietyOptions = this.seededVarietyOptions.slice()
 
       invSeeded.controls['isPedigreeInd'].setValue(false)
       invSeeded.controls['isQuantityInsurableInd'].setValue(false)
@@ -220,7 +245,9 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
       }
 
       // check quantity Insurable checkbox
-      invSeeded.controls['isQuantityInsurableInd'].setValue(true)
+      let seededCommodityOption = this.getSeededCommodityOptionById(tempCropCmdtyId)
+      invSeeded.controls['isQuantityInsurableInd'].setValue(seededCommodityOption && seededCommodityOption.isQuantityInsurableInd)
+      invSeeded.controls['isSpotLossInsurableInd'].setValue(false)
 
     } else {
       // clear selected commodity type
@@ -234,6 +261,77 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     }
 
     this.isMyFormDirty(); // check for changes
+  }
+
+  // SEEDED COMMODITIES AND VARIETIES
+  populateSeededCommodityAndVarietyOptions() {
+ 
+    var self = this
+
+    this.seededCommodityOptions = []
+    this.seededVarietyOptions = [];
+
+    // add empty records
+    this.seededCommodityOptions.push ({
+      commodityName: CROP_COMMODITY_UNSPECIFIED.NAME,
+      cropCommodityId: CROP_COMMODITY_UNSPECIFIED.ID,
+      insurancePlanId: null,
+      isQuantityInsurableInd: false,
+      isSpotLossInsurableInd: false
+    })
+
+    this.seededVarietyOptions.push ({
+      cropCommodityId: CROP_COMMODITY_UNSPECIFIED.ID,
+      cropVarietyId: CROP_COMMODITY_UNSPECIFIED.ID,
+      varietyName: CROP_COMMODITY_UNSPECIFIED.NAME,
+      cropVarietyCommodityTypes: <CropVarietyCommodityType>[]
+    })
+
+    // Populate GRAIN Commodities and Varieties
+    if ( this.cropCommodityList && this.cropCommodityList.collection && this.cropCommodityList.collection.length ) {
+      this.cropCommodityList.collection.forEach( cmdty => {
+
+        this.seededCommodityOptions.push ({
+          commodityName: cmdty.commodityName,
+          cropCommodityId: cmdty.cropCommodityId,
+          insurancePlanId: cmdty.insurancePlanId,
+          isQuantityInsurableInd: true,    // Always true for GRAIN
+          isSpotLossInsurableInd: true     // Always true for GRAIN
+        })
+    
+        cmdty.cropVariety.forEach( vrty => {
+          self.seededVarietyOptions.push ({
+            cropCommodityId: vrty.cropCommodityId,
+            cropVarietyId: vrty.cropVarietyId,
+            varietyName: vrty.varietyName  ,
+            cropVarietyCommodityTypes: vrty.cropVarietyCommodityTypes, 
+          })
+        })
+      })
+    }
+
+    // Populate FORAGE Commodities and Varieties
+    if ( this.underSeededCropCommodityList && this.underSeededCropCommodityList.collection && this.underSeededCropCommodityList.collection.length ) { 
+      this.underSeededCropCommodityList.collection.forEach( uCmdty => {
+
+        this.seededCommodityOptions.push ({
+          commodityName: uCmdty.commodityName,
+          cropCommodityId: uCmdty.cropCommodityId,
+          insurancePlanId: uCmdty.insurancePlanId,
+          isQuantityInsurableInd: false,                                      // Always false for FORAGE
+          isSpotLossInsurableInd: (uCmdty.commodityName == 'FORAGE SEED')     // Only allowed for FORAGE SEED
+        })
+    
+        uCmdty.cropVariety.forEach( uVrty => {
+          self.seededVarietyOptions.push ({
+            cropCommodityId: uVrty.cropCommodityId,
+            cropVarietyId: uVrty.cropVarietyId,
+            varietyName: uVrty.varietyName  ,
+            cropVarietyCommodityTypes: uVrty.cropVarietyCommodityTypes, 
+          })
+        })
+      })
+    }
   }
 
 
@@ -293,14 +391,14 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
 
     if (selectedCropCommodityId) {
 
-      this.filteredVarietyOptions = 
-            this.cropVarietyOptions.filter(option => 
+      this.filteredSeededVarietyOptions = 
+            this.seededVarietyOptions.filter(option => 
                                             ( option.cropCommodityId == selectedCropCommodityId) )
 
     } else {
       
       //return all varieties
-      this.filteredVarietyOptions = this.cropVarietyOptions.slice()
+      this.filteredSeededVarietyOptions = this.seededVarietyOptions.slice()
 
     }
   }
@@ -312,7 +410,7 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
   }
 
    // GET COMMODITIES to prepare the commodity totals table
-  
+
    addAllCommodities() {
     // first add all commodities
     // then update them based on what's coming from the backend
@@ -350,6 +448,38 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
         isVisible:                      [false],
       } ) )
     } )
+
+    // Add FORAGE SEED, as the only Forage commodity that could be insurable and appear in the commodity totals.
+    let forageSeedCmdty = this.underSeededCropCommodityList.collection.find(el => el.commodityName == "FORAGE SEED")
+    if (forageSeedCmdty) {
+
+      cmdtiesFA.push( this.fb.group( {
+        cropCommodityId:                [forageSeedCmdty.cropCommodityId],
+        cropCommodityName:              [forageSeedCmdty.commodityName],
+        inventoryContractCommodityGuid: [ ],
+        inventoryContractGuid:          [ ],
+        totalSeededAcres:               [0], 
+        totalSpotLossAcres:             [0],
+        isPedigreeInd:                  [false],
+        totalUnseededAcres:             [0],
+        totalUnseededAcresOverride:     [],
+        isVisible:                     [false],
+      } ) )
+
+      // add pedigreed commodity
+      cmdtiesFA.push( this.fb.group( {
+        cropCommodityId:                [forageSeedCmdty.cropCommodityId],
+        cropCommodityName:              [forageSeedCmdty.commodityName + " Pedigreed"],
+        inventoryContractCommodityGuid: [ ],
+        inventoryContractGuid:          [ ],
+        totalSeededAcres:               [0], 
+        totalSpotLossAcres:             [0],
+        isPedigreeInd:                  [true],
+        totalUnseededAcres:             [0],
+        totalUnseededAcresOverride:     [],
+        isVisible:                      [false],
+      } ) )
+    }
 
     this.inventoryContract.commodities.forEach( cmdt => this.updateCommodity( cmdt ) )
 
@@ -456,6 +586,47 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     })
   }
 
+
+  isSeededCommodityQuantityInsurable(fieldIndex, plantingIndex, invSeededIndex) {
+
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
+    const invSeeded = pltg.controls['inventorySeededGrains'].value.controls[invSeededIndex]
+
+    let selectedCropCommodityId = invSeeded.controls['cropCommodityId'].value;
+    let seededCommodityOption = this.getSeededCommodityOptionById(selectedCropCommodityId)
+
+    // Only show Quantity Ins checkbox if commodity is quantity insurable
+    if ( seededCommodityOption && seededCommodityOption.isQuantityInsurableInd ) {
+      return true
+    } else {
+      invSeeded.controls['isQuantityInsurableInd'].setValue(false)
+      return false
+    }
+
+  }
+
+
+  isSeededCommoditySpotLossInsurable(fieldIndex, plantingIndex, invSeededIndex) {
+
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
+    const invSeeded = pltg.controls['inventorySeededGrains'].value.controls[invSeededIndex]
+
+    let selectedCropCommodityId = invSeeded.controls['cropCommodityId'].value;
+    let seededCommodityOption = this.getSeededCommodityOptionById(selectedCropCommodityId)
+
+    // Only show Spot Loss Ins checkbox if commodity is spot loss insurable
+    if ( seededCommodityOption && seededCommodityOption.isSpotLossInsurableInd ) {
+      return true
+    } else {
+      invSeeded.controls['isSpotLossInsurableInd'].setValue(false)
+      return false
+    }
+
+  }
+
+
   isChecked(event, fieldIndex, plantingIndex, invSeededIndex) {
 
     if ( event.checked ){
@@ -469,6 +640,7 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
         // do nothing
       } else {
         alert ("Crop must be selected")
+
         invSeeded.controls['isPedigreeInd'].setValue(false)
         invSeeded.controls['isQuantityInsurableInd'].setValue(false)
         invSeeded.controls['isSpotLossInsurableInd'].setValue(false)
@@ -693,7 +865,7 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
 
     if (selectedCropCommodityId && selectedCropVarietyId && selectedCommodityTypeCode && selectedSeededDate) {
 
-      let myTempArray = this.cropVarietyOptions.filter(option => 
+      let myTempArray = this.seededVarietyOptions.filter(option => 
         ( option.cropCommodityId == selectedCropCommodityId && option.cropVarietyId == selectedCropVarietyId && option.cropVarietyId  ) )
 
         if (myTempArray && myTempArray.length > 0) {
@@ -732,7 +904,7 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
 
     if (selectedCropCommodityId && selectedCropVarietyId && selectedCommodityTypeCode && selectedSeededDate) {
 
-      let myTempArray = this.cropVarietyOptions.filter(option => 
+      let myTempArray = this.seededVarietyOptions.filter(option => 
         ( option.cropCommodityId == selectedCropCommodityId && option.cropVarietyId == selectedCropVarietyId && option.cropVarietyId  ) )
 
         if (myTempArray && myTempArray.length > 0) {
@@ -789,16 +961,16 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
       this.searchVariety(value, fieldIndex, plantingIndex, invSeededIndex);
 
       //If only one is found, select it and set the commodity and commodity type
-      if(this.filteredVarietyOptions && this.filteredVarietyOptions.length == 1) {
+      if(this.filteredSeededVarietyOptions && this.filteredSeededVarietyOptions.length == 1) {
 
         invSeeded.controls['cropVarietyCtrl'].setValue({      
-          cropCommodityId: this.filteredVarietyOptions[0].cropCommodityId,
-          cropVarietyId: this.filteredVarietyOptions[0].cropVarietyId,
-          varietyName: this.filteredVarietyOptions[0].varietyName,
-          cropVarietyCommodityTypes: this.filteredVarietyOptions[0].cropVarietyCommodityTypes     
+          cropCommodityId: this.filteredSeededVarietyOptions[0].cropCommodityId,
+          cropVarietyId: this.filteredSeededVarietyOptions[0].cropVarietyId,
+          varietyName: this.filteredSeededVarietyOptions[0].varietyName,
+          cropVarietyCommodityTypes: this.filteredSeededVarietyOptions[0].cropVarietyCommodityTypes     
         })
 
-        this.setCropCommodity(this.filteredVarietyOptions[0].cropCommodityId, this.filteredVarietyOptions[0].cropVarietyCommodityTypes, fieldIndex, plantingIndex, invSeededIndex) 
+        this.setCropCommodity(this.filteredSeededVarietyOptions[0].cropCommodityId, this.filteredSeededVarietyOptions[0].cropVarietyCommodityTypes, fieldIndex, plantingIndex, invSeededIndex) 
 
       }
 
@@ -814,12 +986,15 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
         })
 
       } else {
-        // check quantity Insurable checkbox
-        invSeeded.controls['isQuantityInsurableInd'].setValue(true)
 
+        // check quantity Insurable checkbox
+        let seededCommodityOption = this.getSeededCommodityOptionById(invSeeded.controls['cropCommodityId'].value)
+        invSeeded.controls['isQuantityInsurableInd'].setValue(seededCommodityOption && seededCommodityOption.isQuantityInsurableInd)
+        invSeeded.controls['isSpotLossInsurableInd'].setValue(false)
       }
     }
 
+    this.geInvSeededTotals()
     this.isMyFormDirty()
   }
 
@@ -1236,6 +1411,50 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
     return {
       'grid-template-columns':  'auto 180px 140px 150px 12px 190px' // one extra button
     }
+  }
+
+  isVarietyWarningVisible(fieldIndex, plantingIndex, invSeededIndex) {
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
+    const invSeeded = pltg.controls['inventorySeededGrains'].value.controls[invSeededIndex]
+
+    if (invSeeded.controls['commodityTypeCode'].value ==  "Polish Canola" ) {
+      
+        return true
+    }
+
+    return false
+  }
+
+  checkForHiddenFieldInTotals() {
+
+    // raises a flag if there is an insured field with acres that is marked as hidden 
+    const frmMain = this.viewModel.formGroup as FormGroup
+    const formFields: FormArray = frmMain.controls.fields as FormArray
+
+    for (let i = 0; i < formFields.controls.length; i++){
+      let frmField = formFields.controls[i] as FormArray
+      	  
+      for (let k = 0; k < frmField.value.plantings.controls.length; k++){
+        let frmPlanting = frmField.value.plantings.controls[k] as FormArray
+        
+        // now check inventory seeded grains 
+        for (let n = 0; n < frmPlanting.value.inventorySeededGrains.controls.length; n++) {
+                  
+          let frmInvSeededGrains = frmPlanting.value.inventorySeededGrains.controls[n] as FormArray
+    
+          let seededAcres = !isNaN( parseFloat(frmInvSeededGrains.value.seededAcres)) ?  parseFloat(frmInvSeededGrains.value.seededAcres) : 0
+
+          if ( frmPlanting.value.isHiddenOnPrintoutInd && seededAcres > 0 && (frmInvSeededGrains.value.isQuantityInsurableInd || frmInvSeededGrains.value.isSpotLossInsurableInd) ) {
+            
+            this.isHiddenFieldInTotals = true
+            return
+          }
+        }
+      }
+	  }
+
+    this.isHiddenFieldInTotals = false // default
   }
 
 }

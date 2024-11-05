@@ -20,6 +20,7 @@ public class InventoryUnseededDto extends BaseDto<InventoryUnseededDto> {
 	private String inventoryFieldGuid;
 	private Integer cropCommodityId;
 	private String cropCommodityName;
+	private Integer cropVarietyId;
 	private Boolean isUnseededInsurableInd;
 	private Double acresToBeSeeded;
 	
@@ -32,7 +33,11 @@ public class InventoryUnseededDto extends BaseDto<InventoryUnseededDto> {
 	//Commodity properties
 	private Boolean isCropInsuranceEligibleInd;
 	private Boolean isInventoryCropInd;
-	
+	private Integer cropInsurancePlanId;
+
+	//Variety properties
+	private String cropVarietyName;
+
 	public InventoryUnseededDto() {
 	}
 	
@@ -43,6 +48,7 @@ public class InventoryUnseededDto extends BaseDto<InventoryUnseededDto> {
 		this.inventoryFieldGuid = dto.inventoryFieldGuid;
 		this.cropCommodityId = dto.cropCommodityId;
 		this.cropCommodityName = dto.cropCommodityName;
+		this.cropVarietyId = dto.cropVarietyId;
 		this.isUnseededInsurableInd = dto.isUnseededInsurableInd;
 		this.acresToBeSeeded = dto.acresToBeSeeded;
 		this.createUser = dto.createUser;
@@ -53,6 +59,8 @@ public class InventoryUnseededDto extends BaseDto<InventoryUnseededDto> {
 		this.totalAcresToBeSeeded = dto.totalAcresToBeSeeded;
 		this.isInventoryCropInd = dto.isInventoryCropInd;
 		this.isCropInsuranceEligibleInd = dto.isCropInsuranceEligibleInd;
+		this.cropVarietyName = dto.cropVarietyName;
+		this.cropInsurancePlanId = dto.cropInsurancePlanId;
 	}
 	
 
@@ -71,6 +79,7 @@ public class InventoryUnseededDto extends BaseDto<InventoryUnseededDto> {
 			result = result&&dtoUtils.equals("inventoryUnseededGuid", inventoryUnseededGuid, other.inventoryUnseededGuid);
 			result = result&&dtoUtils.equals("inventoryFieldGuid", inventoryFieldGuid, other.inventoryFieldGuid);
 			result = result&&dtoUtils.equals("cropCommodityId", cropCommodityId, other.cropCommodityId);
+			result = result&&dtoUtils.equals("cropVarietyId", cropVarietyId, other.cropVarietyId);
 			result = result&&dtoUtils.equals("isUnseededInsurableInd", isUnseededInsurableInd, other.isUnseededInsurableInd);
 			result = result&&dtoUtils.equals("acresToBeSeeded", acresToBeSeeded, other.acresToBeSeeded, 4);
 		}
@@ -114,6 +123,20 @@ public class InventoryUnseededDto extends BaseDto<InventoryUnseededDto> {
 	}
 	public void setCropCommodityName(String cropCommodityName) {
 		this.cropCommodityName = cropCommodityName;
+	}
+
+	public Integer getCropVarietyId() {
+		return cropVarietyId;
+	}
+	public void setCropVarietyId(Integer cropVarietyId) {
+		this.cropVarietyId = cropVarietyId;
+	}
+
+	public String getCropVarietyName() {
+		return cropVarietyName;
+	}
+	public void setCropVarietyName(String cropVarietyName) {
+		this.cropVarietyName = cropVarietyName;
 	}
 
 	public Boolean getIsUnseededInsurableInd() {
@@ -181,4 +204,10 @@ public class InventoryUnseededDto extends BaseDto<InventoryUnseededDto> {
 		this.isCropInsuranceEligibleInd = isCropInsuranceEligibleInd;
 	}
 
+	public Integer getCropInsurancePlanId() {
+		return cropInsurancePlanId;
+	}
+	public void setCropInsurancePlanId(Integer cropInsurancePlanId) {
+		this.cropInsurancePlanId = cropInsurancePlanId;
+	}
 }

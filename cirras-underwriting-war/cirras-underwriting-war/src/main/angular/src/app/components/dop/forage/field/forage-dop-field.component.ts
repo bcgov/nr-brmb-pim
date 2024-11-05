@@ -58,9 +58,9 @@ export class ForageDopFieldComponent implements OnInit {
     setPlantingStyles() {
         return {
             'display': 'grid',
-            'grid-template-columns': '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+            'grid-template-columns': '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr', 
             'align-items': 'stretch',
-            'width': `${320 * this.numCuts + 620}px`
+            'width': `${320 * this.numCuts + 860}px`
         };
     }
 

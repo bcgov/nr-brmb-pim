@@ -2,6 +2,8 @@ name: build npm-lib
 
 env:
   NPMRC: ${{ secrets.NPMRC }}
+  REPO_PREFIX: na12-pim-libs
+  ARTIFACTORY_PATH: ca/bc/gov/mal/cirras/underwriting
 
 on:
   workflow_call:
@@ -12,13 +14,10 @@ on:
       MICROSERVICE_NAME:
           required: true
           type: string
-      EXPORT_MODULE:
+      API_TARGET:
           required: false
           type: string
-      DOWNLOAD_FILE:
-          required: false
-          type: string
-      DOWNLOAD_PATH:
+      SWAGGER_TARGET_PATH:
           required: false
           type: string
       NPM_ARTIFACT_PATH:
@@ -49,16 +48,31 @@ jobs:
         with:
           node-version: 14
 
+      - name: Extract version number
+        id: getVersion
+        run: |
+          export VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+(-SNAPSHOT)?'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )
+          echo "VERSION_NUMBER=$VERSION_NUMBER" >> $GITHUB_OUTPUT
+
       #NOTE: necessary to build client-war 
       - name: Add .npmrc file
         run: echo -e $NPMRC > ~/.npmrc
 
-      - name: download files from other jobs
-        if: ${{ inputs.DOWNLOAD_FILE }}
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ inputs.DOWNLOAD_FILE}}
-          path: ${{ inputs.DOWNLOAD_PATH}}
+      - name: Setup artifactory
+        uses: jfrog/setup-jfrog-cli@v4
+
+      - name: download swagger file
+        run: |
+          [[ $(echo "${{ steps.getVersion.outputs.VERSION_NUMBER }}" | grep -o SNAPSHOT ) = SNAPSHOT ]] && REPO_SUFFIX="snapshot" || REPO_SUFFIX="release"
+          [[ $(echo "${{ steps.getVersion.outputs.VERSION_NUMBER }}" | grep -o SNAPSHOT ) = SNAPSHOT ]] && URL="${{ vars.SNAPSHOT_URL }}" || URL=${{ vars.RELEASE_URL }}
+          jfrog rt dl \
+          --flat --limit=1 --sort-by=created \
+          --sort-order=desc \
+          --url=${{vars.ARTIFACTORY_BASE_URL}} \
+          --user=${{ secrets.OPENSHIFT_ACCOUNT }} \
+          --password=${{ secrets.OPENSHIFT_PASSWORD }} \
+          "${{ env.REPO_PREFIX }}-$REPO_SUFFIX/${{ env.ARTIFACTORY_PATH }}/${{inputs.API_TARGET}}-rest-endpoints/${{ steps.getVersion.outputs.VERSION_NUMBER }}/${{inputs.API_TARGET}}-rest-endpoints-${{ steps.getVersion.outputs.VERSION_NUMBER }}-swagger.json" \
+          ${{inputs.SWAGGER_TARGET_PATH}}
       
       - name: npm install
         run: |
@@ -66,30 +80,15 @@ jobs:
           npm install
           npm run generate
           npm run build
-          cd dist/${{ inputs.EXPORT_MODULE }}
+          cd dist/${{ inputs.API_TARGET }}
           npm pack
-
-      - name: Extract version number
-        id: getVersion
-        run: |
-          export VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )
-          echo "VERSION_NUMBER=$VERSION_NUMBER" >> $GITHUB_OUTPUT
-
-      - name: upload module
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{inputs.EXPORT_MODULE}}-${{ steps.getVersion.outputs.VERSION_NUMBER }}.tgz
-          path: ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-${{ steps.getVersion.outputs.VERSION_NUMBER }}.tgz
-
-      - name: Setup artifactory
-        uses: jfrog/setup-jfrog-cli@v4
 
       - name: Push Build to Artifactory
         run: |
           export VERSION_NUMBER=${{ steps.getVersion.outputs.VERSION_NUMBER }}
-          mv ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.EXPORT_MODULE }}/cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz  cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz
-          export BUILD_NAME="cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER"
-          export BUILD_MODULE="${{ inputs.EXPORT_MODULE}}"
+          mv ${{ inputs.MICROSERVICE_NAME }}/${{ inputs.MICROSERVICE_NAME }}/src/main/angular/dist/${{ inputs.API_TARGET }}/cirras-${{ inputs.API_TARGET}}-$VERSION_NUMBER.tgz  cirras-${{ inputs.API_TARGET}}-$VERSION_NUMBER.tgz
+          export BUILD_NAME="cirras-${{ inputs.API_TARGET}}-$VERSION_NUMBER"
+          export BUILD_MODULE="${{ inputs.API_TARGET}}"
           
-          jf rt upload  --url ${{ vars.ARTIFACTORY_URL }} --user ${{ secrets.OPENSHIFT_ACCOUNT }} --password ${{ secrets.OPENSHIFT_PASSWORD }} --build-name $BUILD_NAME --module $BUILD_MODULE --target-props npm.version=$VERSION_NUMBER "cirras-${{ inputs.EXPORT_MODULE}}-$VERSION_NUMBER.tgz" ${{ vars.NPM_REPO }}/${{ inputs.NPM_ARTIFACT_PATH}}/${{inputs.EXPORT_MODULE}}-$VERSION_NUMBER.${{ github.run_number }}.tgz
+          jf rt upload  --url ${{ vars.ARTIFACTORY_URL }} --user ${{ secrets.OPENSHIFT_ACCOUNT }} --password ${{ secrets.OPENSHIFT_PASSWORD }} --build-name $BUILD_NAME --module $BUILD_MODULE --target-props npm.version=$VERSION_NUMBER "cirras-${{ inputs.API_TARGET}}-$VERSION_NUMBER.tgz" ${{ vars.NPM_REPO }}/${{ inputs.NPM_ARTIFACT_PATH}}/${{inputs.API_TARGET}}-$VERSION_NUMBER.${{ github.run_number }}.tgz
           

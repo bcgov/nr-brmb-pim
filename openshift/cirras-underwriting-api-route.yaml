@@ -13,4 +13,4 @@ spec:
     insecureEdgeTerminationPolicy: Redirect
     destinationCACertificate: ''
   port:
-    targetPort: #{TARGET_PORT}#
+    targetPort: #{TOMCAT_PORT}#

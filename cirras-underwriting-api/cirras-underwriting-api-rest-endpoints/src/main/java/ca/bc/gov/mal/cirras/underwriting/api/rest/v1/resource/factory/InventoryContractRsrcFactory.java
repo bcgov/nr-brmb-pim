@@ -342,6 +342,8 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setAcresToBeSeeded(dto.getAcresToBeSeeded());
 		model.setCropCommodityId(dto.getCropCommodityId());
 		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setCropVarietyId(dto.getCropVarietyId());
+		model.setCropVarietyName(dto.getCropVarietyName());
 		model.setInventoryFieldGuid(dto.getInventoryFieldGuid());
 		model.setInventoryUnseededGuid(dto.getInventoryUnseededGuid());
 		model.setIsUnseededInsurableInd(dto.getIsUnseededInsurableInd());
@@ -662,7 +664,11 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			String rolloverPlantIns = null;
 			
 			if ("E1".equals(prevPlanIns) ) {
-				rolloverPlantIns = "E2";
+				if ( Boolean.TRUE.equals(dto.getIsIrrigatedInd()) ) {
+					rolloverPlantIns = "W1";
+				} else {
+					rolloverPlantIns = "E2";					
+				}
 			}
 			else if ("E2".equals(prevPlanIns) ) {
 				rolloverPlantIns = null;
@@ -796,12 +802,16 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			dto.setAcresToBeSeeded(null);
 			dto.setCropCommodityId(null);
 			dto.setCropCommodityName(null);
+			dto.setCropVarietyId(null);
+			dto.setCropVarietyName(null);
 			dto.setIsUnseededInsurableInd(true); // Defaults to true.
 
 		} else {		
 			dto.setAcresToBeSeeded(model.getAcresToBeSeeded());
 			dto.setCropCommodityId(model.getCropCommodityId());
 			dto.setCropCommodityName(model.getCropCommodityName());
+			dto.setCropVarietyId(model.getCropVarietyId());
+			dto.setCropVarietyName(model.getCropVarietyName());
 			dto.setIsUnseededInsurableInd(model.getIsUnseededInsurableInd());
 		}	
 	}

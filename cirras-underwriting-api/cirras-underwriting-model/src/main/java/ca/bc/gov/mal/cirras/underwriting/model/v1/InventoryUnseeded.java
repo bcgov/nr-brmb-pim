@@ -13,6 +13,8 @@ public class InventoryUnseeded implements Serializable {
 	private String inventoryFieldGuid;
 	private Integer cropCommodityId;
 	private String cropCommodityName;
+	private Integer cropVarietyId;
+	private String cropVarietyName;
 	private Boolean isUnseededInsurableInd;
 	private Double acresToBeSeeded;
 	private Boolean deletedByUserInd;
@@ -45,6 +47,20 @@ public class InventoryUnseeded implements Serializable {
 	}
 	public void setCropCommodityName(String cropCommodityName) {
 		this.cropCommodityName = cropCommodityName;
+	}
+
+	public Integer getCropVarietyId() {
+		return cropVarietyId;
+	}
+	public void setCropVarietyId(Integer cropVarietyId) {
+		this.cropVarietyId = cropVarietyId;
+	}
+
+	public String getCropVarietyName() {
+		return cropVarietyName;
+	}
+	public void setCropVarietyName(String cropVarietyName) {
+		this.cropVarietyName = cropVarietyName;
 	}
 
 	public Boolean getIsUnseededInsurableInd() {
