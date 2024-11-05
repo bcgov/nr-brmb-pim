@@ -138,7 +138,6 @@ jobs:
           MAX_UI_COUNT: ${{ vars.MAX_UI_COUNT }}
           BASE_URL: https://cirras-underwriting-ui-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/pub/cirras-underwriting/
           CIRRAS_UNDERWRITING_REST_URI: https://cirras-underwriting-api-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/cirras-underwriting-api/v1
-          WEBADE_CIRRAS_UNDERWRITING_UI_SECRET: ${{secrets.WEBADE_CIRRAS_UNDERWRITING_UI_SECRET}}
 
           ACTIVE_PORT: ${{ vars.TARGET_PORT }}
           LOCAL_CHECKTOKEN_ENDPOINT: ${{ vars.LOCAL_CHECKTOKEN_ENDPOINT }}

@@ -99,11 +99,6 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-ui-config-#{ENV}#
                   key: WEBADE_OAUTH2_SITEMINDER_URL
-            - name: WEBADE_CIRRAS_UNDERWRITING_UI_SECRET
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-ui-config-#{ENV}#
-                  key: WEBADE_CIRRAS_UNDERWRITING_UI_SECRET
             - name: WEBADE_GET_TOKEN_URL
               valueFrom:
                 configMapKeyRef:
