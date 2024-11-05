@@ -126,10 +126,6 @@ jobs:
 
 
           #DB/Liquibase variables:
-          POSTGRES_READ_ONLY_PASSWORD: ${{ secrets.POSTGRES_READONLY_PASSWORD }}
-          POSTGRES_PROXY_USER_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_ADMIN_USERNAME: ${{ secrets.POSTGRES_ADMIN_USERNAME }}
-          POSTGRES_ADMIN_PASSWORD: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
           POSTGRES_MAXACTIVE: '10'
           CHANGELOG_FILE: changelog.json
 
