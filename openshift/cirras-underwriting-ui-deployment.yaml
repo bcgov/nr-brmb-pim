@@ -13,11 +13,33 @@ spec:
       labels:
         app: cirras-underwriting-ui-#{ENV}#
         project: brmb-pim-#{ENV}#
+      annotations:
+        # 1. Vault injector configuration goes here, inside the template.
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-inject-token: 'false' # set to 'true' if you are going to connect and query vault from your application
+        vault.hashicorp.com/agent-pre-populate-only: 'true' # this makes sure the secret vault will only change during pod restart
+        vault.hashicorp.com/auth-path: auth/k8s-silver  # Must match cluster. Use one of: k8s-silver, k8s-gold, k8s-golddr, k8s-emerald
+        vault.hashicorp.com/namespace: platform-services
+        vault.hashicorp.com/role: #{LICENSE_PLATE}#-#{VAULT_RESOURCE}#  # licenseplate-nonprod or licenseplate-prod are your options
+        # Configure how to retrieve and populate the secrets from Vault:
+        # - The name of the secret is any unique string after vault.hashicorp.com/agent-inject-secret-<name>
+        # - The value is the path in Vault where the secret is located.
+        vault.hashicorp.com/agent-inject-secret-env: #{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets
+        # - The template Vault Agent should use for rendering a secret:
+        vault.hashicorp.com/agent-inject-template-env: |
+          {{- with secret "#{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets" -}}
+            export WEBADE_CIRRAS_UNDERWRITING_UI_SECRET="{{ .Data.data.WEBADE_CIRRAS_UNDERWRITING_UI_SECRET }}"
+          {{- end }}          
     spec:
+      serviceAccountName: #{LICENSE_PLATE}#-vault
       containers:
         - name: container
           image: '#{IMAGE_BY_DIGEST}#'
           imagePullPolicy: Always
+          command:
+            ['sh', '-c']
+          args:
+            ['. /vault/secrets/env && catalina.sh run']
           ports:
             - containerPort: #{TOMCAT_PORT}#
               protocol: TCP
