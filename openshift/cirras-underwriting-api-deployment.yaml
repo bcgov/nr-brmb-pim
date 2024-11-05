@@ -138,9 +138,9 @@ spec:
             httpGet:
               scheme: HTTP
               path: /cirras-underwriting-api/v1/checkHealth?callStack=test
-              port: #{TARGET_PORT}#
+              port: #{TOMCAT_PORT}#
             initialDelaySeconds: 60
-            periodSeconds: 10
+            periodSeconds: 15
             timeoutSeconds: 5
             failureThreshold: 2
           resources:
