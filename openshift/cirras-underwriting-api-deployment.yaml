@@ -136,12 +136,13 @@ spec:
                   key: LOG_LEVEL
           livenessProbe:
             httpGet:
+              path: /cirras-underwriting-api/v1/checkHealth?callstack=test
+              port: 8443
               scheme: HTTP
-              path: /cirras-underwriting-api/v1/checkHealth?callStack=test
-              port: #{TOMCAT_PORT}#
-            initialDelaySeconds: 120
-            periodSeconds: 15
-            timeoutSeconds: 15
+            initialDelaySeconds: 200
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
             failureThreshold: 2
           resources:
             requests:
