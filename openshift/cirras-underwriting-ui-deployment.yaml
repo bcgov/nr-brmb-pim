@@ -120,8 +120,10 @@ spec:
               path: /pub/cirras-underwriting/
               port: #{TOMCAT_PORT}#
             initialDelaySeconds: 60
-            periodSeconds: 15
             timeoutSeconds: 5
+            periodSeconds: 15
+            successThreshold: 1
+            failureThreshold: 2
           resources:
             requests:
               cpu: 50m

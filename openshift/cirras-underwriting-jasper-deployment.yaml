@@ -107,8 +107,10 @@ spec:
               path: /jasperserver/
               port: 8080
             initialDelaySeconds: 1200
-            periodSeconds: 60
             timeoutSeconds: 15
+            periodSeconds: 60
+            successThreshold: 1
+            failureThreshold: 2
           volumeMounts:
             - name: jasper-#{ENV}#
               mountPath: /bitnami/jasperreports
