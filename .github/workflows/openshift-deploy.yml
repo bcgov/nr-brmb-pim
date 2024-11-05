@@ -91,7 +91,7 @@ jobs:
           #Common variables
           LICENSE_PLATE: 'a12541'
           #Vault path is different for prod than all other environments
-          VAULT_RESOURCE: ${{ inputs.NAMESPACE == 'a12541-dev' && 'prod' || 'nonprod'  }}
+          VAULT_RESOURCE: ${{ inputs.NAMESPACE == 'a12541-prod' && 'prod' || 'nonprod'  }}
           ENV: ${{ inputs.ENVIRONMENT_NAME }}
           NAMESPACE: ${{ inputs.NAMESPACE }}
           TAG: ${{ inputs.TAG }}
