@@ -27,7 +27,7 @@ spec:
         vault.hashicorp.com/agent-inject-secret-env: #{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets
         # - The template Vault Agent should use for rendering a secret:
         vault.hashicorp.com/agent-inject-template-env: |
-          {{- with secret "#{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets" -}}
+          {{- with secret "#{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets" }}
             export JASPERREPORTS_DATABASE_USER="{{ .Data.data.JASPER_DATABASE_USER }}"
             export MARIADB_USER="{{ .Data.data.JASPER_DATABASE_USER }}"
             export JASPERREPORTS_DATABASE_PASSWORD="{{ .Data.data.JASPER_DATABASE_PASSWORD }}"

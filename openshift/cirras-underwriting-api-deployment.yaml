@@ -28,7 +28,7 @@ spec:
         vault.hashicorp.com/agent-inject-secret-env: #{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets
         # - The template Vault Agent should use for rendering a secret:
         vault.hashicorp.com/agent-inject-template-env: |
-          {{- with secret "#{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets" -}}
+          {{- with secret "#{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets" }}
             export POSTGRES_PASSWORD="{{ .Data.data.POSTGRES_PASSWORD }}"
             export CIRRAS_UNDERWRITING_REST_SECRET="{{ .Data.data.CIRRAS_UNDERWRITING_REST_SECRET }}"
             export JASPER_PASSWORD="{{ .Data.data.JASPER_PASSWORD }}"

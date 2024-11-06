@@ -27,7 +27,7 @@ spec:
         vault.hashicorp.com/agent-inject-secret-env: #{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets
         # - The template Vault Agent should use for rendering a secret:
         vault.hashicorp.com/agent-inject-template-env: |
-          {{- with secret "#{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets" -}}
+          {{- with secret "#{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets" }}
             export LIQUIBASE_COMMAND_PASSWORD="{{ .Data.data.POSTGRES_ADMIN_PASSWORD }}"
             export POSTGRES_ADMIN_PASSWORD="{{ .Data.data.POSTGRES_ADMIN_PASSWORD }}"
             export LIQUIBASE_COMMAND_USERNAME="{{ .Data.data.POSTGRES_ADMIN_USERNAME }}"
@@ -43,7 +43,7 @@ spec:
         command:
           ['sh', '-c']
         args:
-          ['. /vault/secrets/env && catalina.sh run']
+          ['. /vault/secrets/env && liquibase update --changelog-file=#{CHANGELOG_FILE}#']
         imagePullPolicy: Always
         resources:
             requests:

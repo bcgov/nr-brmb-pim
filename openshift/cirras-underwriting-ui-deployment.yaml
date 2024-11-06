@@ -27,7 +27,7 @@ spec:
         vault.hashicorp.com/agent-inject-secret-env: #{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets
         # - The template Vault Agent should use for rendering a secret:
         vault.hashicorp.com/agent-inject-template-env: |
-          {{- with secret "#{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets" -}}
+          {{- with secret "#{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets" }}
             export WEBADE_CIRRAS_UNDERWRITING_UI_SECRET="{{ .Data.data.WEBADE_CIRRAS_UNDERWRITING_UI_SECRET }}"
           {{- end }}          
     spec:
