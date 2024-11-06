@@ -113,10 +113,6 @@ export class AppComponent implements OnInit {
             "insert_comment",
             this.domSanitizer.bypassSecurityTrustResourceUrl("assets/icons/insert_comment.svg")
         );
-        this.matIconRegistry.addSvgIcon(
-            "scale",
-            this.domSanitizer.bypassSecurityTrustResourceUrl("assets/icons/scale.svg")
-        );
 
     }
 

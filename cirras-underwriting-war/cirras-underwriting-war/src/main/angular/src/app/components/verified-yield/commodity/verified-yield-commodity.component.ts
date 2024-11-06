@@ -5,7 +5,7 @@ import { Store } from "@ngrx/store";
 import { VerifiedYieldContractCommodity } from "src/app/conversion/models-yield";
 import { RootState } from "src/app/store";
 import { setFormStateUnsaved } from "src/app/store/application/application.actions";
-import { VERIFIED_COMPONENT_ID } from "src/app/store/verified-yield/verified-yield.state";
+import { VERIFIED_YIELD_COMPONENT_ID } from "src/app/store/verified-yield/verified-yield.state";
 import { makeNumberOnly } from "src/app/utils";
 import { SecurityUtilService } from 'src/app/services/security-util.service';
 
@@ -22,9 +22,6 @@ export class VerifiedYieldCommodityComponent implements OnInit {
   @Input() decimalPrecision: number;
 
   commodityFormGroup: FormGroup;
-
-  yieldCalculatorLink = "ms-excel:ofe|u|https://bcgov.sharepoint.com/sites/AF-BRMB-DATA/Shared%20Documents/PI%20Grain%20Yield%20&%20Claim%20Calculator.xlsm"
-
 
   constructor(private fb: FormBuilder,
       private store: Store<RootState>,
@@ -64,7 +61,7 @@ export class VerifiedYieldCommodityComponent implements OnInit {
 
     this.commodityFormGroup.controls['harvestedAcresOverride'].setValue(harvestedAcresOverride)
 
-    this.store.dispatch(setFormStateUnsaved(VERIFIED_COMPONENT_ID, true));
+    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true));
   }
 
   updateHarvestedYieldOverride(): void {
@@ -74,14 +71,14 @@ export class VerifiedYieldCommodityComponent implements OnInit {
 
     this.commodityFormGroup.controls['harvestedYieldOverride'].setValue(harvestedYieldOverride)
 
-    this.store.dispatch(setFormStateUnsaved(VERIFIED_COMPONENT_ID, true));
+    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true));
   }
 
   onDeleteCommodity() {
     this.commodityFormGroup.controls['harvestedAcresOverride'].setValue('')
     this.commodityFormGroup.controls['harvestedYieldOverride'].setValue('')
 
-    this.store.dispatch(setFormStateUnsaved(VERIFIED_COMPONENT_ID, true));
+    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true));
   }
 
 }

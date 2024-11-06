@@ -1,5 +1,5 @@
 <div class="plcy-inv-cmdty-totals-header"
-    style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 75px 75px; padding-left: 10px;">
+    style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 75px 60px; padding-left: 10px;">
 
     <div *ngIf="isUnsaved" class="table-header border-top border-left border-right"
         style="grid-column-start: 1; grid-column-end: 10;">
@@ -12,8 +12,15 @@
         </span>
     </div>
 
-    <div class="table-header border-top border-left border-right" style="grid-column-start: 1; grid-column-end: 10;">
+    <div class="table-header border-top border-left" style="grid-column-start: 1; grid-column-end: 8;">
         Commodity Totals
+    </div>
+    <div class="table-header border-top border-right" style="grid-column-start: 8; grid-column-end: 10; ">
+        <button 
+            mat-raised-button color="primary" 
+            (click)="goToYieldCalculatorLink()">
+                Enter Weights
+        </button>
     </div>
 
     <div class="header border-top border-bottom border-right  border-left">
@@ -29,7 +36,7 @@
     </div>
     <div class="border-right header border-top border-bottom"
         matTooltip="Acres are rounded to the nearest tenth after the decimal point.">
-        Override
+        Override Acres
     </div>
     <div class="header border-top border-bottom border-right">
         Production Guarantee
@@ -38,7 +45,7 @@
         Harvested Yield
     </div>
     <div class="header border-top border-bottom border-right">
-        Override
+        Override Yield
     </div>
     <div class="header border-top border-bottom border-right">
         Yield/ac
@@ -49,7 +56,7 @@
     </div>
 
     <div class="grain-unsdd-inv-tot-cmdty-container"
-        style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 75px 75px; margin-left: 0px;">
+        style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 75px 60px; margin-left: 0px;">
         <verified-yield-commodity *ngFor="let commodity of commodities" [commodity]="commodity"
             [commoditiesFormArray]="commoditiesFormArray" [decimalPrecision]="decimalPrecision"
             style="display: contents;"></verified-yield-commodity>

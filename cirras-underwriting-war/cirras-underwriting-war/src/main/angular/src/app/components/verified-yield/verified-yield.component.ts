@@ -23,7 +23,7 @@ import { HttpClient } from '@angular/common/http';
 import { DecimalPipe } from '@angular/common';
 import { VerifiedYieldComponentModel } from './verified-yield.component.model';
 import { LoadVerifiedYieldContract, RolloverVerifiedYieldContract } from 'src/app/store/verified-yield/verified-yield.actions';
-import { VERIFIED_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
+import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
 
 @Component({
   selector: 'verified-yield',
@@ -42,7 +42,7 @@ export class VerifiedYieldComponent extends BaseComponent {
   verifiedYieldContractGuid: string;
   cropYear: string;
   insurancePlanId: string;
-  componentId = VERIFIED_COMPONENT_ID; 
+  componentId = VERIFIED_YIELD_COMPONENT_ID; 
 
 
   constructor(protected router: Router,

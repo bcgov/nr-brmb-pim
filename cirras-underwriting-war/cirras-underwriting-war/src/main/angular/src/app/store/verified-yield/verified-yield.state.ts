@@ -1,6 +1,6 @@
 import { VerifiedYieldContract } from "src/app/conversion/models-yield";
  
-  export const VERIFIED_COMPONENT_ID = "verifiedYieldContract";
+  export const VERIFIED_YIELD_COMPONENT_ID = "verifiedYieldContract";
 
   export interface VerifiedYieldState {
     verifiedYieldContract?: VerifiedYieldContract;

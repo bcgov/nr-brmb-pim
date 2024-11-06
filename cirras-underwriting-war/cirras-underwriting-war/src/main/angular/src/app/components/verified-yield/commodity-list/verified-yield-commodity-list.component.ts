@@ -14,4 +14,11 @@ export class VerifiedYieldCommodityListComponent  {
   @Input() commoditiesFormArray: FormArray;
   @Input() isUnsaved: boolean;
 
+  yieldCalculatorLink = "ms-excel:ofe|u|https://bcgov.sharepoint.com/sites/AF-BRMB-DATA/Shared%20Documents/PI%20Grain%20Yield%20&%20Claim%20Calculator.xlsm"
+
+  
+  goToYieldCalculatorLink(){
+    window.open(this.yieldCalculatorLink, "_blank");
+  }
+
 }

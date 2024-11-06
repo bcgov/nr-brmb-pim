@@ -18,7 +18,7 @@ import { RootState } from "src/app/store";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ApplicationStateService } from "src/app/services/application-state.service";
-import { VERIFIED_COMPONENT_ID } from "src/app/store/verified-yield/verified-yield.state";
+import { VERIFIED_YIELD_COMPONENT_ID } from "src/app/store/verified-yield/verified-yield.state";
 import { selectVerifiedYieldContract } from "src/app/store/verified-yield/verified-yield.selectors";
 
 @Component({
@@ -41,13 +41,13 @@ export class VerifiedYieldContainer extends BaseContainer implements OnInit {
 
     loadState$: Observable<LoadState> = this.store.pipe(select(selectVerifiedYieldContractLoadState()));
     errorState$: Observable<ErrorState[]> = this.store.pipe(select(selectVerifiedYieldContractErrorState()));
-    isUnsaved$: Observable<boolean> = this.store.pipe(select(selectFormStateUnsaved(VERIFIED_COMPONENT_ID)));
+    isUnsaved$: Observable<boolean> = this.store.pipe(select(selectFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID)));
 
     verifiedYieldContract: VerifiedYieldContract;
 
     getAssociatedComponentIds(): string[] {
         return [
-            VERIFIED_COMPONENT_ID
+            VERIFIED_YIELD_COMPONENT_ID
         ];
     }
 

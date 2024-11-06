@@ -54,18 +54,6 @@ export interface ClearVerifiedYieldContractAction extends Action {
 
 }
 
-export interface AddForageVerifiedYieldFieldCutAction extends Action {
-  payload: {
-    verifiedYieldContract: VerifiedYieldContract;
-  };
-}
-
-export interface DelForageVerifiedYieldFieldCutAction extends Action {
-  payload: {
-    verifiedYieldContract: VerifiedYieldContract;
-  };
-}
-
 export interface DeleteVerifiedYieldContractErrorAction extends Action {
   componentId: string;
   payload: {
