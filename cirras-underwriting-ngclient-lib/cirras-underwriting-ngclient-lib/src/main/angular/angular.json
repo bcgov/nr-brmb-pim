@@ -11,7 +11,7 @@
       "prefix": "cirras",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/cirras-underwriting-api/tsconfig.lib.json",
             "project": "projects/cirras-underwriting-api/ng-package.json"
