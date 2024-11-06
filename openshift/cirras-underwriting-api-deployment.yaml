@@ -137,7 +137,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /cirras-underwriting-api/v1/checkHealth?callstack=test
-              port: ${{ vars.TOMCAT_PORT }}
+              port: #{TOMCAT_PORT}#
               scheme: HTTP
             initialDelaySeconds: 200
             timeoutSeconds: 5
