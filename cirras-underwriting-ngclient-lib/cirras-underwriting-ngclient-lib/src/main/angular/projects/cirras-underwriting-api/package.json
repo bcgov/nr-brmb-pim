@@ -1,6 +1,9 @@
 {
   "name": "@cirras/cirras-underwriting-api",
   "version": "3.6.0-SNAPSHOT",
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
   "peerDependencies": {
     "@angular/common": "^6.0.0 || ^7.0.0",
     "@angular/core": "^6.0.0 || ^7.0.0"
