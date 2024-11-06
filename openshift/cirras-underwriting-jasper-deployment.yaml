@@ -57,6 +57,8 @@ spec:
           command:
             ['sh', '-c']
           args:
+          #TODO: catalina.sh run is most likely wrong for the Jasper deployment. It's not used anymore though.
+          #In case it's used again we'll have to check for the CMD in the docker file which is provided by DockerHub.
             ['. /vault/secrets/env && catalina.sh run']
           env:
             - name: ALLOW_EMPTY_PASSWORD
@@ -87,6 +89,8 @@ spec:
           command:
             ['sh', '-c']
           args:
+            #TODO: catalina.sh run is most likely wrong for the Jasper deployment. It's not used anymore though.
+            #In case it's used again we'll have to check for the CMD in the docker file which is provided by DockerHub.
             ['. /vault/secrets/env && catalina.sh run']
           ports:
             - containerPort: 8080
