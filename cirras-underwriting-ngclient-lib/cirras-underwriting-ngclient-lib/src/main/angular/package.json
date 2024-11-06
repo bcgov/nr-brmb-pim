@@ -24,7 +24,9 @@
     "cross-env": "^7.0.2",
     "ng-packagr": "^9.1.5",
     "rxjs": "6.5.5",
-    "tsickle": "0.33.1",
-    "typescript": "3.8.3"
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "zone.js": "^0.10.3"
   }
 }
