@@ -8,25 +8,25 @@
     "version-minor": "cd projects/cirras-underwriting-api && npm version minor",
     "version-major": "cd projects/cirras-underwriting-api && npm version major",
     "generate": "java -jar src/openapi/openapi-generator-cli.jar generate -i src/swagger/swagger.json -g typescript-angular -c src/swagger/swagger-config.json -o projects/cirras-underwriting-api/generated 2>&1",
-    "build": "ng build --prod cirras-underwriting-api",
+    "build": "ng build --configuration production cirras-underwriting-api",
     "publish-lib": "cd dist/cirras-underwriting-api && npm publish --loglevel silly",
     "version-maven": "cross-env npm version $mvn_prj_vrsn.$jenkins_build --prefix=projects/cirras-underwriting-api --allow-same-version",
     "mavenbuild": "npm run version-maven && npm run generate && npm run build && npm run publish-lib"
   },
   "private": true,
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.1102.18",
-    "@angular/cli": "~11.2.19",
-    "@angular/common": "^11.2.14",
-    "@angular/compiler": "^11.2.14",
-    "@angular/compiler-cli": "^11.2.14",
-    "@angular/core": "^11.2.14",
+    "@angular-devkit/build-angular": "~12.2.18",
+    "@angular/cli": "~12.2.18",
+    "@angular/common": "^12.2.17",
+    "@angular/compiler": "^12.2.17",
+    "@angular/compiler-cli": "^12.2.17",
+    "@angular/core": "^12.2.17",
     "cross-env": "^7.0.2",
-    "ng-packagr": "^10.1.0",
+    "ng-packagr": "^12.2.7",
     "rxjs": "6.5.5",
-    "typescript": "^4.0.8"
+    "typescript": "^4.3.5"
   },
   "dependencies": {
-    "zone.js": "^0.10.3"
+    "zone.js": "~0.11.4"
   }
 }
