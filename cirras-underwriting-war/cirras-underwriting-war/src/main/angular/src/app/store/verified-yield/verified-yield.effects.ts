@@ -64,7 +64,7 @@ export class VerifiedYieldEffects {
     )
   ))
 
-  getDop: Observable<Action> = createEffect (() => this.actions.pipe(
+  getVerifiedYield: Observable<Action> = createEffect (() => this.actions.pipe(
     ofType(LOAD_VERIFIED_YIELD),
     withLatestFrom(this.store),
     debounceTime(500),

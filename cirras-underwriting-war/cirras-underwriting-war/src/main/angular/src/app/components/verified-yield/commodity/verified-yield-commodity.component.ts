@@ -84,8 +84,4 @@ export class VerifiedYieldCommodityComponent implements OnInit {
     this.store.dispatch(setFormStateUnsaved(VERIFIED_COMPONENT_ID, true));
   }
 
-
-  goToYieldCalculatorLink() {
-    window.open(this.yieldCalculatorLink, "_blank");
-  }
 }

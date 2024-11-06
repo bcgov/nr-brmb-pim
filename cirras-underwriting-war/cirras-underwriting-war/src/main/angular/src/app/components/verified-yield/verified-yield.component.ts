@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
 import { BaseComponent } from '../common/base/base.component';
 import { UwContract } from 'src/app/conversion/models';
-import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
-import { DopYieldContract, GradeModifierList, VerifiedYieldContract, YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
-import { getInsurancePlanName, makeNumberOnly, setHttpHeaders } from 'src/app/utils';
+import { VerifiedYieldContract } from 'src/app/conversion/models-yield';
+import { getInsurancePlanName } from 'src/app/utils';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import {ViewEncapsulation } from '@angular/core';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';

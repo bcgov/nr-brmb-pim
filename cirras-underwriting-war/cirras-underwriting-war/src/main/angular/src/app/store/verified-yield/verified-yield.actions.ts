@@ -1,5 +1,5 @@
 import {Action} from "@ngrx/store";
-import { DopYieldContract, VerifiedYieldContract, YieldMeasUnitTypeCodeList } from "src/app/conversion/models-yield";
+import { VerifiedYieldContract } from "src/app/conversion/models-yield";
 import {ErrorState} from "../application/application.state";
 
 export const LOAD_VERIFIED_YIELD = "LOAD_VERIFIED_YIELD";
