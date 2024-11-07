@@ -46,6 +46,7 @@ export interface UwContract {
   growerPrimaryPhone?: string;
   inventoryContractGuid?: string;
   declaredYieldContractGuid?: string;
+  verifiedYieldContractGuid?: string;
   totalDopEligibleInventory?: number;
 
   isSelectedForPrint?: boolean;

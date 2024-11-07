@@ -8,7 +8,7 @@ import {getCodeOptions} from "../../utils/code-table-utils";
 import { initUwContractsListPaging, UW_CONTRACTS_SEARCH_COMPONENT_ID } from 'src/app/store/uw-contracts-list/uw-contracts-list.state';
 import { clearUwContractsSearch, searchUwContracts, clearReportPrint } from 'src/app/store/uw-contracts-list/uw-contracts-list.actions';
 import { INSURANCE_PLAN, REPORT_CHOICES, REPORT_SORT_BY, REPORT_TYPE, ResourcesRoutes, SORT_BY_CHOICES } from "src/app/utils/constants";
-import { goToLinkGlobal, userCanAccessDop, userCanAccessInventory } from "src/app/utils";
+import { goToLinkGlobal, userCanAccessDop, userCanAccessInventory, userCanAccessVerifiedYield } from "src/app/utils";
 import { GetDopReport } from "src/app/store/dop/dop.actions";
 import { GetInventoryReport } from "src/app/store/inventory/inventory.actions";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -249,6 +249,11 @@ export class UwContractsListComponent extends CollectionComponent implements OnC
   userCanAccessDop(item: UwContract){
       return userCanAccessDop(this.securityUtilService, item.links)  
   }
+
+  userCanAccessVerifiedYield(item: UwContract){
+    return userCanAccessVerifiedYield(this.securityUtilService, item.links)  
+  }
+
 
   isPrintDisabled() {
     return ( this.isPrintClicked || (this.selectedInsurancePlan != INSURANCE_PLAN.GRAIN && this.selectedInsurancePlan != INSURANCE_PLAN.FORAGE))

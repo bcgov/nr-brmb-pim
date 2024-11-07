@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { UwContract } from 'src/app/conversion/models';
 import { INSURANCE_PLAN, ResourcesRoutes } from 'src/app/utils/constants';
-import { goToLinkGlobal, userCanAccessDop, userCanAccessInventory } from "src/app/utils";
+import { goToLinkGlobal, userCanAccessDop, userCanAccessInventory, userCanAccessVerifiedYield } from "src/app/utils";
 import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { Router } from '@angular/router';
 
@@ -45,6 +45,14 @@ export class GrowerContractHeaderComponent {
     }
   }
 
+  userCanAccessVerifiedYield(){
+    if (this.growerContract) {
+      return userCanAccessVerifiedYield(this.securityUtilService, this.growerContract.links)  
+    } else {
+      return false
+    }
+  }
+
   goToLink (linkType) {
 
     goToLinkGlobal(this.growerContract, linkType, this.router)
@@ -71,7 +79,12 @@ export class GrowerContractHeaderComponent {
         routerUrl.indexOf(ResourcesRoutes.DOP_FORAGE) > -1  )) {
       return true
     } 
-        
+
+    if ( linkType == 'verifiedYield' && 
+      routerUrl.indexOf(ResourcesRoutes.VERIFIED_YIELD_GRAIN) > -1 ) { 
+      return true
+    } 
+
     return false
   }
 
@@ -95,12 +108,12 @@ export class GrowerContractHeaderComponent {
   setStyles(){
 
     let styles = { // default - for Grain
-      'grid-template-columns':  '26px 154px 35px 26px 134px 35px 26px 200px auto'
+      'grid-template-columns':  '26px 154px 35px 26px 134px 35px 26px 190px 35px 26px 110px auto'
     }
 
     if (this.isForageScreen()) {
       styles = {
-        'grid-template-columns':  '26px 134px 35px 26px 200px auto'
+        'grid-template-columns':  '26px 134px 35px 26px 200px 35px 26px 110px auto'
       }
     }
 
@@ -143,6 +156,14 @@ export class GrowerContractHeaderComponent {
         'border': '1px solid #E1CF7B',
         'border-radius': '5px',
         'background': '#FEFAEC'
+      }
+    }
+
+    if (routerUrl.indexOf(ResourcesRoutes.VERIFIED_YIELD_GRAIN) > -1 ) {
+      styles = {  
+        'border': '1px solid #DEC7DE',
+        'border-radius': '5px',
+        'background': '#FFF5FF'
       }
     }
 
