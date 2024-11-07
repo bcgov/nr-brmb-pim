@@ -89,6 +89,9 @@ jobs:
           files: staging/**.yaml
         env:
           #Common variables
+          LICENSE_PLATE: 'a12541'
+          #Vault path is different for prod than all other environments
+          VAULT_RESOURCE: ${{ inputs.NAMESPACE == 'a12541-prod' && 'prod' || 'nonprod'  }}
           ENV: ${{ inputs.ENVIRONMENT_NAME }}
           NAMESPACE: ${{ inputs.NAMESPACE }}
           TAG: ${{ inputs.TAG }}
@@ -100,7 +103,6 @@ jobs:
           WEBADE_CHECK_TOKEN_URL: ${{ vars.WEBADE_CHECK_TOKEN_URL }}
           WEBADE_GET_TOKEN_URL: ${{ vars.WEBADE_GET_TOKEN_URL }}
           POSTGRES_USERNAME: ${{ vars.POSTGRES_USERNAME}}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
 
           #API variables
@@ -118,18 +120,12 @@ jobs:
 
           CIRRAS_POLICIES_API_URL: ${{ vars.CIRRAS_POLICIES_API_URL}}
           CIRRAS_UNDERWRITING_REST_CLIENT_ID: ${{ vars.CIRRAS_UNDERWRITING_REST_CLIENT_ID }}
-          CIRRAS_UNDERWRITING_REST_SECRET: ${{ secrets.CIRRAS_UNDERWRITING_REST_SECRET }}
 
           WEBADE_USERNAME: ${{ vars.WEBADE_USERNAME }}
-          WEBADE_PASSWORD: ${{ secrets.WEBADE_PASSWORD }}
           WEBADE_MAXACTIVE: ${{ vars.WEBADE_MAXACTIVE }}
 
 
           #DB/Liquibase variables:
-          POSTGRES_READ_ONLY_PASSWORD: ${{ secrets.POSTGRES_READONLY_PASSWORD }}
-          POSTGRES_PROXY_USER_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_ADMIN_USERNAME: ${{ secrets.POSTGRES_ADMIN_USERNAME }}
-          POSTGRES_ADMIN_PASSWORD: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
           POSTGRES_MAXACTIVE: '10'
           CHANGELOG_FILE: changelog.json
 
@@ -138,7 +134,6 @@ jobs:
           MAX_UI_COUNT: ${{ vars.MAX_UI_COUNT }}
           BASE_URL: https://cirras-underwriting-ui-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/pub/cirras-underwriting/
           CIRRAS_UNDERWRITING_REST_URI: https://cirras-underwriting-api-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/cirras-underwriting-api/v1
-          WEBADE_CIRRAS_UNDERWRITING_UI_SECRET: ${{secrets.WEBADE_CIRRAS_UNDERWRITING_UI_SECRET}}
 
           ACTIVE_PORT: ${{ vars.TARGET_PORT }}
           LOCAL_CHECKTOKEN_ENDPOINT: ${{ vars.LOCAL_CHECKTOKEN_ENDPOINT }}
@@ -158,13 +153,9 @@ jobs:
           JASPER_CPU_LIMIT: ${{ vars.JASPER_CPU_LIMIT }}
           JASPER_MEMORY_REQUEST: ${{ vars.JASPER_MEMORY_REQUEST }}
           JASPER_MEMORY_LIMIT: ${{ vars.JASPER_MEMORY_LIMIT }}
-          JASPER_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
           ALLOW_EMPTY_PASSWORD: true
           JASPERREPORTS_DATABASE_NAME: jasper${{ inputs.ENVIRONMENT_NAME }}
-          JASPERREPORTS_DATABASE_USER: ${{ secrets.JASPER_DATABASE_USER }}
-          JASPERREPORTS_DATABASE_PASSWORD: ${{ secrets.JASPER_DATABASE_PASSWORD }}
           JASPERREPORTS_UI_USER: ${{ vars.JASPER_USERNAME }}
-          JASPERREPORTS_UI_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
           JASPER_STORAGE_CAPACITY: 25Mi
           MARIADB_MAX_LOG_BYTES: ${{ vars.MARIADB_MAX_LOG_BYTES }}
 
