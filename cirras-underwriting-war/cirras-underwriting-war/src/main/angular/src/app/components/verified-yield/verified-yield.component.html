@@ -8,8 +8,7 @@
         <div class="policy-header-container">
             <div class="grower-header">
                 {{ ( (growerContract && growerContract.growerName) ? growerContract.growerName : "" ) | titlecase}} 
-                <!-- TODO: get the Insurance Plan from verifiedYieldContract -->
-                <!-- ({{ ((dopYieldContract && dopYieldContract.insurancePlanId) ? getInsPlanName(dopYieldContract.insurancePlanId) : "" ) | titlecase }}) -->
+                ({{ ((verifiedYieldContract && verifiedYieldContract.insurancePlanId) ? getInsPlanName(verifiedYieldContract.insurancePlanId) : "" ) | titlecase }})
                 {{ (growerContract && growerContract.policyNumber) ? growerContract.policyNumber : "" }}   
             </div>
             <!-- unsaved messages -->
@@ -32,15 +31,15 @@
             <div> 
                 <!-- Placeholder for a Download button  -->
             </div>
-            <div>
-                <button 
+            <div> <!-- TODO -->
+                <!-- <button 
                     *ngIf="securityUtilService.canEditVerifiedYield()" 
                     mat-raised-button color="primary" 
                     class="button-large-text" 
                     [disabled]="!isUnsaved" 
                     (click)="onSave()">
                         Save
-                </button>
+                </button> -->
             </div>
         </div>        
             
@@ -52,8 +51,8 @@
 
             <div class="plcy-inv-form-header" [ngStyle]="setFormStyles()">
                 <div>
-                    <h2>Veriried Yield</h2>
-                    <p>Last Updated: <!-- TODO: {{ ((dopYieldContract && dopYieldContract.dopUpdateTimestamp) ? dopYieldContract.dopUpdateTimestamp : "" ) | date }} --> </p>
+                    <h2>Verified Yield</h2>
+                    <p>Last Updated: {{ ((verifiedYieldContract && verifiedYieldContract.verifiedYieldUpdateTimestamp) ? verifiedYieldContract.verifiedYieldUpdateTimestamp : "" ) | date }} </p>
                 </div>            
                
                 <div>
@@ -81,7 +80,16 @@
                 </div>
             </div>
 
-           <!-- TODO -->
+           <div style="margin-top: 8px;">
+            <!-- commodity totals -->
+            <verified-yield-commodity-list
+                *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodities"
+                [commodities]="verifiedYieldContract.verifiedYieldContractCommodities"
+                [commoditiesFormArray]="getViewModel().formGroup.controls.verifiedYieldContractCommodities"
+                [isUnsaved]="isUnsaved"></verified-yield-commodity-list>
+            </div>
+
+
         </form>
         </div>
     </div>

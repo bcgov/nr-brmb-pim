@@ -1,0 +1,66 @@
+<div class="plcy-inv-cmdty-totals-header"
+    style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 75px 60px; padding-left: 10px;">
+
+    <div *ngIf="isUnsaved" class="table-header border-top border-left border-right"
+        style="grid-column-start: 1; grid-column-end: 10;">
+        <span #el matTooltip="" style="margin-left:10px;">
+            <mat-icon
+                [ngStyle]="{'color':'orangered', 'font-size':'large', 'padding-top': '4px'}">warning_amber</mat-icon>
+        </span>
+        <span style="color:orangered; font-size: 14px;">
+            Yield/ac is calculated on save.
+        </span>
+    </div>
+
+    <div class="table-header border-top border-left" style="grid-column-start: 1; grid-column-end: 8;">
+        Commodity Totals
+    </div>
+    <div class="table-header border-top border-right" style="grid-column-start: 8; grid-column-end: 10; ">
+        <button 
+            mat-raised-button color="primary" 
+            (click)="goToYieldCalculatorLink()">
+                Enter Weights
+        </button>
+    </div>
+
+    <div class="header border-top border-bottom border-right  border-left">
+        Commodity
+    </div>
+    <div class="border-right header border-top border-bottom"
+        matTooltip="Acres are rounded to the nearest tenth after the decimal point.">
+        Insured Acres
+    </div>
+    <div class="border-right header border-top border-bottom"
+        matTooltip="Acres are rounded to the nearest tenth after the decimal point.">
+        Harvested Acres
+    </div>
+    <div class="border-right header border-top border-bottom"
+        matTooltip="Acres are rounded to the nearest tenth after the decimal point.">
+        Override Acres
+    </div>
+    <div class="header border-top border-bottom border-right">
+        Production Guarantee
+    </div>
+    <div class="header border-top border-bottom border-right">
+        Harvested Yield
+    </div>
+    <div class="header border-top border-bottom border-right">
+        Override Yield
+    </div>
+    <div class="header border-top border-bottom border-right">
+        Yield/ac
+    </div>
+
+    <div class="header border-top border-bottom border-right">
+        Actions
+    </div>
+
+    <div class="grain-unsdd-inv-tot-cmdty-container"
+        style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 75px 60px; margin-left: 0px;">
+        <verified-yield-commodity *ngFor="let commodity of commodities" [commodity]="commodity"
+            [commoditiesFormArray]="commoditiesFormArray" [decimalPrecision]="decimalPrecision"
+            style="display: contents;"></verified-yield-commodity>
+
+    </div>
+
+</div>

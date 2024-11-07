@@ -1,9 +1,9 @@
 import {DomSanitizer} from "@angular/platform-browser";
 import {FormBuilder, FormArray} from "@angular/forms";
-import {BaseComponentModel} from "../../common/base/base.component.model";
+import {BaseComponentModel} from "../common/base/base.component.model";
 
 
-export class GrainVerifiedYieldComponentModel extends BaseComponentModel {
+export class VerifiedYieldComponentModel extends BaseComponentModel {
     
 
     constructor(protected sanitizer: DomSanitizer,
@@ -17,15 +17,15 @@ export class GrainVerifiedYieldComponentModel extends BaseComponentModel {
             // declarationOfProductionDate: [''],
             // balerWagonInfo: [''],
             // totalLivestock: [''],
-            fields: new FormArray([]), // subform responsible for the field / commodity grid 
+            verifiedYieldContractCommodities: new FormArray([]), // subform responsible for the commodities grid 
             // dopYieldContractCommodityForageList: new FormArray([]),
             // dopYieldFieldRollupForageList: new FormArray([]),
 
         });
     }
 
-    public clone(): GrainVerifiedYieldComponentModel {
-        let clonedModel: GrainVerifiedYieldComponentModel = new GrainVerifiedYieldComponentModel(this.sanitizer, this.fb);
+    public clone(): VerifiedYieldComponentModel {
+        let clonedModel: VerifiedYieldComponentModel = new VerifiedYieldComponentModel(this.sanitizer, this.fb);
         return clonedModel;
     }
 }

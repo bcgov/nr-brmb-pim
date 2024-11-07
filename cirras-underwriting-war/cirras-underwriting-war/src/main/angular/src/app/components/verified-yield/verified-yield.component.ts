@@ -1,27 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
-import { BaseComponent } from '../../common/base/base.component';
+import { BaseComponent } from '../common/base/base.component';
 import { UwContract } from 'src/app/conversion/models';
-import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { 
-  AddForageDopYieldFieldCut,
-  AddNewDopYieldContract,
-  ClearDopYieldContract, 
-  DelForageDopYieldFieldCut, 
-  DeleteDopYieldContract,
-  GetDopReport,
-  LoadDopYieldContract, 
-  LoadYieldMeasUnitList, 
-  RolloverDopYieldContract,
-  UpdateDopYieldContract
-} from 'src/app/store/dop/dop.actions';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
-import { DopYieldContract, GradeModifierList, YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
-import { getInsurancePlanName, makeNumberOnly, setHttpHeaders } from 'src/app/utils';
+import { VerifiedYieldContract } from 'src/app/conversion/models-yield';
+import { getInsurancePlanName } from 'src/app/utils';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import {ViewEncapsulation } from '@angular/core';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
-import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { RootState } from 'src/app/store';
@@ -35,25 +21,28 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Overlay } from '@angular/cdk/overlay';
 import { HttpClient } from '@angular/common/http';
 import { DecimalPipe } from '@angular/common';
-import { GrainVerifiedYieldComponentModel } from './grain-verified-yield.component.model';
-
-
+import { VerifiedYieldComponentModel } from './verified-yield.component.model';
+import { LoadVerifiedYieldContract, RolloverVerifiedYieldContract } from 'src/app/store/verified-yield/verified-yield.actions';
+import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
 
 @Component({
-  selector: 'grain-verified-yield',
-  templateUrl: './grain-verified-yield.component.html',
-  styleUrls: ['./grain-verified-yield.component.scss']
+  selector: 'verified-yield',
+  templateUrl: './verified-yield.component.html',
+  styleUrls: ['./verified-yield.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
-export class GrainVerifiedYieldComponent extends BaseComponent {
+export class VerifiedYieldComponent extends BaseComponent {
 
   @Input() growerContract: UwContract;
   @Input() isUnsaved: boolean;
+  @Input() verifiedYieldContract: VerifiedYieldContract;
 
   policyId: string;
   verifiedYieldContractGuid: string;
   cropYear: string;
   insurancePlanId: string;
-  componentId = DOP_COMPONENT_ID; //TODO replace with VERIFIED_YIELD_COMPONENT_ID once the store is ready
+  componentId = VERIFIED_YIELD_COMPONENT_ID; 
 
 
   constructor(protected router: Router,
@@ -78,11 +67,11 @@ export class GrainVerifiedYieldComponent extends BaseComponent {
 
 
   initModels() {
-    this.viewModel = new GrainVerifiedYieldComponentModel(this.sanitizer, this.fb);
+    this.viewModel = new VerifiedYieldComponentModel(this.sanitizer, this.fb);
   }
 
-  getViewModel(): GrainVerifiedYieldComponentModel  {  
-    return <GrainVerifiedYieldComponentModel>this.viewModel;
+  getViewModel(): VerifiedYieldComponentModel  {  
+    return <VerifiedYieldComponentModel>this.viewModel;
   }
 
   loadPage() {
@@ -95,23 +84,36 @@ export class GrainVerifiedYieldComponent extends BaseComponent {
           this.cropYear = params.get("cropYear") ? params.get("cropYear") : "";
           this.insurancePlanId = params.get("insurancePlanId") ? params.get("insurancePlanId") : "";
 
-          // this.store.dispatch(ClearDopYieldContract());
-
           this.store.dispatch(LoadGrowerContract(this.componentId, this.policyId))
 
-          // TODO: replace with GET/ROLLOVER links for verified yield
-          // if (this.declaredYieldContractGuid.length > 0) {
-          //   // get the already existing dop yield contract
-          //   this.store.dispatch(LoadDopYieldContract(this.componentId, this.declaredYieldContractGuid ))
-          // } else {
-          //   // prepare the new dop yield contract
-          //   this.store.dispatch(RolloverDopYieldContract(this.componentId, this.policyId))
-          // }
+          if (this.verifiedYieldContractGuid.length > 0) {
+            // get the already existing verified yield contract
+            this.store.dispatch(LoadVerifiedYieldContract(this.componentId, this.verifiedYieldContractGuid ))
+          } else {
+            // prepare the new verified yield contract
+            this.store.dispatch(RolloverVerifiedYieldContract(this.componentId, this.policyId))
+          }
 
       }
     );
 
-    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, false ));
+    this.store.dispatch(setFormStateUnsaved(this.componentId, false ));
+  }
+
+  // ngOnChanges(changes: SimpleChanges) {
+  //   super.ngOnChanges(changes);
+
+  //   if (this.verifiedYieldContract) {
+  //     // any changes that need to be set up
+      
+  //   }
+
+  // }
+
+
+  getInsPlanName(insurancePlanId){
+
+    return getInsurancePlanName(insurancePlanId)
   }
 
   onCancel(){
@@ -120,7 +122,6 @@ export class GrainVerifiedYieldComponent extends BaseComponent {
 
   setFormStyles(){
     return {
-      // 'grid-template-columns':  'auto 148px 110px 100px 128px 186px 146px 12px 155px'
       'grid-template-columns':  'auto 146px 12px 155px'
     }
   }
