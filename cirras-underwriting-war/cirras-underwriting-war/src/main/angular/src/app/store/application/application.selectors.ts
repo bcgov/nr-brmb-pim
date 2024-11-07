@@ -27,6 +27,9 @@ export const selectInventoryContractErrorState = () => (state: RootState): Error
 export const selectDopYieldContractLoadState = () => (state: RootState): LoadState => ((state.application.loadStates.dopYieldContract) ? state.application.loadStates.dopYieldContract : undefined);
 export const selectDopYieldContractErrorState = () => (state: RootState): ErrorState[] => ((state.application.errorStates.dopYieldContract) ? state.application.errorStates.dopYieldContract : undefined);
 
+export const selectVerifiedYieldContractLoadState = () => (state: RootState): LoadState => ((state.application.loadStates.verifiedYieldContract) ? state.application.loadStates.verifiedYieldContract : undefined);
+export const selectVerifiedYieldContractErrorState = () => (state: RootState): ErrorState[] => ((state.application.errorStates.verifiedYieldContract) ? state.application.errorStates.verifiedYieldContract : undefined);
+
 export const selectLegalLandListLoadState = () => (state: RootState): LoadState => ((state.application.loadStates.legalLandList) ? state.application.loadStates.legalLandList : undefined);
 export const selectLegalLandListErrorState = () => (state: RootState): ErrorState[] => ((state.application.errorStates.legalLandList) ? state.application.errorStates.legalLandList : undefined);
 

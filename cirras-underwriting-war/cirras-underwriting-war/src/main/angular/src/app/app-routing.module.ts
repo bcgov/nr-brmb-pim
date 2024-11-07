@@ -6,7 +6,7 @@ import {ResourcesRoutes as R} from "./utils/constants";
 import {ResourcesAuthGuard} from "./services/util/ResourcesAuthGuard";
 import {SignOutPageComponent} from "./components/sign-out-page/sign-out-page.component";
 
-import {ROUTE_SCOPES, SCOPES_UI} from "./utils/scopes";
+import {ROUTE_SCOPES} from "./utils/scopes";
 import { InventoryContractContainer } from "./containers/inventory/inventory-contract-container.component";
 import { UwContractsListContainer } from "./containers/uw-contracts-list/uw-contracts-list-container.component";
 import { GrainDopContainer } from "./containers/dop/grain-dop-container.component";
@@ -20,6 +20,7 @@ import { ForageVarietyInsurabilityContainer } from "./containers/maintenance/for
 import { YieldConversionContainer } from "./containers/maintenance/yield-conversion-container.component";
 import { DeactivateGuard } from "./services/util/DeactivateGuard";
 import { ForageDopContainer } from "./containers/dop/forage-dop-container.component";
+import { VerifiedYieldContainer } from "./containers/verified-yield/verified-yield-container.component";
 
 const routesDesktop: Routes = [
     { path: R.LANDING, component: UwContractsListContainer, data: {scopes: [ROUTE_SCOPES.LANDING]},  pathMatch: "full" },
@@ -50,24 +51,35 @@ const routesDesktop: Routes = [
       },
 
     { path: R.DOP_GRAIN, 
-        children: [
-        { 
-          path: ':insurancePlanId/:cropYear/:policyId/:declaredYieldContractGuid', component: GrainDopContainer, data: {scopes: [ROUTE_SCOPES.DOP]},
-          canActivate: [ResourcesAuthGuard],
-          canDeactivate: [DeactivateGuard]
-        },
-        ] 
+      children: [
+      { 
+        path: ':insurancePlanId/:cropYear/:policyId/:declaredYieldContractGuid', component: GrainDopContainer, data: {scopes: [ROUTE_SCOPES.DOP]},
+        canActivate: [ResourcesAuthGuard],
+        canDeactivate: [DeactivateGuard]
       },
+      ] 
+    },
 
-      { path: R.DOP_FORAGE, 
-        children: [
-        { 
-          path: ':insurancePlanId/:cropYear/:policyId/:declaredYieldContractGuid', component: ForageDopContainer, data: {scopes: [ROUTE_SCOPES.DOP]},
-          canActivate: [ResourcesAuthGuard],
-          canDeactivate: [DeactivateGuard]
-        },
-        ] 
+    { path: R.DOP_FORAGE, 
+      children: [
+      { 
+        path: ':insurancePlanId/:cropYear/:policyId/:declaredYieldContractGuid', component: ForageDopContainer, data: {scopes: [ROUTE_SCOPES.DOP]},
+        canActivate: [ResourcesAuthGuard],
+        canDeactivate: [DeactivateGuard]
       },
+      ] 
+    },
+
+    // grain verified yield
+    { path: R.VERIFIED_YIELD_GRAIN, 
+      children: [
+      { 
+        path: ':insurancePlanId/:cropYear/:policyId/:verifiedYieldContractGuid', component: VerifiedYieldContainer, data: {scopes: [ROUTE_SCOPES.VERIFIED_YEILD]},
+        canActivate: [ResourcesAuthGuard],
+        canDeactivate: [DeactivateGuard]
+      },
+      ] 
+    },
 
     { path: R.LAND_LIST, component: LandListContainer, data: {scopes: [ROUTE_SCOPES.LEGAL_LAND]},  pathMatch: "full" },
     { path: R.LAND_MANAGE, 
