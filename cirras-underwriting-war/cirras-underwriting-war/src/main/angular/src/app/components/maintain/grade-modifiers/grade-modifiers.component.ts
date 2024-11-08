@@ -4,7 +4,7 @@ import { GradeModifiersComponentModel } from './grade-modifiers.component.model'
 import { GradeModifierList, GradeModifierTypeList, UnderwritingYearList } from 'src/app/conversion/models-maintenance';
 import { loadGradeModifierTypes, loadGradeModifiers, loadUwYears, saveGradeModifiers } from 'src/app/store/maintenance/maintenance.actions';
 import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { makeNumberOnly } from 'src/app/utils';
 import { CROP_COMMODITY_TYPE_CONST, CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
@@ -43,7 +43,7 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
     protected route: ActivatedRoute,
     protected sanitizer: DomSanitizer,
     protected store: Store<RootState>,
-    protected fb: FormBuilder,
+    protected fb: UntypedFormBuilder,
     protected dialog: MatDialog,
     protected applicationStateService: ApplicationStateService,
     public securityUtilService: SecurityUtilService,                
@@ -112,7 +112,7 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
     if (changes.gradeModifierList) {
 
       // pre-fill the form
-      let frmGradeModifiers: FormArray = this.viewModel.formGroup.controls.gradeModifiers as FormArray
+      let frmGradeModifiers: UntypedFormArray = this.viewModel.formGroup.controls.gradeModifiers as UntypedFormArray
       frmGradeModifiers.clear()
 
       let cropYear = parseInt(this.viewModel.formGroup.controls.selectedCropYear.value)
@@ -312,10 +312,10 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
 
     if ( this.cropCommodityList && this.cropCommodityList.collection && this.cropCommodityList.collection.length > 0 ) { 
 
-      const frmGradeModifiers: FormArray = this.viewModel.formGroup.controls.gradeModifiers as FormArray
+      const frmGradeModifiers: UntypedFormArray = this.viewModel.formGroup.controls.gradeModifiers as UntypedFormArray
 
       var self = this
-      frmGradeModifiers.controls.forEach( function(frmGM : FormArray) {
+      frmGradeModifiers.controls.forEach( function(frmGM : UntypedFormArray) {
 
         // find the commodity and get its name.
         if ( frmGM.value.cropCommodityId && frmGM.value.cropCommodityId != "" && (!frmGM.value.commodityName || frmGM.value.commodityName == "") ) { 
@@ -357,13 +357,13 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
 
   isFormValid() {
 
-    const frmGradeModifiers: FormArray = this.viewModel.formGroup.controls.gradeModifiers as FormArray
+    const frmGradeModifiers: UntypedFormArray = this.viewModel.formGroup.controls.gradeModifiers as UntypedFormArray
     let selectedCropCommodityId = this.viewModel.formGroup.controls.selectedCropCommodityId.value
 
     let rowCount = 0
     for (let i = 0; i < frmGradeModifiers.controls.length; i++) {
 
-      let frmGM = frmGradeModifiers.controls[i] as FormArray
+      let frmGM = frmGradeModifiers.controls[i] as UntypedFormArray
 
       if ( !(frmGM.value.deletedByUserInd == true && (frmGM.value.gradeModifierGuid == null || frmGM.value.gradeModifierGuid == "")) ) {
         rowCount++
@@ -443,10 +443,10 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
       updatedGradeModifiers = JSON.parse(JSON.stringify(this.gradeModifierList));
     }
 
-    const frmGradeModifiers: FormArray = this.viewModel.formGroup.controls.gradeModifiers as FormArray
+    const frmGradeModifiers: UntypedFormArray = this.viewModel.formGroup.controls.gradeModifiers as UntypedFormArray
 
     var self = this
-    frmGradeModifiers.controls.forEach( function(frmGM : FormArray) {
+    frmGradeModifiers.controls.forEach( function(frmGM : UntypedFormArray) {
 
       // Ignore rows that were added then deleted without saving.
       if ( !(frmGM.value.deletedByUserInd == true && (frmGM.value.gradeModifierGuid == null || frmGM.value.gradeModifierGuid == "")) ) {
@@ -490,11 +490,11 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
     
     if (!this.gradeModifierList) return false;
 
-    const frmGradeModifiers: FormArray = this.viewModel.formGroup.controls.gradeModifiers as FormArray
+    const frmGradeModifiers: UntypedFormArray = this.viewModel.formGroup.controls.gradeModifiers as UntypedFormArray
 
     for (let i = 0; i < frmGradeModifiers.controls.length; i++) {
 
-      let frmGM = frmGradeModifiers.controls[i] as FormArray
+      let frmGM = frmGradeModifiers.controls[i] as UntypedFormArray
 
       if ( frmGM.value.addedByUserInd == true || !frmGM.value.gradeModifierGuid) {
         return true
@@ -546,7 +546,7 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
       }
     }
 
-    const frmGradeModifiers: FormArray = this.viewModel.formGroup.controls.gradeModifiers as FormArray
+    const frmGradeModifiers: UntypedFormArray = this.viewModel.formGroup.controls.gradeModifiers as UntypedFormArray
 
     frmGradeModifiers.push (this.fb.group({
       gradeModifierGuid:              [ null ],
@@ -568,8 +568,8 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
 
   validateGradeModifierValue(rowIndex) {
 
-    const frmGradeModifiers: FormArray = this.viewModel.formGroup.controls.gradeModifiers as FormArray
-    const frmGM = frmGradeModifiers.controls[rowIndex] as FormArray
+    const frmGradeModifiers: UntypedFormArray = this.viewModel.formGroup.controls.gradeModifiers as UntypedFormArray
+    const frmGM = frmGradeModifiers.controls[rowIndex] as UntypedFormArray
     const gradeModifierValueCtl = frmGM.controls['gradeModifierValue']
 
     let acres = gradeModifierValueCtl.value
@@ -614,8 +614,8 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
 
   onDeleteGradeModifier(rowIndex) {
 
-    const frmGradeModifiers: FormArray = this.viewModel.formGroup.controls.gradeModifiers as FormArray
-    const frmGM = frmGradeModifiers.controls[rowIndex] as FormArray
+    const frmGradeModifiers: UntypedFormArray = this.viewModel.formGroup.controls.gradeModifiers as UntypedFormArray
+    const frmGM = frmGradeModifiers.controls[rowIndex] as UntypedFormArray
 
     if (frmGM.value.deleteAllowedInd == true) {
       frmGM.controls['deletedByUserInd'].setValue(true)

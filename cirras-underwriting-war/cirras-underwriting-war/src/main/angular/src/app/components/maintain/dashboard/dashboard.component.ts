@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges }
 import { UnderwritingYear, UnderwritingYearList } from 'src/app/conversion/models-maintenance';
 import { BaseComponent } from '../../common/base/base.component';
 import { DashboardComponentModel } from './dashboard.component.model';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, UntypedFormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { addUwYear, loadUwYears} from 'src/app/store/maintenance/maintenance.actions';
 import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -33,7 +33,7 @@ export class DashboardComponent  extends BaseComponent implements OnChanges   {
     protected route: ActivatedRoute,
     protected sanitizer: DomSanitizer,
     protected store: Store<RootState>,
-    protected fb: FormBuilder,
+    protected fb: UntypedFormBuilder,
     protected dialog: MatDialog,
     protected applicationStateService: ApplicationStateService,
     public securityUtilService: SecurityUtilService,                

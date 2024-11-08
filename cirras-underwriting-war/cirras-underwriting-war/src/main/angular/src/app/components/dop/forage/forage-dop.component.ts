@@ -27,7 +27,7 @@ import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { RootState } from 'src/app/store';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ApplicationStateService } from 'src/app/services/application-state.service';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
@@ -57,7 +57,7 @@ export class ForageDopComponent extends BaseComponent {
     protected route: ActivatedRoute,
     protected sanitizer: DomSanitizer,
     protected store: Store<RootState>,
-    protected fb: FormBuilder,
+    protected fb: UntypedFormBuilder,
     protected dialog: MatDialog,
     protected applicationStateService: ApplicationStateService,
     public securityUtilService: SecurityUtilService,                

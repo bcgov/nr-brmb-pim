@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormArray, FormBuilder, FormGroup } from "@angular/forms";
 import { AnnualField } from "src/app/conversion/models";
 
 @Component({
@@ -10,7 +10,7 @@ import { AnnualField } from "src/app/conversion/models";
 })
 export class ForageDopFieldListComponent {
     @Input() fields: Array<AnnualField>;
-    @Input() fieldsFormArray: FormArray;
+    @Input() fieldsFormArray: UntypedFormArray;
 
     get numCuts(): number {
         for (const field of this.fields) {

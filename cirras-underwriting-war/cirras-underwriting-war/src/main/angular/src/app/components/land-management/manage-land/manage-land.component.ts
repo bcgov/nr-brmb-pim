@@ -6,7 +6,7 @@ import { getCodeOptions } from 'src/app/utils/code-table-utils';
 import { LegalLand, RiskAreaList } from 'src/app/conversion/models';
 import { MANAGE_LEGAL_LAND_COMPONENT_ID } from 'src/app/store/land-management/land-management.state';
 import { addNewLegalLand, deleteLegalLand, getLegalLand, getRiskAreaList, updateLegalLand } from 'src/app/store/land-management/land-management.actions';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { areNotEqual, makeNumberOnly } from 'src/app/utils';
 import { PRIMARY_LAND_IDENTIFIER_TYPE_CODE, PRIMARY_REFERENCE_TYPE_CODE } from 'src/app/utils/constants';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
@@ -38,7 +38,7 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
     protected route: ActivatedRoute,
     protected sanitizer: DomSanitizer,
     protected store: Store<RootState>,
-    protected fb: FormBuilder,
+    protected fb: UntypedFormBuilder,
     protected dialog: MatDialog,
     protected applicationStateService: ApplicationStateService,
     public securityUtilService: SecurityUtilService,                
@@ -137,7 +137,7 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
         this.selectLandIdentifierType(this.viewModel.formGroup.controls.primaryLandIdentifierTypeCode.value)
 
         // populate the risk areas in the form
-        let riskAreas: FormArray = this.viewModel.formGroup.controls.riskAreas as FormArray
+        let riskAreas: UntypedFormArray = this.viewModel.formGroup.controls.riskAreas as UntypedFormArray
         riskAreas.clear()
 
         if (this.legalLand && this.legalLand.riskAreas && this.legalLand.riskAreas.length > 0 ){
@@ -158,7 +158,7 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
 
   addRiskArea(ra: LegalLandRiskArea) {
     
-    let raForm: FormArray = this.viewModel.formGroup.controls.riskAreas as FormArray
+    let raForm: UntypedFormArray = this.viewModel.formGroup.controls.riskAreas as UntypedFormArray
 
     raForm.push( this.fb.group( {
       riskAreaId:       [ ra.riskAreaId ],
@@ -185,7 +185,7 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
     if (this.legalLandId) {
       this.store.dispatch(getLegalLand(this.componentId, this.legalLandId));
     } else {
-      const frmMain = this.viewModel.formGroup as FormGroup
+      const frmMain = this.viewModel.formGroup as UntypedFormGroup
 
       frmMain.controls.primaryReferenceTypeCode.setValue(PRIMARY_REFERENCE_TYPE_CODE.DEFAULT)
       frmMain.controls.primaryLandIdentifierTypeCode.setValue(PRIMARY_LAND_IDENTIFIER_TYPE_CODE.DEFAULT)
@@ -196,7 +196,7 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
       frmMain.controls.activeFromCropYear.setValue("") 
       frmMain.controls.activeToCropYear.setValue("") 
       
-      let riskAreas: FormArray = this.viewModel.formGroup.controls.riskAreas as FormArray
+      let riskAreas: UntypedFormArray = this.viewModel.formGroup.controls.riskAreas as UntypedFormArray
       riskAreas.clear()
       
     }
@@ -264,7 +264,7 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
         
     // risk areas
     updatedLegalLand.riskAreas = []
-    const riskAreasFrm: FormArray = this.viewModel.formGroup.controls.riskAreas as FormArray
+    const riskAreasFrm: UntypedFormArray = this.viewModel.formGroup.controls.riskAreas as UntypedFormArray
 
     for (let i = 0; i < riskAreasFrm.controls.length; i++ ) {
 
@@ -292,7 +292,7 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
 
   isFormValid() {
 
-    const frmMain = this.viewModel.formGroup as FormGroup
+    const frmMain = this.viewModel.formGroup as UntypedFormGroup
 
     if ( !frmMain.controls.primaryPropertyIdentifier.value ) {
       alert ("Identifier is mandatory field")
@@ -329,7 +329,7 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
     }
 
     // validate the risk areas
-    const riskAreasFrm: FormArray = this.viewModel.formGroup.controls.riskAreas as FormArray
+    const riskAreasFrm: UntypedFormArray = this.viewModel.formGroup.controls.riskAreas as UntypedFormArray
 
     for (let i = 0; i < riskAreasFrm.controls.length; i++ ) {
 
@@ -370,7 +370,7 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
 
   isMyFormReallyDirty() : boolean {
 
-    const frmMain = this.viewModel.formGroup as FormGroup
+    const frmMain = this.viewModel.formGroup as UntypedFormGroup
 
     if (!this.legalLand) {
 
@@ -386,7 +386,7 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
 
     } else {
 
-      const riskAreasFrm: FormArray = this.viewModel.formGroup.controls.riskAreas as FormArray
+      const riskAreasFrm: UntypedFormArray = this.viewModel.formGroup.controls.riskAreas as UntypedFormArray
 
       // compare the original inventory contract data with the one in the form and set the flag if anything changed
       if ( areNotEqual(frmMain.controls.primaryReferenceTypeCode.value, this.legalLand.primaryReferenceTypeCode )
@@ -449,7 +449,7 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
   }
 
   onAddRiskArea() {
-    let raForm: FormArray = this.viewModel.formGroup.controls.riskAreas as FormArray
+    let raForm: UntypedFormArray = this.viewModel.formGroup.controls.riskAreas as UntypedFormArray
 
     raForm.push( this.fb.group( {
       riskAreaId:       [ null ],
@@ -467,7 +467,7 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
   }
 
   populateRiskAreaOptions(raIndex) {
-    const riskAreasFrm: FormArray = this.viewModel.formGroup.controls.riskAreas as FormArray
+    const riskAreasFrm: UntypedFormArray = this.viewModel.formGroup.controls.riskAreas as UntypedFormArray
     const selectedInsurancePlanId = riskAreasFrm.controls[raIndex]['controls']['insurancePlanId'].value
     
     this.riskAreaOptions[raIndex] = []
@@ -485,12 +485,12 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
   }
 
   clearRiskAreaOptions(raIndex) {
-    const riskAreasFrm: FormArray = this.viewModel.formGroup.controls.riskAreas as FormArray
+    const riskAreasFrm: UntypedFormArray = this.viewModel.formGroup.controls.riskAreas as UntypedFormArray
     riskAreasFrm.controls[raIndex]['controls']['riskAreaId'].setValue(null)
   }
 
   onDeleteRiskArea(raIndex) {
-    const riskAreasFrm: FormArray = this.viewModel.formGroup.controls.riskAreas as FormArray
+    const riskAreasFrm: UntypedFormArray = this.viewModel.formGroup.controls.riskAreas as UntypedFormArray
     riskAreasFrm.controls[raIndex]['controls']['deletedByUserInd'].setValue(true)
   }
 

@@ -4,7 +4,7 @@ import { SeedingDeadlinesComponentModel } from './seeding-deadlines.component.mo
 import { SeedingDeadlineList, UnderwritingYearList } from 'src/app/conversion/models-maintenance';
 import { loadSeedingDeadlines, loadUwYears, saveSeedingDeadlines } from 'src/app/store/maintenance/maintenance.actions';
 import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, FormGroup } from '@angular/forms';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { areDatesNotEqual, setHttpHeaders } from 'src/app/utils';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
@@ -38,7 +38,7 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
     protected route: ActivatedRoute,
     protected sanitizer: DomSanitizer,
     protected store: Store<RootState>,
-    protected fb: FormBuilder,
+    protected fb: UntypedFormBuilder,
     protected dialog: MatDialog,
     protected applicationStateService: ApplicationStateService,
     public securityUtilService: SecurityUtilService,                
@@ -99,7 +99,7 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
     if (changes.seedingDeadlineList) {
       // pre-fill the form
       
-      let frmSeedingDeadlines: FormArray = this.viewModel.formGroup.controls.seedingDeadlines as FormArray
+      let frmSeedingDeadlines: UntypedFormArray = this.viewModel.formGroup.controls.seedingDeadlines as UntypedFormArray
       frmSeedingDeadlines.clear()
 
       if ( this.seedingDeadlineList && this.seedingDeadlineList.collection && this.seedingDeadlineList.collection.length > 0) {
@@ -110,10 +110,10 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
             seedingDeadlineGuid:              [ sd.seedingDeadlineGuid ],
             commodityTypeCode:                [ sd.commodityTypeCode ],
             cropYear:                         [ sd.cropYear ],
-            fullCoverageDeadlineDate:         new FormControl(new Date(sd.fullCoverageDeadlineDate )), 
-            finalCoverageDeadlineDate:        new FormControl(new Date(sd.finalCoverageDeadlineDate )),
-            fullCoverageDeadlineDateDefault:  new FormControl(new Date(sd.fullCoverageDeadlineDateDefault )),
-            finalCoverageDeadlineDateDefault: new FormControl(new Date(sd.finalCoverageDeadlineDateDefault )),
+            fullCoverageDeadlineDate:         new UntypedFormControl(new Date(sd.fullCoverageDeadlineDate )), 
+            finalCoverageDeadlineDate:        new UntypedFormControl(new Date(sd.finalCoverageDeadlineDate )),
+            fullCoverageDeadlineDateDefault:  new UntypedFormControl(new Date(sd.fullCoverageDeadlineDateDefault )),
+            finalCoverageDeadlineDateDefault: new UntypedFormControl(new Date(sd.finalCoverageDeadlineDateDefault )),
             deletedByUserInd:                 [ sd.deletedByUserInd ],
             addedByUserInd:                    [ false ], 
             fullCoverageDeadlineDateEditedInd: [ false ], // flags to keep track whether the user has edited that date or it needs to be set to the default date on Save
@@ -184,11 +184,11 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
   }
 
   isFormValid() {
-    const frmSeedingDeadlines: FormArray = this.viewModel.formGroup.controls.seedingDeadlines as FormArray
+    const frmSeedingDeadlines: UntypedFormArray = this.viewModel.formGroup.controls.seedingDeadlines as UntypedFormArray
 
     for (let i = 0; i < frmSeedingDeadlines.controls.length; i++) {
 
-      let frmSD = frmSeedingDeadlines.controls[i] as FormArray
+      let frmSD = frmSeedingDeadlines.controls[i] as UntypedFormArray
 
       // commodity type code should not be empty
       if (!frmSeedingDeadlines.controls[i].value.commodityTypeCode) {
@@ -259,10 +259,10 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
 
      // for the new rows set the current dates to the default dates wherever the user hasn't changed them 
 
-    const frmSeedingDeadlines: FormArray = this.viewModel.formGroup.controls.seedingDeadlines as FormArray
+    const frmSeedingDeadlines: UntypedFormArray = this.viewModel.formGroup.controls.seedingDeadlines as UntypedFormArray
     for (let i = 0; i < frmSeedingDeadlines.controls.length; i++) {
 
-      let frmSD = frmSeedingDeadlines.controls[i] as FormArray
+      let frmSD = frmSeedingDeadlines.controls[i] as UntypedFormArray
 
       if (!frmSD.value.seedingDeadlineGuid) {
         
@@ -288,10 +288,10 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
       this.etag = ""
     }
 
-    const frmSeedingDeadlines: FormArray = this.viewModel.formGroup.controls.seedingDeadlines as FormArray
+    const frmSeedingDeadlines: UntypedFormArray = this.viewModel.formGroup.controls.seedingDeadlines as UntypedFormArray
 
     var self = this
-    frmSeedingDeadlines.controls.forEach( function(frmSD : FormArray) {
+    frmSeedingDeadlines.controls.forEach( function(frmSD : UntypedFormArray) {
 
       // find the corresponding field in updatedDopYieldContract object
       let origSeedingDeadline = updatedSeedingDeadlines.collection.find( el => el.commodityTypeCode == frmSD.value.commodityTypeCode)
@@ -334,11 +334,11 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
     
     if (!this.seedingDeadlineList) return false;
 
-    const frmSeedingDeadlines: FormArray = this.viewModel.formGroup.controls.seedingDeadlines as FormArray
+    const frmSeedingDeadlines: UntypedFormArray = this.viewModel.formGroup.controls.seedingDeadlines as UntypedFormArray
 
     for (let i = 0; i < frmSeedingDeadlines.controls.length; i++) {
 
-      let frmSD = frmSeedingDeadlines.controls[i] as FormArray
+      let frmSD = frmSeedingDeadlines.controls[i] as UntypedFormArray
 
       if ( frmSD.value.addedByUserInd == true) {
         return true
@@ -380,7 +380,7 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
     // just filter out the existing commodity types from the list
     this.filterUsedCommodityTypeCodes()
   
-    const frmSeedingDeadlines: FormArray = this.viewModel.formGroup.controls.seedingDeadlines as FormArray
+    const frmSeedingDeadlines: UntypedFormArray = this.viewModel.formGroup.controls.seedingDeadlines as UntypedFormArray
 
     frmSeedingDeadlines.push (this.fb.group({
       seedingDeadlineGuid:              [],
@@ -452,8 +452,8 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
 
   shouldHighlightDate(rowIndex, datePickerNum) {
 
-    const frmSeedingDeadlines: FormArray = this.viewModel.formGroup.controls.seedingDeadlines as FormArray
-    const frmSD = frmSeedingDeadlines.controls[rowIndex] as FormArray
+    const frmSeedingDeadlines: UntypedFormArray = this.viewModel.formGroup.controls.seedingDeadlines as UntypedFormArray
+    const frmSD = frmSeedingDeadlines.controls[rowIndex] as UntypedFormArray
 
     let frmDate = new Date()
 
@@ -501,8 +501,8 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
   }
 
   onCurrentYearDateEdited(rowIndex, datePickerNum) {
-    const frmSeedingDeadlines: FormArray = this.viewModel.formGroup.controls.seedingDeadlines as FormArray
-    const frmSD = frmSeedingDeadlines.controls[rowIndex] as FormArray
+    const frmSeedingDeadlines: UntypedFormArray = this.viewModel.formGroup.controls.seedingDeadlines as UntypedFormArray
+    const frmSD = frmSeedingDeadlines.controls[rowIndex] as UntypedFormArray
 
     switch (datePickerNum) {
       case 1:
@@ -539,11 +539,11 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
         // the rollover button was clicked
         // we have to update all dates on the form to show the current year 
 
-        const frmSeedingDeadlines: FormArray = this.viewModel.formGroup.controls.seedingDeadlines as FormArray
+        const frmSeedingDeadlines: UntypedFormArray = this.viewModel.formGroup.controls.seedingDeadlines as UntypedFormArray
 
         for (let i = 0; i < frmSeedingDeadlines.controls.length; i++) {
 
-          let frmSD = frmSeedingDeadlines.controls[i] as FormArray
+          let frmSD = frmSeedingDeadlines.controls[i] as UntypedFormArray
 
           let originalSD = this.seedingDeadlineList.collection.find( sd => sd.seedingDeadlineGuid == frmSD.value.seedingDeadlineGuid)
 
@@ -563,8 +563,8 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
 
   onDeleteSeedingDeadline(rowIndex) {
 
-    const frmSeedingDeadlines: FormArray = this.viewModel.formGroup.controls.seedingDeadlines as FormArray
-    const frmSD = frmSeedingDeadlines.controls[rowIndex] as FormArray
+    const frmSeedingDeadlines: UntypedFormArray = this.viewModel.formGroup.controls.seedingDeadlines as UntypedFormArray
+    const frmSD = frmSeedingDeadlines.controls[rowIndex] as UntypedFormArray
 
     frmSD.controls['deletedByUserInd'].setValue(true)
 

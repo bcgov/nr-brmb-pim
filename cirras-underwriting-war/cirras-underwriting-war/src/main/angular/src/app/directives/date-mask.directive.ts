@@ -1,7 +1,7 @@
 import {Directive, ElementRef, HostListener, Input, OnDestroy} from "@angular/core";
 import * as textMask from "vanilla-text-mask/dist/vanillaTextMask.js";
 import {CONSTANTS} from "../utils";
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {Subscription} from "rxjs";
 import * as moment from "moment";
 
@@ -9,7 +9,7 @@ import * as moment from "moment";
   selector: '[appWFDateMask]'
 })
 export class DateMaskDirective implements OnDestroy {
-  @Input() public formControl: FormControl;
+  @Input() public formControl: UntypedFormControl;
   public lastValidDate: string;
   public formControlValueSub: Subscription;
   dateInputElement: HTMLInputElement;

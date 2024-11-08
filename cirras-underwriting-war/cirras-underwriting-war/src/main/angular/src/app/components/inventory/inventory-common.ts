@@ -1,5 +1,5 @@
 import { ChangeDetectorRef } from "@angular/core"
-import { FormArray, FormBuilder, FormControl } from "@angular/forms"
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl } from "@angular/forms"
 import { InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
 import { AnnualField, CropVarietyCommodityType } from "src/app/conversion/models"
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from "src/app/utils/constants"
@@ -24,7 +24,7 @@ export interface CropCommodityVarietyOptionsType {
 
 export function addPlantingObject(cropYear, fieldId, insurancePlanId, inventoryFieldGuid, lastYearCropCommodityId, 
                   lastYearCropCommodityName, lastYearCropVarietyId, lastYearCropVarietyName, plantingNumber, isHiddenOnPrintoutInd, underseededInventorySeededForageGuid,
-                  inventoryUnseeded: InventoryUnseeded, inventorySeededGrains: FormArray, inventorySeededForages: FormArray) {
+                  inventoryUnseeded: InventoryUnseeded, inventorySeededGrains: UntypedFormArray, inventorySeededForages: UntypedFormArray) {
 
   return {
     cropYear:                  [ cropYear ],
@@ -58,7 +58,7 @@ export function addPlantingObject(cropYear, fieldId, insurancePlanId, inventoryF
   }
 }
 
-export function addAnnualFieldObject (field: AnnualField, fldPlantings: FormArray, fldComments: Array<UnderwritingComment>) {
+export function addAnnualFieldObject (field: AnnualField, fldPlantings: UntypedFormArray, fldComments: Array<UnderwritingComment>) {
   return {
     annualFieldDetailId:   [ field.annualFieldDetailId ],
     displayOrder:          [ field.displayOrder ],
@@ -93,7 +93,7 @@ export function addSeededGrainsObject(inventoryFieldGuid, underseededAcres, unde
     isQuantityInsurableInd:   [ ( !inventorySeededGrains || !inventorySeededGrains.isQuantityInsurableInd ) ? false : inventorySeededGrains.isQuantityInsurableInd ],
     isReplacedInd:            [ ( !inventorySeededGrains || !inventorySeededGrains.isReplacedInd) ? false : inventorySeededGrains.isReplacedInd ],
     isPedigreeInd:            [ ( !inventorySeededGrains || !inventorySeededGrains.isPedigreeInd ) ? false : inventorySeededGrains.isPedigreeInd ],
-    seededDate:               new FormControl(new Date( (inventorySeededGrains && inventorySeededGrains.seededDate) ? inventorySeededGrains.seededDate : '' )),
+    seededDate:               new UntypedFormControl(new Date( (inventorySeededGrains && inventorySeededGrains.seededDate) ? inventorySeededGrains.seededDate : '' )),
     seededAcres:              [ (inventorySeededGrains && inventorySeededGrains.seededAcres) ? inventorySeededGrains.seededAcres : null],
     isSpotLossInsurableInd:   [ ( !inventorySeededGrains || !inventorySeededGrains.isSpotLossInsurableInd ) ? false : inventorySeededGrains.isSpotLossInsurableInd ], 
     isHiddenOnPrintoutInd:    [ isHiddenOnPrintoutInd ],
@@ -121,7 +121,7 @@ export function addSeededForagesObject(inventoryFieldGuid, isHiddenOnPrintoutInd
     commodityTypeCode:        [ (inventorySeededForage && inventorySeededForage.commodityTypeCode) ? inventorySeededForage.commodityTypeCode : null],
     fieldAcres:               [ (inventorySeededForage && inventorySeededForage.fieldAcres) ? inventorySeededForage.fieldAcres : null],
     seedingYear:              [ (inventorySeededForage && inventorySeededForage.seedingYear) ? inventorySeededForage.seedingYear : null],
-    seedingDate:              new FormControl(new Date( (inventorySeededForage && inventorySeededForage.seedingDate) ? inventorySeededForage.seedingDate : '' )),
+    seedingDate:              new UntypedFormControl(new Date( (inventorySeededForage && inventorySeededForage.seedingDate) ? inventorySeededForage.seedingDate : '' )),
     isIrrigatedInd:           [ (!inventorySeededForage || !inventorySeededForage.isIrrigatedInd) ? false : inventorySeededForage.isIrrigatedInd ],
     isQuantityInsurableInd:   [ (!inventorySeededForage || !inventorySeededForage.isQuantityInsurableInd ) ? false : inventorySeededForage.isQuantityInsurableInd ],
     plantInsurabilityTypeCode:[ (inventorySeededForage && inventorySeededForage.plantInsurabilityTypeCode) ? inventorySeededForage.plantInsurabilityTypeCode : null],
@@ -223,9 +223,9 @@ export function isThereAnyCommentForField(field) {
   return false
 }
 
-export function updateComments(fieldId: number, uwComments: UnderwritingComment[], flds: FormArray) {
+export function updateComments(fieldId: number, uwComments: UnderwritingComment[], flds: UntypedFormArray) {
 
-  flds.controls.forEach( function(field : FormArray) {
+  flds.controls.forEach( function(field : UntypedFormArray) {
 
     if (field.value.fieldId == fieldId) {
         
@@ -280,7 +280,7 @@ export function deleteNewFormField(field, flds) {
   }
 }
 
-export function dragField(event: CdkDragDrop<string[]>, fields: FormArray) {
+export function dragField(event: CdkDragDrop<string[]>, fields: UntypedFormArray) {
 
   if (event.previousIndex == event.currentIndex) {
     return;
@@ -317,13 +317,13 @@ export function dragField(event: CdkDragDrop<string[]>, fields: FormArray) {
 }
 
 // Land Management
-export function AddNewFormField(fb: FormBuilder, flds: FormArray, dialog: MatDialog, cropYear, policyId, insurancePlanId,  cdr: ChangeDetectorRef) {
+export function AddNewFormField(fb: UntypedFormBuilder, flds: UntypedFormArray, dialog: MatDialog, cropYear, policyId, insurancePlanId,  cdr: ChangeDetectorRef) {
 
       // find the max display_order
       let maxDisplayOrder = 0; // field order should start with 1
       let minFieldId = 0; // new fields should have negative field ids
   
-      flds.controls.forEach( function(fld : FormArray) {
+      flds.controls.forEach( function(fld : UntypedFormArray) {
     
         if (fld.controls['displayOrder'].value > maxDisplayOrder) {
           maxDisplayOrder = fld.controls['displayOrder'].value
@@ -348,7 +348,7 @@ export function AddNewFormField(fb: FormBuilder, flds: FormArray, dialog: MatDia
   
       openAddEditLandPopup(fb, flds, dialog, dataToSend, maxDisplayOrder + 1, true, cdr)
 }
-export function openAddEditLandPopup(fb: FormBuilder, flds: FormArray,dialog: MatDialog, dataToSend: AddLandPopupData , displayOrder, isNewFieldUI, cdr: ChangeDetectorRef) {
+export function openAddEditLandPopup(fb: UntypedFormBuilder, flds: UntypedFormArray,dialog: MatDialog, dataToSend: AddLandPopupData , displayOrder, isNewFieldUI, cdr: ChangeDetectorRef) {
 
   // open up the popup to get the legal land and field
   // const dataToSend : AddLandPopupData = {
@@ -404,26 +404,26 @@ export function openAddEditLandPopup(fb: FormBuilder, flds: FormArray,dialog: Ma
   });
 }
 
-export function populateNewLand( fb: FormBuilder, cdr: ChangeDetectorRef, flds: FormArray, landData, displayOrder, cropYear, insurancePlanId) {
+export function populateNewLand( fb: UntypedFormBuilder, cdr: ChangeDetectorRef, flds: UntypedFormArray, landData, displayOrder, cropYear, insurancePlanId) {
 
   // var self = this
   // const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
 
     // Now add the new field to the form
-  let fldPlantings = new FormArray ([]) 
+  let fldPlantings = new UntypedFormArray ([]) 
 
-  let pltgInventorySeededGrains = new FormArray ([])
+  let pltgInventorySeededGrains = new UntypedFormArray ([])
 
-  let pltgInventorySeededForages =  new FormArray ([])
+  let pltgInventorySeededForages =  new UntypedFormArray ([])
 
   if (landData.plantings && landData.plantings.length > 0 ) {
   
     // add existing plantings
     landData.plantings.forEach ( pltg => {
 
-      let pltgInventorySeededGrains = new FormArray ([])
+      let pltgInventorySeededGrains = new UntypedFormArray ([])
 
-      let pltgInventorySeededForages =  new FormArray ([])
+      let pltgInventorySeededForages =  new UntypedFormArray ([])
 
       // add inventory seeded grains if any
       if (pltg.inventorySeededGrains && pltg.inventorySeededGrains.length > 0) {
@@ -525,7 +525,7 @@ export function populateNewLand( fb: FormBuilder, cdr: ChangeDetectorRef, flds: 
   }
 }
 
-export function renameLegalLand(flds: FormArray, fieldId, landData, cdr: ChangeDetectorRef) {
+export function renameLegalLand(flds: UntypedFormArray, fieldId, landData, cdr: ChangeDetectorRef) {
   // const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
 
   for (let i = 0 ; i < flds.length; i++) {
@@ -538,7 +538,7 @@ export function renameLegalLand(flds: FormArray, fieldId, landData, cdr: ChangeD
   }
 }
 
-export function replaceLegalLand(flds: FormArray, fieldId, landData, cdr: ChangeDetectorRef) {
+export function replaceLegalLand(flds: UntypedFormArray, fieldId, landData, cdr: ChangeDetectorRef) {
   // const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
 
   for (let i = 0 ; i < flds.length; i++) {
@@ -552,7 +552,7 @@ export function replaceLegalLand(flds: FormArray, fieldId, landData, cdr: Change
   }
 }
 
-export function deleteFormField(field, flds: FormArray, dialog: MatDialog, dataToSend: RemoveFieldPopupData , cdr: ChangeDetectorRef ) {
+export function deleteFormField(field, flds: UntypedFormArray, dialog: MatDialog, dataToSend: RemoveFieldPopupData , cdr: ChangeDetectorRef ) {
 
     let dialogRef = dialog.open(RemoveFieldComponent, {
       width: '800px',
@@ -580,7 +580,7 @@ export function deleteFormField(field, flds: FormArray, dialog: MatDialog, dataT
 
 }
 
-export function removeGapsInDisplayOrder(flds: FormArray) {
+export function removeGapsInDisplayOrder(flds: UntypedFormArray) {
 
   let counter = 0
 

@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AnnualFieldRsrc, AnnualFieldListRsrc, LegalLandRsrc, AddFieldValidationRsrc, InventoryContractRsrc, InventoryField, UnderwritingComment, RemoveFieldValidationRsrc } from '@cirras/cirras-underwriting-api';
 import { AppConfigService, TokenService } from '@wf1/core-ui';
@@ -36,7 +36,7 @@ export class RemoveFieldComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<RemoveFieldComponent>,
     @Inject(MAT_DIALOG_DATA) public data: RemoveFieldPopupData,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private tokenService: TokenService,
     private appConfig: AppConfigService, 
     private http: HttpClient   ) {  

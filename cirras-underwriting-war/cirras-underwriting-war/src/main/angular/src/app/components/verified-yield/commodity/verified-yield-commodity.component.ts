@@ -1,6 +1,6 @@
 import { DecimalPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { VerifiedYieldContractCommodity } from "src/app/conversion/models-yield";
 import { RootState } from "src/app/store";
@@ -18,12 +18,12 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
 export class VerifiedYieldCommodityComponent implements OnInit {
 
   @Input() commodity: VerifiedYieldContractCommodity;
-  @Input() commoditiesFormArray: FormArray;
+  @Input() commoditiesFormArray: UntypedFormArray;
   @Input() decimalPrecision: number;
 
-  commodityFormGroup: FormGroup;
+  commodityFormGroup: UntypedFormGroup;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
       private store: Store<RootState>,
       public securityUtilService: SecurityUtilService, 
       private decimalPipe: DecimalPipe) {

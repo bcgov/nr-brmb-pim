@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { AddFieldValidationRsrc, AnnualFieldRsrc, LinkedPlanting, UwContractListRsrc } from '@cirras/cirras-underwriting-api';
 import { AppConfigService, TokenService } from '@wf1/core-ui';
@@ -47,7 +47,7 @@ export class LinkPlantingComponent implements OnInit {
 
   dataReceived : AddPlantingPopupData;
 
-  linkPlantingForm: FormGroup;
+  linkPlantingForm: UntypedFormGroup;
 
   uwContract: UwContract;
 
@@ -59,7 +59,7 @@ export class LinkPlantingComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AddPlantingPopupData>,
     @Inject(MAT_DIALOG_DATA) public data: AddPlantingPopupData,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private tokenService: TokenService,
     private appConfig: AppConfigService, 
     private http: HttpClient,

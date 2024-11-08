@@ -1,7 +1,7 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, FormControl, UntypedFormGroup } from '@angular/forms';
 import { isBaseCommodity, makeTitleCase } from 'src/app/utils';
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { GrainInventoryComponent } from "../grain-inventory.component";
@@ -34,7 +34,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
     protected route: ActivatedRoute,
     protected sanitizer: DomSanitizer,
     protected store: Store<RootState>,
-    protected fb: FormBuilder,
+    protected fb: UntypedFormBuilder,
     protected dialog: MatDialog,
     protected applicationStateService: ApplicationStateService,
     public securityUtilService: SecurityUtilService,                
@@ -75,7 +75,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
   }
 
   lastYearCommodityVarietyFocus(fieldIndex, plantingIndex) {
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray;
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
     const lastYearCropCommodityVarietyName = pltg.controls['lastYearCropCommodityVarietyName'].value?.toLowerCase();
 
@@ -105,7 +105,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
     // first add all commodities
     // then update them based on what's coming from the backend
 
-    let cmdtiesFA: FormArray = this.viewModel.formGroup.controls.commodities as FormArray
+    let cmdtiesFA: UntypedFormArray = this.viewModel.formGroup.controls.commodities as UntypedFormArray
     cmdtiesFA.clear()
 
     var self = this
@@ -143,9 +143,9 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
 
   updateCommodity( cmdty ) {
 
-    const cmdtiesFA: FormArray = this.viewModel.formGroup.controls.commodities as FormArray
+    const cmdtiesFA: UntypedFormArray = this.viewModel.formGroup.controls.commodities as UntypedFormArray
 
-      cmdtiesFA.controls.forEach ( function(cmdtyFC: FormGroup){
+      cmdtiesFA.controls.forEach ( function(cmdtyFC: UntypedFormGroup){
 
         if (cmdtyFC.value.cropCommodityId == cmdty.cropCommodityId) {
 
@@ -175,8 +175,8 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
 
   isAddPlantingVisible(planting) {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
-    const fld: FormArray  =  flds.controls.find( f => f.value.fieldId == planting.value.fieldId ) as FormArray 
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
+    const fld: UntypedFormArray  =  flds.controls.find( f => f.value.fieldId == planting.value.fieldId ) as UntypedFormArray 
 
     //in order to show Add Planting button, find the max planting number for that field that hasn't been deleted 
     let numPlantings = 0
@@ -214,9 +214,9 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
   onDeletePlanting(planting) {
     var self = this
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
-    flds.controls.forEach( function(field : FormGroup) {
+    flds.controls.forEach( function(field : UntypedFormGroup) {
 
       if (field.value.fieldId == planting.value.fieldId) { 
         // we have found the field in the form that contains the planting to be deleted
@@ -275,7 +275,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
   }
 
   roundUpAcres(fieldIndex, plantingIndex){
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
      
     let acres = pltg.controls['acresToBeSeeded'].value
@@ -287,7 +287,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
 
   roundUpProjectedAcres(cmdtyIndex){
     
-    const frmCmdty: FormArray = this.viewModel.formGroup.controls.commodities['controls'][cmdtyIndex] as FormArray
+    const frmCmdty: UntypedFormArray = this.viewModel.formGroup.controls.commodities['controls'][cmdtyIndex] as UntypedFormArray
 
     let acres = frmCmdty['controls']['totalUnseededAcresOverride'].value
 
@@ -409,14 +409,14 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
   checkForHiddenFieldInTotals() {
     // raises a flag if there is a field with acres that is marked as hidden 
     
-    const frmMain = this.viewModel.formGroup as FormGroup
-    const formFields: FormArray = frmMain.controls.fields as FormArray
+    const frmMain = this.viewModel.formGroup as UntypedFormGroup
+    const formFields: UntypedFormArray = frmMain.controls.fields as UntypedFormArray
 
     for (let i = 0; i < formFields.controls.length; i++){
-      let frmField = formFields.controls[i] as FormArray
+      let frmField = formFields.controls[i] as UntypedFormArray
 	  
       for (let k = 0; k < frmField.value.plantings.controls.length; k++){
-        let frmPlanting = frmField.value.plantings.controls[k] as FormArray
+        let frmPlanting = frmField.value.plantings.controls[k] as UntypedFormArray
 
         let acresToBeSeeded = !isNaN( parseFloat(frmPlanting.value.acresToBeSeeded)) ?  parseFloat(frmPlanting.value.acresToBeSeeded) : 0
 
@@ -431,7 +431,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
   }
 
   commodityVarietyFocus(fieldIndex, plantingIndex) {
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray;
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
     const cropCommodityVarietyName = pltg.controls['cropCommodityVarietyName'].value?.toLowerCase();
 
@@ -454,7 +454,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
   }
 
   validateLastYearCommodityVariety(option, value, fieldIndex, plantingIndex){
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray;
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
 
     // find the corresponding commodity variety id
@@ -488,7 +488,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
 
 
   validateCommodityVariety(option, value, fieldIndex, plantingIndex){
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray;
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
 
     
@@ -525,7 +525,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
 
   isUnseededInsurableVisible( fieldIndex, plantingIndex) {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray;
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
     const cropCommodityVarietyName = pltg.controls['cropCommodityVarietyName'].value; // ?.toLowerCase();
 
@@ -546,7 +546,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
 
   shouldHighlightCropVariety(fieldIndex, plantingIndex) {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
     const cropCommodityVarietyName = pltg.controls['cropCommodityVarietyName'].value; 
 
@@ -564,7 +564,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
 
   shouldHighlightLastYearCropVariety (fieldIndex, plantingIndex, invSeededIndex) {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
     const lastYearCropCommodityVarietyName = pltg.controls['lastYearCropCommodityVarietyName'].value; 
 

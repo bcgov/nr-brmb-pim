@@ -10,7 +10,7 @@ import {ServiceWorkerModule} from "@angular/service-worker";
 import {EffectsModule} from "@ngrx/effects";
 import {StoreModule} from "@ngrx/store";
 import {StoreDevtoolsModule} from "@ngrx/store-devtools";
-import {StoreRouterConnectingModule} from "@ngrx/router-store";
+// import {StoreRouterConnectingModule} from "@ngrx/router-store";
 import {AppConfigService, CoreUIModule, MapService, PublicApplicationHeaderModule, TokenService} from "@wf1/core-ui";
 import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./containers/application-root/app.component";
@@ -179,20 +179,16 @@ if (!environment.production || !environment.restrict_imports) {
         SingleSelectDirective,
         MultiSelectDirective,
         SingleSelectDirective,
-
         MatInputCommifiedDirective,
-
         WFSnackbarComponent,
         BaseExpansionPanelComponent,
         BaseDialogComponent,
         AutoFocusDirective,
-
-       // UwContractsListContainerDesktop,
+        // UwContractsListContainerDesktop,
         UwContractsListContainer,
         UwContractsListComponent,
         AppComponent,
         BaseWrapperComponent,
-
         UnauthorizedPageComponent,
         ErrorPanelComponent,
         ErrorDialogComponent,
@@ -208,52 +204,52 @@ if (!environment.production || !environment.restrict_imports) {
         PrintoutLogoComponent,
         AddLandComponent,
         EditLandComponent,
-       GrainUnseededInventoryComponent,
-       GrainSeededInventoryComponent,
-       GrainDopComponent,
-       GrainDopContainer,
-       ForageInventoryComponent,
-       LandListComponent,
-       LandListContainer,
-       ManageLandComponent,
-       ManageLandComponentContainer,
-       RemoveFieldComponent,
-       LandingPageComponent,
-       LinkPlantingComponent,
-       RemovePlantingDialogComponent,
-       DashboardComponent,
-       DashboardContainer,
-       SeedingDeadlinesComponent,
-       SeedingDeadlinesContainer,
-       GradeModifiersComponent,
-       GradeModifiersContainer,
-       GradeModifiersTypesComponent,
-       GradeModifierTypesContainer,
-       ForageVarietyInsurabilityComponent,
-       ForageVarietyInsurabilityContainer,
-       PlantInsurabilityComponent,
-       YieldConversionComponent,
-       YieldConversionContainer,
-       YieldConversionUnitsComponent,
-       YieldConversionUnitsContainer,
-       RelatedPoliciesComponent,
-       UnsavedDialogComponent,
-       ForageDopComponent,
-       ForageDopFieldListComponent,
-       ForageDopFieldComponent,
-       ForageDopYieldFieldListComponent,
-       ForageDopYieldFieldComponent,
-       ForageDopYieldFieldCutListComponent,
-       ForageDopYieldFieldCutComponent,
-       ForageDopCommodityListComponent,
-       ForageDopCommodityComponent,
-       ForageDopContainer,
-       ForageDopYieldSummaryListComponent,
-       ForageDopYieldSummaryComponent,
-       VerifiedYieldComponent,
-       VerifiedYieldContainer,
-       VerifiedYieldCommodityListComponent,
-       VerifiedYieldCommodityComponent
+        GrainUnseededInventoryComponent,
+        GrainSeededInventoryComponent,
+        GrainDopComponent,
+        GrainDopContainer,
+        ForageInventoryComponent,
+        LandListComponent,
+        LandListContainer,
+        ManageLandComponent,
+        ManageLandComponentContainer,
+        RemoveFieldComponent,
+        LandingPageComponent,
+        LinkPlantingComponent,
+        RemovePlantingDialogComponent,
+        DashboardComponent,
+        DashboardContainer,
+        SeedingDeadlinesComponent,
+        SeedingDeadlinesContainer,
+        GradeModifiersComponent,
+        GradeModifiersContainer,
+        GradeModifiersTypesComponent,
+        GradeModifierTypesContainer,
+        ForageVarietyInsurabilityComponent,
+        ForageVarietyInsurabilityContainer,
+        PlantInsurabilityComponent,
+        YieldConversionComponent,
+        YieldConversionContainer,
+        YieldConversionUnitsComponent,
+        YieldConversionUnitsContainer,
+        RelatedPoliciesComponent,
+        UnsavedDialogComponent,
+        ForageDopComponent,
+        ForageDopFieldListComponent,
+        ForageDopFieldComponent,
+        ForageDopYieldFieldListComponent,
+        ForageDopYieldFieldComponent,
+        ForageDopYieldFieldCutListComponent,
+        ForageDopYieldFieldCutComponent,
+        ForageDopCommodityListComponent,
+        ForageDopCommodityComponent,
+        ForageDopContainer,
+        ForageDopYieldSummaryListComponent,
+        ForageDopYieldSummaryComponent,
+        VerifiedYieldComponent,
+        VerifiedYieldContainer,
+        VerifiedYieldCommodityListComponent,
+        VerifiedYieldCommodityComponent
     ],
     imports: [
         CirrasUnderwritingAPIServiceModule,
@@ -296,14 +292,14 @@ if (!environment.production || !environment.restrict_imports) {
         NgSelectModule,
         ScrollingModule,
         PublicApplicationHeaderModule,
-        CoreUIModule.forRoot({configurationPath: environment.app_config_location}),
-        StoreModule.forRoot(rootReducers, {initialState: initialRootState}),
+        CoreUIModule.forRoot({ configurationPath: environment.app_config_location }),
+        StoreModule.forRoot(rootReducers, { initialState: initialRootState }),
         AppRoutingModule,
         NgxPaginationModule,
         // Connects RouterModule with StoreModule
-        StoreRouterConnectingModule.forRoot(),
+        // StoreRouterConnectingModule.forRoot(),
         EffectsModule.forRoot([]),
-        ServiceWorkerModule.register("ngsw-worker.js", {enabled: environment.production, scope: "./"}),
+        ServiceWorkerModule.register("ngsw-worker.js", { enabled: environment.production, scope: "./" }),
         ...devOnlyImports,
         A11yModule,
         MatNativeDateModule,
@@ -327,52 +323,42 @@ if (!environment.production || !environment.restrict_imports) {
             deps: [HttpHandler, Injector]
         },
         {
-          provide: CirrasUnderwritingAPIServiceConfiguration,
-          useFactory: cirrasUnderwritingRestInitializerFn,
-          multi: false,
-          deps: [AppConfigService]
+            provide: CirrasUnderwritingAPIServiceConfiguration,
+            useFactory: cirrasUnderwritingRestInitializerFn,
+            multi: false,
+            deps: [AppConfigService]
         },
-        {provide: OWL_DATE_TIME_FORMATS, useValue: DATE_FORMATS},
-        {provide: RouteReuseStrategy, useClass: CustomReuseStrategy},
+        { provide: OWL_DATE_TIME_FORMATS, useValue: DATE_FORMATS },
+        { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: ResourcesInterceptor,
             multi: true
         },
         {
-          provide: ConnectionServiceOptionsToken,
-          useValue: <ConnectionServiceOptions>{
-              enableHeartbeat: false,
-          }
+            provide: ConnectionServiceOptionsToken,
+            useValue: <ConnectionServiceOptions>{
+                enableHeartbeat: false
+            }
         },
-        { // sets the datepicker to display month with a 3 letter word
-        provide: DateAdapter,
-        useClass: MomentDateAdapter,
-        deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
         },
-    
-        {provide: MAT_DATE_FORMATS, 
+        { provide: MAT_DATE_FORMATS,
             useValue: {
-                    parse: {
-                    dateInput: 'LL',
+                parse: {
+                    dateInput: 'LL'
                 },
-                    display: {
+                display: {
                     dateInput: 'MMM DD, YYYY',
                     monthYearLabel: 'MMM YYYY',
                     dateA11yLabel: 'LL',
-                    monthYearA11yLabel: 'MMM YYYY',
-                },
-          } },
+                    monthYearA11yLabel: 'MMM YYYY'
+                }
+            } },
         DecimalPipe
-
-    ],
-    entryComponents: [
-        BaseDialogComponent,
-        // ClaimsContainerMobile,
-        // ClaimsComponentMobile,
-        // CalculationsContainerMobile,
-        // CalculationsComponentMobile,        
-        ErrorDialogComponent,
     ],
     bootstrap: [AppComponent]
 })

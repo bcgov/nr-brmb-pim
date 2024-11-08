@@ -1,5 +1,5 @@
 import {Action, ActionReducerMap} from "@ngrx/store";
-import {routerReducer} from "@ngrx/router-store";
+//import {routerReducer} from "@ngrx/router-store";
 
 import {applicationReducer} from "./application/application.reducer";
 import {ApplicationEffects} from "./application/application.effects";
@@ -33,7 +33,7 @@ import { VerifiedYieldEffects } from "./verified-yield/verified-yield.effects";
 
 
 export const rootReducers: ActionReducerMap<any> = {
-    router: routerReducer,
+    //router: routerReducer,
     searchUwContracts: pageSearchReducer,
     application: applicationReducer,
     uwContractsList: uwContractsListReducer,

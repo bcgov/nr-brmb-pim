@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FormArray } from "@angular/forms";
+import { UntypedFormArray } from "@angular/forms";
 import { DopYieldFieldForage } from "src/app/conversion/models-yield";
 
 @Component({
@@ -10,6 +10,6 @@ import { DopYieldFieldForage } from "src/app/conversion/models-yield";
 })
 export class ForageDopYieldFieldListComponent {
     @Input() yieldFields: Array<DopYieldFieldForage>;
-    @Input() yieldFieldsFormArray: FormArray;
+    @Input() yieldFieldsFormArray: UntypedFormArray;
     @Input() fieldHiddenOnPrintoutInd: boolean;
 }

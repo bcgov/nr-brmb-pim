@@ -1,5 +1,5 @@
 import {DomSanitizer} from "@angular/platform-browser";
-import {FormBuilder, FormArray} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormArray} from "@angular/forms";
 import {BaseComponentModel} from "../common/base/base.component.model";
 
 
@@ -7,7 +7,7 @@ export class VerifiedYieldComponentModel extends BaseComponentModel {
     
 
     constructor(protected sanitizer: DomSanitizer,
-                private fb: FormBuilder) {
+                private fb: UntypedFormBuilder) {
 
         super(sanitizer);
         
@@ -17,7 +17,7 @@ export class VerifiedYieldComponentModel extends BaseComponentModel {
             // declarationOfProductionDate: [''],
             // balerWagonInfo: [''],
             // totalLivestock: [''],
-            verifiedYieldContractCommodities: new FormArray([]), // subform responsible for the commodities grid 
+            verifiedYieldContractCommodities: new UntypedFormArray([]), // subform responsible for the commodities grid 
             // dopYieldContractCommodityForageList: new FormArray([]),
             // dopYieldFieldRollupForageList: new FormArray([]),
 

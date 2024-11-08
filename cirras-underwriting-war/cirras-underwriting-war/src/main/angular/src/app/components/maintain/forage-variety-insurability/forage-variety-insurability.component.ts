@@ -6,7 +6,7 @@ import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.
 import { loadVarietyInsurability, saveVarietyInsurability } from 'src/app/store/maintenance/maintenance.actions';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 import { CropVarietyInsurabilityList } from 'src/app/conversion/models-maintenance';
-import { FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, FormControl, Validators } from '@angular/forms';
 import { PlantInsurabilityComponent } from './plant-insurability/plant-insurability.component';
 import { areNotEqual } from 'src/app/utils';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -38,7 +38,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
     protected route: ActivatedRoute,
     protected sanitizer: DomSanitizer,
     protected store: Store<RootState>,
-    protected fb: FormBuilder,
+    protected fb: UntypedFormBuilder,
     protected dialog: MatDialog,
     protected applicationStateService: ApplicationStateService,
     public securityUtilService: SecurityUtilService,                
@@ -82,7 +82,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
     if (changes.cropVarietyInsurabilityList) {
       // pre-fill the form
       
-      let frmVarietyInsurability: FormArray = this.viewModel.formGroup.controls.varietyInsurability as FormArray
+      let frmVarietyInsurability: UntypedFormArray = this.viewModel.formGroup.controls.varietyInsurability as UntypedFormArray
       frmVarietyInsurability.clear()
 
       if ( this.cropVarietyInsurabilityList && this.cropVarietyInsurabilityList.collection && this.cropVarietyInsurabilityList.collection.length > 0) {
@@ -137,9 +137,9 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
     //make a deep copy
     let updatedVarietyInsurability : CropVarietyInsurabilityList = JSON.parse(JSON.stringify(this.cropVarietyInsurabilityList));
 
-    const frmVarietyInsurability: FormArray = this.viewModel.formGroup.controls.varietyInsurability as FormArray
+    const frmVarietyInsurability: UntypedFormArray = this.viewModel.formGroup.controls.varietyInsurability as UntypedFormArray
 
-    frmVarietyInsurability.controls.forEach( function(frmVI : FormArray) {
+    frmVarietyInsurability.controls.forEach( function(frmVI : UntypedFormArray) {
 
       // find the corresponding field in updatedVarietyInsurability object
       let origVarietyInsurability = updatedVarietyInsurability.collection.find( el => el.cropVarietyId == frmVI.value.cropVarietyId)
@@ -172,11 +172,11 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
     
     if (!this.cropVarietyInsurabilityList) return false;
 
-    const frmVarietyInsurability: FormArray = this.viewModel.formGroup.controls.varietyInsurability as FormArray
+    const frmVarietyInsurability: UntypedFormArray = this.viewModel.formGroup.controls.varietyInsurability as UntypedFormArray
 
     for (let i = 0; i < frmVarietyInsurability.controls.length; i++) {
 
-      let frmVI = frmVarietyInsurability.controls[i] as FormArray
+      let frmVI = frmVarietyInsurability.controls[i] as UntypedFormArray
 
       let originalVI = this.cropVarietyInsurabilityList.collection.find( el => el.cropVarietyId == frmVI.value.cropVarietyId)
 
@@ -273,7 +273,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
 
   onEditPlantInsurability(rowIndex) {
   
-    const frmVarietyInsurability: FormArray = this.viewModel.formGroup.controls.varietyInsurability as FormArray
+    const frmVarietyInsurability: UntypedFormArray = this.viewModel.formGroup.controls.varietyInsurability as UntypedFormArray
 
     // open up the popup
     const dataToSend  = {
@@ -304,7 +304,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
 
   setPlantInsurability(data) {
     // gets the changes from the popup and transfers them to the form
-    let frmVarietyInsurability: FormArray = this.viewModel.formGroup.controls.varietyInsurability as FormArray
+    let frmVarietyInsurability: UntypedFormArray = this.viewModel.formGroup.controls.varietyInsurability as UntypedFormArray
 
     for ( let i = 0; i < frmVarietyInsurability.controls.length; i++) {
 
@@ -319,7 +319,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
   }
 
   isDeletePossible(rowIndex){
-    const frmVarietyInsurability: FormArray = this.viewModel.formGroup.controls.varietyInsurability as FormArray
+    const frmVarietyInsurability: UntypedFormArray = this.viewModel.formGroup.controls.varietyInsurability as UntypedFormArray
 
     if (frmVarietyInsurability.controls[rowIndex].value.isQuantityInsurableEditableInd == true &&
       frmVarietyInsurability.controls[rowIndex].value.isUnseededInsurableEditableInd == true &&
@@ -336,7 +336,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
 
   onDeleteVarietyInsurability(rowIndex) {
     
-    const frmVarietyInsurability: FormArray = this.viewModel.formGroup.controls.varietyInsurability as FormArray
+    const frmVarietyInsurability: UntypedFormArray = this.viewModel.formGroup.controls.varietyInsurability as UntypedFormArray
 
     frmVarietyInsurability.controls[rowIndex]['controls'].deletedByUserInd.setValue(false)
 
@@ -351,7 +351,7 @@ export class ForageVarietyInsurabilityComponent  extends BaseComponent implement
   }
 
   removePlantInsurabilities(rowIndex) {
-    const frmVarietyInsurability: FormArray = this.viewModel.formGroup.controls.varietyInsurability as FormArray
+    const frmVarietyInsurability: UntypedFormArray = this.viewModel.formGroup.controls.varietyInsurability as UntypedFormArray
 
     let cvpi = frmVarietyInsurability.controls[rowIndex]['controls'].cropVarietyPlantInsurabilities.value
 

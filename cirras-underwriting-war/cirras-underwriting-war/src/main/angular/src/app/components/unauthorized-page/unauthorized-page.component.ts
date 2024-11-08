@@ -5,7 +5,7 @@ import { AppConfigService } from "@wf1/core-ui";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DomSanitizer, Title} from "@angular/platform-browser";
 import {State, Store} from "@ngrx/store";
-import {FormBuilder} from "@angular/forms";
+import {UntypedFormBuilder} from "@angular/forms";
 import {ConnectionService} from "ngx-connection-service";
 import {Overlay} from "@angular/cdk/overlay";
 import {ApplicationStateService} from "../../services/application-state.service";
@@ -30,7 +30,7 @@ export class UnauthorizedPageComponent extends BaseComponent {
     protected route: ActivatedRoute,
     protected sanitizer: DomSanitizer,
     protected store: Store<RootState>,
-    protected fb: FormBuilder,
+    protected fb: UntypedFormBuilder,
     protected dialog: MatDialog,
     protected applicationStateService: ApplicationStateService,
     public securityUtilService: SecurityUtilService,                

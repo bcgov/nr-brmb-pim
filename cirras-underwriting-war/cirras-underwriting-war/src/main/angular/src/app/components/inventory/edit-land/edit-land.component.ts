@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AnnualFieldRsrc, AnnualFieldListRsrc, LegalLandRsrc, AddFieldValidationRsrc, RenameLegalValidationRsrc, ReplaceLegalValidationRsrc } from '@cirras/cirras-underwriting-api';
 import { AppConfigService, TokenService } from '@wf1/core-ui';
@@ -24,7 +24,7 @@ export class EditLandComponent implements OnInit {
 
   dataReceived : AddLandPopupData;
 
-  editLandForm: FormGroup;
+  editLandForm: UntypedFormGroup;
   
   choiceExplanation = "";
 
@@ -44,7 +44,7 @@ export class EditLandComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<EditLandComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AddLandPopupData,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private tokenService: TokenService,
     private appConfig: AppConfigService, 
     private http: HttpClient   ) {  
