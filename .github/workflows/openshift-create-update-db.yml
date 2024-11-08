@@ -40,6 +40,9 @@ jobs:
         with:
           files: staging/**/*
         env:
+          LICENSE_PLATE: 'a12541'
+          #Vault path is different for prod than all other environments
+          VAULT_RESOURCE: ${{ inputs.NAMESPACE == 'a12541-prod' && 'prod' || 'nonprod'  }}        
           ENV: ${{ inputs.ENVIRONMENT_NAME }}
           DB_STORAGE: ${{ vars.DB_STORAGE }}
           DB_MAX_CPU: ${{ vars.DB_MAX_CPU }}

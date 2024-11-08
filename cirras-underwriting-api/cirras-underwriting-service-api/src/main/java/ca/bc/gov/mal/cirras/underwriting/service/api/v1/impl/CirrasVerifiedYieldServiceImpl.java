@@ -12,9 +12,13 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.PolicyDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldContractCommodityDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldContractDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractCommodityDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.ConflictException;
 import ca.bc.gov.nrs.wfone.common.service.api.ForbiddenException;
@@ -47,6 +51,8 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	private PolicyDao policyDao;
 	private DeclaredYieldContractDao declaredYieldContractDao;
 	private DeclaredYieldContractCommodityDao declaredYieldContractCommodityDao;
+	private VerifiedYieldContractDao verifiedYieldContractDao;
+	private VerifiedYieldContractCommodityDao verifiedYieldContractCommodityDao;
 
 	public void setApplicationProperties(Properties applicationProperties) {
 		this.applicationProperties = applicationProperties;
@@ -70,6 +76,14 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 	public void setDeclaredYieldContractCommodityDao(DeclaredYieldContractCommodityDao declaredYieldContractCommodityDao) {
 		this.declaredYieldContractCommodityDao = declaredYieldContractCommodityDao;
+	}
+
+	public void setVerifiedYieldContractDao(VerifiedYieldContractDao verifiedYieldContractDao) {
+		this.verifiedYieldContractDao = verifiedYieldContractDao;
+	}
+
+	public void setVerifiedYieldContractCommodityDao(VerifiedYieldContractCommodityDao verifiedYieldContractCommodityDao) {
+		this.verifiedYieldContractCommodityDao = verifiedYieldContractCommodityDao;
 	}
 
 	@Override
@@ -156,9 +170,43 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 
-		// TODO Auto-generated method stub
-		throw new ServiceException("Not implemented");
+		logger.debug("<getVerifiedYieldContract");
+
+		VerifiedYieldContract<? extends AnnualField> result = null;
+
+		try {
+			VerifiedYieldContractDto dto = verifiedYieldContractDao.fetch(verifiedYieldContractGuid);
+
+			if (dto == null) {
+				throw new NotFoundException("Did not find the verified yield contract: " + verifiedYieldContractGuid);
+			}
+
+			result = loadVerifiedYieldContract(dto, factoryContext, authentication);
+
+		} catch (DaoException e) {
+			throw new ServiceException("DAO threw an exception", e);
+		}
+
+		logger.debug(">getVerifiedYieldContract");
+		return result;
 	}	
+
+	private VerifiedYieldContract<? extends AnnualField> loadVerifiedYieldContract(
+			VerifiedYieldContractDto dto,
+			FactoryContext factoryContext, 
+			WebAdeAuthentication authentication) throws DaoException {
+
+		loadVerifiedYieldContractCommodities(dto);
+
+		return verifiedYieldContractFactory.getVerifiedYieldContract(dto, factoryContext, authentication);
+	}
+	
+
+	private void loadVerifiedYieldContractCommodities(VerifiedYieldContractDto dto) throws DaoException {
+		List<VerifiedYieldContractCommodityDto> verifiedCommodities = verifiedYieldContractCommodityDao.selectForVerifiedYieldContract(dto.getVerifiedYieldContractGuid());
+		dto.setVerifiedYieldContractCommodities(verifiedCommodities);
+	}
+	
 	
 	@Override
 	public VerifiedYieldContract<? extends AnnualField> createVerifiedYieldContract(

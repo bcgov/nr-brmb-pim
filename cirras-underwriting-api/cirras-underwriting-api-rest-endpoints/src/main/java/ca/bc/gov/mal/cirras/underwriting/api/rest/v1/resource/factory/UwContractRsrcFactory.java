@@ -26,6 +26,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UwContractValidat
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UwContractValidateRemoveFieldEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UwContractValidateRenameLegalEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UwContractValidateReplaceLegalEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.VerifiedYieldContractEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AddFieldValidationRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
@@ -202,7 +203,7 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 		resource.setGrowerPrimaryPhone(dto.getGrowerPrimaryPhone());
 		resource.setInventoryContractGuid(dto.getInventoryContractGuid());
 		resource.setDeclaredYieldContractGuid(dto.getDeclaredYieldContractGuid());
-		resource.setVerifiedYieldContractGuid(null); // TODO: Set from dto.
+		resource.setVerifiedYieldContractGuid(dto.getVerifiedYieldContractGuid());
 		resource.setTotalDopEligibleInventory(dto.getTotalDopEligibleInventory());
 
 		// TODO: Add remaining fields for resource (or remove from resource if not needed):
@@ -286,12 +287,12 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 		if (resource.getDeclaredYieldContractGuid() != null ) {
 
 			if (resource.getVerifiedYieldContractGuid() != null && authentication.hasAuthority(Scopes.GET_VERIFIED_YIELD_CONTRACT)) {
-				// TODO: Add link to GET endpoint.
-//				String result = UriBuilder
-//					.fromUri(baseUri)
-//					.path(VerifiedYieldContractEndpoint.class)
-//					.build(resource.getVerifiedYieldContractGuid()).toString();
-//				resource.getLinks().add(new RelLink(ResourceTypes.VERIFIED_YIELD_CONTRACT, result, "GET"));
+
+				String result = UriBuilder
+					.fromUri(baseUri)
+					.path(VerifiedYieldContractEndpoint.class)
+					.build(resource.getVerifiedYieldContractGuid()).toString();
+				resource.getLinks().add(new RelLink(ResourceTypes.VERIFIED_YIELD_CONTRACT, result, "GET"));
 			}
 			else if(resource.getVerifiedYieldContractGuid() == null 
 				&& resource.getPolicyId() != null 

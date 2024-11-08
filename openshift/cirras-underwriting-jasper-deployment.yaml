@@ -13,7 +13,29 @@ spec:
       labels:
         app: cirras-underwriting-jasper-#{ENV}#
         project: brmb-pim-#{ENV}#
+      annotations:
+        # 1. Vault injector configuration goes here, inside the template.
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-inject-token: 'false' # set to 'true' if you are going to connect and query vault from your application
+        vault.hashicorp.com/agent-pre-populate-only: 'true' # this makes sure the secret vault will only change during pod restart
+        vault.hashicorp.com/auth-path: auth/k8s-silver  # Must match cluster. Use one of: k8s-silver, k8s-gold, k8s-golddr, k8s-emerald
+        vault.hashicorp.com/namespace: platform-services
+        vault.hashicorp.com/role: #{LICENSE_PLATE}#-#{VAULT_RESOURCE}#  # licenseplate-nonprod or licenseplate-prod are your options
+        # Configure how to retrieve and populate the secrets from Vault:
+        # - The name of the secret is any unique string after vault.hashicorp.com/agent-inject-secret-<name>
+        # - The value is the path in Vault where the secret is located.
+        vault.hashicorp.com/agent-inject-secret-env: #{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets
+        # - The template Vault Agent should use for rendering a secret:
+        vault.hashicorp.com/agent-inject-template-env: |
+          {{- with secret "#{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets" }}
+            export JASPERREPORTS_DATABASE_USER="{{ .Data.data.JASPER_DATABASE_USER }}"
+            export MARIADB_USER="{{ .Data.data.JASPER_DATABASE_USER }}"
+            export JASPERREPORTS_DATABASE_PASSWORD="{{ .Data.data.JASPER_DATABASE_PASSWORD }}"
+            export MARIADB_PASSWORD="{{ .Data.data.JASPER_DATABASE_PASSWORD }}"
+            export JASPERREPORTS_PASSWORD="{{ .Data.data.JASPER_PASSWORD }}"
+          {{- end }}          
     spec:
+      serviceAccountName: #{LICENSE_PLATE}#-vault
       volumes:
         - name: jasper-#{ENV}#
           persistentVolumeClaim:
@@ -32,22 +54,18 @@ spec:
               memory: 400Mi 
           image: >-
             docker.io/bitnami/mariadb:latest
+          command:
+            ['sh', '-c']
+          args:
+          #TODO: catalina.sh run is most likely wrong for the Jasper deployment. It's not used anymore though.
+          #In case it's used again we'll have to check for the CMD in the docker file which is provided by DockerHub.
+            ['. /vault/secrets/env && catalina.sh run']
           env:
             - name: ALLOW_EMPTY_PASSWORD
               valueFrom:
                 configMapKeyRef:
                   name: cirras-underwriting-jasper-config-#{ENV}#
                   key: ALLOW_EMPTY_PASSWORD
-            - name: MARIADB_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-jasper-config-#{ENV}#
-                  key: JASPERREPORTS_DATABASE_USER
-            - name: MARIADB_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-jasper-config-#{ENV}#
-                  key: JASPERREPORTS_DATABASE_PASSWORD
             - name: MARIADB_DATABASE
               valueFrom:
                 configMapKeyRef:
@@ -68,22 +86,18 @@ spec:
               memory: #{JASPER_MEMORY_LIMIT}#
           image: >-
             docker.io/bitnami/jasperreports-archived:latest
+          command:
+            ['sh', '-c']
+          args:
+            #TODO: catalina.sh run is most likely wrong for the Jasper deployment. It's not used anymore though.
+            #In case it's used again we'll have to check for the CMD in the docker file which is provided by DockerHub.
+            ['. /vault/secrets/env && catalina.sh run']
           ports:
             - containerPort: 8080
               protocol: TCP
             - containerPort: 8443
               protocol: TCP
           env:
-            - name: JASPERREPORTS_DATABASE_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-jasper-config-#{ENV}#
-                  key: JASPERREPORTS_DATABASE_USER
-            - name: JASPERREPORTS_DATABASE_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-jasper-config-#{ENV}#
-                  key: JASPERREPORTS_DATABASE_PASSWORD
             - name: JASPERREPORTS_DATABASE_NAME
               valueFrom:
                 configMapKeyRef:
@@ -96,11 +110,6 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-jasper-config-#{ENV}#
                   key: JASPERREPORTS_UI_USER
-            - name: JASPERREPORTS_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-jasper-config-#{ENV}#
-                  key: JASPERREPORTS_UI_PASSWORD
           volumeMounts:
             - name: jasper-#{ENV}#
               mountPath: /bitnami/jasperreports

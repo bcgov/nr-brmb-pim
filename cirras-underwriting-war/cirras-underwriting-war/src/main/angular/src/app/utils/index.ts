@@ -449,6 +449,22 @@ export function setHttpHeaders(authToken) {
     return false
   }
 
+  export function userCanAccessVerifiedYield(securityUtilService, links: Array<RelLink>){
+
+    for (let i = 0; i< links.length; i++ ) {
+
+      if ( ( securityUtilService.doesUserHaveScope(SCOPES_UI.CREATE_VERIFIED_YIELD_CONTRACT) 
+            || securityUtilService.doesUserHaveScope(SCOPES_UI.GET_VERIFIED_YIELD_CONTRACT) ) 
+        && (links[i].href.toLocaleLowerCase().indexOf("rolloververifiedyieldcontract") > -1 
+            || links[i].href.toLocaleLowerCase().indexOf("verifiedyieldcontracts") > -1  ) ) {
+
+          return true;
+      } 
+    }
+
+    return false
+  }
+
   export function goToLinkGlobal (item: UwContract, linkType: string, router: Router) {
 
     let resourceRoute = ""
@@ -508,6 +524,26 @@ export function setHttpHeaders(authToken) {
 
         break;
 
+      case 'verifiedYield': 
+
+        //if (item.insurancePlanId == INSURANCE_PLAN.GRAIN) {
+
+            resourceRoute = ResourcesRoutes.VERIFIED_YIELD_GRAIN
+
+        //} else if (item.insurancePlanId == INSURANCE_PLAN.FORAGE) {
+
+        //    resourceRoute = ResourcesRoutes.DOP_FORAGE  // TODO
+            
+        //}
+
+        router.navigate([resourceRoute,
+        item.insurancePlanId.toString(), 
+        item.cropYear.toString(),
+        item.policyId.toString(),
+        (item.verifiedYieldContractGuid ) ? item.verifiedYieldContractGuid.toString() : '' 
+        ]);
+
+    break;
       default:
         resourceRoute = ""
     }

@@ -14,8 +14,4 @@ metadata:
     project: brmb-pim-#{ENV}#
 immutable: false
 data:
-  LIQUIBASE_COMMAND_USERNAME: '#{POSTGRES_ADMIN_USERNAME}#'
-  LIQUIBASE_COMMAND_PASSWORD: '#{POSTGRES_ADMIN_PASSWORD}#'
   LIQUIBASE_COMMAND_URL: jdbc:postgresql://crunchy-postgres-#{ENV}#-pgbouncer.#{NAMESPACE}#.svc.cluster.local/pituw#{ENV}#
-  POSTGRES_PROXY_USER_PASSWORD: '#{POSTGRES_PROXY_USER_PASSWORD}#'
-  POSTGRES_READ_ONLY_PASSWORD: '#{POSTGRES_READ_ONLY_PASSWORD}#'
