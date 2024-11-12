@@ -112,7 +112,7 @@ const routesDesktop: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routesDesktop, { relativeLinkResolution: 'legacy' })],
+    imports: [RouterModule.forRoot(routesDesktop, {})],
     exports: [RouterModule]
 })
 export class AppRoutingModule {
