@@ -35,7 +35,7 @@
     "@angular/pwa": "^0.10.4",
     "@angular/router": "^15.2.10",
     "@angular/service-worker": "^15.2.10",
-    "@busacca/ng-pick-datetime": "^9.0.2",
+    "@busacca/ng-pick-datetime": "^15.0.0",
     "@cirras/cirras-underwriting-api": "^3.6.0-SNAPSHOT",
     "@ng-select/ng-select": "^5.0.3",
     "@ngrx/effects": "^15.4.0",
