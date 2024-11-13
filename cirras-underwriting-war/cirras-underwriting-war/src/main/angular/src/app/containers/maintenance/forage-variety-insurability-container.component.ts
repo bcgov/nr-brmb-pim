@@ -25,12 +25,11 @@ import { ApplicationStateService } from "src/app/services/application-state.serv
         <forage-variety-insurability
             [cropVarietyInsurabilityList]="cropVarietyInsurabilityList$ | async"
             [loadState]="loadState$ | async"
-            [errorState]="errorState$ | async"
-            [isUnsaved]="isUnsaved$ | async"
+            [errorState]="errorState$ | async"           
         ></forage-variety-insurability>`, 
     providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
 })
-
+// [isUnsaved]="isUnsaved$ | async"
 export class ForageVarietyInsurabilityContainer extends BaseContainer {
 
     cropVarietyInsurabilityList$: Observable<CropVarietyInsurabilityList> = this.store.pipe(select(selectCropVarietyInsurabilityList()))
@@ -45,13 +44,13 @@ export class ForageVarietyInsurabilityContainer extends BaseContainer {
         ];
     }
 
-    constructor(
-        protected store: Store<RootState>,
-        protected router: Router,
-        public snackBar: MatSnackBar,
-        protected applicationStateService: ApplicationStateService,
-        protected cdr: ChangeDetectorRef
-    ) {
-        super(store, router, snackBar, applicationStateService, cdr);
-    }
+    // constructor(
+    //     protected store: Store<RootState>,
+    //     protected router: Router,
+    //     public snackBar: MatSnackBar,
+    //     protected applicationStateService: ApplicationStateService,
+    //     protected cdr: ChangeDetectorRef
+    // ) {
+    //     super(store, router, snackBar, applicationStateService, cdr);
+    // }
 }

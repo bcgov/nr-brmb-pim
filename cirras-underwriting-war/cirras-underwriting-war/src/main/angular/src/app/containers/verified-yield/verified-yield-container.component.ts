@@ -29,11 +29,10 @@ import { selectVerifiedYieldContract } from "src/app/store/verified-yield/verifi
             [verifiedYieldContract]="verifiedYieldContract"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
-            [isUnsaved]="isUnsaved$ | async"
         ></verified-yield>`, 
     providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
 })
-
+//  [isUnsaved]="isUnsaved$ | async"
 export class VerifiedYieldContainer extends BaseContainer implements OnInit {
 
     growerContract$: Observable<UwContract> = this.store.pipe(select(selectGrowerContract()));
@@ -44,6 +43,16 @@ export class VerifiedYieldContainer extends BaseContainer implements OnInit {
     isUnsaved$: Observable<boolean> = this.store.pipe(select(selectFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID)));
 
     verifiedYieldContract: VerifiedYieldContract;
+
+    // constructor(
+    //     protected store: Store<RootState>,
+    //     protected router: Router,
+    //     public snackBar: MatSnackBar,
+    //     protected applicationStateService: ApplicationStateService,
+    //     protected cdr: ChangeDetectorRef
+    // ) {
+    //     super(store, router, snackBar, applicationStateService, cdr);
+    // }
 
     getAssociatedComponentIds(): string[] {
         return [
@@ -59,13 +68,5 @@ export class VerifiedYieldContainer extends BaseContainer implements OnInit {
         });
     }
 
-    constructor(
-        protected store: Store<RootState>,
-        protected router: Router,
-        public snackBar: MatSnackBar,
-        protected applicationStateService: ApplicationStateService,
-        protected cdr: ChangeDetectorRef
-    ) {
-        super(store, router, snackBar, applicationStateService, cdr);
-    }
+    
 }
