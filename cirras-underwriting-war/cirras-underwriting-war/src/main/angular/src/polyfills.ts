@@ -69,7 +69,8 @@ import "wicg-inert"; //TODO add explanation
 
 if (!Element.prototype.matches) {
     Element.prototype.matches = Element.prototype.msMatchesSelector ||
-        Element.prototype.webkitMatchesSelector;
+        //Element.prototype.webkitMatchesSelector; // deprecated
+        Element.prototype.matches;
 }
 
 // Add global to window, assigning the value of window itself.

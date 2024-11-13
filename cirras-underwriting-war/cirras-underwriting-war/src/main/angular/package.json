@@ -57,7 +57,7 @@
     "ngx-mask": "^15.2.3",
     "ngx-moment": "^6.0.2",
     "ngx-pagination": "^6.0.3",
-    "puppeteer": "^1.14.0",
+    "puppeteer": "^23.7.1",
     "rxjs": "^6.3.3",
     "sass": "^1.78.0",
     "scroll-into-view-if-needed": "^2.2.31",
