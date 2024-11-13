@@ -3,7 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { AddFieldValidationRsrc, AnnualFieldRsrc, LinkedPlanting, UwContractListRsrc } from '@cirras/cirras-underwriting-api';
-import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
 import { InventoryContract, UwContract } from 'src/app/conversion/models';
 import { makeTitleCase, setHttpHeaders } from 'src/app/utils';
 import { INSURANCE_PLAN, LAND_UPDATE_TYPE, LINK_PLANTING_TYPE, PLANT_INSURABILITY_TYPE_CODE } from 'src/app/utils/constants';

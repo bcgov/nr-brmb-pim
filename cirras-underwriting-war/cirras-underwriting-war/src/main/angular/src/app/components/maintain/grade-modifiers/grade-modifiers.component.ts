@@ -18,7 +18,7 @@ import { RootState } from 'src/app/store';
 import { MatDialog } from '@angular/material/dialog';
 import { ApplicationStateService } from 'src/app/services/application-state.service';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
-import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
 import { ConnectionService } from 'ngx-connection-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Overlay } from '@angular/cdk/overlay';
@@ -37,7 +37,7 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
   @Input() gradeModifierList: GradeModifierList   // TODO: Reconcile with yield model.
   @Input() cropCommodityList: CropCommodityList
   @Input() gradeModifierTypeList: GradeModifierTypeList
-  @Input() isUnsaved: boolean;
+  // @Input() isUnsaved: boolean;
 
   constructor(protected router: Router,
     protected route: ActivatedRoute,

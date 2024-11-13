@@ -1,7 +1,7 @@
 import {Injectable, Injector} from "@angular/core";
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {AppConfigService, AuthenticationInterceptor, TokenService} from "@wf1/core-ui";
+import {AppConfigService, AuthenticationInterceptor, TokenService} from "@wf1/wfcc-core-lib";
 import {UUID} from "angular2-uuid";
 import {catchError, mergeMap} from "rxjs/operators";
 import {Router} from "@angular/router";
@@ -20,7 +20,7 @@ export class ResourcesInterceptor extends AuthenticationInterceptor implements H
 
     constructor(protected appConfig: AppConfigService, private snackbarService: MatSnackBar, protected injector: Injector,
                 private router: Router, private routerExtService: RouterExtService) {
-        super(appConfig, injector);
+        super(injector);
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {Action, Store} from "@ngrx/store";
 import {DefaultService as CirrasUnderwritingAPIService, InventoryContractRsrc, UwContractListRsrc} from "@cirras/cirras-underwriting-api";
-import {TokenService} from "@wf1/core-ui";
+import {TokenService} from "@wf1/wfcc-core-lib";
 import {UUID} from "angular2-uuid";
 import {Observable, of} from 'rxjs';
 import {catchError, concatMap, debounceTime, map, switchMap, withLatestFrom} from 'rxjs/operators';

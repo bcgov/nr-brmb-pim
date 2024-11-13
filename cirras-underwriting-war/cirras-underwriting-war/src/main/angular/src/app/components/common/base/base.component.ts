@@ -28,7 +28,7 @@ import {ConnectionService} from "ngx-connection-service";
 import {ActionItem} from "../base-wrapper/base-wrapper.component";
 import {Overlay} from "@angular/cdk/overlay";
 import {ApplicationStateService} from "../../../services/application-state.service";
-import {AppConfigService, TokenService} from "@wf1/core-ui";
+import {AppConfigService, TokenService} from "@wf1/wfcc-core-lib";
 import {PaginationInstance} from "ngx-pagination";
 import {HttpClient} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
@@ -64,7 +64,7 @@ export class BaseComponent implements OnInit, OnChanges, AfterViewInit {
     @Input() loadState: LoadState;
     @Input() errorState: ErrorState[];
     @Input() saveErrorState: ErrorState[];
-    @Input() growerContract: UwContract;
+    //@Input() growerContract: UwContract;
 
    //@Input() severeErrorState?: ErrorState[];
     displayLabel = "Data";

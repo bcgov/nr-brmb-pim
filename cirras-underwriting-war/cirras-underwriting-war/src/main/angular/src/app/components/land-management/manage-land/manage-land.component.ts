@@ -17,7 +17,7 @@ import { RootState } from 'src/app/store';
 import { MatDialog } from '@angular/material/dialog';
 import { ApplicationStateService } from 'src/app/services/application-state.service';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
-import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
 import { ConnectionService } from 'ngx-connection-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Overlay } from '@angular/cdk/overlay';

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { UntypedFormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AnnualFieldRsrc, AnnualFieldListRsrc, LegalLandRsrc, AddFieldValidationRsrc, InventoryContractRsrc, InventoryField, UnderwritingComment, RemoveFieldValidationRsrc } from '@cirras/cirras-underwriting-api';
-import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
 import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest';
 import { LegalLandList } from 'src/app/conversion/models';
 import { makeTitleCase, setHttpHeaders } from 'src/app/utils';

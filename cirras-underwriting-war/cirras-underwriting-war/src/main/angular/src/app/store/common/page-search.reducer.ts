@@ -1,6 +1,6 @@
-import {searchReducer, SearchState} from "@wf1/core-ui";
+import {searchReducer, SearchState} from "@wf1/wfcc-core-lib";
 import {Action} from "@ngrx/store";
-import {SearchActions} from "@wf1/core-ui/lib/search/store/actions";
+import {SearchActions} from "@wf1/wfcc-core-lib/lib/search/store/actions";
 
 import deepEqual from "deep-equal";
 import { SearchUwContractsAction, SEARCH_UW_CONTRACTS } from "../uw-contracts-list/uw-contracts-list.actions";

@@ -11,7 +11,7 @@ import { RouterLink, WfApplicationConfiguration, WfApplicationState, WfDevice } 
 import {Subscription} from "rxjs";
 import { ResourcesRoutes } from "src/app/utils/constants";
 import { MatDialog } from "@angular/material/dialog";
-import { AppConfigService, TokenService } from "@wf1/core-ui";
+import { AppConfigService, TokenService } from "@wf1/wfcc-core-lib";
 import { SecurityUtilService } from "src/app/services/security-util.service";
 import { ROUTE_SCOPES, SCOPES_UI } from "src/app/utils/scopes";
 

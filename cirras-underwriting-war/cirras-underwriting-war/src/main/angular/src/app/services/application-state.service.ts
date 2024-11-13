@@ -1,5 +1,5 @@
 import {Injectable, Injector} from "@angular/core";
-import {TokenService} from "@wf1/core-ui";
+import {TokenService} from "@wf1/wfcc-core-lib";
 
 @Injectable({
     providedIn: "root"

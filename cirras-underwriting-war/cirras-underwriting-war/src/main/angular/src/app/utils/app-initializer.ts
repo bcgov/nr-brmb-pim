@@ -1,7 +1,7 @@
 import {DefaultService as CirrasUnderwritingAPIService} from "@cirras/cirras-underwriting-api";
 
 import {Injector} from "@angular/core";
-import {AppConfigService, TokenService} from "@wf1/core-ui";
+import {AppConfigService, TokenService} from "@wf1/wfcc-core-lib";
 import {HttpErrorResponse, HttpHandler} from "@angular/common/http";
 import {catchError, defaultIfEmpty, map} from "rxjs/operators";
 import {forkJoin, of} from "rxjs";

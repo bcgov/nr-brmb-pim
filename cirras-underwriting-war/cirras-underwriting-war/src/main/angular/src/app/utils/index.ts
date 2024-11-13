@@ -1,7 +1,7 @@
 import {APP_BOOTSTRAP_LISTENER, Inject, InjectionToken, Renderer2, Type} from "@angular/core";
 import {EffectSources} from "@ngrx/effects";
 import {PagingInfoRequest} from "../store/application/application.state";
-import {SortDirection} from "@wf1/core-ui";
+import {SortDirection} from "@wf1/wfcc-core-lib";
 import * as moment from "moment";
 import {Moment} from "moment";
 import {Validators} from "@angular/forms";

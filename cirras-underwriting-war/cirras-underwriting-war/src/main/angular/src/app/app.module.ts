@@ -11,7 +11,7 @@ import {EffectsModule} from "@ngrx/effects";
 import {StoreModule} from "@ngrx/store";
 import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 // import {StoreRouterConnectingModule} from "@ngrx/router-store";
-import {AppConfigService, CoreUIModule, MapService, PublicApplicationHeaderModule, TokenService} from "@wf1/core-ui";
+// import {AppConfigService, CoreUIModule, MapService, PublicApplicationHeaderModule, TokenService} from "@wf1/wfcc-core-lib";
 import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./containers/application-root/app.component";
 import {environment} from "../environments/environment";
@@ -146,6 +146,7 @@ import { VerifiedYieldComponent } from './components/verified-yield/verified-yie
 import { VerifiedYieldContainer } from "./containers/verified-yield/verified-yield-container.component";
 import { VerifiedYieldCommodityListComponent } from './components/verified-yield/commodity-list/verified-yield-commodity-list.component';
 import { VerifiedYieldCommodityComponent } from './components/verified-yield/commodity/verified-yield-commodity.component';
+import { AppConfigService, TokenService } from "@wf1/wfcc-core-lib";
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -291,8 +292,8 @@ if (!environment.production || !environment.restrict_imports) {
         ReactiveFormsModule,
         NgSelectModule,
         ScrollingModule,
-        PublicApplicationHeaderModule,
-        CoreUIModule.forRoot({ configurationPath: environment.app_config_location }),
+        // PublicApplicationHeaderModule,
+        // CoreUIModule.forRoot({ configurationPath: environment.app_config_location }),
         StoreModule.forRoot(rootReducers, { initialState: initialRootState }),
         AppRoutingModule,
         NgxPaginationModule,
@@ -314,7 +315,7 @@ if (!environment.production || !environment.restrict_imports) {
         UpdateService,
         AppConfigService,
         TokenService,
-        MapService,
+        // MapService,
         Title,
         {
             provide: APP_INITIALIZER,
