@@ -17,7 +17,8 @@ import {AppComponent} from "./containers/application-root/app.component";
 import {environment} from "../environments/environment";
 import {initialRootState, rootEffects, rootReducers} from "./store";
 import {DATE_FORMATS, provideBootstrapEffects} from "./utils";
-import {NgxMaskModule} from "ngx-mask";
+//import {NgxMaskModule} from "ngx-mask";
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from "ngx-mask";
 import {MomentModule} from "ngx-moment";
 import {UnauthorizedPageComponent} from "./components/unauthorized-page/unauthorized-page.component";
 import {NgxTrimModule} from "ngx-trim";
@@ -286,7 +287,9 @@ if (!environment.production || !environment.restrict_imports) {
         MomentModule,
         MatProgressSpinnerModule,
         NgxTrimModule,
-        NgxMaskModule.forRoot(),
+        // NgxMaskModule.forRoot(),
+        NgxMaskDirective,
+        NgxMaskPipe,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
         ReactiveFormsModule,
@@ -359,6 +362,7 @@ if (!environment.production || !environment.restrict_imports) {
                     monthYearA11yLabel: 'MMM YYYY'
                 }
             } },
+        provideNgxMask(),
         DecimalPipe
     ],
     bootstrap: [AppComponent]
