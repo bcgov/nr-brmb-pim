@@ -73,7 +73,7 @@ import {ReadonlyFieldDirective} from "./directives/readonly-field.directive";
 import {ReadonlyFormDirective} from "./directives/readonly-form.directive";
 import {A11yModule} from "@angular/cdk/a11y";
 
-import {NgSelectModule} from "@ng-select/ng-select";
+//import {NgSelectModule} from "@ng-select/ng-select";
 import {MultiSelectDirective} from "./directives/multi-select.directive";
 import {SingleSelectDirective} from "./directives/singleselect.directive";
 
@@ -290,7 +290,7 @@ if (!environment.production || !environment.restrict_imports) {
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
         ReactiveFormsModule,
-        NgSelectModule,
+        // NgSelectModule,
         ScrollingModule,
         // PublicApplicationHeaderModule,
         // CoreUIModule.forRoot({ configurationPath: environment.app_config_location }),
