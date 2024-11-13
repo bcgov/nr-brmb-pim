@@ -21,7 +21,7 @@ import {DATE_FORMATS, provideBootstrapEffects} from "./utils";
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from "ngx-mask";
 import {MomentModule} from "ngx-moment";
 import {UnauthorizedPageComponent} from "./components/unauthorized-page/unauthorized-page.component";
-import {NgxTrimModule} from "ngx-trim";
+//import {NgxTrimModule} from "ngx-trim";
 import {ErrorPanelComponent} from "./components/common/error-panel/error-panel.component";
 import {ConnectionServiceOptions, ConnectionServiceOptionsToken} from "ngx-connection-service";
 import {DragDropModule} from "@angular/cdk/drag-drop";
@@ -286,7 +286,7 @@ if (!environment.production || !environment.restrict_imports) {
         MatToolbarModule,
         MomentModule,
         MatProgressSpinnerModule,
-        NgxTrimModule,
+        //NgxTrimModule,
         // NgxMaskModule.forRoot(),
         NgxMaskDirective,
         NgxMaskPipe,
