@@ -1,32 +1,32 @@
 @import '../../../styles/variables';
 
 .related-policies{
-  
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   .mat-form-field-wrapper{
     padding-bottom: 0;
     width: 170px;
     height: 36px;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   .mat-form-field-underline {
     display: none;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   .mat-form-field-appearance-fill .mat-form-field-infix {
      padding: 0; 
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   .mat-form-field-infix {
       padding: 0 0 0 0;
     }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   .mat-form-field-appearance-fill .mat-form-field-flex {
       background-color: white;
       border: 1px solid rgba(194, 194, 194, 1) !important;
       border-radius: 5px !important;
       padding: 0 !important;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
   .mat-select-value {
     padding-bottom: 10px;
     padding-left: 8px;

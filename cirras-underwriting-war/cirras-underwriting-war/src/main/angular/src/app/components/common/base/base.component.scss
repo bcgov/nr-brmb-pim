@@ -80,7 +80,7 @@
 
   }
 
-  &.mobile mat-card.mat-card.cirras-underwriting-header-bar .header-items .search-action-bar,
+  &.mobile mat-card.mat-mdc-card.cirras-underwriting-header-bar .header-items .search-action-bar,
   .table-search-header .search-and-filters{
     .input-clear-button {
       margin-bottom: 8px;
@@ -91,7 +91,7 @@
       width: 24px;
       border-radius: 20%;
       background-color: $colour-lighter-grey;
-
+      /*TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
       ::ng-deep .mat-button-wrapper{
         display: flex;
       }

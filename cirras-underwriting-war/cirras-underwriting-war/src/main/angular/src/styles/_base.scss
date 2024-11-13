@@ -9,13 +9,14 @@ body {
   font-feature-settings: 'liga';
 }
 
-mat-dialog-container.mat-dialog-container {
+/* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version.*/
+mat-dialog-container.mat-mdc-dialog-container {
   font-family: $font-family-main;
   font-size: $font-size;
 }
 
-button.mat-fab.mat-primary,
-button.mat-raised-button.mat-primary {
+button.mat-mdc-fab.mat-primary,
+button.mat-mdc-raised-button.mat-primary {
   background-color: $colour-button-primary;
   color: $colour-white;
 
@@ -28,18 +29,18 @@ button.mat-raised-button.mat-primary {
   }
 }
 
-button.mat-fab.mat-secondary,
-button.mat-raised-button.mat-secondary {
+button.mat-mdc-fab.mat-secondary,
+button.mat-mdc-raised-button.mat-secondary {
   background-color: $colour-white;
   color: $colour-blue;
 }
 
-button.mat-fab:not([disabled]).mat-primary:hover,
-button.mat-raised-button:not([disabled]).mat-primary:hover {
+button.mat-mdc-fab:not([disabled]).mat-primary:hover,
+button.mat-mdc-raised-button:not([disabled]).mat-primary:hover {
   background-color: $colour-button-primary-hover;
 }
-button.mat-fab,
-button.mat-raised-button {
+button.mat-mdc-fab,
+button.mat-mdc-raised-button {
   background-color: $colour-button;
   color: $colour-white;
   font-family: $font-family-main;
@@ -54,29 +55,29 @@ button.mat-raised-button {
   // }
 }
 
-button.mat-raised-button[disabled]{
+button.mat-mdc-raised-button[disabled]{
   border: 1px solid $colour-medium-grey;
 }
 
-button.mat-raised-button:not([disabled]):hover {
+button.mat-mdc-raised-button:not([disabled]):hover {
   background-color: $colour-button-hover;
 }
 
-.mat-button,
-.mat-raised-button,
-.mat-icon-button,
-.mat-stroked-button,
-.mat-flat-button,
-.mat-fab,
-.mat-mini-fab
-.mat-menu-item,
-.mat-table,
-.mat-list-item {
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-icon-button,
+.mat-mdc-outlined-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-fab,
+.mat-mdc-mini-fab
+.mat-mdc-menu-item,
+.mat-mdc-table,
+.mat-mdc-list-item {
   font-family: $font-family-main;
   font-size: $font-size;
 }
 
-.mat-table {
+.mat-mdc-table {
   thead {
     font-family: $font-family-emphasis;
   }
@@ -86,16 +87,16 @@ button.mat-raised-button:not([disabled]):hover {
   display: flex;
   flex-direction: column;
 
-  .mat-button,
-  .mat-raised-button,
-  .mat-icon-button,
-  .mat-stroked-button,
-  .mat-flat-button,
-  .mat-fab,
-  .mat-mini-fab
-  .mat-menu-item,
-  .mat-table,
-  .mat-list-item {
+  .mat-mdc-button,
+  .mat-mdc-raised-button,
+  .mat-mdc-icon-button,
+  .mat-mdc-outlined-button,
+  .mat-mdc-unelevated-button,
+  .mat-mdc-fab,
+  .mat-mdc-mini-fab
+  .mat-mdc-menu-item,
+  .mat-mdc-table,
+  .mat-mdc-list-item {
     font-family: $font-family-main;
     font-size: $font-size;
   }
@@ -133,14 +134,14 @@ button.mat-raised-button:not([disabled]):hover {
 
 
       .mat-nav-list {
-        .mat-list-item{
+        .mat-mdc-list-item{
           color: $opacity-dark-grey;
 
           .color-sidenav-icon {
             color: $opacity-dark-grey;
           }
         }
-
+        /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
         .mat-list-item-content {
           fa-icon {
             width: 24px;
@@ -152,7 +153,7 @@ button.mat-raised-button:not([disabled]):hover {
             width: 100%;
           }
         }
-
+      /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
       .mat-list-item-disabled{
         color: $colour-disabled-text;
 
@@ -200,7 +201,7 @@ button.mat-raised-button:not([disabled]):hover {
   }
 }
 
-cirras-underwriting-list-container mat-list.mat-list {
+cirras-underwriting-list-container mat-list.mat-mdc-list {
   padding-top: 0;
 }
 
@@ -211,8 +212,11 @@ cirras-underwriting-list-container cirras-underwriting-spinner {
   align-items: center;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
+/* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
 mat-list-option.list-item,
 mat-list-item.list-item {
+  /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
   .mat-list-item-content {
     align-items: center;
     padding: 0 !important;
@@ -225,11 +229,11 @@ mat-list-item.list-item {
 }
 
 
-.cdk-overlay-pane .mat-dialog-container {
+.cdk-overlay-pane .mat-mdc-dialog-container {
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
-.mat-tooltip {
+.mat-mdc-tooltip {
   font-size: $font-size;
 }
 
@@ -298,13 +302,13 @@ a:hover {
   color: $colour-orange
 }
 
-#core-interface-container mat-sidenav .mat-nav-list.mat-list-base {
+#core-interface-container mat-sidenav .mat-nav-list.mat-mdc-list-base {
 
-  a.mat-list-item:hover {
+  a.mat-mdc-list-item:hover {
     color: $colour-orange
   }
 
-  a.mat-list-item.nav-item-active {
+  a.mat-mdc-list-item.nav-item-active {
     font-family: $font-family-emphasis;
     font-weight: 600;
     color: $colour-blue;
@@ -493,29 +497,34 @@ a:hover {
   white-space: pre-line;
 }
 
-mat-checkbox.mat-checkbox {
+/* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
+/* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
+mat-checkbox.mat-mdc-checkbox {
   font-family: $font-family-main;
   border: none !important;
-
+  /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
   .mat-checkbox-frame {
     border-width: 1px;
     border-color: $colour-dark-grey;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
+  /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
   &.mat-checkbox-disabled {
+    /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
     .mat-checkbox-frame {
       border-color: #b0b0b0;
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
     .mat-checkbox-label {
       color: unset;
     }
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
+  /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
   &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
   &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
     background-color: transparent;
-
+    /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
     .mat-checkbox-checkmark-path {
       stroke: $colour-dark-grey !important;
       stroke-width: 4px;
@@ -523,11 +532,11 @@ mat-checkbox.mat-checkbox {
   }
 }
 
-.mat-footer-row th {
+.mat-mdc-footer-row th {
   font-weight: $font-weight;
 }
 
-.mat-snack-bar-container {
+.mat-mdc-snack-bar-container {
   word-break: break-word;
 }
 
@@ -535,7 +544,7 @@ mat-checkbox.mat-checkbox {
   color: $colour-disabled-text;
 }
 
-.mat-cell[disabled]{
+.mat-mdc-cell[disabled]{
   mat-icon{
     color: $opacity-grey;
   }
@@ -560,20 +569,22 @@ mat-checkbox.mat-checkbox {
     padding-right: 0;
   }
 }
-.mat-radio-button:not(.mat-radio-disabled).mat-accent .mat-radio-inner-circle,
+.mat-mdc-radio-button:not(.mat-radio-disabled).mat-accent .mat-radio-inner-circle,
 .mat-radio-button:not(.mat-radio-disabled).mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple),
 .mat-radio-button:not(.mat-radio-disabled).mat-accent.mat-radio-checked .mat-radio-persistent-ripple,
 .mat-radio-button:not(.mat-radio-disabled).mat-accent:active .mat-radio-persistent-ripple{
   background-color: $colour-blue;
 }
-.mat-radio-button:not(.mat-radio-disabled).mat-accent.mat-radio-checked .mat-radio-outer-circle {
+/* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
+.mat-mdc-radio-button:not(.mat-radio-disabled).mat-accent.mat-radio-checked .mat-radio-outer-circle {
   border-color: $colour-blue;
 }
 
-.mat-tab-group{
+.mat-mdc-tab-group{
   margin-top: var(--cirras-underwriting-gutter-space);
   font-family: $font-family-main;
-
+  /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
+  /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
   mat-tab-body{
     font-family: $font-family-main;
     border-bottom: 1px solid $colour-light-grey;
@@ -587,7 +598,7 @@ mat-checkbox.mat-checkbox {
       padding: 5px;
     }
 
-    .mat-card:not(.error-panel){
+    .mat-mdc-card:not(.error-panel){
       padding: 0;
       border-radius: 0;
       box-shadow: none;
@@ -605,10 +616,10 @@ mat-checkbox.mat-checkbox {
       }
     }
   }
-
-
+  /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
+  /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
   .mat-tab-labels{
-
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
     .mat-tab-label {
       //border: 1px solid transparent;
       border-top-left-radius: $wf1-border-radius;
@@ -632,7 +643,7 @@ mat-checkbox.mat-checkbox {
       }
 
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
     .mat-tab-label-active {
       font-family: $font-family-main;
       font-weight: $font-weight-emphasis;
@@ -651,14 +662,14 @@ mat-checkbox.mat-checkbox {
 #core-interface-container {
   font-family: $font-family-main;
 
-  .mat-paginator-container {
+  .mat-mdc-paginator-container {
     justify-content: center;
     font-size: $font-size;
   }
 
   .table-wrapper{
 
-    .mat-table {
+    .mat-mdc-table {
       .mat-column-remove,
       .mat-column-addRemove,
       .mat-column-viewEdit,
@@ -716,7 +727,7 @@ mat-checkbox.mat-checkbox {
   font-family: $font-family-main;
 }
 
-.mat-snack-bar-container {
+.mat-mdc-snack-bar-container {
   color: $colour-white;
   position: inherit;
   padding: 0 !important;
@@ -810,21 +821,21 @@ mat-checkbox.mat-checkbox {
 }
 .cdk-overlay-container,
 cirras-underwriting-root {
-  .mat-button,
-  .mat-raised-button,
-  .mat-icon-button,
-  .mat-stroked-button,
-  .mat-flat-button,
-  .mat-fab,
-  .mat-mini-fab,
-  .mat-menu-item,
-  .mat-table,
-  .mat-list-item {
+  .mat-mdc-button,
+  .mat-mdc-raised-button,
+  .mat-mdc-icon-button,
+  .mat-mdc-outlined-button,
+  .mat-mdc-unelevated-button,
+  .mat-mdc-fab,
+  .mat-mdc-mini-fab,
+  .mat-mdc-menu-item,
+  .mat-mdc-table,
+  .mat-mdc-list-item {
     font-family: $font-family-main;
     font-size: $font-size;
   }
 
-  button.mat-menu-item {
+  button.mat-mdc-menu-item {
     height: 30px;
     line-height: 30px;
   }
@@ -934,8 +945,8 @@ cirras-underwriting-root {
         .summary-card{
           margin: var(--cirras-underwriting-gutter-space) 0 0 0;
         }
-
-        mat-card.mat-card.cirras-underwriting-header-bar {
+        /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
+        mat-card.mat-mdc-card.cirras-underwriting-header-bar {
           padding: 0;
         }
 
@@ -948,7 +959,7 @@ cirras-underwriting-root {
         }
       }
 
-      .mat-tab-body{
+      .mat-mdc-tab-body{
         .table-wrapper{
           margin: var(--cirras-underwriting-gutter-space);
           width: calc(100% - 2*var(--cirras-underwriting-gutter-space));
@@ -984,8 +995,10 @@ cirras-underwriting-root {
 
     &.hide-labels{
       .form-flex .field {
-        .mat-form-field .mat-form-field-infix {
+        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+        .mat-mdc-form-field .mat-form-field-infix {
           padding-top: 0;
+          /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
           .mat-form-field-label-wrapper{
             display: none;
           }
@@ -1056,6 +1069,7 @@ cirras-underwriting-root {
         margin-left: var(--cirras-underwriting-gutter-space);
 
         &.no-underline{
+          /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
           .mat-form-field-underline{
             display: none;
           }
@@ -1096,11 +1110,12 @@ cirras-underwriting-root {
           flex-shrink: 0;
           display: flex;
 
-          .mat-form-field{
+          .mat-mdc-form-field{
             //.mat-form-field-flex{
             //  padding-top: 0;
             //}
-
+            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
             .mat-form-field-infix{
               display: flex;
               justify-content: center;
@@ -1108,15 +1123,16 @@ cirras-underwriting-root {
               input{
                 width: 0;
               }
-
+              /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
               .mat-radio-container{
                 margin-left: 3px;
               }
             }
+            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
             .mat-form-field-label {
               text-align: center;
             }
-
+            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
             .mat-form-field-underline{
               display: none;
             }
@@ -1125,12 +1141,13 @@ cirras-underwriting-root {
         }
 
         &.action{
+          /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
           .mat-form-field-infix button {
             margin-top: -2px;
           }
         }
 
-        .mat-form-field{
+        .mat-mdc-form-field{
           width: 100%;
           font-family: $font-family-main;
 
@@ -1142,7 +1159,7 @@ cirras-underwriting-root {
               min-width: 0;
             }
 
-            .mat-button {
+            .mat-mdc-button {
               line-height: 0px;
               margin-top: -5px;
             }
@@ -1152,15 +1169,15 @@ cirras-underwriting-root {
               font-size: 1.5rem;
             }
           }
-
+          /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
           &.mat-form-field-invalid .mat-form-field-label {
             color: $colour-errors;
           }
-
+          /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
           .mat-form-field-flex, .mat-form-field-infix{
             width: 100%;
           }
-
+          /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
           .mat-form-field-infix{
             padding-top: 1em;
           }
@@ -1177,19 +1194,19 @@ cirras-underwriting-root {
           }
         }
 
-        .mat-form-field.readonly {
+        .mat-mdc-form-field.readonly {
           cursor: not-allowed;
 
           [readonly="true"]{
             color: $colour-disabled-text;
             cursor: not-allowed;
           }
-
+          /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
           mat-radio-button .mat-radio-label{
             cursor: not-allowed;
           }
-
-
+          /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+          /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
           &.mat-form-field-appearance-standard .mat-form-field-underline {
             background-position: 0;
             background-color: transparent;
@@ -1197,14 +1214,16 @@ cirras-underwriting-root {
             background-size: 4px 100%;
             background-repeat: repeat-x;
             color: $colour-black;
-
+            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
             .mat-form-field-ripple{
               background-color: transparent;
             }
           }
+          /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
           &.mat-form-field-type-mat-native-select.mat-form-field-invalid .mat-form-field-infix::after{
             color: rgba(0, 0, 0, 0.54);
           }
+          /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
           &.mat-form-field-invalid .mat-form-field-label{
             color: $colour-black;
           }
@@ -1269,7 +1288,7 @@ cirras-underwriting-root {
             min-width: 0;
           }
 
-          .mat-button {
+          .mat-mdc-button {
             line-height: 0px;
             margin-top: 4px;
             margin-left: -45px;
@@ -1309,19 +1328,19 @@ cirras-underwriting-root {
       background-color: $colour-highlight4;
     }
 
-    .mat-cell.selected-grid-item{
+    .mat-mdc-cell.selected-grid-item{
       background-color: $colour-blue;
       color: $colour-white;
     }
 
-    .mat-table{
+    .mat-mdc-table{
       tr{
         border-right: 1px solid $colour-light-grey;
       }
-      .mat-row:hover {
+      .mat-mdc-row:hover {
         background-color: $colour-white;
       }
-      .mat-row:nth-child(odd){
+      .mat-mdc-row:nth-child(odd){
         background-color: $colour-white;
       }
 
@@ -1347,7 +1366,7 @@ cirras-underwriting-root {
       td,th{
         max-width: unset;
 
-        &.mat-cell{
+        &.mat-mdc-cell{
           .mat-icon{
             padding-right: 10px;
           }
@@ -1385,7 +1404,7 @@ cirras-underwriting-root {
             background-color: $colour-highlight4;
           }
 
-          .mat-menu-trigger{
+          .mat-mdc-menu-trigger{
             cursor: pointer;
           }
         }
@@ -1410,7 +1429,7 @@ cirras-underwriting-root {
 
 }
 
-.cdk-overlay-container .mat-dialog-content{
+.cdk-overlay-container .mat-mdc-dialog-content{
 
   .form-flex{
     flex-direction: column;
@@ -1420,13 +1439,13 @@ cirras-underwriting-root {
       display: flex;
       flex-flow: row nowrap;
       flex-direction: column;
-
+      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-start,
       .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end,
       .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-gap {
         border-width: 1px;
       }
-
+      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       .mat-form-field-infix {
         border-top: none;
         padding-bottom: 0.5em;
@@ -1457,7 +1476,7 @@ cirras-underwriting-root {
 
 .mat-expansion-panel-content,
 button,
-.mat-card{
+.mat-mdc-card{
   font-family: $font-family-main;
   font-size: $font-size;
 }
@@ -1511,7 +1530,7 @@ input{
   background-color: $colour-lighter-grey;
 }
 
-textarea.mat-input-element.cdk-textarea-autosize{
+textarea.mat-mdc-input-element.cdk-textarea-autosize{
   height: 15px;
   overflow: hidden;
 }
@@ -1521,7 +1540,7 @@ textarea.mat-input-element.cdk-textarea-autosize{
   pointer-events: none;
 }
 
-mat-error.mat-error {
+mat-error.mat-mdc-form-field-error {
   color: $colour-errors;
 }
 
@@ -1543,11 +1562,11 @@ mat-error.mat-error {
     display: flex;
     height: 37.5px;
 
-    .mat-checkbox{
+    .mat-mdc-checkbox{
       padding-left: 0;
       margin-right: 8px;
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
     .mat-checkbox-inner-container{
       height: 24px;
       width: 24px;
@@ -1558,8 +1577,8 @@ mat-error.mat-error {
 .intermediate-action{
   color: $colour-intermediate-action;
 
-  &.mat-fab.mat-primary span,
-  &.mat-raised-button.mat-primary span{
+  &.mat-mdc-fab.mat-primary span,
+  &.mat-mdc-raised-button.mat-primary span{
     color: $colour-white;
   }
 }

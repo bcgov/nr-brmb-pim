@@ -16,7 +16,7 @@
       padding: 0 1rem;
   
       .field,
-      .field .mat-form-field {
+      .field .mat-mdc-form-field {
         width: 100%;
   
         span {
@@ -28,7 +28,7 @@
       }
     }
   
-    .mat-dialog-content {
+    .mat-mdc-dialog-content {
       margin: 0;
       padding: 0.5rem;
       min-height: 4rem;
@@ -40,13 +40,15 @@
     }
 
     .entire {
+      /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       ::ng-deep .mat-form-field-wrapper {
           padding-bottom: 0;
       }
+      /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       ::ng-deep .mat-form-field-underline {
           bottom: 0;
       }
-      ::ng-deep .mat-form-field {
+      ::ng-deep .mat-mdc-form-field {
           width: 100%;
       }
     }
@@ -118,29 +120,29 @@
             & > * {
                   flex-grow: 1;
               }
-              .mat-form-field{
+              .mat-mdc-form-field{
                 width: 99px;
                 height: 60px;
                 //margin-bottom: -1.4em
               }
-        
+              /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
               .mat-form-field-wrapper {
                 bottom: 0;
               }
-         
+              /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
               ::ng-deep .mat-form-field-underline {
                 display: none;
-              }  
-            
+              }
+              /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
               ::ng-deep .mat-form-field-infix {
                 display: flex;
                 justify-content: center;
               }
-              
+              /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
               ::ng-deep .mat-form-field-wrapper {
                 padding-bottom: 0;
               }
-
+              /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
               ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
                 height: 60px;
               }

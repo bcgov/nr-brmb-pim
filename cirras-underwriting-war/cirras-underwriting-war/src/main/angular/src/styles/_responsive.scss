@@ -71,8 +71,8 @@
   .cdk-overlay-container {
     position: fixed !important;
   }
-
-  mat-dialog-container.mat-dialog-container {
+  /*TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version.*/
+  mat-dialog-container.mat-mdc-dialog-container {
     font-size: $font-size;
   }
 }
@@ -129,6 +129,7 @@
 //---------------table screens----------
 @media screen and (max-width: map_get($grid-breakpoints, xs)) {
   .sort-dir{
+    /*TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
     .mat-radio-label-content{
       padding-left: 2px;
     }
@@ -184,8 +185,8 @@
     }
   }
 
-  .mat-tab-group .mat-tab-body{
-    .mat-card:not(.error-panel){
+  .mat-mdc-tab-group .mat-mdc-tab-body{
+    .mat-mdc-card:not(.error-panel){
       border: 1px solid $colour-light-grey;
       margin: var(--cirras-underwriting-gutter-space);
       border-radius: $wf1-border-radius;

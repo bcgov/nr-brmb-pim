@@ -1,6 +1,6 @@
 @import 'src/styles/variables';
 
-::ng-deep .mat-dialog-container {
+::ng-deep .mat-mdc-dialog-container {
     font-size: $font-size;
     padding: 0;
     font-family: $font-family-main;
@@ -20,30 +20,30 @@
             margin-left: var(--cirras-underwriting-gutter-space);
             color: $colour-white;
 
-            .mat-progress-spinner circle,
-            .mat-spinner circle {
+            .mat-mdc-progress-spinner circle,
+            .mat-mdc-progress-spinner circle {
                 stroke: $colour-white;
             }
         }
     }
 
-    ::ng-deep .mat-dialog-actions {
+    ::ng-deep .mat-mdc-dialog-actions {
         margin: 0;
         background-color: #F2F2F2;
         border-top: solid 1px $colour-light-grey;
         padding: var(--cirras-underwriting-gutter-space);
     }
 
-    ::ng-deep .desktop .mat-dialog-content.no-scroll {
+    ::ng-deep .desktop .mat-mdc-dialog-content.no-scroll {
         overflow-y: hidden;
     }
 
-    ::ng-deep .desktop .mat-dialog-content.grow {
+    ::ng-deep .desktop .mat-mdc-dialog-content.grow {
         overflow-y: auto !important;
         max-height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 135px);
     }
 
-    ::ng-deep .mat-dialog-content {
+    ::ng-deep .mat-mdc-dialog-content {
         padding: var(--cirras-underwriting-gutter-space);
         margin: 0;
     }
@@ -56,7 +56,7 @@
             line-height: 0;
             height: 0;
             width: 0;
-
+            /*TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
             ::ng-deep .mat-button-wrapper {
                 display: flex;
                 border-radius: 20%;
@@ -72,7 +72,7 @@
 ::ng-deep .cdk-overlay-container.mobile .cdk-overlay-pane {
     width: unset !important; //mobile dialog unset width
 
-    ::ng-deep .mat-dialog-container {
+    ::ng-deep .mat-mdc-dialog-container {
         min-width: unset !important;
         
         .mobile {
@@ -87,13 +87,13 @@
             padding: 8px;
         }
 
-        ::ng-deep .mat-dialog-actions {
+        ::ng-deep .mat-mdc-dialog-actions {
             bottom: 0;
             max-height: 68px;
             max-width: 100%;
         }
 
-        ::ng-deep .mat-dialog-content {
+        ::ng-deep .mat-mdc-dialog-content {
             max-height: unset;
             overflow-y: auto !important;
             height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 135px);
