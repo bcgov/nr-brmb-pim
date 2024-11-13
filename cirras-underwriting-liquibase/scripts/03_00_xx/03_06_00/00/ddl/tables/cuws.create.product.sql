@@ -57,6 +57,12 @@ CREATE INDEX ix_prd_pl ON cuws.product(policy_id)
 CREATE INDEX ix_prd_cco ON cuws.product(crop_commodity_id)
  TABLESPACE pg_default
 ;
+CREATE INDEX ix_prd_ccc ON cuws.product(commodity_coverage_code)
+ TABLESPACE pg_default
+;
+CREATE INDEX ix_prd_prdsc ON cuws.product(product_status_code)
+ TABLESPACE pg_default
+;
 ALTER TABLE cuws.product ADD 
     CONSTRAINT pk_prd PRIMARY KEY (product_id) USING INDEX TABLESPACE pg_default 
 ;
