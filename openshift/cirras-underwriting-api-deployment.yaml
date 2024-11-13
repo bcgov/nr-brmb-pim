@@ -134,6 +134,16 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: LOG_LEVEL
+          livenessProbe:
+            httpGet:
+              path: /cirras-underwriting-api/v1/checkHealth?callstack=test
+              port: #{TOMCAT_PORT}#
+              scheme: HTTP
+            initialDelaySeconds: 200
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 2
           resources:
             requests:
               cpu: #{API_CPU_REQUEST}#
