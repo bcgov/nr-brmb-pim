@@ -15,7 +15,7 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
               "lodash",
@@ -25,13 +25,10 @@
               "angular2-uuid",
               "vanilla-text-mask"              
             ],
-            "outputPath": {
-              "base": "dist/cirras-underwriting"
-            },
+            "outputPath": "dist/cirras-underwriting",
             "index": "src/index.html",
-            "polyfills": [
-              "src/polyfills.ts"
-            ],
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
@@ -55,16 +52,12 @@
               "node_modules/multiple-select/dist/multiple-select.js"
             ],
             "aot": false,
+            "vendorChunk": true,
             "extractLicenses": false,
+            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true,
-            "browser": "src/main.ts",
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "."
-              ]
-            }
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -94,6 +87,8 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
               "serviceWorker": true
             }
           },

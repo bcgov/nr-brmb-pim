@@ -1,5 +1,6 @@
 import {ValidationError} from "../store/application/application.state";
-import * as moment from "moment";
+// import * as moment from "moment";
+import moment, { Moment } from "moment";
 import {DATE_FORMATS} from "./index";
 import {getCodeOptions, getDescriptionForCode} from "./code-table-utils";
 

@@ -2,8 +2,9 @@ import {APP_BOOTSTRAP_LISTENER, Inject, InjectionToken, Renderer2, Type} from "@
 import {EffectSources} from "@ngrx/effects";
 import {PagingInfoRequest} from "../store/application/application.state";
 import {SortDirection} from "@wf1/wfcc-core-lib";
-import * as moment from "moment";
-import {Moment} from "moment";
+// import * as moment from "moment";
+// import {Moment} from "moment";
+import moment, { Moment } from "moment";
 import {Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import { CropCommodityList, RelLink, UwContract } from "../conversion/models";
