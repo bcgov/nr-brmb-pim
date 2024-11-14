@@ -165,7 +165,7 @@ if (!environment.production || !environment.restrict_imports) {
     devOnlyImports = [
         StoreDevtoolsModule.instrument({
             maxAge: 50,
-        }),
+        connectInZone: true}),
     ];
 }
 
