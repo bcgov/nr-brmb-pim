@@ -28,7 +28,7 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import {RouteReuseStrategy} from "@angular/router";
 import {CustomReuseStrategy} from "./utils/custom-route-reuse-strategy";
 import {BaseWrapperComponent} from "./components/common/base-wrapper/base-wrapper.component";
-import {HTTP_INTERCEPTORS, HttpClientModule, HttpHandler} from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpHandler, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import {ResourcesInterceptor} from "./interceptors/resources-interceptor";
 import {NgxPaginationModule} from "ngx-pagination";
 import { DecimalPipe } from "@angular/common";
@@ -169,8 +169,7 @@ if (!environment.production || !environment.restrict_imports) {
     ];
 }
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         DateMaskDirective,
         TimeMaskDirective,
         DateTimeMaskDirective,
@@ -253,9 +252,7 @@ if (!environment.production || !environment.restrict_imports) {
         VerifiedYieldCommodityListComponent,
         VerifiedYieldCommodityComponent
     ],
-    imports: [
-        CirrasUnderwritingAPIServiceModule,
-        HttpClientModule,
+    bootstrap: [AppComponent], imports: [CirrasUnderwritingAPIServiceModule,
         DragDropModule,
         CdkTableModule,
         BrowserModule,
@@ -308,9 +305,7 @@ if (!environment.production || !environment.restrict_imports) {
         A11yModule,
         MatNativeDateModule,
         MatDatepickerModule,
-        WildfireApplicationModule.forRoot(),
-    ],
-    providers: [
+        WildfireApplicationModule.forRoot()], providers: [
         // Added provideBootstrapEffects function to handle the ngrx issue that loads effects before APP_INITIALIZER
         // providers have finished initializing.
         // See https://github.com/ngrx/platform/issues/931 for more information.
@@ -363,10 +358,9 @@ if (!environment.production || !environment.restrict_imports) {
                 }
             } },
         provideNgxMask(),
-        DecimalPipe
-    ],
-    bootstrap: [AppComponent]
-})
+        DecimalPipe,
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule {
 
 }

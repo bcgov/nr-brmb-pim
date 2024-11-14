@@ -1,5 +1,5 @@
 import {Injectable, Injector} from "@angular/core";
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
 import {Observable} from "rxjs";
 import {AppConfigService, AuthenticationInterceptor, TokenService} from "@wf1/wfcc-core-lib";
 import {UUID} from "angular2-uuid";

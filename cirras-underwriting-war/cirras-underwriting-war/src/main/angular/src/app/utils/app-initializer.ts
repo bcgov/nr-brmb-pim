@@ -2,7 +2,7 @@ import {DefaultService as CirrasUnderwritingAPIService} from "@cirras/cirras-und
 
 import {Injector} from "@angular/core";
 import {AppConfigService, TokenService} from "@wf1/wfcc-core-lib";
-import {HttpErrorResponse, HttpHandler} from "@angular/common/http";
+import { HttpErrorResponse, HttpHandler } from "@angular/common/http";
 import {catchError, defaultIfEmpty, map} from "rxjs/operators";
 import {forkJoin, of} from "rxjs";
 import {UUID} from "angular2-uuid";

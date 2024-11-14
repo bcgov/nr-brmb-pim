@@ -30,7 +30,7 @@ import {Overlay} from "@angular/cdk/overlay";
 import {ApplicationStateService} from "../../../services/application-state.service";
 import {AppConfigService, TokenService} from "@wf1/wfcc-core-lib";
 import {PaginationInstance} from "ngx-pagination";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SCOPES_UI} from "../../../utils/scopes";

@@ -1,7 +1,7 @@
 import {CodeData, Option} from "../store/application/application.state";
 import {CONSTANTS, getCodeTableCache} from "./index";
 import * as moment from "moment";
-import { HttpClient,HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 export const sortByDisplayOrder = (a: CodeData, b: CodeData) => a.displayOrder - b.displayOrder;
 
