@@ -30,7 +30,7 @@ export function appInitFn(httpHandler: HttpHandler, injector: Injector): () => P
                       });
                   } else {
                       //resolve();
-                      resolve(defaultIfEmpty());
+                      resolve(defaultIfEmpty(''));
                   }
               }, 1000);
           });
