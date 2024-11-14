@@ -45,13 +45,13 @@ export class UwContractsListContainer extends BaseContainer {
     errorState$: Observable<ErrorState[]> = this.store.pipe(select(selectUwContractsListErrorState()));
     reportCollection$: Observable<any> = this.store.pipe(select(selectInventoryContractList()));
 
-    constructor(
-        protected store: Store<RootState>,
-        protected router: Router,
-        public snackBar: MatSnackBar,
-        protected applicationStateService: ApplicationStateService,
-        protected cdr: ChangeDetectorRef
-    ) {
-        super(store, router, snackBar, applicationStateService, cdr);
-    }
+    // constructor(
+    //     protected store: Store<RootState>,
+    //     protected router: Router,
+    //     public snackBar: MatSnackBar,
+    //     protected applicationStateService: ApplicationStateService,
+    //     protected cdr: ChangeDetectorRef
+    // ) {
+    //     super(store, router, snackBar, applicationStateService, cdr);
+    // }
 }

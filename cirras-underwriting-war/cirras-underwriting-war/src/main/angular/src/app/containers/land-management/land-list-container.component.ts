@@ -38,13 +38,13 @@ export class LandListContainer extends BaseContainer {
     loadState$: Observable<LoadState> = this.store.pipe(select(selectLegalLandListLoadState()));
     errorState$: Observable<ErrorState[]> = this.store.pipe(select(selectLegalLandListErrorState()));
 
-    constructor(
-        protected store: Store<RootState>,
-        protected router: Router,
-        public snackBar: MatSnackBar,
-        protected applicationStateService: ApplicationStateService,
-        protected cdr: ChangeDetectorRef
-    ) {
-        super(store, router, snackBar, applicationStateService, cdr);
-    }
+    // constructor(
+    //     protected store: Store<RootState>,
+    //     protected router: Router,
+    //     public snackBar: MatSnackBar,
+    //     protected applicationStateService: ApplicationStateService,
+    //     protected cdr: ChangeDetectorRef
+    // ) {
+    //     super(store, router, snackBar, applicationStateService, cdr);
+    // }
 }

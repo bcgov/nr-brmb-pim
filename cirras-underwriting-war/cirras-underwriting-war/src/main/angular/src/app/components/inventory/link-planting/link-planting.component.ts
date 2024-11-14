@@ -43,7 +43,7 @@ export interface AddPlantingPopupData {
 })
 export class LinkPlantingComponent implements OnInit {
 
-  httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
+  httpOptions; // = setHttpHeaders(this.tokenService.getOauthToken())
 
   dataReceived : AddPlantingPopupData;
 
@@ -67,6 +67,9 @@ export class LinkPlantingComponent implements OnInit {
     protected dialog: MatDialog,  ) {  
 
       if (data) {
+
+        this.httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
+
         //capture the data that comes from the main page
         this.dataReceived = data;
 
@@ -122,7 +125,7 @@ export class LinkPlantingComponent implements OnInit {
     url = url +"/uwcontracts?cropYear=&policyNumber=" + encodeURI(searchPolicyNumber) + "&sortColumn=policyNumber&sortDirection=ASC&pageNumber=1&pageRowCount=20"
 
     this.http.get<UwContractListRsrc>(url, this.httpOptions).subscribe({
-      next: data => {
+      next: (data : any) => {
           this.validatePolicy(data)
       },
       error: error => {
@@ -364,7 +367,7 @@ export class LinkPlantingComponent implements OnInit {
     url = url + "&insurancePlanId=" +  INSURANCE_PLAN.FORAGE
 
     this.http.get<AnnualFieldRsrc>(url, this.httpOptions).subscribe({
-      next: data => {
+      next: (data : any) => {
           // the rollover endpoint should return plantings and comments 
           // in case the field has inventory but it's not on the policy to which we want to add it 
           

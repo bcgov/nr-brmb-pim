@@ -50,13 +50,13 @@ export class InventoryContractContainer extends BaseContainer {
         ];
     }
 
-    constructor(
-        protected store: Store<RootState>,
-        protected router: Router,
-        public snackBar: MatSnackBar,
-        protected applicationStateService: ApplicationStateService,
-        protected cdr: ChangeDetectorRef
-    ) {
-        super(store, router, snackBar, applicationStateService, cdr);
-    }
+    // constructor(
+    //     protected store: Store<RootState>,
+    //     protected router: Router,
+    //     public snackBar: MatSnackBar,
+    //     protected applicationStateService: ApplicationStateService,
+    //     protected cdr: ChangeDetectorRef
+    // ) {
+    //     super(store, router, snackBar, applicationStateService, cdr);
+    // }
 }
