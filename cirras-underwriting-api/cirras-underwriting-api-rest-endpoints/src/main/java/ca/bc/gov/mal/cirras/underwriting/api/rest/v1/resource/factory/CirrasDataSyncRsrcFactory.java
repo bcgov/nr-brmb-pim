@@ -37,6 +37,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.ContactRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.GrowerContactRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.GrowerRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PolicyRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.ProductRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SyncCommodityTypeCodeRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SyncCommodityTypeVarietyXrefRsrc;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.CommodityTypeCode;
@@ -47,11 +48,13 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.ContactPhone;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.Grower;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.GrowerContact;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.Policy;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.Product;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.SyncCode;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.OfficeDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyStatusCodeDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.CirrasDataSyncFactory;
 
 public class CirrasDataSyncRsrcFactory extends BaseResourceFactory implements CirrasDataSyncFactory { 
@@ -175,6 +178,45 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory implements Ci
 
 		return resource;
 	}
+
+	//======================================================================================================================
+	// Product
+	//======================================================================================================================
+
+	@Override
+	public void updateProduct(ProductDto dto, Product model) {
+
+		dto.setCommodityCoverageCode(model.getCommodityCoverageCode());
+		dto.setCropCommodityId(model.getCropCommodityId());
+		dto.setDeductibleLevel(model.getDeductibleLevel());
+		dto.setInsuredByMeasType(model.getInsuredByMeasType());
+		dto.setPolicyId(model.getPolicyId());
+		dto.setProbableYield(model.getProbableYield());
+		dto.setProductId(model.getProductId());
+		dto.setProductionGuarantee(model.getProductionGuarantee());
+		dto.setProductStatusCode(model.getProductStatusCode());
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+	}
+
+	
+	@Override
+	public Product getProduct(ProductDto dto) {
+		ProductRsrc resource = new ProductRsrc();
+		
+		resource.setCommodityCoverageCode(dto.getCommodityCoverageCode());
+		resource.setCropCommodityId(dto.getCropCommodityId());
+		resource.setDeductibleLevel(dto.getDeductibleLevel());
+		resource.setInsuredByMeasType(dto.getInsuredByMeasType());
+		resource.setPolicyId(dto.getPolicyId());
+		resource.setProbableYield(dto.getProbableYield());
+		resource.setProductId(dto.getProductId());
+		resource.setProductionGuarantee(dto.getProductionGuarantee());
+		resource.setProductStatusCode(dto.getProductStatusCode());
+		resource.setDataSyncTransDate(dto.getDataSyncTransDate());
+		
+		return resource;
+	}
+	
 	
 	//======================================================================================================================
 	// Crop Commodity
@@ -553,6 +595,18 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory implements Ci
 
 		return result;
 	}
+
+	public static String getProductSelfUri(
+			URI baseUri) {
+
+		String result = UriBuilder.fromUri(baseUri)
+			.path(PolicyEndpoint.class) // TODO
+			.build()
+			.toString();
+
+		return result;
+	}
+	
 	
 	public static String getSyncCommodityVarietySelfUri(
 			URI baseUri) {

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.GrowerRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PolicyRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.ProductRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SyncCodeRsrc;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.CommodityTypeCode;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.CommodityTypeVarietyXref;
@@ -16,16 +17,19 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.ContactPhone;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.Grower;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.GrowerContact;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.Policy;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.Product;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.SyncCode;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.SyncCommodityVariety;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.GrowerDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.OfficeDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.PolicyDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.PolicyStatusCodeDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ProductDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.OfficeDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyStatusCodeDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CommodityTypeCodeDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CommodityTypeVarietyXrefDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContactDto;
@@ -69,6 +73,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	private PolicyStatusCodeDao policyStatusCodeDao;
 	private GrowerDao growerDao;
 	private PolicyDao policyDao;
+	private ProductDao productDao;
 	private CropCommodityDao cropCommodityDao;
 	private CropVarietyDao cropVarietyDao;
 	private OfficeDao officeDao;
@@ -114,6 +119,10 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 		this.policyDao = policyDao;
 	}
 
+	public void setProductDao(ProductDao productDao) {
+		this.productDao = productDao;
+	}
+	
 	public void setCropCommodityDao(CropCommodityDao cropCommodityDao) {
 		this.cropCommodityDao = cropCommodityDao;
 	}
@@ -630,6 +639,118 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 		logger.debug(">deletePolicy");
 
 	}
+
+	@Override
+	public Product getProduct(Integer productId, FactoryContext factoryContext, WebAdeAuthentication authentication)
+			throws ServiceException, NotFoundException, DaoException {
+
+		logger.debug("<getProduct");
+
+		Product result = null;
+
+		try {
+			ProductDto dto = productDao.fetch(productId);
+
+			if (dto != null) {
+				result = cirrasDataSyncFactory.getProduct(dto);
+			}
+			else {
+				//This method is only used for testing. Return null instead of an error
+				//throw new NotFoundException("Did not find grower record: policyId: " + policyId);
+			}
+
+		} catch (DaoException e) {
+			throw new ServiceException("DAO threw an exception", e);
+		}
+
+		logger.debug(">getProduct");
+		return result;
+	}
+
+	@Override
+	public void synchronizeProduct(ProductRsrc resource, FactoryContext factoryContext,
+			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, DaoException {
+
+		logger.debug("<synchronizeProduct");
+
+		if (resource.getTransactionType().equalsIgnoreCase(PoliciesSyncEventTypes.ProductDeleted)) {
+			// DELETE
+			deleteProduct(resource.getProductId(), factoryContext, authentication);
+		
+		} else if (resource.getTransactionType().equalsIgnoreCase(PoliciesSyncEventTypes.ProductCreated)
+				|| resource.getTransactionType().equalsIgnoreCase(PoliciesSyncEventTypes.ProductUpdated)) {
+			// INSERT OR UPDATE
+			
+			//Check if record already exist and call the correct method
+			ProductDto dto = productDao.fetch(resource.getProductId());
+
+			if (dto == null) {
+				createProduct(resource, factoryContext, authentication);
+			} else {
+				updateProduct(resource, dto, factoryContext, authentication);
+			}
+		}
+
+		logger.debug(">synchronizeProduct");
+
+	}
+
+	private void updateProduct(ProductRsrc resource, ProductDto dto, 
+			FactoryContext factoryContext, WebAdeAuthentication authentication) {
+
+		logger.debug("<updateProduct");
+
+		try {
+
+			String userId = getUserId(authentication);
+
+			cirrasDataSyncFactory.updateProduct(dto, resource);
+			productDao.update(dto, userId);
+
+		} catch (DaoException e) {
+			e.printStackTrace();
+			throw new ServiceException("DAO threw an exception: " + e.getMessage(), e);
+		}
+
+		logger.debug(">updateProduct");
+
+	}
+
+	private void createProduct(ProductRsrc resource, FactoryContext factoryContext,
+			WebAdeAuthentication authentication) {
+
+		logger.debug("<createProduct");
+
+		try {
+
+			String userId = getUserId(authentication);
+			
+			ProductDto dto = new ProductDto();
+
+			cirrasDataSyncFactory.updateProduct(dto, resource);
+			productDao.insert(dto, userId);
+
+		} catch (DaoException e) {
+			e.printStackTrace();
+			throw new ServiceException("DAO threw an exception: " + e.getMessage(), e);
+		}
+
+		logger.debug(">createProduct");
+
+	}
+
+	@Override
+	public void deleteProduct(Integer productId,
+			FactoryContext factoryContext, WebAdeAuthentication authentication)
+			throws ServiceException, NotFoundException, DaoException {
+		logger.debug("<deleteProduct");
+
+		productDao.delete(productId);
+
+		logger.debug(">deleteProduct");
+
+	}
+	
 	
 	////////////////////////////////////////////////////////////////////
 	// Commodity Variety
