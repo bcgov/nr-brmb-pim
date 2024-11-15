@@ -6,22 +6,20 @@ import {
   Configuration as CirrasUnderwritingAPIServiceConfiguration
 } from "@cirras/cirras-underwriting-api";
 import {BrowserModule, Title} from "@angular/platform-browser";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // or NoopAnimationsModule
 import {ServiceWorkerModule} from "@angular/service-worker";
 import {EffectsModule} from "@ngrx/effects";
 import {StoreModule} from "@ngrx/store";
 import {StoreDevtoolsModule} from "@ngrx/store-devtools";
-// import {StoreRouterConnectingModule} from "@ngrx/router-store";
-// import {AppConfigService, CoreUIModule, MapService, PublicApplicationHeaderModule, TokenService} from "@wf1/wfcc-core-lib";
+import {AppConfigService, CoreUIModule, TokenService} from "@wf1/wfcc-core-lib"; //MapService, PublicApplicationHeaderModule, 
 import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./containers/application-root/app.component";
 import {environment} from "../environments/environment";
 import {initialRootState, rootEffects, rootReducers} from "./store";
 import {DATE_FORMATS, provideBootstrapEffects} from "./utils";
-//import {NgxMaskModule} from "ngx-mask";
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from "ngx-mask";
 import {MomentModule} from "ngx-moment";
 import {UnauthorizedPageComponent} from "./components/unauthorized-page/unauthorized-page.component";
-//import {NgxTrimModule} from "ngx-trim";
 import {ErrorPanelComponent} from "./components/common/error-panel/error-panel.component";
 import {ConnectionServiceOptions, ConnectionServiceOptionsToken} from "ngx-connection-service";
 import {DragDropModule} from "@angular/cdk/drag-drop";
@@ -73,15 +71,12 @@ import {DateRangeMaskDirective} from "./directives/date-range-mask.directive";
 import {ReadonlyFieldDirective} from "./directives/readonly-field.directive";
 import {ReadonlyFormDirective} from "./directives/readonly-form.directive";
 import {A11yModule} from "@angular/cdk/a11y";
-
-//import {NgSelectModule} from "@ng-select/ng-select";
 import {MultiSelectDirective} from "./directives/multi-select.directive";
 import {SingleSelectDirective} from "./directives/singleselect.directive";
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
-// import { UwContractsListContainerDesktop } from "./containers/uw-contracts-list/uw-contracts-list-container.component.desktop";
 import { InventoryContractContainer } from "./containers/inventory/inventory-contract-container.component";
 import { InventorySelectorComponent } from './components/inventory/inventory-selector/inventory-selector.component';
 import { GrowerContractHeaderComponent } from './components/grower-contract-header/grower-contract-header.component';
@@ -124,7 +119,7 @@ import { YieldConversionComponent } from './components/maintain/yield-conversion
 import { YieldConversionContainer } from "./containers/maintenance/yield-conversion-container.component";
 import { YieldConversionUnitsComponent } from './components/maintain/yield-conversion/yield-conversion-units/yield-conversion-units.component';
 import { YieldConversionUnitsContainer } from "./containers/maintenance/yield-conversion-units-container.component";
-import { WildfireApplicationModule } from "@wf1/wfcc-application-ui";
+import { WildfireApplicationModule , WildfireResourceManagerModule } from "@wf1/wfcc-application-ui";
 import { RelatedPoliciesComponent } from './components/related-policies/related-policies.component';
 import { UnsavedDialogComponent } from './components/dialogs/unsaved-dialog/unsaved-dialog.component';
 import { ForageDopComponent } from './components/dop/forage/forage-dop.component';
@@ -147,7 +142,8 @@ import { VerifiedYieldComponent } from './components/verified-yield/verified-yie
 import { VerifiedYieldContainer } from "./containers/verified-yield/verified-yield-container.component";
 import { VerifiedYieldCommodityListComponent } from './components/verified-yield/commodity-list/verified-yield-commodity-list.component';
 import { VerifiedYieldCommodityComponent } from './components/verified-yield/commodity/verified-yield-commodity.component';
-import { AppConfigService, TokenService } from "@wf1/wfcc-core-lib";
+
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -185,7 +181,6 @@ if (!environment.production || !environment.restrict_imports) {
         BaseExpansionPanelComponent,
         BaseDialogComponent,
         AutoFocusDirective,
-        // UwContractsListContainerDesktop,
         UwContractsListContainer,
         UwContractsListComponent,
         AppComponent,
@@ -256,6 +251,7 @@ if (!environment.production || !environment.restrict_imports) {
         DragDropModule,
         CdkTableModule,
         BrowserModule,
+        BrowserAnimationsModule,
         FormsModule,
         MatExpansionModule,
         MatBadgeModule,
@@ -283,29 +279,24 @@ if (!environment.production || !environment.restrict_imports) {
         MatToolbarModule,
         MomentModule,
         MatProgressSpinnerModule,
-        //NgxTrimModule,
-        // NgxMaskModule.forRoot(),
         NgxMaskDirective,
         NgxMaskPipe,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
         ReactiveFormsModule,
-        // NgSelectModule,
         ScrollingModule,
-        // PublicApplicationHeaderModule,
-        // CoreUIModule.forRoot({ configurationPath: environment.app_config_location }),
+        CoreUIModule.forRoot({ configurationPath: environment.app_config_location }),
         StoreModule.forRoot(rootReducers, { initialState: initialRootState }),
         AppRoutingModule,
         NgxPaginationModule,
-        // Connects RouterModule with StoreModule
-        // StoreRouterConnectingModule.forRoot(),
         EffectsModule.forRoot([]),
         ServiceWorkerModule.register("ngsw-worker.js", { enabled: environment.production, scope: "./" }),
         ...devOnlyImports,
         A11yModule,
         MatNativeDateModule,
         MatDatepickerModule,
-        WildfireApplicationModule.forRoot()], providers: [
+        WildfireApplicationModule.forRoot(),
+        WildfireResourceManagerModule.forRoot()], providers: [
         // Added provideBootstrapEffects function to handle the ngrx issue that loads effects before APP_INITIALIZER
         // providers have finished initializing.
         // See https://github.com/ngrx/platform/issues/931 for more information.
@@ -313,7 +304,6 @@ if (!environment.production || !environment.restrict_imports) {
         UpdateService,
         AppConfigService,
         TokenService,
-        // MapService,
         Title,
         {
             provide: APP_INITIALIZER,
@@ -357,9 +347,15 @@ if (!environment.production || !environment.restrict_imports) {
                     monthYearA11yLabel: 'MMM YYYY'
                 }
             } },
+        { // to remove padding-bottom at the bottom of the text-fields
+            provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+            useValue: {
+                subscriptSizing: 'dynamic'
+            }
+        },
         provideNgxMask(),
         DecimalPipe,
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
     ] })
 export class AppModule {
 

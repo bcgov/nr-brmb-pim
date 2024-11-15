@@ -7,19 +7,17 @@
     "serve": "ng serve",
     "start.prod": "ng serve --configuration production --sourceMap=true",
     "build": "ng build",
-    "build.prod": "ng build --configuration production --sourceMap=true --base-href /pub/cirras-underwriting/ && replace-in-file /ngsw:/g ngsw:cirras-underwritinge: dist/cirras-underwriting/ngsw-worker.js --verbose --isRegex",
+    "build.prod": "ng build --configuration production --sourceMap=true --base-href /pub/cirras-underwriting/ && replace-in-file /ngsw:/g ngsw:cirras-underwriting: dist/cirras-underwriting/ngsw-worker.js --verbose --isRegex",
     "test": "ng test",
     "test-and-coverage": "ng test --browsers ChromeHeadlessCustom --watch=false --code-coverage",
     "test-dev": "ng test --reporters=mocha",
     "test-dev-chrome": "ng test --watch=true --browsers=Chrome",
     "test-dev-safari": "ng test --watch=true --browsers=Safari",
     "lint": "ng lint",
-    "e2e": "ng e2e",
     "cr": "npm run lint && npm start.prod",
-    "mavenbuild": "node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build --configuration production --sourceMap=true --output-path ../../../target/angular --base-href /pub/cirras-underwriting/ && replace-in-file /ngsw:/g ngsw:cirras-underwritinge: ../../../target/angular/ngsw-worker.js --verbose --isRegex",
+    "mavenbuild": "node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build --configuration production --output-path ../../../target/angular --base-href /pub/cirras-underwriting/ && replace-in-file /ngsw:/g ngsw:cirras-underwritinge: ../../../target/angular/ngsw-worker.js --verbose --isRegex",
     "bundle-report": "webpack-bundle-analyzer dist/cirras-underwriting/stats.json",
-    "compodoc": "npx compodoc -p src/tsconfig.app.json",
-    "postinstall": "ngcc"
+    "compodoc": "npx compodoc -p src/tsconfig.app.json"
   },
   "private": true,
   "dependencies": {
