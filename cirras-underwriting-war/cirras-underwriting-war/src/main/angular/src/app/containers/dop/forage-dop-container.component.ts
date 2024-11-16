@@ -33,7 +33,6 @@ import { ApplicationStateService } from "src/app/services/application-state.serv
         ></forage-dop>`, 
     providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
 })
-//[isUnsaved]="isUnsaved$ | async" 
 
 export class ForageDopContainer extends BaseContainer implements OnInit {
 
@@ -63,14 +62,4 @@ export class ForageDopContainer extends BaseContainer implements OnInit {
             this.cdr.detectChanges();
         });
     }
-
-    // constructor(
-    //     protected store: Store<RootState>,
-    //     protected router: Router,
-    //     public snackBar: MatSnackBar,
-    //     protected applicationStateService: ApplicationStateService,
-    //     protected cdr: ChangeDetectorRef
-    // ) {
-    //     super(store, router, snackBar, applicationStateService, cdr);
-    // }
 }

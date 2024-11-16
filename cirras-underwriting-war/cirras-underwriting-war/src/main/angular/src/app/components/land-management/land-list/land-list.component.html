@@ -8,7 +8,7 @@
                         <mat-spinner [diameter]="30"></mat-spinner>
                     </div>
                     <p *ngIf="securityUtilService.doesUserHaveScope(SCOPES_UI.CREATE_LEGAL_LAND)">
-                        <button mat-raised-button color="primary" (click)="onAddLegalLand()">
+                        <button mat-raised-button color="primary" (click)="onAddLegalLand()" style="width: 170px;">
                             <mat-icon class="button-mat-icon">add</mat-icon>Add Legal Land
                         </button>
                     </p>

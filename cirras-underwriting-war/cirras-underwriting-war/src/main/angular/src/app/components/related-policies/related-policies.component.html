@@ -1,6 +1,6 @@
 
 <form [formGroup]="relatedPoliciesForm" class="related-policies">
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline" style="width:170px; height:36px;">
         <mat-select 
             formControlName="relatedPolicies"
             (selectionChange)="relatedPoliciesChange($event)">

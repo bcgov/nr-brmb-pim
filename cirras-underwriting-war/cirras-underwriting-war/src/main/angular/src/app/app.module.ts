@@ -30,14 +30,13 @@ import { HTTP_INTERCEPTORS, HttpHandler, provideHttpClient, withInterceptorsFrom
 import {ResourcesInterceptor} from "./interceptors/resources-interceptor";
 import {NgxPaginationModule} from "ngx-pagination";
 import { DecimalPipe } from "@angular/common";
-
 import {CdkTableModule} from "@angular/cdk/table";
 import {appInitFn} from "./utils/app-initializer";
 import {AutoFocusDirective} from "./directives/auto-focus.directive";
 import {BaseDialogComponent} from "./components/dialogs/base-dialog/base-dialog.component";
 import {UpdateService} from "./services/update.service";
 import {MatToolbarModule} from "@angular/material/toolbar";
-import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatFormFieldModule, MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
 import {MatSelectModule} from "@angular/material/select";
 import {MatIconModule} from "@angular/material/icon";
 import {MatPaginatorModule} from "@angular/material/paginator";
@@ -73,10 +72,8 @@ import {ReadonlyFormDirective} from "./directives/readonly-form.directive";
 import {A11yModule} from "@angular/cdk/a11y";
 import {MultiSelectDirective} from "./directives/multi-select.directive";
 import {SingleSelectDirective} from "./directives/singleselect.directive";
-
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-
 import { InventoryContractContainer } from "./containers/inventory/inventory-contract-container.component";
 import { InventorySelectorComponent } from './components/inventory/inventory-selector/inventory-selector.component';
 import { GrowerContractHeaderComponent } from './components/grower-contract-header/grower-contract-header.component';
@@ -132,7 +129,6 @@ import { ForageDopYieldFieldCutComponent } from "./components/dop/forage/yield-f
 import { ForageDopCommodityListComponent } from "./components/dop/forage/commodity-list/forage-dop-commodity-list.component";
 import { ForageDopCommodityComponent } from "./components/dop/forage/commodity/forage-dop-commodity.component";
 import { ForageDopContainer } from "./containers/dop/forage-dop-container.component";
-
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { MatInputCommifiedDirective } from "./directives/input-comified.directive";
@@ -142,8 +138,6 @@ import { VerifiedYieldComponent } from './components/verified-yield/verified-yie
 import { VerifiedYieldContainer } from "./containers/verified-yield/verified-yield-container.component";
 import { VerifiedYieldCommodityListComponent } from './components/verified-yield/commodity-list/verified-yield-commodity-list.component';
 import { VerifiedYieldCommodityComponent } from './components/verified-yield/commodity/verified-yield-commodity.component';
-
-import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
