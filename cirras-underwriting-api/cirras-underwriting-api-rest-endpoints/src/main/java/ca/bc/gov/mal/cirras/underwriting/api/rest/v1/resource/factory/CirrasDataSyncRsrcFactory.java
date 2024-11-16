@@ -28,6 +28,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.ContactPhoneEndpo
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.GrowerContactEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.GrowerEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.PolicyEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.ProductEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.SyncCodeEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.SyncCommodityTypeCodeEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.SyncCommodityTypeVarietyXrefEndpoint;
@@ -600,7 +601,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory implements Ci
 			URI baseUri) {
 
 		String result = UriBuilder.fromUri(baseUri)
-			.path(PolicyEndpoint.class) // TODO
+			.path(ProductEndpoint.class)
 			.build()
 			.toString();
 

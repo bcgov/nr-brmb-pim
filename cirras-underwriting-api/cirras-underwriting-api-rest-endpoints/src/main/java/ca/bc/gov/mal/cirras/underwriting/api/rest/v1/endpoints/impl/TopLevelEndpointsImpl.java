@@ -163,6 +163,11 @@ public class TopLevelEndpointsImpl extends BaseEndpointsImpl implements TopLevel
 				result.getLinks().add(new RelLink(ResourceTypes.POLICY, selfURI, HttpMethod.GET));
 			}
 
+			if (hasAuthority(Scopes.GET_PRODUCT)) {
+				selfURI = CirrasDataSyncRsrcFactory.getProductSelfUri(baseUri);
+				result.getLinks().add(new RelLink(ResourceTypes.PRODUCT, selfURI, HttpMethod.GET));
+			}
+			
 			if (hasAuthority(Scopes.GET_CONTACT)) {
 				selfURI = CirrasDataSyncRsrcFactory.getContactSelfUri(baseUri);
 				result.getLinks().add(new RelLink(ResourceTypes.CONTACT, selfURI, HttpMethod.GET));
@@ -237,6 +242,10 @@ public class TopLevelEndpointsImpl extends BaseEndpointsImpl implements TopLevel
 				//POLICY SYNC
 				selfURI = CirrasDataSyncRsrcFactory.getPolicySelfUri(baseUri);
 				result.getLinks().add(new RelLink(ResourceTypes.SYNCHRONIZE_POLICY, selfURI, HttpMethod.POST));
+
+				//PRODUCT SYNC
+				selfURI = CirrasDataSyncRsrcFactory.getProductSelfUri(baseUri);
+				result.getLinks().add(new RelLink(ResourceTypes.SYNCHRONIZE_PRODUCT, selfURI, HttpMethod.POST));
 				
 				//LEGAL LAND SYNC
 				selfURI = LandDataSyncRsrcFactory.getLegalLandSelfUri(baseUri);
@@ -307,6 +316,10 @@ public class TopLevelEndpointsImpl extends BaseEndpointsImpl implements TopLevel
 				selfURI = CirrasDataSyncRsrcFactory.getPolicySelfUri(baseUri);
 				result.getLinks().add(new RelLink(ResourceTypes.DELETE_SYNC_POLICY, selfURI, HttpMethod.DELETE));
 
+				//PRODUCT SYNC
+				selfURI = CirrasDataSyncRsrcFactory.getProductSelfUri(baseUri);
+				result.getLinks().add(new RelLink(ResourceTypes.DELETE_SYNC_PRODUCT, selfURI, HttpMethod.DELETE));
+				
 				//LEGAL LAND SYNC
 				selfURI = LandDataSyncRsrcFactory.getLegalLandSelfUri(baseUri);
 				result.getLinks().add(new RelLink(ResourceTypes.DELETE_SYNC_LEGAL_LAND, selfURI, HttpMethod.DELETE));

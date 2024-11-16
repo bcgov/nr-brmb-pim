@@ -41,6 +41,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.LegalLandSyn
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.LegalLandFieldXrefEndpointImpl;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.LegalLandListEndpointImpl;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.PolicyEndpointImpl;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.ProductEndpointImpl;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.RiskAreaListEndpointImpl;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.SeedingDeadlineListEndpointImpl;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.TopLevelEndpointsImpl;
@@ -100,6 +101,7 @@ public class JerseyApplication extends JerseyResourceConfig {
 		register(SyncCodeEndpointImpl.class);
 		register(GrowerEndpointImpl.class);
 		register(PolicyEndpointImpl.class);
+		register(ProductEndpointImpl.class);
 		register(LegalLandSyncEndpointImpl.class);
 		register(FieldEndpointImpl.class);
 		register(LegalLandFieldXrefEndpointImpl.class);

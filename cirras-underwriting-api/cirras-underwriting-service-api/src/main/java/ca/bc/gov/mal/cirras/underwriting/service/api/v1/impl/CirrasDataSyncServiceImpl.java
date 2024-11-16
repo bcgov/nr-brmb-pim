@@ -655,8 +655,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 				result = cirrasDataSyncFactory.getProduct(dto);
 			}
 			else {
-				//This method is only used for testing. Return null instead of an error
-				//throw new NotFoundException("Did not find grower record: policyId: " + policyId);
+				throw new NotFoundException("Did not find product record: productId: " + productId);
 			}
 
 		} catch (DaoException e) {
