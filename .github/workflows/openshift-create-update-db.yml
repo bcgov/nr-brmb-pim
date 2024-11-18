@@ -12,6 +12,7 @@ on:
           - dlvr
           - test
           - prod
+          - tools
       NAMESPACE:
         required: true
         type: choice
@@ -19,6 +20,7 @@ on:
           - a12541-dev
           - a12541-test
           - a12541-prod
+          - a12541-tools
 
 jobs:
   build:
