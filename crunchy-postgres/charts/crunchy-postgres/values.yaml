@@ -34,14 +34,22 @@ instances:
 
 pgBackRest:
   image: # it's not necessary to specify an image as the images specified in the Crunchy Postgres Operator will be pulled by default
-  retention: "2" # Ideally a larger number such as 30 backups/days
+  retention: "8" # Ideally a larger number such as 30 backups/days
+  retentionDifferential: "14"
+
   # If retention-full-type set to 'count' then the oldest backups will expire when the number of backups reach the number defined in retention
   # If retention-full-type set to 'time' then the number defined in retention will take that many days worth of full backups before expiration
   retentionFullType: count
+
+  #How many backups worth of WAL files to keep, and what type of backup to count for expiring WAL files
+  retentionArchive: 1
+  retentionArchiveType: differential
+
   repos:
     schedules:
-      full: 0 */8 * * *
-      incremental: 0 2,4,6,10,12,14,18,20,22 * * *
+      full: 0 0 * * 0
+      differential: 0 0 * * * 1-6
+      incremental: 0 4,8,12,16,20 * * *
     volume:
       accessModes: "ReadWriteOnce"
       storage: 1Gi

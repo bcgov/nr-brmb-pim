@@ -92,11 +92,18 @@ spec:
         repo1-retention-full: {{ .Values.pgBackRest.retention | quote }}
         repo1-retention-full-type: {{ .Values.pgBackRest.retentionFullType }}
 
+        # how many differential backups to keep
+        repo1-retention-diff: {{ .Values.pgBackRest.retentionDifferential | quote}}
+
+        #Whether to expire .wal files on any backup or full backup only
+        repo1-retention-archive-type: {{ .Values.pgBackRest.retentionArchiveType }}
+
       repos:
         # hardcoding repo1 until we solution allowing multiple repos
         - name: repo1
           schedules:
             full: {{ .Values.pgBackRest.repos.schedules.full }}
+            differential: {{ .Values.pgBackRest.repos.schedules.differential }}
             incremental: {{ .Values.pgBackRest.repos.schedules.incremental }}
           volume:
             volumeClaimSpec:
