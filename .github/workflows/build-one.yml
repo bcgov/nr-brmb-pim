@@ -1,5 +1,5 @@
 name: Build single component
-run-name: Build single component for ${{ inputs.COMPONENT }}
+run-name: Build ${{ inputs.COMPONENT }}
 
 on:
   workflow_dispatch:
