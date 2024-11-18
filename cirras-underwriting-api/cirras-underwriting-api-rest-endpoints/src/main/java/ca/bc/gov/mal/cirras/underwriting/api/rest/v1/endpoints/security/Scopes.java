@@ -35,6 +35,7 @@ public class Scopes {
 
 	public static final String GET_GROWER = "CIRRAS_UNDERWRITING.GET_GROWER";
 	public static final String GET_POLICY = "CIRRAS_UNDERWRITING.GET_POLICY";
+	public static final String GET_PRODUCT = "CIRRAS_UNDERWRITING.GET_PRODUCT";
 	public static final String GET_LAND = "CIRRAS_UNDERWRITING.GET_LAND";
 	public static final String GET_COMMODITY_VARIETY = "CIRRAS_UNDERWRITING.GET_COMMODITY_VARIETY";
 

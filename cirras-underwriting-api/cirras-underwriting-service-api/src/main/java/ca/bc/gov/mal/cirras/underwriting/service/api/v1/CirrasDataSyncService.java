@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.SyncCommodityVariety;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.GrowerRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PolicyRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.ProductRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SyncCodeRsrc;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.CommodityTypeCode;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.CommodityTypeVarietyXref;
@@ -14,6 +15,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.ContactPhone;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.Grower;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.GrowerContact;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.Policy;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.Product;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.SyncCode;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
@@ -94,6 +96,31 @@ public interface CirrasDataSyncService {
 	)
 	throws ServiceException, NotFoundException, DaoException;
 
+	
+	////////////////////////////////////////////////////////////////////
+	//Product
+	////////////////////////////////////////////////////////////////////
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
+	Product getProduct(
+		Integer productId,
+		FactoryContext factoryContext, 
+		WebAdeAuthentication authentication
+	)
+	throws ServiceException, NotFoundException, DaoException;
+	
+	@Transactional(readOnly = false, rollbackFor = Exception.class)
+	void synchronizeProduct (ProductRsrc resource, FactoryContext factoryContext,
+			WebAdeAuthentication webAdeAuthentication) throws ServiceException, NotFoundException, DaoException;
+
+	@Transactional(readOnly = false, rollbackFor = Exception.class)
+	void deleteProduct(
+		Integer productId,
+		FactoryContext factoryContext, 
+		WebAdeAuthentication authentication
+	)
+	throws ServiceException, NotFoundException, DaoException;
+	
+	
 	////////////////////////////////////////////////////////////////////
 	//Commodity Variety Sync
 	////////////////////////////////////////////////////////////////////
