@@ -1,4 +1,5 @@
 name: Build single component
+run-name: Manually run by ${{ github.actor }} for ${{ inputs.COMPONENT }}
 
 on:
   workflow_dispatch:
