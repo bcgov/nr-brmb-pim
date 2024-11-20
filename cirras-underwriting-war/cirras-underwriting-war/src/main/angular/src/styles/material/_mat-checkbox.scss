@@ -40,11 +40,11 @@ mat-selection-list .mat-mdc-list-option {
         .mdc-checkbox__ripple {
             position: absolute;
             top: 30%;
-            height: 20px;
-            right: 30%;
-            width: 20px;
-            transform: translate(-7%, -5%);     
-            background-color: transparent !important;       
+            height: 28px;
+            right: 80%;
+            width: 28px;
+            transform: translate(-15%, -5%);     
+            //background-color: transparent !important;       
         }
     }
 }

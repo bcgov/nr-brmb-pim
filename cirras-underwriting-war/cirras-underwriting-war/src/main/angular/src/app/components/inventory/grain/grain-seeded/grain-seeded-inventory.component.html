@@ -316,7 +316,7 @@
                                             </div>
 
                                             <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value && inventorySeededGrains.value.deletedByUserInd != true" 
-                                                class="border-bottom border-right" style="width:78px;"
+                                                class="inventory-fill border-bottom border-right" style="width:78px;"
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
                                                 <mat-checkbox 
                                                     formControlName="isPedigreeInd" 
@@ -375,7 +375,7 @@
                                             </div>                                            
 
                                             <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value && inventorySeededGrains.value.deletedByUserInd != true" 
-                                                class="border-bottom border-left border-right" style="width:68px;"
+                                                class="inventory-fill border-bottom border-left border-right" style="width:68px;"
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
 
                                                 <mat-checkbox 
@@ -391,7 +391,7 @@
                                             </div>
 
                                             <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value && inventorySeededGrains.value.deletedByUserInd != true" 
-                                                class="border-bottom border-left" style="width:84px;"
+                                                class="inventory-fill border-bottom border-left" style="width:84px;"
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
 
                                                 <mat-checkbox 
@@ -402,7 +402,7 @@
                                             </div>
 
                                             <div *ngIf="inventorySeededGrains.value.deletedByUserInd != true" 
-                                                class="border-bottom border-left" style="width:94px;"
+                                                class="inventory-fill border-bottom border-left" style="width:94px;"
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
                                                 <mat-checkbox 
                                                     *ngIf="isSeededCommoditySpotLossInsurable(fieldIndex, plantingIndex, invSeededIndex)"
@@ -433,6 +433,7 @@
                                                     </mat-option>
                                                     </mat-autocomplete>
                                                 </mat-form-field>
+                                                <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Underseeded Variety is writeable">edit</mat-icon>
                                             </div> 
 
                                             <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value && inventorySeededGrains.value.deletedByUserInd != true"
@@ -452,9 +453,8 @@
                                                         [readonly]="isUnderSeededAcresReadOnly(fieldIndex, plantingIndex, invSeededIndex)"
                                                         maxlength="10">
                                                 </mat-form-field>
-
+                                                
                                                 <mat-icon 
-                                                    style="padding-right:10px;" 
                                                     *ngIf="isInfoVisible(field.value.fieldId, inventorySeededGrains)"
                                                     matTooltip="The forage policy has a different grower than the grain policy." 
                                                     >info_outlined</mat-icon>
@@ -470,7 +470,6 @@
                                                     [matTooltip]="linkedPlantingTooltip(field.value.fieldId, planting.value.inventoryFieldGuid)">link</mat-icon>
                                                 
                                                 <mat-icon 
-                                                    style="padding-right:10px;" 
                                                     *ngIf="inventorySeededGrains.value.underSeededAcres"
                                                     matTooltip="Add or remove link of underseeded Grain planting to a Forage planting." 
                                                     (click)="onLinkPlantings(field, plantingIndex, invSeededIndex)">edit</mat-icon>
@@ -559,14 +558,18 @@
                 </div>
             </div>
 
-            <!-- <p style="padding-left: 8px; padding-top: 6px;">* Acres are rounded to the nearest tenth after the decimal point</p> -->
-
             <!-- inventory contract data  -->
-            <div class="plcy-inv-cntrct" style="grid-template-columns: 650px 600px" >
-                <div class="question" style="border: 1px solid #B8CFB8; background: #F1F7F1;">
-                    Do you expect to have grain stored from previous crop years on August 1st?
-                    <div class="inventory-fill" style="padding-top: 20px;">
-                        <mat-form-field appearance="fill" style="width: 100px;">
+            <div class="plcy-inv-cntrct" style="grid-template-columns: 700px 600px" >
+                <div class="question" 
+                    style="border: 1px solid #B8CFB8; background: #F1F7F1; 
+                        display: grid;
+                        grid-auto-rows: minmax( 2em, auto );
+                        grid-template-columns: 580px 100px">
+                    <div style="padding-top: 6px;">
+                        Do you expect to have grain stored from previous crop years on August 1st?
+                    </div>
+                    <div class="question-dropdown" style="padding-bottom: 16px;">
+                        <mat-form-field appearance="outline" style="width: 100px;">
                             <mat-select formControlName="grainFromPrevYearInd" (selectionChange)="isMyFormDirty()">
                                 <mat-option [value]=""></mat-option>
                                 <mat-option [value]="true">Yes</mat-option>
@@ -576,7 +579,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div style="padding-left: 100px;">
 
                     <!-- commodity totals -->
                     <div class="plcy-inv-cmdty-totals-header"> 
