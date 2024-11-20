@@ -30,6 +30,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.RiskAreaRs
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.SeedingDeadlineRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.UnderwritingYearRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.UwContractRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.VerifiedYieldContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.YieldMeasUnitConversionRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.YieldMeasUnitTypeCodeRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
@@ -146,6 +147,11 @@ public class TopLevelEndpointsImpl extends BaseEndpointsImpl implements TopLevel
 			if (hasAuthority(Scopes.CREATE_DOP_YIELD_CONTRACT)) {
 				selfURI = DopYieldContractRsrcFactory.getDopYieldContractListSelfUri(baseUri);
 				result.getLinks().add(new RelLink(ResourceTypes.CREATE_DOP_YIELD_CONTRACT, selfURI, HttpMethod.POST));
+			}
+			
+			if (hasAuthority(Scopes.CREATE_VERIFIED_YIELD_CONTRACT)) {
+				selfURI = VerifiedYieldContractRsrcFactory.getVerifiedYieldContractListSelfUri(baseUri);
+				result.getLinks().add(new RelLink(ResourceTypes.CREATE_VERIFIED_YIELD_CONTRACT, selfURI, HttpMethod.POST));
 			}
 			
 			if (hasAuthority(Scopes.CREATE_LEGAL_LAND)) {

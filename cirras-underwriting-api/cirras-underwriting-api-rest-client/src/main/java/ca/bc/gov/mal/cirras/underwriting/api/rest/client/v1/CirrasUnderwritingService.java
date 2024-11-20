@@ -182,6 +182,11 @@ public interface CirrasUnderwritingService {
 
 	VerifiedYieldContractRsrc getVerifiedYieldContract(UwContractRsrc resource) throws CirrasUnderwritingServiceException;
 	
+	VerifiedYieldContractRsrc createVerifiedYieldContract(EndpointsRsrc parent, VerifiedYieldContractRsrc resource) throws CirrasUnderwritingServiceException, ValidationException;
+	
+	VerifiedYieldContractRsrc updateVerifiedYieldContract(VerifiedYieldContractRsrc resource) throws CirrasUnderwritingServiceException, ValidationException;
+
+	void deleteVerifiedYieldContract(VerifiedYieldContractRsrc resource) throws CirrasUnderwritingServiceException;
 	
 	//////////////////////////////////////////////////////
 	// Seeding Deadline

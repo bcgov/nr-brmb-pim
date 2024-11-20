@@ -724,6 +724,49 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 		
 	}
 
+	@Override
+	public VerifiedYieldContractRsrc createVerifiedYieldContract(EndpointsRsrc parent, VerifiedYieldContractRsrc resource)
+			throws CirrasUnderwritingServiceException, ValidationException {
+
+		GenericRestDAO<VerifiedYieldContractRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(VerifiedYieldContractRsrc.class);
+		
+		try {
+			Response<VerifiedYieldContractRsrc> response = dao.Process(ResourceTypes.CREATE_VERIFIED_YIELD_CONTRACT, this.getTransformer(), parent, resource, getWebClient());
+			return response.getResource();
+		} catch(BadRequestException e) {
+			throw new ValidationException(e.getMessages());			
+		} catch (RestDAOException rde) {
+			throw new CirrasUnderwritingServiceException(rde);
+		}
+	}
+
+	@Override
+	public VerifiedYieldContractRsrc updateVerifiedYieldContract(VerifiedYieldContractRsrc resource) throws CirrasUnderwritingServiceException, ValidationException {
+
+		GenericRestDAO<VerifiedYieldContractRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(VerifiedYieldContractRsrc.class);
+		
+		try {
+			Response<VerifiedYieldContractRsrc> response = dao.Process(ResourceTypes.UPDATE_VERIFIED_YIELD_CONTRACT, this.getTransformer(), resource, getWebClient());
+			return response.getResource();
+		} catch(BadRequestException e) {
+			throw new ValidationException(e.getMessages());
+		} catch (RestDAOException rde) {
+			throw new CirrasUnderwritingServiceException(rde);
+		}
+	}
+
+	@Override
+	public void deleteVerifiedYieldContract(VerifiedYieldContractRsrc resource) throws CirrasUnderwritingServiceException {
+
+		GenericRestDAO<VerifiedYieldContractRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(VerifiedYieldContractRsrc.class);
+		
+		try {
+			dao.Process(ResourceTypes.DELETE_VERIFIED_YIELD_CONTRACT, this.getTransformer(), resource, getWebClient());
+		} catch (RestDAOException rde) {
+			throw new CirrasUnderwritingServiceException(rde);
+		}
+		
+	}
 	
 	//////////////////////////////////////////////////////
 	// Yield Measurement Unit Type Code
