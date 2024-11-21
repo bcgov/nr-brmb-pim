@@ -1,5 +1,5 @@
 <div [formGroup]="yieldFieldFormGroup" style="display: contents;">
-    <div class="inventory-cell" style="width: 120px;"
+    <div class="inventory-cell" style="width: 140px;"
         [ngClass]="!fieldHiddenOnPrintoutInd && yieldField.isHiddenOnPrintoutInd ? 'inventory-border-exclude-printout border-left-exclude-printout' : 'inventory-border'">
         {{ yieldFieldFormGroup.value.commodityTypeDescription | titlecase }}
     </div>
@@ -16,7 +16,7 @@
         {{ yieldFieldFormGroup.value.seedingYear ? yieldFieldFormGroup.value.seedingYear : "" }}  
         {{ yieldFieldFormGroup.value.seedingDate ? (yieldFieldFormGroup.value.seedingDate | date) : "" }}
     </div>
-    <div style="width:80px;"
+    <div class="inventory-fill" style="width:80px;"
         [ngClass]="!fieldHiddenOnPrintoutInd && yieldField.isHiddenOnPrintoutInd ? 'inventory-border-exclude-printout' : 'inventory-border'">
         <mat-checkbox formControlName="isQuantityInsurableInd">
         </mat-checkbox>

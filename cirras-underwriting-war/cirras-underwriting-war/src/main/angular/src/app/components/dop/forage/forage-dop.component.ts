@@ -248,7 +248,7 @@ export class ForageDopComponent extends BaseComponent {
 
   setFormStyles(){
     return {
-      'grid-template-columns':  'auto 148px 110px 100px 128px 186px 146px 12px 155px'
+      'grid-template-columns':  'auto 148px 120px 100px 128px 186px 146px 12px 155px'
     }
   }
 

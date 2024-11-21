@@ -39,7 +39,7 @@ mat-selection-list .mat-mdc-list-option {
         .mat-mdc-checkbox-ripple, 
         .mdc-checkbox__ripple {
             position: absolute;
-            top: 30%;
+            top: 10%;
             height: 28px;
             right: 80%;
             width: 28px;
@@ -53,5 +53,11 @@ mat-selection-list .mat-mdc-list-option {
     .mdc-checkbox {
         padding-top: 0px;
         padding-bottom: 0px
+    }
+
+    .mdc-checkbox__background{
+        position: absolute;
+        top: 30%;
+        left: 10%;
     }
 }

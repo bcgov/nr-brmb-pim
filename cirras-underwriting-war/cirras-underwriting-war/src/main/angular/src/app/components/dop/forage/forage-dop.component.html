@@ -56,7 +56,7 @@
                 </div>            
                 <div class="plcy-frm-hdr-calendar" matTooltip="Date when the Declaration of Production is submitted.">
                     <!-- DOP Date: -->
-                    <mat-form-field appearance="fill" >
+                    <mat-form-field appearance="outline" >
                         <input matInput 
                             [matDatepicker]="picker"
                             formControlName="declarationOfProductionDate" 
@@ -68,7 +68,8 @@
                 </div>
                 <div class="plcy-frm-hdr-dropdown" matTooltip="Units">
                     <!-- Units:  -->
-                    <mat-form-field *ngIf="yieldMeasUnitList && yieldMeasUnitList.collection" appearance="fill">
+                    <mat-form-field *ngIf="yieldMeasUnitList && yieldMeasUnitList.collection" 
+                        appearance="outline" style="width: 110px;">
                         <mat-select
                             formControlName="yieldMeasUnitTypeCode"
                             (selectionChange)="updateEnteredYieldMeasUnitTypeCode()">
@@ -153,23 +154,21 @@
 
                     <div class="forage-dop-contract-info">
                         <div class="cell">Baler/Wagon Make & Model:</div>
-                        <div class="fill">
-                            <mat-form-field appearance="fill">
+                        <div class="comment-fill">
+                            <mat-form-field appearance="outline" style="width: 400px;">
                                 <input matInput formControlName="balerWagonInfo" 
                                         maxlength="128"
                                         (blur)="updateBalerWagonInfo()">
                             </mat-form-field>
-                            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
                         </div>
                         <div class="cell">Total Number of Livestock:</div>  
-                        <div class="fill">
-                            <mat-form-field appearance="fill">
+                        <div class="comment-fill">
+                            <mat-form-field appearance="outline" style="width: 100px;">
                                 <input matInput matInputCommified formControlName="totalLivestock" 
                                         maxlength="5"
                                         (keypress)="numberOnly($event)"
                                         (blur)="updateTotalLivestock()">
                             </mat-form-field>
-                            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
                         </div>
                     </div>
 
@@ -182,7 +181,7 @@
 
 
                 <!-- dop contract data  -->
-                <div class="plcy-inv-cntrct" style="grid-template-columns: 850px 790px;" >
+                <div class="plcy-inv-cntrct" style="grid-template-columns: 830px 790px;" >
                     <div>
                         <!-- yield summary  -->
                         <forage-dop-yield-summary-list

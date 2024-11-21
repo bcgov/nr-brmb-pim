@@ -1,5 +1,5 @@
 @import '../variables';
-
+.mat-mdc-select,
 .mdc-text-field--filled,
 .mdc-text-field--outlined {
     font-family: $font-family-main;
@@ -32,6 +32,7 @@
         }
     }
 
+
     // for the dropdown
     .mat-mdc-select-arrow svg {
         fill: currentColor;
@@ -40,6 +41,10 @@
         left: 80%;
         transform: translate(-10%, -20%);
     }
+    .mat-mdc-form-field-type-mat-select:not(.mat-form-field-disabled) .mat-mdc-text-field-wrapper {
+        padding-left:2px;
+    }
+    
 }
 
 .inventory-date{
@@ -130,6 +135,13 @@
     .mat-mdc-text-field-wrapper {
         height: 30px;
     }
+
+    .mdc-text-field--outlined .mat-mdc-form-field-infix //, .mdc-text-field--no-label .mat-mdc-form-field-infix 
+    {
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+
 }
 
 .question-dropdown{
