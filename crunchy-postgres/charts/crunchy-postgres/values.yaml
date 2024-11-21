@@ -48,7 +48,7 @@ pgBackRest:
   repos:
     schedules:
       full: 0 0 * * 0
-      differential: 0 0 * * * 1-6
+      differential: 0 0 * * 1-6
       incremental: 0 4,8,12,16,20 * * *
     volume:
       accessModes: "ReadWriteOnce"
