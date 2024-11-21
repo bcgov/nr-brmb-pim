@@ -152,15 +152,13 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				vycc.setHarvestedYield(harvestedYield);
 
 				// Calculated Yield per Acre
-				Double yieldPerAcre = null;
+				Double yieldPerAcre = 0.0;
 				
 				Double effectiveAcres = notNull(vycc.getHarvestedAcresOverride(), vycc.getHarvestedAcres());
 				Double effectiveYield = notNull(vycc.getHarvestedYieldOverride(), vycc.getHarvestedYield());
 
 				if ( effectiveAcres != null && effectiveYield != null ) {
-					if ( effectiveAcres == 0.0 ) {
-						yieldPerAcre = 0.0;
-					} else {
+					if ( effectiveAcres > 0.0 ) {
 						yieldPerAcre = effectiveYield / effectiveAcres;
 					}
 				}
@@ -271,7 +269,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		dto.setVerifiedYieldContractGuid(null);
 		verifiedYieldContractDao.insert(dto, userId);
 
-		return dto.getDeclaredYieldContractGuid();
+		return dto.getVerifiedYieldContractGuid();
 	}
 	
 	private void updateVerifiedYieldContractCommodity(
