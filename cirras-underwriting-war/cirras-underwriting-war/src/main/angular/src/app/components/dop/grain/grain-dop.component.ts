@@ -940,7 +940,7 @@ export class GrainDopComponent extends BaseComponent{
 
   setFormStyles(){
     return {
-      'grid-template-columns':  'auto 148px 110px 186px 146px 12px 155px'
+      'grid-template-columns':  'auto 148px 120px 186px 146px 12px 155px'
     }
   }
 

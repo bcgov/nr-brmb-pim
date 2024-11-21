@@ -54,10 +54,10 @@
             <div>
                 <h2>Declaration of Production | Schedule D - 15</h2>
                 <p>Last Updated: {{ ((dopYieldContract && dopYieldContract.dopUpdateTimestamp) ? dopYieldContract.dopUpdateTimestamp : "" ) | date }}</p>
-            </div>            
+            </div> 
             <div class="plcy-frm-hdr-calendar" matTooltip="Date when the Declaration of Production is submitted.">
                 <!-- DOP Date: -->
-                <mat-form-field appearance="fill" >
+                <mat-form-field appearance="outline" >
                     <input matInput 
                         [matDatepicker]="picker"
                         formControlName="declarationOfProductionDate" 
@@ -67,8 +67,8 @@
                 </mat-form-field>
             </div>
             <div class="plcy-frm-hdr-dropdown" matTooltip="Units">
-                <!-- Units:  -->
-                <mat-form-field appearance="fill">
+                <!-- Units: -->
+                <mat-form-field appearance="outline" style="width: 110px;">
                     <mat-select formControlName="yieldMeasUnitTypeCode" (selectionChange)="yieldMeasUnitTypeSelectionChanged()">
                         <mat-option *ngFor="let option of yieldMeasUnitOptions" [value]="option.yieldMeasUnitTypeCode"
                         >{{ option.description | titlecase }}</mat-option>
@@ -175,11 +175,11 @@
                                     <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Estimated Yield/Acres is writeable">edit</mat-icon>
                                 </div>
 
-                                <div class="inventory-border" style="width:100px;">
+                                <div class="inventory-fill inventory-border" style="width:100px;">
                                     <mat-checkbox formControlName="unharvestedAcresInd" (change)="isMyFormDirty()">
                                     </mat-checkbox>
                                 </div>
-                                <div class="border-bottom border-right border-left" style="width:80px; align-items:center;">
+                                <div class="inventory-fill border-bottom border-right border-left" style="width:80px; align-items:center;">
                                     <mat-icon 
                                         *ngIf="securityUtilService.canEditDop()"
                                         (click)="onDeleteFieldYield(dopYieldField, dopYieldFieldIndex)"
@@ -210,17 +210,26 @@
 
             <!-- dop contract data  -->
             <div class="plcy-inv-cntrct" style="grid-template-columns: 1360px" >
-                <div class="question" style="border: 1px solid #E1CF7B; background: #FEFAEC;">
-                    Did you purchase or come into possession of any grain from sources other than those fields which you have insured?
+                <div class="question" 
+                style="border: 1px solid #E1CF7B; background: #FEFAEC;
+                        display: grid; 
+                        grid-auto-rows: minmax( 2em, auto );
+                        grid-template-columns: 900px 100px;
+                        padding-bottom: 8px; padding-top:12px;">
+                    <div style="padding-top: 4px;">
+                        Did you purchase or come into possession of any grain from sources other than those fields which you have insured?
+                    </div>
+                    <div>
+                        <mat-radio-group class="plcy-grain-sdd-inv inv-radio-group" formControlName="grainFromOtherSourceInd"> 
+                            <mat-radio-button class="plcy-grain-sdd-inv inv-radio-button" [value]="true"> 
+                                Yes
+                            </mat-radio-button>
+                            <mat-radio-button class="plcy-grain-sdd-inv inv-radio-button" [value]="false">
+                                No
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
 
-                    <mat-radio-group class="plcy-grain-sdd-inv inv-radio-group" formControlName="grainFromOtherSourceInd"> 
-                        <mat-radio-button class="plcy-grain-sdd-inv inv-radio-button" [value]="true"> 
-                            Yes
-                        </mat-radio-button>
-                        <mat-radio-button class="plcy-grain-sdd-inv inv-radio-button" [value]="false">
-                            No
-                        </mat-radio-button>
-                    </mat-radio-group>
                 </div>
             </div>
 
@@ -327,7 +336,7 @@
                                 {{ cmdty.value.totalInsuredAcres | number: '1.0-1' }}
                             </div>
                 
-                            <div class="fill border-left border-bottom">
+                            <div class="inventory-fill border-left border-bottom">
                                 <mat-form-field appearance="fill">
                                     <input matInput matInputCommified formControlName="harvestedAcres" 
                                             maxlength="10"
@@ -337,7 +346,7 @@
                                 <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Harvested Acres is writeable">edit</mat-icon>
                             </div>
 
-                            <div class="fill number border-left border-bottom">
+                            <div class="inventory-fill number border-left border-bottom">
                                 <mat-form-field appearance="fill">
                                     <input matInput matInputCommified formControlName="storedYield" 
                                             maxlength="10"
@@ -348,7 +357,7 @@
                                 <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Stored Yield is writeable">edit</mat-icon>
                             </div>
 
-                            <div class="fill number border-left border-bottom">
+                            <div class="inventory-fill number border-left border-bottom">
                                 <mat-form-field appearance="fill">
                                     <input matInput matInputCommified formControlName="soldYield" 
                                             maxlength="10"
@@ -359,7 +368,7 @@
                                 <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Sold Yield is writeable">edit</mat-icon>
                             </div>
 
-                            <div class="fill number border-left border-bottom  border-right">
+                            <div class="inventory-fill number border-left border-bottom  border-right">
                                     <mat-form-field appearance="fill">
                                         <input 
                                             type="text" 

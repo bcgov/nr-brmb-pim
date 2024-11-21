@@ -1,0 +1,23 @@
+@import '../variables';
+
+.plcy-grain-sdd-inv {
+
+    .mat-mdc-radio-button{
+      margin: 0;
+
+      .mdc-radio {
+        padding: 0; 
+      }
+    }
+
+    &.inv-radio-group {
+      display: flex;
+      flex-direction: row;
+      margin: 0;
+      align-items: flex-start;
+    }
+    
+    &.inv-radio-button {
+      margin: 0 5px;
+    }
+  }
