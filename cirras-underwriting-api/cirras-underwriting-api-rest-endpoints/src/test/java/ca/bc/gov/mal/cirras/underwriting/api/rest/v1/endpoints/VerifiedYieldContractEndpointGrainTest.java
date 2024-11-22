@@ -443,12 +443,14 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		}
 
 		//Yield per acre: 0 if yield and acres are null
-		Double yieldPerAcre = 0.0;
+		Double yieldPerAcre = null;
 		Double effectiveAcres = notNull(verifiedCommodity.getHarvestedAcresOverride(), verifiedCommodity.getHarvestedAcres());
 		Double effectiveYield = notNull(verifiedCommodity.getHarvestedYieldOverride(), verifiedCommodity.getHarvestedYield());
 
 		if ( effectiveAcres != null && effectiveYield != null ) {
-			if ( effectiveAcres > 0.0 ) {
+			if ( effectiveAcres == 0.0 ) {
+				yieldPerAcre = 0.0;
+			} else {
 				yieldPerAcre = effectiveYield / effectiveAcres;
 			}
 		}
