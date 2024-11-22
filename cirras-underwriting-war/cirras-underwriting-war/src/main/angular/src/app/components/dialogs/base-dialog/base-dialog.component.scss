@@ -56,48 +56,6 @@
             line-height: 0;
             height: 0;
             width: 0;
-            /*TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
-            ::ng-deep .mat-button-wrapper {
-                display: flex;
-                border-radius: 20%;
-                background-color: $colour-lighter-grey;
-                height: 24px;
-                width: 24px;
-            }
-        }
-    }
-
-}
-
-::ng-deep .cdk-overlay-container.mobile .cdk-overlay-pane {
-    width: unset !important; //mobile dialog unset width
-
-    ::ng-deep .mat-mdc-dialog-container {
-        min-width: unset !important;
-        
-        .mobile {
-            max-width: 100% !important;
-            border-radius: 0 !important;
-            min-width: unset !important;
-            height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 54px) !important;
-            width: calc(var(--vw, 1vw) * 100 - env(safe-area-inset-left) - env(safe-area-inset-right)) !important;
-        }
-
-        h1 {
-            padding: 8px;
-        }
-
-        ::ng-deep .mat-mdc-dialog-actions {
-            bottom: 0;
-            max-height: 68px;
-            max-width: 100%;
-        }
-
-        ::ng-deep .mat-mdc-dialog-content {
-            max-height: unset;
-            overflow-y: auto !important;
-            height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 135px);
-            width: calc(var(--vw, 1vw) * 100 - env(safe-area-inset-left) - env(safe-area-inset-right) - 2 * var(--cirras-underwriting-gutter-space));
         }
     }
 

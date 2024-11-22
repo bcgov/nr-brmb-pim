@@ -19,13 +19,13 @@
                     <div><!-- empty div to account for space when there is no warning --> </div>
                 </ng-template>
                 <div>
-                    <button *ngIf="securityUtilService.canEditSeedingDeadlines()" mat-raised-button color="secondary"
+                    <button *ngIf="securityUtilService.canEditSeedingDeadlines()" mat-raised-button class="secondary"
                         [disabled]="!hasDataChanged" (click)="onCancel()">
                         Clear Changes
                     </button>
                 </div>
                 <div>
-                    <button *ngIf="securityUtilService.canEditSeedingDeadlines()" mat-raised-button color="primary"
+                    <button *ngIf="securityUtilService.canEditSeedingDeadlines()" mat-raised-button class="primary"
                         [disabled]="!hasDataChanged" (click)="onSave()">
                         Save
                     </button>
@@ -55,33 +55,33 @@
                     <ng-template #noRolloverButton>
                         <div></div>
                     </ng-template>
-                    <mat-radio-group aria-labelledby="example-radio-group-label" formControlName="rbChoice">
-                        <mat-radio-button value="changeDefault" style="width: 195px;">
+                    <mat-radio-group class="change-radio-group" formControlName="rbChoice">
+                        <mat-radio-button value="changeDefault" style="width: 210px;">
                             Change Policy Wording
                         </mat-radio-button>
-                        <mat-radio-button value="changeCurrentYear" style="width: 179px; padding-left: 16px;">
+                        <mat-radio-button value="changeCurrentYear" style="width: 210px; padding-left: 16px;">
                             Change Current Year
                         </mat-radio-button>
                     </mat-radio-group>
                 </div>
 
                 <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
-                    <div class="plcy-inv-field-box" style="width:1636px;">
-                        <div class="inventory-header border-left" style="width:308px;">Commodity Type</div>
-                        <div class="inventory-header" style="width:308px;">Policy Wording Full Coverage</div>
-                        <div class="inventory-header" style="width:308px;">Current Year Full Coverage</div>
-                        <div class="inventory-header" style="width:308px;">Policy Wording Final Coverage</div>
-                        <div class="inventory-header" style="width:308px;">Current Year Final Coverage</div>
+                    <div class="plcy-inv-field-box" style="width:1146px;">
+                        <div class="inventory-header border-left" style="width:250px;">Commodity Type</div>
+                        <div class="inventory-header" style="width:200px;">Policy Wording Full Coverage</div>
+                        <div class="inventory-header" style="width:200px;">Current Year Full Coverage</div>
+                        <div class="inventory-header" style="width:200px;">Policy Wording Final Coverage</div>
+                        <div class="inventory-header" style="width:200px;">Current Year Final Coverage</div>
                         <div class="inventory-header" style="width:96px;">Delete</div>
                     </div>
 
-                    <div class="plcy-inv-fld-tbl-inner-wrapper flex-y-grow" style="width:1657px;">
+                    <div class="plcy-inv-fld-tbl-inner-wrapper flex-y-grow" style="width:1170px;">
                         <div class="plcy-inv-field-box"
                             *ngFor="let seedingDeadline of getViewModel().formGroup.controls.seedingDeadlines['controls']; index as rowIndex"
                             [formGroup]="seedingDeadline">
                             <div *ngIf="!seedingDeadline.value.deletedByUserInd == true"
-                                class="inventory-cell inventory-border border-left" [ngStyle]="{'width': '308px'}">
-                                <mat-form-field appearance="none" *ngIf="seedingDeadline.value.addedByUserInd == true"
+                                class="inventory-cell inventory-border border-left" [ngStyle]="{'width': '250px'}">
+                                <mat-form-field class="inventory-fill" appearance="fill" *ngIf="seedingDeadline.value.addedByUserInd == true"
                                     style="width: 100%;">
                                     <mat-select formControlName="commodityTypeCode">
                                         <mat-option *ngFor="let option of filteredCommodityTypeCodeList"
@@ -96,10 +96,10 @@
                             </div>
                             <div *ngIf="!seedingDeadline.value.deletedByUserInd == true"
                                 class="inventory-cell inventory-border"
-                                [ngStyle]="{'width': '308px', 'background-color': shouldHighlightDate(rowIndex, 1) && getViewModel().formGroup.controls.rbChoice.value == 'changeDefault' ? 'yellow' : ''}">
-                                <mat-form-field
+                                [ngStyle]="{'width': '200px', 'background-color': shouldHighlightDate(rowIndex, 1) && getViewModel().formGroup.controls.rbChoice.value == 'changeDefault' ? 'yellow' : ''}">
+                                <mat-form-field class="inventory-date"
                                     *ngIf="getViewModel().formGroup.controls.rbChoice.value == 'changeDefault'"
-                                    appearance="none" [ngStyle]="{'width': '100%'}">
+                                    appearance="fill" [ngStyle]="{'width': '100%'}">
                                     <input matInput [matDatepicker]="pickerfullCoverageDeadlineDateDefault"
                                         formControlName="fullCoverageDeadlineDateDefault">
                                     <mat-datepicker-toggle matIconSuffix
@@ -112,10 +112,10 @@
                             </div>
                             <div *ngIf="!seedingDeadline.value.deletedByUserInd == true"
                                 class="inventory-cell inventory-border"
-                                [ngStyle]="{'width': '308px', 'background-color': shouldHighlightDate(rowIndex, 2) && getViewModel().formGroup.controls.rbChoice.value == 'changeCurrentYear' ? 'yellow' : ''}">
-                                <mat-form-field
+                                [ngStyle]="{'width': '200px', 'background-color': shouldHighlightDate(rowIndex, 2) && getViewModel().formGroup.controls.rbChoice.value == 'changeCurrentYear' ? 'yellow' : ''}">
+                                <mat-form-field class="inventory-date"
                                     *ngIf="getViewModel().formGroup.controls.rbChoice.value == 'changeCurrentYear'"
-                                    appearance="none" [ngStyle]="{'width': '100%'}">
+                                    appearance="fill" [ngStyle]="{'width': '100%'}">
                                     <input matInput [matDatepicker]="pickerFullCoverageDeadlineDate"
                                         formControlName="fullCoverageDeadlineDate"
                                         (dateChange)="onCurrentYearDateEdited(rowIndex, 1)">
@@ -130,10 +130,10 @@
                             </div>
                             <div *ngIf="!seedingDeadline.value.deletedByUserInd == true"
                                 class="inventory-cell inventory-border"
-                                [ngStyle]="{'width': '308px', 'background-color': shouldHighlightDate(rowIndex, 3) && getViewModel().formGroup.controls.rbChoice.value == 'changeDefault' ? 'yellow' : ''}">
-                                <mat-form-field
+                                [ngStyle]="{'width': '200px', 'background-color': shouldHighlightDate(rowIndex, 3) && getViewModel().formGroup.controls.rbChoice.value == 'changeDefault' ? 'yellow' : ''}">
+                                <mat-form-field class="inventory-date"
                                     *ngIf="getViewModel().formGroup.controls.rbChoice.value == 'changeDefault'"
-                                    appearance="none" [ngStyle]="{'width': '100%'}">
+                                    appearance="fill" [ngStyle]="{'width': '100%'}">
                                     <input matInput [matDatepicker]="pickerfinalCoverageDeadlineDateDefault"
                                         formControlName="finalCoverageDeadlineDateDefault">
                                     <mat-datepicker-toggle matIconSuffix
@@ -146,10 +146,10 @@
                             </div>
                             <div *ngIf="!seedingDeadline.value.deletedByUserInd == true"
                                 class="inventory-cell inventory-border"
-                                [ngStyle]="{'width': '308px', 'background-color': shouldHighlightDate(rowIndex, 4) && getViewModel().formGroup.controls.rbChoice.value == 'changeCurrentYear' ? 'yellow' : ''}">
-                                <mat-form-field
+                                [ngStyle]="{'width': '200px', 'background-color': shouldHighlightDate(rowIndex, 4) && getViewModel().formGroup.controls.rbChoice.value == 'changeCurrentYear' ? 'yellow' : ''}">
+                                <mat-form-field class="inventory-date"
                                     *ngIf="getViewModel().formGroup.controls.rbChoice.value == 'changeCurrentYear'"
-                                    appearance="none" [ngStyle]="{'width': '100%'}">
+                                    appearance="fill" [ngStyle]="{'width': '100%'}">
                                     <input matInput [matDatepicker]="pickerFinalCoverageDeadlineDate"
                                         formControlName="finalCoverageDeadlineDate"
                                         (dateChange)="onCurrentYearDateEdited(rowIndex, 2)">

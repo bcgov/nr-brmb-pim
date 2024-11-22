@@ -1,19 +1,4 @@
 
-::ng-deep .mat-mdc-option {
-  mat-icon {
-    color: gray;
-  }
-  /* TODO(mdc-migration): The following rule targets internal classes of option that may no longer apply for the MDC version. */
-  .mat-option-text {
-    line-height: 20px;
-    font-size: 16px;
-
-    span {
-      vertical-align: middle;
-    }
-  }
-}
-
 .cirras-underwriting-header-bar{
   button{
     mat-icon{

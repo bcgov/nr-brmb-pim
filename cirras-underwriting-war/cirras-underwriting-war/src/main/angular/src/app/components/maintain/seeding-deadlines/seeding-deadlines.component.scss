@@ -1,165 +1,7 @@
 @import '../../../../styles/variables';
 
-.uw-year-row-group{
-  padding: 30px 10px 0px 10px;
-    margin: 10px 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-
-    .cuw-container {
-      display: grid;
-      grid-auto-rows: minmax( 2em, auto );
-
-      div {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-    }
-
-      &.cuw-grower-info {
-        grid-template-columns: 80px 230px auto;
-    }
-
-    }
-}
-
-.cuw-row-group {
-    //padding: 30px 10px 10px 10px;
-    margin: 10px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    
-    .cuw-container {
-        display: grid;
-        grid-auto-rows: minmax( 2em, auto );
-        
-        div {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-        }
-  
-        .header {
-            font-weight: bold;            
-        }
-
-        .border-right {
-            border-right: 2px solid #ccc;          
-        }
-  
-        .border-top {
-            border-top: 2px solid #ccc;          
-        }
-  
-        .border-left {
-            border-left: 2px solid #ccc;          
-        }
-  
-        .justify-center {
-            justify-content: center;   
-        }
-  
-        .border-bottom {
-            border-bottom: 2px solid #ccc;
-        }
-
-        &.sd-info {
-            // width: 850px;
-            grid-template-columns: 200px 190px 190px 190px 190px 30px;
-        }
-
-        .sd-info-fill {
-    
-            & > * {
-                  flex-grow: 1;
-              }
-              .mat-mdc-form-field{
-                width: 99px;
-                height: 60px;
-                //margin-bottom: -1.4em
-              }
-              /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-              .mat-form-field-wrapper {
-                bottom: 0;
-              }
-              /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-              ::ng-deep .mat-form-field-underline {
-                display: none;
-              }
-              /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-              ::ng-deep .mat-form-field-infix {
-                display: flex;
-                justify-content: center;
-              }
-              /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-              ::ng-deep .mat-form-field-wrapper {
-                padding-bottom: 0;
-              }
-              /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-              ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
-                height: 60px;
-              }
-          }
-
-    }
-  }
-  
-
-  .grower-header-label{    
-    width: 80px;
-  }
-
-  h2 {
-    font-size: 22px;
-    font-weight: bold;
-    margin-left: 20px;
-    display: inline;
-  }
-
-
-  .button-row {
-    padding-top: 12px;
-    margin-left: 20px;
-    margin-right: 20px;
-  
-    ::ng-deep .mat-mdc-raised-button {
-      padding: 0 10px;
-    }
-  }
-
   .button-mat-icon {
     margin-right: 4px;
-  }
-
-  .button-large-text {
-    font-size: 20px !important;
-  }
-  
-  .button-right {
-    float: right;
-  }
-
-  .unsaved-changes-warning {
-    display: flex; 
-    flex-direction: row; 
-    justify-content:center; 
-    align-items: center; 
-    max-width: 400px;
-    margin-left: 20px; 
-    border: 2px solid orangered; 
-    border-radius: 5px;
-  }
-
-  .table-wrapper {
-    max-height: calc(var(--vh, 1vh) * 100 - 25em);
-    width: calc(100% - 2 * var(--cirras-underwriting-gutter-space));
-    width: 1010px;
-    margin: 0;
-    border-top: 1px solid $colour-light-grey;
-    border-bottom: 1px solid $colour-light-grey;
-    overflow-y: auto;
   }
 
 .grower-header {
@@ -173,14 +15,7 @@
 
 .top-filter {
   display: grid;
-  grid-template-columns: 174px 146px auto 406px;
-
-  ::ng-deep .ms-parent:nth-of-type(1) {
-    width: 158px !important;
-    > ::ng-deep .ms-choice {
-      width: 158px !important;
-    }
-  }
+  grid-template-columns: 174px 146px 300px 420px;
 
   button {
     color: #424242;
@@ -191,6 +26,51 @@
       margin-bottom: 4px;
     }
   }
+
+  ::ng-deep .mat-internal-form-field>label {
+    padding-left: 0px !important; 
+  }
+
+  ::ng-deep .mat-mdc-radio-button .mat-internal-form-field {
+    color: $colour-dark-grey !important;
+  }
+}
+
+::ng-deep .ms-choice {
+  height: 37.5px;
+  line-height: 37.5px;
+  width: 80px;
+  border: 1px solid $colour-light-grey;
+  padding: 0 5px;
+  border-radius: 5px;
+  font-family: $font-family-main;
+  font-size: $font-size;
+  color: inherit;
+
+  span.placeholder{
+    color: #6a6a6a;
+  }
+
+  > div.icon-caret{
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 50% !important;
+    right: 8px;
+    margin-top: -5px;
+    border-width: 5px 4px 0 4px;
+
+    &.open{
+      border-width: 0 6px 9px 6px;
+    }
+  }
+}
+
+.change-radio-group{
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  align-items: flex-start;
 }
 
 .policy-header-container {
@@ -226,10 +106,7 @@
     padding-bottom: 0;
     padding-top: 0;
   }
-  /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-  ::ng-deep .mat-form-field-infix {
-    border-top: 0;
-  }
+
 }
 
 .plcy-inv-fld-tbl-outer-wrapper {

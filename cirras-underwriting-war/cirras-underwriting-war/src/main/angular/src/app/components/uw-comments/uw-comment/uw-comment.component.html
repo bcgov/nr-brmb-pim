@@ -14,7 +14,7 @@
             {{ uwCommentFormGroup.value.updateUser }}
         </label>
     </div>
-    <div class="border-right border-bottom entire">
+    <div class="border-right border-bottom">
         <mat-form-field appearance="none" *ngIf="uwCommentFormGroup.value.userCanEditInd; else readOnlyComment">
             <textarea matInput formControlName="underwritingComment" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
                 cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" maxlength="2000" (blur)="onCommentChange()"

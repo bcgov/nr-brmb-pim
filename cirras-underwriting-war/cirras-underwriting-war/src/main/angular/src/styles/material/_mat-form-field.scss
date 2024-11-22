@@ -1,14 +1,18 @@
 @import '../variables';
-.mat-mdc-select,
+
 .mdc-text-field--filled,
-.mdc-text-field--outlined {
-    font-family: $font-family-main;
-    font-size: $font-size;
+.mdc-text-field--outlined,
+.mat-mdc-select,
+.mat-mdc-option // for a dropdown list
+{
+    font-family: $font-family-main !important;
+    font-size: $font-size !important;
     background-color: transparent !important;
 }
 
-
-
+.mat-mdc-option {
+    min-height: 36px !important;
+}
 
 .inventory-fill {
     color: #424242;
@@ -44,7 +48,7 @@
     .mat-mdc-form-field-type-mat-select:not(.mat-form-field-disabled) .mat-mdc-text-field-wrapper {
         padding-left:2px;
     }
-    
+
 }
 
 .inventory-date{

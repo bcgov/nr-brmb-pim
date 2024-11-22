@@ -1,5 +1,39 @@
 @import '../variables';
 
+
+// .mat-mdc-radio-button:not(.mat-radio-disabled).mat-accent .mat-radio-inner-circle,
+// .mat-radio-button:not(.mat-radio-disabled).mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple),
+// .mat-radio-button:not(.mat-radio-disabled).mat-accent.mat-radio-checked .mat-radio-persistent-ripple,
+// .mat-radio-button:not(.mat-radio-disabled).mat-accent:active .mat-radio-persistent-ripple{
+//   background-color: $colour-blue;
+// }
+
+// .mat-mdc-radio-button:not(.mat-radio-disabled).mat-accent.mat-radio-checked .mat-radio-outer-circle {
+//   border-color: $colour-blue;
+// }
+
+.mat-mdc-radio-button.mat-accent {
+
+  --mdc-radio-selected-focus-icon-color: $colour-blue;
+  --mdc-radio-selected-hover-icon-color: $colour-blue;
+  --mdc-radio-selected-icon-color: $colour-blue;
+  --mdc-radio-selected-pressed-icon-color: $colour-blue;
+  --mat-mdc-radio-checked-ripple-color: $colour-blue;
+
+  .mdc-form-field {
+      .mdc-radio {
+          .mdc-radio__native-control:enabled + .mdc-radio__background {
+              .mdc-radio__outer-circle {
+                  background-color: white;
+              }
+              .mdc-radio__inner-circle {
+              }
+          }
+      }
+  }
+}
+
+
 .plcy-grain-sdd-inv {
 
     .mat-mdc-radio-button{

@@ -81,16 +81,6 @@
             flex-direction: column;
             align-items: flex-start;
         }
-
-        .entire {
-          ::ng-deep .mat-mdc-form-field {
-            width: 100%;
-          }
-          /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-          ::ng-deep .mat-form-field-wrapper {
-            padding-bottom: 0;
-          }
-        }
     }
   }
 
@@ -135,20 +125,6 @@
     .dialog-controls {
       align-self: center; // flex-end;
       padding: .5rem 1rem 1rem;
-    }
-
-    .entire {
-      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-      ::ng-deep .mat-form-field-wrapper {
-          padding-bottom: 0;
-      }
-      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-      ::ng-deep .mat-form-field-underline {
-          bottom: 0;
-      }
-      ::ng-deep .mat-mdc-form-field {
-          width: 100%;
-      }
     }
 
     .button-large-text {

@@ -243,26 +243,6 @@
         width: auto !important;
         flex-basis: auto;
       }
-
-      ::ng-deep .mat-mdc-radio-group{
-        display: flex;
-        .mat-mdc-radio-button{
-          height: 35px;
-          display: flex;
-
-          &:not(:first-of-type) {
-            margin-left: 5px;
-          }
-          /*TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
-          .mat-radio-outer-circle {
-            background-color: $colour-white;
-          }
-        }
-      }
-
-      input.search-input{
-        //width: 297px;
-      }
     }
 
     &>*{
