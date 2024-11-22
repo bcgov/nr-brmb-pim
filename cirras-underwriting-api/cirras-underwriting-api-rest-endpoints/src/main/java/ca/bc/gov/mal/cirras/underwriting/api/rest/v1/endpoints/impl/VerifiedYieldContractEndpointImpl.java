@@ -56,7 +56,7 @@ public class VerifiedYieldContractEndpointImpl extends BaseEndpointsImpl impleme
 
 
 	@Override
-	public Response updateVerifiedYieldContract(String declaredYieldContractGuid, VerifiedYieldContractRsrc verifiedYieldContract) {
+	public Response updateVerifiedYieldContract(String verifiedYieldContractGuid, VerifiedYieldContractRsrc verifiedYieldContract) {
 
 		Response response = null;
 		
@@ -68,7 +68,7 @@ public class VerifiedYieldContractEndpointImpl extends BaseEndpointsImpl impleme
 			
 		try {
 			VerifiedYieldContractRsrc currentVerifiedYieldContract = (VerifiedYieldContractRsrc) cirrasVerifiedYieldService.getVerifiedYieldContract(
-					declaredYieldContractGuid, 
+					verifiedYieldContractGuid, 
 					getFactoryContext(), 
 					getWebAdeAuthentication());
 
@@ -82,7 +82,7 @@ public class VerifiedYieldContractEndpointImpl extends BaseEndpointsImpl impleme
 				String optimisticLock = getIfMatchHeader();
 
 				VerifiedYieldContractRsrc result = (VerifiedYieldContractRsrc)cirrasVerifiedYieldService.updateVerifiedYieldContract(
-						declaredYieldContractGuid,
+						verifiedYieldContractGuid,
 						optimisticLock, 
 						verifiedYieldContract, 
 						getFactoryContext(), 
@@ -113,7 +113,7 @@ public class VerifiedYieldContractEndpointImpl extends BaseEndpointsImpl impleme
 	}	
 
 	@Override
-	public Response deleteVerifiedYieldContract(String declaredYieldContractGuid) {
+	public Response deleteVerifiedYieldContract(String verifiedYieldContractGuid) {
 
 		Response response = null;
 		
@@ -125,7 +125,7 @@ public class VerifiedYieldContractEndpointImpl extends BaseEndpointsImpl impleme
 			
 		try {
 			VerifiedYieldContractRsrc current = (VerifiedYieldContractRsrc) cirrasVerifiedYieldService.getVerifiedYieldContract(
-					declaredYieldContractGuid, 
+					verifiedYieldContractGuid, 
 					getFactoryContext(), 
 					getWebAdeAuthentication());
 
@@ -139,7 +139,7 @@ public class VerifiedYieldContractEndpointImpl extends BaseEndpointsImpl impleme
 				String optimisticLock = getIfMatchHeader();
 
 				cirrasVerifiedYieldService.deleteVerifiedYieldContract(
-						declaredYieldContractGuid, 
+						verifiedYieldContractGuid, 
 						optimisticLock, 
 						getWebAdeAuthentication());
 
