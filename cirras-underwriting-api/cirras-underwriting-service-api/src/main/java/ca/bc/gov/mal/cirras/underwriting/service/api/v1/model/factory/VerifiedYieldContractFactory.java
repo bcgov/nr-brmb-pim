@@ -6,8 +6,10 @@ import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 
 public interface VerifiedYieldContractFactory {
@@ -24,4 +26,11 @@ public interface VerifiedYieldContractFactory {
 			FactoryContext context, 
 			WebAdeAuthentication authentication
 		) throws FactoryException;
+
+	void updateDto(
+			VerifiedYieldContractDto dto, 
+			VerifiedYieldContract<? extends AnnualField> model,
+			String userId);
+
+	void updateDto(VerifiedYieldContractCommodityDto dto, VerifiedYieldContractCommodity model);
 }

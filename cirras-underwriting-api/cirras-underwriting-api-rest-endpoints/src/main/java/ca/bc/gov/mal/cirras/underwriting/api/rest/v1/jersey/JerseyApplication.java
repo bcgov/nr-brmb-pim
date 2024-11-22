@@ -57,6 +57,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.UwContractVa
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.UwContractValidateRenameLegalEndpointImpl;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.UwContractValidateReplaceLegalEndpointImpl;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.VerifiedYieldContractEndpointImpl;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.VerifiedYieldContractListEndpointImpl;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.YieldMeasUnitConversionListEndpointImpl;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl.YieldMeasUnitTypeCodeListEndpointImpl;
 import ca.bc.gov.nrs.wfone.common.api.rest.code.endpoints.impl.CodeTableEndpointsImpl;
@@ -134,6 +135,7 @@ public class JerseyApplication extends JerseyResourceConfig {
 		register(YieldMeasUnitConversionListEndpointImpl.class);
 		register(UwContractRolloverVerifiedYieldEndpointImpl.class);
 		register(VerifiedYieldContractEndpointImpl.class);
+		register(VerifiedYieldContractListEndpointImpl.class);
 		
 
 		register(OpenApiResource.class);
