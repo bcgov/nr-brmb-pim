@@ -1,6 +1,5 @@
 @import '../../../../styles/variables';
 
-
 .uw-year-row-group{
     padding: 30px 10px 0px 10px;
       margin: 10px 10px;
@@ -25,95 +24,12 @@
       }
   }
   
-  .cuw-row-group {
-      //padding: 30px 10px 10px 10px;
-      margin: 10px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      
-      .cuw-container {
-          display: grid;
-          grid-auto-rows: minmax( 2em, auto );
-          
-          div {
-              display: flex;
-              justify-content: flex-start;
-              align-items: center;
-          }
-    
-          .header {
-              font-weight: bold;            
-          }
-  
-          .border-right {
-              border-right: 2px solid #ccc;          
-          }
-    
-          .border-top {
-              border-top: 2px solid #ccc;          
-          }
-    
-          .border-left {
-              border-left: 2px solid #ccc;          
-          }
-    
-          .justify-center {
-              justify-content: center;   
-          }
-    
-          .border-bottom {
-              border-bottom: 2px solid #ccc;
-          }
-  
-          &.sd-info {
-              // width: 850px;
-              grid-template-columns: 200px 190px 190px 190px 190px 30px;
-          }
-  
-          .sd-info-fill {
-      
-              & > * {
-                    flex-grow: 1;
-                }
-                .mat-mdc-form-field{
-                  width: 99px;
-                  height: 60px;
-                  //margin-bottom: -1.4em
-                }
-                /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-                .mat-form-field-wrapper {
-                  bottom: 0;
-                }
-                /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-                ::ng-deep .mat-form-field-underline {
-                  display: none;
-                }
-                /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-                ::ng-deep .mat-form-field-infix {
-                  display: flex;
-                  justify-content: center;
-                }
-                /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-                ::ng-deep .mat-form-field-wrapper {
-                  padding-bottom: 0;
-                }
-                /*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-                ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
-                  height: 60px;
-                }
-            }
-  
-      }
-    }
-    
   h2 {
     font-size: 22px;
     font-weight: bold;
     margin-left: 20px;
     display: inline;
   }
-
 
   .button-row {
     padding-top: 12px;
@@ -133,6 +49,3 @@
     font-size: 20px !important;
   }
   
-  .button-right {
-    float: right;
-  }

@@ -23,17 +23,17 @@
                             </option>
                         </select>
                         <div class="vertical-line"></div>
-                        <button *ngIf="securityUtilService.canEditGradeModifiers()" mat-raised-button color="secondary"
+                        <button *ngIf="securityUtilService.canEditGradeModifiers()" mat-raised-button class="secondary"
                             (click)="onAddGradeModifier()" class="ms-choice" style="width: 130px;">
                             <mat-icon class="button-mat-icon">add</mat-icon>Add New
                         </button>
                         <button
                             *ngIf="securityUtilService.canEditGradeModifiers() && gradeModifierList && gradeModifierList.collection && gradeModifierList.collection.length == 0"
-                            mat-raised-button color="secondary" (click)="onRollover()" class="ms-choice"
+                            mat-raised-button class="secondary" (click)="onRollover()" class="ms-choice"
                             style="width: 120px;">
                             <mat-icon class="button-mat-icon">refresh</mat-icon>Rollover
                         </button>
-                        <button mat-raised-button color="secondary" (click)="onMaintainGradeModifierTypes()"
+                        <button mat-raised-button class="secondary" (click)="onMaintainGradeModifierTypes()"
                             class="ms-choice" style="width: 280px;">
                             <mat-icon class="button-mat-icon">format_list_bulleted</mat-icon>{{ (
                             securityUtilService.canEditGradeModifiers()) ? "Maintain" : "View" }} Grade Modifier Types
@@ -52,13 +52,13 @@
                     <div><!-- empty div to account for space when there is no warning --> </div>
                 </ng-template>
                 <div>
-                    <button *ngIf="securityUtilService.canEditGradeModifiers()" mat-raised-button color="secondary"
+                    <button *ngIf="securityUtilService.canEditGradeModifiers()" mat-raised-button class="secondary"
                         [disabled]="!hasDataChanged && !isUnsaved" (click)="onCancel()">
                         Clear Changes
                     </button>
                 </div>
                 <div>
-                    <button *ngIf="securityUtilService.canEditGradeModifiers()" mat-raised-button color="primary"
+                    <button *ngIf="securityUtilService.canEditGradeModifiers()" mat-raised-button class="primary"
                         [disabled]="!hasDataChanged && !isUnsaved" (click)="onSave()">
                         Save
                     </button>
@@ -81,7 +81,7 @@
                             [formGroup]="gradeModifier">
                             <div *ngIf="!gradeModifier.value.deletedByUserInd == true"
                                 class="inventory-cell inventory-border border-left" [ngStyle]="{'width': '386px'}">
-                                <mat-form-field appearance="none"
+                                <mat-form-field appearance="fill" class="inventory-fill"
                                     *ngIf="gradeModifier.value.addedByUserInd == true && !(getViewModel().formGroup.controls.selectedCropCommodityId.value && getViewModel().formGroup.controls.selectedCropCommodityId.value != '')"
                                     style="width: 100%;">
                                     <mat-select formControlName="cropCommodityId">
@@ -96,7 +96,7 @@
                             </div>
                             <div *ngIf="!gradeModifier.value.deletedByUserInd == true"
                                 class="inventory-cell inventory-border" [ngStyle]="{'width': '386px'}">
-                                <mat-form-field appearance="none" *ngIf="gradeModifier.value.addedByUserInd == true"
+                                <mat-form-field appearance="fill" class="inventory-fill" *ngIf="gradeModifier.value.addedByUserInd == true"
                                     style="width: 100%;">
                                     <mat-select formControlName="gradeModifierTypeCode">
                                         <mat-option *ngFor="let option of gradeModifierTypeOptions"
@@ -110,7 +110,7 @@
                             <div *ngIf="!gradeModifier.value.deletedByUserInd == true"
                                 class="inventory-cell inventory-border"
                                 [ngStyle]="{'width': '386px', 'display': 'flex', 'justify-content': 'space-between'}">
-                                <mat-form-field appearance="none">
+                                <mat-form-field appearance="fill" class="inventory-fill">
                                     <input matInput formControlName="gradeModifierValue" maxlength="5"
                                         (keypress)="numberOnly($event)" (blur)="validateGradeModifierValue(rowIndex)">
                                 </mat-form-field>

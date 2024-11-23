@@ -17,6 +17,13 @@
   display: grid;
   grid-template-columns: 174px 146px 300px 420px;
 
+  ::ng-deep .ms-parent:nth-of-type(1) {
+    width: 120px !important;
+    > ::ng-deep .ms-choice {
+      width: 120px !important;
+    }
+  }
+
   button {
     color: #424242;
     border: 1px solid #c2c2c2;
@@ -33,36 +40,6 @@
 
   ::ng-deep .mat-mdc-radio-button .mat-internal-form-field {
     color: $colour-dark-grey !important;
-  }
-}
-
-::ng-deep .ms-choice {
-  height: 37.5px;
-  line-height: 37.5px;
-  width: 80px;
-  border: 1px solid $colour-light-grey;
-  padding: 0 5px;
-  border-radius: 5px;
-  font-family: $font-family-main;
-  font-size: $font-size;
-  color: inherit;
-
-  span.placeholder{
-    color: #6a6a6a;
-  }
-
-  > div.icon-caret{
-    position: absolute;
-    width: 0;
-    height: 0;
-    top: 50% !important;
-    right: 8px;
-    margin-top: -5px;
-    border-width: 5px 4px 0 4px;
-
-    &.open{
-      border-width: 0 6px 9px 6px;
-    }
   }
 }
 
