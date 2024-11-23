@@ -16,11 +16,13 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.PolicyDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldAmendmentDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldContractDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldAmendmentDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.YieldMeasUnitConversionDto;
@@ -59,6 +61,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	private DeclaredYieldContractCommodityDao declaredYieldContractCommodityDao;
 	private VerifiedYieldContractDao verifiedYieldContractDao;
 	private VerifiedYieldContractCommodityDao verifiedYieldContractCommodityDao;
+	private VerifiedYieldAmendmentDao verifiedYieldAmendmentDao;
 
 	public void setApplicationProperties(Properties applicationProperties) {
 		this.applicationProperties = applicationProperties;
@@ -92,6 +95,10 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		this.verifiedYieldContractCommodityDao = verifiedYieldContractCommodityDao;
 	}
 
+	public void setVerifiedYieldAmendmentDao(VerifiedYieldAmendmentDao verifiedYieldAmendmentDao) {
+		this.verifiedYieldAmendmentDao = verifiedYieldAmendmentDao;
+	}
+	
 	@Override
 	public VerifiedYieldContract<? extends AnnualField> rolloverVerifiedYieldContract(Integer policyId,
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
@@ -203,6 +210,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			WebAdeAuthentication authentication) throws DaoException {
 
 		loadVerifiedYieldContractCommodities(dto);
+		loadVerifiedYieldAmendments(dto);
 
 		return verifiedYieldContractFactory.getVerifiedYieldContract(dto, factoryContext, authentication);
 	}
@@ -213,6 +221,10 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		dto.setVerifiedYieldContractCommodities(verifiedCommodities);
 	}
 	
+	private void loadVerifiedYieldAmendments(VerifiedYieldContractDto dto) throws DaoException {
+		List<VerifiedYieldAmendmentDto> verifiedAmendments = verifiedYieldAmendmentDao.selectForVerifiedYieldContract(dto.getVerifiedYieldContractGuid());
+		dto.setVerifiedYieldAmendments(verifiedAmendments);
+	}
 	
 	@Override
 	public VerifiedYieldContract<? extends AnnualField> createVerifiedYieldContract(

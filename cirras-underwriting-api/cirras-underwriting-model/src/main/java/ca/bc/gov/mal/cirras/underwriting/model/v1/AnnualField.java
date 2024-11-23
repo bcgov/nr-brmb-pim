@@ -50,5 +50,8 @@ public interface AnnualField extends Serializable {
 	
 	public List<PolicySimple> getPolicies();
 	public void setPolicies(List<PolicySimple> policies);
+
+	public List<VerifiableCommodity> getVerifiableCommodities();
+	public void setVerifiableCommodities(List<VerifiableCommodity> verifiableCommodities);
 	
 }

@@ -26,6 +26,8 @@ public interface InventorySeededGrainMapper {
 	List<InventorySeededGrainDto> select(Map<String, Object> parameters);
 
 	List<InventorySeededGrainDto> selectForDeclaredYield(Map<String, Object> parameters);
-	
+
+	List<InventorySeededGrainDto> selectForVerifiedYield(Map<String, Object> parameters);
+
 	List<InventorySeededGrainDto> selectTotalsForFieldYearPlan(Map<String, Object> parameters);
 }
