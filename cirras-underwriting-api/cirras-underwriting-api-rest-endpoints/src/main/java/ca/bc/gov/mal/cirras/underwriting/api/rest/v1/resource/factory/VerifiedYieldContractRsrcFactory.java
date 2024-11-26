@@ -8,6 +8,7 @@ import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,18 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		VerifiedYieldContractRsrc resource = new VerifiedYieldContractRsrc();
 
 		populateDefaultResource(resource, policyDto, dycDto);
+
+		// Fields
+		if (dycDto.getFields() != null && !dycDto.getFields().isEmpty()) {
+			List<AnnualFieldRsrc> fields = new ArrayList<AnnualFieldRsrc>();
+
+			for (ContractedFieldDetailDto cfdDto : dycDto.getFields()) {
+				AnnualFieldRsrc afModel = createAnnualField(cfdDto, authentication);
+				fields.add(afModel);
+			}
+
+			resource.setFields(fields);
+		}
 		
 		// Verified Yield Contract Commodity
 		if (!dycDto.getDeclaredYieldContractCommodities().isEmpty()) {
@@ -111,6 +124,18 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		VerifiedYieldContractRsrc resource = new VerifiedYieldContractRsrc();
 
 		populateResource(resource, dto);
+
+		// Fields
+		if (!dto.getFields().isEmpty()) {
+			List<AnnualFieldRsrc> fields = new ArrayList<AnnualFieldRsrc>();
+
+			for (ContractedFieldDetailDto cfdDto : dto.getFields()) {
+				AnnualFieldRsrc afModel = createAnnualField(cfdDto, authentication);
+				fields.add(afModel);
+			}
+
+			resource.setFields(fields);
+		}
 		
 		// Verified Yield Contract Commodity
 		if (!dto.getVerifiedYieldContractCommodities().isEmpty()) {
@@ -212,21 +237,34 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 
 			for (InventoryFieldDto ifDto : dto.getPlantings()) {
 				
-				if(InsurancePlans.GRAIN.getInsurancePlanId().equals(ifDto.getInsurancePlanId())) {
+				if (InsurancePlans.GRAIN.getInsurancePlanId().equals(ifDto.getInsurancePlanId())) {
 					for ( InventorySeededGrainDto isgDto : ifDto.getInventorySeededGrains() ) {
-						// TODO: Check for null commodity?
-						VerifiableCommodity vc = createVerifiableCommodity(isgDto);
-						String vcKey = vc.getCropCommodityId() + "_" + vc.getIsPedigreeInd();
-						vcMap.put(vcKey, vc);
+						if ( isgDto.getCropCommodityId() != null && isgDto.getIsPedigreeInd() != null ) {						
+							VerifiableCommodity vc = createVerifiableCommodity(isgDto);
+							String vcKey = vc.getCropCommodityId() + "_" + vc.getIsPedigreeInd();
+							vcMap.put(vcKey, vc);
+						}
 					}
 					
-				} else if(InsurancePlans.FORAGE.getInsurancePlanId().equals(ifDto.getInsurancePlanId())) {
+				} else if (InsurancePlans.FORAGE.getInsurancePlanId().equals(ifDto.getInsurancePlanId())) {
 					
 				}
 			}
 
-			// TODO: Sort.
 			verifiableCommodities.addAll(vcMap.values());
+			verifiableCommodities.sort(new Comparator<VerifiableCommodity>() {
+				
+				@Override
+				public int compare(VerifiableCommodity vc1, VerifiableCommodity vc2) {
+					
+					int cmpResult = vc1.getCropCommodityName().compareTo(vc2.getCropCommodityName());
+					if ( cmpResult == 0 ) {
+						cmpResult = vc1.getIsPedigreeInd().compareTo(vc2.getIsPedigreeInd());
+					}
+					return cmpResult;
+				}
+				
+			} );
 			
 			model.setVerifiableCommodities(verifiableCommodities);
 		}
