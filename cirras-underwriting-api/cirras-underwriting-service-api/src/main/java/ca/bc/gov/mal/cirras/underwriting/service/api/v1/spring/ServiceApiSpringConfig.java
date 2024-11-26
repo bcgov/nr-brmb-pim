@@ -240,6 +240,7 @@ public class ServiceApiSpringConfig {
 		result.setPolicyStatusCodeDao(persistenceSpringConfig.policyStatusCodeDao());
 		result.setGrowerDao(persistenceSpringConfig.growerDao());
 		result.setPolicyDao(persistenceSpringConfig.policyDao());
+		result.setProductDao(persistenceSpringConfig.productDao());
 		result.setCropCommodityDao(persistenceSpringConfig.cropCommodityDao());
 		result.setCropVarietyDao(persistenceSpringConfig.cropVarietyDao());
 		result.setOfficeDao(persistenceSpringConfig.officeDao());

@@ -46,4 +46,9 @@ public class PoliciesSyncEventTypes {
 	
 	public static final String CommodityTypeVarietyXrefCreated = EventTypeNamespace + "CommodityTypeVarietyXrefCreated";
 	public static final String CommodityTypeVarietyXrefDeleted = EventTypeNamespace + "CommodityTypeVarietyXrefDeleted";
+
+	public static final String ProductCreated = EventTypeNamespace + "ProductCreated";    
+    public static final String ProductUpdated = EventTypeNamespace + "ProductUpdated";
+	public static final String ProductDeleted = EventTypeNamespace + "ProductDeleted";
+
 }

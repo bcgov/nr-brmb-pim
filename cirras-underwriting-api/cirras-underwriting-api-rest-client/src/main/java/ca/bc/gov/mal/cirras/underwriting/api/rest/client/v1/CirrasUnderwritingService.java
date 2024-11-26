@@ -27,6 +27,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandFieldXrefRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PolicyRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.ProductRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.RemoveFieldValidationRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.RenameLegalValidationRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.ReplaceLegalValidationRsrc;
@@ -181,6 +182,11 @@ public interface CirrasUnderwritingService {
 
 	VerifiedYieldContractRsrc getVerifiedYieldContract(UwContractRsrc resource) throws CirrasUnderwritingServiceException;
 	
+	VerifiedYieldContractRsrc createVerifiedYieldContract(EndpointsRsrc parent, VerifiedYieldContractRsrc resource) throws CirrasUnderwritingServiceException, ValidationException;
+	
+	VerifiedYieldContractRsrc updateVerifiedYieldContract(VerifiedYieldContractRsrc resource) throws CirrasUnderwritingServiceException, ValidationException;
+
+	void deleteVerifiedYieldContract(VerifiedYieldContractRsrc resource) throws CirrasUnderwritingServiceException;
 	
 	//////////////////////////////////////////////////////
 	// Seeding Deadline
@@ -293,6 +299,11 @@ public interface CirrasUnderwritingService {
 	void synchronizePolicy(PolicyRsrc resource) throws CirrasUnderwritingServiceException, ValidationException;
 	void deletePolicy(EndpointsRsrc parent, String policyId) throws CirrasUnderwritingServiceException;
 
+	//Product
+	ProductRsrc getProduct(EndpointsRsrc parent, String productId) throws CirrasUnderwritingServiceException;
+	void synchronizeProduct(ProductRsrc resource) throws CirrasUnderwritingServiceException, ValidationException;
+	void deleteProduct(EndpointsRsrc parent, String productId) throws CirrasUnderwritingServiceException;
+	
 	//Legal Land Sync
 	void synchronizeLegalLand(LegalLandRsrc resource) throws CirrasUnderwritingServiceException, ValidationException;
 	void deleteLegalLandSync(EndpointsRsrc parent, String legalLandId) throws CirrasUnderwritingServiceException;
