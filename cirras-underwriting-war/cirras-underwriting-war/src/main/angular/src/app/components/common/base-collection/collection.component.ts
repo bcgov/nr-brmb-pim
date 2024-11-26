@@ -26,26 +26,6 @@ export class CollectionComponent extends BaseComponent implements OnChanges, Aft
     @Input() searchState: PagingSearchState;
     @Input() reportCollection: PagedCollection;
 
-    // constructor(protected router: Router,
-    //     protected route: ActivatedRoute,
-    //     protected sanitizer: DomSanitizer,
-    //     protected store: Store<RootState>,
-    //     protected fb: UntypedFormBuilder,
-    //     protected dialog: MatDialog,
-    //     protected applicationStateService: ApplicationStateService,
-    //     public securityUtilService: SecurityUtilService,                
-    //     protected tokenService: TokenService,
-    //     protected connectionService: ConnectionService,
-    //     protected snackbarService: MatSnackBar,
-    //     protected overlay: Overlay,
-    //     protected cdr: ChangeDetectorRef,
-    //     protected appConfigService: AppConfigService,
-    //     protected http: HttpClient,
-    //     protected titleService: Title,
-    //     protected decimalPipe: DecimalPipe) {
-    //     super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
-    // }
-
     baseRoute = undefined;
     searchText = undefined; //not use, but leave this.
     searchGrower = undefined;
