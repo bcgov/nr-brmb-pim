@@ -77,6 +77,18 @@
         margin-left: 10px;
       }
     }
-
   }
+
+  .table-search-header .search-and-filters {
+    .search-input {
+        position: relative;
+
+        .input-clear-button {
+            position: absolute;
+            bottom: -6px;
+            right: -6px;
+        }
+    }
+  }
+
 }

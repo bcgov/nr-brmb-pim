@@ -42,13 +42,13 @@
                             <span>{{option.cropYear}}</span>
                         </option>
                     </select>
-                    <button *ngIf="securityUtilService.canEditSeedingDeadlines()" mat-raised-button color="secondary"
-                        (click)="onAddSeedingDeadline()" class="ms-choice" style="width: 130px;">
+                    <button *ngIf="securityUtilService.canEditSeedingDeadlines()" mat-raised-button class="secondary ms-choice"
+                        (click)="onAddSeedingDeadline()" style="width: 130px;">
                         <mat-icon class="button-mat-icon">add</mat-icon>Add New
                     </button>
                     <button
                         *ngIf="securityUtilService.canEditSeedingDeadlines() && seedingDeadlineList && seedingDeadlineList.collection && seedingDeadlineList.collection.length == 0; else noRolloverButton"
-                        mat-raised-button color="secondary" (click)="onRollover()" class="ms-choice"
+                        mat-raised-button (click)="onRollover()" class="secondary ms-choice"
                         style="width: 120px;">
                         <mat-icon class="button-mat-icon">refresh</mat-icon>Rollover
                     </button>

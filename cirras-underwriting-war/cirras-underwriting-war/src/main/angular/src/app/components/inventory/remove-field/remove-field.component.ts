@@ -2,11 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UntypedFormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AnnualFieldRsrc, AnnualFieldListRsrc, LegalLandRsrc, AddFieldValidationRsrc, InventoryContractRsrc, InventoryField, UnderwritingComment, RemoveFieldValidationRsrc } from '@cirras/cirras-underwriting-api';
+import { RemoveFieldValidationRsrc } from '@cirras/cirras-underwriting-api';
 import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
-import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest';
-import { LegalLandList } from 'src/app/conversion/models';
-import { makeTitleCase, setHttpHeaders } from 'src/app/utils';
+import { setHttpHeaders } from 'src/app/utils';
 import { LAND_UPDATE_TYPE } from 'src/app/utils/constants';
 
 
@@ -29,6 +27,8 @@ export interface RemoveFieldPopupData {
 })
 export class RemoveFieldComponent implements OnInit {
 
+  titleLabel = "Remove or Delete Field" 
+
   dataReceived : RemoveFieldPopupData;
   validation: RemoveFieldValidationRsrc;
   deleteToolTip: String;
@@ -44,6 +44,10 @@ export class RemoveFieldComponent implements OnInit {
       if (data) {
         //capture the data that comes from the main page
         this.dataReceived = data;
+
+        this.titleLabel = "Remove or Delete Field " + 
+          ((this.dataReceived && this.dataReceived.fieldId) ? 
+            (": " + this.dataReceived. fieldLabel + " (" + this.dataReceived.fieldId + ")") : "")
       } 
     }
 

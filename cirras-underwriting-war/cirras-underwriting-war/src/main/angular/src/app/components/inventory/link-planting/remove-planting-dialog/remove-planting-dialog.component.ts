@@ -9,6 +9,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class RemovePlantingDialogComponent implements OnInit {
 
   policyNumber: string 
+  titleLabel = "Remove Linked Plantings"
+
   constructor(
     public dialogRef: MatDialogRef<String>,
     @Inject(MAT_DIALOG_DATA) public data: string) {  

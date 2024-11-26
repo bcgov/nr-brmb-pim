@@ -27,16 +27,16 @@
             </div>
             <div class="vertical-line"></div>
             <div matTooltip="Changes must be saved before download is possible.">
-                <button mat-raised-button color="secondary" [disabled]="hasDataChanged == true"
-                class="button-large-text" (click)="onPrint()">
+                <button mat-raised-button class="secondary button-large-text" [disabled]="hasDataChanged == true"
+                (click)="onPrint()">
                     <mat-icon class="button-mat-icon">download</mat-icon>Download
                 </button>
             </div>
             <div>
                 <button 
                     *ngIf="securityUtilService.canEditDop()" 
-                    mat-raised-button color="primary" 
-                    class="button-large-text" 
+                    mat-raised-button 
+                    class="primary button-large-text" 
                     [disabled]="!hasDataChanged" 
                     (click)="onSave()">
                         Save
@@ -89,8 +89,7 @@
             <div>
                 <button
                     mat-raised-button 
-                    color="secondary" 
-                    class="header-button"  
+                    class="secondary header-button"  
                     matTooltip="Clear unsaved changes"
                     (click)="onCancel()">
                     Clear Changes
@@ -101,8 +100,8 @@
                 <button *ngIf="securityUtilService.canDeleteDop() && 
                                 dopYieldContract && 
                                 dopYieldContract.declaredYieldContractGuid" 
-                                mat-raised-button color="secondary" 
-                                class="header-button-red" 
+                                mat-raised-button 
+                                class="secondary header-button-red" 
                                 (click)="onDeleteDop()">
                     <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset DOP
                 </button>

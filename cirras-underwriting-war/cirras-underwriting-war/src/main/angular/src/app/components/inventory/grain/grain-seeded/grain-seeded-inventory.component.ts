@@ -1,27 +1,14 @@
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, SimpleChanges} from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, SimpleChanges} from '@angular/core';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { GrainInventoryComponent } from "../grain-inventory.component";
 import { makeTitleCase } from 'src/app/utils'; 
 import { CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
-import { CropCommodityList, CropVarietyCommodityType } from 'src/app/conversion/models';
+import { CropVarietyCommodityType } from 'src/app/conversion/models';
 import { CropVarietyOptionsType, roundUpDecimalAcres } from '../../inventory-common';
 import { AddPlantingPopupData, LinkPlantingComponent } from '../../link-planting/link-planting.component';
 import { LoadInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import {ViewEncapsulation } from '@angular/core';
-import { DomSanitizer, Title } from '@angular/platform-browser';
-import { Store } from '@ngrx/store';
-import { RootState } from 'src/app/store';
-import { MatDialog } from '@angular/material/dialog';
-import { ApplicationStateService } from 'src/app/services/application-state.service';
-import { SecurityUtilService } from 'src/app/services/security-util.service';
-import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
-import { ConnectionService } from 'ngx-connection-service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Overlay } from '@angular/cdk/overlay';
-import { HttpClient } from '@angular/common/http';
-import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'grain-seeded-inventory',
@@ -32,26 +19,6 @@ import { DecimalPipe } from '@angular/common';
 })
 
 export class GrainSeededInventoryComponent extends GrainInventoryComponent { 
- 
-  constructor(protected router: Router,
-    protected route: ActivatedRoute,
-    protected sanitizer: DomSanitizer,
-    protected store: Store<RootState>,
-    protected fb: UntypedFormBuilder,
-    protected dialog: MatDialog,
-    protected applicationStateService: ApplicationStateService,
-    public securityUtilService: SecurityUtilService,                
-    protected tokenService: TokenService,
-    protected connectionService: ConnectionService,
-    protected snackbarService: MatSnackBar,
-    protected overlay: Overlay,
-    protected cdr: ChangeDetectorRef,
-    protected appConfigService: AppConfigService,
-    protected http: HttpClient,
-    protected titleService: Title,
-    protected decimalPipe: DecimalPipe) {
-    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
-  }
 
   seededCommodityOptions = [];
 

@@ -43,6 +43,8 @@ export interface AddPlantingPopupData {
 })
 export class LinkPlantingComponent implements OnInit {
 
+  titleLabel = "Link Planting for Field"
+
   httpOptions; // = setHttpHeaders(this.tokenService.getOauthToken())
 
   dataReceived : AddPlantingPopupData;
@@ -76,6 +78,12 @@ export class LinkPlantingComponent implements OnInit {
         if (this.dataReceived && this.dataReceived.policyNumber) {
           this.searchPolicy(this.dataReceived.policyNumber)
         }
+
+        this.titleLabel = "Link Planting for Field " + 
+        ( (this.dataReceived)  ?  
+        ": " + this.dataReceived.fieldLabel + " (Field Id: " + this.dataReceived.fieldId + "), Location: " + this.dataReceived.otherLegalDescription
+            : "" )
+        
       } 
     }
 

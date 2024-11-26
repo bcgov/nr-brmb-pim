@@ -26,8 +26,8 @@
             </div>
             <div class="vertical-line"></div>
             <div matTooltip="Changes must be saved before download is possible.">
-                <button mat-raised-button color="secondary" [disabled]="hasDataChanged == true"
-                class="button-large-text" (click)="onPrint()">
+                <button mat-raised-button class="secondary button-large-text" [disabled]="hasDataChanged == true"
+                (click)="onPrint()">
                     <mat-icon class="button-mat-icon">download</mat-icon>Download
                 </button>
             </div>
@@ -35,8 +35,7 @@
                 <button 
                     *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
                     mat-raised-button 
-                    [color]="isHiddenFieldInTotals ? 'secondary' : 'primary'"
-                    [ngClass]="isHiddenFieldInTotals ? 'header-button-red' : 'button-large-text'"
+                    [ngClass]="isHiddenFieldInTotals ? 'secondary header-button-red' : 'primary button-large-text'"
                     [disabled]="!hasDataChanged" 
                     (click)="onSave()">
                         Save
@@ -75,7 +74,7 @@
                 <p>Last Updated: {{ ((inventoryContract && inventoryContract.invUpdateTimestamp) ? inventoryContract.invUpdateTimestamp : "" ) | date }}</p>
             </div>
             <div >
-                <button mat-raised-button color="secondary" class="header-button" (click)="onToggleColumns()">
+                <button mat-raised-button class="secondary header-button" (click)="onToggleColumns()">
                     <mat-icon  *ngIf="!getViewModel().formGroup.controls.showMoreColumns.value; else lessColumnsIcon" class="button-mat-icon" svgIcon="left-panel-open"></mat-icon> 
                         
                     <ng-template #lessColumnsIcon>
@@ -87,15 +86,14 @@
                 </button>
             </div>
             <div>
-                <button *ngIf="securityUtilService.canEditInventory() && !hasYieldData" mat-raised-button color="secondary" class="header-button"  (click)="onAddNewField()">
+                <button *ngIf="securityUtilService.canEditInventory() && !hasYieldData" mat-raised-button class="secondary header-button"  (click)="onAddNewField()">
                     <mat-icon class="button-mat-icon">add</mat-icon>Add Field
                 </button>
             </div>
             <div>
                 <button *ngIf="!hasYieldData" 
                     mat-raised-button 
-                    color="secondary" 
-                    class="header-button"  
+                    class="secondary header-button"  
                     matTooltip="Clear unsaved changes"
                     (click)="onCancel()">
                     Clear Changes
@@ -106,7 +104,7 @@
                 <button *ngIf="securityUtilService.canDeleteInventory() && 
                                 inventoryContract && inventoryContract.inventoryContractGuid &&
                                 hasYieldData == false"  
-                    mat-raised-button color="secondary" 
+                    mat-raised-button class="secondary" 
                     class="header-button-red"  
                     (click)="onDeleteInventory()">
                     <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset Inventory

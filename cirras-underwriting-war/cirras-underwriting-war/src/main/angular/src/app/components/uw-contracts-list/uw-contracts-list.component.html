@@ -27,7 +27,7 @@
                   <div class="field search-input">
                       <mat-label class="label filter-label">Grower Information</mat-label>     
                       <input class="search-input" aria-label="Grower Information" [(ngModel)]="searchGrower" (ngModelChange)="searchTextUpdated()">
-                      <button mat-button matSuffix mat-icon-button class="input-clear-button" *ngIf="searchGrower"
+                      <button matSuffix mat-icon-button class="input-clear-button" *ngIf="searchGrower"
                               aria-label="Clear" (click)="searchGrower=undefined;searchTextUpdated(); $event.stopPropagation()"
                               matTooltip="Clear">                            
                                 <mat-icon>close</mat-icon>
@@ -37,7 +37,7 @@
                   <div class="field search-input">
                     <mat-label class="label filter-label">Policy Number</mat-label>                    
                     <input class="search-input" aria-label="Policy Number" [(ngModel)]="searchPolicyNumber" (ngModelChange)="searchTextUpdated()">
-                    <button mat-button matSuffix mat-icon-button class="input-clear-button" *ngIf="searchPolicyNumber"
+                    <button matSuffix mat-icon-button class="input-clear-button" *ngIf="searchPolicyNumber"
                             aria-label="Clear" (click)="searchPolicyNumber=undefined;searchTextUpdated(); $event.stopPropagation()"
                             matTooltip="Clear">
                         <mat-icon>close</mat-icon>
@@ -125,7 +125,7 @@
                     </select>
                   </div>
                   <div class="field">
-                      <button mat-raised-button class="primary" color="primary" (click)="clearSearchAndFilters()"><mat-icon svgIcon="filter-cancel"></mat-icon>Clear</button>
+                      <button mat-raised-button class="primary" (click)="clearSearchAndFilters()"><mat-icon svgIcon="filter-cancel"></mat-icon>Clear</button>
                   </div>
 
               </div>
