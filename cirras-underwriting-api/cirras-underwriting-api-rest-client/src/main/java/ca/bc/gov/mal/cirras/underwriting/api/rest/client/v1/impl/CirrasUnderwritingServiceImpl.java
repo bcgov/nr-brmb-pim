@@ -35,6 +35,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandFieldXrefRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PolicyRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.ProductRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.RemoveFieldValidationRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.RenameLegalValidationRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.ReplaceLegalValidationRsrc;
@@ -723,6 +724,49 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 		
 	}
 
+	@Override
+	public VerifiedYieldContractRsrc createVerifiedYieldContract(EndpointsRsrc parent, VerifiedYieldContractRsrc resource)
+			throws CirrasUnderwritingServiceException, ValidationException {
+
+		GenericRestDAO<VerifiedYieldContractRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(VerifiedYieldContractRsrc.class);
+		
+		try {
+			Response<VerifiedYieldContractRsrc> response = dao.Process(ResourceTypes.CREATE_VERIFIED_YIELD_CONTRACT, this.getTransformer(), parent, resource, getWebClient());
+			return response.getResource();
+		} catch(BadRequestException e) {
+			throw new ValidationException(e.getMessages());			
+		} catch (RestDAOException rde) {
+			throw new CirrasUnderwritingServiceException(rde);
+		}
+	}
+
+	@Override
+	public VerifiedYieldContractRsrc updateVerifiedYieldContract(VerifiedYieldContractRsrc resource) throws CirrasUnderwritingServiceException, ValidationException {
+
+		GenericRestDAO<VerifiedYieldContractRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(VerifiedYieldContractRsrc.class);
+		
+		try {
+			Response<VerifiedYieldContractRsrc> response = dao.Process(ResourceTypes.UPDATE_VERIFIED_YIELD_CONTRACT, this.getTransformer(), resource, getWebClient());
+			return response.getResource();
+		} catch(BadRequestException e) {
+			throw new ValidationException(e.getMessages());
+		} catch (RestDAOException rde) {
+			throw new CirrasUnderwritingServiceException(rde);
+		}
+	}
+
+	@Override
+	public void deleteVerifiedYieldContract(VerifiedYieldContractRsrc resource) throws CirrasUnderwritingServiceException {
+
+		GenericRestDAO<VerifiedYieldContractRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(VerifiedYieldContractRsrc.class);
+		
+		try {
+			dao.Process(ResourceTypes.DELETE_VERIFIED_YIELD_CONTRACT, this.getTransformer(), resource, getWebClient());
+		} catch (RestDAOException rde) {
+			throw new CirrasUnderwritingServiceException(rde);
+		}
+		
+	}
 	
 	//////////////////////////////////////////////////////
 	// Yield Measurement Unit Type Code
@@ -1400,6 +1444,63 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 		
 	}
 
+	//PRODUCT SYNC
+	@Override
+	public ProductRsrc getProduct(EndpointsRsrc parent, String productId)
+	throws CirrasUnderwritingServiceException {
+
+		GenericRestDAO<ProductRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(ProductRsrc.class);
+
+		try {
+			
+			Map<String, String> queryParams = new HashMap<String, String>();
+			
+			putQueryParam(queryParams, "productId",  productId);
+			
+			Response<ProductRsrc> response = dao.Process(ResourceTypes.PRODUCT, this.getTransformer(), parent, queryParams, getWebClient());
+			return response.getResource();
+		} catch (RestDAOException rde) {
+			throw new CirrasUnderwritingServiceException(rde);
+		}
+	}
+
+	@Override
+	public void synchronizeProduct(ProductRsrc resource) throws CirrasUnderwritingServiceException, ValidationException {
+
+		EndpointsRsrc parentEndpoint = getTopLevelEndpoints();
+		
+		GenericRestDAO<ProductRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(ProductRsrc.class);
+		
+		try {
+			dao.Process(ResourceTypes.SYNCHRONIZE_PRODUCT, this.getTransformer(), parentEndpoint, resource, getWebClient());
+						
+		} catch(BadRequestException e) {
+			throw new ValidationException(e.getMessages());			
+		} catch (RestDAOException rde) {
+			throw new CirrasUnderwritingServiceException(rde);
+		}
+		
+	}
+
+	@Override
+	public void deleteProduct(EndpointsRsrc parent, String productId) throws CirrasUnderwritingServiceException {
+
+		GenericRestDAO<ProductRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(ProductRsrc.class);
+		
+		try {
+		
+			Map<String, String> queryParams = new HashMap<String, String>();
+			
+			putQueryParam(queryParams, "productId",  productId);
+			
+			dao.Process(ResourceTypes.DELETE_SYNC_PRODUCT, this.getTransformer(), parent, queryParams, getWebClient());
+	
+		} catch (RestDAOException e) {
+			throw new CirrasUnderwritingServiceException(e);
+		}
+		
+	}
+	
 	@Override
 	public void synchronizeLegalLand(LegalLandRsrc resource) throws CirrasUnderwritingServiceException, ValidationException {
 

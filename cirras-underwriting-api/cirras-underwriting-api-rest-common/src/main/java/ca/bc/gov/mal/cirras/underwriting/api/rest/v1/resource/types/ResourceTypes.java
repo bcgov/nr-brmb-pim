@@ -224,6 +224,12 @@ public class ResourceTypes extends BaseResourceTypes {
 	public static final String CREATE_VERIFIED_YIELD_CONTRACT = NAMESPACE + "createVerifiedYieldContract";
 	public static final String UPDATE_VERIFIED_YIELD_CONTRACT = NAMESPACE + "updateVerifiedYieldContract";
 	public static final String DELETE_VERIFIED_YIELD_CONTRACT = NAMESPACE + "deleteVerifiedYieldContract";
+
+	//Product
+	public static final String PRODUCT_NAME = "product";
+	public static final String PRODUCT = NAMESPACE + PRODUCT_NAME;
+	public static final String SYNCHRONIZE_PRODUCT = NAMESPACE + "synchronizeProduct";
+	public static final String DELETE_SYNC_PRODUCT = NAMESPACE + "deleteProduct";
 	
 }
 

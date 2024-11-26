@@ -13,6 +13,7 @@ import java.util.List;
 import javax.ws.rs.core.UriBuilder;
 
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.VerifiedYieldContractEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.VerifiedYieldContractListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
@@ -169,20 +170,56 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		String result = UriBuilder.fromUri(baseUri).path(VerifiedYieldContractEndpoint.class).build(verifiedYieldContractGuid).toString();
 		return result;
 	}
+	
+	public static String getVerifiedYieldContractListSelfUri(URI baseUri) {
+		String result = UriBuilder.fromUri(baseUri).path(VerifiedYieldContractListEndpoint.class).build().toString();
+		return result;
+	}
 
 	private static void setLinks(String verifiedYieldContractGuid, VerifiedYieldContractRsrc resource, URI baseUri, WebAdeAuthentication authentication) {		
 
-		//String result = UriBuilder.fromUri(baseUri).path(VerifiedYieldContractEndpoint.class).build(verifiedYieldContractGuid).toString();
+		String result = UriBuilder.fromUri(baseUri).path(VerifiedYieldContractEndpoint.class).build(verifiedYieldContractGuid).toString();
 
 		if (authentication.hasAuthority(Scopes.UPDATE_VERIFIED_YIELD_CONTRACT)) {
-			// TODO: Add link once endpoint is implemented.
-			//resource.getLinks().add(new RelLink(ResourceTypes.UPDATE_VERIFIED_YIELD_CONTRACT, result, "PUT"));
+			resource.getLinks().add(new RelLink(ResourceTypes.UPDATE_VERIFIED_YIELD_CONTRACT, result, "PUT"));
 		}
 		
 		if (authentication.hasAuthority(Scopes.DELETE_VERIFIED_YIELD_CONTRACT)) {
-			// TODO: Add link once endpoint is implemented.
-			// resource.getLinks().add(new RelLink(ResourceTypes.DELETE_VERIFIED_YIELD_CONTRACT, result, "DELETE"));
+			resource.getLinks().add(new RelLink(ResourceTypes.DELETE_VERIFIED_YIELD_CONTRACT, result, "DELETE"));
 		}
+		
+	}
+
+	@Override
+	public void updateDto(VerifiedYieldContractDto dto, VerifiedYieldContract<? extends AnnualField> model, String userId) {
+		 
+		dto.setVerifiedYieldContractGuid(model.getVerifiedYieldContractGuid());
+		dto.setContractId(model.getContractId());
+		dto.setCropYear(model.getCropYear());
+		dto.setDeclaredYieldContractGuid(model.getDeclaredYieldContractGuid());
+		dto.setDefaultYieldMeasUnitTypeCode(model.getDefaultYieldMeasUnitTypeCode());
+		dto.setVerifiedYieldUpdateTimestamp(model.getVerifiedYieldUpdateTimestamp());
+		dto.setVerifiedYieldUpdateUser(model.getVerifiedYieldUpdateUser());
+		dto.setInsurancePlanId(model.getInsurancePlanId());
+		dto.setGrowerContractYearId(model.getGrowerContractYearId());
+		
+	}
+
+	@Override
+	public void updateDto(VerifiedYieldContractCommodityDto dto, VerifiedYieldContractCommodity model) {
+
+		dto.setVerifiedYieldContractCommodityGuid(model.getVerifiedYieldContractCommodityGuid());
+		dto.setVerifiedYieldContractGuid(model.getVerifiedYieldContractGuid());
+		dto.setCropCommodityId(model.getCropCommodityId());
+		dto.setIsPedigreeInd(model.getIsPedigreeInd());
+		dto.setHarvestedAcres(model.getHarvestedAcres());
+		dto.setHarvestedAcresOverride(model.getHarvestedAcresOverride());
+		dto.setStoredYieldDefaultUnit(model.getStoredYieldDefaultUnit());
+		dto.setSoldYieldDefaultUnit(model.getSoldYieldDefaultUnit());
+		dto.setProductionGuarantee(model.getProductionGuarantee());
+		dto.setHarvestedYield(model.getHarvestedYield());
+		dto.setHarvestedYieldOverride(model.getHarvestedYieldOverride());
+		dto.setYieldPerAcre(model.getYieldPerAcre());
 		
 	}
 	

@@ -110,6 +110,16 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-jasper-config-#{ENV}#
                   key: JASPERREPORTS_UI_USER
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /jasperserver/
+              port: 8080
+            initialDelaySeconds: 1200
+            timeoutSeconds: 15
+            periodSeconds: 60
+            successThreshold: 1
+            failureThreshold: 2
           volumeMounts:
             - name: jasper-#{ENV}#
               mountPath: /bitnami/jasperreports
