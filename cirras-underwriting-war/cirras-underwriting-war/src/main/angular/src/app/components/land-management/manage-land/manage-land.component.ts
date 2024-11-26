@@ -34,26 +34,6 @@ export class ManageLandComponent extends BaseComponent implements OnChanges {
   @Input() legalLand: LegalLand
   @Input() riskAreaList: RiskAreaList
 
-  constructor(protected router: Router,
-    protected route: ActivatedRoute,
-    protected sanitizer: DomSanitizer,
-    protected store: Store<RootState>,
-    protected fb: UntypedFormBuilder,
-    protected dialog: MatDialog,
-    protected applicationStateService: ApplicationStateService,
-    public securityUtilService: SecurityUtilService,                
-    protected tokenService: TokenService,
-    protected connectionService: ConnectionService,
-    protected snackbarService: MatSnackBar,
-    protected overlay: Overlay,
-    protected cdr: ChangeDetectorRef,
-    protected appConfigService: AppConfigService,
-    protected http: HttpClient,
-    protected titleService: Title,
-    protected decimalPipe: DecimalPipe) {
-    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
-  }
-
   legalLandId: string
   
   landIdentifierTypeOptions = getCodeOptions("land_identifier_type_code");  

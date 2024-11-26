@@ -1,12 +1,11 @@
 import { Component, Inject, Input, OnChanges, OnInit , SimpleChanges} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UntypedFormArray, UntypedFormBuilder, FormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store} from "@ngrx/store";
 import { RootState} from "../../../../store";
 import { GradeModifierType, GradeModifierTypeList } from 'src/app/conversion/models-maintenance';
 import { loadGradeModifierTypes, saveGradeModifierTypes } from 'src/app/store/maintenance/maintenance.actions';
 import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
-import { INSURANCE_PLAN } from 'src/app/utils/constants';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { areNotEqual, makeNumberOnly } from 'src/app/utils';
 import { SecurityUtilService } from 'src/app/services/security-util.service';

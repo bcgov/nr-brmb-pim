@@ -64,7 +64,7 @@ export class BaseComponent implements OnInit, OnChanges, AfterViewInit {
     @Input() loadState: LoadState;
     @Input() errorState: ErrorState[];
     @Input() saveErrorState: ErrorState[];
-    //@Input() growerContract: UwContract;
+    @Input() growerContract: UwContract;
 
    //@Input() severeErrorState?: ErrorState[];
     displayLabel = "Data";

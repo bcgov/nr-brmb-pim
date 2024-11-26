@@ -25,7 +25,8 @@ import { DOP_COMPONENT_ID } from "src/app/store/dop/dop.state";
             [dopYieldContract]="dopYieldContract"
             [yieldMeasUnitList]="yieldMeasUnitList$ | async"
             [loadState]="loadState$ | async"
-            [errorState]="errorState$ | async"            
+            [errorState]="errorState$ | async"     
+            [isUnsaved]="isUnsaved$ | async"       
         ></forage-dop>`, 
     providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
 })

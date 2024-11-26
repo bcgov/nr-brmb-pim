@@ -1,7 +1,7 @@
 import { BaseContainer } from "../base/base-container.component";
-import {select, Store} from "@ngrx/store";
+import {select} from "@ngrx/store";
 import {Observable} from "rxjs";
-import {ChangeDetectorRef, Component} from "@angular/core";
+import {Component} from "@angular/core";
 import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
@@ -15,12 +15,6 @@ import { YieldMeasUnitTypeCodeList } from "src/app/conversion/models-yield";
 import { selectYieldMeasUnit } from "src/app/store/dop/dop.selectors";
 import { YieldMeasUnitConversionList } from "src/app/conversion/models-maintenance";
 import { selectYieldMeasUnitConversionList } from "src/app/store/maintenance/maintenance.selectors";
-import { RootState } from "src/app/store";
-import { Router } from "@angular/router";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { ApplicationStateService } from "src/app/services/application-state.service";
-
-// [seedingDeadlineList]="seedingDeadlineList$ | async"
 
 @Component({
     selector: "yield-conversion-container",
@@ -47,14 +41,4 @@ export class YieldConversionContainer extends BaseContainer {
             MAINTENANCE_COMPONENT_ID
         ];
     }
-
-    // constructor(
-    //     protected store: Store<RootState>,
-    //     protected router: Router,
-    //     public snackBar: MatSnackBar,
-    //     protected applicationStateService: ApplicationStateService,
-    //     protected cdr: ChangeDetectorRef
-    // ) {
-    //     super(store, router, snackBar, applicationStateService, cdr);
-    // }
 }

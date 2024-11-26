@@ -1,7 +1,7 @@
 import { BaseContainer } from "../base/base-container.component";
-import {select, Store} from "@ngrx/store";
+import {select} from "@ngrx/store";
 import {Observable} from "rxjs";
-import {ChangeDetectorRef, Component} from "@angular/core";
+import {Component} from "@angular/core";
 import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
@@ -16,10 +16,6 @@ import { GradeModifierList, GradeModifierTypeList, UnderwritingYearList } from "
 import { selectGradeModifierList, selectGradeModifierTypeList, selectUnderwritingYears } from "src/app/store/maintenance/maintenance.selectors";
 import { CropCommodityList } from "src/app/conversion/models";
 import { selectCropCommodityList } from "src/app/store/crop-commodity/crop-commodity.selectors";
-import { RootState } from "src/app/store";
-import { Router } from "@angular/router";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { ApplicationStateService } from "src/app/services/application-state.service";
 
 @Component({
     selector: "grade-modifiers-container",
@@ -31,10 +27,10 @@ import { ApplicationStateService } from "src/app/services/application-state.serv
             [gradeModifierTypeList]="gradeModifierTypeList$ | async"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
+            [isUnsaved]="isUnsaved$ | async"
         ></grade-modifiers>`, 
     providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
 })
-// [isUnsaved]="isUnsaved$ | async"
 export class GradeModifiersContainer extends BaseContainer {
 
     underwritingYears$: Observable<UnderwritingYearList> = this.store.pipe(select(selectUnderwritingYears()))
@@ -51,14 +47,4 @@ export class GradeModifiersContainer extends BaseContainer {
             MAINTENANCE_COMPONENT_ID
         ];
     }
-
-    // constructor(
-    //     protected store: Store<RootState>,
-    //     protected router: Router,
-    //     public snackBar: MatSnackBar,
-    //     protected applicationStateService: ApplicationStateService,
-    //     protected cdr: ChangeDetectorRef
-    // ) {
-    //     super(store, router, snackBar, applicationStateService, cdr);
-    // }
 }

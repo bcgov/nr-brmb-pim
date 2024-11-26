@@ -1,30 +1,16 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { BaseComponent } from '../../common/base/base.component';
 import { GradeModifiersComponentModel } from './grade-modifiers.component.model';
 import { GradeModifierList, GradeModifierTypeList, UnderwritingYearList } from 'src/app/conversion/models-maintenance';
 import { loadGradeModifierTypes, loadGradeModifiers, loadUwYears, saveGradeModifiers } from 'src/app/store/maintenance/maintenance.actions';
 import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
-import { UntypedFormArray, UntypedFormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray } from '@angular/forms';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { makeNumberOnly } from 'src/app/utils';
 import { CROP_COMMODITY_TYPE_CONST, CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { GradeModifierTypesContainer } from 'src/app/containers/maintenance/grade-modifier-types-container.component';
 import { CropCommodityList } from 'src/app/conversion/models';
 import { ClearCropCommodity, LoadCropCommodityList } from 'src/app/store/crop-commodity/crop-commodity.actions';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DomSanitizer, Title } from '@angular/platform-browser';
-import { Store } from '@ngrx/store';
-import { RootState } from 'src/app/store';
-import { MatDialog } from '@angular/material/dialog';
-import { ApplicationStateService } from 'src/app/services/application-state.service';
-import { SecurityUtilService } from 'src/app/services/security-util.service';
-import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
-import { ConnectionService } from 'ngx-connection-service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Overlay } from '@angular/cdk/overlay';
-import { HttpClient } from '@angular/common/http';
-import { DecimalPipe } from '@angular/common';
-
 
 @Component({
   selector: 'grade-modifiers',
@@ -37,27 +23,7 @@ export class GradeModifiersComponent extends BaseComponent implements OnChanges 
   @Input() gradeModifierList: GradeModifierList   // TODO: Reconcile with yield model.
   @Input() cropCommodityList: CropCommodityList
   @Input() gradeModifierTypeList: GradeModifierTypeList
-  // @Input() isUnsaved: boolean;
-
-  constructor(protected router: Router,
-    protected route: ActivatedRoute,
-    protected sanitizer: DomSanitizer,
-    protected store: Store<RootState>,
-    protected fb: UntypedFormBuilder,
-    protected dialog: MatDialog,
-    protected applicationStateService: ApplicationStateService,
-    public securityUtilService: SecurityUtilService,                
-    protected tokenService: TokenService,
-    protected connectionService: ConnectionService,
-    protected snackbarService: MatSnackBar,
-    protected overlay: Overlay,
-    protected cdr: ChangeDetectorRef,
-    protected appConfigService: AppConfigService,
-    protected http: HttpClient,
-    protected titleService: Title,
-    protected decimalPipe: DecimalPipe) {
-    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
-  }
+  @Input() isUnsaved: boolean;
 
   hasDataChanged = false;
   uwYearOptions = [];

@@ -36,7 +36,7 @@ export class ForageDopComponent extends BaseComponent {
   @Input() growerContract: UwContract;
   @Input() dopYieldContract: DopYieldContract;
   @Input() yieldMeasUnitList: YieldMeasUnitTypeCodeList;
-  // @Input() isUnsaved: boolean;
+  @Input() isUnsaved: boolean;
 
   // max number of the allowed cuts per field
   maxNumOfCutsAllowed = 7

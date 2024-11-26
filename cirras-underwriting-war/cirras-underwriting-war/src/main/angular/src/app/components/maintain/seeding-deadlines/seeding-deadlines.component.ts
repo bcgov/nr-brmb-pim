@@ -1,28 +1,14 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { BaseComponent } from '../../common/base/base.component';
 import { SeedingDeadlinesComponentModel } from './seeding-deadlines.component.model';
 import { SeedingDeadlineList, UnderwritingYearList } from 'src/app/conversion/models-maintenance';
 import { loadSeedingDeadlines, loadUwYears, saveSeedingDeadlines } from 'src/app/store/maintenance/maintenance.actions';
 import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { areDatesNotEqual, setHttpHeaders } from 'src/app/utils';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 import { CommodityTypeCodeListRsrc } from '@cirras/cirras-underwriting-api';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DomSanitizer, Title } from '@angular/platform-browser';
-import { Store } from '@ngrx/store';
-import { RootState } from 'src/app/store';
-import { MatDialog } from '@angular/material/dialog';
-import { ApplicationStateService } from 'src/app/services/application-state.service';
-import { SecurityUtilService } from 'src/app/services/security-util.service';
-import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
-import { ConnectionService } from 'ngx-connection-service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Overlay } from '@angular/cdk/overlay';
-import { HttpClient } from '@angular/common/http';
-import { DecimalPipe } from '@angular/common';
-
 
 @Component({
   selector: 'seeding-deadlines',
@@ -33,26 +19,6 @@ export class SeedingDeadlinesComponent extends BaseComponent implements OnChange
 
   @Input() underwritingYears: UnderwritingYearList
   @Input() seedingDeadlineList: SeedingDeadlineList
-
-  constructor(protected router: Router,
-    protected route: ActivatedRoute,
-    protected sanitizer: DomSanitizer,
-    protected store: Store<RootState>,
-    protected fb: UntypedFormBuilder,
-    protected dialog: MatDialog,
-    protected applicationStateService: ApplicationStateService,
-    public securityUtilService: SecurityUtilService,                
-    protected tokenService: TokenService,
-    protected connectionService: ConnectionService,
-    protected snackbarService: MatSnackBar,
-    protected overlay: Overlay,
-    protected cdr: ChangeDetectorRef,
-    protected appConfigService: AppConfigService,
-    protected http: HttpClient,
-    protected titleService: Title,
-    protected decimalPipe: DecimalPipe) {
-    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
-  }
 
   hasDataChanged = false;
   uwYearOptions = [];
