@@ -395,6 +395,9 @@ public class ServiceApiSpringConfig {
 		result.setVerifiedYieldContractFactory(verifiedYieldContractFactory);
 
 		result.setPolicyDao(persistenceSpringConfig.policyDao());
+		result.setInventoryFieldDao(persistenceSpringConfig.inventoryFieldDao());
+		result.setInventorySeededGrainDao(persistenceSpringConfig.inventorySeededGrainDao());
+		result.setContractedFieldDetailDao(persistenceSpringConfig.contractedFieldDetailDao());
 		result.setDeclaredYieldContractDao(persistenceSpringConfig.declaredYieldContractDao());
 		result.setDeclaredYieldContractCommodityDao(persistenceSpringConfig.declaredYieldContractCommodityDao());
 		result.setVerifiedYieldContractDao(persistenceSpringConfig.verifiedYieldContractDao());

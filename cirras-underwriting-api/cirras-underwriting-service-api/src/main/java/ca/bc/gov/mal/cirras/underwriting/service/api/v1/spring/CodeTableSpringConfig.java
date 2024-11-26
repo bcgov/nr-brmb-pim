@@ -57,6 +57,7 @@ public class CodeTableSpringConfig {
 		result.add(plantInsurabilityTypeCodeTableConfig());
 		result.add(landIdentifierTypeCodeTableConfig());
 		result.add(primaryReferenceTypeCodeTableConfig());
+		result.add(verifiedYieldAmendmentCodeTableConfig());
 		result.add(policyCropYearCodeTableConfig());
 		result.add(insurancePlanTableConfig());
 		result.add(officeTableConfig());
@@ -108,7 +109,10 @@ public class CodeTableSpringConfig {
 		return createCodeTableConfig("primary_reference_type_code", "SORT_ORDER");
 	}
 	
-	
+	@Bean
+	public CodeTableConfig verifiedYieldAmendmentCodeTableConfig() {
+		return createCodeTableConfig("verified_yield_amendment_code", "DESCRIPTION");
+	}	
 	
 	@Bean
 	public CodeTableConfig policyCropYearCodeTableConfig() {
