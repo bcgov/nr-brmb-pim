@@ -1,23 +1,10 @@
-import {AfterViewInit, ChangeDetectorRef, Directive, Injectable, Input, OnChanges, SimpleChanges} from "@angular/core";
+import {AfterViewInit, Directive, Injectable, Input, OnChanges, SimpleChanges} from "@angular/core";
 import {BaseComponent} from "../base/base.component";
 import {PaginationInstance} from "ngx-pagination";
 import {PagedCollection} from "../../../conversion/models";
 import {PagingInfoRequest, PagingSearchState} from "../../../store/application/application.state";
 import {getDescriptionForCode} from "../../../utils/code-table-utils";
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
-import { DomSanitizer, Title } from "@angular/platform-browser";
-import { Store } from "@ngrx/store";
-import { RootState } from "src/app/store";
-import { UntypedFormBuilder } from "@angular/forms";
-import { MatDialog } from "@angular/material/dialog";
-import { ApplicationStateService } from "src/app/services/application-state.service";
-import { SecurityUtilService } from "src/app/services/security-util.service";
-import { AppConfigService, TokenService } from "@wf1/wfcc-core-lib";
-import { ConnectionService } from "ngx-connection-service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { Overlay } from "@angular/cdk/overlay";
-import { HttpClient } from "@angular/common/http";
-import { DecimalPipe } from "@angular/common";
+import { NavigationEnd} from "@angular/router";
 
 @Directive()
 @Injectable()
