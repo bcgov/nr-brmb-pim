@@ -59,6 +59,7 @@ pgBackRest:
     s3:
       bucket: "pit#{ENV}#"
       endpoint: "https://nrs.objectstore.gov.bc.ca:443?"
+      region: ""
 
   repoHost:
     requests:
