@@ -6,6 +6,7 @@ import { RemoveFieldValidationRsrc } from '@cirras/cirras-underwriting-api';
 import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
 import { setHttpHeaders } from 'src/app/utils';
 import { LAND_UPDATE_TYPE } from 'src/app/utils/constants';
+import { DIALOG_TYPE } from '../../dialogs/base-dialog/base-dialog.component';
 
 
 export interface RemoveFieldPopupData {
@@ -28,6 +29,7 @@ export interface RemoveFieldPopupData {
 export class RemoveFieldComponent implements OnInit {
 
   titleLabel = "Remove or Delete Field" 
+  dialogType = DIALOG_TYPE.INFO;
 
   dataReceived : RemoveFieldPopupData;
   validation: RemoveFieldValidationRsrc;

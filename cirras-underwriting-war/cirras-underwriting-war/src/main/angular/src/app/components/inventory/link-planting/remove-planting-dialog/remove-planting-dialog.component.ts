@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
 
 @Component({
   selector: 'cirras-remove-planting-dialog',
@@ -9,7 +10,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class RemovePlantingDialogComponent implements OnInit {
 
   policyNumber: string 
+
   titleLabel = "Remove Linked Plantings"
+  dialogType = DIALOG_TYPE.INFO;
 
   constructor(
     public dialogRef: MatDialogRef<String>,

@@ -13,6 +13,7 @@ import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state'
 import { Store } from '@ngrx/store';
 import { RootState } from 'src/app/store';
 import { RemovePlantingDialogComponent } from './remove-planting-dialog/remove-planting-dialog.component';
+import { DIALOG_TYPE } from '../../dialogs/base-dialog/base-dialog.component';
 
 export interface AddPlantingPopupData {
   fieldId: number;
@@ -44,6 +45,7 @@ export interface AddPlantingPopupData {
 export class LinkPlantingComponent implements OnInit {
 
   titleLabel = "Link Planting for Field"
+  dialogType = DIALOG_TYPE.INFO;
 
   httpOptions; // = setHttpHeaders(this.tokenService.getOauthToken())
 

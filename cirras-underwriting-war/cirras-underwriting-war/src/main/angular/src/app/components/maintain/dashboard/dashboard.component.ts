@@ -15,6 +15,7 @@ export class DashboardComponent  extends BaseComponent implements OnChanges   {
   @Input() underwritingYears: UnderwritingYearList
 
   uwYearOptions = [];
+  selectedCropYear = ""
 
   initModels() {
     this.viewModel = new DashboardComponentModel(this.sanitizer, this.fb);
@@ -41,6 +42,7 @@ export class DashboardComponent  extends BaseComponent implements OnChanges   {
           cropYear: x.cropYear
         }))
 
+        this.selectedCropYear = Math.max.apply(null, this.underwritingYears.collection.map(function (o) { return o.cropYear; }));
     }
   
   }
