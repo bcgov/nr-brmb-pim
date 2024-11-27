@@ -54,6 +54,12 @@ pgBackRest:
       accessModes: "ReadWriteOnce"
       storage: 1Gi
       storageClassName: netapp-file-backup
+    configuration:
+      secretName: "#{ENV}#-postgres-s3-secret"
+    s3:
+      bucket: "pit#{ENV}#"
+      endpoint: "https://nrs.objectstore.gov.bc.ca:443?"
+
   repoHost:
     requests:
       cpu: 1m
