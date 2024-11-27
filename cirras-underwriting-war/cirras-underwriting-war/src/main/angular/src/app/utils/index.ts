@@ -527,21 +527,22 @@ export function setHttpHeaders(authToken) {
 
       case 'verifiedYield': 
 
-        //if (item.insurancePlanId == INSURANCE_PLAN.GRAIN) {
+        resourceRoute = ResourcesRoutes.VERIFIED_YIELD_GRAIN
 
-            resourceRoute = ResourcesRoutes.VERIFIED_YIELD_GRAIN
+        // extract verifiedYieldContractGuid from the haetus link here
+        let verifiedYieldContractGuid = ""
 
-        //} else if (item.insurancePlanId == INSURANCE_PLAN.FORAGE) {
-
-        //    resourceRoute = ResourcesRoutes.DOP_FORAGE  // TODO
-            
-        //}
+        let vyLinkHref = item.links.find(x => x.href.indexOf("verifiedYieldContracts") > -1 )?.href
+        
+        if (vyLinkHref) {
+          verifiedYieldContractGuid = vyLinkHref.substring(vyLinkHref.indexOf("verifiedYieldContracts") + 23 )
+        }
 
         router.navigate([resourceRoute,
-        item.insurancePlanId.toString(), 
-        item.cropYear.toString(),
-        item.policyId.toString(),
-        (item.verifiedYieldContractGuid ) ? item.verifiedYieldContractGuid.toString() : '' 
+          item.insurancePlanId.toString(), 
+          item.cropYear.toString(),
+          item.policyId.toString(),
+          verifiedYieldContractGuid
         ]);
 
     break;

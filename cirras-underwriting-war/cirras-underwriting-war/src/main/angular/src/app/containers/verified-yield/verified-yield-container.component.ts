@@ -25,10 +25,10 @@ import { selectVerifiedYieldContract } from "src/app/store/verified-yield/verifi
             [verifiedYieldContract]="verifiedYieldContract"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
+            [isUnsaved]="isUnsaved$ | async"
         ></verified-yield>`, 
     providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
 })
-//  [isUnsaved]="isUnsaved$ | async"
 export class VerifiedYieldContainer extends BaseContainer implements OnInit {
 
     growerContract$: Observable<UwContract> = this.store.pipe(select(selectGrowerContract()));

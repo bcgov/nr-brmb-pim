@@ -1,29 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
 import { BaseComponent } from '../common/base/base.component';
 import { UwContract } from 'src/app/conversion/models';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ParamMap } from '@angular/router';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
 import { VerifiedYieldContract } from 'src/app/conversion/models-yield';
 import { getInsurancePlanName } from 'src/app/utils';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import {ViewEncapsulation } from '@angular/core';
-import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
-import { DomSanitizer, Title } from '@angular/platform-browser';
-import { Store } from '@ngrx/store';
-import { RootState } from 'src/app/store';
-import { UntypedFormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { ApplicationStateService } from 'src/app/services/application-state.service';
-import { SecurityUtilService } from 'src/app/services/security-util.service';
-import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
-import { ConnectionService } from 'ngx-connection-service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Overlay } from '@angular/cdk/overlay';
-import { HttpClient } from '@angular/common/http';
-import { DecimalPipe } from '@angular/common';
 import { VerifiedYieldComponentModel } from './verified-yield.component.model';
-import { LoadVerifiedYieldContract, RolloverVerifiedYieldContract } from 'src/app/store/verified-yield/verified-yield.actions';
+import { AddNewVerifiedYieldContract, DeleteVerifiedYieldContract, LoadVerifiedYieldContract, RolloverVerifiedYieldContract, UpdateVerifiedYieldContract } from 'src/app/store/verified-yield/verified-yield.actions';
 import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
+import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 
 @Component({
   selector: 'verified-yield',
@@ -35,7 +22,7 @@ import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verifi
 export class VerifiedYieldComponent extends BaseComponent {
 
   @Input() growerContract: UwContract;
-  // @Input() isUnsaved: boolean;
+  @Input() isUnsaved: boolean;
   @Input() verifiedYieldContract: VerifiedYieldContract;
 
   policyId: string;
@@ -43,28 +30,6 @@ export class VerifiedYieldComponent extends BaseComponent {
   cropYear: string;
   insurancePlanId: string;
   componentId = VERIFIED_YIELD_COMPONENT_ID; 
-
-
-  constructor(protected router: Router,
-    protected route: ActivatedRoute,
-    protected sanitizer: DomSanitizer,
-    protected store: Store<RootState>,
-    protected fb: UntypedFormBuilder,
-    protected dialog: MatDialog,
-    protected applicationStateService: ApplicationStateService,
-    public securityUtilService: SecurityUtilService,                
-    protected tokenService: TokenService,
-    protected connectionService: ConnectionService,
-    protected snackbarService: MatSnackBar,
-    protected overlay: Overlay,
-    protected cdr: ChangeDetectorRef,
-    protected appConfigService: AppConfigService,
-    protected http: HttpClient,
-    protected titleService: Title,
-    protected decimalPipe: DecimalPipe) {
-    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
-  }
-
 
   initModels() {
     this.viewModel = new VerifiedYieldComponentModel(this.sanitizer, this.fb);
@@ -103,10 +68,10 @@ export class VerifiedYieldComponent extends BaseComponent {
   // ngOnChanges(changes: SimpleChanges) {
   //   super.ngOnChanges(changes);
 
-  //   if (this.verifiedYieldContract) {
-  //     // any changes that need to be set up
-      
-  //   }
+  //   // if (this.verifiedYieldContract) {
+  //   //   // any changes that need to be set up
+
+  //   // }
 
   // }
 
@@ -116,13 +81,55 @@ export class VerifiedYieldComponent extends BaseComponent {
     return getInsurancePlanName(insurancePlanId)
   }
 
-  onCancel(){
-    // TODO
+  onCancel() {
+
+    if ( confirm("Are you sure you want to clear all unsaved changes on the screen? There is no way to undo this action.") ) {
+      // reload the page
+      this.loadPage()
+
+      this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, false ));
+
+      displaySuccessSnackbar(this.snackbarService, "Unsaved changes have been cleared successfully.")
+    }
+  }
+
+  onDeleteVerifiedYield() {
+        //Ask for confirmation before deleting all Verified Yield data
+        if ( confirm("You are about to delete all Verified Yield data for the policy. Do you want to continue?") ) {
+
+          if (this.verifiedYieldContract.verifiedYieldContractGuid) {
+            //Delete verified yield contract
+            this.store.dispatch(DeleteVerifiedYieldContract(VERIFIED_YIELD_COMPONENT_ID, this.policyId, this.verifiedYieldContract))
+    
+          } 
+        }
+  }
+
+  // Function for Save
+  onSave() {
+    
+    if (!this.isFormValid()) {
+      return
+    }
+
+    if (this.verifiedYieldContract.verifiedYieldContractGuid) {
+      this.store.dispatch(UpdateVerifiedYieldContract(VERIFIED_YIELD_COMPONENT_ID, this.verifiedYieldContract))
+    } else {
+      // add new
+      this.store.dispatch(AddNewVerifiedYieldContract(VERIFIED_YIELD_COMPONENT_ID, this.verifiedYieldContract))
+    }
+
+    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, false ));
+  }
+
+  isFormValid() {
+    // TODO ??
+    return true
   }
 
   setFormStyles(){
     return {
-      'grid-template-columns':  'auto 146px 12px 155px'
+      'grid-template-columns':  'auto 146px 12px 200px'
     }
   }
 

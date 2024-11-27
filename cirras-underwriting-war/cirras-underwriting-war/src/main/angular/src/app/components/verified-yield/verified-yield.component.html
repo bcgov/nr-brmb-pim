@@ -31,15 +31,15 @@
             <div> 
                 <!-- Placeholder for a Download button  -->
             </div>
-            <div> <!-- TODO -->
-                <!-- <button 
+            <div>
+                <button 
                     *ngIf="securityUtilService.canEditVerifiedYield()" 
-                    mat-raised-button class="primary" 
-                    class="button-large-text" 
+                    mat-raised-button
+                    class="primary button-large-text" 
                     [disabled]="!isUnsaved" 
                     (click)="onSave()">
                         Save
-                </button> -->
+                </button>
             </div>
         </div>        
             
@@ -56,27 +56,24 @@
                 </div>            
                
                 <div>
-                    <!-- TODO -->
-                    <!-- <button
+                    <button
                         mat-raised-button 
-                        color="secondary" 
-                        class="header-button"  
+                        class="secondary header-button"  
                         matTooltip="Clear unsaved changes"
                         (click)="onCancel()">
                         Clear Changes
-                    </button> -->
+                    </button>
                 </div>
                 <div class="vertical-line"></div>
                 <div>
-                    <!-- TODO -->
-                    <!-- <button *ngIf="securityUtilService.canDeleteDop() && 
-                                    dopYieldContract && 
-                                    dopYieldContract.declaredYieldContractGuid" 
-                                    mat-raised-button color="secondary" 
-                                    class="header-button-red" 
-                                    (click)="onDeleteDop()">
+                    <button *ngIf="securityUtilService.canDeleteVerifiedYield() && 
+                        verifiedYieldContract && 
+                        verifiedYieldContract.verifiedYieldContractGuid" 
+                        mat-raised-button
+                        class="secondary header-button-red" 
+                        (click)="onDeleteVerifiedYield()">
                         <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset Verified Yield
-                    </button> -->
+                    </button>
                 </div>
             </div>
 
