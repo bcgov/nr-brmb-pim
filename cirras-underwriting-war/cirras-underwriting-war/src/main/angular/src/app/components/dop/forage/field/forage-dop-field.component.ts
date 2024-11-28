@@ -60,7 +60,6 @@ export class ForageDopFieldComponent implements OnInit {
             'display': 'grid',
             'grid-template-columns': '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr', 
             'align-items': 'stretch',
-            // 'width': `${320 * this.numCuts + 860}px`
             'width': `${320 * this.numCuts + 880}px`
         };
     }

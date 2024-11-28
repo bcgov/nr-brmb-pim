@@ -100,9 +100,9 @@
                                     [formGroup]="riskArea"          
                         style="display:contents">
                     
-                        <div *ngIf="riskArea.value.deletedByUserInd == false">    
-                            <mat-form-field appearance="fill" *ngIf="riskArea.value.isNewRiskArea">
-                                <mat-select formControlName="insurancePlanId"
+                        <div *ngIf="riskArea.value.deletedByUserInd == false" class="question-dropdown">    
+                            <mat-form-field appearance="outline" *ngIf="riskArea.value.isNewRiskArea"  style="width: 140px;">
+                                <mat-select hideSingleSelectionIndicator="true" formControlName="insurancePlanId"
                                 (selectionChange)="clearRiskAreaOptions(raIndex)">
                                     <mat-option *ngFor="let option of insurancePlansOptions" [value]="option.code"
                                     >{{ option.description | titlecase }}</mat-option>
@@ -112,9 +112,9 @@
                             {{ ( riskArea.value.isNewRiskArea == false ? riskArea.value.insurancePlanName : "") | titlecase }}
                         </div>
             
-                        <div *ngIf="riskArea.value.deletedByUserInd == false">   
-                            <mat-form-field appearance="fill" *ngIf="riskArea.value.isNewRiskArea">
-                                <mat-select formControlName="riskAreaId"
+                        <div *ngIf="riskArea.value.deletedByUserInd == false" class="question-dropdown">   
+                            <mat-form-field appearance="outline" *ngIf="riskArea.value.isNewRiskArea" style="width: 160px;">
+                                <mat-select hideSingleSelectionIndicator="true" formControlName="riskAreaId"
                                 (focus)="populateRiskAreaOptions(raIndex)">
                                     <mat-option *ngFor="let option of riskAreaOptions[raIndex]" [value]="option.code"
                                     >{{ option.description | titlecase }}</mat-option>
@@ -124,7 +124,7 @@
                             {{ ( riskArea.value.isNewRiskArea == false ? riskArea.value.riskAreaName : "" ) | titlecase }}
                         </div>
             
-                        <div *ngIf="riskArea.value.deletedByUserInd == false">
+                        <div *ngIf="riskArea.value.deletedByUserInd == false" style="padding-left: 14px; padding-bottom: 6px;">
                         <mat-icon
                             matTooltip="Delete Risk Area" 
                             [ngStyle]="{'color':'red'}"

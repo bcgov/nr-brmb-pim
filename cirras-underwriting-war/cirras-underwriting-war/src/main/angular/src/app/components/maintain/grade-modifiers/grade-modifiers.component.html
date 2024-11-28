@@ -84,7 +84,7 @@
                                 <mat-form-field appearance="fill" class="inventory-fill"
                                     *ngIf="gradeModifier.value.addedByUserInd == true && !(getViewModel().formGroup.controls.selectedCropCommodityId.value && getViewModel().formGroup.controls.selectedCropCommodityId.value != '')"
                                     style="width: 100%;">
-                                    <mat-select formControlName="cropCommodityId">
+                                    <mat-select hideSingleSelectionIndicator="true" formControlName="cropCommodityId">
                                         <mat-option *ngFor="let option of cropCommodityOptions"
                                             [value]="option.cropCommodityId">{{
                                             option.commodityName | titlecase }}</mat-option>
@@ -98,7 +98,7 @@
                                 class="inventory-cell inventory-border" [ngStyle]="{'width': '386px'}">
                                 <mat-form-field appearance="fill" class="inventory-fill" *ngIf="gradeModifier.value.addedByUserInd == true"
                                     style="width: 100%;">
-                                    <mat-select formControlName="gradeModifierTypeCode">
+                                    <mat-select hideSingleSelectionIndicator="true" formControlName="gradeModifierTypeCode">
                                         <mat-option *ngFor="let option of gradeModifierTypeOptions"
                                             [value]="option.gradeModifierTypeCode">{{ option.gradeModifierTypeCode
                                             }}</mat-option>

@@ -1,17 +1,5 @@
 @import '../variables';
 
-
-// .mat-mdc-radio-button:not(.mat-radio-disabled).mat-accent .mat-radio-inner-circle,
-// .mat-radio-button:not(.mat-radio-disabled).mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple),
-// .mat-radio-button:not(.mat-radio-disabled).mat-accent.mat-radio-checked .mat-radio-persistent-ripple,
-// .mat-radio-button:not(.mat-radio-disabled).mat-accent:active .mat-radio-persistent-ripple{
-//   background-color: $colour-blue;
-// }
-
-// .mat-mdc-radio-button:not(.mat-radio-disabled).mat-accent.mat-radio-checked .mat-radio-outer-circle {
-//   border-color: $colour-blue;
-// }
-
 .mat-mdc-radio-button.mat-accent {
 
   --mdc-radio-selected-focus-icon-color: $colour-blue;

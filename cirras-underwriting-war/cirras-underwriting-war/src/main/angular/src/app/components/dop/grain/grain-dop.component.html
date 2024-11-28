@@ -69,7 +69,7 @@
             <div class="plcy-frm-hdr-dropdown" matTooltip="Units">
                 <!-- Units: -->
                 <mat-form-field appearance="outline" style="width: 110px;">
-                    <mat-select formControlName="yieldMeasUnitTypeCode" (selectionChange)="yieldMeasUnitTypeSelectionChanged()">
+                    <mat-select formControlName="yieldMeasUnitTypeCode" hideSingleSelectionIndicator="true" (selectionChange)="yieldMeasUnitTypeSelectionChanged()">
                         <mat-option *ngFor="let option of yieldMeasUnitOptions" [value]="option.yieldMeasUnitTypeCode"
                         >{{ option.description | titlecase }}</mat-option>
                     </mat-select>
