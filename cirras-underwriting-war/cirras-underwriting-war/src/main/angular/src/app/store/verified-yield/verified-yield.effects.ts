@@ -114,7 +114,7 @@ addNewVerifiedYield: Observable<Action> = createEffect (() => this.actions.pipe(
     switchMap(
         ([action, store]) => {
             let typedAction = <VerifiedYieldContractAction>action;
-            let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
             let payload = <VerifiedYieldContract>typedAction.payload.verifiedYieldContract;
 
@@ -156,7 +156,7 @@ updateDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
     switchMap(
         ([action, store]) => {
             let typedAction = <VerifiedYieldContractAction>action;
-            let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
             let payload = <VerifiedYieldContract>typedAction.payload.verifiedYieldContract;
 
@@ -201,7 +201,7 @@ deleteVerifiedYield: Observable<Action> = createEffect (() => this.actions.pipe(
   switchMap(
       ([action, store]) => {
           let typedAction = <DeleteVerifiedYieldContractAction>action;
-          let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+          let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
           let authToken = this.tokenService.getOauthToken();
           let payload = <VerifiedYieldContract>typedAction.payload.verifiedYieldContract;
 

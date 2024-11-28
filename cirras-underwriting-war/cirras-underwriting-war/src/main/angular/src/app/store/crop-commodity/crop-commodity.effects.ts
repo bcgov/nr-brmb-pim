@@ -34,7 +34,7 @@ getCropCommodityList: Observable<Action> = createEffect (() => this.actions.pipe
       let typedAction = <LoadCropCommodityListAction>action;
       
       let authToken = this.tokenService.getOauthToken();
-      let requestId = `cirras-underwritingE${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+      let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
 
       let insurancePlanId = typedAction.payload.insurancePlanId ? typedAction.payload.insurancePlanId : ""
       let cropYear = typedAction.payload.cropYear ? typedAction.payload.cropYear : ""
@@ -76,7 +76,7 @@ getUnderSeededCropCommodityList: Observable<Action> = createEffect (() => this.a
       let typedAction = <LoadCropCommodityListAction>action;
       
       let authToken = this.tokenService.getOauthToken();
-      let requestId = `cirras-underwritingE${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+      let requestId = `CUWS$${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
 
       let insurancePlanId = typedAction.payload.insurancePlanId ? typedAction.payload.insurancePlanId : ""
       let cropYear = typedAction.payload.cropYear ? typedAction.payload.cropYear : ""

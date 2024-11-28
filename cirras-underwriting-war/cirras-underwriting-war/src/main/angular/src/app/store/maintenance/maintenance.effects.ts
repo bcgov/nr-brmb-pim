@@ -75,7 +75,7 @@ export class MaintenanceEffects {
     switchMap(
         ([action, store]) => {
             let typedAction = <AddUwYearAction>action;
-            let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
 
             const uwYear = typedAction.payload.uwYear 
