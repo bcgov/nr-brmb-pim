@@ -1,12 +1,12 @@
 @import '../../../styles/variables';
 
-.mat-table {
+.mat-mdc-table {
     display: block;
     font-family: $font-family-main;
   }
   
-  .mat-row,
-  .mat-header-row {
+  .mat-mdc-row,
+  .mat-mdc-header-row {
     display: flex;
     border-bottom-width: 1px;
     border-bottom-style: solid;
@@ -15,8 +15,8 @@
     padding: 0 24px;
   }
   
-  .mat-cell,
-  .mat-header-cell {
+  .mat-mdc-cell,
+  .mat-mdc-header-cell {
     flex: 1;
     overflow: hidden;
     word-wrap: break-word;

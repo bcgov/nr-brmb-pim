@@ -1,97 +1,12 @@
-
- .dialog-form {
-    //font-family: Roboto, 'Helvetica Neue', sans-serif;
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: stretch;
-  
-    .title-row.form-row {
-      background-color: rgba(200, 200, 200, .60);
-      padding: .5rem 1rem 0;
-    }
-  
-    .form-row {
-      display: flex;
-      justify-content: center;
-      padding: 0 1rem;
-  
-      .field,
-      .field .mat-form-field {
-        width: 100%;
-  
-        span {
-          font-size: medium;
-        }
-        .uppercase{
-          text-transform: uppercase;
-        }
-      }
-    }
-  
-    .mat-dialog-content {
-      margin: 0;
-      padding: 0.5rem;
-      min-height: 4rem;
-    }
-  
-    .dialog-controls {
-      align-self: center; // flex-end;
-      padding: .5rem 1rem 1rem;
-    }
-
-    .entire {
-      ::ng-deep .mat-form-field-wrapper {
-          padding-bottom: 0;
-      }
-      ::ng-deep .mat-form-field-underline {
-          bottom: 0;
-      }
-      ::ng-deep .mat-form-field {
-          width: 100%;
-      }
-    }
-
-    .button-large-text {
-      font-size: 20px !important;
-    }
-
-  }
-
-
-  .grid-container {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    padding: 10px;
-    justify-content: start;
-    align-items: center;
-  }
-
-  .grid-item {
-    padding-left: 20px;
-  }
-
-.row-choice {
-    padding: 10px;
-    display: grid;
-    // grid-auto-rows: minmax( 2em, auto );
-    grid-template-columns:  auto auto;
-    align-items: flex-start;
-
-}
-
 .row-group-left {
-    //padding: 10px;
     padding-top: 0px;
     padding-left: 10px;
     padding-right: 10px;
     padding-bottom: 20px;
     
-    //margin: 20px 10px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    //align-items: center;
-
 
   .legal-land-container {
     display: grid;
@@ -161,22 +76,16 @@
     }
   }
 
-  .cuw-table-wrapper {
-    max-height: 200px;
-    width: 780px;
-    overflow-y: auto;
+
+  ::ng-deep  .mdc-text-field--filled {
+
+    /* change the background color */
+    .mat-mdc-form-field-focus-overlay {
+        background-color: transparent !important;
+    }
   }
 
-}
 
-.dialog-drag-handle {
-  position: relative;
-  top: 5px;
-  left: 5px;
-  color: #ccc;
-  cursor: move;
-  width: 24px;
-  height: 24px;
 }
 
 span.location-title {
@@ -191,12 +100,6 @@ span.location-subtitle {
   font-size: 15px;
   line-height: 20px;
   margin-right: 8px;
-}
-
-::ng-deep .mat-form-field-flex {
-  background-color: transparent !important;
-  padding-top: 0 !important;
-  padding-left: 0 !important;
 }
 
 div.location-button {

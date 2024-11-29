@@ -1,9 +1,8 @@
 import {APP_BOOTSTRAP_LISTENER, Inject, InjectionToken, Renderer2, Type} from "@angular/core";
 import {EffectSources} from "@ngrx/effects";
 import {PagingInfoRequest} from "../store/application/application.state";
-import {SortDirection} from "@wf1/core-ui";
-import * as moment from "moment";
-import {Moment} from "moment";
+import {SortDirection} from "@wf1/wfcc-core-lib";
+import moment, { Moment } from "moment";
 import {Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import { CropCommodityList, RelLink, UwContract } from "../conversion/models";
@@ -526,21 +525,22 @@ export function setHttpHeaders(authToken) {
 
       case 'verifiedYield': 
 
-        //if (item.insurancePlanId == INSURANCE_PLAN.GRAIN) {
+        resourceRoute = ResourcesRoutes.VERIFIED_YIELD_GRAIN
 
-            resourceRoute = ResourcesRoutes.VERIFIED_YIELD_GRAIN
+        // extract verifiedYieldContractGuid from the haetus link here
+        let verifiedYieldContractGuid = ""
 
-        //} else if (item.insurancePlanId == INSURANCE_PLAN.FORAGE) {
-
-        //    resourceRoute = ResourcesRoutes.DOP_FORAGE  // TODO
-            
-        //}
+        let vyLinkHref = item.links.find(x => x.href.indexOf("verifiedYieldContracts") > -1 )?.href
+        
+        if (vyLinkHref) {
+          verifiedYieldContractGuid = vyLinkHref.substring(vyLinkHref.indexOf("verifiedYieldContracts") + 23 )
+        }
 
         router.navigate([resourceRoute,
-        item.insurancePlanId.toString(), 
-        item.cropYear.toString(),
-        item.policyId.toString(),
-        (item.verifiedYieldContractGuid ) ? item.verifiedYieldContractGuid.toString() : '' 
+          item.insurancePlanId.toString(), 
+          item.cropYear.toString(),
+          item.policyId.toString(),
+          verifiedYieldContractGuid
         ]);
 
     break;

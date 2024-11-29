@@ -1,70 +1,46 @@
 
+<cuws-base-dialog [titleLabel]="titleLabel" [type]="dialogType" class="remove-field">
+    <div mat-dialog-content class="grow">
 
-<div class="dialog-form"
-     cdkDrag
-     cdkDragRootElement=".cdk-overlay-pane"
-     cdkDragBoundary=".cdk-overlay-container">
+        <div class="row-group-left">
+            <!-- field warnings -->
+            <div *ngIf="validation && ( validation.removeFromPolicyWarnings || validation.deleteFieldErrors) " class="legal-land-container error-messages" >
+                <div *ngFor="let msg of validation.removeFromPolicyWarnings" style="display:contents">
+                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+                    <div><span style="color:orange">{{ msg.message }}</span></div>
+                </div>
 
-     <div class="dialog-drag-handle" cdkDragHandle>
-        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
-        <!-- <g transform="translate(0 -5)"> -->
-            <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
-            <!-- <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 4v3H7l5 5 5-5h-3v-3z"></path>  -->
-            <path d="M0 0h24v24H0z" fill="none"></path>
-        <!-- </g> -->
-        </svg>
-    </div>
-
-    <h3 style="padding-left: 10px; font-weight: 600; margin-bottom: 4px;">Remove or Delete Field{{ (dataReceived && dataReceived.fieldId) ? (": " + dataReceived. fieldLabel + " (" + dataReceived.fieldId + ")") : "" }} </h3>
-    <hr style="width: 800px; height:2px;">
-
-<!-- <p>Field has comment: {{ dataReceived ? dataReceived.hasComments : ""  }} </p>
-<p>Field has inventory: {{ dataReceived ? dataReceived.hasInventory : ""  }} </p> -->
-
-    <div class="row-group-left">
-        <!-- field warnings -->
-        <div *ngIf="validation && ( validation.removeFromPolicyWarnings || validation.deleteFieldErrors) " class="legal-land-container error-messages" >
-            <div *ngFor="let msg of validation.removeFromPolicyWarnings" style="display:contents">
-                <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
-                <div><span style="color:orange">{{ msg.message }}</span></div>
-            </div>
-
-            <div *ngIf="dataReceived && ( dataReceived.hasComments || dataReceived.hasInventory)" style="display:contents">
-                <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
-                <div><span style="color:orange">The field has inventory or comments in the current year which will not be removed from the field.</span></div>
-            </div>
-            <div *ngFor="let msg of validation.deleteFieldErrors" style="display:contents">
-                <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
-                <div><span style="color:orange">{{ msg.message }}</span></div>
+                <div *ngIf="dataReceived && ( dataReceived.hasComments || dataReceived.hasInventory)" style="display:contents">
+                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+                    <div><span style="color:orange">The field has inventory or comments in the current year which will not be removed from the field.</span></div>
+                </div>
+                <div *ngFor="let msg of validation.deleteFieldErrors" style="display:contents">
+                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+                    <div><span style="color:orange">{{ msg.message }}</span></div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="form-row dialog-controls">
-        <button mat-raised-button color="primary" (click)="onCancelChanges()" class="button-large-text">
+    </div>
+    <div mat-dialog-actions align="end">
+        <button mat-raised-button class="primary" (click)="onCancelChanges()">
             <mat-icon style="padding-right: 4px; margin-right: 4px;">cancel_presentation</mat-icon>Cancel
         </button>
         &nbsp;
         <button 
             *ngIf="validation && validation.isRemoveFromPolicyAllowed" 
-            mat-raised-button color="primary" 
+            mat-raised-button class="primary" 
             (click)="onRemoveFieldFromPolicy()" 
-            class="button-large-text" 
             matTooltip="Removes the field from this policy but keeps the inventory and comments">
             <mat-icon style="padding-right: 4px; margin-right: 4px;">save_alt</mat-icon>Remove from policy
         </button>
         &nbsp;
         <button 
             [disabled]="!validation || (validation && validation.isDeleteFieldAllowed == false)"
-            mat-raised-button color="primary" 
+            mat-raised-button class="primary" 
             (click)="onDeleteField()" 
-            class="button-large-text" 
             [matTooltip]=deleteToolTip >
             <mat-icon style="padding-right: 4px; margin-right: 4px;">save_alt</mat-icon>Delete
         </button>
     </div>
-
-    <!-- <p>Remove: Removes the field from this policy but keeps the inventory and comments</p>
-    <p>Delete: Deletes the field completely from the database</p> -->
-
-</div>
+</cuws-base-dialog>

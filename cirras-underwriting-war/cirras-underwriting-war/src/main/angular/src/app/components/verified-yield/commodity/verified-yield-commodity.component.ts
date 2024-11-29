@@ -1,6 +1,6 @@
 import { DecimalPipe } from "@angular/common";
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { VerifiedYieldContractCommodity } from "src/app/conversion/models-yield";
 import { RootState } from "src/app/store";
@@ -15,38 +15,48 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
   styleUrls: ['./verified-yield-commodity.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VerifiedYieldCommodityComponent implements OnInit {
+export class VerifiedYieldCommodityComponent implements OnChanges {
 
   @Input() commodity: VerifiedYieldContractCommodity;
-  @Input() commoditiesFormArray: FormArray;
+  @Input() commoditiesFormArray: UntypedFormArray;
   @Input() decimalPrecision: number;
 
-  commodityFormGroup: FormGroup;
+  commodityFormGroup: UntypedFormGroup;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
       private store: Store<RootState>,
       public securityUtilService: SecurityUtilService, 
       private decimalPipe: DecimalPipe) {
   }
 
-  ngOnInit(): void {
-      this.commodityFormGroup = this.fb.group({
-        verifiedYieldContractCommodityGuid: [this.commodity.verifiedYieldContractCommodityGuid],
-        verifiedYieldContractGuid: [this.commodity.verifiedYieldContractGuid],
-        cropCommodityId: [this.commodity.cropCommodityId],
-        isPedigreeInd: [this.commodity.isPedigreeInd],
-        harvestedAcres: [this.commodity.harvestedAcres],
-        harvestedAcresOverride: [this.commodity.harvestedAcresOverride],
-        storedYieldDefaultUnit: [this.commodity.storedYieldDefaultUnit],
-        soldYieldDefaultUnit: [this.commodity.soldYieldDefaultUnit],
-        productionGuarantee: [this.commodity.productionGuarantee],
-        harvestedYield: [this.commodity.harvestedYield],
-        harvestedYieldOverride: [this.commodity.harvestedYieldOverride],
-        yieldPerAcre: [this.commodity.yieldPerAcre],
-        cropCommodityName: [this.commodity.cropCommodityName],
-        totalInsuredAcres: [this.commodity.totalInsuredAcres]
-      });
-      this.commoditiesFormArray.push(this.commodityFormGroup);
+  // ngOnInit(): void {
+  //     this.setupForm()
+  // }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.commodity && this.commodity) {
+      this.setupForm()
+    }
+  }
+
+  setupForm() {
+    this.commodityFormGroup = this.fb.group({
+      verifiedYieldContractCommodityGuid: [this.commodity.verifiedYieldContractCommodityGuid],
+      verifiedYieldContractGuid: [this.commodity.verifiedYieldContractGuid],
+      cropCommodityId: [this.commodity.cropCommodityId],
+      isPedigreeInd: [this.commodity.isPedigreeInd],
+      harvestedAcres: [this.commodity.harvestedAcres],
+      harvestedAcresOverride: [this.commodity.harvestedAcresOverride],
+      storedYieldDefaultUnit: [this.commodity.storedYieldDefaultUnit],
+      soldYieldDefaultUnit: [this.commodity.soldYieldDefaultUnit],
+      productionGuarantee: [this.commodity.productionGuarantee],
+      harvestedYield: [this.commodity.harvestedYield],
+      harvestedYieldOverride: [this.commodity.harvestedYieldOverride],
+      yieldPerAcre: [this.commodity.yieldPerAcre],
+      cropCommodityName: [this.commodity.cropCommodityName],
+      totalInsuredAcres: [this.commodity.totalInsuredAcres]
+    });
+    this.commoditiesFormArray.push(this.commodityFormGroup);
   }
 
   numberOnly(event): boolean {

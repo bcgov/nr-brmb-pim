@@ -1,6 +1,6 @@
 @import 'src/styles/variables';
 
-::ng-deep .mat-dialog-container {
+::ng-deep .mat-mdc-dialog-container {
     font-size: $font-size;
     padding: 0;
     font-family: $font-family-main;
@@ -20,30 +20,30 @@
             margin-left: var(--cirras-underwriting-gutter-space);
             color: $colour-white;
 
-            .mat-progress-spinner circle,
-            .mat-spinner circle {
+            .mat-mdc-progress-spinner circle,
+            .mat-mdc-progress-spinner circle {
                 stroke: $colour-white;
             }
         }
     }
 
-    ::ng-deep .mat-dialog-actions {
+    ::ng-deep .mat-mdc-dialog-actions {
         margin: 0;
         background-color: #F2F2F2;
         border-top: solid 1px $colour-light-grey;
         padding: var(--cirras-underwriting-gutter-space);
     }
 
-    ::ng-deep .desktop .mat-dialog-content.no-scroll {
+    ::ng-deep .desktop .mat-mdc-dialog-content.no-scroll {
         overflow-y: hidden;
     }
 
-    ::ng-deep .desktop .mat-dialog-content.grow {
+    ::ng-deep .desktop .mat-mdc-dialog-content.grow {
         overflow-y: auto !important;
         max-height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 135px);
     }
 
-    ::ng-deep .mat-dialog-content {
+    ::ng-deep .mat-mdc-dialog-content {
         padding: var(--cirras-underwriting-gutter-space);
         margin: 0;
     }
@@ -56,48 +56,6 @@
             line-height: 0;
             height: 0;
             width: 0;
-
-            ::ng-deep .mat-button-wrapper {
-                display: flex;
-                border-radius: 20%;
-                background-color: $colour-lighter-grey;
-                height: 24px;
-                width: 24px;
-            }
-        }
-    }
-
-}
-
-::ng-deep .cdk-overlay-container.mobile .cdk-overlay-pane {
-    width: unset !important; //mobile dialog unset width
-
-    ::ng-deep .mat-dialog-container {
-        min-width: unset !important;
-        
-        .mobile {
-            max-width: 100% !important;
-            border-radius: 0 !important;
-            min-width: unset !important;
-            height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 54px) !important;
-            width: calc(var(--vw, 1vw) * 100 - env(safe-area-inset-left) - env(safe-area-inset-right)) !important;
-        }
-
-        h1 {
-            padding: 8px;
-        }
-
-        ::ng-deep .mat-dialog-actions {
-            bottom: 0;
-            max-height: 68px;
-            max-width: 100%;
-        }
-
-        ::ng-deep .mat-dialog-content {
-            max-height: unset;
-            overflow-y: auto !important;
-            height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 135px);
-            width: calc(var(--vw, 1vw) * 100 - env(safe-area-inset-left) - env(safe-area-inset-right) - 2 * var(--cirras-underwriting-gutter-space));
         }
     }
 

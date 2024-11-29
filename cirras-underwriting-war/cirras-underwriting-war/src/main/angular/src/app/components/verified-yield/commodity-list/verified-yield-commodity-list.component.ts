@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FormArray } from "@angular/forms";
+import { UntypedFormArray } from "@angular/forms";
 import { DopYieldContractCommodityForage } from "src/app/conversion/models-yield";
 
 @Component({
@@ -11,7 +11,7 @@ import { DopYieldContractCommodityForage } from "src/app/conversion/models-yield
 export class VerifiedYieldCommodityListComponent  {
 
   @Input() commodities: Array<DopYieldContractCommodityForage>;
-  @Input() commoditiesFormArray: FormArray;
+  @Input() commoditiesFormArray: UntypedFormArray;
   @Input() isUnsaved: boolean;
 
   yieldCalculatorLink = "ms-excel:ofe|u|https://bcgov.sharepoint.com/sites/AF-BRMB-DATA/Shared%20Documents/PI%20Grain%20Yield%20&%20Claim%20Calculator.xlsm"

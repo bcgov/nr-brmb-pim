@@ -14,8 +14,8 @@
             {{ uwCommentFormGroup.value.updateUser }}
         </label>
     </div>
-    <div class="border-right border-bottom entire">
-        <mat-form-field appearance="none" *ngIf="uwCommentFormGroup.value.userCanEditInd; else readOnlyComment">
+    <div class="border-right border-bottom">
+        <mat-form-field appearance="fill" *ngIf="uwCommentFormGroup.value.userCanEditInd; else readOnlyComment"  style="width: 100%;">
             <textarea matInput formControlName="underwritingComment" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
                 cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" maxlength="2000" (blur)="onCommentChange()"
                 [style.background-color]="validComment ? 'transparent' : 'yellow'">

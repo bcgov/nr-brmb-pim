@@ -1,12 +1,12 @@
 import {DomSanitizer} from "@angular/platform-browser";
-import {FormBuilder, FormArray, FormGroup} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormArray, FormGroup} from "@angular/forms";
 import {BaseComponentModel} from "../../common/base/base.component.model";
 import { PRIMARY_LAND_IDENTIFIER_TYPE_CODE, PRIMARY_REFERENCE_TYPE_CODE } from "src/app/utils/constants";
 
 export class ManageLandComponentModel extends BaseComponentModel {
      
     constructor(protected sanitizer: DomSanitizer,
-                private fb: FormBuilder) {
+                private fb: UntypedFormBuilder) {
 
         super(sanitizer);
         
@@ -18,7 +18,7 @@ export class ManageLandComponentModel extends BaseComponentModel {
             otherDescription: [],
             activeFromCropYear: [],
             activeToCropYear: [],
-            riskAreas: new FormArray([]),
+            riskAreas: new UntypedFormArray([]),
         });
     }
 

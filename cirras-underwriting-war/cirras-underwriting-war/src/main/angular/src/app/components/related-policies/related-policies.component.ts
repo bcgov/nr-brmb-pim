@@ -4,7 +4,7 @@ import { INSURANCE_PLAN, ResourcesRoutes } from 'src/app/utils/constants';
 import { goToLinkGlobal, makeTitleCase, userCanAccessDop, userCanAccessInventory } from "src/app/utils";
 import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'related-policies',
@@ -20,10 +20,10 @@ export class RelatedPoliciesComponent implements OnInit, OnChanges {
 
   relatedPoliciesOptions = [];
 
-  relatedPoliciesForm: FormGroup;
+  relatedPoliciesForm: UntypedFormGroup;
 
   constructor( 
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     protected router: Router,
     public securityUtilService: SecurityUtilService
     ) { }

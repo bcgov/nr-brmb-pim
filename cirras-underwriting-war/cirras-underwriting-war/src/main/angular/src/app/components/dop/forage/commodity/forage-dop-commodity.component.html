@@ -5,7 +5,7 @@
     <div class="readonly border-right border-bottom center">
         {{ commodityFormGroup.value.totalFieldAcres | number: '1.0-1' }}
     </div>
-    <div class="fill border-right border-bottom center">
+    <div class="inventory-fill border-right border-bottom center">
         <mat-form-field appearance="fill">
             <input matInput matInputCommified formControlName="harvestedAcres" maxlength="10"
                 (keypress)="numberOnly($event)" (blur)="updateHarvestedAcres()" />
@@ -13,7 +13,7 @@
         <mat-icon style="padding-right: 10px; font-size: 18px; margin-top: 6px;"
             matTooltip="Harvested Acres is writeable">edit</mat-icon>
     </div>
-    <div class="fill number border-right border-bottom">
+    <div class="inventory-fill number border-right border-bottom">
         <mat-form-field appearance="fill">
             <input matInput matInputCommified formControlName="totalBalesLoads" maxlength="10"
                 (keypress)="numberOnly($event)" (blur)="updateTotalBalesLoads()" />
@@ -22,7 +22,7 @@
             matTooltip="Bales/Loads is writeable">edit</mat-icon>
     </div>
 
-    <div class="fill number border-right border-bottom">
+    <div class="inventory-fill number border-right border-bottom">
         <mat-form-field appearance="fill">
             <input matInput matInputCommified formControlName="weight" maxlength="10"
                 (keypress)="numberOnly($event)" (blur)="updateWeight()" />
@@ -31,7 +31,7 @@
             matTooltip="Weight is writeable">edit</mat-icon>
     </div>
 
-    <div class="fill number border-right border-bottom">
+    <div class="inventory-fill number border-right border-bottom">
         <mat-form-field appearance="fill">
             <input matInput matInputCommified formControlName="moisturePercent" maxlength="10"
                 (keypress)="numberOnly($event)" (blur)="updateMoisturePercent()" />

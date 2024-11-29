@@ -1,4 +1,4 @@
-import {ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot} from "@angular/router";
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import {Injectable} from "@angular/core";
 import {Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
@@ -14,7 +14,7 @@ import { ResourcesRoutes } from "src/app/utils/constants";
 @Injectable({
     providedIn: "root",
 })
-export class DeactivateGuard implements CanDeactivate<any> {
+export class DeactivateGuard  {
     constructor(
         protected dialog: MatDialog,
         protected store: Store<RootState>,

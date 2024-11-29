@@ -1,0 +1,85 @@
+@import '../variables';
+
+.mat-mdc-snack-bar-container {
+    color: $colour-white;
+    font-family: $font-family-main;
+    font-size: $font-size;
+    word-break: break-word;
+
+    .snack-bar-content{
+        display: flex;
+        align-items: center;
+
+        .icon-panel{
+            padding: var(--cirras-underwriting-gutter-space);
+            display: flex;
+            background-color: $colour-lighter-grey;
+            height: 100%;
+            align-items: center;
+        }
+
+        .message-panel{
+            padding:var(--cirras-underwriting-gutter-space);
+            flex: 1;
+        }
+
+        button{
+            padding: calc(#{var(--cirras-underwriting-gutter-space)}/2);
+            border: 1px $colour-white solid;
+            border-radius: $wf1-border-radius;
+            color: $colour-white;
+            margin-right: var(--cirras-underwriting-gutter-space);
+            cursor: pointer;
+            font-family: $font-family-main;
+        }
+
+    }
+
+    .mat-mdc-snack-bar-label {
+        padding: 0;
+    }
+
+    &.snackbar-success {
+        --mdc-snackbar-container-color: #{ $colour-success };
+        mat-icon{
+            color: $colour-success;
+        }
+        button{
+            background-color: $colour-success;
+        }
+    }
+
+    &.snackbar-error {
+        --mdc-snackbar-container-color: #{ $colour-errors };
+        mat-icon{
+            color: $colour-errors;
+        }
+        button{
+            background-color: $colour-errors;
+        }
+    }
+
+    &.snackbar-info {
+        --mdc-snackbar-container-color: #{ $colour-blue-grey };
+        mat-icon{
+            color: $colour-blue-grey;
+        }
+        button{
+            background-color: $colour-blue-grey;
+        }
+    }
+
+    &.snackbar-update {
+        --mdc-snackbar-container-color: #{ $colour-blue-grey };
+
+        button {
+            color: $colour-blue-grey;
+        }
+        mat-icon{
+            color: $colour-blue-grey;
+        }
+        button{
+            background-color: $colour-blue-grey;
+        }
+    }
+}

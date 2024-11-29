@@ -26,16 +26,16 @@
             </div>
             <div class="vertical-line"></div>
             <div matTooltip="Changes must be saved before download is possible.">
-                <button mat-raised-button color="secondary" [disabled]="isUnsaved"
-                class="button-large-text" (click)="onPrint()">
+                <button mat-raised-button class="secondary button-large-text" [disabled]="isUnsaved"
+                (click)="onPrint()">
                     <mat-icon class="button-mat-icon">download</mat-icon>Download
                 </button>
             </div>
             <div>
                 <button 
                     *ngIf="securityUtilService.canEditDop()" 
-                    mat-raised-button color="primary" 
-                    class="button-large-text" 
+                    mat-raised-button 
+                    class="primary button-large-text" 
                     [disabled]="!isUnsaved" 
                     (click)="onSave()">
                         Save
@@ -56,7 +56,7 @@
                 </div>            
                 <div class="plcy-frm-hdr-calendar" matTooltip="Date when the Declaration of Production is submitted.">
                     <!-- DOP Date: -->
-                    <mat-form-field appearance="fill" >
+                    <mat-form-field appearance="outline" >
                         <input matInput 
                             [matDatepicker]="picker"
                             formControlName="declarationOfProductionDate" 
@@ -68,7 +68,8 @@
                 </div>
                 <div class="plcy-frm-hdr-dropdown" matTooltip="Units">
                     <!-- Units:  -->
-                    <mat-form-field *ngIf="yieldMeasUnitList && yieldMeasUnitList.collection" appearance="fill">
+                    <mat-form-field *ngIf="yieldMeasUnitList && yieldMeasUnitList.collection" 
+                        appearance="outline" style="width: 110px;">
                         <mat-select
                             formControlName="yieldMeasUnitTypeCode"
                             (selectionChange)="updateEnteredYieldMeasUnitTypeCode()">
@@ -81,7 +82,7 @@
                     <!-- add cut -->
                     <button
                         mat-raised-button 
-                        color="secondary" 
+                        class="secondary" 
                         class="header-button"  
                         matTooltip="Add New Cut"
                         [disabled]="!isNewCutBtnEnabled()"
@@ -93,7 +94,7 @@
                     <!-- remove cut -->
                     <button
                         mat-raised-button 
-                        color="secondary" 
+                        class="secondary" 
                         class="header-button"  
                         matTooltip="Remove Last Cut"
                         [disabled]="!isRemoveCutBtnEnabled()"
@@ -115,7 +116,7 @@
                 <div>
                     <button
                         mat-raised-button 
-                        color="secondary" 
+                        class="secondary" 
                         class="header-button"  
                         matTooltip="Clear unsaved changes"
                         (click)="onCancel()">
@@ -127,8 +128,8 @@
                     <button *ngIf="securityUtilService.canDeleteDop() && 
                                     dopYieldContract && 
                                     dopYieldContract.declaredYieldContractGuid" 
-                                    mat-raised-button color="secondary" 
-                                    class="header-button-red" 
+                                    mat-raised-button 
+                                    class="secondary header-button-red" 
                                     (click)="onDeleteDop()">
                         <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset DOP
                     </button>
@@ -153,23 +154,21 @@
 
                     <div class="forage-dop-contract-info">
                         <div class="cell">Baler/Wagon Make & Model:</div>
-                        <div class="fill">
-                            <mat-form-field appearance="fill">
+                        <div class="comment-fill">
+                            <mat-form-field appearance="outline" style="width: 400px;">
                                 <input matInput formControlName="balerWagonInfo" 
                                         maxlength="128"
                                         (blur)="updateBalerWagonInfo()">
                             </mat-form-field>
-                            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
                         </div>
                         <div class="cell">Total Number of Livestock:</div>  
-                        <div class="fill">
-                            <mat-form-field appearance="fill">
+                        <div class="comment-fill">
+                            <mat-form-field appearance="outline" style="width: 100px;">
                                 <input matInput matInputCommified formControlName="totalLivestock" 
                                         maxlength="5"
                                         (keypress)="numberOnly($event)"
                                         (blur)="updateTotalLivestock()">
                             </mat-form-field>
-                            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
                         </div>
                     </div>
 
@@ -182,7 +181,7 @@
 
 
                 <!-- dop contract data  -->
-                <div class="plcy-inv-cntrct" style="grid-template-columns: 850px 790px;" >
+                <div class="plcy-inv-cntrct" style="grid-template-columns: 830px 790px;" >
                     <div>
                         <!-- yield summary  -->
                         <forage-dop-yield-summary-list
