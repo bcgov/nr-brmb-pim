@@ -144,7 +144,7 @@ export class LandListEffects {
     switchMap(
         ([action, store]) => {
             let typedAction = <ManageLegalLandAction>action;
-            let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
 
             const legalLand = typedAction.payload.legalLand 
@@ -186,7 +186,7 @@ updateLegalLand: Observable<Action> = createEffect(() => this.actions.pipe(
     switchMap(
         ([action, store]) => {
             let typedAction = <ManageLegalLandAction>action;
-            let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
             let payload = <LegalLand>typedAction.payload.legalLand;
 
@@ -230,7 +230,7 @@ deleteLegalLand: Observable<Action> = createEffect(() => this.actions.pipe(
   switchMap(
       ([action, store]) => {
           let typedAction = <ManageLegalLandAction>action;
-          let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+          let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
           let authToken = this.tokenService.getOauthToken();
           let payload = <LegalLand>typedAction.payload.legalLand;
           
