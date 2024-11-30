@@ -186,7 +186,9 @@ export interface VerifiedYieldContract {
     defaultYieldMeasUnitTypeCode?: string;
     insurancePlanId?: number;
     growerContractYearId?: number;
+    fields?: Array<AnnualField>;
     verifiedYieldContractCommodities?: Array<VerifiedYieldContractCommodity>;
+    verifiedYieldAmendments?: Array<VerifiedYieldAmendment>;
     etag?: string;
     type: string;
   }
@@ -206,4 +208,25 @@ export interface VerifiedYieldContract {
 	yieldPerAcre?: number;
     cropCommodityName?: string;
     totalInsuredAcres?: number;
+  }
+
+  export interface VerifiedYieldAmendment {
+    verifiedYieldAmendmentGuid?: string;
+	verifiedYieldAmendmentCode?: string;
+	verifiedYieldContractGuid?: string;
+	cropCommodityId?: number;
+	isPedigreeInd?: boolean;
+	fieldId?: number;
+	yieldPerAcre?: number;
+	acres?: number;
+	rationale?: string;
+	cropCommodityName?: string;
+	fieldLabel?: string;
+	deletedByUserInd?: boolean;   
+  }
+
+  export interface VerifiableCommodity  {
+    cropCommodityId?: number;
+    cropCommodityName?: string;
+    isPedigreeInd?: boolean;
   }

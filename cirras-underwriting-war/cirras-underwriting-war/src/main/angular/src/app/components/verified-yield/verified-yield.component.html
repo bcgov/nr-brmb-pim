@@ -86,6 +86,16 @@
                 [isUnsaved]="isUnsaved"></verified-yield-commodity-list>
             </div>
 
+            <div style="margin-top: 16px;">
+                <!-- amendments -->
+                <verified-yield-amendment-list
+                    *ngIf="verifiedYieldContract"
+                    [amendments]="verifiedYieldContract.verifiedYieldAmendments"
+                    [amendmentsFormArray]="getViewModel().formGroup.controls.verifiedYieldAmendments"
+                    [cropCommodityList]="cropCommodityList"
+                    [isUnsaved]="isUnsaved"
+                    ></verified-yield-amendment-list>
+            </div>
 
         </form>
         </div>
