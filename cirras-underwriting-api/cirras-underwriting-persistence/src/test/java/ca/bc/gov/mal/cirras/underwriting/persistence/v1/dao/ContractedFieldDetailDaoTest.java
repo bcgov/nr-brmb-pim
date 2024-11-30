@@ -17,6 +17,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetai
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.spring.PersistenceSpringConfig;
@@ -54,19 +55,15 @@ public class ContractedFieldDetailDaoTest {
 	
 	private void deleteContractedFieldDetail() throws NotFoundDaoException, DaoException{
 
-		if ( declaredYieldFieldGuid != null ) {
-			DeclaredYieldFieldDao dyfDao = persistenceSpringConfig.declaredYieldFieldDao();
-			dyfDao.delete(declaredYieldFieldGuid);			
-		}
-
-		if ( inventorySeededGrainGuid != null ) {
-			InventorySeededGrainDao isgDao = persistenceSpringConfig.inventorySeededGrainDao();
-			isgDao.delete(inventorySeededGrainGuid);			
-		}
-
-		if ( inventoryFieldGuid != null ) {
-			InventoryFieldDao ifDao = persistenceSpringConfig.inventoryFieldDao();
-			ifDao.delete(inventoryFieldGuid);			
+		FieldDao fieldDao = persistenceSpringConfig.fieldDao();
+		FieldDto fieldDto = fieldDao.fetch(fieldId);
+		if (fieldDto != null) {
+			InventorySeededGrainDao invSeededGrainDao = persistenceSpringConfig.inventorySeededGrainDao();
+			invSeededGrainDao.deleteForField(fieldId);
+			InventorySeededForageDao invSeededForageDao = persistenceSpringConfig.inventorySeededForageDao();
+			invSeededForageDao.deleteForField(fieldId);
+			InventoryFieldDao invFieldDao = persistenceSpringConfig.inventoryFieldDao();
+			invFieldDao.deleteForField(fieldId);
 		}
 		
 		ContractedFieldDetailDao dao = persistenceSpringConfig.contractedFieldDetailDao();
@@ -86,9 +83,6 @@ public class ContractedFieldDetailDaoTest {
 		}	
 
 		// delete field
-		FieldDao fieldDao = persistenceSpringConfig.fieldDao();
-		FieldDto fieldDto = fieldDao.fetch(fieldId);
-		
 		if (fieldDto != null) {
 			fieldDao.delete(fieldId);
 		}
@@ -333,6 +327,11 @@ public class ContractedFieldDetailDaoTest {
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(0, dtos.size()); // Empty, because none of them have seeded inventory or declared yield.
 
+		//select for verified yield
+		dtos = dao.selectForVerifiedYield(contractId, cropYear);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size()); // Empty, because none of them have seeded inventory or is forage inventory 
+
 		// Create inventory_field
 		ifDto.setCropYear(cropYear);
 		ifDto.setFieldId(fieldId);
@@ -359,11 +358,37 @@ public class ContractedFieldDetailDaoTest {
 		Assert.assertNotNull(isgDto);
 		inventorySeededGrainGuid = isgDto.getInventorySeededGrainGuid();
 		
+		//INSERT FORAGE
+		InventorySeededForageDto isfDto3 = new InventorySeededForageDto();
+
+		isfDto3.setInventoryFieldGuid(inventoryFieldGuid);
+		isfDto3.setCommodityTypeCode("CPSW");
+		isfDto3.setCropCommodityId(26);
+		isfDto3.setCropVarietyId(1010602);
+		isfDto3.setCropVarietyName("AAC ENTICE");
+		isfDto3.setFieldAcres(10.4);
+		isfDto3.setSeedingYear(2020);		
+		isfDto3.setSeedingDate(null);		
+		isfDto3.setIsIrrigatedInd(true);
+		isfDto3.setIsQuantityInsurableInd(false);
+		isfDto3.setPlantInsurabilityTypeCode("E1");
+		isfDto3.setIsAwpEligibleInd(true);
+		
+		InventorySeededForageDao invSeededForageDao = persistenceSpringConfig.inventorySeededForageDao();
+		invSeededForageDao.insert(isfDto3, userId);
+		Assert.assertNotNull(isfDto3.getInventorySeededForageGuid());
+		
 		
 		dtos = dao.selectForDeclaredYield(contractId, cropYear);
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(0, dtos.size()); // Empty, because none of them have seeded inventory with crop and acres > 0, or declared yield.
 
+		//select for verified yield
+		dtos = dao.selectForVerifiedYield(contractId, cropYear);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size()); // Empty, because none of them have seeded inventory with crop and acres > 0 or is forage inventory
+		
+		
 		isgDto.setSeededAcres(11.22);
 		isgDao.update(isgDto, userId);
 		isgDto = isgDao.fetch(isgDto.getInventorySeededGrainGuid());
@@ -372,7 +397,7 @@ public class ContractedFieldDetailDaoTest {
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(1, dtos.size()); // Only 1 record returned
 		ContractedFieldDetailDto cfdYieldDto = dtos.get(0);
-		
+
 		Assert.assertEquals(cmpDto.getAnnualFieldDetailId(), cfdYieldDto.getAnnualFieldDetailId());
 		Assert.assertEquals(cmpDto.getContractedFieldDetailId(), cfdYieldDto.getContractedFieldDetailId());
 		Assert.assertEquals(cmpDto.getContractId(), cfdYieldDto.getContractId());
@@ -385,6 +410,24 @@ public class ContractedFieldDetailDaoTest {
 		Assert.assertEquals(cmpDto.getLegalLandId(), cfdYieldDto.getLegalLandId());
 		Assert.assertEquals(cmpDto.getOtherLegalDescription(), cfdYieldDto.getOtherLegalDescription());
 
+		//select for verified yield
+		dtos = dao.selectForVerifiedYield(contractId, cropYear);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(1, dtos.size()); // Only 1 record returned
+		cfdYieldDto = dtos.get(0);
+				
+		Assert.assertEquals(cmpDto.getAnnualFieldDetailId(), cfdYieldDto.getAnnualFieldDetailId());
+		Assert.assertEquals(cmpDto.getContractedFieldDetailId(), cfdYieldDto.getContractedFieldDetailId());
+		Assert.assertEquals(cmpDto.getContractId(), cfdYieldDto.getContractId());
+		Assert.assertEquals(cmpDto.getCropYear(), cfdYieldDto.getCropYear());
+		Assert.assertEquals(cmpDto.getDisplayOrder(), cfdYieldDto.getDisplayOrder());
+		Assert.assertEquals(cmpDto.getFieldId(), cfdYieldDto.getFieldId());
+		Assert.assertEquals(cmpDto.getFieldLabel(), cfdYieldDto.getFieldLabel());
+		Assert.assertEquals(cmpDto.getGrowerContractYearId(), cfdYieldDto.getGrowerContractYearId());
+		Assert.assertEquals(cmpDto.getInsurancePlanId(), cfdYieldDto.getInsurancePlanId());
+		Assert.assertEquals(cmpDto.getLegalLandId(), cfdYieldDto.getLegalLandId());
+		Assert.assertEquals(cmpDto.getOtherLegalDescription(), cfdYieldDto.getOtherLegalDescription());
+		
 		// Remove seeded inventory
 		isgDto.setSeededAcres(0.0);
 		isgDao.update(isgDto, userId);
@@ -394,6 +437,11 @@ public class ContractedFieldDetailDaoTest {
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(0, dtos.size()); // Empty, because none of them have seeded inventory with crop and acres > 0, or declared yield.
 
+		//select for verified yield
+		dtos = dao.selectForVerifiedYield(contractId, cropYear);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size()); // Empty, because none of them have seeded inventory or is forage inventory
+		
 		// Add declared yield field.
 		dyfDto.setEstimatedYieldPerAcre(12.34);
 		dyfDto.setEstimatedYieldPerAcreDefaultUnit(56.78);
@@ -429,6 +477,8 @@ public class ContractedFieldDetailDaoTest {
 		
 		isgDao.delete(isgDto.getInventorySeededGrainGuid());
 		inventorySeededGrainGuid = null;
+		
+		invSeededForageDao.delete(isfDto3.getInventorySeededForageGuid());
 		
 		ifDao.delete(ifDto.getInventoryFieldGuid());
 		inventoryFieldGuid = null;
