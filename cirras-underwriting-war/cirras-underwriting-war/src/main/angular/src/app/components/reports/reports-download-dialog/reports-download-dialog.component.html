@@ -2,7 +2,7 @@
     <div mat-dialog-content>
         <mat-label class="label filter-label">Sort By</mat-label>
         <mat-form-field appearance="fill">
-            <mat-select (selectionChange)="onSelectionChange($event)">
+            <mat-select hideSingleSelectionIndicator="true" (selectionChange)="onSelectionChange($event)">
                 <mat-option *ngFor="let option of reportSortByOptions" [value]="option.code">
                     {{option.description}}
                 </mat-option>

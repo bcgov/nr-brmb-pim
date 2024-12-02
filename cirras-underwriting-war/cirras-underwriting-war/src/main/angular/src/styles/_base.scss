@@ -9,8 +9,14 @@ body {
   font-feature-settings: 'liga';
 }
 
-mat-dialog-container.mat-mdc-dialog-container {
+.mat-dialog-container.mat-mdc-dialog-container {
   font-family: $font-family-main;
+  font-size: $font-size;
+}
+
+// fonts for the popups
+.mat-mdc-dialog-content{
+  font-family: $font-family-main !important;
   font-size: $font-size;
 }
 

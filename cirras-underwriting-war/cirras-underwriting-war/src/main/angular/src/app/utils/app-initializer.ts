@@ -9,7 +9,6 @@ import {UUID} from "angular2-uuid";
 import {DATE_FORMATS} from "./index";
 import {CODE_TABLE_CACHE} from "./constants";
 import {ApplicationStateService} from "../services/application-state.service";
-// import * as moment from "moment";
 import moment, { Moment } from "moment";
 
 export function appInitFn(httpHandler: HttpHandler, injector: Injector): () => Promise<any> {

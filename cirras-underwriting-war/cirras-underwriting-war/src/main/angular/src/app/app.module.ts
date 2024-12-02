@@ -11,7 +11,7 @@ import {ServiceWorkerModule} from "@angular/service-worker";
 import {EffectsModule} from "@ngrx/effects";
 import {StoreModule} from "@ngrx/store";
 import {StoreDevtoolsModule} from "@ngrx/store-devtools";
-import {AppConfigService, CoreUIModule, TokenService} from "@wf1/wfcc-core-lib"; //MapService, PublicApplicationHeaderModule, 
+import {AppConfigService, CoreUIModule, TokenService} from "@wf1/wfcc-core-lib";  
 import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./containers/application-root/app.component";
 import {environment} from "../environments/environment";

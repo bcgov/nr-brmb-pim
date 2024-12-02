@@ -34,7 +34,7 @@
     "@angular/router": "^18.2.12",
     "@angular/service-worker": "^18.2.12",
     "@busacca/ng-pick-datetime": "^15.0.0",
-    "@cirras/cirras-underwriting-api": "^3.6.0-SNAPSHOT",
+    "@cirras/cirras-underwriting-api": "3.6.0-SNAPSHOT",
     "@ngrx/effects": "^18.1.1",
     "@ngrx/store": "^18.1.1",
     "@ngrx/store-devtools": "^18.1.1",
@@ -45,13 +45,13 @@
     "angular-oauth2-oidc": "^17.0.2",
     "angular2-uuid": "^1.1.1",
     "axe-core": "^4.10.2",
-    "deep-equal": "1.1.0",
+    "deep-equal": "^1.1.0",
     "jquery": "^3.6.4",
     "karma-viewport": "^1.0.9",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
     "multiple-select": "^1.5.2",
-    "ngx-connection-service": "18.0.0",
+    "ngx-connection-service": "^18.0.0",
     "ngx-mask": "^18.0.4",
     "ngx-moment": "^6.0.2",
     "ngx-pagination": "^6.0.3",
@@ -83,11 +83,11 @@
     "karma-jasmine-html-reporter": "^1.5.0",
     "karma-mocha-reporter": "^2.2.5",
     "karma-safari-launcher": "^1.0.0",
-    "karma-spec-reporter": "0.0.32",
+    "karma-spec-reporter": "^0.0.32",
     "protractor": "~7.0.0",
     "replace-in-file": "^3.4.2",
     "ts-node": "~8.10.2",
     "tslint": "~6.1.0",
-    "typescript": "5.4.5"
+    "typescript": "^5.4.5"
   }
 }

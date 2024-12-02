@@ -83,7 +83,7 @@
                                 class="inventory-cell inventory-border border-left" [ngStyle]="{'width': '250px'}">
                                 <mat-form-field class="inventory-fill" appearance="fill" *ngIf="seedingDeadline.value.addedByUserInd == true"
                                     style="width: 100%;">
-                                    <mat-select formControlName="commodityTypeCode">
+                                    <mat-select hideSingleSelectionIndicator="true" formControlName="commodityTypeCode">
                                         <mat-option *ngFor="let option of filteredCommodityTypeCodeList"
                                             [value]="option">
                                             {{ option }}
