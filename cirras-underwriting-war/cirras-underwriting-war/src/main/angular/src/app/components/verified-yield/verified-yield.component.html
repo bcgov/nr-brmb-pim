@@ -90,6 +90,7 @@
                 <!-- amendments -->
                 <verified-yield-amendment-list
                     *ngIf="verifiedYieldContract"
+                    [verifiedYieldContractGuid]="verifiedYieldContractGuid"
                     [amendments]="verifiedYieldContract.verifiedYieldAmendments"
                     [amendmentsFormArray]="getViewModel().formGroup.controls.verifiedYieldAmendments"
                     [cropCommodityList]="cropCommodityList"

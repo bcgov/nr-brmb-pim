@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { UntypedFormArray } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { VerifiedYieldAmendment } from 'src/app/conversion/models-yield';
 import { CropCommodityList } from 'src/app/conversion/models';
+import { VERIFIED_YIELD_AMENDMENT_CODE } from 'src/app/utils/constants';
 
 @Component({
   selector: 'verified-yield-amendment-list',
@@ -10,12 +11,54 @@ import { CropCommodityList } from 'src/app/conversion/models';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VerifiedYieldAmendmentListComponent {
+  @Input() verifiedYieldContractGuid: string;
   @Input() amendments: Array<VerifiedYieldAmendment>;
   @Input() amendmentsFormArray: UntypedFormArray;
   @Input() isUnsaved: boolean;
   @Input() cropCommodityList: CropCommodityList
 
+  amendmentFormGroup: UntypedFormGroup;
+
+  constructor(private fb: UntypedFormBuilder,
+    ){
+  }
+
   addAmendment() {
-    // TODO
+
+    if (!this.amendments) {
+      this.amendments = []
+    }
+    
+    this.amendments.push({
+      verifiedYieldAmendmentGuid: null, // or create your own temp guid ??
+      verifiedYieldAmendmentCode: VERIFIED_YIELD_AMENDMENT_CODE.APPRAISAL, // default
+      verifiedYieldContractGuid: this.verifiedYieldContractGuid, 
+      cropCommodityId: null,
+      isPedigreeInd: false,
+      fieldId: null,
+      yieldPerAcre: null,
+      acres: null,
+      rationale: null,
+      cropCommodityName: null,
+      fieldLabel: null,
+      deletedByUserInd: false
+    })
+
+    this.amendmentFormGroup = this.fb.group({
+      verifiedYieldAmendmentGuid: [],
+      verifiedYieldAmendmentCode: [VERIFIED_YIELD_AMENDMENT_CODE.APPRAISAL],
+      verifiedYieldContractGuid: [this.verifiedYieldContractGuid],
+      cropCommodityId: [''],
+      isPedigreeInd: [false],
+      fieldId: [''],
+      yieldPerAcre: [''],
+      acres: [''],
+      rationale: [''],
+      cropCommodityName: [''],
+      fieldLabel: [''],
+      deletedByUserInd: [false]
+    });
+
+    this.amendmentsFormArray.push(this.amendmentFormGroup);
   }
 }

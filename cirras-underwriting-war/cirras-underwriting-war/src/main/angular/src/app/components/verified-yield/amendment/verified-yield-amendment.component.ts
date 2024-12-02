@@ -12,7 +12,7 @@ import { getCodeOptions } from 'src/app/utils/code-table-utils';
 @Component({
   selector: 'verified-yield-amendment',
   templateUrl: './verified-yield-amendment.component.html',
-  styleUrl: './verified-yield-amendment.component.scss',
+  styleUrls: ['./verified-yield-amendment.component.scss', '../../../../styles/_inventory.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VerifiedYieldAmendmentComponent implements OnChanges {
@@ -25,6 +25,8 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
   amendmentFormGroup: UntypedFormGroup;
 
   amendmentOptions = getCodeOptions("verified_yield_amendment_code"); // get the amendment code
+  fieldOptions = [];
+  cropCommodityOptions = [];
 
   constructor(private fb: UntypedFormBuilder,
     private store: Store<RootState>,
@@ -69,5 +71,15 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
       return makeNumberOnly(event);
   }
 
+  updateYieldPerAcre() {
+    //TODO
+  }
 
+  updateAcres() {
+    //TODO
+  }
+
+  onDeleteAmendment() {
+    
+  }
 }
