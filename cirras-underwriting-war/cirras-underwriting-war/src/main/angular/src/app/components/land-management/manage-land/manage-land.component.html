@@ -100,9 +100,9 @@
                                     [formGroup]="riskArea"          
                         style="display:contents">
                     
-                        <div *ngIf="riskArea.value.deletedByUserInd == false">    
-                            <mat-form-field appearance="fill" *ngIf="riskArea.value.isNewRiskArea">
-                                <mat-select formControlName="insurancePlanId"
+                        <div *ngIf="riskArea.value.deletedByUserInd == false" class="question-dropdown">    
+                            <mat-form-field appearance="outline" *ngIf="riskArea.value.isNewRiskArea"  style="width: 140px;">
+                                <mat-select hideSingleSelectionIndicator="true" formControlName="insurancePlanId"
                                 (selectionChange)="clearRiskAreaOptions(raIndex)">
                                     <mat-option *ngFor="let option of insurancePlansOptions" [value]="option.code"
                                     >{{ option.description | titlecase }}</mat-option>
@@ -112,9 +112,9 @@
                             {{ ( riskArea.value.isNewRiskArea == false ? riskArea.value.insurancePlanName : "") | titlecase }}
                         </div>
             
-                        <div *ngIf="riskArea.value.deletedByUserInd == false">   
-                            <mat-form-field appearance="fill" *ngIf="riskArea.value.isNewRiskArea">
-                                <mat-select formControlName="riskAreaId"
+                        <div *ngIf="riskArea.value.deletedByUserInd == false" class="question-dropdown">   
+                            <mat-form-field appearance="outline" *ngIf="riskArea.value.isNewRiskArea" style="width: 160px;">
+                                <mat-select hideSingleSelectionIndicator="true" formControlName="riskAreaId"
                                 (focus)="populateRiskAreaOptions(raIndex)">
                                     <mat-option *ngFor="let option of riskAreaOptions[raIndex]" [value]="option.code"
                                     >{{ option.description | titlecase }}</mat-option>
@@ -124,7 +124,7 @@
                             {{ ( riskArea.value.isNewRiskArea == false ? riskArea.value.riskAreaName : "" ) | titlecase }}
                         </div>
             
-                        <div *ngIf="riskArea.value.deletedByUserInd == false">
+                        <div *ngIf="riskArea.value.deletedByUserInd == false" style="padding-left: 14px; padding-bottom: 6px;">
                         <mat-icon
                             matTooltip="Delete Risk Area" 
                             [ngStyle]="{'color':'red'}"
@@ -161,31 +161,23 @@
 
                 <div class="button-row flex-y-fixed" style="width: 680px;">
             
-                    <button mat-raised-button color="primary" class="button-large-text" (click)="onCancel()">
+                    <button mat-raised-button class="secondary button-large-text" (click)="onCancel()">
                         <mat-icon class="button-mat-icon">cancel_presentation</mat-icon>Cancel
                     </button>
                     &nbsp;
-                    <button mat-raised-button color="primary" class="button-large-text"  (click)="onAddRiskArea()">
+                    <button mat-raised-button class="secondary button-large-text"  (click)="onAddRiskArea()">
                         <mat-icon class="button-mat-icon">add_box</mat-icon>Add Risk Area
                     </button>
                     &nbsp;
                     <button *ngIf="securityUtilService.canEditLegalLand()" 
-                        mat-raised-button color="primary" 
-                        class="button-large-text" 
+                        mat-raised-button class="primary button-large-text" 
                         [disabled]="!hasDataChanged" 
                         (click)="onSave()">
                             <mat-icon class="button-mat-icon">save</mat-icon>Save
                     </button>
-                    <!-- &nbsp;
-                    <button 
-                        mat-raised-button color="primary" 
-                        class="button-large-text" 
-                        (click)="isMyFormDirty()">
-                            <mat-icon class="button-mat-icon">Check</mat-icon>Check
-                    </button> -->
                     &nbsp;  
                     <button *ngIf="securityUtilService.canDeleteLegalLand() && legalLand && legalLand.legalLandId"
-                        mat-raised-button color="warn" 
+                        mat-raised-button color="warn"
                         class="button-large-text button-right" 
                         (click)="onDeleteLegalLand()">
                             <mat-icon class="button-mat-icon">delete</mat-icon>Delete

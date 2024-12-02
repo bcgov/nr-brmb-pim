@@ -3,8 +3,8 @@ import { BaseComponent } from 'src/app/components/common/base/base.component';
 import { AnnualField, CropCommodityList, InventoryContract, UwContract } from 'src/app/conversion/models';
 import { ForageInventoryComponentModel } from './forage-inventory.component.model';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ParamMap } from '@angular/router';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN, PLANT_DURATION, PLANT_INSURABILITY_TYPE_CODE } from 'src/app/utils/constants';
 import { CropVarietyCommodityType, InventorySeededForage, InventoryUnseeded, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { addUwCommentsObject, areDatesNotEqual, areNotEqual, makeNumberOnly, makeTitleCase } from 'src/app/utils';
@@ -16,18 +16,6 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { RemoveFieldPopupData } from '../remove-field/remove-field.component';
 import {ViewEncapsulation } from '@angular/core';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
-import { DomSanitizer, Title } from '@angular/platform-browser';
-import { Store } from '@ngrx/store';
-import { RootState } from 'src/app/store';
-import { MatDialog } from '@angular/material/dialog';
-import { ApplicationStateService } from 'src/app/services/application-state.service';
-import { SecurityUtilService } from 'src/app/services/security-util.service';
-import { AppConfigService, TokenService } from '@wf1/core-ui';
-import { ConnectionService } from 'ngx-connection-service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Overlay } from '@angular/cdk/overlay';
-import { HttpClient } from '@angular/common/http';
-import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'forage-inventory',
@@ -42,26 +30,6 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   @Input() inventoryContract: InventoryContract;
   @Input() cropCommodityList: CropCommodityList;
   @Input() growerContract: UwContract;
-
-  constructor(protected router: Router,
-    protected route: ActivatedRoute,
-    protected sanitizer: DomSanitizer,
-    protected store: Store<RootState>,
-    protected fb: FormBuilder,
-    protected dialog: MatDialog,
-    protected applicationStateService: ApplicationStateService,
-    public securityUtilService: SecurityUtilService,                
-    protected tokenService: TokenService,
-    protected connectionService: ConnectionService,
-    protected snackbarService: MatSnackBar,
-    protected overlay: Overlay,
-    protected cdr: ChangeDetectorRef,
-    protected appConfigService: AppConfigService,
-    protected http: HttpClient,
-    protected titleService: Title,
-    protected decimalPipe: DecimalPipe) {
-    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
-  }
 
   cropVarietyOptions = [];
   filteredVarietyOptions: CropVarietyOptionsType[];  
@@ -142,7 +110,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
     if ( changes.inventoryContract && this.inventoryContract && this.inventoryContract.fields ) {
 
-        let flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+        let flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
         flds.clear()
         this.inventoryContract.fields.forEach( f => this.addField( f ) )
 
@@ -161,9 +129,9 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
   addField( field: AnnualField ) {
 
-    let fldPlantings = new FormArray ([]) 
+    let fldPlantings = new UntypedFormArray ([]) 
 
-    let pltgInventorySeededForages = new FormArray ([]) 
+    let pltgInventorySeededForages = new UntypedFormArray ([]) 
 
     var self = this
 
@@ -172,7 +140,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
       field.plantings.forEach( function(pltg) {
 
         // add seededForage if any
-        pltgInventorySeededForages = new FormArray ([])
+        pltgInventorySeededForages = new UntypedFormArray ([])
 
         let acresToBeSeeded = (pltg.inventoryUnseeded && pltg.inventoryUnseeded.acresToBeSeeded ) ? pltg.inventoryUnseeded.acresToBeSeeded : null
         let isUnseededInsurableInd = ( pltg.inventoryUnseeded ) ? pltg.inventoryUnseeded.isUnseededInsurableInd : false
@@ -198,7 +166,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
           addPlantingObject(pltg.cropYear, pltg.fieldId, pltg.insurancePlanId, pltg.inventoryFieldGuid, 
             pltg.lastYearCropCommodityId, pltg.lastYearCropCommodityName, pltg.lastYearCropVarietyId, pltg.lastYearCropVarietyName,
             pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, null,
-            pltg.inventoryUnseeded, new FormArray ([]), pltgInventorySeededForages ) ) )
+            pltg.inventoryUnseeded, new UntypedFormArray ([]), pltgInventorySeededForages ) ) )
         }
 
       )
@@ -206,7 +174,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
     } else { //empty plantings array
 
       fldPlantings.push( this.fb.group( 
-        addPlantingObject( this.cropYear, field.fieldId , this.insurancePlanId, '', '', '', '', '', 1, false, null, <InventoryUnseeded>{}, new FormArray ([]), new FormArray ([]))
+        addPlantingObject( this.cropYear, field.fieldId , this.insurancePlanId, '', '', '', '', '', 1, false, null, <InventoryUnseeded>{}, new UntypedFormArray ([]), new UntypedFormArray ([]))
        ))
 
     }
@@ -221,7 +189,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
       ))
     } 
     
-    let fld: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    let fld: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
     fld.push( this.fb.group(addAnnualFieldObject(field, fldPlantings, fldComments) ) )
   }
@@ -306,7 +274,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
   validateVariety(option, fieldIndex, plantingIndex, invSeededIndex){
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
     const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex]
 
@@ -376,7 +344,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   }
 
   private getVariety(fieldIndex: any, plantingIndex: any, invSeededIndex: any) {
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray;
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
     const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex];
 
@@ -388,7 +356,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
   private getVarietySddYear(fieldIndex: any, plantingIndex: any, invSeededIndex: any) {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray;
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
     const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex];
 
@@ -488,11 +456,11 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
   setInitialPlantInsurabilityOptions(){
     // for all fields
-    const formFields: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const formFields: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     
     for (let fieldIndex = 0; fieldIndex < formFields.controls.length; fieldIndex++) { 
 
-      let formField = formFields.controls[fieldIndex] as FormArray
+      let formField = formFields.controls[fieldIndex] as UntypedFormArray
 
       for (let plantingIndex = 0; plantingIndex < formField.value.plantings.length; plantingIndex++) {
 
@@ -506,7 +474,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   }
 
   checkPlantInsurability(fieldIndex, plantingIndex, invSeededIndex) {
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray;
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
     const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex];
 
@@ -581,8 +549,8 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
     }
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
-    const fld: FormArray  =  flds.controls.find( f => f.value.fieldId == planting.value.fieldId ) as FormArray 
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
+    const fld: UntypedFormArray  =  flds.controls.find( f => f.value.fieldId == planting.value.fieldId ) as UntypedFormArray 
 
     //in order to show Add Planting button, find the max planting number for that field that hasn't been deleted 
     let numPlantings = 0
@@ -622,8 +590,8 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
   onDeletePlanting(planting, invSeededIndex) {
     // find the field in the form that contains the planting to be deleted
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
-    const field: FormArray  =  flds.controls.find( f => f.value.fieldId == planting.value.fieldId ) as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
+    const field: UntypedFormArray  =  flds.controls.find( f => f.value.fieldId == planting.value.fieldId ) as UntypedFormArray
 
     // count the number of plantings for that field that have not been deleted
     let numPlantings = 0       
@@ -727,7 +695,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   }
 
   roundUpAcres(fieldIndex, plantingIndex, invSeededIndex){
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
     const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex]
 
@@ -739,7 +707,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   }
 
   roundUpUnseededAcres(fieldIndex, plantingIndex, invSeededIndex){
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
     const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex]
 
@@ -760,7 +728,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
   changeIsHiddenOnPrintoutInd(event, fieldIndex, plantingIndex, invSeededIndex) {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
     const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex]
 
@@ -776,13 +744,13 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
       var self = this
 
-      const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+      const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
-      flds.controls.forEach( function(field : FormControl) {
+      flds.controls.forEach( function(field : UntypedFormControl) {
 
         if (field.value.fieldId == planting.value.fieldId) {
 
-          let pltgInventorySeededForages = new FormArray ([])
+          let pltgInventorySeededForages = new UntypedFormArray ([])
 
           pltgInventorySeededForages.push( self.fb.group( 
             addSeededForagesObject(planting.value.inventoryFieldGuid, false, null, false, <InventorySeededForage>[])
@@ -793,7 +761,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
             addPlantingObject(planting.value.cropYear, planting.value.fieldId, planting.value.insurancePlanId, null , 
               planting.value.lastYearCropCommodityId, planting.value.lastYearCropCommodityName, planting.value.lastYearCropVarietyId, planting.value.lastYearCropVarietyName,
               planting.value.plantingNumber + 1, false, null,
-              <InventoryUnseeded>{}, new FormArray ([]) , pltgInventorySeededForages)
+              <InventoryUnseeded>{}, new UntypedFormArray ([]) , pltgInventorySeededForages)
 
           ) )          
         }
@@ -803,7 +771,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
   onInventoryCommentsDone(fieldId: number, uwComments: UnderwritingComment[]) {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
     updateComments(fieldId, uwComments, flds)
 
@@ -846,7 +814,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
         }  
       }
 
-      const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+      const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
       deleteFormField(field, flds, this.dialog, dataToSend, this.cdr)
     }
@@ -854,7 +822,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
   deleteNewField(field) {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     deleteNewFormField(field, flds)
     
     this.isMyFormDirty()
@@ -869,7 +837,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
     } else {
 
-      const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+      const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
       const dataToSend : AddLandPopupData = {
         fieldId: field.value.fieldId,
@@ -889,7 +857,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
   onAddNewField() {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
     AddNewFormField(this.fb, flds, this.dialog, this.cropYear, this.policyId, this.insurancePlanId, this.cdr)
 
@@ -925,9 +893,9 @@ getUpdatedInventoryContract() {
   var self = this;   
 
   // update unseededInventory values
-  const formFields: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+  const formFields: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
-  formFields.controls.forEach( function(formField : FormArray) {
+  formFields.controls.forEach( function(formField : UntypedFormArray) {
     // go through each field and update its planting information
     let updField = updatedInventoryContract.fields.find( f => f.fieldId == formField.value.fieldId)
 
@@ -1200,7 +1168,7 @@ getUpdatedInventoryContract() {
 isFormValid() {
 
     // check for empty legal land / field id for new fields
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
     for (var i = 0;  i < flds.controls.length ; i++) {
   
@@ -1270,7 +1238,7 @@ isFormValid() {
     // compare the original inventory contract data with the one in the form and set the flag if anything changed
     if (!this.inventoryContract) return false
 
-    const frmMain = this.viewModel.formGroup as FormGroup
+    const frmMain = this.viewModel.formGroup as UntypedFormGroup
 
     // check if the number of fields has changed
     if ( this.inventoryContract.fields.length !== frmMain.controls.fields.value.length  ) {
@@ -1278,10 +1246,10 @@ isFormValid() {
     }
 
     // start checking if the information for each field and planting was changed from the original one
-    const formFields: FormArray = frmMain.controls.fields as FormArray
+    const formFields: UntypedFormArray = frmMain.controls.fields as UntypedFormArray
 
     for (let i = 0; i < formFields.controls.length; i++){
-      let frmField = formFields.controls[i] as FormArray
+      let frmField = formFields.controls[i] as UntypedFormArray
 
       if (frmField.value.deletedByUserInd == true ) {
         return true
@@ -1303,7 +1271,7 @@ isFormValid() {
 
         // check the plantings
         for (let k = 0; k < frmField.value.plantings.controls.length; k++){
-          let frmPlanting = frmField.value.plantings.controls[k] as FormArray
+          let frmPlanting = frmField.value.plantings.controls[k] as UntypedFormArray
 
           let originalPlanting = originalField.plantings.find( p => p.plantingNumber == frmPlanting.value.plantingNumber)
 
@@ -1321,7 +1289,7 @@ isFormValid() {
             // now check inventory seeded forages 
             for (let n = 0; n < frmPlanting.value.inventorySeededForages.controls.length; n++) {
               
-              let frmInvSeededForages = frmPlanting.value.inventorySeededForages.controls[n] as FormArray
+              let frmInvSeededForages = frmPlanting.value.inventorySeededForages.controls[n] as UntypedFormArray
               let originalInvSeededForages = originalPlanting.inventorySeededForages.find( p => p.inventorySeededForageGuid == frmInvSeededForages.value.inventorySeededForageGuid)
 
               if (originalInvSeededForages) {
@@ -1427,7 +1395,7 @@ isFormValid() {
 
   drop(event: CdkDragDrop<string[]>) {
     
-    let fields = this.getViewModel().formGroup.controls.fields as FormArray
+    let fields = this.getViewModel().formGroup.controls.fields as UntypedFormArray
     dragField(event, fields)
 
     // this.isMyFormDirty()
@@ -1435,7 +1403,7 @@ isFormValid() {
   }
 
   isYearValid(fieldIndex, plantingIndex, invSeededIndex){
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
     const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex]
 
@@ -1480,7 +1448,7 @@ isFormValid() {
 
   isQuantityInsurable(fieldIndex, plantingIndex, invSeededIndex) {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray;
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
     const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex];
 
@@ -1527,7 +1495,7 @@ isFormValid() {
 
   isAnnualPlanting(fieldIndex, plantingIndex, invSeededIndex) {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
     const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex]
 
@@ -1566,7 +1534,7 @@ isFormValid() {
 
   onDateChange(fieldIndex, plantingIndex, invSeededIndex) {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
     const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex]
 
@@ -1576,7 +1544,7 @@ isFormValid() {
 
   validateSeedingDate(event, fieldIndex, plantingIndex, invSeededIndex){
   
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
     const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex]
 
@@ -1738,7 +1706,7 @@ isFormValid() {
 
   toggleHiddenOnPrintout(fieldIndex, plantingIndex) {  
     
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
     
     // get the current value
@@ -1749,7 +1717,7 @@ isFormValid() {
   }
 
   isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) {
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
 
     return pltg.controls['isHiddenOnPrintoutInd'].value
@@ -1758,7 +1726,7 @@ isFormValid() {
   isFieldHiddenOnPrintout(fieldIndex) {
 
     // return false unless at least one planting is not hidden
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     for (let i = 0; i < flds.controls[fieldIndex]['controls']['plantings'].value.controls.length; i++ ) {
 
       let pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[i]
@@ -1775,19 +1743,19 @@ isFormValid() {
   checkForHiddenFieldInTotals() {
 
     // raises a flag if there is an insured field with acres that is marked as hidden 
-    const frmMain = this.viewModel.formGroup as FormGroup
-    const formFields: FormArray = frmMain.controls.fields as FormArray
+    const frmMain = this.viewModel.formGroup as UntypedFormGroup
+    const formFields: UntypedFormArray = frmMain.controls.fields as UntypedFormArray
 
     for (let i = 0; i < formFields.controls.length; i++){
-      let frmField = formFields.controls[i] as FormArray
+      let frmField = formFields.controls[i] as UntypedFormArray
       	  
       for (let k = 0; k < frmField.value.plantings.controls.length; k++){
-        let frmPlanting = frmField.value.plantings.controls[k] as FormArray
+        let frmPlanting = frmField.value.plantings.controls[k] as UntypedFormArray
         
         // now check inventory seeded forages 
         for (let n = 0; n < frmPlanting.value.inventorySeededForages.controls.length; n++) {
                   
-          let inventorySeededForages = frmPlanting.value.inventorySeededForages.controls[n] as FormArray
+          let inventorySeededForages = frmPlanting.value.inventorySeededForages.controls[n] as UntypedFormArray
     
           let fieldAcres = !isNaN( parseFloat(inventorySeededForages.value.fieldAcres)) ?  parseFloat(inventorySeededForages.value.fieldAcres) : 0
 

@@ -1,5 +1,5 @@
 import {DomSanitizer} from "@angular/platform-browser";
-import {FormBuilder, FormArray} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormArray} from "@angular/forms";
 import {BaseComponentModel} from "../../common/base/base.component.model";
 
 
@@ -7,7 +7,7 @@ export class ForageDopComponentModel extends BaseComponentModel {
     
 
     constructor(protected sanitizer: DomSanitizer,
-                private fb: FormBuilder) {
+                private fb: UntypedFormBuilder) {
 
         super(sanitizer);
         
@@ -17,9 +17,9 @@ export class ForageDopComponentModel extends BaseComponentModel {
             declarationOfProductionDate: [''],
             balerWagonInfo: [''],
             totalLivestock: [''],
-            fields: new FormArray([]), // subform responsible for the field / commodity/estimated yield grid 
-            dopYieldContractCommodityForageList: new FormArray([]),
-            dopYieldFieldRollupForageList: new FormArray([]),
+            fields: new UntypedFormArray([]), // subform responsible for the field / commodity/estimated yield grid 
+            dopYieldContractCommodityForageList: new UntypedFormArray([]),
+            dopYieldFieldRollupForageList: new UntypedFormArray([]),
 
         });
     }

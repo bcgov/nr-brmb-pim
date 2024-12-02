@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { FormArray } from "@angular/forms";
+import { UntypedFormArray } from "@angular/forms";
 import { DopYieldContractCommodityForage } from "src/app/conversion/models-yield";
 
 @Component({
@@ -10,7 +10,7 @@ import { DopYieldContractCommodityForage } from "src/app/conversion/models-yield
 })
 export class ForageDopCommodityListComponent {
     @Input() commodities: Array<DopYieldContractCommodityForage>;
-    @Input() commoditiesFormArray: FormArray;
+    @Input() commoditiesFormArray: UntypedFormArray;
     @Input() decimalPrecision: number;
     @Input() isUnsaved: boolean;
 

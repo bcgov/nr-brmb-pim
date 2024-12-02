@@ -1,16 +1,15 @@
 import {DefaultService as CirrasUnderwritingAPIService} from "@cirras/cirras-underwriting-api";
 
 import {Injector} from "@angular/core";
-import {AppConfigService, TokenService} from "@wf1/core-ui";
-import {HttpErrorResponse, HttpHandler} from "@angular/common/http";
+import {AppConfigService, TokenService} from "@wf1/wfcc-core-lib";
+import { HttpErrorResponse, HttpHandler } from "@angular/common/http";
 import {catchError, defaultIfEmpty, map} from "rxjs/operators";
 import {forkJoin, of} from "rxjs";
 import {UUID} from "angular2-uuid";
 import {DATE_FORMATS} from "./index";
 import {CODE_TABLE_CACHE} from "./constants";
 import {ApplicationStateService} from "../services/application-state.service";
-import * as moment from "moment";
- 
+import moment, { Moment } from "moment";
 
 export function appInitFn(httpHandler: HttpHandler, injector: Injector): () => Promise<any> {
   const appStateService = injector.get(ApplicationStateService);
@@ -30,7 +29,7 @@ export function appInitFn(httpHandler: HttpHandler, injector: Injector): () => P
                       });
                   } else {
                       //resolve();
-                      resolve(defaultIfEmpty());
+                      resolve(defaultIfEmpty(''));
                   }
               }, 1000);
           });

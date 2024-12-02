@@ -3,45 +3,19 @@
 
 .forage-dop-contract-info {
     display: grid; 
-    grid-template-columns: 230px 300px 230px auto;
+    grid-template-columns: 210px 500px 200px auto;
 
     .cell {
+      padding-top: 6px;
+      padding-bottom: 16px;
         font-size: 15px;
         color: #424242;
         justify-content: center;  
       }
-
-      .fill {
-        justify-content: center;  
-    
-        & > * {
-          flex-grow: 1;
-        }
-    
-        // styling all textbox inputs within this css subclass 
-        .mat-form-field-infix {
-          width: 100%;
-          padding: 0.5em 0;
-          border-top: 10px solid transparent;
-        }
-    
-        .mat-form-field-appearance-fill .mat-form-field-flex {
-          background-color: transparent;
-        }
-    
-        .mat-form-field-appearance-fill .mat-form-field-infix {
-          padding: 0;
-        }
-    
-        .mat-form-field-appearance-fill .mat-form-field-flex {
-          padding: 0 0.75em 0 0.75em;
-        }
-    
-      }
 }
 
 .question-single{
-  width: 2030px;
+  width: 1730px;
   border-radius: 5px 5px 5px 5px;
   padding-top: 16px;
   padding-left: 8px;    

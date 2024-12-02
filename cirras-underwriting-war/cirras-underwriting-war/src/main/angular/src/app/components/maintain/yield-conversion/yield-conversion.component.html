@@ -23,7 +23,7 @@
                                 <span>{{ defaultUnitForPlan }} to {{ option.description }}</span>
                             </option>
                         </select>
-                        <button mat-raised-button color="secondary" (click)="onViewYieldUnits()" class="ms-choice"
+                        <button mat-raised-button class="secondary" (click)="onViewYieldUnits()" class="ms-choice"
                             style="width: 132px;">
                             <mat-icon class="button-mat-icon">format_list_bulleted</mat-icon>Plan Units
                         </button>
@@ -42,13 +42,13 @@
                     <div><!-- empty div to account for space when there is no warning --> </div>
                 </ng-template>
                 <div>
-                    <button *ngIf="securityUtilService.canEditYieldConversion()" mat-raised-button color="secondary"
+                    <button *ngIf="securityUtilService.canEditYieldConversion()" mat-raised-button class="secondary"
                         [disabled]="!hasDataChanged" (click)="onCancel()">
                         Clear Changes
                     </button>
                 </div>
                 <div>
-                    <button *ngIf="securityUtilService.canEditYieldConversion()" mat-raised-button color="primary"
+                    <button *ngIf="securityUtilService.canEditYieldConversion()" mat-raised-button class="primary"
                         [disabled]="!hasDataChanged" (click)="onSave()">
                         Save
                     </button>
@@ -85,20 +85,20 @@
 
                 <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
                     <div class="plcy-inv-field-box" style="width:1000px;">
-                        <div class="inventory-header border-left" style="width:500px;">Commodity</div>
-                        <div class="inventory-header" style="width:500px;">Conversion Factor</div>
+                        <div class="inventory-header border-left" style="width:300px;">Commodity</div>
+                        <div class="inventory-header" style="width:280px;">Conversion Factor</div>
                     </div>
 
                     <div class="plcy-inv-fld-tbl-inner-wrapper flex-y-grow" style="width:1021px;">
                         <div class="plcy-inv-field-box"
                             *ngFor="let unitConversion of getViewModel().formGroup.controls.yieldMeasUnitConversionList['controls']; index as rowIndex"
                             [formGroup]="unitConversion">
-                            <div class="inventory-cell inventory-border border-left" [ngStyle]="{'width': '500px'}">
+                            <div class="inventory-cell inventory-border border-left" [ngStyle]="{'width': '300px'}">
                                 {{ unitConversion.value.commodityName | titlecase }}
                             </div>
-                            <div class="inventory-cell inventory-border"
-                                [ngStyle]="{'width': '500px', 'display': 'flex', 'justify-content': 'space-between'}">
-                                <mat-form-field appearance="none">
+                            <div class="inventory-fill inventory-cell inventory-border"
+                                [ngStyle]="{'width': '280px', 'display': 'flex', 'justify-content': 'space-between'}">
+                                <mat-form-field appearance="fill">
                                     <input matInput formControlName="conversionFactor" maxlength="10"
                                         (keypress)="numberOnly($event)" (keyup)="isMyFormDirty()">
                                 </mat-form-field>

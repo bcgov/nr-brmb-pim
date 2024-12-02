@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
@@ -13,7 +13,7 @@ export class PlantInsurabilityComponent implements OnInit {
   dialogType = DIALOG_TYPE.INFO;
 
   dataReceived: any;
-  varietyPlantInsForm: FormGroup;
+  varietyPlantInsForm: UntypedFormGroup;
 
   plantInsurabilityOptions = getCodeOptions("plant_insurability_type_code");  
 
@@ -24,7 +24,7 @@ export class PlantInsurabilityComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<PlantInsurabilityComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,  
-    private fb: FormBuilder,  
+    private fb: UntypedFormBuilder,  
     ) {  
 
       if (data) {
@@ -36,7 +36,7 @@ export class PlantInsurabilityComponent implements OnInit {
   ngOnInit(): void {
     
     // initialize the form
-    let plantIns = new FormArray([])
+    let plantIns = new UntypedFormArray([])
 
     for (let i = 0; i < this.plantInsurabilityOptions.length; i ++) {
       plantIns.push( this.fb.group( {  

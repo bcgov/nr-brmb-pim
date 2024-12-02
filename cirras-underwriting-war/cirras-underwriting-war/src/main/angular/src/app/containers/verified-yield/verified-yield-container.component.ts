@@ -1,7 +1,7 @@
 import { BaseContainer } from "../base/base-container.component";
-import {select, Store} from "@ngrx/store";
+import {select} from "@ngrx/store";
 import {Observable} from "rxjs";
-import {ChangeDetectorRef, Component, OnInit} from "@angular/core";
+import { Component, OnInit} from "@angular/core";
 import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
@@ -14,10 +14,6 @@ import {
 import { UwContract } from "src/app/conversion/models";
 import { selectGrowerContract } from "src/app/store/grower-contract/grower-contract.selector";
 import { VerifiedYieldContract } from "src/app/conversion/models-yield";
-import { RootState } from "src/app/store";
-import { Router } from "@angular/router";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { ApplicationStateService } from "src/app/services/application-state.service";
 import { VERIFIED_YIELD_COMPONENT_ID } from "src/app/store/verified-yield/verified-yield.state";
 import { selectVerifiedYieldContract } from "src/app/store/verified-yield/verified-yield.selectors";
 
@@ -33,7 +29,6 @@ import { selectVerifiedYieldContract } from "src/app/store/verified-yield/verifi
         ></verified-yield>`, 
     providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
 })
-
 export class VerifiedYieldContainer extends BaseContainer implements OnInit {
 
     growerContract$: Observable<UwContract> = this.store.pipe(select(selectGrowerContract()));
@@ -59,13 +54,5 @@ export class VerifiedYieldContainer extends BaseContainer implements OnInit {
         });
     }
 
-    constructor(
-        protected store: Store<RootState>,
-        protected router: Router,
-        public snackBar: MatSnackBar,
-        protected applicationStateService: ApplicationStateService,
-        protected cdr: ChangeDetectorRef
-    ) {
-        super(store, router, snackBar, applicationStateService, cdr);
-    }
+    
 }

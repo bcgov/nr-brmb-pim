@@ -1,6 +1,5 @@
 import {AbstractControl, ValidatorFn} from "@angular/forms";
-import * as moment from "moment";
-
+import moment, { Moment } from "moment";
 
 export function phoneNumberValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {

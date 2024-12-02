@@ -1,13 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AnnualFieldRsrc, AnnualFieldListRsrc, LegalLandRsrc, AddFieldValidationRsrc, InventoryContractRsrc, InventoryField, UnderwritingComment, RemoveFieldValidationRsrc } from '@cirras/cirras-underwriting-api';
-import { AppConfigService, TokenService } from '@wf1/core-ui';
-import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest';
-import { LegalLandList } from 'src/app/conversion/models';
-import { makeTitleCase, setHttpHeaders } from 'src/app/utils';
+import { RemoveFieldValidationRsrc } from '@cirras/cirras-underwriting-api';
+import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
+import { setHttpHeaders } from 'src/app/utils';
 import { LAND_UPDATE_TYPE } from 'src/app/utils/constants';
+import { DIALOG_TYPE } from '../../dialogs/base-dialog/base-dialog.component';
 
 
 export interface RemoveFieldPopupData {
@@ -29,6 +28,9 @@ export interface RemoveFieldPopupData {
 })
 export class RemoveFieldComponent implements OnInit {
 
+  titleLabel = "Remove or Delete Field" 
+  dialogType = DIALOG_TYPE.INFO;
+
   dataReceived : RemoveFieldPopupData;
   validation: RemoveFieldValidationRsrc;
   deleteToolTip: String;
@@ -36,7 +38,7 @@ export class RemoveFieldComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<RemoveFieldComponent>,
     @Inject(MAT_DIALOG_DATA) public data: RemoveFieldPopupData,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private tokenService: TokenService,
     private appConfig: AppConfigService, 
     private http: HttpClient   ) {  
@@ -44,6 +46,10 @@ export class RemoveFieldComponent implements OnInit {
       if (data) {
         //capture the data that comes from the main page
         this.dataReceived = data;
+
+        this.titleLabel = "Remove or Delete Field " + 
+          ((this.dataReceived && this.dataReceived.fieldId) ? 
+            (": " + this.dataReceived. fieldLabel + " (" + this.dataReceived.fieldId + ")") : "")
       } 
     }
 

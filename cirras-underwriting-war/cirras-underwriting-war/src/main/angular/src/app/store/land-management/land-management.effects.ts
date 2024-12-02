@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {Action, Store} from "@ngrx/store";
 import {DefaultService as CirrasUnderwritingAPIService, LegalLandRsrc, UwContractListRsrc} from "@cirras/cirras-underwriting-api";
-import {SortDirection, TokenService} from "@wf1/core-ui";
+import {SortDirection, TokenService} from "@wf1/wfcc-core-lib";
 import {UUID} from "angular2-uuid";
 import {Observable, of} from 'rxjs';
 import {catchError, concatMap, debounceTime, map, switchMap, withLatestFrom} from 'rxjs/operators';
@@ -144,7 +144,7 @@ export class LandListEffects {
     switchMap(
         ([action, store]) => {
             let typedAction = <ManageLegalLandAction>action;
-            let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
 
             const legalLand = typedAction.payload.legalLand 
@@ -186,7 +186,7 @@ updateLegalLand: Observable<Action> = createEffect(() => this.actions.pipe(
     switchMap(
         ([action, store]) => {
             let typedAction = <ManageLegalLandAction>action;
-            let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
             let payload = <LegalLand>typedAction.payload.legalLand;
 
@@ -230,7 +230,7 @@ deleteLegalLand: Observable<Action> = createEffect(() => this.actions.pipe(
   switchMap(
       ([action, store]) => {
           let typedAction = <ManageLegalLandAction>action;
-          let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+          let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
           let authToken = this.tokenService.getOauthToken();
           let payload = <LegalLand>typedAction.payload.legalLand;
           

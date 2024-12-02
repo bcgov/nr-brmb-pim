@@ -1,23 +1,10 @@
-import {AfterViewInit, ChangeDetectorRef, Directive, Injectable, Input, OnChanges, SimpleChanges} from "@angular/core";
+import {AfterViewInit, Directive, Injectable, Input, OnChanges, SimpleChanges} from "@angular/core";
 import {BaseComponent} from "../base/base.component";
 import {PaginationInstance} from "ngx-pagination";
 import {PagedCollection} from "../../../conversion/models";
 import {PagingInfoRequest, PagingSearchState} from "../../../store/application/application.state";
 import {getDescriptionForCode} from "../../../utils/code-table-utils";
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
-import { DomSanitizer, Title } from "@angular/platform-browser";
-import { Store } from "@ngrx/store";
-import { RootState } from "src/app/store";
-import { FormBuilder } from "@angular/forms";
-import { MatDialog } from "@angular/material/dialog";
-import { ApplicationStateService } from "src/app/services/application-state.service";
-import { SecurityUtilService } from "src/app/services/security-util.service";
-import { AppConfigService, TokenService } from "@wf1/core-ui";
-import { ConnectionService } from "ngx-connection-service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { Overlay } from "@angular/cdk/overlay";
-import { HttpClient } from "@angular/common/http";
-import { DecimalPipe } from "@angular/common";
+import { NavigationEnd} from "@angular/router";
 
 @Directive()
 @Injectable()
@@ -25,26 +12,6 @@ export class CollectionComponent extends BaseComponent implements OnChanges, Aft
     @Input() collection: PagedCollection;
     @Input() searchState: PagingSearchState;
     @Input() reportCollection: PagedCollection;
-
-    constructor(protected router: Router,
-        protected route: ActivatedRoute,
-        protected sanitizer: DomSanitizer,
-        protected store: Store<RootState>,
-        protected fb: FormBuilder,
-        protected dialog: MatDialog,
-        protected applicationStateService: ApplicationStateService,
-        public securityUtilService: SecurityUtilService,                
-        protected tokenService: TokenService,
-        protected connectionService: ConnectionService,
-        protected snackbarService: MatSnackBar,
-        protected overlay: Overlay,
-        protected cdr: ChangeDetectorRef,
-        protected appConfigService: AppConfigService,
-        protected http: HttpClient,
-        protected titleService: Title,
-        protected decimalPipe: DecimalPipe) {
-        super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
-    }
 
     baseRoute = undefined;
     searchText = undefined; //not use, but leave this.

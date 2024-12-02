@@ -36,10 +36,6 @@ export class BaseContainer implements OnDestroy {
         }
     }
 
-    // getIsMobileResolution(): boolean {
-    //     return this.applicationStateService.getIsMobileResolution();
-    // }
-
     getAssociatedComponentIds(): string[] {
         return [];
     }

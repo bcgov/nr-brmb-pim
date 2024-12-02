@@ -1,4 +1,4 @@
-import {SearchState} from "@wf1/core-ui";
+import {SearchState} from "@wf1/wfcc-core-lib";
 
 export enum ERROR_TYPE {
   VALIDATION,

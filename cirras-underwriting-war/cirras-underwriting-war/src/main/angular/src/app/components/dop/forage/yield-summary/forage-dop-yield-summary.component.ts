@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { DopYieldFieldRollupForage } from 'src/app/conversion/models-yield';
 import { RootState } from 'src/app/store';
@@ -15,11 +15,11 @@ import { makeNumberOnly } from 'src/app/utils';
 export class ForageDopYieldSummaryComponent{
 
   @Input() fieldRollup: DopYieldFieldRollupForage;
-  @Input() fieldRollupFormArray: FormArray;
+  @Input() fieldRollupFormArray: UntypedFormArray;
 
-  fieldRollupFormGroup: FormGroup;
+  fieldRollupFormGroup: UntypedFormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: UntypedFormBuilder) {
   }
 
   ngOnInit(): void {

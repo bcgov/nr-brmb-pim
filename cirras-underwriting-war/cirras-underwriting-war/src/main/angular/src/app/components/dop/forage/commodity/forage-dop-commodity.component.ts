@@ -1,6 +1,6 @@
 import { DecimalPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { DopYieldContractCommodityForage } from "src/app/conversion/models-yield";
 import { RootState } from "src/app/store";
@@ -17,12 +17,12 @@ import { PLANT_DURATION } from "src/app/utils/constants";
 })
 export class ForageDopCommodityComponent implements OnInit {
     @Input() commodity: DopYieldContractCommodityForage;
-    @Input() commoditiesFormArray: FormArray;
+    @Input() commoditiesFormArray: UntypedFormArray;
     @Input() decimalPrecision: number;
 
-    commodityFormGroup: FormGroup;
+    commodityFormGroup: UntypedFormGroup;
 
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private store: Store<RootState>,
         private decimalPipe: DecimalPipe) {
     }

@@ -1,27 +1,7 @@
-<div class="dialog-form"
-     cdkDrag
-     cdkDragRootElement=".cdk-overlay-pane"
-     cdkDragBoundary=".cdk-overlay-container">
-
-     <div class="dialog-drag-handle" cdkDragHandle>
-        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
-        <!-- <g transform="translate(0 -5)"> -->
-            <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
-            <!-- <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 4v3H7l5 5 5-5h-3v-3z"></path>  -->
-            <path d="M0 0h24v24H0z" fill="none"></path>
-        <!-- </g> -->
-        </svg>
-    </div>
-
+<cuws-base-dialog [titleLabel]="titleLabel" [type]="dialogType" class="remove-field">
+    <div mat-dialog-content class="grow">
 
     <form [formGroup]="linkPlantingForm">
-        <h3 style="padding-left: 10px; font-weight: 600;">
-            Link Planting for Field
-            {{ (dataReceived)  ?  
-            ": " + dataReceived.fieldLabel + " (Field Id: " + dataReceived.fieldId + "), Location: " + dataReceived.otherLegalDescription
-                : "" }} </h3>
-        <hr>
-
       
         <h4 *ngIf="dataReceived && dataReceived.linkedPolicies && dataReceived.linkedPolicies.length > 0 && dataReceived.isFieldLinked == false" style="padding-left: 20px;">
             Linked Forage Policies
@@ -84,7 +64,7 @@
                             </mat-form-field>
                         </div>
                         <div class="grid-item">
-                            <button mat-raised-button color="primary" (click)="onPolicyValidate()" class="button-large-text" style="padding-left: 10px;;" >
+                            <button mat-raised-button class="primary" (click)="onPolicyValidate()" class="button-large-text" style="padding-left: 10px;;" >
                                 Validate
                             </button>
                         </div> 
@@ -121,27 +101,24 @@
                 <div><span style="color:orangered">{{ msg.message }}</span></div>
             </div>
         </div>
-
-        <div class="form-row dialog-controls">
-            <button mat-raised-button color="primary" (click)="onCancelChanges()" class="button-large-text">
-                <mat-icon style="padding-right: 4px; margin-right: 4px;">cancel_presentation</mat-icon>Cancel
-            </button>
-            &nbsp;
-            <button 
-                *ngIf="isAddNewLinkedPlantingMsgVisible()" 
-                mat-raised-button 
-                color="primary" 
-                [disabled]="hasSaveStarted == true"
-                (click)="onCreateLink()" 
-                class="button-large-text" >
-                    <mat-icon style="padding-right: 4px; margin-right: 4px;">save</mat-icon>Create Link
-            </button>
-            <button *ngIf="dataReceived && dataReceived.isPlantingLinked" mat-raised-button color="primary" (click)="onRemoveLink()" class="button-large-text" >
-                <mat-icon style="padding-right: 4px; margin-right: 4px;">delete</mat-icon>Remove Link
-            </button>
-
-        </div>
-
-
     </form>
-</div>
+    </div>
+    <div mat-dialog-actions align="end">
+        <button mat-raised-button class="secondary" (click)="onCancelChanges()">
+            <mat-icon style="padding-right: 4px; margin-right: 4px;">cancel_presentation</mat-icon>Cancel
+        </button>
+        &nbsp;
+        <button 
+            *ngIf="isAddNewLinkedPlantingMsgVisible()" 
+            mat-raised-button 
+            class="primary" 
+            [disabled]="hasSaveStarted == true"
+            (click)="onCreateLink()" >
+                <mat-icon style="padding-right: 4px; margin-right: 4px;">save</mat-icon>Create Link
+        </button>
+        <button *ngIf="dataReceived && dataReceived.isPlantingLinked" mat-raised-button class="secondary" (click)="onRemoveLink()">
+            <mat-icon style="padding-right: 4px; margin-right: 4px;">delete</mat-icon>Remove Link
+        </button>
+
+    </div>    
+</cuws-base-dialog>

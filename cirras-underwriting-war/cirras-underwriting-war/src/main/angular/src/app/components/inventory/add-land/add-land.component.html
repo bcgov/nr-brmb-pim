@@ -33,7 +33,7 @@
                 </mat-form-field>
             </div>
             <div class="grid-item">
-                <button mat-raised-button color="secondary" (click)="onLegalLandSearch()" class="button-large-text" style=" margin-left:60px;">
+                <button mat-raised-button class="secondary" (click)="onLegalLandSearch()" style=" margin-left:60px;">
                     <mat-icon style="padding-right: 4px; margin-right: 4px;">search</mat-icon>Search
                 </button>
             </div> 
@@ -274,7 +274,7 @@
 </div>
 <div mat-dialog-actions align="end">
     <span *ngIf="showProceedButton" style="padding-right:160px;">To save field, click done and then click save on the main screen.</span>
-    <button mat-raised-button color="secondary" (click)="onCancelChanges()">Cancel</button>
-    <button *ngIf="showProceedButton" mat-raised-button color="primary" (click)="onProceed()">Done</button>
+    <button mat-raised-button class="secondary" (click)="onCancelChanges()">Cancel</button>
+    <button *ngIf="showProceedButton" mat-raised-button class="primary" (click)="onProceed()">Done</button>
 </div>
 </cuws-base-dialog>

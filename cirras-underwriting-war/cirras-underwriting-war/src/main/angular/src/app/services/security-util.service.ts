@@ -1,5 +1,5 @@
 import {Injectable, Injector} from "@angular/core";
-import {TokenService} from "@wf1/core-ui";
+import {TokenService} from "@wf1/wfcc-core-lib";
 import {ROLES_UI, SCOPES_UI} from "../utils/scopes";
 
 

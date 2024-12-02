@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormArray } from '@angular/forms';
+import { UntypedFormArray } from '@angular/forms';
 import { DopYieldFieldRollupForage } from 'src/app/conversion/models-yield';
 
 @Component({
@@ -14,7 +14,7 @@ import { DopYieldFieldRollupForage } from 'src/app/conversion/models-yield';
 export class ForageDopYieldSummaryListComponent {
 
   @Input() fieldRollupList: Array<DopYieldFieldRollupForage>;
-  @Input() fieldRollupFormArray: FormArray;
+  @Input() fieldRollupFormArray: UntypedFormArray;
   @Input() isUnsaved: boolean;
 
   get totalFieldAcresTotal(): number {

@@ -1,12 +1,4 @@
 <cuws-base-dialog [titleLabel]="titleLabel" [type]="dialogType">
-
-    <!-- <div class="dialog-drag-handle" cdkDragHandle>
-        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
-            <path d="M0 0h24v24H0z" fill="none"></path>
-        </svg>
-    </div> -->
-
     <div mat-dialog-content>
     <div class="row-group-left">
     <form [formGroup]="gradeModifierTypesForm">
@@ -15,7 +7,7 @@
 
             <div *ngIf="hasDataChanged == true" class="unsaved-changes-warning">
               
-                <span #el matTooltip="" style="margin-left: 10px; margin-right: 20px;">
+                <span #el matTooltip="" style="margin-left: 6px; margin-right: 10px;">
                     <mat-icon [ngStyle]="{'color':'orangered', 'font-size':'xx-large'}">warning</mat-icon>
                   </span>
                  <span style="font-size: large; color:orangered">
@@ -39,35 +31,39 @@
                     [formGroup]="gradeModifierType"        
                     style="display: contents;">
 
-                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true"  class="gmt-info-fill border-right border-bottom border-left">   
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true"  class="inventory-fill border-right border-bottom border-left">   
                         <mat-form-field appearance="fill" *ngIf="gradeModifierType.value.addedByUserInd == true">
                             <input matInput formControlName="gradeModifierTypeCode" maxlength="10">
                         </mat-form-field>
+                        <mat-icon *ngIf="gradeModifierType.value.addedByUserInd == true" style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
                         <span style="padding-left: 6px;">{{ ( gradeModifierType.value.addedByUserInd) ? "" : gradeModifierType.value.gradeModifierTypeCode }}</span>
                     </div>
 
-                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="gmt-info-fill border-right border-bottom" style="width:190px;" >
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="inventory-fill border-right border-bottom" style="width:190px;" >
                         <mat-form-field appearance="fill">
                             <input matInput formControlName="description" maxlength="100">
                         </mat-form-field>
+                        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
                     </div>
 
-                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="gmt-info-fill border-right border-bottom" style="width:100px;" >
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="inventory-fill border-right border-bottom" style="width:100px;" >
                         <mat-form-field appearance="fill" *ngIf="gradeModifierType.value.addedByUserInd == true">
                             <input matInput formControlName="effectiveYear" maxlength="4" (keypress)="numberOnly($event)">
                         </mat-form-field>
+                        <mat-icon *ngIf="gradeModifierType.value.addedByUserInd == true" style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
                         <span style="padding-left: 6px;">{{  ( gradeModifierType.value.addedByUserInd) ? "" :  gradeModifierType.value.effectiveYear }}</span>
                     </div>
 
-                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="gmt-info-fill border-right border-bottom" style="width:100px;" >
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="inventory-fill border-right border-bottom" style="width:100px;" >
                         <mat-form-field appearance="fill">
                             <input matInput formControlName="expiryYear"                                                             
                                     (keypress)="numberOnly($event)" 
                                     maxlength="4">
                         </mat-form-field>
+                        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
                     </div>
 
-                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="gmt-info-fill border-right border-bottom" style="width:30px;" >
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="border-right border-bottom" style="width:30px;" >
                         <mat-icon *ngIf="securityUtilService.canEditGradeModifiers() && gradeModifierType.value.deleteAllowedInd == true"
                                 matTooltip="Delete Grade Modifier Type" 
                                 [ngStyle]="{'color':'red'}"
@@ -83,16 +79,16 @@
     </div>
 
     <div mat-dialog-actions align="end">
-        <button mat-raised-button color="secondary" (click)="onCancelChanges()">
+        <button mat-raised-button class="secondary" (click)="onCancelChanges()">
             Cancel
         </button>
         &nbsp;
-        <button *ngIf="securityUtilService.canEditGradeModifiers()" mat-raised-button color="primary"
+        <button *ngIf="securityUtilService.canEditGradeModifiers()" mat-raised-button class="primary"
             (click)="onAddGradeModifierType()">
             Add
         </button>
         &nbsp;
-        <button *ngIf="securityUtilService.canEditGradeModifiers()" mat-raised-button color="primary" (click)="onSave()">
+        <button *ngIf="securityUtilService.canEditGradeModifiers()" mat-raised-button class="primary" (click)="onSave()">
             Save
         </button>
     </div>

@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {Action, Store} from "@ngrx/store";
 import {DefaultService as CirrasUnderwritingAPIService, InventoryContractRsrc} from "@cirras/cirras-underwriting-api";
-import {AppConfigService, TokenService} from "@wf1/core-ui";
+import {AppConfigService, TokenService} from "@wf1/wfcc-core-lib";
 import {UUID} from "angular2-uuid";
 import {Observable, of} from 'rxjs';
 import {catchError, concatMap, debounceTime, map, switchMap, withLatestFrom} from 'rxjs/operators';
@@ -118,7 +118,7 @@ addNewInventory: Observable<Action> = createEffect(() => this.actions.pipe(
     switchMap(
         ([action, store]) => {
             let typedAction = <InventoryContractAction>action;
-            let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
 
             const policyId = typedAction.policyId
@@ -164,7 +164,7 @@ updateInventory: Observable<Action> = createEffect(() => this.actions.pipe(
     switchMap(
         ([action, store]) => {
             let typedAction = <InventoryContractAction>action;
-            let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
             let payload = <InventoryContract>typedAction.payload.inventoryContract;
 
@@ -271,7 +271,7 @@ deleteInventory: Observable<Action> = createEffect(() => this.actions.pipe(
   switchMap(
       ([action, store]) => {
           let typedAction = <DeleteInventoryContractAction>action;
-          let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+          let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
           let authToken = this.tokenService.getOauthToken();
 
           let payload = typedAction.payload;

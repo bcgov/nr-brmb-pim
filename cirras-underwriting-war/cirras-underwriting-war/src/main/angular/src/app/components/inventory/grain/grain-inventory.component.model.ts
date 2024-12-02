@@ -1,5 +1,5 @@
 import {DomSanitizer} from "@angular/platform-browser";
-import {FormBuilder, FormArray} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormArray} from "@angular/forms";
 import {BaseComponentModel} from "../../common/base/base.component.model";
 import {InventoryContract} from "../../../conversion/models";
 
@@ -7,7 +7,7 @@ export class GrainInventoryComponentModel extends BaseComponentModel {
     inventoryContract: InventoryContract
 
     constructor(protected sanitizer: DomSanitizer,
-                private fb: FormBuilder,
+                private fb: UntypedFormBuilder,
                 private inventoryContractData: InventoryContract) {
 
         super(sanitizer);
@@ -21,8 +21,8 @@ export class GrainInventoryComponentModel extends BaseComponentModel {
             otherChangesComment:[''],           
             grainFromPrevYearInd: [''] ,
             showMoreColumns:    [false],
-            fields: new FormArray([]),
-            commodities: new FormArray([]),
+            fields: new UntypedFormArray([]),
+            commodities: new UntypedFormArray([]),
         });
     }
 
