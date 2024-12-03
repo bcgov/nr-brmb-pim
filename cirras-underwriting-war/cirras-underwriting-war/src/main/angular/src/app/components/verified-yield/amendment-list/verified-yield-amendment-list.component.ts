@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { VerifiedYieldAmendment } from 'src/app/conversion/models-yield';
-import { CropCommodityList } from 'src/app/conversion/models';
+import { AnnualField, CropCommodityList } from 'src/app/conversion/models';
 import { VERIFIED_YIELD_AMENDMENT_CODE } from 'src/app/utils/constants';
 
 @Component({
@@ -10,18 +10,55 @@ import { VERIFIED_YIELD_AMENDMENT_CODE } from 'src/app/utils/constants';
   styleUrl: './verified-yield-amendment-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VerifiedYieldAmendmentListComponent {
+export class VerifiedYieldAmendmentListComponent implements OnChanges{
   @Input() verifiedYieldContractGuid: string;
   @Input() amendments: Array<VerifiedYieldAmendment>;
   @Input() amendmentsFormArray: UntypedFormArray;
   @Input() isUnsaved: boolean;
   @Input() cropCommodityList: CropCommodityList
+  @Input() fields: Array<AnnualField>;
 
   amendmentFormGroup: UntypedFormGroup;
+  fieldOptions = [];
+  cropCommodityOptions = [];
 
   constructor(private fb: UntypedFormBuilder,
     ){
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.cropCommodityList && this.cropCommodityList) {
+      this.setCropCommodityOptions()
+    }
+
+    if (changes.fields && this.fields) {
+      this.setFieldsOptions()
+    }
+
+  }
+
+  setCropCommodityOptions() {
+    //TODO - create a list of crop commodity options including pedigree to load in the autocomplete
+  }
+
+  setFieldsOptions() {
+    var self = this
+
+    self.fieldOptions.push({
+      fieldId: null,
+      fieldLabel: "",
+      verifiableCommodities: []
+    })
+
+    this.fields.forEach(f => {
+      self.fieldOptions.push({
+        fieldId: f.fieldId,
+        fieldLabel: f.fieldLabel + "(ID: " + f.fieldId + ")",
+        verifiableCommodities: f.verifiableCommodities
+      })
+    })
+  }
+
 
   addAmendment() {
 

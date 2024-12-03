@@ -6,7 +6,9 @@ import { CropCommodityList } from 'src/app/conversion/models';
 import { VerifiedYieldAmendment } from 'src/app/conversion/models-yield';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { RootState } from 'src/app/store';
-import { makeNumberOnly } from 'src/app/utils';
+import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
+import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
+import { makeNumberOnly, makeTitleCase } from 'src/app/utils';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
 
 @Component({
@@ -20,13 +22,16 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
   @Input() amendment: VerifiedYieldAmendment;
   @Input() amendmentsFormArray: UntypedFormArray;
   @Input() decimalPrecision: number;
-  @Input() cropCommodityList: CropCommodityList
+
+  @Input() fieldOptions;
+  @Input() cropCommodityOptions;
 
   amendmentFormGroup: UntypedFormGroup;
 
   amendmentOptions = getCodeOptions("verified_yield_amendment_code"); // get the amendment code
-  fieldOptions = [];
-  cropCommodityOptions = [];
+  
+  filteredFieldOptions = [];
+
 
   constructor(private fb: UntypedFormBuilder,
     private store: Store<RootState>,
@@ -36,15 +41,11 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.amendment && this.amendment) {
-      this.setupForm()
-    }
-
-    if (changes.cropCommodityList && this.cropCommodityList) {
-      this.setupCropCommodityOptions()
+      this.setForm()
     }
   }
 
-  setupForm() {
+  setForm() {
     this.amendmentFormGroup = this.fb.group({
       verifiedYieldAmendmentGuid: [this.amendment.verifiedYieldAmendmentGuid],
       verifiedYieldAmendmentCode: [this.amendment.verifiedYieldAmendmentCode],
@@ -62,24 +63,74 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
     this.amendmentsFormArray.push(this.amendmentFormGroup);
   }
 
-  setupCropCommodityOptions() {
-    //TODO - create a list of crop commodity options including pedigree to load in the autocomplete
-
-  }
-
   numberOnly(event): boolean {
       return makeNumberOnly(event);
   }
 
   updateYieldPerAcre() {
-    //TODO
+    let yieldPerAcre = this.amendmentFormGroup.value.yieldPerAcre;
+    yieldPerAcre = this.decimalPipe.transform(yieldPerAcre, '1.0-3')?.replace(',', '');
+    this.amendment.yieldPerAcre = parseFloat(yieldPerAcre) || null;
+
+    this.amendmentFormGroup.controls['yieldPerAcre'].setValue(yieldPerAcre)
+
+    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true));
   }
 
   updateAcres() {
-    //TODO
+    let acres = this.amendmentFormGroup.value.acres;
+    acres = this.decimalPipe.transform(acres, '1.0-1')?.replace(',', '');
+    this.amendment.acres = parseFloat(acres) || null;
+
+    this.amendmentFormGroup.controls['acres'].setValue(acres)
+
+    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true));
+  }
+
+  updateRationale(){
+    let rationale = this.amendmentFormGroup.value.rationale;
+    
+    this.amendment.rationale = rationale || null;
+
+    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true)); 
   }
 
   onDeleteAmendment() {
-    
+    // TODO
+    // deletes a row
+    // if the guid is null delete the row from the array and the formArray
+    // if there is a guid then hide it in the page and set deletedByUserInd to true
+
   }
+
+
+  displayFieldsFn(fld: any): string {
+    return fld && fld.fieldLabel ? makeTitleCase( fld.fieldLabel)  : '';
+  }
+
+  fieldFocus() {
+    debugger
+    
+    // // prepare the list of varieties based on the selected crop id
+    
+    // const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
+    // const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
+    // const invSeeded = pltg.controls['inventorySeededGrains'].value.controls[invSeededIndex]
+	
+    // let selectedCropCommodityId = invSeeded.controls['cropCommodityId'].value
+
+    // if (selectedCropCommodityId) {
+
+    //   this.filteredSeededVarietyOptions = 
+    //         this.seededVarietyOptions.filter(option => 
+    //                                         ( option.cropCommodityId == selectedCropCommodityId) )
+
+    // } else {
+      
+      //return all fields
+      // this.filteredSeededVarietyOptions = this.seededVarietyOptions.slice()
+      this.filteredFieldOptions = this.fieldOptions.slice()
+    // }
+  }
+
 }

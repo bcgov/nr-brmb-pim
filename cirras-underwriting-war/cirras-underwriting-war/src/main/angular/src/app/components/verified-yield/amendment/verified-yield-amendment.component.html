@@ -17,10 +17,12 @@
                 type="text" 
                 matInput 
                 formControlName="fieldId" 
-                [matAutocomplete]="autoFieldId">
-            <mat-autocomplete #autoFieldId="matAutocomplete">
+                [matAutocomplete]="autoFieldId"
+                (focus)="fieldFocus()">
+            <mat-autocomplete #autoFieldId="matAutocomplete"
+                [displayWith]="displayFieldsFn">
             <mat-option *ngFor="let option of fieldOptions" [value]="option">
-                {{ option.varietyName | titlecase }}
+                {{ option.fieldLabel | titlecase }}
             </mat-option>
             </mat-autocomplete>
         </mat-form-field>  
@@ -61,8 +63,15 @@
             matTooltip="Editable field">edit</mat-icon>
     </div> 
     
-    <div class="readonly border-right border-bottom center">
-        <!-- rationale -->
+    <div class="inventory-fill border-right border-bottom center">
+        <mat-form-field appearance="fill"  style="width: 100%;">
+            <textarea matInput formControlName="rationale" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1" cdkAutosizeMaxRows="2" maxlength="200" (blur)="updateRationale()">
+                {{ amendmentFormGroup.value.rationale }}
+            </textarea>
+        </mat-form-field>
+        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;"
+            matTooltip="Editable field">edit</mat-icon>
     </div>
 
     <div class="readonly border-right border-bottom center">
