@@ -87,6 +87,9 @@ spec:
       {{ if .Values.pgBackRest.image }}
       image: {{ .Values.pgBackRest.image }}
       {{ end }}
+      configuration:
+        - secret:
+            name: {{ .Values.pgBackRest.repos.configuration.secretName }}
       global:
         # hardcoding repo1 until we solution allowing multiple repos
         repo1-retention-full: {{ .Values.pgBackRest.retention | quote }}
@@ -98,6 +101,18 @@ spec:
         #Whether to expire .wal files on any backup or full backup only
         repo1-retention-archive-type: {{ .Values.pgBackRest.retentionArchiveType }}
 
+       # hardcoding repo2 until we solution allowing multiple repos
+        repo2-retention-full: {{ .Values.pgBackRest.retention | quote }}
+        repo2-retention-full-type: {{ .Values.pgBackRest.retentionFullType }}
+
+        # how many differential backups to keep
+        repo2-retention-diff: {{ .Values.pgBackRest.retentionDifferential | quote}}
+
+        #Whether to expire .wal files on any backup or full backup only
+        repo2-retention-archive-type: {{ .Values.pgBackRest.retentionArchiveType }}
+
+        
+
       repos:
         # hardcoding repo1 until we solution allowing multiple repos
         - name: repo1
@@ -105,9 +120,6 @@ spec:
             full: {{ .Values.pgBackRest.repos.schedules.full }}
             differential: {{ .Values.pgBackRest.repos.schedules.differential }}
             incremental: {{ .Values.pgBackRest.repos.schedules.incremental }}
-          configuration:
-            - secret:
-                name: {{ .Values.pgBackRest.repos.configuration.secretName }}
           volume:
             volumeClaimSpec:
               accessModes:
@@ -116,10 +128,16 @@ spec:
                 requests:
                   storage: {{ .Values.pgBackRest.repos.volume.storage }}
               storageClassName: {{ .Values.pgBackRest.repos.volume.storageClassName }}
+        - name: repo2
+          schedules:
+            full: {{ .Values.pgBackRest.repos.schedules.full }}
+            differential: {{ .Values.pgBackRest.repos.schedules.differential }}
+            incremental: {{ .Values.pgBackRest.repos.schedules.incremental }}
           s3:
             bucket:  {{ .Values.pgBackRest.repos.s3.bucket }}
             endpoint:  {{ .Values.pgBackRest.repos.s3.endpoint }}
             region: {{ .Values.pgBackRest.repos.s3.region}}
+          
 
       # this stuff is for the "pgbackrest" container (the only non-init container) in the "postgres-crunchy-repo-host" pod
       repoHost:
