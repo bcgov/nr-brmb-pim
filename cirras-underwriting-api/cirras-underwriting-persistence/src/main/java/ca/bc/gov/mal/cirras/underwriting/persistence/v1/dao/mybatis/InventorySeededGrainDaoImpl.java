@@ -239,6 +239,27 @@ public class InventorySeededGrainDaoImpl extends BaseDao implements InventorySee
 		logger.debug(">selectForDeclaredYield " + dtos);
 		return dtos;
 	}
+
+	@Override
+	public List<InventorySeededGrainDto> selectForVerifiedYield(String inventoryFieldGuid) throws DaoException {
+		logger.debug("<selectForVerifiedYield");
+	
+		List<InventorySeededGrainDto> dtos = null;
+	
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			
+			parameters.put("inventoryFieldGuid", inventoryFieldGuid);
+						
+			dtos = this.mapper.selectForVerifiedYield(parameters);
+	
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+	
+		logger.debug(">selectForVerifiedYield " + dtos);
+		return dtos;
+	}	
 	
 	public List<InventorySeededGrainDto> selectTotalsForFieldYearPlan(Integer fieldId, Integer cropYear, Integer insurancePlanId) throws DaoException {
 		List<InventorySeededGrainDto> dtos = null;

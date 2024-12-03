@@ -31,8 +31,14 @@ public interface VerifiedYieldContract<A extends AnnualField> extends Serializab
 	public void setInsurancePlanId(Integer insurancePlanId);
 				
 	public Integer getGrowerContractYearId();
-	public void setGrowerContractYearId(Integer growerContractYearId);	
+	public void setGrowerContractYearId(Integer growerContractYearId);
 
+	public List<A> getFields();
+	public void setFields(List<A> fields);
+	
 	public List<VerifiedYieldContractCommodity> getVerifiedYieldContractCommodities();
 	public void setVerifiedYieldContractCommodities(List<VerifiedYieldContractCommodity> verifiedYieldContractCommodities);
+
+	public List<VerifiedYieldAmendment> getVerifiedYieldAmendments();
+	public void setVerifiedYieldAmendments(List<VerifiedYieldAmendment> verifiedYieldAmendments);
 }

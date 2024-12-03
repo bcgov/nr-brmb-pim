@@ -41,6 +41,8 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededGrain;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryUnseeded;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiableCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandManagementEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
@@ -293,6 +295,24 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		checkVerifiedContractCommodityRollover(newContract.getVerifiedYieldContractCommodities(), 18, true, null); 
 		//Barley - Pedigree
 		checkVerifiedContractCommodityRollover(newContract.getVerifiedYieldContractCommodities(), 16, true, null); 
+		
+		//Check verifiable Commodities and field
+		Assert.assertEquals(1, newContract.getFields().size());
+		AnnualFieldRsrc field = newContract.getFields().get(0);
+		Assert.assertEquals(fieldId, field.getFieldId());
+		Assert.assertEquals(2, field.getVerifiableCommodities().size());
+		Boolean pedigreed = false;
+		Boolean nonPedigreed = false;
+		for(VerifiableCommodity vc : field.getVerifiableCommodities()) {
+			Assert.assertEquals(16, vc.getCropCommodityId().intValue());
+			if(vc.getIsPedigreeInd()) {
+				pedigreed = true;
+			} else if(vc.getIsPedigreeInd() == false) {
+				nonPedigreed = true;
+			}
+		}
+		Assert.assertTrue(pedigreed);
+		Assert.assertTrue(nonPedigreed);
 		
 		//Create verified contract ******************************************************************************
 		//Add override values for barley non pedigree
@@ -703,38 +723,30 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 					}
 				} else if ( planting.getInventorySeededGrains() != null && insurancePlanId.equals(InsurancePlans.GRAIN.getInsurancePlanId()) ) {
 					
-					Calendar cal = Calendar.getInstance();
-					cal.clear();
-					cal.set(2020, Calendar.JANUARY, 15);
-					Date seededDate = cal.getTime();
-					
-					InventorySeededGrain invSeededGrain = new InventorySeededGrain();
-
-					invSeededGrain.setCommodityTypeCode("Two Row");
-					invSeededGrain.setCommodityTypeDesc("Two Row Standard");
-					invSeededGrain.setCropCommodityId(16);
-					invSeededGrain.setCropCommodityName("BARLEY");
-					invSeededGrain.setCropVarietyId(1010430);
-					invSeededGrain.setCropVarietyName("CHAMPION");
-					invSeededGrain.setInventoryFieldGuid(null);
-					invSeededGrain.setInventorySeededGrainGuid(null);
-					invSeededGrain.setIsPedigreeInd(false);
-					invSeededGrain.setIsSpotLossInsurableInd(true);
-					invSeededGrain.setIsQuantityInsurableInd(true);
-					invSeededGrain.setIsReplacedInd(false);
-					invSeededGrain.setSeededAcres(23.45);
-					invSeededGrain.setSeededDate(seededDate);
 					
 					List<InventorySeededGrain> seededGrains = new ArrayList<InventorySeededGrain>();
-					seededGrains.add(invSeededGrain);
+					seededGrains.add(createInventorySeededGrain(16, "BARLEY", false, 23.45));
 
 					planting.setInventorySeededGrains(seededGrains);
 					
 					addedSeededGrain = true;
 				}
 			}
-		}
+			
+			if(addedSeededGrain) {
+				//Add additional plantings for verifiable commodity tests
+				 
+				InventoryField newPlanting = createPlanting(field, 2, cropYear1, false, insurancePlanId);
+				List<InventorySeededGrain> seededGrains = new ArrayList<InventorySeededGrain>();
+				seededGrains.add(createInventorySeededGrain(16, "BARLEY", true, 18.0));
 
+				newPlanting.setInventorySeededGrains(seededGrains);
+				
+				//field.getPlantings().add(newPlanting);
+			}
+		}
+		
+		
 		if (insurancePlanId.equals(InsurancePlans.GRAIN.getInsurancePlanId())) {
 			InventoryContractCommodity icc = createInventoryContractCommodity(16, "BARLEY", false, 23.45, 23.45, 0.0);
 			resource.getCommodities().add(icc);
@@ -747,6 +759,60 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		} else if ( insurancePlanId.equals(InsurancePlans.FORAGE.getInsurancePlanId()) ) {
 			Assert.assertTrue(addedSeededForage);
 		}
+	}
+
+	private InventorySeededGrain createInventorySeededGrain(Integer cropCommodityId, String cropCommodityName, Boolean isPedigreeInd, Double seededAcres) {
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(2020, Calendar.JANUARY, 15);
+		Date seededDate = cal.getTime();
+		
+		InventorySeededGrain invSeededGrain = new InventorySeededGrain();
+
+		invSeededGrain.setCommodityTypeCode("Two Row");
+		invSeededGrain.setCommodityTypeDesc("Two Row Standard");
+		invSeededGrain.setCropCommodityId(cropCommodityId);
+		invSeededGrain.setCropCommodityName(cropCommodityName);
+		invSeededGrain.setCropVarietyId(1010430);
+		invSeededGrain.setCropVarietyName("CHAMPION");
+		invSeededGrain.setInventoryFieldGuid(null);
+		invSeededGrain.setInventorySeededGrainGuid(null);
+		invSeededGrain.setIsPedigreeInd(isPedigreeInd);
+		invSeededGrain.setIsSpotLossInsurableInd(true);
+		invSeededGrain.setIsQuantityInsurableInd(true);
+		invSeededGrain.setIsReplacedInd(false);
+		invSeededGrain.setSeededAcres(seededAcres);
+		invSeededGrain.setSeededDate(seededDate);
+		return invSeededGrain;
+	}
+	
+	private InventoryField createPlanting(AnnualFieldRsrc field, Integer plantingNumber, Integer cropYear, Boolean isHiddenOnPrintoutInd, Integer insurancePlanId) {
+		
+		InventoryUnseeded iu = new InventoryUnseeded();
+		iu.setAcresToBeSeeded(null);
+		iu.setCropCommodityId(null);
+		iu.setIsUnseededInsurableInd(false);
+		
+		InventoryField planting = new InventoryField();
+
+		planting.setCropYear(cropYear);
+		planting.setFieldId(field.getFieldId());
+		planting.setInsurancePlanId(insurancePlanId);
+		planting.setInventoryFieldGuid(null);
+		planting.setLastYearCropCommodityId(null);
+		planting.setLastYearCropCommodityName(null);
+		planting.setLastYearCropVarietyId(null);
+		planting.setLastYearCropVarietyName(null);
+		planting.setIsHiddenOnPrintoutInd(isHiddenOnPrintoutInd);
+		planting.setPlantingNumber(plantingNumber);
+		planting.setUnderseededAcres(null);
+		planting.setUnderseededCropVarietyId(null);
+		planting.setUnderseededCropVarietyName(null);
+		planting.setInventoryUnseeded(iu);
+		
+		field.getPlantings().add(planting);
+
+		return planting;
 	}
 
 	private InventoryContractCommodity createInventoryContractCommodity(Integer cropCommodityId, String cropCommodityName, Boolean isPedigreeInd, Double totalSeededAcres, Double totalSpotLossAcres, Double totalUnseededAcres) {

@@ -3,6 +3,7 @@ CREATE TABLE cuws.verified_yield_amendment(
     verified_yield_amendment_code    varchar(10)       NOT NULL,
     verified_yield_contract_guid     varchar(32)       NOT NULL,
     crop_commodity_id                numeric(9, 0)     NOT NULL,
+    is_pedigree_ind                  varchar(1)        NOT NULL,
     field_id                         numeric(9, 0),
     yield_per_acre                   numeric(14, 4)    NOT NULL,
     acres                            numeric(14, 4)    NOT NULL,
@@ -21,6 +22,8 @@ COMMENT ON COLUMN cuws.verified_yield_amendment.verified_yield_amendment_code IS
 COMMENT ON COLUMN cuws.verified_yield_amendment.verified_yield_contract_guid IS 'Verified Yield Contract GUID  is the primary key used to identify the record'
 ;
 COMMENT ON COLUMN cuws.verified_yield_amendment.crop_commodity_id IS 'Crop Commodity Id is a unique Id of a commodity from cirr_crop_types.crpt_id'
+;
+COMMENT ON COLUMN cuws.verified_yield_amendment.is_pedigree_ind IS 'Is Pedigree Ind determines if the yield is for a pedigree crop (Y) or (N).'
 ;
 COMMENT ON COLUMN cuws.verified_yield_amendment.field_id IS 'Field Id is a unique key of a field from cirr_lots.lot_id'
 ;

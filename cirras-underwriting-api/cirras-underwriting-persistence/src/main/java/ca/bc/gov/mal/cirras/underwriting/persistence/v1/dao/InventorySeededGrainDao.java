@@ -30,6 +30,8 @@ public interface InventorySeededGrainDao extends Serializable {
 
     List<InventorySeededGrainDto> selectForDeclaredYield(String inventoryFieldGuid) throws DaoException;
     
+    List<InventorySeededGrainDto> selectForVerifiedYield(String inventoryFieldGuid) throws DaoException;
+
     List<InventorySeededGrainDto> selectTotalsForFieldYearPlan(Integer fieldId, Integer cropYear, Integer insurancePlanId) throws DaoException;
 
 }

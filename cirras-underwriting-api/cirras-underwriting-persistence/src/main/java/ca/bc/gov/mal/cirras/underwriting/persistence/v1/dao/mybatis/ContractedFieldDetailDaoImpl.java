@@ -387,6 +387,33 @@ public class ContractedFieldDetailDaoImpl extends BaseDao implements ContractedF
 	}
 
 	@Override
+	public List<ContractedFieldDetailDto> selectForVerifiedYield(Integer contractId, Integer cropYear) throws DaoException {
+		logger.debug("<selectForVerifiedYield");
+
+		List<ContractedFieldDetailDto> dtos = null;
+
+		try {
+
+			String orderBy = getOrderBy("displayOrder", "ASC");
+			
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			
+			parameters.put("contractId", contractId);
+			parameters.put("cropYear", cropYear);
+			parameters.put("orderBy", orderBy);
+						
+			dtos = this.mapper.selectForVerifiedYield(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectForVerifiedYield " + dtos);
+		return dtos;
+	}
+	
+	
+	@Override
 	public List<ContractedFieldDetailDto> selectForDisplayOrderUpdate(Integer growerContractYearId) throws DaoException {
 		List<ContractedFieldDetailDto> dtos = null;
 
