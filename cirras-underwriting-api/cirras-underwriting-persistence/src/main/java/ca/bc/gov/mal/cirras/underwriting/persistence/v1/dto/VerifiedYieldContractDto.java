@@ -25,7 +25,9 @@ public class VerifiedYieldContractDto extends BaseDto<VerifiedYieldContractDto> 
 	private Date verifiedYieldUpdateTimestamp;
 	private String verifiedYieldUpdateUser;
 	
+	private List<ContractedFieldDetailDto> fields = new ArrayList<ContractedFieldDetailDto>();
 	private List<VerifiedYieldContractCommodityDto> verifiedYieldContractCommodities = new ArrayList<VerifiedYieldContractCommodityDto>();
+	private List<VerifiedYieldAmendmentDto> verifiedYieldAmendments = new ArrayList<VerifiedYieldAmendmentDto>();
 	
 	private String createUser;
 	private Date createDate;
@@ -49,6 +51,14 @@ public class VerifiedYieldContractDto extends BaseDto<VerifiedYieldContractDto> 
 		this.defaultYieldMeasUnitTypeCode = dto.defaultYieldMeasUnitTypeCode;
 		this.verifiedYieldUpdateTimestamp = dto.verifiedYieldUpdateTimestamp;
 		this.verifiedYieldUpdateUser = dto.verifiedYieldUpdateUser;
+
+		if ( dto.fields != null ) {			
+			this.fields = new ArrayList<>();
+			
+			for ( ContractedFieldDetailDto cfdDto : dto.fields ) {
+				this.fields.add(cfdDto.copy());
+			}
+		}
 		
 		if ( dto.verifiedYieldContractCommodities != null ) {			
 			this.verifiedYieldContractCommodities = new ArrayList<>();
@@ -57,7 +67,15 @@ public class VerifiedYieldContractDto extends BaseDto<VerifiedYieldContractDto> 
 				this.verifiedYieldContractCommodities.add(vyccDto.copy());
 			}
 		}	
-						
+
+		if ( dto.verifiedYieldAmendments != null ) {			
+			this.verifiedYieldAmendments = new ArrayList<>();
+			
+			for ( VerifiedYieldAmendmentDto vyaDto : dto.verifiedYieldAmendments ) {
+				this.verifiedYieldAmendments.add(vyaDto.copy());
+			}
+		}
+		
 		this.createUser = dto.createUser;
 		this.createDate = dto.createDate;
 		this.updateUser = dto.updateUser;
@@ -153,11 +171,25 @@ public class VerifiedYieldContractDto extends BaseDto<VerifiedYieldContractDto> 
 		this.verifiedYieldUpdateUser = verifiedYieldUpdateUser;
 	}
 
+	public List<ContractedFieldDetailDto> getFields() {
+		return fields;
+	}
+	public void setFields(List<ContractedFieldDetailDto> fields) {
+		this.fields = fields;
+	}
+	
 	public List<VerifiedYieldContractCommodityDto> getVerifiedYieldContractCommodities() {
 		return verifiedYieldContractCommodities;
 	}
 	public void setVerifiedYieldContractCommodities(List<VerifiedYieldContractCommodityDto> verifiedYieldContractCommodities) {
 		this.verifiedYieldContractCommodities = verifiedYieldContractCommodities;
+	}
+
+	public List<VerifiedYieldAmendmentDto> getVerifiedYieldAmendments() {
+		return verifiedYieldAmendments;
+	}
+	public void setVerifiedYieldAmendments(List<VerifiedYieldAmendmentDto> verifiedYieldAmendments) {
+		this.verifiedYieldAmendments = verifiedYieldAmendments;
 	}
 
 	public String getCreateUser() {

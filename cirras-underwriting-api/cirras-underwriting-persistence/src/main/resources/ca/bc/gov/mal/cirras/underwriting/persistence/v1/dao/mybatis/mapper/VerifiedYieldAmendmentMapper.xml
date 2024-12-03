@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.VerifiedYieldAmendmentMapper">
+
+	<resultMap id="VerifiedYieldAmendmentDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldAmendmentDto">
+
+		<id property="verifiedYieldAmendmentGuid" column="verified_yield_amendment_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+
+		<result property="verifiedYieldAmendmentCode" column="verified_yield_amendment_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="verifiedYieldContractGuid" column="verified_yield_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="cropCommodityId" column="crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="isPedigreeInd" column="is_pedigree_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="fieldId" column="field_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="yieldPerAcre" column="yield_per_acre" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="acres" column="acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="rationale" column="rationale" javaType="java.lang.String" jdbcType="VARCHAR" />
+
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+		<result property="cropCommodityName" column="crop_commodity_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="fieldLabel" column="field_label" javaType="java.lang.String" jdbcType="VARCHAR" />
+
+	</resultMap>
+	
+	
+    <sql id="selectColumns">
+		select t.verified_yield_amendment_guid, 
+		       t.verified_yield_amendment_code, 
+			   t.verified_yield_contract_guid, 
+			   t.crop_commodity_id, 
+			   t.is_pedigree_ind,
+			   t.field_id, 
+			   t.yield_per_acre, 
+			   t.acres, 
+			   t.rationale, 
+			   t.create_user, 
+			   t.create_date, 
+			   t.update_user, 
+			   t.update_date
+    </sql>
+    
+    <select id="fetch" resultMap="VerifiedYieldAmendmentDtoMap">
+		<include refid="selectColumns"/>,
+		cc.commodity_name as crop_commodity_name,
+		f.field_label
+		from verified_yield_amendment t
+		join crop_commodity cc ON cc.crop_commodity_id = t.crop_commodity_id
+		left join field f ON f.field_id = t.field_id
+		where t.verified_yield_amendment_guid = #{verifiedYieldAmendmentGuid}
+	</select>
+
+	<insert id="insert">
+		<selectKey keyProperty="verifiedYieldAmendmentGuid" resultType="java.lang.String" order="BEFORE"> 
+			select replace(cast(gen_random_uuid() as text), '-', '')
+		</selectKey>
+
+		insert into verified_yield_amendment(
+			verified_yield_amendment_guid, 
+			verified_yield_amendment_code, 
+			verified_yield_contract_guid, 
+			crop_commodity_id, 
+			is_pedigree_ind,
+			field_id, 
+			yield_per_acre, 
+			acres, 
+			rationale, 
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date
+		) values (
+			#{verifiedYieldAmendmentGuid},
+			#{dto.verifiedYieldAmendmentCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.verifiedYieldContractGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.isPedigreeInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			#{dto.fieldId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.yieldPerAcre, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.acres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.rationale, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+	</insert> 
+
+	<update id="update">
+		update verified_yield_amendment
+		set verified_yield_amendment_code = #{dto.verifiedYieldAmendmentCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			crop_commodity_id = #{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			is_pedigree_ind = #{dto.isPedigreeInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			field_id = #{dto.fieldId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			yield_per_acre = #{dto.yieldPerAcre, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			acres = #{dto.acres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			rationale = #{dto.rationale, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where verified_yield_amendment_guid = #{dto.verifiedYieldAmendmentGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
+	</update> 
+
+	<delete id="delete">
+		delete from verified_yield_amendment where verified_yield_amendment_guid = #{verifiedYieldAmendmentGuid}
+	</delete>
+	
+	<delete id="deleteForVerifiedYieldContract">
+		delete from verified_yield_amendment where verified_yield_contract_guid = #{verifiedYieldContractGuid}
+	</delete>
+			
+	<select id="selectForVerifiedYieldContract" resultMap="VerifiedYieldAmendmentDtoMap">
+		<include refid="selectColumns"/>,
+		cc.commodity_name as crop_commodity_name,
+		f.field_label
+		from verified_yield_amendment t
+		join crop_commodity cc ON cc.crop_commodity_id = t.crop_commodity_id
+		left join field f ON f.field_id = t.field_id
+		where t.verified_yield_contract_guid = #{verifiedYieldContractGuid}
+		order by t.verified_yield_amendment_code, cc.commodity_name, t.is_pedigree_ind, f.field_label, t.field_id, t.create_date, t.verified_yield_amendment_guid
+	</select>
+
+</mapper>

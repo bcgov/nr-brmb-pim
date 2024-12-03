@@ -501,8 +501,8 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		}
 
 		// These must be set to a real policy in CIRRAS. Crop Year must match other test data.
-		String policyNumberWithProducts = "212076-20";
-		Integer fieldIdOnPolicyWithProducts = 21145;
+		String policyNumberWithProducts = "140913-24";
+		Integer fieldIdOnPolicyWithProducts = 23688;
 		
 		//Date and Time without millisecond
 		Calendar cal = Calendar.getInstance();

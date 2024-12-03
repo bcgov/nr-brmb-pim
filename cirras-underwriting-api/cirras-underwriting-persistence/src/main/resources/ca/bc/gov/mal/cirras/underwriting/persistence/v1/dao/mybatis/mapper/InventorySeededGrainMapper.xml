@@ -188,6 +188,20 @@
 		order by isg.is_replaced_ind desc, isg.seeding_date
 	</select>
 
+	<select id="selectForVerifiedYield" resultMap="InventorySeededGrainDtoMap">
+		<include refid="selectColumns"/>
+		from inventory_seeded_grain isg
+		join crop_commodity cc on cc.crop_commodity_id = isg.crop_commodity_id   -- Not a left join, because we only want records with a seeded crop.
+		join inventory_field invf on invf.inventory_field_guid = isg.inventory_field_guid
+		left join crop_variety cv on cv.crop_variety_id = isg.crop_variety_id
+		left join commodity_type_code ctc on ctc.commodity_type_code = isg.commodity_type_code
+		where isg.inventory_field_guid = #{inventoryFieldGuid}
+		  and cc.insurance_plan_id = invf.insurance_plan_id   -- Exclude Forage commodities on Seeded Grain
+		  and isg.seeded_acres <![CDATA[ > ]]> 0
+		order by isg.is_replaced_ind desc, isg.seeding_date
+	</select>
+
+
 	<select id="selectTotalsForFieldYearPlan" resultMap="InventorySeededGrainDtoMap"> 
 		WITH inv_acres AS
 		(
