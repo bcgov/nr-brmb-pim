@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, SimpleChanges } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { DopYieldFieldForage } from "src/app/conversion/models-yield";
 import { SecurityUtilService } from "src/app/services/security-util.service";
@@ -16,14 +16,14 @@ import { getCodeOptions } from "src/app/utils/code-table-utils";
 })
 export class ForageDopYieldFieldComponent implements OnInit {
     @Input() yieldField: DopYieldFieldForage;
-    @Input() yieldFieldsFormArray: FormArray;
+    @Input() yieldFieldsFormArray: UntypedFormArray;
     @Input() fieldHiddenOnPrintoutInd: boolean;
 
-    yieldFieldFormGroup: FormGroup;
+    yieldFieldFormGroup: UntypedFormGroup;
 
     plantInsurabilityOptions = getCodeOptions("plant_insurability_type_code");  
 
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private store: Store<RootState>,
         public securityUtilService: SecurityUtilService) {
     }

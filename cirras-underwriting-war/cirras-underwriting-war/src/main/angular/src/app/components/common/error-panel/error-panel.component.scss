@@ -13,7 +13,7 @@ mat-card.error-panel {
   mat-card-header.warnings {
     background-color: $colour-warnings;
   }
-
+ 
   mat-card-header {
     background-color: $colour-errors;
     color: $colour-white;
@@ -22,16 +22,16 @@ mat-card.error-panel {
     cursor: pointer;
     display: block;
 
-    .mat-card-title {
+    .mat-mdc-card-title {
       margin-bottom: 0;
       font-size: 13px;
     }
-
+    
     &::ng-deep .mat-card-header-text {
       margin: 0 8px;
     }
   }
-
+  
   mat-card-content {
     padding: 8px 0;
   }

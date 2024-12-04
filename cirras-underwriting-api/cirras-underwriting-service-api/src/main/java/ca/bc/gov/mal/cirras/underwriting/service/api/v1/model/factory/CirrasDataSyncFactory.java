@@ -19,11 +19,13 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.ContactPhone;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.Grower;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.GrowerContact;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.Policy;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.Product;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.SyncCode;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.OfficeDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyStatusCodeDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto;
 
 public interface CirrasDataSyncFactory {
 
@@ -40,6 +42,10 @@ public interface CirrasDataSyncFactory {
 	void updatePolicy(PolicyDto dto, Policy model);
 	Policy getPolicy(PolicyDto dto);
 
+	//Product
+	void updateProduct(ProductDto dto, Product model);
+	Product getProduct(ProductDto dto);
+	
 	//Commodities
 	CropCommodityDto createCropCommodity(SyncCommodityVariety model);
 	void updateCropCommodity(CropCommodityDto dto, SyncCommodityVariety model);

@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { DialogData } from "../uw-comments-button/uw-comments-button.component";
 import { DIALOG_TYPE } from "../../dialogs/base-dialog/base-dialog.component";
 import { SecurityUtilService } from "src/app/services/security-util.service";
-import { FormArray } from "@angular/forms";
+import { UntypedFormArray } from "@angular/forms";
 import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 import { UW_COMMENT_TYPE_CODE } from "src/app/utils/constants";
 
@@ -14,7 +14,7 @@ import { UW_COMMENT_TYPE_CODE } from "src/app/utils/constants";
 })
 export class UwCommentsDialogComponent {
     dialogType = DIALOG_TYPE.INFO;
-    uwCommentsFormArray = new FormArray([]);
+    uwCommentsFormArray = new UntypedFormArray([]);
 
     constructor(public dialogRef: MatDialogRef<UwCommentsDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData,

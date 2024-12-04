@@ -32,12 +32,12 @@
                     </mat-form-field>
                     <div class="location-button">
                         <button *ngIf="editLandForm.controls.choiceSelected.value == 'rename'" mat-raised-button
-                            color="secondary" (click)="onLegalLandValidate()">
+                            class="secondary" (click)="onLegalLandValidate()">
                             <mat-icon>check</mat-icon>
                             Validate
                         </button>
                         <button *ngIf="editLandForm.controls.choiceSelected.value == 'replace'" mat-raised-button
-                            color="secondary" (click)="onLegalLandValidate()">
+                            class="secondary" (click)="onLegalLandValidate()">
                             <mat-icon>search</mat-icon>
                             Search
                         </button>
@@ -257,8 +257,8 @@
     <div mat-dialog-actions align="end">
         <p style="margin-right: auto;">To save legal location information, click done and then click save on the main
             screen.</p>
-        <button mat-raised-button color="secondary" (click)="onCancelChanges()">Cancel</button>
-        <button *ngIf="showProceedButton" mat-raised-button color="primary" (click)="onProceed()">Done</button>
+        <button mat-raised-button class="secondary" (click)="onCancelChanges()">Cancel</button>
+        <button *ngIf="showProceedButton" mat-raised-button class="primary" (click)="onProceed()">Done</button>
     </div>
 
 </cuws-base-dialog>

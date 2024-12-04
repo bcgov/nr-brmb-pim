@@ -1,26 +1,10 @@
-import {AfterViewInit, ChangeDetectorRef, OnChanges, SimpleChanges} from "@angular/core";
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {AfterViewInit, OnChanges, SimpleChanges} from "@angular/core";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CollectionComponent } from "../../common/base-collection/collection.component";
 import { ClearLegalLand, clearLandSearch, searchLand } from "src/app/store/land-management/land-management.actions";
 import { LAND_SEARCH_COMPONENT_ID, initLandSearchPaging } from "src/app/store/land-management/land-management.state";
 import { LandListComponentModel } from "./land-list.component.model";
 import { ResourcesRoutes } from "src/app/utils/constants";
-import { LegalLand } from "src/app/conversion/models";
-import { SCOPES_UI } from "src/app/utils/scopes";
-import { ActivatedRoute, Router } from "@angular/router";
-import { DomSanitizer, Title } from "@angular/platform-browser";
-import { Store } from "@ngrx/store";
-import { RootState } from "src/app/store";
-import { FormBuilder } from "@angular/forms";
-import { MatDialog } from "@angular/material/dialog";
-import { ApplicationStateService } from "src/app/services/application-state.service";
-import { SecurityUtilService } from "src/app/services/security-util.service";
-import { AppConfigService, TokenService } from "@wf1/core-ui";
-import { ConnectionService } from "ngx-connection-service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { Overlay } from "@angular/cdk/overlay";
-import { HttpClient } from "@angular/common/http";
-import { DecimalPipe } from "@angular/common";
 
 @Component({
   selector: "cirras-land-list",
@@ -32,27 +16,6 @@ import { DecimalPipe } from "@angular/common";
 })
 
 export class LandListComponent extends CollectionComponent implements OnChanges, AfterViewInit {
-
-  constructor(protected router: Router,
-    protected route: ActivatedRoute,
-    protected sanitizer: DomSanitizer,
-    protected store: Store<RootState>,
-    protected fb: FormBuilder,
-    protected dialog: MatDialog,
-    protected applicationStateService: ApplicationStateService,
-    public securityUtilService: SecurityUtilService,                
-    protected tokenService: TokenService,
-    protected connectionService: ConnectionService,
-    protected snackbarService: MatSnackBar,
-    protected overlay: Overlay,
-    protected cdr: ChangeDetectorRef,
-    protected appConfigService: AppConfigService,
-    protected http: HttpClient,
-    protected titleService: Title,
-    protected decimalPipe: DecimalPipe) {
-    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
-  }
-
 
   columnsToDisplay = [ "otherDescription", "primaryPropertyIdentifier", "legalDescription", "totalAcres", "isActive", "actions" ]; 
 

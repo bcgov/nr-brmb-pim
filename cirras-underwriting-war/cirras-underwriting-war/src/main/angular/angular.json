@@ -18,7 +18,12 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "deep-equal"               
+              "lodash",
+              "deep-equal",
+              "moment-timezone",
+              "moment",
+              "angular2-uuid",
+              "vanilla-text-mask"              
             ],
             "outputPath": "dist/cirras-underwriting",
             "index": "src/index.html",
@@ -30,7 +35,12 @@
               "src/assets",
               "src/dev-config",
               "src/manifest.json",
-              "src/refresh-token.html"
+              "src/refresh-token.html",
+              {
+                "glob": "bc-sans/**/*",
+                "input": "node_modules/@wf1/wfcc-application-ui",
+                "output": "assets"
+              }
             ],
             "styles": [
               "src/styles/main.scss",
@@ -38,7 +48,6 @@
               "node_modules/multiple-select/dist/multiple-select.css"
             ],
             "scripts": [
-              "node_modules/gsap/src/uncompressed/TweenMax.js",
               "node_modules/jquery/dist/jquery.slim.js",
               "node_modules/multiple-select/dist/multiple-select.js"
             ],
@@ -63,7 +72,12 @@
                 "src/assets",
                 "src/dev-config",
                 "src/manifest.json",
-                "src/refresh-token.html"
+                "src/refresh-token.html",
+                {
+                  "glob": "bc-sans/**/*",
+                  "input": "node_modules/@wf1/wfcc-application-ui",
+                  "output": "assets"
+                }
               ],
               "optimization": {
                 "fonts": false
@@ -83,19 +97,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "cirras-underwriting:build",
-            "port": 11200
+            "port": 11200,
+            "buildTarget": "cirras-underwriting:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "cirras-underwriting:build:production"
+              "buildTarget": "cirras-underwriting:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "cirras-underwriting:build"
+            "buildTarget": "cirras-underwriting:build"
           }
         },
         "test": {
@@ -141,25 +155,6 @@
           }
         }
       }
-    },
-    "cirras-underwriting-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "cirras-underwriting:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "cirras-underwriting:serve:production"
-            }
-          }
-        }
-      }
     }
-  },
-  "defaultProject": "cirras-underwriting"
+  }
 }

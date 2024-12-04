@@ -12,7 +12,7 @@ import {
     Output,
     SimpleChanges
 } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Store } from "@ngrx/store";
@@ -63,7 +63,7 @@ export class BaseDialogComponent implements AfterViewInit, OnChanges, OnDestroy 
         public dialogRef: MatDialogRef<BaseDialogComponent>,
         protected applicationStateService: ApplicationStateService,
         protected sanitizer: DomSanitizer,
-        protected fb: FormBuilder,
+        protected fb: UntypedFormBuilder,
         public cdr: ChangeDetectorRef,
         public securityUtilService: SecurityUtilService,
         //public navigationUtilService: NavigationUtilService,
@@ -157,13 +157,13 @@ export class BaseDialogComponent implements AfterViewInit, OnChanges, OnDestroy 
         this.isLoading = value;
     }
 
-    disableSaveForm(form?: FormGroup): boolean {
+    disableSaveForm(form?: UntypedFormGroup): boolean {
         let fg = form ? form : this.viewModel.formGroup;
         // console.log(fg);
         return !fg.dirty || !fg.valid;
     }
 
-    unsavedForm(form?: FormGroup, arrayProperty?: string): boolean {
+    unsavedForm(form?: UntypedFormGroup, arrayProperty?: string): boolean {
         //console.log("unsaved", this.componentId);
         let fg = form ? form : this.viewModel.formGroup;
         if (arrayProperty) {
@@ -177,7 +177,7 @@ export class BaseDialogComponent implements AfterViewInit, OnChanges, OnDestroy 
     unsavedBatchForm(arrayProperty: string): boolean {
         let fg = this.viewModel.formGroup;
         //Check form array for dirty flag
-        let fgArray: FormGroup[] = fg?.controls[arrayProperty]['controls'];
+        let fgArray: UntypedFormGroup[] = fg?.controls[arrayProperty]['controls'];
         let arrayHasDirtyFlag = fgArray.some(contactFg => contactFg.dirty);
         let hasAddedUnsavedItem = this.hasAddedUnsavedItemNotBlank(fg, arrayProperty);
         //console.log("arrayHasDirtyFlag", arrayHasDirtyFlag, "fgDirty", fg.dirty, "hasAddedUnsavedItem", hasAddedUnsavedItem);
@@ -194,10 +194,10 @@ export class BaseDialogComponent implements AfterViewInit, OnChanges, OnDestroy 
         }
     }
 
-    hasAddedUnsavedItemNotBlank(fgMain: FormGroup, arrayProperty: string) {
+    hasAddedUnsavedItemNotBlank(fgMain: UntypedFormGroup, arrayProperty: string) {
         let controls = fgMain?.controls[arrayProperty]['controls'];
         let ret = controls.some(ac => {
-                let fg: FormGroup = <FormGroup>ac;
+                let fg: UntypedFormGroup = <UntypedFormGroup>ac;
                 if (!fg.get("id").value && controls.length > 1) { //not a default empty entry
                     //console.log("not default entry");
                     return true;
@@ -223,10 +223,10 @@ export class BaseDialogComponent implements AfterViewInit, OnChanges, OnDestroy 
         if (this.viewModel) {
             Object.keys(this.viewModel.formGroup.controls).forEach(key => {
                 let control = this.viewModel.formGroup.get(key);
-                if (control instanceof FormArray) {
+                if (control instanceof UntypedFormArray) {
                     if (control.controls.length > 0) {
                         control["controls"].forEach(fg => {
-                            let formGroup = fg as FormGroup;
+                            let formGroup = fg as UntypedFormGroup;
                             Object.keys(formGroup.controls).forEach(key2 => {
                                 let arrayControlItem = formGroup.get(key2);
                                 arrayControlItem.markAsTouched();
@@ -246,10 +246,10 @@ export class BaseDialogComponent implements AfterViewInit, OnChanges, OnDestroy 
         this.preconditionOkButtonClick.emit(eventData);
     }
 
-    disableBatchSaveForm(arrayProperty: string, form?: FormGroup): boolean {
+    disableBatchSaveForm(arrayProperty: string, form?: UntypedFormGroup): boolean {
         let fg = form ? form : this.viewModel.formGroup;
         //Check form array for dirty flag
-        let fgArray: FormGroup[] = fg?.controls[arrayProperty]['controls'];
+        let fgArray: UntypedFormGroup[] = fg?.controls[arrayProperty]['controls'];
 
         let arrayHasDirtyFlag = fgArray.some(contactFg => contactFg.dirty);
         let arrayHasInvalidFlag = fgArray.some(contactFg => !contactFg.valid);

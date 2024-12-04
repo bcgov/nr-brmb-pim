@@ -1,4 +1,4 @@
-import {HttpErrorResponse} from "@angular/common/http";
+import { HttpErrorResponse } from "@angular/common/http";
 import {ERROR_TYPE, ErrorState} from "../store/application/application.state";
 import {UUID} from "angular2-uuid";
 import { 

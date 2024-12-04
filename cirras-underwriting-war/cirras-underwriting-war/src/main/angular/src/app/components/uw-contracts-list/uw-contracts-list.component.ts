@@ -1,5 +1,4 @@
-
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from "@angular/core";
+import {ChangeDetectionStrategy, Component, Input} from "@angular/core";
 import { CropCommodityList, UwContract } from '../../conversion/models';
 import {UwContractsListComponentModel} from "./uw-contracts-list.component.model";
 import {CollectionComponent} from "../common/base-collection/collection.component";
@@ -9,24 +8,6 @@ import { initUwContractsListPaging, UW_CONTRACTS_SEARCH_COMPONENT_ID } from 'src
 import { clearUwContractsSearch, searchUwContracts, clearReportPrint } from 'src/app/store/uw-contracts-list/uw-contracts-list.actions';
 import { INSURANCE_PLAN, REPORT_CHOICES, REPORT_SORT_BY, REPORT_TYPE, ResourcesRoutes, SORT_BY_CHOICES } from "src/app/utils/constants";
 import { goToLinkGlobal, userCanAccessDop, userCanAccessInventory, userCanAccessVerifiedYield } from "src/app/utils";
-import { GetDopReport } from "src/app/store/dop/dop.actions";
-import { GetInventoryReport } from "src/app/store/inventory/inventory.actions";
-import { ActivatedRoute, Router } from "@angular/router";
-import { DomSanitizer, Title } from "@angular/platform-browser";
-import { Store } from "@ngrx/store";
-import { RootState } from "src/app/store";
-import { FormBuilder } from "@angular/forms";
-import { MatDialog } from "@angular/material/dialog";
-import { ApplicationStateService } from "src/app/services/application-state.service";
-import { SecurityUtilService } from "src/app/services/security-util.service";
-import { AppConfigService, TokenService } from "@wf1/core-ui";
-import { ConnectionService } from "ngx-connection-service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { Overlay } from "@angular/cdk/overlay";
-import { HttpClient } from "@angular/common/http";
-import { DecimalPipe } from "@angular/common";
-
-
 
 @Component({
   selector: "cirras-uw-contracts-list",
@@ -40,26 +21,6 @@ import { DecimalPipe } from "@angular/common";
 export class UwContractsListComponent extends CollectionComponent implements OnChanges, AfterViewInit {
 
   @Input() cropCommodityList: CropCommodityList;
-
-  constructor(protected router: Router,
-    protected route: ActivatedRoute,
-    protected sanitizer: DomSanitizer,
-    protected store: Store<RootState>,
-    protected fb: FormBuilder,
-    protected dialog: MatDialog,
-    protected applicationStateService: ApplicationStateService,
-    public securityUtilService: SecurityUtilService,                
-    protected tokenService: TokenService,
-    protected connectionService: ConnectionService,
-    protected snackbarService: MatSnackBar,
-    protected overlay: Overlay,
-    protected cdr: ChangeDetectorRef,
-    protected appConfigService: AppConfigService,
-    protected http: HttpClient,
-    protected titleService: Title,
-    protected decimalPipe: DecimalPipe) {
-    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
-  }
 
   columnsToDisplay = [ "selectGUIDs", "policyNumber", "growerNumber", "growerName", "insurancePlanName", "policyStatus", "actions" ]; 
 

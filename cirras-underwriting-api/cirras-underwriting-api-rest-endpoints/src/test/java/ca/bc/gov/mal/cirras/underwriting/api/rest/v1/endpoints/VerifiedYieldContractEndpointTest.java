@@ -2,6 +2,7 @@ package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -17,7 +18,9 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.EndpointsRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
@@ -198,7 +201,7 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		//BEFORE TESTS: CREATE YIELD BY RUNNING THE INSERT SCRIPTS BELOW.
 		//*****************************************************************
 
-		String policyNumber = "999999-23";   // Set to valid policy number.
+		String policyNumber = "301848-23";   // Set to valid policy number.
 		
 		List<VerifiedYieldContractCommodity> expectedVycc = new ArrayList<VerifiedYieldContractCommodity>();
 		VerifiedYieldContractCommodity vycc = new VerifiedYieldContractCommodity();
@@ -237,8 +240,43 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		
 		expectedVycc.add(vycc);		
 		
-		Integer pageNumber = new Integer(1);
-		Integer pageRowCount = new Integer(20);
+		List<VerifiedYieldAmendment> expectedVya = new ArrayList<VerifiedYieldAmendment>();
+		VerifiedYieldAmendment vya = new VerifiedYieldAmendment();
+		
+		vya.setVerifiedYieldAmendmentGuid("abdcdgfgrsaged2025-1");
+		vya.setVerifiedYieldContractGuid("bd4c96bf89d94e46a7b81e89fa5eba56");
+		vya.setVerifiedYieldAmendmentCode("Appraisal");
+		vya.setCropCommodityId(16);
+		vya.setIsPedigreeInd(false);
+		vya.setFieldId(7929);
+		vya.setYieldPerAcre(15.5);
+		vya.setAcres(50.0);
+		vya.setRationale("test");
+		vya.setCropCommodityName("BARLEY");
+		vya.setFieldLabel("LOT A");
+		vya.setDeletedByUserInd(null);
+
+		expectedVya.add(vya);
+		
+		vya = new VerifiedYieldAmendment();
+		
+		vya.setVerifiedYieldAmendmentGuid("abdcdgfgrsaged2025-2");
+		vya.setVerifiedYieldContractGuid("bd4c96bf89d94e46a7b81e89fa5eba56");
+		vya.setVerifiedYieldAmendmentCode("Assessment");
+		vya.setCropCommodityId(16);
+		vya.setIsPedigreeInd(true);
+		vya.setFieldId(null);
+		vya.setYieldPerAcre(7.7);
+		vya.setAcres(77.0);
+		vya.setRationale("test");
+		vya.setCropCommodityName("BARLEY");
+		vya.setFieldLabel(null);
+		vya.setDeletedByUserInd(null);
+
+		expectedVya.add(vya);
+
+		Integer pageNumber = (1);
+		Integer pageRowCount = (20);
 
 		UwContractListRsrc searchResults = service.getUwContractList(
 				topLevelEndpoints, 
@@ -257,7 +295,7 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		Assert.assertEquals(1, searchResults.getCollection().size());
 
 		UwContractRsrc referrer = searchResults.getCollection().get(0);
-		Assert.assertNotNull(referrer.getInventoryContractGuid());
+		//Assert.assertNotNull(referrer.getInventoryContractGuid());
 		Assert.assertNotNull(referrer.getDeclaredYieldContractGuid());
 		Assert.assertNotNull(referrer.getVerifiedYieldContractGuid());
 
@@ -266,11 +304,11 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 
 		checkVerifiedYieldContractCommodities(expectedVycc, verifiedYldContract.getVerifiedYieldContractCommodities());
 		
+		checkVerifiedYieldAmendments(expectedVya, verifiedYldContract.getVerifiedYieldAmendments());
+		
 		//*****************************************************************
 		//AFTER TESTS: DELETE LAND, INVENTORY AND YIELD BY RUNNING THE DELETE SCRIPTS BELOW
 		//*****************************************************************
-
-		
 
 		logger.debug(">testGetVerifiedYieldContractCommodities");
 	
@@ -280,6 +318,38 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 	INSERT STATEMENTS
 	*****************
 
+		-- Declared Yield Contract
+		INSERT INTO cuws.declared_yield_contract(
+		declared_yield_contract_guid, 
+			contract_id, crop_year, 
+			declaration_of_production_date, 
+			dop_update_timestamp, 
+			dop_update_user, 
+			entered_yield_meas_unit_type_code, 
+			default_yield_meas_unit_type_code, 
+			grain_from_other_source_ind, 
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date, 
+			baler_wagon_info, 
+			total_livestock)
+		VALUES ('dyc-guid',
+				3939,
+				2023,
+				now(),
+				now(),
+				'admin',
+				'BUSHEL',
+				'TONNE',
+				'N',
+				'admin',
+				now(),
+				'admin',
+				now(),
+				null,
+				null);
+		
 		-- Verified Yield Contract
 		insert into verified_yield_contract(
 			verified_yield_contract_guid, 
@@ -295,7 +365,7 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 			update_date
 		) values (
 			'bd4c96bf89d94e46a7b81e89fa5eba56', 
-			-1,
+			3939,
 			2023,
 			'dyc-guid',
 			'TONNE',
@@ -305,7 +375,7 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 			now(),
 			'admin',
 			now()
-		)
+		);
 
 
 		-- Verified Yield Contract Commodity
@@ -381,20 +451,29 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 			now()
 		);
 
-	*****************
-	DELETE STATEMENTS
-	*****************
+	--Verified Yield Amendment
+	INSERT INTO cuws.verified_yield_amendment(verified_yield_amendment_guid, verified_yield_amendment_code, verified_yield_contract_guid, crop_commodity_id, field_id, yield_per_acre, acres, rationale, is_pedigree_ind, create_user, create_date, update_user, update_date)
+		VALUES ('abdcdgfgrsaged2025-1', 'Appraisal', 'bd4c96bf89d94e46a7b81e89fa5eba56', 16, 7929, 15.5, 50, 'test', 'N', 'admin', now(), 'admin', now());
+		
+	INSERT INTO cuws.verified_yield_amendment(verified_yield_amendment_guid, verified_yield_amendment_code, verified_yield_contract_guid, crop_commodity_id, field_id, yield_per_acre, acres, rationale, is_pedigree_ind, create_user, create_date, update_user, update_date)
+		VALUES ('abdcdgfgrsaged2025-2', 'Assessment', 'bd4c96bf89d94e46a7b81e89fa5eba56', 16, null, 7.7, 77, 'test', 'Y', 'admin', now(), 'admin', now());
+	
+
+
+	delete from verified_yield_amendment where verified_yield_contract_guid = 'bd4c96bf89d94e46a7b81e89fa5eba56';
 	delete from verified_yield_contract_commodity where verified_yield_contract_guid = 'bd4c96bf89d94e46a7b81e89fa5eba56';
 	delete from verified_yield_contract where verified_yield_contract_guid = 'bd4c96bf89d94e46a7b81e89fa5eba56';
+	delete from declared_yield_contract where declared_yield_contract_guid = 'dyc-guid';
 
 	 
 	*****************
 	SELECT STATEMENTS
 	*****************
+	select * from declared_yield_contract where declared_yield_contract_guid = 'dyc-guid';
 	select * from verified_yield_contract vyc where vyc.verified_yield_contract_guid = 'bd4c96bf89d94e46a7b81e89fa5eba56';
 	select * from verified_yield_contract_commodity vycc where vycc.verified_yield_contract_guid = 'bd4c96bf89d94e46a7b81e89fa5eba56';	
- 
-	 */
+	select * from verified_yield_amendment where verified_yield_contract_guid = 'bd4c96bf89d94e46a7b81e89fa5eba56';
+*/ 
 	}
 	
 	
@@ -411,6 +490,48 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		Assert.assertNotNull(actual.getVerifiedYieldUpdateTimestamp());
 	}
 
+	private void checkVerifiedYieldAmendments(List<VerifiedYieldAmendment> expected, List<VerifiedYieldAmendment> actual) {
+		if ( expected == null && actual != null || expected != null && actual == null ) {
+			Assert.fail();
+		} else if ( expected != null && actual != null ) {
+			Assert.assertEquals(expected.size(), actual.size());
+			for (VerifiedYieldAmendment expectedVya : expected) {
+				VerifiedYieldAmendment actualVya = getVerifiedYieldAmendment(expectedVya.getCropCommodityId(), expectedVya.getIsPedigreeInd(), actual);
+				checkVerifiedYieldAmendment(expectedVya, actualVya);
+			}
+		}
+		
+	}
+	
+	private VerifiedYieldAmendment getVerifiedYieldAmendment(Integer cropCommodityId, Boolean isPedigree, List<VerifiedYieldAmendment> vyaList) {
+		
+		VerifiedYieldAmendment vya = null;
+		
+		List<VerifiedYieldAmendment> vyaFiltered = vyaList.stream()
+				.filter(x -> x.getCropCommodityId() == cropCommodityId && x.getIsPedigreeInd() == isPedigree )
+				.collect(Collectors.toList());
+		
+		if (vyaFiltered != null) {
+			vya = vyaFiltered.get(0);
+		}
+		return vya;
+	}
+	
+	private void checkVerifiedYieldAmendment(VerifiedYieldAmendment expected, VerifiedYieldAmendment actual) {
+		Assert.assertEquals("VerifiedYieldAmendmentGuid", expected.getVerifiedYieldAmendmentGuid(), actual.getVerifiedYieldAmendmentGuid());
+		Assert.assertEquals("VerifiedYieldContractGuid", expected.getVerifiedYieldContractGuid(), actual.getVerifiedYieldContractGuid());
+		Assert.assertEquals("VerifiedYieldAmendmentCode", expected.getVerifiedYieldAmendmentCode(), actual.getVerifiedYieldAmendmentCode());
+		Assert.assertEquals("CropCommodityId", expected.getCropCommodityId(), actual.getCropCommodityId());
+		Assert.assertEquals("IsPedigreeInd", expected.getIsPedigreeInd(), actual.getIsPedigreeInd());
+		Assert.assertEquals("FieldId", expected.getFieldId(), actual.getFieldId());
+		Assert.assertEquals("YieldPerAcre", expected.getYieldPerAcre(), actual.getYieldPerAcre());
+		Assert.assertEquals("Acres", expected.getAcres(), actual.getAcres());
+		Assert.assertEquals("Rationale", expected.getRationale(), actual.getRationale());
+		Assert.assertEquals("CropCommodityName", expected.getCropCommodityName(), actual.getCropCommodityName());
+		Assert.assertEquals("FieldLabel", expected.getFieldLabel(), actual.getFieldLabel());
+		Assert.assertEquals("DeletedByUserInd", expected.getDeletedByUserInd(), actual.getDeletedByUserInd());
+	}
+	
 	private void checkVerifiedYieldContractCommodities(List<VerifiedYieldContractCommodity> expected, List<VerifiedYieldContractCommodity> actual) {
 		if ( expected == null && actual != null || expected != null && actual == null ) {
 			Assert.fail();

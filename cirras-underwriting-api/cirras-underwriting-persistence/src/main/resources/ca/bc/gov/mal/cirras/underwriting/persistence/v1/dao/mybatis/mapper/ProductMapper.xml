@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.ProductMapper">
+
+	<resultMap id="ProductDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto">
+	
+		<id property="productId" column="product_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+
+		<result property="policyId" column="policy_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="cropCommodityId" column="crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="commodityCoverageCode" column="commodity_coverage_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="productStatusCode" column="product_status_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="deductibleLevel" column="deductible_level" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="productionGuarantee" column="production_guarantee" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="probableYield" column="probable_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="insuredByMeasType" column="insured_by_meas_type" javaType="java.lang.String" jdbcType="VARCHAR" />
+
+		<result property="dataSyncTransDate" column="data_sync_trans_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+	</resultMap>
+	
+    <sql id="selectColumns">
+		t.product_id,  
+		t.policy_id, 
+		t.crop_commodity_id, 
+		t.commodity_coverage_code, 
+		t.product_status_code, 
+		t.deductible_level, 
+		t.production_guarantee, 
+		t.probable_yield, 
+		t.insured_by_meas_type, 
+		t.data_sync_trans_date, 
+		t.create_user, 
+		t.create_date, 
+		t.update_user, 
+		t.update_date
+    </sql>
+    
+	<select id="fetch" resultMap="ProductDtoMap">
+		SELECT 	
+		<include refid="selectColumns"/>
+		FROM product t
+		WHERE t.product_id = #{productId}
+	</select>
+	
+	<insert id="insert">
+
+		INSERT INTO product(
+			product_id, 
+			policy_id, 
+			crop_commodity_id, 
+			commodity_coverage_code, 
+			product_status_code, 
+			deductible_level, 
+			production_guarantee, 
+			probable_yield, 
+			insured_by_meas_type, 
+			data_sync_trans_date, 
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date
+		) VALUES (
+			#{dto.productId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.policyId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.commodityCoverageCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.productStatusCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.deductibleLevel, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.productionGuarantee, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.probableYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.insuredByMeasType, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.dataSyncTransDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+	</insert> 
+
+	<update id="update">
+		UPDATE product
+		SET policy_id = #{dto.policyId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			crop_commodity_id = #{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			commodity_coverage_code = #{dto.commodityCoverageCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			product_status_code = #{dto.productStatusCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			deductible_level = #{dto.deductibleLevel, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			production_guarantee = #{dto.productionGuarantee, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			probable_yield = #{dto.probableYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			insured_by_meas_type = #{dto.insuredByMeasType, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			data_sync_trans_date = #{dto.dataSyncTransDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			update_date = now()
+		WHERE product_id = #{dto.productId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}
+		 AND data_sync_trans_date <![CDATA[ < ]]> #{dto.dataSyncTransDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN}
+	</update> 
+
+	<delete id="delete">
+		DELETE FROM product WHERE product_id = #{productId}
+	</delete> 
+
+</mapper>

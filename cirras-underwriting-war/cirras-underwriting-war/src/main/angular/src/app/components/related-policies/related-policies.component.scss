@@ -1,35 +1,32 @@
 @import '../../../styles/variables';
 
 .related-policies{
-  
-  .mat-form-field-wrapper{
-    padding-bottom: 0;
+
+ .mat-mdc-text-field-wrapper {
     width: 170px;
     height: 36px;
-  }
+    padding-left: 6px; 
+    border: 0.5px solid  rgba(194, 194, 194, 1) !important;
+    border-radius: 5px !important;
+ }
 
-  .mat-form-field-underline {
-    display: none;
-  }
+ .mat-mdc-form-field-flex {
+  width: 155px;
+  height: 36px;
 
-  .mat-form-field-appearance-fill .mat-form-field-infix {
-     padding: 0; 
-  }
+ }
 
-  .mat-form-field-infix {
-      padding: 0 0 0 0;
-    }
+ .mat-mdc-form-field-infix {
+  width: 155px !important;
+  min-height: 36px;
+ }
 
-  .mat-form-field-appearance-fill .mat-form-field-flex {
-      background-color: white;
-      border: 1px solid rgba(194, 194, 194, 1) !important;
-      border-radius: 5px !important;
-      padding: 0 !important;
-  }
+ .mat-mdc-select{
+  font-family:  $font-family-main;
+ }
 
-  .mat-select-value {
-    padding-bottom: 10px;
-    padding-left: 8px;
-    font-family: $font-family-main;
-  }
+ .mdc-text-field--outlined .mat-mdc-form-field-infix { 
+  padding-top: 7px;
+ }
+
 }

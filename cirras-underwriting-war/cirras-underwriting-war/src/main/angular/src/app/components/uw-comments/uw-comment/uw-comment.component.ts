@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 
 @Component({
@@ -9,12 +9,12 @@ import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 })
 export class UwCommentComponent implements OnInit {
     @Input() uwComment: UnderwritingComment;
-    @Input() uwCommentsFormArray: FormArray;
+    @Input() uwCommentsFormArray: UntypedFormArray;
 
-    uwCommentFormGroup: FormGroup;
+    uwCommentFormGroup: UntypedFormGroup;
     validComment: boolean = true;
 
-    constructor(private fb: FormBuilder) {
+    constructor(private fb: UntypedFormBuilder) {
     }
 
     ngOnInit(): void {

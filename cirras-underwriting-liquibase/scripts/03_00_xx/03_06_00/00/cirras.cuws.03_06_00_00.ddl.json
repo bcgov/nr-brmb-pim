@@ -6,5 +6,7 @@
   {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.verified_yield_contract_commodity.sql"}},
   {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.verified_yield_amendment_code.sql"}},
   {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.verified_yield_amendment.sql"}},
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.product.sql"}},
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.crop_commodity_pedigree_xref.sql"}},
   {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
   ] } }]}

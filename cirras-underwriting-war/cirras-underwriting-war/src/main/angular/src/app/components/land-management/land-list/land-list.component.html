@@ -8,7 +8,7 @@
                         <mat-spinner [diameter]="30"></mat-spinner>
                     </div>
                     <p *ngIf="securityUtilService.doesUserHaveScope(SCOPES_UI.CREATE_LEGAL_LAND)">
-                        <button mat-raised-button color="primary" (click)="onAddLegalLand()">
+                        <button mat-raised-button class="primary" (click)="onAddLegalLand()" style="width: 170px;">
                             <mat-icon class="button-mat-icon">add</mat-icon>Add Legal Land
                         </button>
                     </p>
@@ -20,7 +20,7 @@
                     <div class="field search-input">
                         <mat-label class="label filter-label">Legal Location</mat-label>     
                         <input class="search-input" aria-label="Legal Location" [(ngModel)]="searchLegalLocation" (ngModelChange)="searchTextUpdated()">
-                        <button mat-button matSuffix mat-icon-button class="input-clear-button" *ngIf="searchLegalLocation"
+                        <button matSuffix mat-icon-button class="input-clear-button" *ngIf="searchLegalLocation"
                                 aria-label="Clear" (click)="searchLegalLocation=undefined;searchTextUpdated(); $event.stopPropagation()"
                                 matTooltip="Clear" style="margin-left: 270px;">                            
                                   <mat-icon>close</mat-icon>
@@ -30,7 +30,7 @@
                     <div class="field search-input">
                         <mat-label class="label filter-label">Land Identifier</mat-label>     
                         <input class="search-input" aria-label="Land Identifier" [(ngModel)]="searchLandIdentifier" (ngModelChange)="searchTextUpdated()">
-                        <button mat-button matSuffix mat-icon-button class="input-clear-button" *ngIf="searchLandIdentifier"
+                        <button matSuffix mat-icon-button class="input-clear-button" *ngIf="searchLandIdentifier"
                                 aria-label="Clear" (click)="searchLandIdentifier=undefined;searchTextUpdated(); $event.stopPropagation()"
                                 matTooltip="Clear" style="margin-left: 191px;">                            
                                   <mat-icon>close</mat-icon>
@@ -40,7 +40,7 @@
                     <div class="field search-input">
                         <mat-label class="label filter-label">Grower Information</mat-label>     
                         <input class="search-input" aria-label="Grower Information" [(ngModel)]="searchGrower" (ngModelChange)="searchTextUpdated()">
-                        <button mat-button matSuffix mat-icon-button class="input-clear-button" *ngIf="searchGrower"
+                        <button matSuffix mat-icon-button class="input-clear-button" *ngIf="searchGrower"
                                 aria-label="Clear" (click)="searchGrower=undefined;searchTextUpdated(); $event.stopPropagation()"
                                 matTooltip="Clear">                            
                                   <mat-icon>close</mat-icon>
@@ -60,7 +60,7 @@
                     </div>
   
                     <div class="field">
-                        <button mat-raised-button color="primary" (click)="clearSearchAndFilters()"><mat-icon svgIcon="filter-cancel"></mat-icon>Clear</button>
+                        <button mat-raised-button class="primary" (click)="clearSearchAndFilters()"><mat-icon svgIcon="filter-cancel"></mat-icon>Clear</button>
                     </div>
 
   

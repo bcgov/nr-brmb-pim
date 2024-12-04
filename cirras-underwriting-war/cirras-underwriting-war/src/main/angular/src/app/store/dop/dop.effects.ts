@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {Action, Store} from "@ngrx/store";
 import {DefaultService as CirrasUnderwritingAPIService, DopYieldContractRsrc} from "@cirras/cirras-underwriting-api";
-import {AppConfigService, TokenService} from "@wf1/core-ui";
+import {AppConfigService, TokenService} from "@wf1/wfcc-core-lib";
 import {UUID} from "angular2-uuid";
 import {Observable, of} from 'rxjs';
 import {catchError, concatMap, debounceTime, map, switchMap, withLatestFrom} from 'rxjs/operators';
@@ -172,7 +172,7 @@ addNewDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
     switchMap(
         ([action, store]) => {
             let typedAction = <DopYieldContractAction>action;
-            let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
             let payload = <DopYieldContract>typedAction.payload.dopYieldContract;
 
@@ -214,7 +214,7 @@ updateDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
     switchMap(
         ([action, store]) => {
             let typedAction = <DopYieldContractAction>action;
-            let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
             let payload = <DopYieldContract>typedAction.payload.dopYieldContract;
 
@@ -259,7 +259,7 @@ deleteDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
   switchMap(
       ([action, store]) => {
           let typedAction = <DeleteDopYieldContractAction>action;
-          let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+          let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
           let authToken = this.tokenService.getOauthToken();
           let payload = <DopYieldContract>typedAction.payload.dopYieldContract;
 

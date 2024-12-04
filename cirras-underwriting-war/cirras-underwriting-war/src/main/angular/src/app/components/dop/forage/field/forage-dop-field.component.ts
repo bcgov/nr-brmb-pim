@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 import { Store } from "@ngrx/store";
@@ -16,11 +16,11 @@ import { DOP_COMPONENT_ID } from "src/app/store/dop/dop.state";
 })
 export class ForageDopFieldComponent implements OnInit {
     @Input() field: AnnualField;
-    @Input() fieldsFormArray: FormArray;
+    @Input() fieldsFormArray: UntypedFormArray;
 
-    fieldFormGroup: FormGroup;
+    fieldFormGroup: UntypedFormGroup;
 
-    constructor(private fb: FormBuilder,
+    constructor(private fb: UntypedFormBuilder,
         private dialog: MatDialog,
         private store: Store<RootState>) {
     }
@@ -60,7 +60,7 @@ export class ForageDopFieldComponent implements OnInit {
             'display': 'grid',
             'grid-template-columns': '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr', 
             'align-items': 'stretch',
-            'width': `${320 * this.numCuts + 860}px`
+            'width': `${320 * this.numCuts + 880}px`
         };
     }
 

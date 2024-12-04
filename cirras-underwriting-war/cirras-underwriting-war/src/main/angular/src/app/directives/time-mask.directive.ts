@@ -1,6 +1,6 @@
 import {Directive, ElementRef, HostListener, Input, OnChanges, OnDestroy, SimpleChanges} from "@angular/core";
 import {CONSTANTS} from "../utils";
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {Subscription} from "rxjs";
 
 @Directive({
@@ -10,7 +10,7 @@ export class TimeMaskDirective implements OnDestroy, OnChanges {
   mask = CONSTANTS.DATE_MASK;
   timeInputElement: any;
   @Input()
-  public formControl: FormControl;
+  public formControl: UntypedFormControl;
   public formControlValueSub: Subscription;
   public lastValidDate: string;
   constructor(private element: ElementRef) {

@@ -1,10 +1,7 @@
 import {Action, ActionReducerMap} from "@ngrx/store";
-import {routerReducer} from "@ngrx/router-store";
-
 import {applicationReducer} from "./application/application.reducer";
 import {ApplicationEffects} from "./application/application.effects";
 import {ApplicationState, PagingSearchState} from "./application/application.state";
-
 import {pageSearchReducer} from "./common/page-search.reducer";
 import { UwContractsListEffects } from "./uw-contracts-list/uw-contracts-list.effects";
 import { initialUwContractsListSearchState, UwContractsListState } from "./uw-contracts-list/uw-contracts-list.state";
@@ -33,7 +30,6 @@ import { VerifiedYieldEffects } from "./verified-yield/verified-yield.effects";
 
 
 export const rootReducers: ActionReducerMap<any> = {
-    router: routerReducer,
     searchUwContracts: pageSearchReducer,
     application: applicationReducer,
     uwContractsList: uwContractsListReducer,

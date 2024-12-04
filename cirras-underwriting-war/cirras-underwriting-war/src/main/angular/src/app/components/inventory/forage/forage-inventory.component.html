@@ -25,8 +25,8 @@
             </div>
             <div class="vertical-line"></div>
             <div matTooltip="Changes must be saved before download is possible.">
-                <button mat-raised-button color="secondary" [disabled]="hasDataChanged == true"
-                class="button-large-text" (click)="onPrint()">
+                <button mat-raised-button class="secondary button-large-text" [disabled]="hasDataChanged == true"
+                (click)="onPrint()">
                     <mat-icon class="button-mat-icon">download</mat-icon>Download
                 </button>
             </div>
@@ -34,8 +34,7 @@
                 <button 
                     *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
                     mat-raised-button 
-                    [color]="isHiddenFieldInTotals ? 'secondary' : 'primary'"
-                    [ngClass]="isHiddenFieldInTotals ? 'header-button-red' : 'button-large-text'"
+                    [ngClass]="isHiddenFieldInTotals ? 'secondary header-button-red' : 'primary button-large-text'"
                     [disabled]="!hasDataChanged && inventoryContract?.inventoryContractGuid" 
                     (click)="onSave()">
                         Save
@@ -75,15 +74,14 @@
             </div>
             
             <div>
-                <button *ngIf="securityUtilService.canEditInventory() && !hasYieldData" mat-raised-button color="secondary" class="header-button"  (click)="onAddNewField()">
+                <button *ngIf="securityUtilService.canEditInventory() && !hasYieldData" mat-raised-button class="secondary header-button"  (click)="onAddNewField()">
                     <mat-icon class="button-mat-icon">add</mat-icon>Add Field
                 </button>
             </div>
             <div>
                 <button *ngIf="!hasYieldData" 
                     mat-raised-button 
-                    color="secondary" 
-                    class="header-button"  
+                    class="secondary header-button"  
                     matTooltip="Clear unsaved changes"
                     (click)="onCancel()">
                     Clear Changes
@@ -94,8 +92,8 @@
                 <button *ngIf="securityUtilService.canDeleteInventory() && 
                                 inventoryContract && inventoryContract.inventoryContractGuid &&
                                 hasYieldData == false"  
-                    mat-raised-button color="secondary" 
-                    class="header-button-red"  
+                    mat-raised-button 
+                    class="secondary header-button-red"  
                     (click)="onDeleteInventory()">
                     <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset Inventory
                 </button>
@@ -119,12 +117,12 @@
                 <div class="inventory-header" style="width:180px">Crop Seeded</div>
                 <div class="inventory-header" style="width:185px" matTooltip="Acres are rounded to the nearest tenth after the decimal point">Field Acres</div>
                 <div class="inventory-header" style="width:150px">Year/Date Seeded</div>
-                <div class="inventory-header" style="width:75px" matTooltip="Irrigated">Irgt</div>
-                <div class="inventory-header" style="width:75px" matTooltip="Insurable for Quantity">Ins for QTY</div>
-                <div class="inventory-header" style="width:140px">Plant Insurability</div>
+                <div class="inventory-header" style="width:65px" matTooltip="Irrigated">Irgt</div>
+                <div class="inventory-header" style="width:65px" matTooltip="Insurable for Quantity">Ins for QTY</div>
+                <div class="inventory-header" style="width:170px">Plant Insurability</div>
 
                 <div class="inventory-header" style="width:100px" matTooltip="Acres are rounded to the nearest tenth after the decimal point">Seeding Intention</div>
-                <div class="inventory-header" style="width:75px" matTooltip="Unseeded Insurable">Unsdd</div>
+                <div class="inventory-header" style="width:65px" matTooltip="Unseeded Insurable">Unsdd</div>
 
                 <div class="inventory-header" style="width:75px">AWP Eligibility</div>
                 <div class="inventory-header" style="width:90px;">Manage Planting</div>
@@ -312,7 +310,7 @@
                                             </div>
 
                                             <div *ngIf="inventorySeededForages.value.deletedByUserInd != true" 
-                                                class="border-bottom border-left" style="width:75px;"
+                                                class="inventory-fill border-bottom border-left" style="width:65px;"
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
                                                 <mat-checkbox 
                                                     formControlName="isIrrigatedInd" 
@@ -321,7 +319,7 @@
                                             </div>
 
                                             <div *ngIf="inventorySeededForages.value.deletedByUserInd != true" 
-                                                class="border-bottom border-left" style="width:75px;"
+                                                class="inventory-fill border-bottom border-left" style="width:65px;"
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
                                                 <mat-checkbox 
                                                     *ngIf="isQuantityInsurable(fieldIndex, plantingIndex, invSeededIndex)" 
@@ -332,11 +330,11 @@
                                             </div>
 
                                             <div *ngIf="inventorySeededForages.value.deletedByUserInd != true"
-                                                class="inventory-fill" style="width:140px;"
+                                                class="inventory-fill" style="width:170px;"
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">  
 
                                                 <mat-form-field *ngIf="!isAnnualPlanting(fieldIndex, plantingIndex, invSeededIndex)" appearance="fill">
-                                                <mat-select 
+                                                <mat-select hideSingleSelectionIndicator="true"
                                                     formControlName="plantInsurabilityTypeCode" 
                                                     (focus)="setPlantInsurability(fieldIndex, plantingIndex, invSeededIndex)"
                                                     (selectionChange)="isMyFormDirty()"
@@ -363,7 +361,7 @@
                                             </div>
 
                                             <div *ngIf="planting.value.deletedByUserInd != true" 
-                                                class="border-bottom border-left border-right" style="width:75px;"
+                                                class="inventory-fill border-bottom border-left border-right" style="width:65px;"
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
                                                 <mat-checkbox 
                                                     *ngIf="isUnseededInsurable(fieldIndex, plantingIndex, invSeededIndex)" 
@@ -374,7 +372,7 @@
                                             </div>
 
                                             <div *ngIf="inventorySeededForages.value.deletedByUserInd != true" 
-                                                class="border-bottom border-left" style="width:75px;"
+                                                class="inventory-fill border-bottom border-left" style="width:75px;"
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
                                                 <mat-checkbox 
                                                     *ngIf="isAwpEligible(fieldIndex, plantingIndex, invSeededIndex)" 
@@ -384,7 +382,7 @@
                                             </div>
 
                                             <div *ngIf="planting.value.deletedByUserInd != true" 
-                                                class="border-bottom border-right border-left" style="width:90px;"
+                                                class="action-icons border-bottom border-right border-left" style="width:90px;"
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout border-right-exclude-printout' :  'inventory-border' )">
                                             
                                                 <mat-icon 

@@ -16,7 +16,6 @@
     background: #EFF5FA; // blue
   }
 
-
   .grain-unsdd-inv-cntrct-container {
     display: grid;
     grid-auto-rows: minmax( 2em, auto );
@@ -28,15 +27,5 @@
         align-items: center;
     }
 
-    .comment-fill{
-
-        .mat-form-field-appearance-fill .mat-form-field-underline::before {
-            background-color: black;
-        }
-
-        .mat-form-field-appearance-fill .mat-form-field-flex {
-            background-color: transparent;
-          }
-    }
   }
 
