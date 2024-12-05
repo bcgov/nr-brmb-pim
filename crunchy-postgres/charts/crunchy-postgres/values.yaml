@@ -47,14 +47,14 @@ pgBackRest:
   retentionArchive: 1
   retentionArchiveType: differential
   timeout: 600
-  s3-uri-style: path
+  s3UriStyle: path
 
   repos:
     schedules:
       full: 0 0 * * 0
       differential: 0 0 * * 1-6
       incremental: 0 4,8,12,16,20 * * *
-    schedules-offset:
+    schedulesOffset:
       full: 0 1 * * 0
       differential: 0 1 * * 1-6
       incremental: 0 5,9,13,17,21 * * *
