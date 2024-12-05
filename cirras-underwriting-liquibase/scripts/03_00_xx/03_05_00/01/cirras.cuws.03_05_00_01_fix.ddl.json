@@ -1,0 +1,6 @@
+
+{
+  "databaseChangeLog": [
+{ "changeSet": {"author":"mhostettler","id":"86","changes": [
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.alter.declared_yield_rollup_forage.sql"}}
+  ] } }]}
