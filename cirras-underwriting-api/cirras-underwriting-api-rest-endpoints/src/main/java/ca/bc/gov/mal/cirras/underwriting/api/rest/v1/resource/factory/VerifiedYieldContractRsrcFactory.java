@@ -1,6 +1,8 @@
 package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory;
 
+import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
 import ca.bc.gov.nrs.common.wfone.rest.resource.RelLink;
+import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
@@ -12,6 +14,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.core.UriBuilder;
 
@@ -32,6 +35,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContrac
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldAmendmentDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
@@ -41,7 +45,7 @@ import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnu
 public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implements VerifiedYieldContractFactory { 
 	
 	@Override
-	public VerifiedYieldContract<? extends AnnualField> getDefaultVerifiedYieldContract(
+	public VerifiedYieldContract<? extends AnnualField, ? extends Message> getDefaultVerifiedYieldContract(
 			PolicyDto policyDto,
 			DeclaredYieldContractDto dycDto,
 			FactoryContext context, 
@@ -93,6 +97,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		resource.setVerifiedYieldContractGuid(null);
 		resource.setVerifiedYieldUpdateTimestamp(null);
 		resource.setVerifiedYieldUpdateUser(null);
+		resource.setProductWarningMessages(new ArrayList<MessageRsrc>());
 	}
    	
 	
@@ -118,12 +123,12 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 	}
 
 	@Override
-	public VerifiedYieldContract<? extends AnnualField> getVerifiedYieldContract(VerifiedYieldContractDto dto,
+	public VerifiedYieldContract<? extends AnnualField, ? extends Message> getVerifiedYieldContract(VerifiedYieldContractDto dto, List<ProductDto> productDtos,
 			FactoryContext context, WebAdeAuthentication authentication) throws FactoryException {
 
 		VerifiedYieldContractRsrc resource = new VerifiedYieldContractRsrc();
 
-		populateResource(resource, dto);
+		populateResource(resource, dto, productDtos);
 
 		// Fields
 		if (!dto.getFields().isEmpty()) {
@@ -137,6 +142,8 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			resource.setFields(fields);
 		}
 		
+		List<MessageRsrc> productWarnings = new ArrayList<MessageRsrc>();
+		
 		// Verified Yield Contract Commodity
 		if (!dto.getVerifiedYieldContractCommodities().isEmpty()) {
 			List<VerifiedYieldContractCommodity> verifiedContractCommodities = new ArrayList<VerifiedYieldContractCommodity>();
@@ -144,6 +151,12 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			for (VerifiedYieldContractCommodityDto vyccDto : dto.getVerifiedYieldContractCommodities()) {
 				VerifiedYieldContractCommodity vyccModel = createVerifiedYieldContractCommodity(vyccDto);
 				verifiedContractCommodities.add(vyccModel);
+				
+				//Check product guarantee
+				MessageRsrc warning = getProductWarning(vyccDto, productDtos);
+				if(warning != null) {
+					productWarnings.add(warning);
+				}
 			}
 
 			resource.setVerifiedYieldContractCommodities(verifiedContractCommodities);
@@ -161,6 +174,9 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			resource.setVerifiedYieldAmendments(verifiedYieldAmendments);
 		}
 		
+		resource.setProductWarningMessages(productWarnings);
+
+		
 		String eTag = getEtag(resource);
 		resource.setETag(eTag);
 
@@ -171,7 +187,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		return resource;		
 	}
 
-	private void populateResource(VerifiedYieldContractRsrc resource, VerifiedYieldContractDto dto) {
+	private void populateResource(VerifiedYieldContractRsrc resource, VerifiedYieldContractDto dto, List<ProductDto> productDtos) {
 		
 		resource.setContractId(dto.getContractId());
 		resource.setCropYear(dto.getCropYear());
@@ -182,7 +198,58 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		resource.setVerifiedYieldContractGuid(dto.getVerifiedYieldContractGuid());
 		resource.setVerifiedYieldUpdateTimestamp(dto.getVerifiedYieldUpdateTimestamp());
 		resource.setVerifiedYieldUpdateUser(dto.getVerifiedYieldUpdateUser());
+		resource.setUpdateProductValuesInd(false);
 		
+	}
+
+	private MessageRsrc getProductWarning(VerifiedYieldContractCommodityDto vyccDto, List<ProductDto> productDtos) {
+		
+		//MessageRsrc messagesRsrc = new MessageRsrc();
+		MessageRsrc messageRsrc = null;
+		
+		ProductDto product = null;
+		
+		if(productDtos == null || productDtos.size() == 0) {
+			//Find product
+			product = getProductDto(vyccDto.getCropCommodityId(), vyccDto.getIsPedigreeInd(), productDtos);
+		}
+		
+		if(product != null) {
+			if (Double.compare(notNull(product.getProductionGuarantee(), (double)-1), notNull(vyccDto.getProductionGuarantee(), (double)-1)) != 0) {
+				//Add warning if values are different -> Only if product is in status FINAL
+				String msg = "";
+				messageRsrc = new MessageRsrc(msg);
+
+				//TODO
+				//Production guarantee for COMMODITY(PEDIGREE or not) is different in the product (PRODUCT VALUE) it's shown in Commodity Totals and used in Yield Summary Claim Yield to Count
+			}
+		} else {
+			//No product: Check if the production guarantee in commodity totals is null
+			if(vyccDto.getProductionGuarantee() != null) {
+				//Add warning if values are different
+				//TODO
+				//There is no product for COMMODITY(PEDIGREE or not) in CIRRAS. The shown Production guarantee is not valid anymore. It's shown in Commodity Totals and used in Yield Summary Claim Yield to Count
+			}
+		}
+		
+		
+		return messageRsrc;
+	}
+	
+	private ProductDto getProductDto(Integer cropCommodityId, Boolean isPedigree, List<ProductDto> productDtos) {
+		
+		ProductDto product = null;
+		
+		//Products in CIRRAS use a different commodity id for pedigreed than in this app. A table maps the correct commodity ids and
+		//are returned to the NonPedigreeCropCommodityId property
+		List<ProductDto> products = productDtos.stream()
+				.filter(x -> x.getNonPedigreeCropCommodityId() == cropCommodityId && x.getIsPedigreeProduct() == isPedigree )
+				.collect(Collectors.toList());
+		
+		if (products != null) {
+			product = products.get(0);
+		}
+		return product;
 	}
 
 	private VerifiedYieldContractCommodity createVerifiedYieldContractCommodity(VerifiedYieldContractCommodityDto dto) {
@@ -314,7 +381,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 	}
 
 	@Override
-	public void updateDto(VerifiedYieldContractDto dto, VerifiedYieldContract<? extends AnnualField> model, String userId) {
+	public void updateDto(VerifiedYieldContractDto dto, VerifiedYieldContract<? extends AnnualField, ? extends Message> model, String userId) {
 		 
 		dto.setVerifiedYieldContractGuid(model.getVerifiedYieldContractGuid());
 		dto.setContractId(model.getContractId());
@@ -345,5 +412,8 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		dto.setYieldPerAcre(model.getYieldPerAcre());
 		
 	}
-	
+
+	private Double notNull(Double value, Double defaultValue) {
+		return (value == null) ? defaultValue : value;
+	}
 }

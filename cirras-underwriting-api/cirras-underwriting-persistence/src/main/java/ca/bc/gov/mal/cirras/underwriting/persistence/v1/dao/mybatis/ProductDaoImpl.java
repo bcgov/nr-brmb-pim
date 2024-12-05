@@ -1,6 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -48,6 +49,28 @@ public class ProductDaoImpl extends BaseDao implements ProductDao {
 		return result;	
 	}
 
+	@Override
+	public List<ProductDto> getForPolicy(Integer contractId, Integer cropYear) throws DaoException {
+
+		logger.debug("<getForPolicy");
+
+		List<ProductDto> dtos = null;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			
+			parameters.put("contractId", contractId);
+			parameters.put("cropYear", cropYear);
+						
+			dtos = this.mapper.getForPolicy(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">getForPolicy " + dtos);
+		return dtos;
+	}
 	
 	@Override
 	public void insert(ProductDto dto, String userId) throws DaoException {

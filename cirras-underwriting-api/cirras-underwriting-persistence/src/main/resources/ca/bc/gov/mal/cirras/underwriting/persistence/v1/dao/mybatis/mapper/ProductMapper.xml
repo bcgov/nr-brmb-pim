@@ -15,9 +15,10 @@
 		<result property="productionGuarantee" column="production_guarantee" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="probableYield" column="probable_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="insuredByMeasType" column="insured_by_meas_type" javaType="java.lang.String" jdbcType="VARCHAR" />
-
 		<result property="dataSyncTransDate" column="data_sync_trans_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-
+		<result property="nonPedigreeCropCommodityId" column="non_pedigree_crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="isPedigreeProduct" column="is_pedigree_product" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		
 		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -47,6 +48,23 @@
 		<include refid="selectColumns"/>
 		FROM product t
 		WHERE t.product_id = #{productId}
+	</select>
+	
+	<select id="getForPolicy" resultMap="ProductDtoMap">
+		SELECT 	
+		<include refid="selectColumns"/>
+		, COALESCE(xref.crop_commodity_id, t.crop_commodity_id) AS non_pedigree_crop_commodity_id
+		, CASE 
+			WHEN COALESCE(xref.crop_commodity_id, 0) > 0 THEN
+			 'Y'
+			ELSE
+			 'N'
+		  END AS is_pedigree_product
+		FROM cuws.product t
+		JOIN policy p on p.policy_id = t.policy_id
+		LEFT JOIN crop_commodity_pedigree_xref xref ON xref.crop_commodity_id_pedigree = t.crop_commodity_id
+		WHERE contract_id = #{contractId}
+		AND crop_year = #{cropYear}
 	</select>
 	
 	<insert id="insert">

@@ -4,6 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
+import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.service.api.ConflictException;
 import ca.bc.gov.nrs.wfone.common.service.api.ForbiddenException;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
@@ -15,7 +16,7 @@ import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 public interface CirrasVerifiedYieldService {
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	VerifiedYieldContract<? extends AnnualField> rolloverVerifiedYieldContract(
+	VerifiedYieldContract<? extends AnnualField, ? extends Message> rolloverVerifiedYieldContract(
 		Integer policyId, 
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -23,7 +24,7 @@ public interface CirrasVerifiedYieldService {
 	throws ServiceException, NotFoundException;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	VerifiedYieldContract<? extends AnnualField> getVerifiedYieldContract(
+	VerifiedYieldContract<? extends AnnualField, ? extends Message> getVerifiedYieldContract(
 		String verifiedYieldContractGuid, 
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -31,18 +32,18 @@ public interface CirrasVerifiedYieldService {
 	throws ServiceException, NotFoundException;	
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	VerifiedYieldContract<? extends AnnualField> createVerifiedYieldContract(
-		VerifiedYieldContract<? extends AnnualField> verifiedYieldContract,
+	VerifiedYieldContract<? extends AnnualField, ? extends Message> createVerifiedYieldContract(
+		VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
 	) 
 	throws ServiceException, NotFoundException, ValidationFailureException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	VerifiedYieldContract<? extends AnnualField> updateVerifiedYieldContract(
+	VerifiedYieldContract<? extends AnnualField, ? extends Message> updateVerifiedYieldContract(
 		String verifiedYieldContractGuid, 
 		String optimisticLock,
-		VerifiedYieldContract<? extends AnnualField> verifiedYieldContract, 
+		VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract, 
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
 	)
