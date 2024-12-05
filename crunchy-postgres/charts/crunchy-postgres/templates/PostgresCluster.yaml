@@ -98,6 +98,10 @@ spec:
         #Whether to expire .wal files on any backup or full backup only
         repo1-retention-archive-type: {{ .Values.pgBackRest.retentionArchiveType }}
 
+      configuration:
+        - secret:
+            name: {{ .Values.pgBackRest.repos.configuration.secretName }}
+
       repos:
         # hardcoding repo1 until we solution allowing multiple repos
         - name: repo1
@@ -105,9 +109,6 @@ spec:
             full: {{ .Values.pgBackRest.repos.schedules.full }}
             differential: {{ .Values.pgBackRest.repos.schedules.differential }}
             incremental: {{ .Values.pgBackRest.repos.schedules.incremental }}
-          configuration:
-            - secret:
-                name: {{ .Values.pgBackRest.repos.configuration.secretName }}
           volume:
             volumeClaimSpec:
               accessModes:
@@ -116,6 +117,10 @@ spec:
                 requests:
                   storage: {{ .Values.pgBackRest.repos.volume.storage }}
               storageClassName: {{ .Values.pgBackRest.repos.volume.storageClassName }}
+        - name: repo2
+          schedules:
+            full: {{ .Values.pgBackRest.repos.schedules.full }}
+            differential: {{ .Values.pgBackRest.repos.schedules.differential }}
           s3:
             bucket:  {{ .Values.pgBackRest.repos.s3.bucket }}
             endpoint:  {{ .Values.pgBackRest.repos.s3.endpoint }}
