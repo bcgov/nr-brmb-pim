@@ -145,6 +145,6 @@ export const PLANT_INSURABILITY_TYPE_CODE ={
 }
 
 export const VERIFIED_YIELD_AMENDMENT_CODE = {
-    "APPRAISAL"     : "APPRAISAL",  
-    "ASSESSMENT"    : "ASSESSMENT"
+    "APPRAISAL"     : "Appraisal",  
+    "ASSESSMENT"    : "Assessment"
 }

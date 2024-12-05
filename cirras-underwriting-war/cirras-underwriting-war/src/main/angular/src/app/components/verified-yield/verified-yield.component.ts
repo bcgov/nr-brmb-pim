@@ -117,6 +117,9 @@ export class VerifiedYieldComponent extends BaseComponent {
       return
     }
 
+    // remove rows with empty verifiedYieldAmendmentGuid and deletedByUserInd = true from verifiedYieldContract
+    this.cleanUpAmendments()
+
     if (this.verifiedYieldContract.verifiedYieldContractGuid) {
       this.store.dispatch(UpdateVerifiedYieldContract(VERIFIED_YIELD_COMPONENT_ID, this.verifiedYieldContract))
     } else {
@@ -128,8 +131,38 @@ export class VerifiedYieldComponent extends BaseComponent {
   }
 
   isFormValid() {
-    // TODO ??
+    // amendments: all inputs but fields are required
+    for (let i=0; i < this.verifiedYieldContract.verifiedYieldAmendments.length; i++) {
+
+      if (this.verifiedYieldContract.verifiedYieldAmendments[i].deletedByUserInd !== true ) {
+        if (!this.verifiedYieldContract.verifiedYieldAmendments[i].verifiedYieldAmendmentCode ||
+            !this.verifiedYieldContract.verifiedYieldAmendments[i].cropCommodityId ||
+            !this.verifiedYieldContract.verifiedYieldAmendments[i].yieldPerAcre ||
+            !this.verifiedYieldContract.verifiedYieldAmendments[i].acres ||
+            !this.verifiedYieldContract.verifiedYieldAmendments[i].rationale) {
+
+              alert("Ammendment Type, Commodity, Yield/ac, Acres and Rationale are mandatory!")
+              return false
+            }
+      }
+    }
+
     return true
+  }
+
+  cleanUpAmendments(){
+    // removes rows with empty verifiedYieldAmendmentGuid and deletedByUserInd = true from verifiedYieldContract
+  
+    for (let i=0; i < this.verifiedYieldContract.verifiedYieldAmendments.length; i++) {
+
+      if (this.verifiedYieldContract.verifiedYieldAmendments[i].deletedByUserInd == true && 
+          !this.verifiedYieldContract.verifiedYieldAmendments[i].verifiedYieldAmendmentGuid) {
+
+            // remove amendment
+            this.verifiedYieldContract.verifiedYieldAmendments.splice(i)
+            i--
+          }
+    }
   }
 
   setFormStyles(){

@@ -50,22 +50,16 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
       verifiedYieldContractGuid: [this.amendment.verifiedYieldContractGuid],
       cropCommodityCtrl:          [ { 
         cropCommodityId: ( this.amendment.cropCommodityId) ? this.amendment.cropCommodityId : "", 
-        cropCommodityName: ( this.amendment.cropCommodityName) ? this.amendment.cropCommodityName :"",
-        isPedigreeInd: ( ( this.amendment.isPedigreeInd) ? this.amendment.isPedigreeInd : false )
+        cropCommodityName: ( this.amendment.cropCommodityName) ? this.amendment.cropCommodityName : "",
+        isPedigreeInd: ( this.amendment.isPedigreeInd )
       } ],
-      cropCommodityId: [this.amendment.cropCommodityId],
-      isPedigreeInd: [this.amendment.isPedigreeInd],
       fieldCtrl:          [ { 
         fieldId: ( this.amendment.fieldId) ? this.amendment.fieldId : "", 
         fieldLabel: ( this.amendment.fieldLabel) ? this.amendment.fieldLabel :"",
-        verifiableCommodities: []
       } ],
-      fieldId: [this.amendment.fieldId],
       yieldPerAcre: [this.amendment.yieldPerAcre],
       acres: [this.amendment.acres],
       rationale: [this.amendment.rationale],
-      cropCommodityName: [this.amendment.cropCommodityName],
-      fieldLabel: [this.amendment.fieldLabel],
       deletedByUserInd: [this.amendment.deletedByUserInd]
     });
     this.amendmentsFormArray.push(this.amendmentFormGroup);
@@ -93,27 +87,24 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
 
   updateRationale(){
     let rationale = this.amendmentFormGroup.value.rationale;
-    
     this.amendment.rationale = rationale || null;
 
     this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true)); 
   }
 
   onDeleteAmendment() {
-    // TODO
-    // deletes a row
-    // if the guid is null delete the row from the array and the formArray
-    // if there is a guid then hide it in the page and set deletedByUserInd to true
-
+    // marks the row as deleted and hide it in the html
+    this.amendment.deletedByUserInd = true 
+    this.amendmentFormGroup.controls['deletedByUserInd'].setValue(true)
   }
 
-
+  // field autocomplete functions
   displayFieldsFn(fld: any): string {
     return fld && fld.fieldLabel ? fld.fieldLabel  : '';
   }
 
   getFieldOptions() {
-    
+    // prepare the list of fields based on the selected commodity id
     let fldOpt = [] 
     let cropCommodityId = this.amendmentFormGroup.controls['cropCommodityCtrl'].value.cropCommodityId
     let isPedigreeInd = this.amendmentFormGroup.controls['cropCommodityCtrl'].value.isPedigreeInd
@@ -128,7 +119,6 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
           fldOpt.push({
             fieldId: fld.fieldId,
             fieldLabel: fld.fieldLabel,
-            verifiableCommodities: fld.verifiableCommodities
           })
         }
       })
@@ -143,10 +133,7 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
   }
 
   fieldFocus() {
-  
-    // prepare the list of fields based on the selected commodity id
     this.filteredFieldOptions = this.getFieldOptions()
-
   }
   
   searchField(value){
@@ -164,7 +151,15 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
       }
   }
 
-  // commodities functions
+  updateField(){
+
+    let fieldId = this.amendmentFormGroup.controls['fieldCtrl'].value.fieldId
+    this.amendment.fieldId = fieldId || null;
+
+    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true)); 
+  }
+
+  // commodity autocomplete functions
   displayCommoditiesFn(cmdty: any): string {
     return cmdty && cmdty.cropCommodityName ? makeTitleCase(cmdty.cropCommodityName)  : '';
   }
@@ -176,11 +171,12 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
     
     if (fieldId) {
       // return only the commodities for that field
-      let verifiableCommodities = this.amendmentFormGroup.controls['fieldCtrl'].value.verifiableCommodities
+      let elem = this.fieldOptions.find(fld => fld.fieldId == fieldId)
 
-      if (verifiableCommodities) {
-       cmdtOpt = verifiableCommodities.slice()
-      } 
+      if (elem && elem.verifiableCommodities.length > 0) {
+        cmdtOpt = elem.verifiableCommodities.slice()
+      }
+
     } else {
       
       //return all fields
@@ -210,10 +206,14 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
     }
   }
 
-  // TODO
-  // onDeleteAmendment
-  // rationale - resisable 
-  // drop downs onChange should change the store value
-  // validation -> probably on the main page
-  // remove checkmarks from all autocompletes
+  updateCommodity(){
+
+    let cropCommodityId = this.amendmentFormGroup.controls['cropCommodityCtrl'].value.cropCommodityId
+    let isPedigreeInd = this.amendmentFormGroup.controls['cropCommodityCtrl'].value.isPedigreeInd
+
+    this.amendment.cropCommodityId = cropCommodityId || null;
+    this.amendment.isPedigreeInd = isPedigreeInd || false;
+
+    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true)); 
+  }
 }

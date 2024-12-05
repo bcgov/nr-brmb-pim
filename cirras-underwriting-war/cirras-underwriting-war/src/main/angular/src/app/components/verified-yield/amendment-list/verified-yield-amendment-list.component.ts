@@ -72,7 +72,6 @@ export class VerifiedYieldAmendmentListComponent implements OnInit{
     })
   }
 
-
   addAmendment() {
 
     if (!this.amendments) {
@@ -80,18 +79,18 @@ export class VerifiedYieldAmendmentListComponent implements OnInit{
     }
     
     this.amendments.push({
-      verifiedYieldAmendmentGuid: null, // or create your own temp guid ??
+      verifiedYieldAmendmentGuid: null,
       verifiedYieldAmendmentCode: VERIFIED_YIELD_AMENDMENT_CODE.APPRAISAL, // default
       verifiedYieldContractGuid: this.verifiedYieldContractGuid, 
       cropCommodityId: null,
-      isPedigreeInd: false,
+      isPedigreeInd: false, // default
       fieldId: null,
       yieldPerAcre: null,
       acres: null,
       rationale: null,
       cropCommodityName: null,
       fieldLabel: null,
-      deletedByUserInd: false
+      deletedByUserInd: false // default
     })
 
     this.amendmentFormGroup = this.fb.group({

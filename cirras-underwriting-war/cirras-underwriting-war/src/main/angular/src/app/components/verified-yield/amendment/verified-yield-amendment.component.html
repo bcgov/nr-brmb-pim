@@ -1,5 +1,5 @@
 <div [formGroup]="amendmentFormGroup" style="display: contents;">
-    <div class="inventory-fill border-right border-bottom border-left" style="padding-left: 6px;">
+    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill border-right border-bottom border-left" style="padding-left: 6px;">
        
         <mat-form-field appearance="fill">
             <mat-select hideSingleSelectionIndicator="true"
@@ -10,7 +10,7 @@
         </mat-form-field>
 
     </div>
-    <div class="inventory-fill border-right border-bottom center">
+    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill border-right border-bottom center">
 
         <mat-form-field appearance="fill" style="width: 100%;">
             <input 
@@ -21,7 +21,8 @@
                 (focus)="fieldFocus()"
                 (keyup)="searchField($event.target.value)">
             <mat-autocomplete #autoFieldId="matAutocomplete" hideSingleSelectionIndicator="true"
-                [displayWith]="displayFieldsFn">
+                [displayWith]="displayFieldsFn"
+                (optionSelected)="updateField()">
             <mat-option *ngFor="let option of filteredFieldOptions" [value]="option">
                 {{ option.fieldLabel | titlecase }}
             </mat-option>
@@ -30,7 +31,7 @@
         <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
 
     </div>
-    <div class="inventory-fill border-right border-bottom center">
+    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill border-right border-bottom center">
         <mat-form-field appearance="fill">
             <input 
                 type="text" 
@@ -40,7 +41,8 @@
                 (focus)="commoditiesFocus()"
                 (keyup)="searchCommodity($event.target.value)">
             <mat-autocomplete #autoCropCommodityId="matAutocomplete" hideSingleSelectionIndicator="true"
-                [displayWith]="displayCommoditiesFn">
+                [displayWith]="displayCommoditiesFn"
+                (optionSelected)="updateCommodity()">
             <mat-option *ngFor="let option of filteredCropCommodityOptions" [value]="option">
                 {{ option.cropCommodityName | titlecase }}
             </mat-option>
@@ -49,7 +51,7 @@
         <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
     </div>
 
-    <div class="inventory-fill number border-right border-bottom">
+    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill number border-right border-bottom">
         <mat-form-field appearance="fill">
             <input matInput matInputCommified formControlName="yieldPerAcre" maxlength="10"
                 (keypress)="numberOnly($event)" (blur)="updateYieldPerAcre()" />
@@ -58,7 +60,7 @@
             matTooltip="Editable field">edit</mat-icon>
     </div>
 
-    <div class="inventory-fill number border-right border-bottom">
+    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill number border-right border-bottom">
         <mat-form-field appearance="fill">
             <input matInput matInputCommified formControlName="acres" maxlength="10"
                 (keypress)="numberOnly($event)" (blur)="updateAcres()" />
@@ -67,10 +69,12 @@
             matTooltip="Editable field">edit</mat-icon>
     </div> 
     
-    <div class="inventory-fill border-right border-bottom center">
-        <mat-form-field appearance="fill"  style="width: 100%;">
-            <textarea matInput formControlName="rationale" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-                cdkAutosizeMinRows="1" cdkAutosizeMaxRows="2" maxlength="200" (blur)="updateRationale()">
+    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="border-right border-bottom center">
+        <mat-form-field appearance="fill"  style="width: 100%;" class="inventory-fill">
+            <textarea matInput formControlName="rationale" 
+                cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1" cdkAutosizeMaxRows="8" 
+                maxlength="200" (blur)="updateRationale()">
                 {{ amendmentFormGroup.value.rationale }}
             </textarea>
         </mat-form-field>
@@ -78,7 +82,7 @@
             matTooltip="Editable field">edit</mat-icon>
     </div>
 
-    <div class="readonly border-right border-bottom center">
+    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="readonly border-right border-bottom center">
         <mat-icon *ngIf="securityUtilService.canEditVerifiedYield()"
             matTooltip="Clear editable fields for amendment." 
             style="margin-left: 4px; margin-right: 4px;"
