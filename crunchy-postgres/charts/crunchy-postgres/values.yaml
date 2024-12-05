@@ -46,7 +46,7 @@ pgBackRest:
   #How many backups worth of WAL files to keep, and what type of backup to count for expiring WAL files
   retentionArchive: 1
   retentionArchiveType: differential
-  timeout: 600
+  timeout: "600"
   s3UriStyle: path
 
   repos:
