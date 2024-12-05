@@ -1,5 +1,5 @@
 <div class="plcy-inv-cmdty-totals-header"
-    style="grid-template-columns: 130px 140px 115px 115px 115px 500px 60px; padding-left: 10px;">
+    style="grid-template-columns: 123px 250px 180px 115px 115px 500px 60px; padding-left: 10px;">
 
     <div class="table-header border-top border-left" style="grid-column-start: 1; grid-column-end: 5; padding-top: 8px;">
         Amendments
@@ -34,11 +34,11 @@
         Actions
     </div>
 
-    <div class="grain-unsdd-inv-tot-cmdty-container"
-        style="grid-template-columns: 130px 140px 115px 115px 115px 500px 60px; margin-left: 0px;">
+    <div *ngIf="fieldOptions"
+        class="grain-unsdd-inv-tot-cmdty-container"
+        style="grid-template-columns: 123px 250px 180px 115px 115px 500px 60px; margin-left: 0px;">
         <verified-yield-amendment *ngFor="let amendment of amendments" [amendment]="amendment"
             [amendmentsFormArray]="amendmentsFormArray" 
-            [decimalPrecision]="decimalPrecision"
             [fieldOptions]="fieldOptions"
             [cropCommodityOptions]="cropCommodityOptions"
             style="display: contents;"></verified-yield-amendment>

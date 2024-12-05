@@ -89,7 +89,7 @@
             <div style="margin-top: 16px;">
                 <!-- amendments -->
                 <verified-yield-amendment-list
-                    *ngIf="verifiedYieldContract"
+                    *ngIf="verifiedYieldContract && cropCommodityList"
                     [verifiedYieldContractGuid]="verifiedYieldContractGuid"
                     [amendments]="verifiedYieldContract.verifiedYieldAmendments"
                     [amendmentsFormArray]="getViewModel().formGroup.controls.verifiedYieldAmendments"

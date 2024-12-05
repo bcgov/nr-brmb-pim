@@ -1,8 +1,6 @@
-import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { CropCommodityList } from 'src/app/conversion/models';
 import { VerifiedYieldAmendment } from 'src/app/conversion/models-yield';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { RootState } from 'src/app/store';
@@ -10,18 +8,19 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
 import { makeNumberOnly, makeTitleCase } from 'src/app/utils';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
+import { roundUpDecimalAcres, roundUpDecimalYield } from '../../inventory/inventory-common';
 
 @Component({
   selector: 'verified-yield-amendment',
   templateUrl: './verified-yield-amendment.component.html',
   styleUrls: ['./verified-yield-amendment.component.scss', '../../../../styles/_inventory.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class VerifiedYieldAmendmentComponent implements OnChanges {
 
   @Input() amendment: VerifiedYieldAmendment;
   @Input() amendmentsFormArray: UntypedFormArray;
-  @Input() decimalPrecision: number;
 
   @Input() fieldOptions;
   @Input() cropCommodityOptions;
@@ -31,12 +30,11 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
   amendmentOptions = getCodeOptions("verified_yield_amendment_code"); // get the amendment code
   
   filteredFieldOptions = [];
-
+  filteredCropCommodityOptions = [];
 
   constructor(private fb: UntypedFormBuilder,
     private store: Store<RootState>,
-    public securityUtilService: SecurityUtilService, 
-    private decimalPipe: DecimalPipe ){
+    public securityUtilService: SecurityUtilService){
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -50,8 +48,18 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
       verifiedYieldAmendmentGuid: [this.amendment.verifiedYieldAmendmentGuid],
       verifiedYieldAmendmentCode: [this.amendment.verifiedYieldAmendmentCode],
       verifiedYieldContractGuid: [this.amendment.verifiedYieldContractGuid],
+      cropCommodityCtrl:          [ { 
+        cropCommodityId: ( this.amendment.cropCommodityId) ? this.amendment.cropCommodityId : "", 
+        cropCommodityName: ( this.amendment.cropCommodityName) ? this.amendment.cropCommodityName :"",
+        isPedigreeInd: ( ( this.amendment.isPedigreeInd) ? this.amendment.isPedigreeInd : false )
+      } ],
       cropCommodityId: [this.amendment.cropCommodityId],
       isPedigreeInd: [this.amendment.isPedigreeInd],
+      fieldCtrl:          [ { 
+        fieldId: ( this.amendment.fieldId) ? this.amendment.fieldId : "", 
+        fieldLabel: ( this.amendment.fieldLabel) ? this.amendment.fieldLabel :"",
+        verifiableCommodities: []
+      } ],
       fieldId: [this.amendment.fieldId],
       yieldPerAcre: [this.amendment.yieldPerAcre],
       acres: [this.amendment.acres],
@@ -68,20 +76,16 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
   }
 
   updateYieldPerAcre() {
-    let yieldPerAcre = this.amendmentFormGroup.value.yieldPerAcre;
-    yieldPerAcre = this.decimalPipe.transform(yieldPerAcre, '1.0-3')?.replace(',', '');
-    this.amendment.yieldPerAcre = parseFloat(yieldPerAcre) || null;
-
+    let yieldPerAcre = roundUpDecimalYield(this.amendmentFormGroup.value.yieldPerAcre, 3)
+    this.amendment.yieldPerAcre = parseFloat(yieldPerAcre.toString()) || null
     this.amendmentFormGroup.controls['yieldPerAcre'].setValue(yieldPerAcre)
-
-    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true));
+    
+    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true))
   }
 
   updateAcres() {
-    let acres = this.amendmentFormGroup.value.acres;
-    acres = this.decimalPipe.transform(acres, '1.0-1')?.replace(',', '');
-    this.amendment.acres = parseFloat(acres) || null;
-
+    let acres = roundUpDecimalAcres(this.amendmentFormGroup.value.acres) 
+    this.amendment.acres = parseFloat(acres.toString()) || null;
     this.amendmentFormGroup.controls['acres'].setValue(acres)
 
     this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true));
@@ -105,32 +109,111 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
 
 
   displayFieldsFn(fld: any): string {
-    return fld && fld.fieldLabel ? makeTitleCase( fld.fieldLabel)  : '';
+    return fld && fld.fieldLabel ? fld.fieldLabel  : '';
+  }
+
+  getFieldOptions() {
+    
+    let fldOpt = [] 
+    let cropCommodityId = this.amendmentFormGroup.controls['cropCommodityCtrl'].value.cropCommodityId
+    let isPedigreeInd = this.amendmentFormGroup.controls['cropCommodityCtrl'].value.isPedigreeInd
+
+    if (cropCommodityId) {
+      // return only the fields that have the selected commodity
+
+      this.fieldOptions.forEach( fld => {
+        let elem = fld.verifiableCommodities.filter(x => ( x.cropCommodityId == cropCommodityId && x.isPedigreeInd == isPedigreeInd))
+        
+        if (elem && elem.length > 0) {
+          fldOpt.push({
+            fieldId: fld.fieldId,
+            fieldLabel: fld.fieldLabel,
+            verifiableCommodities: fld.verifiableCommodities
+          })
+        }
+      })
+
+    } else {
+      
+      //return all fields
+      fldOpt = this.fieldOptions
+    }
+
+    return fldOpt.slice()
   }
 
   fieldFocus() {
-    debugger
-    
-    // // prepare the list of varieties based on the selected crop id
-    
-    // const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
-    // const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
-    // const invSeeded = pltg.controls['inventorySeededGrains'].value.controls[invSeededIndex]
-	
-    // let selectedCropCommodityId = invSeeded.controls['cropCommodityId'].value
+  
+    // prepare the list of fields based on the selected commodity id
+    this.filteredFieldOptions = this.getFieldOptions()
 
-    // if (selectedCropCommodityId) {
+  }
+  
+  searchField(value){
 
-    //   this.filteredSeededVarietyOptions = 
-    //         this.seededVarietyOptions.filter(option => 
-    //                                         ( option.cropCommodityId == selectedCropCommodityId) )
+      const fieldLabel = (( typeof value === 'string') ? value : value?.fieldLabel)
+      let fldOptions = this.getFieldOptions()
 
-    // } else {
-      
-      //return all fields
-      // this.filteredSeededVarietyOptions = this.seededVarietyOptions.slice()
-      this.filteredFieldOptions = this.fieldOptions.slice()
-    // }
+      if (fieldLabel) {
+        const filterValue = fieldLabel.toLowerCase()
+
+        this.filteredFieldOptions = fldOptions.filter(option => option.fieldLabel.toLowerCase().includes(filterValue) )
+        
+      } else {
+        this.filteredFieldOptions = fldOptions
+      }
   }
 
+  // commodities functions
+  displayCommoditiesFn(cmdty: any): string {
+    return cmdty && cmdty.cropCommodityName ? makeTitleCase(cmdty.cropCommodityName)  : '';
+  }
+
+  getCommodityOptions() {
+    
+    let cmdtOpt = [] 
+    let fieldId = this.amendmentFormGroup.controls['fieldCtrl'].value.fieldId
+    
+    if (fieldId) {
+      // return only the commodities for that field
+      let verifiableCommodities = this.amendmentFormGroup.controls['fieldCtrl'].value.verifiableCommodities
+
+      if (verifiableCommodities) {
+       cmdtOpt = verifiableCommodities.slice()
+      } 
+    } else {
+      
+      //return all fields
+      cmdtOpt = this.cropCommodityOptions.slice()
+    }
+
+    return cmdtOpt
+  }
+
+  commoditiesFocus() {
+    this.filteredCropCommodityOptions = this.getCommodityOptions() 
+  }
+
+  searchCommodity(value){ 
+
+    const cropCommodityName = (( typeof value === 'string') ? value : value?.cropCommodityName)
+
+    let cmdtyOptions = this.getCommodityOptions()
+
+    if (cropCommodityName) {
+      const filterValue = cropCommodityName.toLowerCase()
+
+      this.filteredCropCommodityOptions = cmdtyOptions.filter(option => option.cropCommodityName.toLowerCase().includes(filterValue) )
+
+    } else {
+      this.filteredCropCommodityOptions = cmdtyOptions
+    }
+  }
+
+  // TODO
+  // onDeleteAmendment
+  // rationale - resisable 
+  // drop downs onChange should change the store value
+  // validation -> probably on the main page
+  // remove checkmarks from all autocompletes
 }

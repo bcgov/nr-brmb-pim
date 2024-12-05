@@ -12,16 +12,17 @@
     </div>
     <div class="inventory-fill border-right border-bottom center">
 
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" style="width: 100%;">
             <input 
                 type="text" 
                 matInput 
-                formControlName="fieldId" 
+                formControlName="fieldCtrl" 
                 [matAutocomplete]="autoFieldId"
-                (focus)="fieldFocus()">
-            <mat-autocomplete #autoFieldId="matAutocomplete"
+                (focus)="fieldFocus()"
+                (keyup)="searchField($event.target.value)">
+            <mat-autocomplete #autoFieldId="matAutocomplete" hideSingleSelectionIndicator="true"
                 [displayWith]="displayFieldsFn">
-            <mat-option *ngFor="let option of fieldOptions" [value]="option">
+            <mat-option *ngFor="let option of filteredFieldOptions" [value]="option">
                 {{ option.fieldLabel | titlecase }}
             </mat-option>
             </mat-autocomplete>
@@ -34,11 +35,14 @@
             <input 
                 type="text" 
                 matInput 
-                formControlName="cropCommodityId" 
-                [matAutocomplete]="autoCropCommodityId">
-            <mat-autocomplete #autoCropCommodityId="matAutocomplete">
-            <mat-option *ngFor="let option of cropCommodityOptions" [value]="option">
-                {{ option.commodityName | titlecase }}
+                formControlName="cropCommodityCtrl" 
+                [matAutocomplete]="autoCropCommodityId"
+                (focus)="commoditiesFocus()"
+                (keyup)="searchCommodity($event.target.value)">
+            <mat-autocomplete #autoCropCommodityId="matAutocomplete" hideSingleSelectionIndicator="true"
+                [displayWith]="displayCommoditiesFn">
+            <mat-option *ngFor="let option of filteredCropCommodityOptions" [value]="option">
+                {{ option.cropCommodityName | titlecase }}
             </mat-option>
             </mat-autocomplete>
         </mat-form-field>  

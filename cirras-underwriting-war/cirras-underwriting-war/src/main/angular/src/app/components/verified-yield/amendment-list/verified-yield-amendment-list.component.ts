@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { VerifiedYieldAmendment } from 'src/app/conversion/models-yield';
 import { AnnualField, CropCommodityList } from 'src/app/conversion/models';
@@ -10,7 +10,7 @@ import { VERIFIED_YIELD_AMENDMENT_CODE } from 'src/app/utils/constants';
   styleUrl: './verified-yield-amendment-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VerifiedYieldAmendmentListComponent implements OnChanges{
+export class VerifiedYieldAmendmentListComponent implements OnInit{
   @Input() verifiedYieldContractGuid: string;
   @Input() amendments: Array<VerifiedYieldAmendment>;
   @Input() amendmentsFormArray: UntypedFormArray;
@@ -26,31 +26,44 @@ export class VerifiedYieldAmendmentListComponent implements OnChanges{
     ){
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.cropCommodityList && this.cropCommodityList) {
-      this.setCropCommodityOptions()
-    }
-
-    if (changes.fields && this.fields) {
-      this.setFieldsOptions()
-    }
-
+  ngOnInit() {
+    this.setCropCommodityOptions()
+    this.setFieldsOptions()
   }
 
+
   setCropCommodityOptions() {
-    //TODO - create a list of crop commodity options including pedigree to load in the autocomplete
+    var self = this
+
+    self.cropCommodityList.collection.forEach(cc => {
+      self.cropCommodityOptions.push({
+        cropCommodityId: cc.cropCommodityId,
+        cropCommodityName: cc.commodityName,
+        isPedigreeInd: false
+      })
+
+      // add pedigree flag for insurable crops
+      if (cc.isCropInsuranceEligibleInd) {
+        self.cropCommodityOptions.push({
+          cropCommodityId: cc.cropCommodityId,
+          cropCommodityName: cc.commodityName + " - Pedigree",
+          isPedigreeInd: true
+        })
+      }
+
+    })
   }
 
   setFieldsOptions() {
     var self = this
-
+    
     self.fieldOptions.push({
       fieldId: null,
       fieldLabel: "",
       verifiableCommodities: []
     })
 
-    this.fields.forEach(f => {
+    self.fields.forEach(f => {
       self.fieldOptions.push({
         fieldId: f.fieldId,
         fieldLabel: f.fieldLabel + "(ID: " + f.fieldId + ")",

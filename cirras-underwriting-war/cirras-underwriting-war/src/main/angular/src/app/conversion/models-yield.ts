@@ -212,17 +212,17 @@ export interface VerifiedYieldContract {
 
   export interface VerifiedYieldAmendment {
     verifiedYieldAmendmentGuid?: string;
-	verifiedYieldAmendmentCode?: string;
-	verifiedYieldContractGuid?: string;
-	cropCommodityId?: number;
-	isPedigreeInd?: boolean;
-	fieldId?: number;
-	yieldPerAcre?: number;
-	acres?: number;
-	rationale?: string;
-	cropCommodityName?: string;
-	fieldLabel?: string;
-	deletedByUserInd?: boolean;   
+    verifiedYieldAmendmentCode?: string;
+    verifiedYieldContractGuid?: string;
+    cropCommodityId?: number;
+    isPedigreeInd?: boolean;
+    fieldId?: number;
+    yieldPerAcre?: number;
+    acres?: number;
+    rationale?: string;
+    cropCommodityName?: string;
+    fieldLabel?: string;
+    deletedByUserInd?: boolean;
   }
 
   export interface VerifiableCommodity  {
