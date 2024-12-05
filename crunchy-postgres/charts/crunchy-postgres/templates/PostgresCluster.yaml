@@ -111,6 +111,9 @@ spec:
         #Whether to expire .wal files on any backup or full backup only
         repo2-retention-archive-type: {{ .Values.pgBackRest.retentionArchiveType }}
 
+        repo2-s3-uri-style: {{ .Values.pgBackRest.s3UriStyle }}
+        repo2-path: /pgbackrest/postgres-operator/{{.Values.clusterName}}/repo2
+        db-timeout: {{ .Values.pgBackRest.timeout }}
         
 
       repos:
@@ -130,9 +133,9 @@ spec:
               storageClassName: {{ .Values.pgBackRest.repos.volume.storageClassName }}
         - name: repo2
           schedules:
-            full: {{ .Values.pgBackRest.repos.schedules.full }}
-            differential: {{ .Values.pgBackRest.repos.schedules.differential }}
-            incremental: {{ .Values.pgBackRest.repos.schedules.incremental }}
+            full: {{ .Values.pgBackRest.repos.schedulesOffset.full }}
+            differential: {{ .Values.pgBackRest.repos.schedulesOffset.differential }}
+            incremental: {{ .Values.pgBackRest.repos.schedulesOffset.incremental }}
           s3:
             bucket:  {{ .Values.pgBackRest.repos.s3.bucket }}
           
