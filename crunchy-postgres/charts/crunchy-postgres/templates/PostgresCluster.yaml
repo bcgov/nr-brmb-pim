@@ -116,7 +116,7 @@ spec:
         repo2-retention-archive: {{ .Values.pgBackRest.retentionArchiveCount }}
 
         repo2-s3-uri-style: {{ .Values.pgBackRest.s3UriStyle }}
-        repo2-path: /pgbackrest/postgres-operator/{{.Values.clusterName}}/repo2
+        repo2-path: /pgbackrest/postgres-operator/{{.Values.pgBackRest.repos.s3.directoryName}}/repo2
         db-timeout: {{ .Values.pgBackRest.timeout }}
         
 

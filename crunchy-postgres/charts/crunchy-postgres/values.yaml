@@ -6,8 +6,6 @@ postgresVersion: 15
 #postGISVersion: '3.3' # use this version of POSTGIS. both crunchyImage and this property needs to have valid values for POSTGIS to be enabled.
 imagePullPolicy: IfNotPresent
 
-clusterName: wfprev-#{ENV}#
-
 instances:
   name: ha # high availability
   replicas: #{DB_REPLICAS}#
@@ -68,6 +66,7 @@ pgBackRest:
       bucket: "pit#{ENV}#"
       endpoint: "nrs.objectstore.gov.bc.ca"
       region: "ca-central-1"
+      directoryName: pituw#{ENV}#
 
   repoHost:
     requests:
