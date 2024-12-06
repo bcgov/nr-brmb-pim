@@ -61,6 +61,7 @@ pgBackRest:
     volume:
       accessModes: "ReadWriteOnce"
       storageClassName: netapp-file-backup
+      storage: 1Gi
     configuration:
       secretName: "#{ENV}#-postgres-s3-secret"
     s3:
