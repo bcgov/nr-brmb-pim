@@ -179,6 +179,24 @@ export function roundUpDecimalAcres(acres) {
   }
 }
 
+export function roundUpDecimalYield(numberToRound, precision) {
+  if (!numberToRound) {
+    return ""
+  }
+
+  if (isNaN(parseFloat(numberToRound))) {
+    alert ("Yield must be a valid number" )
+  } else {
+
+    if (parseFloat(numberToRound) % 1 == 0 ) {
+      // return integer if it's an integer, no zeros after the decimal point
+      return parseInt(numberToRound)
+    }
+    
+    return parseFloat(numberToRound).toFixed(precision)
+  }
+}
+
 export function navigateUpDownTextbox(event, jumps) {
 
   if (event.key === "ArrowUp" || event.key === "ArrowDown") {

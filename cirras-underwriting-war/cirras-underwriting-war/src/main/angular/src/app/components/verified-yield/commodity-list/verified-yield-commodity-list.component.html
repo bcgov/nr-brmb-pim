@@ -8,7 +8,7 @@
                 [ngStyle]="{'color':'orangered', 'font-size':'large', 'padding-top': '4px'}">warning_amber</mat-icon>
         </span>
         <span style="color:orangered; font-size: 14px;">
-            Commodity Totals are calculated on save.
+            Harvested Yield and Yield/ac are calculated on save.
         </span>
     </div>
 
@@ -58,7 +58,7 @@
     <div class="grain-unsdd-inv-tot-cmdty-container"
         style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 75px 60px; margin-left: 0px;">
         <verified-yield-commodity *ngFor="let commodity of commodities" [commodity]="commodity"
-            [commoditiesFormArray]="commoditiesFormArray" [decimalPrecision]="decimalPrecision"
+            [commoditiesFormArray]="commoditiesFormArray"
             style="display: contents;"></verified-yield-commodity>
 
     </div>
