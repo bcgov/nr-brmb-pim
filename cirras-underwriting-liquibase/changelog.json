@@ -16,6 +16,7 @@
       { "include": {"file": "scripts/03_00_xx/03_02_00/00/cirras.cuws.03_02_00_00.ddl.json"} },
       { "include": {"file": "scripts/03_00_xx/03_03_00/00/cirras.cuws.03_03_00_00.ddl.json"} },
       { "include": {"file": "scripts/03_00_xx/03_05_00/01/cirras.cuws.03_05_00_01.ddl.json"} },
+      { "include": {"file": "scripts/03_00_xx/03_05_00/01/cirras.cuws.03_05_00_01_fix.ddl.json"} },
       { "include": {"file": "scripts/03_00_xx/03_05_00/01/cirras.cuws.03_05_00_01.dml.json"} }
   ]
 }
