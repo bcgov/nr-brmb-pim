@@ -611,3 +611,7 @@ export function setHttpHeaders(authToken) {
   export function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
+
+  export function replaceNonAlphanumericCharacters(str: string) : string {
+    return str.replace(/[^a-zA-Z0-9]/g, ' ').trim()
+  }

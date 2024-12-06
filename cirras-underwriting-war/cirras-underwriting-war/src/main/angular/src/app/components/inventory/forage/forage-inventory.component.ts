@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { BaseComponent } from 'src/app/components/common/base/base.component';
 import { AnnualField, CropCommodityList, InventoryContract, UwContract } from 'src/app/conversion/models';
 import { ForageInventoryComponentModel } from './forage-inventory.component.model';
@@ -7,7 +7,7 @@ import { ParamMap } from '@angular/router';
 import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN, PLANT_DURATION, PLANT_INSURABILITY_TYPE_CODE } from 'src/app/utils/constants';
 import { CropVarietyCommodityType, InventorySeededForage, InventoryUnseeded, UnderwritingComment } from '@cirras/cirras-underwriting-api';
-import { addUwCommentsObject, areDatesNotEqual, areNotEqual, makeNumberOnly, makeTitleCase } from 'src/app/utils';
+import { addUwCommentsObject, areDatesNotEqual, areNotEqual, makeNumberOnly, makeTitleCase, replaceNonAlphanumericCharacters } from 'src/app/utils';
 import { AddNewFormField, CropVarietyOptionsType, addAnnualFieldObject, addPlantingObject, addSeededForagesObject, deleteFormField, deleteNewFormField, dragField, fieldHasInventory, getInventorySeededForagesObjForSave, isLinkedFieldCommon, isLinkedPlantingCommon, isThereAnyCommentForField, linkedFieldTooltipCommon, linkedPlantingTooltipCommon, navigateUpDownTextbox, openAddEditLandPopup, roundUpDecimalAcres, updateComments } from '../inventory-common';
 import { AddNewInventoryContract, DeleteInventoryContract, GetInventoryReport, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
@@ -1440,8 +1440,7 @@ isFormValid() {
 
   onPrint() {
 
-    let reportName = this.growerContract.growerName + "-Inventory" 
-    reportName = reportName.replace(".", "")
+    let reportName = replaceNonAlphanumericCharacters(this.growerContract.growerName) + "-Inventory" 
     this.store.dispatch(GetInventoryReport(reportName, this.policyId, "", INSURANCE_PLAN.FORAGE.toString(), "", "", "", "", ""))
     
   }
