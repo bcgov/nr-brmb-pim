@@ -6,6 +6,7 @@ postgresVersion: 15
 #postGISVersion: '3.3' # use this version of POSTGIS. both crunchyImage and this property needs to have valid values for POSTGIS to be enabled.
 imagePullPolicy: IfNotPresent
 
+clusterName: wfprev-#{ENV}#
 
 instances:
   name: ha # high availability
@@ -13,6 +14,7 @@ instances:
   dataVolumeClaimSpec:
     storage: #{DB_STORAGE}#
     storageClassName: netapp-block-standard
+  # Note: using New York time zone to match existing deployment - otherwise, would use either local time or PST
   env:
     - name: PGTZ
       value: America/New_York
@@ -63,7 +65,7 @@ pgBackRest:
       secretName: "#{ENV}#-postgres-s3-secret"
     s3:
       bucket: "pit#{ENV}#"
-      endpoint: "https://nrs.objectstore.gov.bc.ca:443?"
+      endpoint: "nrs.objectstore.gov.bc.ca"
       region: "ca-central-1"
 
   repoHost:
