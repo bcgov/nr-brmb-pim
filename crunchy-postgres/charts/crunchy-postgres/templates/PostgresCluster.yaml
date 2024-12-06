@@ -101,7 +101,7 @@ spec:
         #Whether to expire .wal files on any backup or full backup only
         repo1-retention-archive-type: {{ .Values.pgBackRest.retentionArchiveType }}
         #How many differential/full backups to keep WAL files for
-        repo1-retention-archive: {{ .Values.pgBackRest.retentionArchiveCount }}
+        repo1-retention-archive: {{ .Values.pgBackRest.retentionArchiveCount | quote}}
 
        # hardcoding repo2 until we solution allowing multiple repos
         repo2-retention-full: {{ .Values.pgBackRest.retentionFull | quote }}
@@ -113,11 +113,11 @@ spec:
         #Whether to expire .wal files on any backup or full backup only
         repo2-retention-archive-type: {{ .Values.pgBackRest.retentionArchiveType }}
         #How many differential/full backups to keep WAL files for
-        repo2-retention-archive: {{ .Values.pgBackRest.retentionArchiveCount }}
+        repo2-retention-archive: {{ .Values.pgBackRest.retentionArchiveCount | quote}}
 
         repo2-s3-uri-style: {{ .Values.pgBackRest.s3UriStyle }}
         repo2-path: /pgbackrest/postgres-operator/{{.Values.pgBackRest.repos.s3.directoryName}}/repo2
-        db-timeout: {{ .Values.pgBackRest.timeout }}
+        db-timeout: {{ .Values.pgBackRest.timeout | quote}}
         
 
       repos:
