@@ -20,7 +20,6 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;

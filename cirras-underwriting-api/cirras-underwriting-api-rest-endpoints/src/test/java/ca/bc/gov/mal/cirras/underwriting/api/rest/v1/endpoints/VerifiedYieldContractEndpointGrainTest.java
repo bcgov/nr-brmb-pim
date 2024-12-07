@@ -29,9 +29,11 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.InventoryContractR
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PoliciesSyncEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PolicyRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.ProductRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.VerifiedYieldContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.test.EndpointsTest;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForage;
@@ -42,6 +44,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededGrain;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryUnseeded;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.Product;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiableCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandManagementEventTypes;
@@ -96,6 +99,10 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 	private Integer fieldId = 90000016;
 	private Integer annualFieldDetailId1 = 90000017;
 	private Integer contractedFieldDetailId1 = 90000018;
+	
+	private Integer productId1 = 99999999;
+	private Integer productId2 = 88889999;
+	private Integer productId3 = 77777777;
 
 
 	@Before
@@ -114,6 +121,10 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 	
 	private void delete() throws NotFoundDaoException, DaoException, CirrasUnderwritingServiceException {
 
+		service.deleteProduct(topLevelEndpoints, productId1.toString());
+		service.deleteProduct(topLevelEndpoints, productId2.toString());
+		service.deleteProduct(topLevelEndpoints, productId3.toString());
+		
 		deleteVerifiedYieldContract(policyNumber1);
 		
 		deleteDopYieldContract(policyNumber1);
@@ -246,6 +257,15 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		createInventoryContract(policyNumber1, 4);
 		createDopYieldContract(policyNumber1, 4);
 		
+		expectedProducts = new ArrayList<Product>();
+		//Barley - NON Pedigree - Product
+		createProduct(policyId1, productId1, 16, 20, 15.5, 222.2, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		//Canola
+		createProduct(policyId1, productId2, 18, 10, 50.5, 55.2, "Open");
+		//Barley - Pedigree
+		createProduct(policyId1, productId3, 17, 50, 20.5, 11.1, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		
+		
 		Integer pageNumber = 1;
 		Integer pageRowCount = 20;
 
@@ -322,7 +342,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		barleyCommodity.setHarvestedYieldOverride(120.0);
 		
 		List<VerifiedYieldContractCommodity> expectedCommodities = newContract.getVerifiedYieldContractCommodities();
-
+		
 		VerifiedYieldContractRsrc createdContract = service.createVerifiedYieldContract(topLevelEndpoints, newContract);
 		Assert.assertNotNull(createdContract);
 		
@@ -669,6 +689,47 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		resource.setTransactionType(PoliciesSyncEventTypes.GrowerCreated);
 		
 		service.synchronizeGrower(resource);
+
+	}
+	
+	List<Product> expectedProducts;
+	
+	private void createProduct(
+			Integer policyId,
+			Integer productId, 
+			Integer cropCommodityId, 
+			Integer deductibleLevel, 
+			Double probableYield, 
+			Double productionGuarantee, 
+			String productStatusCode
+			) throws CirrasUnderwritingServiceException, ValidationException {
+		
+		//Date and Time without millisecond
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 because they are not set in the database
+		Date transactionDate = cal.getTime();
+
+		Date createTransactionDate = addSeconds(transactionDate, -1);
+
+		//CREATE Product
+		ProductRsrc product = new ProductRsrc();
+		
+		product.setCommodityCoverageCode("CQG");
+		product.setCropCommodityId(cropCommodityId);
+		product.setDeductibleLevel(deductibleLevel);
+		product.setInsuredByMeasType("ACRES");
+		product.setPolicyId(policyId);
+		product.setProbableYield(probableYield);
+		product.setProductId(productId);
+		product.setProductionGuarantee(productionGuarantee);
+		product.setProductStatusCode(productStatusCode);
+		
+		expectedProducts.add(product);
+
+		product.setDataSyncTransDate(createTransactionDate);
+		product.setTransactionType(PoliciesSyncEventTypes.ProductCreated);
+
+		service.synchronizeProduct(product);
 
 	}
 	

@@ -175,7 +175,6 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		}
 		
 		resource.setProductWarningMessages(productWarnings);
-
 		
 		String eTag = getEtag(resource);
 		resource.setETag(eTag);
@@ -201,10 +200,13 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		resource.setUpdateProductValuesInd(false);
 		
 	}
+	
+	public static final String PRODUCT_STATUS_FINAL = "FINAL";
+	public static final String PRODUCTION_GUARANTEE_DIFFERENCE_MSG = "Production guarantee for s% is different in the product: s%";
+	public static final String PRODUCTION_GUARANTEE_NO_PRODUCT_MSG = "There is no product for s% in CIRRAS. The shown Production guarantee is not valid anymore.";
 
 	private MessageRsrc getProductWarning(VerifiedYieldContractCommodityDto vyccDto, List<ProductDto> productDtos) {
 		
-		//MessageRsrc messagesRsrc = new MessageRsrc();
 		MessageRsrc messageRsrc = null;
 		
 		ProductDto product = null;
@@ -215,19 +217,30 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		}
 		
 		if(product != null) {
-			if (Double.compare(notNull(product.getProductionGuarantee(), (double)-1), notNull(vyccDto.getProductionGuarantee(), (double)-1)) != 0) {
-				//Add warning if values are different -> Only if product is in status FINAL
-				String msg = "";
-				messageRsrc = new MessageRsrc(msg);
-
-				//TODO
-				//Production guarantee for COMMODITY(PEDIGREE or not) is different in the product (PRODUCT VALUE) it's shown in Commodity Totals and used in Yield Summary Claim Yield to Count
+			if(product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
+				if (Double.compare(notNull(product.getProductionGuarantee(), (double)-1), notNull(vyccDto.getProductionGuarantee(), (double)-1)) != 0) {
+					//Add warning if values are different -> Only if product is in status FINAL
+					String commodity = vyccDto.getCropCommodityName();
+					if(vyccDto.getIsPedigreeInd()) {
+						commodity = commodity + " Pedigreed";
+					}
+					
+					String msg = String.format(PRODUCTION_GUARANTEE_DIFFERENCE_MSG, commodity, product.getProductionGuarantee());
+					messageRsrc = new MessageRsrc(msg);
+					//Production guarantee for COMMODITY(PEDIGREE or not) is different in the product (PRODUCT VALUE) it's shown in Commodity Totals and used in Yield Summary Claim Yield to Count
+				}
 			}
 		} else {
 			//No product: Check if the production guarantee in commodity totals is null
 			if(vyccDto.getProductionGuarantee() != null) {
-				//Add warning if values are different
-				//TODO
+				//Add warning if there is no product but a saved production guarantee
+				String commodity = vyccDto.getCropCommodityName();
+				if(vyccDto.getIsPedigreeInd()) {
+					commodity = commodity + " Pedigreed";
+				}
+				
+				String msg = String.format(PRODUCTION_GUARANTEE_NO_PRODUCT_MSG, commodity);
+				messageRsrc = new MessageRsrc(msg);
 				//There is no product for COMMODITY(PEDIGREE or not) in CIRRAS. The shown Production guarantee is not valid anymore. It's shown in Commodity Totals and used in Yield Summary Claim Yield to Count
 			}
 		}
