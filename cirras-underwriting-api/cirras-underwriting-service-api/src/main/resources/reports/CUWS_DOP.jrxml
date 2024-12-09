@@ -83,6 +83,7 @@ select p.policy_id
 	, cfd.display_order
 	, cfd.contracted_field_detail_id
 	, isg.is_replaced_ind
+	, isg.is_pedigree_ind
 	, case when $P{p_sort_column} = 'growerName' then g.grower_name
 	       when $P{p_sort_column} = 'policyNumber' then p.policy_number
 	       else p.policy_number
@@ -131,6 +132,7 @@ select distinct p.policy_id
 	, cfd.display_order
 	, cfd.contracted_field_detail_id
 	, isg.is_replaced_ind
+	, isg.is_pedigree_ind
 	, case when $P{p_sort_column} = 'growerName' then g.grower_name
 	       when $P{p_sort_column} = 'policyNumber' then p.policy_number
 	       else p.policy_number
@@ -310,6 +312,7 @@ where isg.seeded_acres > 0
 		<property name="com.jaspersoft.studio.field.name" value="is_replaced_ind"/>
 		<property name="com.jaspersoft.studio.field.label" value="is_replaced_ind"/>
 	</field>
+	<field name="is_pedigree_ind" class="java.lang.String"/>
 	<field name="sort_column" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="sort_column"/>
 		<property name="com.jaspersoft.studio.field.label" value="sort_column"/>
@@ -1078,7 +1081,8 @@ $F{inv_update_timestamp}  + $F{entered_yield_meas_unit_type_code} + $F{grain_fro
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{commodity_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Y".equals($F{is_pedigree_ind})? $F{commodity_name} + "-P" : $F{commodity_name}
+]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ContainerHeight" x="210" y="0" width="70" height="20" uuid="b6858ba4-4065-4017-9755-6eb024480a7f">
