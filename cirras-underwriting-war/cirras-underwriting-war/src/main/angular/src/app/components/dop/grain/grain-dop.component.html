@@ -376,7 +376,7 @@
                                             [matAutocomplete]="autoGradeModifier"
                                             (focus)="gradeModifierFocus(cmdty.value.cropCommodityId)"
                                             (keyup)="isMyFormDirty()">
-                                        <mat-autocomplete #autoGradeModifier="matAutocomplete"  
+                                        <mat-autocomplete #autoGradeModifier="matAutocomplete"  hideSingleSelectionIndicator="true"
                                             [displayWith]="displayGradeModifierFn"
                                             (optionSelected)="isMyFormDirty()">
                                         <mat-option *ngFor="let option of filteredGradeModifierOptions" [value]="option">

@@ -40,7 +40,10 @@
             border-bottom-color: transparent !important;
         }
     }
-
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+        // removes padding at the beginning of the textbox
+        padding-left: 2px; 
+    }
 
     // for the dropdown
     .mat-mdc-select-arrow svg {

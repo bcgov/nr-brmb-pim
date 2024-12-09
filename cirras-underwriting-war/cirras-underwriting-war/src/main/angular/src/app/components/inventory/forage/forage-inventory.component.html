@@ -227,7 +227,7 @@
                                                         (focus)="varietyFocus()"
                                                         (keyup)="searchVariety($event.target.value)"
                                                         (blur)="validateVariety(autoVrty, fieldIndex, plantingIndex, invSeededIndex)">
-                                                    <mat-autocomplete #autoVrty="matAutocomplete"  
+                                                    <mat-autocomplete #autoVrty="matAutocomplete"  hideSingleSelectionIndicator="true"
                                                         [displayWith]="displayVarietyFn">
                                                     <mat-option *ngFor="let option of filteredVarietyOptions" [value]="option">
                                                         {{ option.varietyName | titlecase }}
