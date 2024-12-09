@@ -21,6 +21,7 @@ public interface VerifiedYieldContractFactory {
 	VerifiedYieldContract<? extends AnnualField, ? extends Message> getDefaultVerifiedYieldContract(
 			PolicyDto policyDto,
 			DeclaredYieldContractDto dycDto,
+			List<ProductDto> productDtos,
 			FactoryContext context, 
 			WebAdeAuthentication authentication
 		) throws FactoryException;
@@ -37,5 +38,9 @@ public interface VerifiedYieldContractFactory {
 			VerifiedYieldContract<? extends AnnualField, ? extends Message> model,
 			String userId);
 
-	void updateDto(VerifiedYieldContractCommodityDto dto, VerifiedYieldContractCommodity model);
+	void updateDto(
+			VerifiedYieldContractCommodityDto dto, 
+			VerifiedYieldContractCommodity model, 
+			List<ProductDto> productDtos,
+			Boolean updateProductValues);
 }
