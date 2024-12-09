@@ -84,7 +84,7 @@
 
     <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="readonly border-right border-bottom center">
         <mat-icon *ngIf="securityUtilService.canEditVerifiedYield()"
-            matTooltip="Clear editable fields for amendment." 
+            matTooltip="Delete amendment." 
             style="margin-left: 4px; margin-right: 4px;"
             (click)="onDeleteAmendment()"
             svgIcon="cancel"></mat-icon>
