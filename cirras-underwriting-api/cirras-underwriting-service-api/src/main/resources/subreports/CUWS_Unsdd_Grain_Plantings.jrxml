@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.4.3  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_Inv_Grain_Plantings" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="dae8acde-d8f2-47e4-9e95-8f4ccdfb0fc5">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_Unsdd_Grain_Plantings" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="dae8acde-d8f2-47e4-9e95-8f4ccdfb0fc5">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -42,7 +42,8 @@
 	, INITCAP(cv.variety_name) as seeded_variety_name
     , isg.seeded_acres
     , isg.seeding_date
-    , INITCAP(cv_underseeded.variety_name) as underseeded_variety_name 
+    , INITCAP(cv_underseeded.variety_name) as underseeded_variety_name
+    , isg.is_pedigree_ind
 from grower_contract_year gcy
 join inventory_contract ic on ic.contract_id = gcy.contract_id
                           and ic.crop_year = gcy.crop_year
@@ -168,6 +169,10 @@ offset $P{p_record_offset}]]>
 	<field name="underseeded_variety_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="underseeded_variety_name"/>
 		<property name="com.jaspersoft.studio.field.label" value="underseeded_variety_name"/>
+	</field>
+	<field name="is_pedigree_ind" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="is_pedigree_ind"/>
+		<property name="com.jaspersoft.studio.field.name" value="is_pedigree_ind"/>
 	</field>
 	<group name="Group2" isReprintHeaderOnEachPage="true" keepTogether="true">
 		<groupHeader>
@@ -767,7 +772,9 @@ offset $P{p_record_offset}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{seeded_commodity_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{seeded_commodity_name} != null && "Y".equals($F{is_pedigree_ind})) ? 
+  $F{seeded_commodity_name} + "-P" : 
+  $F{seeded_commodity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="280" y="0" width="45" height="15" uuid="6fa74d87-2b62-4af6-9138-c32088ffbe42"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.4.3  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_Inventory_Grain" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dae8acde-d8f2-47e4-9e95-8f4ccdfb0fc5">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_Seeded_Grain" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dae8acde-d8f2-47e4-9e95-8f4ccdfb0fc5">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="p_crop_year" class="java.lang.Integer"/>
@@ -336,7 +336,7 @@ order by sort_column,
 					<textFieldExpression><![CDATA["Updated: " + new SimpleDateFormat("MMM dd, yyyy").format($F{inv_update_timestamp})]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="0" y="165" width="325" height="15" uuid="9c9b63d0-bb26-48a8-8635-fa7992774ff3">
+					<reportElement x="0" y="165" width="280" height="15" uuid="9c9b63d0-bb26-48a8-8635-fa7992774ff3">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -351,7 +351,7 @@ order by sort_column,
 					<text><![CDATA[  PART 1 - UNSEEDED COVERAGE]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="330" y="165" width="225" height="15" uuid="da6669ba-6f14-4526-b188-3ba753f63bd8">
+					<reportElement x="285" y="165" width="270" height="15" uuid="da6669ba-6f14-4526-b188-3ba753f63bd8">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
@@ -365,7 +365,7 @@ order by sort_column,
 					<text><![CDATA[  PART 3 - SEEDED CROP REPORT]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Opaque" x="0" y="180" width="325" height="15" forecolor="#FFFFFF" backcolor="#606060" uuid="45cbd933-d5f8-4b2b-82ad-b47bfd300117">
+					<reportElement mode="Opaque" x="0" y="180" width="280" height="15" forecolor="#FFFFFF" backcolor="#606060" uuid="45cbd933-d5f8-4b2b-82ad-b47bfd300117">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
@@ -379,7 +379,7 @@ order by sort_column,
 					<text><![CDATA[  COMPLETE BY APRIL 30                        *Optional]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Opaque" x="330" y="180" width="225" height="15" forecolor="#FFFFFF" backcolor="#606060" uuid="ec6e9c07-806d-4889-b337-0bf0394fbae9">
+					<reportElement mode="Opaque" x="285" y="180" width="270" height="15" forecolor="#FFFFFF" backcolor="#606060" uuid="ec6e9c07-806d-4889-b337-0bf0394fbae9">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -919,7 +919,7 @@ order by sort_column,
 						<subreportParameterExpression><![CDATA[$F{sum_elg_unseed_acres}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["subreports/CUWS_Inv_Grain_Plantings.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["subreports/CUWS_Sdd_Grain_Plantings.jasper"]]></subreportExpression>
 				</subreport>
 			</band>
 		</groupFooter>
@@ -990,7 +990,7 @@ order by sort_column,
 					<subreportParameterExpression><![CDATA[$F{sum_elg_unseed_acres}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["subreports/CUWS_Inv_Grain_Plantings.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["subreports/CUWS_Sdd_Grain_Plantings.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>
