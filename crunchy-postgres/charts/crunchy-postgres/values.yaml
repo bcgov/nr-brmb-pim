@@ -42,7 +42,7 @@ pgBackRest:
   retentionFullType: count
 
   #How many backups worth of WAL files to keep, and what type of backup to count for expiring WAL files
-  retentionArchiveType: differential
+  retentionArchiveType: diff
   retentionArchiveCount: "7"
   timeout: "600"
   s3UriStyle: path
