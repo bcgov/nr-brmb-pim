@@ -18,7 +18,7 @@ import {
 } from 'src/app/store/dop/dop.actions';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
 import { DopYieldContract, GradeModifierList, YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
-import { getInsurancePlanName, makeNumberOnly, setHttpHeaders } from 'src/app/utils';
+import { getInsurancePlanName, makeNumberOnly, replaceNonAlphanumericCharacters, setHttpHeaders } from 'src/app/utils';
 import { GradeModifierOptionsType } from '../dop-common';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import {ViewEncapsulation } from '@angular/core';
@@ -124,8 +124,7 @@ export class ForageDopComponent extends BaseComponent {
 
 
   onPrint() {
-    let reportName = this.growerContract.growerName + "-DOP";
-    reportName = reportName.replace(".", "");
+    let reportName = replaceNonAlphanumericCharacters(this.growerContract.growerName) + "-DOP" 
     this.store.dispatch(GetDopReport(reportName, this.policyId, "", this.insurancePlanId, "", "", "", "", ""));
   }
 
