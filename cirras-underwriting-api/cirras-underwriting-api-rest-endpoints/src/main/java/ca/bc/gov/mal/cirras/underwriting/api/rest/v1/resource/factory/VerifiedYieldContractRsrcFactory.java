@@ -238,7 +238,6 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 					}
 					
 					messageRsrc = new MessageRsrc(msg);
-					//Production guarantee for COMMODITY(PEDIGREE or not) is different in the product (PRODUCT VALUE) it's shown in Commodity Totals and used in Yield Summary Claim Yield to Count
 				}
 			}
 		} else {
@@ -252,7 +251,6 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 				
 				String msg = String.format(PRODUCTION_GUARANTEE_NO_PRODUCT_MSG, commodity);
 				messageRsrc = new MessageRsrc(msg);
-				//There is no product for COMMODITY(PEDIGREE or not) in CIRRAS. The shown Production guarantee is not valid anymore. It's shown in Commodity Totals and used in Yield Summary Claim Yield to Count
 			}
 		}
 		
