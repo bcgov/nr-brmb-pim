@@ -369,16 +369,26 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
     return year
   }
 
+  private getIsIrrigated(fieldIndex: any, plantingIndex: any, invSeededIndex: any) {
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray;
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
+    const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex];
+
+    let isIrrigatedInd = invSeeded.controls['isIrrigatedInd'].value;
+    return isIrrigatedInd;
+  }
+
   setPlantInsurability(fieldIndex, plantingIndex, invSeededIndex) {
 
     let variety = this.getVariety(fieldIndex, plantingIndex, invSeededIndex);
     let yearSdd = this.getVarietySddYear(fieldIndex, plantingIndex, invSeededIndex); // this is either the year(seedingDate) or seedingYear
+    let isIrrigated = this.getIsIrrigated(fieldIndex, plantingIndex, invSeededIndex);
 
     let plantInsurabilityOptionsLocal = this.plantInsurabilityOptions.find(x => x.fieldIndex == fieldIndex && x.plantingIndex == plantingIndex && x.invSeededIndex == invSeededIndex)
 
     if (plantInsurabilityOptionsLocal) {
 
-      plantInsurabilityOptionsLocal.options = this.setPlantingInsurabilityOptionsByVarietyAndSddYearOrDate(variety, yearSdd)
+      plantInsurabilityOptionsLocal.options = this.setPlantingInsurabilityOptionsByVarietyAndSddYearOrDate(variety, yearSdd, isIrrigated)
 
     } else {
       // add an entry
@@ -386,12 +396,12 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
           fieldIndex: fieldIndex,
           plantingIndex: plantingIndex,
           invSeededIndex: invSeededIndex,
-          options: this.setPlantingInsurabilityOptionsByVarietyAndSddYearOrDate(variety, yearSdd)
+          options: this.setPlantingInsurabilityOptionsByVarietyAndSddYearOrDate(variety, yearSdd, isIrrigated)
         })
     }  
   }
 
-  setPlantingInsurabilityOptionsByVarietyAndSddYearOrDate(variety, yearSdd){
+  setPlantingInsurabilityOptionsByVarietyAndSddYearOrDate(variety, yearSdd, isIrrigated){
 
     var self = this
     let options = []
@@ -400,7 +410,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
       variety.cropVarietyPlantInsurabilities.forEach( p => {
         // add the year logic
-        if (self.isPlantInsurabilityAllowed(yearSdd, p.plantInsurabilityTypeCode)) {
+        if (self.isPlantInsurabilityAllowed(yearSdd, p.plantInsurabilityTypeCode, isIrrigated)) {
           options.push({
             code:         p.plantInsurabilityTypeCode,
             description:  p.description
@@ -412,7 +422,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
     return options
   }
 
-  isPlantInsurabilityAllowed(yearSdd, pitc){
+  isPlantInsurabilityAllowed(yearSdd, pitc, isIrrigated){
     //Insurability is only enabled if there is a seeded year/date
     if (yearSdd < 0) {
       return false 
@@ -423,19 +433,30 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
       return true
     }
 
-    // EST 2 & Winter 1 coverage is only applicable to Seeded dates of the Previous plan year
+    // EST 2 coverage is only applicable to Seeded dates of the Previous plan year
     if ( yearSdd == this.inventoryContract.cropYear - 1
-        && (pitc == PLANT_INSURABILITY_TYPE_CODE.Establishment2 || pitc == PLANT_INSURABILITY_TYPE_CODE.WinterSurvival1)) {
+        && pitc == PLANT_INSURABILITY_TYPE_CODE.Establishment2) {
       return true
     }
 
-    // Winter 2 coverage is applicable to Seeding dates 2 years prior to the Current Plan year
-    if ( yearSdd == this.inventoryContract.cropYear - 2 && pitc == PLANT_INSURABILITY_TYPE_CODE.WinterSurvival2) {
+    // Winter 1 coverage is only applicable to 
+    //    - Seeded dates of the Previous plan year
+    //    - and if the field is irrigated
+    if ( yearSdd == this.inventoryContract.cropYear - 1 && isIrrigated &&  pitc == PLANT_INSURABILITY_TYPE_CODE.WinterSurvival1) {
+    return true
+  }
+
+    // Winter 2 coverage is applicable to 
+    //    - Seeding dates 2 years prior to the Current Plan year
+    //    - and if the field is irrigated
+    if ( yearSdd == this.inventoryContract.cropYear - 2 && isIrrigated && pitc == PLANT_INSURABILITY_TYPE_CODE.WinterSurvival2) {
       return true
     }
 
-    // Winter 3 coverage is applicable to Seeding dates 3 years prior to the Current Plan year
-    if (yearSdd == this.inventoryContract.cropYear - 3 && pitc == PLANT_INSURABILITY_TYPE_CODE.WinterSurvival3) {
+    // Winter 3 coverage is applicable to 
+    //    - Seeding dates 3 years prior to the Current Plan year
+    //    - and if the field is irrigated
+    if (yearSdd == this.inventoryContract.cropYear - 3 && isIrrigated && pitc == PLANT_INSURABILITY_TYPE_CODE.WinterSurvival3) {
       return true
     }
 
@@ -480,6 +501,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
     let cropVarietyId = invSeeded.controls['cropVarietyCtrl'].value.cropVarietyId
     let seedingYear = invSeeded.controls['seedingYear'].value
+    let isIrrigated = this.getIsIrrigated(fieldIndex, plantingIndex, invSeededIndex);
     let plantInsurabilityTypeCode = invSeeded.controls['plantInsurabilityTypeCode'].value
 
     let isPitcAllowed = false 
@@ -491,7 +513,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
         let elem = variety.cropVarietyPlantInsurabilities.find( x => x.plantInsurabilityTypeCode == plantInsurabilityTypeCode)
  
-        if (elem && this.isPlantInsurabilityAllowed(seedingYear,plantInsurabilityTypeCode)) {
+        if (elem && this.isPlantInsurabilityAllowed(seedingYear, plantInsurabilityTypeCode, isIrrigated)) {
           isPitcAllowed = true
         }
       }
