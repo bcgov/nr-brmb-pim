@@ -14,6 +14,11 @@
     min-height: 36px !important;
 }
 
+.mat-internal-form-field>label {
+    font-family: $font-family-main;
+    font-weight: $font-weight-emphasis;
+}
+
 .inventory-fill {
     color: #424242;
 
