@@ -257,9 +257,9 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		createDopYieldContract(policyNumber1, 4);
 		
 		//Barley - NON Pedigree - Product
-		createUpdateProduct(policyId1, productId1, 16, 20, 15.5, barleyNonPediProductionGuarantee, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		createUpdateProduct(policyId1, productId1, 16, 20, 15.5, barleyNonPediProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
 		//Barley - Pedigree
-		createUpdateProduct(policyId1, productId3, 17, 50, 20.5, barleyPedigreeProductionGuarantee, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		createUpdateProduct(policyId1, productId3, 17, 50, 20.5, barleyPedigreeProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
 		
 		Integer pageNumber = 1;
 		Integer pageRowCount = 20;
@@ -337,7 +337,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		barleyCommodity.setHarvestedYieldOverride(120.0);
 		
 		//Create product for Canola - Pedigree
-		createUpdateProduct(policyId1, productId2, 19, 10, 50.5, canolaPedigreeProductionGuarantee, "Open");
+		createUpdateProduct(policyId1, productId2, 19, 10, 50.5, null, null, canolaPedigreeProductionGuarantee, "Open");
 		
 		List<VerifiedYieldContractCommodity> expectedCommodities = newContract.getVerifiedYieldContractCommodities();
 		
@@ -369,7 +369,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		service.deleteProduct(topLevelEndpoints, productId1.toString());
 		//Update Barley Pedigree Product Guarantee - Expect warning
 		Double barleyPedProdGuaranteeNew = barleyPedigreeProductionGuarantee + 20;
-		createUpdateProduct(policyId1, productId3, 17, 50, 20.5, barleyPedProdGuaranteeNew, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		createUpdateProduct(policyId1, productId3, 17, 50, 20.5, barleyPedProdGuaranteeNew, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
 
 		//Get contract again to prevent precondition fails
 		createdContract = getVerifiedYieldContract(policyNumber1);
@@ -429,7 +429,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 16, true, barleyPedProdGuaranteeNew, null); 
 
 		//Update Barley Pedigree Product Guarantee to NULL - Expect warning
-		createUpdateProduct(policyId1, productId3, 17, 50, 20.5, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		createUpdateProduct(policyId1, productId3, 17, 50, 20.5, null, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
 
 		//Get contract
 		VerifiedYieldContractRsrc vyContract = getVerifiedYieldContract(policyNumber1);
@@ -787,6 +787,8 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 			Integer deductibleLevel, 
 			Double probableYield, 
 			Double productionGuarantee, 
+			Double insurableValueHundredPercent,
+			Double coverageDollars, 
 			String productStatusCode
 			) throws CirrasUnderwritingServiceException, ValidationException {
 		
@@ -809,6 +811,9 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		product.setProductId(productId);
 		product.setProductionGuarantee(productionGuarantee);
 		product.setProductStatusCode(productStatusCode);
+		product.setInsurableValueHundredPercent(insurableValueHundredPercent);
+		product.setCoverageDollars(coverageDollars);
+
 		
 		product.setDataSyncTransDate(createTransactionDate);
 		product.setTransactionType(PoliciesSyncEventTypes.ProductCreated);

@@ -31,6 +31,12 @@ public interface Product extends Serializable {
 
 	public String getInsuredByMeasType();
 	public void setInsuredByMeasType(String insuredByMeasType);
+	
+	public Double getInsurableValueHundredPercent();
+	public void setInsurableValueHundredPercent(Double insurableValueHundredPercent);
+
+	public Double getCoverageDollars();
+	public void setCoverageDollars(Double coverageDollars);
 
 	public Date getDataSyncTransDate();
 	public void setDataSyncTransDate(Date dataSyncTransDate);
