@@ -54,5 +54,10 @@ public class InventoryServiceEnums {
 		ADD_LINK,
 		REMOVE_LINK
 	}
-	
+
+	// Valid options for reportType parameter for Grain Inventory Report.
+	public enum InventoryReportType {
+		unseeded,
+		seeded;
+	}
 }

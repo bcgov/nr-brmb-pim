@@ -460,7 +460,8 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 			String policyNumber,
 			String growerInfo,
 			String sortColumn,
-			String policyIds) throws CirrasUnderwritingServiceException {
+			String policyIds,
+			String reportType) throws CirrasUnderwritingServiceException {
 
 		GenericRestDAO<byte[]> dao = this.getRestDAOFactory().getGenericRestDAO(byte[].class);
 		
@@ -474,6 +475,7 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 			putQueryParam(queryParams, "growerInfo",  growerInfo);
 			putQueryParam(queryParams, "sortColumn",  sortColumn);
 			putQueryParam(queryParams, "policyIds",  policyIds);
+			putQueryParam(queryParams, "reportType",  reportType);
 			
 			Response<byte[]> response = dao.Process(ResourceTypes.BYTES, new NullTransformer("application/octet-stream", "bytes"), parent, queryParams, getWebClient());
 			
