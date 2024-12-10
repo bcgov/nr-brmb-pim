@@ -313,6 +313,8 @@ export class ForageDopComponent extends BaseComponent {
   }
 
   isFormValid() {
+    let cutsExist = true
+    let farmLevelDataExists = false 
 
     // DOP date should be a valid date
     let declarationOfProductionDate = this.dopYieldContract.declarationOfProductionDate;
@@ -336,8 +338,12 @@ export class ForageDopComponent extends BaseComponent {
     for(let i = 1; i <= this.numCuts; i++) {
 
       if (this.isCutEmpty(i)) {
-        alert("Cut Number " + i + " is empty. Save is not possible.")        
-        return false
+        if (i == 1) {
+          cutsExist = false
+        } else {
+          alert("Cut Number " + i + " is empty. Save is not possible.")        
+          return false
+        }
       }
 
     }
@@ -388,6 +394,16 @@ export class ForageDopComponent extends BaseComponent {
         alert("Percent Moisture in in Commodity Totals table  should be between 0 and 100")
         return false
       }
+
+      if (totalBalesLoads && weight && moisturePercent) {
+        farmLevelDataExists = true
+      }
+    }
+
+    // there has to be data for either field cuts or commodity totals
+    if (!farmLevelDataExists && !cutsExist ) {
+      alert("Please enter data either at field level or commodity level.")
+      return false
     }
 
     return true
