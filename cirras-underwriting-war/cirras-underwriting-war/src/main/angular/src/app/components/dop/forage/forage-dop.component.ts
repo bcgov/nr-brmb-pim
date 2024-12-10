@@ -18,7 +18,7 @@ import {
 } from 'src/app/store/dop/dop.actions';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
 import { DopYieldContract, GradeModifierList, YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
-import { getInsurancePlanName, makeNumberOnly, setHttpHeaders } from 'src/app/utils';
+import { getInsurancePlanName, makeNumberOnly, replaceNonAlphanumericCharacters, setHttpHeaders } from 'src/app/utils';
 import { GradeModifierOptionsType } from '../dop-common';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import {ViewEncapsulation } from '@angular/core';
@@ -124,8 +124,7 @@ export class ForageDopComponent extends BaseComponent {
 
 
   onPrint() {
-    let reportName = this.growerContract.growerName + "-DOP";
-    reportName = reportName.replace(".", "");
+    let reportName = replaceNonAlphanumericCharacters(this.growerContract.growerName) + "-DOP" 
     this.store.dispatch(GetDopReport(reportName, this.policyId, "", this.insurancePlanId, "", "", "", "", ""));
   }
 
@@ -314,6 +313,8 @@ export class ForageDopComponent extends BaseComponent {
   }
 
   isFormValid() {
+    let cutsExist = true
+    let farmLevelDataExists = false 
 
     // DOP date should be a valid date
     let declarationOfProductionDate = this.dopYieldContract.declarationOfProductionDate;
@@ -337,8 +338,12 @@ export class ForageDopComponent extends BaseComponent {
     for(let i = 1; i <= this.numCuts; i++) {
 
       if (this.isCutEmpty(i)) {
-        alert("Cut Number " + i + " is empty. Save is not possible.")        
-        return false
+        if (i == 1) {
+          cutsExist = false
+        } else {
+          alert("Cut Number " + i + " is empty. Save is not possible.")        
+          return false
+        }
       }
 
     }
@@ -389,6 +394,16 @@ export class ForageDopComponent extends BaseComponent {
         alert("Percent Moisture in in Commodity Totals table  should be between 0 and 100")
         return false
       }
+
+      if (totalBalesLoads && weight && moisturePercent) {
+        farmLevelDataExists = true
+      }
+    }
+
+    // there has to be data for either field cuts or commodity totals
+    if (!farmLevelDataExists && !cutsExist ) {
+      alert("Please enter data either at field level or commodity level.")
+      return false
     }
 
     return true

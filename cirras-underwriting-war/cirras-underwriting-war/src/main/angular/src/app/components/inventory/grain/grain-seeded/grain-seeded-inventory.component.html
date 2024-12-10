@@ -282,7 +282,7 @@
                                                         (keydown)="clearCommoditySelection(fieldIndex, plantingIndex, invSeededIndex)"
                                                         (keyup)="searchVariety($event.target.value, fieldIndex, plantingIndex, invSeededIndex)"
                                                         (blur)="validateVariety(autoVrty, $event.target.value, fieldIndex, plantingIndex, invSeededIndex)">
-                                                    <mat-autocomplete #autoVrty="matAutocomplete"  
+                                                    <mat-autocomplete #autoVrty="matAutocomplete"  hideSingleSelectionIndicator="true"
                                                         [displayWith]="displayVarietyFn"
                                                         (optionSelected)="varietySelected($event, fieldIndex, plantingIndex, invSeededIndex)">
                                                     <mat-option *ngFor="let option of filteredSeededVarietyOptions" [value]="option">
@@ -424,7 +424,7 @@
                                                         (keyup)="searchUnderSeededVariety($event.target.value)"
                                                         (focus)="underseededVarietyFocus()"
                                                         (blur)="validateUnderSeededVariety(autoUnderSeededVrty, fieldIndex, plantingIndex, invSeededIndex)">
-                                                    <mat-autocomplete #autoUnderSeededVrty="matAutocomplete"  
+                                                    <mat-autocomplete #autoUnderSeededVrty="matAutocomplete"  hideSingleSelectionIndicator="true"
                                                         [displayWith]="displayVarietyFn">
                                                     <mat-option *ngFor="let option of filteredUnderSeededVarietyOptions" [value]="option">
                                                         {{ option.varietyName | titlecase }}

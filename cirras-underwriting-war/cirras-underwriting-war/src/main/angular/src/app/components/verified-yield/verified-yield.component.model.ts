@@ -5,22 +5,15 @@ import {BaseComponentModel} from "../common/base/base.component.model";
 
 export class VerifiedYieldComponentModel extends BaseComponentModel {
     
-
     constructor(protected sanitizer: DomSanitizer,
                 private fb: UntypedFormBuilder) {
 
         super(sanitizer);
         
         this.formGroup = this.fb.group({
-            // todo
-            // yieldMeasUnitTypeCode: [''],  
-            // declarationOfProductionDate: [''],
-            // balerWagonInfo: [''],
-            // totalLivestock: [''],
+            // todo - add the summary grid
             verifiedYieldContractCommodities: new UntypedFormArray([]), // subform responsible for the commodities grid 
-            // dopYieldContractCommodityForageList: new FormArray([]),
-            // dopYieldFieldRollupForageList: new FormArray([]),
-
+            verifiedYieldAmendments: new UntypedFormArray([]) , // subform responsible for the appraisals and assessments grid
         });
     }
 
