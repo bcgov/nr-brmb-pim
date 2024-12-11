@@ -1,16 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { BaseComponent } from '../common/base/base.component';
-import { UwContract } from 'src/app/conversion/models';
+import { CropCommodityList, UwContract } from 'src/app/conversion/models';
 import { ParamMap } from '@angular/router';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
 import { VerifiedYieldContract } from 'src/app/conversion/models-yield';
 import { getInsurancePlanName } from 'src/app/utils';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
-import {ViewEncapsulation } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
 import { VerifiedYieldComponentModel } from './verified-yield.component.model';
 import { AddNewVerifiedYieldContract, DeleteVerifiedYieldContract, LoadVerifiedYieldContract, RolloverVerifiedYieldContract, UpdateVerifiedYieldContract } from 'src/app/store/verified-yield/verified-yield.actions';
 import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
+import { ClearCropCommodity, LoadCropCommodityList } from 'src/app/store/crop-commodity/crop-commodity.actions';
+import { CROP_COMMODITY_TYPE_CONST, INSURANCE_PLAN } from 'src/app/utils/constants';
 
 @Component({
   selector: 'verified-yield',
@@ -24,6 +26,7 @@ export class VerifiedYieldComponent extends BaseComponent {
   @Input() growerContract: UwContract;
   @Input() isUnsaved: boolean;
   @Input() verifiedYieldContract: VerifiedYieldContract;
+  @Input() cropCommodityList: CropCommodityList
 
   policyId: string;
   verifiedYieldContractGuid: string;
@@ -59,22 +62,24 @@ export class VerifiedYieldComponent extends BaseComponent {
             this.store.dispatch(RolloverVerifiedYieldContract(this.componentId, this.policyId))
           }
 
+          this.loadCropCommodities()
       }
     );
 
     this.store.dispatch(setFormStateUnsaved(this.componentId, false ));
   }
+ 
+  loadCropCommodities() {
+    // Clear existing commodity list first.
+    this.store.dispatch(ClearCropCommodity())
 
-  // ngOnChanges(changes: SimpleChanges) {
-  //   super.ngOnChanges(changes);
-
-  //   // if (this.verifiedYieldContract) {
-  //   //   // any changes that need to be set up
-
-  //   // }
-
-  // }
-
+    this.store.dispatch(LoadCropCommodityList(VERIFIED_YIELD_COMPONENT_ID,
+        INSURANCE_PLAN.GRAIN.toString(),
+        this.cropYear.toString(),
+        CROP_COMMODITY_TYPE_CONST.INVENTORY,
+        "N")
+      )
+  }
 
   getInsPlanName(insurancePlanId){
 
@@ -112,6 +117,9 @@ export class VerifiedYieldComponent extends BaseComponent {
       return
     }
 
+    // remove rows with empty verifiedYieldAmendmentGuid and deletedByUserInd = true from verifiedYieldContract
+    this.cleanUpAmendments()
+
     if (this.verifiedYieldContract.verifiedYieldContractGuid) {
       this.store.dispatch(UpdateVerifiedYieldContract(VERIFIED_YIELD_COMPONENT_ID, this.verifiedYieldContract))
     } else {
@@ -123,8 +131,38 @@ export class VerifiedYieldComponent extends BaseComponent {
   }
 
   isFormValid() {
-    // TODO ??
+    // amendments: all inputs but fields are required
+    for (let i=0; i < this.verifiedYieldContract.verifiedYieldAmendments.length; i++) {
+
+      if (this.verifiedYieldContract.verifiedYieldAmendments[i].deletedByUserInd !== true ) {
+        if (!this.verifiedYieldContract.verifiedYieldAmendments[i].verifiedYieldAmendmentCode ||
+            !this.verifiedYieldContract.verifiedYieldAmendments[i].cropCommodityId ||
+            !this.verifiedYieldContract.verifiedYieldAmendments[i].yieldPerAcre ||
+            !this.verifiedYieldContract.verifiedYieldAmendments[i].acres ||
+            !this.verifiedYieldContract.verifiedYieldAmendments[i].rationale) {
+
+              alert("Ammendment Type, Commodity, Yield/ac, Acres and Rationale are mandatory!")
+              return false
+            }
+      }
+    }
+
     return true
+  }
+
+  cleanUpAmendments(){
+    // removes rows with empty verifiedYieldAmendmentGuid and deletedByUserInd = true from verifiedYieldContract
+  
+    for (let i=0; i < this.verifiedYieldContract.verifiedYieldAmendments.length; i++) {
+
+      if (this.verifiedYieldContract.verifiedYieldAmendments[i].deletedByUserInd == true && 
+          !this.verifiedYieldContract.verifiedYieldAmendments[i].verifiedYieldAmendmentGuid) {
+
+            // remove amendment
+            this.verifiedYieldContract.verifiedYieldAmendments.splice(i)
+            i--
+          }
+    }
   }
 
   setFormStyles(){

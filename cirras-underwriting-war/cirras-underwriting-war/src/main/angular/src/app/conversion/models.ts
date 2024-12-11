@@ -1,5 +1,5 @@
 import {  InventoryContractCommodity, InventoryCoverageTotalForage, InventoryField, PolicySimple, UnderwritingComment } from "@cirras/cirras-underwriting-api";
-import {  DopYieldFieldForage, DopYieldFieldGrain } from "./models-yield";
+import {  DopYieldFieldForage, DopYieldFieldGrain, VerifiableCommodity } from "./models-yield";
 
 
 export interface PagedCollection {
@@ -75,6 +75,7 @@ export interface AnnualField {
   dopYieldFieldForageList?: Array<DopYieldFieldForage>;
   uwComments?: Array<UnderwritingComment>;
   policies?: Array<PolicySimple>;
+  verifiableCommodities?: Array<VerifiableCommodity>
   etag?: string;
   type: string;
 

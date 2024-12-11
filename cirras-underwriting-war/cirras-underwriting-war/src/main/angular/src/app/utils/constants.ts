@@ -143,3 +143,8 @@ export const PLANT_INSURABILITY_TYPE_CODE ={
     WinterSurvival2: "W2",
     WinterSurvival3: "W3",
 }
+
+export const VERIFIED_YIELD_AMENDMENT_CODE = {
+    "APPRAISAL"     : "Appraisal",  
+    "ASSESSMENT"    : "Assessment"
+}
