@@ -424,27 +424,38 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		//Barley - NON Pedigree
 		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 16, false, null, 23.45); 
 		//Canola - Pedigree
-		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 18, true, canolaPedigreeProductionGuarantee, null); 
+		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 18, true, null, null); 
 		//Barley - Pedigree
 		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 16, true, barleyPedProdGuaranteeNew, null); 
 
 		//Update Barley Pedigree Product Guarantee to NULL - Expect warning
 		createUpdateProduct(policyId1, productId3, 17, 50, 20.5, null, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
-
+		//Update Canola Pedigree to status final
+		createUpdateProduct(policyId1, productId2, 19, 10, 50.5, canolaPedigreeProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		
 		//Get contract
 		VerifiedYieldContractRsrc vyContract = getVerifiedYieldContract(policyNumber1);
 		Assert.assertNotNull(vyContract);
 
-		//1 warning expected
-		Assert.assertEquals(1, vyContract.getProductWarningMessages().size());
+		//2 warnings expected
+		Assert.assertEquals(2, vyContract.getProductWarningMessages().size());
 
+		//UPDATE product values
+		vyContract.setUpdateProductValuesInd(true);
+
+		vyContract = service.updateVerifiedYieldContract(vyContract);
+		Assert.assertNotNull(vyContract);
+
+		//0 warnings expected
+		Assert.assertEquals(0, updatedContract.getProductWarningMessages().size());
+		
 		// Check Contract Commodities
 		//Barley - NON Pedigree
 		checkVerifiedContractCommodityTotals(expectedCommodities, vyContract.getVerifiedYieldContractCommodities(), 16, false, null, 23.45); 
 		//Canola - Pedigree
 		checkVerifiedContractCommodityTotals(expectedCommodities, vyContract.getVerifiedYieldContractCommodities(), 18, true, canolaPedigreeProductionGuarantee, null); 
 		//Barley - Pedigree
-		checkVerifiedContractCommodityTotals(expectedCommodities, vyContract.getVerifiedYieldContractCommodities(), 16, true, barleyPedProdGuaranteeNew, null); 
+		checkVerifiedContractCommodityTotals(expectedCommodities, vyContract.getVerifiedYieldContractCommodities(), 16, true, null, null); 
 
 		
 		//Delete verified contract ******************************************************************************
