@@ -10,10 +10,13 @@ import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.core.UriBuilder;
@@ -40,6 +43,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldAmendme
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.VerifiedYieldContractFactory;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.CommodityCoverageCode;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
 
 public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implements VerifiedYieldContractFactory { 
@@ -108,7 +112,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		//Get production guarantee
 		Double productionGuarantee = null;
 		ProductDto product = getProductDto(dto.getCropCommodityId(), dto.getIsPedigreeInd(), productDtos);
-		if(product != null) {
+		if(product != null && product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
 			productionGuarantee = product.getProductionGuarantee();
 		}
 
@@ -136,7 +140,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 
 		VerifiedYieldContractRsrc resource = new VerifiedYieldContractRsrc();
 
-		populateResource(resource, dto, productDtos);
+		populateResource(resource, dto);
 
 		// Fields
 		if (!dto.getFields().isEmpty()) {
@@ -194,7 +198,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		return resource;		
 	}
 
-	private void populateResource(VerifiedYieldContractRsrc resource, VerifiedYieldContractDto dto, List<ProductDto> productDtos) {
+	private void populateResource(VerifiedYieldContractRsrc resource, VerifiedYieldContractDto dto) {
 		
 		resource.setContractId(dto.getContractId());
 		resource.setCropYear(dto.getCropYear());
@@ -258,6 +262,13 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		return messageRsrc;
 	}
 	
+	private static final Set<String> coverageCodes = new HashSet<String>(Arrays.asList(
+											     new String[] {
+											    		 	CommodityCoverageCode.QUANTITY_GRAIN, 
+											    		 	CommodityCoverageCode.QUANTITY_FORAGE, 
+											    		 	CommodityCoverageCode.QUANTITY_SILAGE_CORN
+											    		 }));
+	
 	private ProductDto getProductDto(Integer cropCommodityId, Boolean isPedigree, List<ProductDto> productDtos) {
 		
 		ProductDto product = null;
@@ -266,7 +277,9 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			//Products in CIRRAS use a different commodity id for pedigreed than in this app. A table maps the correct commodity ids and
 			//are returned to the NonPedigreeCropCommodityId property
 			List<ProductDto> products = productDtos.stream()
-					.filter(x -> x.getNonPedigreeCropCommodityId() == cropCommodityId && x.getIsPedigreeProduct() == isPedigree )
+					.filter(x -> x.getNonPedigreeCropCommodityId().equals(cropCommodityId) 
+							&& x.getIsPedigreeProduct().equals(isPedigree)
+							&& coverageCodes.contains(x.getCommodityCoverageCode()))
 					.collect(Collectors.toList());
 			
 			if (products != null && products.size() > 0) {
@@ -432,7 +445,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		//Get production guarantee if user wants to update the values
 		if(Boolean.TRUE.equals(updateProductValues)) {
 			ProductDto product = getProductDto(dto.getCropCommodityId(), dto.getIsPedigreeInd(), productDtos);
-			if(product != null) {
+			if(product != null && product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
 				productionGuarantee = product.getProductionGuarantee();
 			} else {
 				productionGuarantee = null;
