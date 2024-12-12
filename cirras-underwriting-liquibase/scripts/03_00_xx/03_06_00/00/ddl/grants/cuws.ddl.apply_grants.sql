@@ -4,6 +4,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON cuws.verified_yield_contract TO "app_cuw
 GRANT SELECT, INSERT, UPDATE, DELETE ON cuws.verified_yield_contract_commodity TO "app_cuws_rest_proxy";
 GRANT SELECT, INSERT, UPDATE, DELETE ON cuws.verified_yield_amendment_code TO "app_cuws_rest_proxy";
 GRANT SELECT, INSERT, UPDATE, DELETE ON cuws.verified_yield_amendment TO "app_cuws_rest_proxy";
+GRANT SELECT, INSERT, UPDATE, DELETE ON cuws.verified_yield_summary TO "app_cuws_rest_proxy";
 GRANT SELECT, INSERT, UPDATE, DELETE ON cuws.product TO "app_cuws_rest_proxy";
 GRANT SELECT, INSERT, UPDATE, DELETE ON cuws.crop_commodity_pedigree_xref TO "app_cuws_rest_proxy";
 
