@@ -73,8 +73,8 @@
         <mat-form-field appearance="fill"  style="width: 100%;" class="inventory-fill">
             <textarea matInput formControlName="rationale" 
                 cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-                cdkAutosizeMinRows="1" cdkAutosizeMaxRows="8" 
-                maxlength="200" (blur)="updateRationale()">
+                cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" 
+                maxlength="200" (blur)="updateRationale()" style="overflow-y:scroll;">
                 {{ amendmentFormGroup.value.rationale }}
             </textarea>
         </mat-form-field>

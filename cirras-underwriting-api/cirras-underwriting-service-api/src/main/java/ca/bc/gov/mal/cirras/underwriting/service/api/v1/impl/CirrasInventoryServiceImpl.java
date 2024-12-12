@@ -100,6 +100,7 @@ import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.UnderwritingService
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InventoryCalculationType;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InventoryReportType;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandUpdateTypes;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.OutOfSync;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.ModelValidator;
@@ -1242,7 +1243,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 	@Override
 	public byte[] generateInvReport(Integer cropYear, Integer insurancePlanId, Integer officeId,
-			String policyStatusCode, String policyNumber, String growerInfo, String sortColumn, String policyIds,
+			String policyStatusCode, String policyNumber, String growerInfo, String sortColumn, String policyIds, String reportType,
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 
@@ -1285,7 +1286,16 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 			// Pick the jasper report to run based on plan.
 			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(insurancePlanId) ) {
-				result = jasperReportService.generateInvGrainReport(queryParams);
+				
+				if ( InventoryReportType.unseeded.name().equals(reportType) ) {
+					result = jasperReportService.generateUnseededGrainReport(queryParams);
+					
+				} else if ( InventoryReportType.seeded.name().equals(reportType) ) {
+					result = jasperReportService.generateSeededGrainReport(queryParams);
+					
+				} else {
+					throw new ServiceException("Report Type for Grain Inventory must be unseeded or seeded");
+				}
 
 			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(insurancePlanId) ) {
 				result = jasperReportService.generateInvForageReport(queryParams);

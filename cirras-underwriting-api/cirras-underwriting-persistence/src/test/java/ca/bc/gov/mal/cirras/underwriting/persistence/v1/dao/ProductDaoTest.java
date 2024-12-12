@@ -2,6 +2,7 @@ package ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -28,6 +29,7 @@ public class ProductDaoTest {
 	private PersistenceSpringConfig persistenceSpringConfig;
 	
 	private Integer productId = 99999999;
+	private Integer productId2 = 79999999;
 
 	private Integer policyId1 = 90000001;
 	private Integer contractId1 = 90000002;
@@ -51,6 +53,7 @@ public class ProductDaoTest {
 	private void delete() throws NotFoundDaoException, DaoException {
 
 		deleteProduct(productId);
+		deleteProduct(productId2);
 		deletePolicy(policyId1);
 		deleteGrower(growerId1);
 	}
@@ -191,16 +194,7 @@ public class ProductDaoTest {
 		//FETCH
 		ProductDto fetchedDto = dao.fetch(productId);
 		
-		Assert.assertEquals("CommodityCoverageCode", newDto.getCommodityCoverageCode(), fetchedDto.getCommodityCoverageCode());
-		Assert.assertEquals("CropCommodityId", newDto.getCropCommodityId(), fetchedDto.getCropCommodityId());
-		Assert.assertEquals("DeductibleLevel", newDto.getDeductibleLevel(), fetchedDto.getDeductibleLevel());
-		Assert.assertEquals("InsuredByMeasType", newDto.getInsuredByMeasType(), fetchedDto.getInsuredByMeasType());
-		Assert.assertEquals("PolicyId", newDto.getPolicyId(), fetchedDto.getPolicyId());
-		Assert.assertEquals("ProbableYield", newDto.getProbableYield(), fetchedDto.getProbableYield());
-		Assert.assertEquals("ProductId", newDto.getProductId(), fetchedDto.getProductId());
-		Assert.assertEquals("ProductionGuarantee", newDto.getProductionGuarantee(), fetchedDto.getProductionGuarantee());
-		Assert.assertEquals("ProductStatusCode", newDto.getProductStatusCode(), fetchedDto.getProductStatusCode());
-		Assert.assertEquals("DataSyncTransDate", newDto.getDataSyncTransDate(), fetchedDto.getDataSyncTransDate());
+		checkProduct(newDto, fetchedDto);
 		
 		//UPDATE
 		dataSyncTransDate = addSeconds(dateTime, -60);
@@ -220,16 +214,7 @@ public class ProductDaoTest {
 		//FETCH
 		ProductDto updatedDto = dao.fetch(productId);
 
-		Assert.assertEquals("CommodityCoverageCode", fetchedDto.getCommodityCoverageCode(), updatedDto.getCommodityCoverageCode());
-		Assert.assertEquals("CropCommodityId", fetchedDto.getCropCommodityId(), updatedDto.getCropCommodityId());
-		Assert.assertEquals("DeductibleLevel", fetchedDto.getDeductibleLevel(), updatedDto.getDeductibleLevel());
-		Assert.assertEquals("InsuredByMeasType", fetchedDto.getInsuredByMeasType(), updatedDto.getInsuredByMeasType());
-		Assert.assertEquals("PolicyId", fetchedDto.getPolicyId(), updatedDto.getPolicyId());
-		Assert.assertEquals("ProbableYield", fetchedDto.getProbableYield(), updatedDto.getProbableYield());
-		Assert.assertEquals("ProductId", fetchedDto.getProductId(), updatedDto.getProductId());
-		Assert.assertEquals("ProductionGuarantee", fetchedDto.getProductionGuarantee(), updatedDto.getProductionGuarantee());
-		Assert.assertEquals("ProductStatusCode", fetchedDto.getProductStatusCode(), updatedDto.getProductStatusCode());
-		Assert.assertEquals("DataSyncTransDate", fetchedDto.getDataSyncTransDate(), updatedDto.getDataSyncTransDate());
+		checkProduct(fetchedDto, updatedDto);
 		
 		//Expect NO update becaus the transaction date is before the latest update
 		userId = "JUNIT_TEST_NO_UPDATE";
@@ -244,12 +229,69 @@ public class ProductDaoTest {
 		//DataSyncTransDate is still the same (no update happened)
 		Assert.assertTrue("DataSyncTransDate 3", notUpdatedDto.getDataSyncTransDate().compareTo(dataSyncTransDate) == 0);
 
+		
+		//Test get for policy
+		
+		//Add second product
+		dao = persistenceSpringConfig.productDao();
+		
+		newDto = new ProductDto();
+
+		newDto.setCommodityCoverageCode("CQG");
+		newDto.setCropCommodityId(25); //Pedigree product
+		newDto.setDeductibleLevel(20);
+		newDto.setInsuredByMeasType("ACRES");
+		newDto.setPolicyId(policyId1);
+		newDto.setProbableYield(22.2);
+		newDto.setProductId(productId2);
+		newDto.setProductionGuarantee(99.0);
+		newDto.setProductStatusCode("FINAL");
+		newDto.setNonPedigreeCropCommodityId(24);
+		newDto.setIsPedigreeProduct(true);
+
+		newDto.setDataSyncTransDate(dataSyncTransDate);
+
+		//INSERT
+		dao.insert(newDto, userId);
+
+		//Set expected values for first product
+		notUpdatedDto.setNonPedigreeCropCommodityId(notUpdatedDto.getCropCommodityId());
+		notUpdatedDto.setIsPedigreeProduct(false);
+		
+		List<ProductDto> dtos = dao.getForPolicy(contractId1, cropYear1);
+		Assert.assertEquals(2, dtos.size());
+		
+		for(ProductDto dto : dtos) {
+			if(dto.getCropCommodityId().equals(newDto.getCropCommodityId())) {
+				checkProduct(newDto, dto);
+			} else {
+				checkProduct(notUpdatedDto, dto);
+			}
+		}
+		
 		//DELETE
 		dao.delete(productId);
 		
 		//FETCH
 		ProductDto deletedDto = dao.fetch(productId);
 		Assert.assertNull(deletedDto);
+	}
+
+	private void checkProduct(ProductDto expected, ProductDto actual) {
+		Assert.assertEquals("CommodityCoverageCode", expected.getCommodityCoverageCode(), actual.getCommodityCoverageCode());
+		Assert.assertEquals("CropCommodityId", expected.getCropCommodityId(), actual.getCropCommodityId());
+		Assert.assertEquals("DeductibleLevel", expected.getDeductibleLevel(), actual.getDeductibleLevel());
+		Assert.assertEquals("InsuredByMeasType", expected.getInsuredByMeasType(), actual.getInsuredByMeasType());
+		Assert.assertEquals("PolicyId", expected.getPolicyId(), actual.getPolicyId());
+		Assert.assertEquals("ProbableYield", expected.getProbableYield(), actual.getProbableYield());
+		Assert.assertEquals("ProductId", expected.getProductId(), actual.getProductId());
+		Assert.assertEquals("ProductionGuarantee", expected.getProductionGuarantee(), actual.getProductionGuarantee());
+		Assert.assertEquals("ProductStatusCode", expected.getProductStatusCode(), actual.getProductStatusCode());
+		Assert.assertEquals("DataSyncTransDate", expected.getDataSyncTransDate(), actual.getDataSyncTransDate());
+		
+		Assert.assertEquals("NonPedigreeCropCommodityId", expected.getNonPedigreeCropCommodityId(), actual.getNonPedigreeCropCommodityId());
+		Assert.assertEquals("IsPedigreeProduct", expected.getIsPedigreeProduct(), actual.getIsPedigreeProduct());
+
 	}
 	
 	private static Date addSeconds(Date date, Integer seconds) {

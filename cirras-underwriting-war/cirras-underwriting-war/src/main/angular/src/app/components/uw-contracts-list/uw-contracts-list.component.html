@@ -10,7 +10,7 @@
                     <p>
                         <span *ngIf="countSelectedRecords > 0">{{ countSelectedRecords }} Selected</span>
                         <reports-download-button
-                            [reportType]="selectedReportType"
+                            [reportChoice]="selectedReportType"
                             [policyId]="getSelectedPolicyIdsForPrint()"
                             [cropYear]="selectedCropYear"
                             [insurancePlanId]="selectedInsurancePlan"

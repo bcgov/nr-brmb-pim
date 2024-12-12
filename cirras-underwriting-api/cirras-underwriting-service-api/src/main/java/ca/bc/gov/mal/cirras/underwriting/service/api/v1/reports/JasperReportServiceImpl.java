@@ -65,11 +65,17 @@ public class JasperReportServiceImpl implements JasperReportService
 	}
 
 	@Override
-	public byte[] generateInvGrainReport(Map<String, Object> paramMap) throws JasperReportServiceException {
-		byte[] reportContent = generateJasperReportInMemory("CUWS_Inventory_Grain", paramMap);		
+	public byte[] generateUnseededGrainReport(Map<String, Object> paramMap) throws JasperReportServiceException {
+		byte[] reportContent = generateJasperReportInMemory("CUWS_Unseeded_Grain", paramMap);		
 		return reportContent;
 	}
 
+	@Override
+	public byte[] generateSeededGrainReport(Map<String, Object> paramMap) throws JasperReportServiceException {
+		byte[] reportContent = generateJasperReportInMemory("CUWS_Seeded_Grain", paramMap);		
+		return reportContent;
+	}
+	
 	private byte[] generateJasperReportInMemory(String reportName, Map<String, Object> paramMap) throws JasperReportServiceException
 	{
 		// Check config settings.
