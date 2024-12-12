@@ -105,6 +105,16 @@ export const SORT_BY_CHOICES = {
     POLICY_NUMBER: "policyNumber",  
     GROWER_NAME: "growerName",   
 }
+export const REPORT_TYPE_OPTIONS = [
+    {
+        code: "unseeded",
+        description: "Unseeded Inventory"
+    },
+    {
+        code: "seeded",
+        description: "Seeded Inventory"
+    },
+];
 
 export const BASE_COMMODITIES = ['BARLEY', 'CANOLA', 'FALL RYE', 'FIELD PEA', 'OAT', 'WHEAT', 'WINTER WHEAT']
 

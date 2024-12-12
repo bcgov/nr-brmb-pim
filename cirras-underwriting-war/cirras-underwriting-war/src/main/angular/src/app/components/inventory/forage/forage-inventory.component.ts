@@ -1463,7 +1463,7 @@ isFormValid() {
   onPrint() {
 
     let reportName = replaceNonAlphanumericCharacters(this.growerContract.growerName) + "-Inventory" 
-    this.store.dispatch(GetInventoryReport(reportName, this.policyId, "", INSURANCE_PLAN.FORAGE.toString(), "", "", "", "", ""))
+    this.store.dispatch(GetInventoryReport(reportName, this.policyId, "", INSURANCE_PLAN.FORAGE.toString(), "", "", "", "", "", ""))
     
   }
 

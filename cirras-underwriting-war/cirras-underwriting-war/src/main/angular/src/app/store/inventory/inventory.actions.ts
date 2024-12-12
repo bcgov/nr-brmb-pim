@@ -153,6 +153,7 @@ export interface GetInventoryReportAction extends Action {
     policyNumber: string;
     growerInfo: string;
     sortColumn: string;
+    reportType: string;
   }
 }
 
@@ -164,7 +165,8 @@ export function GetInventoryReport(reportName: string,
                             policyStatusCode: string,
                             policyNumber: string,
                             growerInfo: string,
-                            sortColumn: string): GetInventoryReportAction {
+                            sortColumn: string,
+                            reportType: string): GetInventoryReportAction {
   return {
     type: GET_INVENTORY_REPORT_BYTES,
     payload: {
@@ -176,7 +178,8 @@ export function GetInventoryReport(reportName: string,
       policyStatusCode: policyStatusCode, 
       policyNumber: policyNumber,
       growerInfo: growerInfo,
-      sortColumn: sortColumn
+      sortColumn: sortColumn,
+      reportType: reportType
     }
   };
 }

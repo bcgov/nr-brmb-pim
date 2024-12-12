@@ -26,7 +26,7 @@
         <div class="vertical-line"></div>
         <div matTooltip="Changes must be saved before download is possible.">
             <button mat-raised-button [disabled]="hasDataChanged == true"
-            class="secondary button-large-text" (click)="onPrint()">
+            class="secondary button-large-text" (click)="onPrint('unseeded')">
                 <mat-icon class="button-mat-icon">download</mat-icon>Download
             </button>
         </div>
