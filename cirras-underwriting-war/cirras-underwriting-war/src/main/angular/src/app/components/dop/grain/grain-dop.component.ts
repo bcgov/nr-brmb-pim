@@ -17,7 +17,7 @@ import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contrac
 import { BaseComponent } from '../../common/base/base.component';
 import { GrainDopComponentModel } from './grain-dop.component.model';
 import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
-import { addUwCommentsObject, areDatesNotEqual, areNotEqual, getInsurancePlanName, makeNumberOnly, setHttpHeaders } from 'src/app/utils';
+import { addUwCommentsObject, areDatesNotEqual, areNotEqual, getInsurancePlanName, makeNumberOnly, replaceNonAlphanumericCharacters, setHttpHeaders } from 'src/app/utils';
 import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import {ViewEncapsulation } from '@angular/core';
@@ -834,11 +834,9 @@ export class GrainDopComponent extends BaseComponent{
   }
 
   onPrint() {
-
-    let reportName = this.growerContract.growerName + "-DOP" 
-    reportName = reportName.replace(".", "")
+    let reportName = replaceNonAlphanumericCharacters(this.growerContract.growerName) + "-DOP" 
     this.store.dispatch(GetDopReport(reportName, this.policyId, "", this.insurancePlanId, "", "", "", "", ""))
-    
+
   }
 
 

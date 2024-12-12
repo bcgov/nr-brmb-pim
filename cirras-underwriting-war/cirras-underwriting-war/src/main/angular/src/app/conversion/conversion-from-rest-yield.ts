@@ -85,10 +85,13 @@ export function convertToYieldMeasUnit(yieldMeasUnitRes: YieldMeasUnitTypeCodeRs
       defaultYieldMeasUnitTypeCode: verifiedYieldContract.defaultYieldMeasUnitTypeCode,
       insurancePlanId: verifiedYieldContract.insurancePlanId,
       growerContractYearId: verifiedYieldContract.growerContractYearId,
-      verifiedYieldContractCommodities: verifiedYieldContract.verifiedYieldContractCommodities,
 
+      fields: verifiedYieldContract.fields,
+      verifiedYieldContractCommodities: verifiedYieldContract.verifiedYieldContractCommodities,
+      verifiedYieldAmendments: verifiedYieldContract.verifiedYieldAmendments,
+      
       etag: etag, 
-      type: verifiedYieldContract.type         
+      type: verifiedYieldContract.type   
     };  
     return ret;
   }

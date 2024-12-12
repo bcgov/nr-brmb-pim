@@ -11,11 +11,11 @@ import {
     selectVerifiedYieldContractLoadState,
 } from "../../store/application/application.selectors";
 
-import { UwContract } from "src/app/conversion/models";
+import { CropCommodityList, UwContract } from "src/app/conversion/models";
 import { selectGrowerContract } from "src/app/store/grower-contract/grower-contract.selector";
 import { VerifiedYieldContract } from "src/app/conversion/models-yield";
 import { VERIFIED_YIELD_COMPONENT_ID } from "src/app/store/verified-yield/verified-yield.state";
-import { selectVerifiedYieldContract } from "src/app/store/verified-yield/verified-yield.selectors";
+import { selectCropCommodityList, selectVerifiedYieldContract } from "src/app/store/verified-yield/verified-yield.selectors";
 
 @Component({
     selector: "grain-vy-container",
@@ -23,6 +23,7 @@ import { selectVerifiedYieldContract } from "src/app/store/verified-yield/verifi
         <verified-yield
             [growerContract]="growerContract$ | async"
             [verifiedYieldContract]="verifiedYieldContract"
+            [cropCommodityList]="cropCommodityList$ | async"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
             [isUnsaved]="isUnsaved$ | async"
@@ -33,6 +34,7 @@ export class VerifiedYieldContainer extends BaseContainer implements OnInit {
 
     growerContract$: Observable<UwContract> = this.store.pipe(select(selectGrowerContract()));
     verifiedYieldContract$: Observable<UwContract> = this.store.pipe(select(selectVerifiedYieldContract()));
+    cropCommodityList$: Observable<CropCommodityList> = this.store.pipe(select(selectCropCommodityList()));
 
     loadState$: Observable<LoadState> = this.store.pipe(select(selectVerifiedYieldContractLoadState()));
     errorState$: Observable<ErrorState[]> = this.store.pipe(select(selectVerifiedYieldContractErrorState()));

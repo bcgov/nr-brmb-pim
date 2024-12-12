@@ -209,7 +209,7 @@
                                             (focus)="lastYearCommodityVarietyFocus(fieldIndex, plantingIndex)"
                                             (keyup)="searchLastYearCommodityVariety($event.target.value)"
                                             (blur)="validateLastYearCommodityVariety(autoCmdtyVrty, $event.target.value, fieldIndex, plantingIndex)">
-                                        <mat-autocomplete #autoCmdtyVrty="matAutocomplete"
+                                        <mat-autocomplete #autoCmdtyVrty="matAutocomplete" hideSingleSelectionIndicator="true"
                                             [displayWith]="displayCommodityVarietyFn">
                                             <mat-option *ngFor="let option of filteredLastYearCommodityVarietyOptions" [value]="option.cropCommodityVarietyName">
                                                 {{ option.cropCommodityVarietyName | titlecase }}
@@ -252,7 +252,7 @@
                                             (focus)="commodityVarietyFocus(fieldIndex, plantingIndex)"
                                             (keyup)="searchCommodityVariety($event.target.value)"
                                             (blur)="validateCommodityVariety(autoCurrentCmdtyVrty, $event.target.value, fieldIndex, plantingIndex)">
-                                        <mat-autocomplete #autoCurrentCmdtyVrty="matAutocomplete"
+                                        <mat-autocomplete #autoCurrentCmdtyVrty="matAutocomplete" hideSingleSelectionIndicator="true"
                                             [displayWith]="displayCommodityVarietyFn">
                                             <mat-option *ngFor="let option of filteredCommodityVarietyOptions" [value]="option.cropCommodityVarietyName">
                                                 {{ option.cropCommodityVarietyName | titlecase }}

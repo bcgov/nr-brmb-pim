@@ -6,7 +6,7 @@ import { CropVarietyCommodityType, InventorySeededGrain, InventoryUnseeded, Unde
 import { CropCommodityList, InventoryContract, UwContract } from 'src/app/conversion/models';
 import { AddNewInventoryContract, DeleteInventoryContract, GetInventoryReport, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
-import { addUwCommentsObject, areDatesNotEqual, areNotEqual, areNullableBooleanNotEqual, isBaseCommodity, makeNumberOnly } from 'src/app/utils';
+import { addUwCommentsObject, areDatesNotEqual, areNotEqual, areNullableBooleanNotEqual, isBaseCommodity, makeNumberOnly, replaceNonAlphanumericCharacters } from 'src/app/utils';
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { BaseComponent } from '../../common/base/base.component';
 import { AddLandPopupData } from '../add-land/add-land.component';
@@ -991,9 +991,7 @@ ngOnChanges2(changes: SimpleChanges) {
   }
 
   onPrint() {
-
-    let reportName = this.growerContract.growerName + "-Inventory" 
-    reportName = reportName.replace(".", "")
+    let reportName = replaceNonAlphanumericCharacters(this.growerContract.growerName) + "-Inventory" 
     this.store.dispatch(GetInventoryReport(reportName, this.policyId, "", INSURANCE_PLAN.GRAIN.toString(), "", "", "", "", ""))
 
   }

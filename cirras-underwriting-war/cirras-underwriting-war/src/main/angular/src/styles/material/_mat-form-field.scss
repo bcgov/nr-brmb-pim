@@ -14,6 +14,11 @@
     min-height: 36px !important;
 }
 
+.mat-internal-form-field>label {
+    font-family: $font-family-main;
+    font-weight: $font-weight-emphasis;
+}
+
 .inventory-fill {
     color: #424242;
 
@@ -35,7 +40,10 @@
             border-bottom-color: transparent !important;
         }
     }
-
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+        // removes padding at the beginning of the textbox
+        padding-left: 2px; 
+    }
 
     // for the dropdown
     .mat-mdc-select-arrow svg {

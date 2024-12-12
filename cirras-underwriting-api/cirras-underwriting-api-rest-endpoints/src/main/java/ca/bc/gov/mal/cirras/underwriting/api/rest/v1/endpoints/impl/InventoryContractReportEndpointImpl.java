@@ -39,7 +39,8 @@ public class InventoryContractReportEndpointImpl extends BaseEndpointsImpl imple
 			String policyNumber,
 			String growerInfo,
 			String sortColumn,
-			String policyIds) {
+			String policyIds,
+			String reportType) {
 
 		Response response = null;
 		
@@ -69,6 +70,7 @@ public class InventoryContractReportEndpointImpl extends BaseEndpointsImpl imple
 					toString(growerInfo),
 					toString(sortColumn),
 					toString(policyIds), 
+					toString(reportType),
 					getFactoryContext(), 
 					getWebAdeAuthentication());
 			
