@@ -29,6 +29,8 @@ public class ProductDto extends BaseDto<ProductDto> {
 	private String insuredByMeasType;
 	
 	private Date dataSyncTransDate;
+	private Integer nonPedigreeCropCommodityId;
+	private Boolean isPedigreeProduct;
 
 	private String createUser;
 	private Date createDate;
@@ -52,6 +54,8 @@ public class ProductDto extends BaseDto<ProductDto> {
 		this.insuredByMeasType = dto.insuredByMeasType;
 		
 		this.dataSyncTransDate = dto.dataSyncTransDate;
+		this.nonPedigreeCropCommodityId = dto.nonPedigreeCropCommodityId;
+		this.isPedigreeProduct = dto.isPedigreeProduct;
 
 		this.createUser = dto.createUser;
 		this.createDate = dto.createDate;
@@ -163,7 +167,23 @@ public class ProductDto extends BaseDto<ProductDto> {
 	public void setInsuredByMeasType(String insuredByMeasType) {
 		this.insuredByMeasType = insuredByMeasType;
 	}
+	
+	public Integer getNonPedigreeCropCommodityId() {
+		return nonPedigreeCropCommodityId;
+	}
 
+	public void setNonPedigreeCropCommodityId(Integer nonPedigreeCropCommodityId) {
+		this.nonPedigreeCropCommodityId = nonPedigreeCropCommodityId;
+	}
+
+	public Boolean getIsPedigreeProduct() {
+		return isPedigreeProduct;
+	}
+
+	public void setIsPedigreeProduct(Boolean isPedigreeProduct) {
+		this.isPedigreeProduct = isPedigreeProduct;
+	}
+	
 	public Date getDataSyncTransDate() {
 		return dataSyncTransDate;
 	}
@@ -198,5 +218,5 @@ public class ProductDto extends BaseDto<ProductDto> {
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
- 
+
 }
