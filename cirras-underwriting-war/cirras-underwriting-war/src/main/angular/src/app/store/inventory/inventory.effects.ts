@@ -221,10 +221,11 @@ getInventoryReportBytes: Observable<Action> = createEffect (() =>  this.actions.
           let policyNumber = typedAction.payload.policyNumber ? typedAction.payload.policyNumber : "";
           let growerInfo = typedAction.payload.growerInfo ? typedAction.payload.growerInfo : "";
           let sortColumn = typedAction.payload.sortColumn ? typedAction.payload.sortColumn : "";
- 
+          let reportType = typedAction.payload.reportType ? typedAction.payload.reportType : "";
+
           let endpoint = this.appConfig.getConfig().rest["cirras_underwriting"] +"/inventoryContracts/report?policyIds=" + policyId +
             "&cropYear=" + cropYear + "&insurancePlanId=" + insurancePlanId + "&officeId=" + officeId + "&policyStatusCode=" + policyStatusCode +
-            "&policyNumber=" + policyNumber + "&growerInfo=" + encodeURI(growerInfo) + "&sortColumn=" + sortColumn
+            "&policyNumber=" + policyNumber + "&growerInfo=" + encodeURI(growerInfo) + "&sortColumn=" + sortColumn + "&reportType=" + reportType
 
           return this.httpClient
           .get(endpoint, {observe: 'response', responseType:'blob'})

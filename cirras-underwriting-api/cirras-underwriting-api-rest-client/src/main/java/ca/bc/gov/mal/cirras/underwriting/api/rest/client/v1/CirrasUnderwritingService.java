@@ -146,7 +146,8 @@ public interface CirrasUnderwritingService {
 			String policyNumber,
 			String growerInfo,
 			String sortColumn,
-			String policyIds
+			String policyIds,
+			String reportType
 		) throws CirrasUnderwritingServiceException;
 	
 	

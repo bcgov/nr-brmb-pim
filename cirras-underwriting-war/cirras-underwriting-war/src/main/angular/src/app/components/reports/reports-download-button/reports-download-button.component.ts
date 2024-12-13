@@ -13,7 +13,7 @@ import { GetDopReport } from "src/app/store/dop/dop.actions";
     styleUrls: ['./reports-download-button.component.scss']
 })
 export class ReportsDownloadButtonComponent {
-    @Input() reportType: string;
+    @Input() reportChoice: string;
     @Input() policyId: string;
     @Input() cropYear: string;
     @Input() insurancePlanId: string;
@@ -32,7 +32,10 @@ export class ReportsDownloadButtonComponent {
     onReportPrint() {
         const dialogRef = this.dialog.open(ReportsDownloadDialogComponent, {
             width: '341px',
-            data: null,
+            data: {
+                insurancePlanId: this.insurancePlanId,
+                reportChoice: this.reportChoice
+            },
             autoFocus: false,
             closeOnNavigation: false,
             panelClass: 'wf-dialog'
@@ -41,9 +44,9 @@ export class ReportsDownloadButtonComponent {
         const self = this;
         dialogRef.afterClosed().subscribe(result => {
             if (result?.event == 'Download' && self.isSearchValid()) {
-                switch (this.reportType) {
+                switch (this.reportChoice) {
                     case REPORT_CHOICES.INVENTORY:
-                        self.inventoryBatchPrint(result.sortColumn);
+                        self.inventoryBatchPrint(result.sortColumn, result.reportType);
                         break;
                     case REPORT_CHOICES.DOP:
                         self.dopReportPrint(result.sortColumn);
@@ -69,7 +72,7 @@ export class ReportsDownloadButtonComponent {
         return false
     }
 
-    inventoryBatchPrint(sortColumn: string) {
+    inventoryBatchPrint(sortColumn: string, reportType: string) {
         this.store.dispatch(GetInventoryReport("Inventory-batch.pdf",
             this.policyId,
             this.cropYear,
@@ -78,7 +81,8 @@ export class ReportsDownloadButtonComponent {
             this.policyStatusCode,
             this.policyNumber,
             this.growerInfo,
-            sortColumn
+            sortColumn,
+            reportType
         ));
     }
 
