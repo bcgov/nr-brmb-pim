@@ -77,7 +77,9 @@ export class VerifiedYieldCommodityComponent implements OnChanges {
   onDeleteCommodity() {
     this.commodityFormGroup.controls['harvestedAcresOverride'].setValue('')
     this.commodityFormGroup.controls['harvestedYieldOverride'].setValue('')
-
+    this.commodity.harvestedAcresOverride = null
+    this.commodity.harvestedYieldOverride = null
+    
     this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true));
   }
 

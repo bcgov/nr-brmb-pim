@@ -990,9 +990,9 @@ ngOnChanges2(changes: SimpleChanges) {
     
   }
 
-  onPrint() {
+  onPrint(reportType) {
     let reportName = replaceNonAlphanumericCharacters(this.growerContract.growerName) + "-Inventory" 
-    this.store.dispatch(GetInventoryReport(reportName, this.policyId, "", INSURANCE_PLAN.GRAIN.toString(), "", "", "", "", ""))
+    this.store.dispatch(GetInventoryReport(reportName, this.policyId, "", INSURANCE_PLAN.GRAIN.toString(), "", "", "", "", "", reportType))
 
   }
 

@@ -6,13 +6,13 @@ postgresVersion: 15
 #postGISVersion: '3.3' # use this version of POSTGIS. both crunchyImage and this property needs to have valid values for POSTGIS to be enabled.
 imagePullPolicy: IfNotPresent
 
-
 instances:
   name: ha # high availability
   replicas: #{DB_REPLICAS}#
   dataVolumeClaimSpec:
     storage: #{DB_STORAGE}#
     storageClassName: netapp-block-standard
+  # Note: using New York time zone to match existing deployment - otherwise, would use either local time or PST
   env:
     - name: PGTZ
       value: America/New_York
@@ -34,18 +34,40 @@ instances:
 
 pgBackRest:
   image: # it's not necessary to specify an image as the images specified in the Crunchy Postgres Operator will be pulled by default
-  retention: "2" # Ideally a larger number such as 30 backups/days
+  retentionFull: "12" # Ideally a larger number such as 30 backups/days
+  retentionDifferential: "30"
+
   # If retention-full-type set to 'count' then the oldest backups will expire when the number of backups reach the number defined in retention
   # If retention-full-type set to 'time' then the number defined in retention will take that many days worth of full backups before expiration
   retentionFullType: count
+
+  #How many backups worth of WAL files to keep, and what type of backup to count for expiring WAL files
+  retentionArchiveType: diff
+  retentionArchiveCount: "7"
+  timeout: "600"
+  s3UriStyle: path
+
   repos:
     schedules:
-      full: 0 */8 * * *
-      incremental: 0 2,4,6,10,12,14,18,20,22 * * *
+      full: 0 0 * * 0
+      differential: 0 0 * * 1-6
+      incremental: 0 4,8,12,16,20 * * *
+    schedulesOffset:
+      full: 0 2 * * 0
+      differential: 0 2 * * 1-6
+      incremental: 0 6,10,14,18,22 * * *
     volume:
       accessModes: "ReadWriteOnce"
-      storage: 1Gi
       storageClassName: netapp-file-backup
+      storage: #{DB_BACKUP_VOLUME_SIZE}#
+    configuration:
+      secretName: "#{ENV}#-postgres-s3-secret"
+    s3:
+      bucket: "pit#{ENV}#"
+      endpoint: "nrs.objectstore.gov.bc.ca"
+      region: "ca-central-1"
+      directoryName: pituw#{ENV}#
+
   repoHost:
     requests:
       cpu: 1m

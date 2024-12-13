@@ -14,8 +14,10 @@ public interface JasperReportService
 	
 	byte[] generateInvForageReport(Map<String, Object> paramMap) throws JasperReportServiceException;
 
-	byte[] generateInvGrainReport(Map<String, Object> paramMap) throws JasperReportServiceException;
+	byte[] generateUnseededGrainReport(Map<String, Object> paramMap) throws JasperReportServiceException;
 
+	byte[] generateSeededGrainReport(Map<String, Object> paramMap) throws JasperReportServiceException;
+	
 	void setReportServiceUrl(String reportServiceUrl);
 
 	void setReportServicePassword(String reportServicePassword);

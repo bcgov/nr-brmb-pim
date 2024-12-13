@@ -6,36 +6,65 @@
 	<parameter name="p_contract_id" class="java.lang.Integer"/>
 	<parameter name="p_crop_year" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[select 
-    COALESCE(base_commodity.commodity_name, tot.commodity_name) as commodity_name 
-    , tot.total_seeded
-from (select crop_commodity_id, INITCAP(commodity_name) as commodity_name
-        from crop_commodity 
-        where insurance_plan_id= 4
-        and is_crop_insurance_eligible_ind = 'Y'
-        and is_inventory_crop_ind = 'Y') as base_commodity  
-full outer join
-    (
-        select icc.crop_commodity_id, INITCAP(cc.commodity_name) as commodity_name, sum(total_seeded_acres) as total_seeded
-        from inventory_contract_commodity icc
-        join inventory_contract ic on icc.inventory_contract_guid = ic.inventory_contract_guid
-        join crop_commodity cc on icc.crop_commodity_id = cc.crop_commodity_id
-        where ic.contract_id = $P{p_contract_id} 
-        and ic.crop_year = $P{p_crop_year}
-        group by icc.crop_commodity_id, cc.commodity_name
-    ) tot on tot.crop_commodity_id = base_commodity.crop_commodity_id
-order by commodity_name]]>
+		<![CDATA[with seeded_inv as (select ic.contract_id,
+                                               ic.crop_year,
+                                              count(*) as num_seedings
+                                   from inventory_contract ic
+                                   join grower_contract_year gcy on gcy.contract_id = ic.contract_id
+                                                                                      and gcy.crop_year = ic.crop_year
+                                   join contracted_field_detail cfd on cfd.grower_contract_year_id = gcy.grower_contract_year_id
+                                   join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+                                   join inventory_field ifd on ifd.crop_year = afd.crop_year
+                                                                         and ifd.field_id = afd.field_id
+                                                                         and ifd.insurance_plan_id = gcy.insurance_plan_id
+                                   join inventory_seeded_grain isg on isg.inventory_field_guid = ifd.inventory_field_guid
+                                  where ifd.is_hidden_on_printout_ind = 'N'
+                                       and isg.seeded_acres > 0
+                                       and ic.contract_id = $P{p_contract_id}
+                                       and ic.crop_year = $P{p_crop_year}
+                                  group by ic.contract_id,
+                                                   ic.crop_year
+                                  )
+select INITCAP(cc.commodity_name) as commodity_name, 
+       icc.is_pedigree_ind,
+       icc.total_seeded_acres
+from inventory_contract_commodity icc
+join crop_commodity cc on cc.crop_commodity_id = icc.crop_commodity_id
+join inventory_contract ic on ic.inventory_contract_guid = icc.inventory_contract_guid
+join seeded_inv on seeded_inv.contract_id = ic.contract_id
+                          and seeded_inv.crop_year = ic.crop_year
+where seeded_inv.num_seedings > 0
+  and icc.total_seeded_acres > 0
+  and ic.contract_id = $P{p_contract_id}
+  and ic.crop_year = $P{p_crop_year}
+union
+select INITCAP(cc.commodity_name) as commodity_name,
+       'N' as is_pedigree_ind,
+       null as total_seeded_acres
+from crop_commodity cc
+left join seeded_inv on seeded_inv.contract_id = $P{p_contract_id}
+                                  and seeded_inv.crop_year = $P{p_crop_year}
+where (seeded_inv.num_seedings is null or seeded_inv.num_seedings = 0)
+  and cc.insurance_plan_id = 4
+  and cc.is_crop_insurance_eligible_ind = 'Y'
+  and cc.is_inventory_crop_ind = 'Y'
+order by commodity_name, is_pedigree_ind
+]]>
 	</queryString>
 	<field name="commodity_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="commodity_name"/>
 		<property name="com.jaspersoft.studio.field.label" value="commodity_name"/>
 	</field>
-	<field name="total_seeded" class="java.lang.Double">
-		<property name="com.jaspersoft.studio.field.name" value="total_seeded"/>
-		<property name="com.jaspersoft.studio.field.label" value="total_seeded"/>
+	<field name="is_pedigree_ind" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="is_pedigree_ind"/>
+		<property name="com.jaspersoft.studio.field.name" value="is_pedigree_ind"/>
+	</field>
+	<field name="total_seeded_acres" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total_seeded_acres"/>
+		<property name="com.jaspersoft.studio.field.name" value="total_seeded_acres"/>
 	</field>
 	<variable name="V_sum_total_seeded" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$F{total_seeded}]]></variableExpression>
+		<variableExpression><![CDATA[$F{total_seeded_acres}]]></variableExpression>
 	</variable>
 	<columnHeader>
 		<band height="20" splitType="Stretch">
@@ -76,7 +105,7 @@ order by commodity_name]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{commodity_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Y".equals($F{is_pedigree_ind}) ? $F{commodity_name} + "-P" : $F{commodity_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="65" y="0" width="59" height="15" uuid="5d8d9f26-5f1f-4967-a5d7-0a33e2dd25e9">
@@ -94,11 +123,12 @@ order by commodity_name]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{total_seeded} == 0 ? "" : ((double)$F{total_seeded}.intValue() == $F{total_seeded}.doubleValue() ? 
-	(new java.text.DecimalFormat("#,##0").format($F{total_seeded}))
-	:
-	 (new java.text.DecimalFormat("#,##0.0").format($F{total_seeded}))
-)]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_seeded_acres} == null || $F{total_seeded_acres} == 0 ? "" : 
+  ((double)$F{total_seeded_acres}.intValue() == $F{total_seeded_acres}.doubleValue() ? 
+	  (new java.text.DecimalFormat("#,##0").format($F{total_seeded_acres}))
+	  :
+	   (new java.text.DecimalFormat("#,##0.0").format($F{total_seeded_acres}))
+  )]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -136,7 +166,7 @@ order by commodity_name]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{V_sum_total_seeded} == 0 ? "" : ((double)$V{V_sum_total_seeded}.intValue() == $V{V_sum_total_seeded}.doubleValue() ? 
+				<textFieldExpression><![CDATA[$V{V_sum_total_seeded} == null || $V{V_sum_total_seeded} == 0 ? "" : ((double)$V{V_sum_total_seeded}.intValue() == $V{V_sum_total_seeded}.doubleValue() ? 
 	(new java.text.DecimalFormat("#,##0").format($V{V_sum_total_seeded}))
 	:
 	(new java.text.DecimalFormat("#,##0.0").format($V{V_sum_total_seeded}))

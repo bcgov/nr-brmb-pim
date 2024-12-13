@@ -49,7 +49,8 @@ public interface InventoryContractReportEndpoint extends BaseEndpoints {
 		@Parameter(description = "Filter the results by the policy number") @QueryParam("policyNumber") String policyNumber,
 		@Parameter(description = "Filter the results by the grower info (Name, Number, Phone, Email") @QueryParam("growerInfo") String growerInfo,
 		@Parameter(description = "Sort by column") @QueryParam("sortColumn") String sortColumn,
-		@Parameter(description = "IDs of policies to be included") @QueryParam("policyIds") String policyIds
+		@Parameter(description = "IDs of policies to be included") @QueryParam("policyIds") String policyIds,
+		@Parameter(description = "Type of report: unseeded or seeded (GRAIN only)") @QueryParam("reportType") String reportType
 	);
 	
 }
