@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ContractedFieldDetailDao;
@@ -333,6 +334,19 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 						updateVerifiedYieldContractCommodity(verifiedYieldContractGuid, verifiedContractCommodity, null, false, userId);
 					}
 				}
+
+				// Verified Yield Amendment
+				List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
+				if (verifiedAmendments != null && !verifiedAmendments.isEmpty()) {
+					for (VerifiedYieldAmendment verifiedAmendment : verifiedAmendments) {
+
+						// Double check that it wasn't added then deleted.
+						if ( !Boolean.TRUE.equals(verifiedAmendment.getDeletedByUserInd()) ) {
+							updateVerifiedYieldAmendment(verifiedYieldContractGuid, verifiedAmendment, userId);
+						}
+					}
+				}
+			
 			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
 
 			} else {
@@ -403,8 +417,65 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 		logger.debug(">insertVerifiedYieldContractCommodity");
 
-	}	
+	}
 
+	private void updateVerifiedYieldAmendment(
+			String verifiedYieldContractGuid, 
+			VerifiedYieldAmendment verifiedAmendment,
+			String userId) throws DaoException {
+
+		logger.debug("<updateVerifiedYieldAmendment");
+		
+		VerifiedYieldAmendmentDto dto = null;
+
+		if (verifiedAmendment.getVerifiedYieldAmendmentGuid() != null) {
+			dto = verifiedYieldAmendmentDao.fetch(verifiedAmendment.getVerifiedYieldAmendmentGuid());
+		}
+
+		if (dto == null) {
+			// Insert if it doesn't exist
+			insertVerifiedYieldAmendment(verifiedYieldContractGuid, verifiedAmendment, userId);
+		} else {
+			verifiedYieldContractFactory.updateDto(dto, verifiedAmendment);
+
+			verifiedYieldAmendmentDao.update(dto, userId);
+		}
+
+		logger.debug(">updateVerifiedYieldAmendment");
+	}
+	
+	
+	private void insertVerifiedYieldAmendment(String verifiedYieldContractGuid,
+			VerifiedYieldAmendment verifiedAmendment, String userId) throws DaoException {
+
+		logger.debug("<insertVerifiedYieldAmendment");
+
+		VerifiedYieldAmendmentDto dto = new VerifiedYieldAmendmentDto();
+
+		verifiedYieldContractFactory.updateDto(dto, verifiedAmendment);
+
+		dto.setVerifiedYieldAmendmentGuid(null);
+		dto.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
+
+		verifiedYieldAmendmentDao.insert(dto, userId);
+
+		logger.debug(">insertVerifiedYieldAmendment");
+
+	}
+
+	private void deleteVerifiedYieldAmendment(VerifiedYieldAmendment verifiedAmendment) throws DaoException {
+
+		logger.debug("<deleteVerifiedYieldAmendment");
+
+		if ( verifiedAmendment.getVerifiedYieldAmendmentGuid() != null ) {
+			verifiedYieldAmendmentDao.delete(verifiedAmendment.getVerifiedYieldAmendmentGuid());
+		}
+
+		logger.debug(">deleteVerifiedYieldAmendment");
+
+	}
+	
+	
 	@Override
 	public VerifiedYieldContract<? extends AnnualField, ? extends Message> updateVerifiedYieldContract(
 			String verifiedYieldContractGuid,
@@ -448,6 +519,18 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 					}
 				}
 
+				// Verified Yield Amendment
+				List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
+				if (verifiedAmendments != null && !verifiedAmendments.isEmpty()) {
+					for (VerifiedYieldAmendment verifiedAmendment : verifiedAmendments) {
+						if ( Boolean.TRUE.equals(verifiedAmendment.getDeletedByUserInd())) {
+							deleteVerifiedYieldAmendment(verifiedAmendment);
+						} else {
+							updateVerifiedYieldAmendment(verifiedYieldContractGuid, verifiedAmendment, userId);
+						}
+					}
+				}
+				
 			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
 
 			} else {
@@ -506,6 +589,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
 			
 			verifiedYieldContractCommodityDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
+			verifiedYieldAmendmentDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
 
 		} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
 
