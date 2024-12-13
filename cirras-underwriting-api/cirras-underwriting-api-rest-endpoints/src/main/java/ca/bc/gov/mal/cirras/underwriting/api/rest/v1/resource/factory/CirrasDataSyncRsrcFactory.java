@@ -196,6 +196,8 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory implements Ci
 		dto.setProductId(model.getProductId());
 		dto.setProductionGuarantee(model.getProductionGuarantee());
 		dto.setProductStatusCode(model.getProductStatusCode());
+		dto.setInsurableValueHundredPercent(model.getInsurableValueHundredPercent());
+		dto.setCoverageDollars(model.getCoverageDollars());
 		dto.setDataSyncTransDate(model.getDataSyncTransDate());
 	}
 
@@ -213,8 +215,10 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory implements Ci
 		resource.setProductId(dto.getProductId());
 		resource.setProductionGuarantee(dto.getProductionGuarantee());
 		resource.setProductStatusCode(dto.getProductStatusCode());
+		resource.setInsurableValueHundredPercent(dto.getInsurableValueHundredPercent());
+		resource.setCoverageDollars(dto.getCoverageDollars());
 		resource.setDataSyncTransDate(dto.getDataSyncTransDate());
-		
+
 		return resource;
 	}
 	

@@ -28,6 +28,8 @@ public class ProductRsrc extends BaseResource implements Product {
 	private Double productionGuarantee;
 	private Double probableYield;
 	private String insuredByMeasType;
+	private Double insurableValueHundredPercent;
+	private Double coverageDollars;
 
 	private Date dataSyncTransDate;
 	private String transactionType;
@@ -108,5 +110,21 @@ public class ProductRsrc extends BaseResource implements Product {
 	}
 	public void setTransactionType(String transactionType) {
 		this.transactionType = transactionType;
+	}
+
+	public Double getInsurableValueHundredPercent() {
+		return insurableValueHundredPercent;
+	}
+
+	public void setInsurableValueHundredPercent(Double insurableValueHundredPercent) {
+		this.insurableValueHundredPercent = insurableValueHundredPercent;
+	}
+
+	public Double getCoverageDollars() {
+		return coverageDollars;
+	}
+
+	public void setCoverageDollars(Double coverageDollars) {
+		this.coverageDollars = coverageDollars;
 	}
 }
