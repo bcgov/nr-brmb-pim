@@ -10,6 +10,8 @@ CREATE TABLE cuws.product(
     production_guarantee       numeric(14, 4),
     probable_yield             numeric(14, 4),
     insured_by_meas_type       varchar(10)       NOT NULL,
+    insurable_value_hundred_percent    numeric(14, 4),
+    coverage_dollars                   numeric(14, 4),
     data_sync_trans_date       timestamp(0)      NOT NULL,
     create_user                varchar(64)       NOT NULL,
     create_date                timestamp(0)      NOT NULL,
@@ -37,6 +39,10 @@ COMMENT ON COLUMN cuws.product.production_guarantee IS 'Production Guarantee is 
 COMMENT ON COLUMN cuws.product.probable_yield IS 'Probable Yield is the calculated probable yield of the commodity and coverage, by unit or acre, from cirr_insurable_crop_units.probable_yield'
 ;
 COMMENT ON COLUMN cuws.product.insured_by_meas_type IS 'Insured By Meas Type determines how the coverage is calculated (ACRES, UNITS, UNKNOWN), based on cirr_crop_coverage_annual.crop_meas_method_code'
+;
+COMMENT ON COLUMN cuws.product.insurable_value_hundred_percent IS 'Insurable Value Hundred Percent is the 100% IV of the product'
+;
+COMMENT ON COLUMN cuws.product.coverage_dollars IS 'Coverage Dollars is the total coverage from the product purchase'
 ;
 COMMENT ON COLUMN cuws.product.data_sync_trans_date IS 'Data Sync Trans Date is the date and time when the data has been updated in the source system. This prevents out of date updates'
 ;

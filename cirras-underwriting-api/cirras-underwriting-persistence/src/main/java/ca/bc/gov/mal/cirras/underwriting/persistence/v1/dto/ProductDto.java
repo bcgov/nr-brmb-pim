@@ -27,6 +27,8 @@ public class ProductDto extends BaseDto<ProductDto> {
 	private Double productionGuarantee;
 	private Double probableYield;
 	private String insuredByMeasType;
+	private Double insurableValueHundredPercent;
+	private Double coverageDollars;
 	
 	private Date dataSyncTransDate;
 	private Integer nonPedigreeCropCommodityId;
@@ -52,6 +54,8 @@ public class ProductDto extends BaseDto<ProductDto> {
 		this.productionGuarantee = dto.productionGuarantee;
 		this.probableYield = dto.probableYield;
 		this.insuredByMeasType = dto.insuredByMeasType;
+		this.insurableValueHundredPercent = dto.insurableValueHundredPercent;
+		this.coverageDollars = dto.coverageDollars;
 		
 		this.dataSyncTransDate = dto.dataSyncTransDate;
 		this.nonPedigreeCropCommodityId = dto.nonPedigreeCropCommodityId;
@@ -86,6 +90,8 @@ public class ProductDto extends BaseDto<ProductDto> {
 			result = result&&dtoUtils.equals("productionGuarantee", productionGuarantee, other.productionGuarantee, 4);
 			result = result&&dtoUtils.equals("probableYield", probableYield, other.probableYield, 4);
 			result = result&&dtoUtils.equals("insuredByMeasType", insuredByMeasType, other.insuredByMeasType);
+			result = result&&dtoUtils.equals("insurableValueHundredPercent", insurableValueHundredPercent, other.insurableValueHundredPercent, 4);
+			result = result&&dtoUtils.equals("coverageDollars", coverageDollars, other.coverageDollars, 4);
 						
 			result = result&&dtoUtils.equals("dataSyncTransDate",
 					LocalDateTime.ofInstant(dataSyncTransDate.toInstant(), ZoneId.systemDefault()), 
@@ -166,6 +172,22 @@ public class ProductDto extends BaseDto<ProductDto> {
 	}
 	public void setInsuredByMeasType(String insuredByMeasType) {
 		this.insuredByMeasType = insuredByMeasType;
+	}
+
+	public Double getInsurableValueHundredPercent() {
+		return insurableValueHundredPercent;
+	}
+
+	public void setInsurableValueHundredPercent(Double insurableValueHundredPercent) {
+		this.insurableValueHundredPercent = insurableValueHundredPercent;
+	}
+
+	public Double getCoverageDollars() {
+		return coverageDollars;
+	}
+
+	public void setCoverageDollars(Double coverageDollars) {
+		this.coverageDollars = coverageDollars;
 	}
 	
 	public Integer getNonPedigreeCropCommodityId() {
