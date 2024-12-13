@@ -55,7 +55,7 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
       } ],
       fieldCtrl:          [ { 
         fieldId: ( this.amendment.fieldId) ? this.amendment.fieldId : "", 
-        fieldLabel: ( this.amendment.fieldLabel) ? this.amendment.fieldLabel :"",
+        fieldLabel: ( this.amendment.fieldLabel) ? (this.amendment.fieldLabel + "(ID: " + this.amendment.fieldId +")" ) :"",
       } ],
       yieldPerAcre: [this.amendment.yieldPerAcre],
       acres: [this.amendment.acres],
@@ -67,6 +67,13 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
 
   numberOnly(event): boolean {
       return makeNumberOnly(event);
+  }
+
+  updateAmendmentCode( event) {
+
+    this.amendment.verifiedYieldAmendmentCode = event.value
+    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true))
+
   }
 
   updateYieldPerAcre() {
@@ -96,6 +103,9 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
     // marks the row as deleted and hide it in the html
     this.amendment.deletedByUserInd = true 
     this.amendmentFormGroup.controls['deletedByUserInd'].setValue(true)
+
+    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true))
+
   }
 
   // field autocomplete functions

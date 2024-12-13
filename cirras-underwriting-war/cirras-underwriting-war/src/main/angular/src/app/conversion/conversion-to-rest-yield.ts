@@ -40,14 +40,16 @@ export function convertToDopYieldContractRsrc(dopYieldContract: DopYieldContract
         declaredYieldContractGuid: verifiedYieldContract.declaredYieldContractGuid ? verifiedYieldContract.declaredYieldContractGuid : null,
         contractId: verifiedYieldContract.contractId,
         cropYear: verifiedYieldContract.cropYear,
-        verifiedUpdateTimestamp: verifiedYieldContract.verifiedYieldUpdateTimestamp,
-        verifiedUpdateUser: verifiedYieldContract.verifiedYieldUpdateUser,
+        verifiedYieldUpdateTimestamp: verifiedYieldContract.verifiedYieldUpdateTimestamp,
+        verifiedYieldUpdateUser: verifiedYieldContract.verifiedYieldUpdateUser,
         defaultYieldMeasUnitTypeCode: verifiedYieldContract.defaultYieldMeasUnitTypeCode,
         insurancePlanId: verifiedYieldContract.insurancePlanId,
         growerContractYearId: verifiedYieldContract.growerContractYearId,
+        fields: verifiedYieldContract.fields,
         verifiedYieldContractCommodities: verifiedYieldContract.verifiedYieldContractCommodities,
+        verifiedYieldAmendments: verifiedYieldContract.verifiedYieldAmendments,
         etag: verifiedYieldContract.etag,
-        type:  "VerifiedYieldContractRsrc"        
+        type:  "VerifiedYieldContractRsrc"     
     };
     return ret;
   }

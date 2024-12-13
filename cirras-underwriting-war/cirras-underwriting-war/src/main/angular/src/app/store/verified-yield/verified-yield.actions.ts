@@ -138,6 +138,7 @@ export interface VerifiedYieldContractAction extends Action {
   componentId: string;
   payload: {
     verifiedYieldContract: VerifiedYieldContract; 
+    policyId: string;
   };
 }
 
@@ -149,24 +150,26 @@ export interface DeleteVerifiedYieldContractAction extends Action {
   };
 }
 
-export function AddNewVerifiedYieldContract(componentId: string, verifiedYieldContract: VerifiedYieldContract): VerifiedYieldContractAction {
+export function AddNewVerifiedYieldContract(componentId: string, verifiedYieldContract: VerifiedYieldContract, policyId: string): VerifiedYieldContractAction {
   
   return {
     type: ADD_NEW_VERIFIED_YIELD,
     componentId: componentId,
     payload: {
-        verifiedYieldContract
+        verifiedYieldContract,
+        policyId
     }
   };
 }
 
-export function UpdateVerifiedYieldContract(componentId: string, verifiedYieldContract: VerifiedYieldContract): VerifiedYieldContractAction {
+export function UpdateVerifiedYieldContract(componentId: string, verifiedYieldContract: VerifiedYieldContract, policyId: string): VerifiedYieldContractAction {
   
   return {
     type: UPDATE_VERIFIED_YIELD,
     componentId: componentId,
     payload: {
-      verifiedYieldContract
+      verifiedYieldContract,
+      policyId
     }
   };
 }
