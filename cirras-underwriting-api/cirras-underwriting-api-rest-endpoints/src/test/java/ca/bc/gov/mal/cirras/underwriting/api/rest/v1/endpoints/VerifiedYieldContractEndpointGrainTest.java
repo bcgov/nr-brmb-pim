@@ -45,6 +45,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededGrain;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryUnseeded;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiableCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandManagementEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
@@ -484,6 +485,179 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		
 		logger.debug(">testInsertUpdateDeleteGrainVerifiedYield");
 	}
+
+	@Test
+	public void testInsertUpdateDeleteGrainVerifiedYieldAmendments() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException, DaoException {
+		logger.debug("<testInsertUpdateDeleteGrainVerifiedYieldAmendments");
+
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+		
+		//Date and Time without millisecond
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		Date transactionDate = cal.getTime();
+		Date createTransactionDate = addSeconds(transactionDate, -1);
+
+		createGrower(growerId, 999888, "grower name", createTransactionDate);
+		
+		createLegalLand("test legal 9999", null, legalLandId, "999-888-000", 1980, null);
+		createField(fieldId, "LOT 3", 1980, null);
+
+		createGrowerContractYear(growerContractYearId1, contractId, growerId, cropYear1, 4, createTransactionDate);
+		createPolicy(policyId1, growerId, 4, policyNumber1, contractNumber, contractId, cropYear1, createTransactionDate);
+		createAnnualFieldDetail(annualFieldDetailId1, legalLandId, fieldId, cropYear1);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId1, 1);
+
+		createInventoryContract(policyNumber1, 4);
+		createDopYieldContract(policyNumber1, 4);
+				
+		Integer pageNumber = 1;
+		Integer pageRowCount = 20;
+
+		// Rollover and create VerifiedYieldContract.
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber1,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+		Assert.assertNotNull(referrer.getInventoryContractGuid());
+		Assert.assertNotNull(referrer.getDeclaredYieldContractGuid());
+		Assert.assertNull(referrer.getVerifiedYieldContractGuid());
+		
+		// Check VerifiedYieldContract
+		VerifiedYieldContractRsrc newContract = service.rolloverVerifiedYieldContract(referrer);
+		Assert.assertNotNull(newContract);
+
+		Assert.assertEquals(contractId, newContract.getContractId());
+		Assert.assertEquals(cropYear1, newContract.getCropYear());
+		Assert.assertEquals(referrer.getDeclaredYieldContractGuid(), newContract.getDeclaredYieldContractGuid());
+		Assert.assertEquals("TONNE", newContract.getDefaultYieldMeasUnitTypeCode());
+		Assert.assertEquals(growerContractYearId1, newContract.getGrowerContractYearId());
+		Assert.assertEquals(Integer.valueOf(4), newContract.getInsurancePlanId());
+		Assert.assertNull(newContract.getVerifiedYieldContractGuid());
+		Assert.assertNull(newContract.getVerifiedYieldUpdateUser());
+		Assert.assertNull(newContract.getVerifiedYieldUpdateTimestamp());
+
+		// Check VerifiedYieldAmendments
+		Assert.assertEquals(0, newContract.getVerifiedYieldAmendments().size());
+		
+		
+		//Create verified contract ******************************************************************************
+
+		VerifiedYieldAmendment vya = createVerifiedYieldAmendment("Appraisal", 18, "CANOLA", false, null, null, 12.34, 56.78, "rationale 1");
+		newContract.getVerifiedYieldAmendments().add(vya);
+		
+		vya = createVerifiedYieldAmendment("Assessment", 16, "BARLEY", true, fieldId, "LOT 3", 11.22, 33.44, "rationale 2");
+		newContract.getVerifiedYieldAmendments().add(vya);
+
+		vya = createVerifiedYieldAmendment("Assessment", 18, "CANOLA", true, null, null, 22.11, 44.33, "rationale 3");
+		newContract.getVerifiedYieldAmendments().add(vya);		
+		
+		VerifiedYieldContractRsrc createdContract = service.createVerifiedYieldContract(topLevelEndpoints, newContract);
+		Assert.assertNotNull(createdContract);
+
+		Assert.assertEquals(newContract.getContractId(), createdContract.getContractId());
+		Assert.assertEquals(newContract.getCropYear(), createdContract.getCropYear());
+		Assert.assertEquals(newContract.getDeclaredYieldContractGuid(), createdContract.getDeclaredYieldContractGuid());
+		Assert.assertEquals(newContract.getDefaultYieldMeasUnitTypeCode(), createdContract.getDefaultYieldMeasUnitTypeCode());
+		Assert.assertEquals(newContract.getGrowerContractYearId(), createdContract.getGrowerContractYearId());
+		Assert.assertEquals(newContract.getInsurancePlanId(), createdContract.getInsurancePlanId());
+		Assert.assertNotNull(createdContract.getVerifiedYieldContractGuid());
+		Assert.assertNotNull(createdContract.getVerifiedYieldUpdateUser());
+		Assert.assertNotNull(createdContract.getVerifiedYieldUpdateTimestamp());
+
+		checkVerifiedYieldAmendments(newContract.getVerifiedYieldAmendments(), createdContract.getVerifiedYieldAmendments());
+		
+		
+		//Update verified contract ******************************************************************************
+		List<VerifiedYieldAmendment> expectedAmendments = new ArrayList<VerifiedYieldAmendment>();
+		
+		vya = createdContract.getVerifiedYieldAmendments().get(0);
+		vya.setAcres(55.66);
+		vya.setCropCommodityId(16);
+		vya.setCropCommodityName("BARLEY");
+		vya.setFieldId(fieldId);
+		vya.setFieldLabel("LOT 3");
+		vya.setIsPedigreeInd(true);
+		vya.setRationale("rationale A");
+		vya.setVerifiedYieldAmendmentCode("Assessment");
+		vya.setYieldPerAcre(77.88);
+
+		expectedAmendments.add(vya);
+		
+		vya = createdContract.getVerifiedYieldAmendments().get(1);
+		vya.setAcres(98.76);
+		vya.setCropCommodityId(18);
+		vya.setCropCommodityName("CANOLA");
+		vya.setFieldId(null);
+		vya.setFieldLabel(null);
+		vya.setIsPedigreeInd(false);
+		vya.setRationale("rationale B");
+		vya.setVerifiedYieldAmendmentCode("Appraisal");
+		vya.setYieldPerAcre(54.32);
+		
+		// The order in which amendments will be returned is reversed by these updates.
+		expectedAmendments.add(0, vya);
+
+		vya = createdContract.getVerifiedYieldAmendments().get(2);
+		vya.setDeletedByUserInd(true);
+		
+		VerifiedYieldContractRsrc updatedContract = service.updateVerifiedYieldContract(createdContract);
+		Assert.assertNotNull(updatedContract);
+		
+		Assert.assertEquals(createdContract.getContractId(), updatedContract.getContractId());
+		Assert.assertEquals(createdContract.getCropYear(), updatedContract.getCropYear());
+		Assert.assertEquals(createdContract.getDeclaredYieldContractGuid(), updatedContract.getDeclaredYieldContractGuid());
+		Assert.assertEquals(createdContract.getDefaultYieldMeasUnitTypeCode(), updatedContract.getDefaultYieldMeasUnitTypeCode());
+		Assert.assertEquals(createdContract.getGrowerContractYearId(), updatedContract.getGrowerContractYearId());
+		Assert.assertEquals(createdContract.getInsurancePlanId(), updatedContract.getInsurancePlanId());
+		Assert.assertEquals(createdContract.getVerifiedYieldContractGuid(), updatedContract.getVerifiedYieldContractGuid());
+		Assert.assertEquals(createdContract.getVerifiedYieldUpdateUser(), updatedContract.getVerifiedYieldUpdateUser());
+		Assert.assertNotNull(updatedContract.getVerifiedYieldUpdateTimestamp());
+
+		checkVerifiedYieldAmendments(expectedAmendments, updatedContract.getVerifiedYieldAmendments());
+
+		//Delete verified contract ******************************************************************************
+		service.deleteVerifiedYieldContract(updatedContract);
+		
+		searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber1,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		referrer = searchResults.getCollection().get(0);
+		Assert.assertNotNull(referrer.getInventoryContractGuid());
+		Assert.assertNotNull(referrer.getDeclaredYieldContractGuid());
+		Assert.assertNull(referrer.getVerifiedYieldContractGuid());
+		
+		logger.debug(">testInsertUpdateDeleteGrainVerifiedYieldAmendments");
+	}
 	
 	private void checkVerifiedContractCommodityTotals(
 			List<VerifiedYieldContractCommodity> expectedCommodities,
@@ -574,6 +748,44 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		Assert.assertEquals(null, verifiedCommodity.getVerifiedYieldContractCommodityGuid());
 		Assert.assertEquals(null, verifiedCommodity.getVerifiedYieldContractGuid());
 		Assert.assertEquals(yieldPerAcre, verifiedCommodity.getYieldPerAcre(), 0.00005);
+	}
+
+	private void checkVerifiedYieldAmendments(List<VerifiedYieldAmendment> expected, List<VerifiedYieldAmendment> actual) {
+		if ( expected == null && actual != null || expected != null && actual == null ) {
+			Assert.fail();
+		} else if ( expected != null && actual != null ) {
+			Assert.assertEquals(expected.size(), actual.size());
+
+			for ( int i = 0; i < expected.size(); i++ ) {
+				checkVerifiedYieldAmendment(expected.get(i), actual.get(i));				
+			}
+		}
+		
+	}
+		
+	private void checkVerifiedYieldAmendment(VerifiedYieldAmendment expected, VerifiedYieldAmendment actual) {
+		if ( expected.getVerifiedYieldAmendmentGuid() != null ) {
+			Assert.assertEquals(expected.getVerifiedYieldAmendmentGuid(), actual.getVerifiedYieldAmendmentGuid());			
+		} else {
+			Assert.assertNotNull(actual.getVerifiedYieldAmendmentGuid());
+		}
+
+		if ( expected.getVerifiedYieldContractGuid() != null ) {
+			Assert.assertEquals(expected.getVerifiedYieldContractGuid(), actual.getVerifiedYieldContractGuid());			
+		} else {
+			Assert.assertNotNull(actual.getVerifiedYieldContractGuid());
+		}
+		
+		Assert.assertEquals(expected.getVerifiedYieldAmendmentCode(), actual.getVerifiedYieldAmendmentCode());
+		Assert.assertEquals(expected.getCropCommodityId(), actual.getCropCommodityId());
+		Assert.assertEquals(expected.getIsPedigreeInd(), actual.getIsPedigreeInd());
+		Assert.assertEquals(expected.getFieldId(), actual.getFieldId());
+		Assert.assertEquals(expected.getYieldPerAcre(), actual.getYieldPerAcre());
+		Assert.assertEquals(expected.getAcres(), actual.getAcres());
+		Assert.assertEquals(expected.getRationale(), actual.getRationale());
+		Assert.assertEquals(expected.getCropCommodityName(), actual.getCropCommodityName());
+		Assert.assertEquals(expected.getFieldLabel(), actual.getFieldLabel());
+		Assert.assertEquals(expected.getDeletedByUserInd(), actual.getDeletedByUserInd());
 	}
 	
 	private DopYieldContractCommodity getDopYieldContractCommodity(Integer cropCommodityId, Boolean isPedigree, List<DopYieldContractCommodity> dyccList) {
@@ -1119,7 +1331,34 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		
 		return dycc;
 	}
-	
+
+	VerifiedYieldAmendment createVerifiedYieldAmendment(
+			String verifiedYieldAmendmentCode, 
+			Integer cropCommodityId, 
+			String cropCommodityName, 
+			Boolean isPedigreeInd, 
+			Integer fieldId, 
+			String fieldLabel, 
+			Double acres, 
+			Double yieldPerAcre,
+			String rationale) 
+	{
+
+		VerifiedYieldAmendment vya = new VerifiedYieldAmendment();
+		vya.setAcres(acres);
+		vya.setCropCommodityId(cropCommodityId);
+		vya.setCropCommodityName(cropCommodityName);
+		vya.setFieldId(fieldId);
+		vya.setFieldLabel(fieldLabel);
+		vya.setIsPedigreeInd(isPedigreeInd);
+		vya.setRationale(rationale);
+		vya.setVerifiedYieldAmendmentCode(verifiedYieldAmendmentCode);
+		vya.setVerifiedYieldAmendmentGuid(null);
+		vya.setVerifiedYieldContractGuid(null);
+		vya.setYieldPerAcre(yieldPerAcre);
+		
+		return vya;
+	}
 	
 	private static Date addSeconds(Date date, Integer seconds) {
 		Calendar cal = Calendar.getInstance();
