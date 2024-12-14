@@ -157,7 +157,12 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 
 
 	@Override
-	public UwContract<? extends UwContract<?>> getUwContract(Integer policyId, Boolean loadLinkedPolicies, FactoryContext factoryContext, WebAdeAuthentication authentication)
+	public UwContract<? extends UwContract<?>> getUwContract(Integer policyId, 
+			                                                 Boolean loadLinkedPolicies, 
+			                                         		 Boolean loadOtherYearPolicies,
+			                                        		 String screenType,
+			                                                 FactoryContext factoryContext, 
+			                                                 WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 		logger.debug("<getUwContract");
 
@@ -190,7 +195,12 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 				linkedPolicyDtos = linkedPolicyResultDtos.getResults();
 			}
 
-			result = uwContractFactory.getUwContract(dto, linkedPolicyDtos, loadLinkedPolicies, factoryContext, authentication);
+			List<PolicyDto> otherYearPolicyDtos = null;
+			if ( Boolean.TRUE.equals(loadOtherYearPolicies) ) {
+				// TODO: Load OtherYearPolicies.
+			}
+
+			result = uwContractFactory.getUwContract(dto, linkedPolicyDtos, otherYearPolicyDtos, loadLinkedPolicies, loadOtherYearPolicies, screenType, factoryContext, authentication);
 
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);

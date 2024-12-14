@@ -87,7 +87,7 @@ public interface CirrasUnderwritingService {
 			Integer pageNumber, 
 			Integer pageRowCount) throws CirrasUnderwritingServiceException;
 
-	UwContractRsrc getUwContract(UwContractRsrc resource, String loadLinkedPolicies) throws CirrasUnderwritingServiceException;
+	UwContractRsrc getUwContract(UwContractRsrc resource, String loadLinkedPolicies, String loadOtherYearPolicies, String screenType) throws CirrasUnderwritingServiceException;
 
 	//////////////////////////////////////////////////////
 	// Annual Fields

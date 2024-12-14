@@ -79,5 +79,8 @@ public interface UwContract<U extends UwContract<?>> extends Serializable {
 
 	public List<U> getLinkedPolicies();
 	public void setLinkedPolicies(List<U> linkedPolicies);
+
+	public List<OtherYearPolicy> getOtherYearPolicies();
+	public void setOtherYearPolicies(List<OtherYearPolicy> otherYearPolicies);
 	
 }

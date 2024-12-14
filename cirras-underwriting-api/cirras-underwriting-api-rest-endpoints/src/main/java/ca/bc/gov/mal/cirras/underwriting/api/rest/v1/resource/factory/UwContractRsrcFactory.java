@@ -41,6 +41,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.AddFieldValidation;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.Field;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.LegalLand;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.OtherYearPolicy;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.PolicySimple;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.RemoveFieldValidation;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.RenameLegalValidation;
@@ -52,6 +53,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UwContractFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.ScreenType;
 
 public class UwContractRsrcFactory extends BaseResourceFactory implements UwContractFactory { 
 	
@@ -87,7 +89,7 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 						
 			populateResource(resource, dto);
 
-			setSelfLink(dto.getPolicyId(), false, resource, baseUri);
+			setSelfLink(dto.getPolicyId(), false, false, null, resource, baseUri);
 			setLinks(resource, baseUri, authentication);
 
 			resources.add(resource);
@@ -146,7 +148,10 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 	public UwContract<? extends UwContract<?>> getUwContract(
 			PolicyDto dto, 
 			List<PolicyDto> linkedPolicyDtos,
+			List<PolicyDto> otherYearPolicyDtos,
 			Boolean loadLinkedPolicies,
+			Boolean loadOtherYearPolicies,
+			String screenType,
 			FactoryContext context, 
 			WebAdeAuthentication authentication
 		) throws FactoryException {
@@ -165,7 +170,7 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 
 				UwContractRsrc linkedPolicyModel = new UwContractRsrc();
 				populateResource(linkedPolicyModel, lpDto);				
-				setSelfLink(lpDto.getPolicyId(), false, linkedPolicyModel, baseUri);
+				setSelfLink(lpDto.getPolicyId(), false, false, null, linkedPolicyModel, baseUri);
 				setLinks(linkedPolicyModel, baseUri, authentication);				
 
 				linkedPoliciesModel.add(linkedPolicyModel);
@@ -173,12 +178,23 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 
 			resource.setLinkedPolicies(linkedPoliciesModel);
 		}
-		
+
+		// Other Year Policies
+		if ( otherYearPolicyDtos != null && !otherYearPolicyDtos.isEmpty() ) {
+			List<OtherYearPolicy> otherYearPoliciesModel = new ArrayList<OtherYearPolicy>();
+
+			for (PolicyDto pDto : otherYearPolicyDtos) {
+				OtherYearPolicy otherYearPolicyModel = createOtherYearPolicy(pDto, screenType);
+				otherYearPoliciesModel.add(otherYearPolicyModel);
+			}
+
+			resource.setOtherYearPolicies(otherYearPoliciesModel);
+		}
 		
 		String eTag = getEtag(resource);
 		resource.setETag(eTag);
 
-		setSelfLink(dto.getPolicyId(), loadLinkedPolicies, resource, baseUri);
+		setSelfLink(dto.getPolicyId(), loadLinkedPolicies, loadOtherYearPolicies, screenType, resource, baseUri);
 		setLinks(resource, baseUri, authentication);
 
 		return resource;
@@ -214,19 +230,45 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 		// growerProvince
 
 	}
+	
+	private OtherYearPolicy createOtherYearPolicy(PolicyDto dto, String screenType) {
 
-	static void setSelfLink(Integer policyId, Boolean loadLinkedPolicies, UwContractRsrc resource, URI baseUri) {
+		OtherYearPolicy model = new OtherYearPolicy();
+		
+		model.setCropYear(dto.getCropYear());
+		model.setInsurancePlanId(dto.getInsurancePlanId());
+		model.setPolicyId(dto.getPolicyId());
+		model.setPolicyNumber(dto.getPolicyNumber());
+
+		if ( ScreenType.INVENTORY.name().equals(screenType) ) {
+			model.setScreenRecordGuid(dto.getInventoryContractGuid());
+		} else if ( ScreenType.DOP.name().equals(screenType) ) {
+			model.setScreenRecordGuid(dto.getDeclaredYieldContractGuid());
+		} else if ( ScreenType.VERIFIED.name().equals(screenType) ) {
+			model.setScreenRecordGuid(dto.getVerifiedYieldContractGuid());
+		} else {
+			throw new FactoryException("Invalid value for screenType: " + screenType);
+		}
+		
+		model.setScreenType(screenType);
+
+		return model;
+	}
+
+	static void setSelfLink(Integer policyId, Boolean loadLinkedPolicies, Boolean loadOtherYearPolicies, String screenType, UwContractRsrc resource, URI baseUri) {
 		if (policyId != null) {
-			String selfUri = getUwContractSelfUri(policyId, loadLinkedPolicies, baseUri);
+			String selfUri = getUwContractSelfUri(policyId, loadLinkedPolicies, loadOtherYearPolicies, screenType, baseUri);
 			resource.getLinks().add(new RelLink(ResourceTypes.SELF, selfUri, "GET"));
 		}
 	}
 
-	public static String getUwContractSelfUri(Integer policyId, Boolean loadLinkedPolicies, URI baseUri) {
+	public static String getUwContractSelfUri(Integer policyId, Boolean loadLinkedPolicies, Boolean loadOtherYearPolicies, String screenType, URI baseUri) {
 		String result = UriBuilder
 				.fromUri(baseUri)
 				.path(UwContractEndpoint.class)
 				.queryParam("loadLinkedPolicies", nvl(toString(loadLinkedPolicies), ""))
+				.queryParam("loadOtherYearPolicies", nvl(toString(loadOtherYearPolicies), ""))
+				.queryParam("screenType", nvl(screenType, ""))
 				.build(policyId).toString();
 		return result;
 	}

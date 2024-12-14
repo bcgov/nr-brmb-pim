@@ -45,6 +45,8 @@ public interface UwContractEndpoint extends BaseEndpoints {
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	Response getUwContract(
 		@Parameter(description = "The Policy ID of the uw contract.") @PathParam("policyId") String policyId,
-		@Parameter(description = "True if linked policies should be included in the returned resource, False if not") @QueryParam("loadLinkedPolicies") String loadLinkedPolicies
+		@Parameter(description = "True if linked policies should be included in the returned resource, False if not") @QueryParam("loadLinkedPolicies") String loadLinkedPolicies,
+		@Parameter(description = "True if other year policies should be included in the returned resource, False if not") @QueryParam("loadOtherYearPolicies") String loadOtherYearPolicies,
+		@Parameter(description = "The screen type for which other year policies should be loaded: INVENTORY, DOP or VERIFIED") @QueryParam("screenType") String screenType
 	);
 }

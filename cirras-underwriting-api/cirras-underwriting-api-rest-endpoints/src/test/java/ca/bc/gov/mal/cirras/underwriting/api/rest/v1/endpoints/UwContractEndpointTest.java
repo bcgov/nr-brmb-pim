@@ -280,7 +280,7 @@ public class UwContractEndpointTest extends EndpointsTest {
 		Assert.assertEquals(1, searchResults.getCollection().size());
 
 		UwContractRsrc referrer = searchResults.getCollection().get(0);
-		UwContractRsrc fetchedResource = service.getUwContract(referrer, "false");
+		UwContractRsrc fetchedResource = service.getUwContract(referrer, "false", "false", null);
 		
 		Assert.assertNotNull(fetchedResource);
 		Assert.assertEquals(contractNumber, fetchedResource.getContractNumber());
@@ -349,7 +349,7 @@ public class UwContractEndpointTest extends EndpointsTest {
 		UwContractRsrc referrer = searchResults.getCollection().get(0);
 
 		// Test: No linked policies exist.
-		UwContractRsrc fetchedResource = service.getUwContract(referrer, "true");
+		UwContractRsrc fetchedResource = service.getUwContract(referrer, "true", "false", null);
 		Assert.assertNotNull(fetchedResource);
 		Assert.assertEquals(policyNumber1, fetchedResource.getPolicyNumber());
 		checkUwContractList(fetchedResource.getLinkedPolicies());
@@ -358,13 +358,13 @@ public class UwContractEndpointTest extends EndpointsTest {
 		createPolicy(policyId2, growerId1, 5, policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
 
 		// A. loadLinkedPolicies param is false.
-		fetchedResource = service.getUwContract(referrer, "false");
+		fetchedResource = service.getUwContract(referrer, "false", "false", null);
 		Assert.assertNotNull(fetchedResource);
 		Assert.assertEquals(policyNumber1, fetchedResource.getPolicyNumber());
 		checkUwContractList(fetchedResource.getLinkedPolicies());
 		
 		// B. loadLinkedPolicies param is true.
-		fetchedResource = service.getUwContract(referrer, "true");
+		fetchedResource = service.getUwContract(referrer, "true", "false", null);
 		Assert.assertNotNull(fetchedResource);
 		Assert.assertEquals(policyNumber1, fetchedResource.getPolicyNumber());
 		checkUwContractList(fetchedResource.getLinkedPolicies(), policyId2);
@@ -384,7 +384,7 @@ public class UwContractEndpointTest extends EndpointsTest {
 		createGrowerContractYear(growerContractYearId2, contractId2, growerId2, 2020, 5, createTransactionDate);
 		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId1, growerContractYearId2, 1);
 
-		fetchedResource = service.getUwContract(referrer, "true");
+		fetchedResource = service.getUwContract(referrer, "true", "false", null);
 		Assert.assertNotNull(fetchedResource);
 		Assert.assertEquals(policyNumber1, fetchedResource.getPolicyNumber());
 		checkUwContractList(fetchedResource.getLinkedPolicies(), policyId2);
@@ -454,7 +454,7 @@ public class UwContractEndpointTest extends EndpointsTest {
 		Assert.assertEquals(policyNumber, referrer.getPolicyNumber());
 		Assert.assertEquals("Eligible Inventory 1", eligibleInventory, referrer.getTotalDopEligibleInventory());
 
-		UwContractRsrc fetchedResource = service.getUwContract(referrer, "false");
+		UwContractRsrc fetchedResource = service.getUwContract(referrer, "false", "false", null);
 		
 		Assert.assertNotNull(fetchedResource);
 		Assert.assertEquals(policyNumber, fetchedResource.getPolicyNumber());
