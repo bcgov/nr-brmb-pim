@@ -45,9 +45,11 @@ export function convertToDopYieldContractRsrc(dopYieldContract: DopYieldContract
         defaultYieldMeasUnitTypeCode: verifiedYieldContract.defaultYieldMeasUnitTypeCode,
         insurancePlanId: verifiedYieldContract.insurancePlanId,
         growerContractYearId: verifiedYieldContract.growerContractYearId,
+        updateProductValuesInd: verifiedYieldContract.updateProductValuesInd,
         fields: verifiedYieldContract.fields,
         verifiedYieldContractCommodities: verifiedYieldContract.verifiedYieldContractCommodities,
         verifiedYieldAmendments: verifiedYieldContract.verifiedYieldAmendments,
+        productWarningMessages: verifiedYieldContract.productWarningMessages,
         etag: verifiedYieldContract.etag,
         type:  "VerifiedYieldContractRsrc"     
     };

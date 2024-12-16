@@ -77,6 +77,24 @@
                 </div>
             </div>
 
+            <!-- warning messages -->
+            <div *ngIf="verifiedYieldContract && verifiedYieldContract.productWarningMessages && verifiedYieldContract.productWarningMessages.length > 0"  
+                class="vy-warning-msgs-container vy-warning-messages">
+
+                <div *ngFor="let msg of verifiedYieldContract.productWarningMessages" style="display:contents">
+                    <div><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+                    <div><span>{{ msg.message }}</span></div>
+                </div>
+                <div style="display:contents">
+                    <div>
+                        <mat-checkbox 
+                            formControlName="updateProductValuesInd" (change)="isUpdateProductChecked($event)">
+                        </mat-checkbox>
+                    </div>
+                    <div>Refresh Product Data from CIRRAS on save</div>
+                </div>
+            </div>
+
            <div style="margin-top: 8px;">
             <!-- commodity totals -->
             <verified-yield-commodity-list
