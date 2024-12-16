@@ -162,7 +162,9 @@ jobs:
           JASPER_STORAGE_CAPACITY: 25Mi
           MARIADB_MAX_LOG_BYTES: ${{ vars.MARIADB_MAX_LOG_BYTES }}
 
-
+      #Explicit install of oc cli tool
+      - name: Install oc
+        uses: redhat-actions/oc-installer@v1
       
       - name: Authenticate and set context
         uses: redhat-actions/oc-login@v1
