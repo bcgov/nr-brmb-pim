@@ -142,7 +142,9 @@ jobs:
           JASPERREPORTS_UI_PASSWORD: ${{ secrets.JASPER_PASSWORD }}
           JASPER_STORAGE_CAPACITY: 25Mi
 
-
+      #Explicit install of oc cli tool
+      - name: Install oc
+        uses: redhat-actions/oc-installer@v1
       
       - name: Authenticate and set context
         uses: redhat-actions/oc-login@v1
