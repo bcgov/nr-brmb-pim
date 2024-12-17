@@ -59,6 +59,8 @@ export class GrainDopComponent extends BaseComponent{
 
   flaggedTotalEstimatedYield = [];
 
+  hasVerifiedYieldData = false
+
   initModels() {
     this.viewModel = new GrainDopComponentModel(this.sanitizer, this.fb);
   }
@@ -106,6 +108,20 @@ export class GrainDopComponent extends BaseComponent{
   }
 
   ngOnChanges2(changes: SimpleChanges) {
+
+    if ( changes.growerContract && this.growerContract ) {
+
+      this.hasVerifiedYieldData = false
+
+      // check for verified yield data
+      for (let i = 0; i< this.growerContract.links.length; i++ ) {
+
+        if ( this.growerContract.links[i].href.toLocaleLowerCase().indexOf("verifiedyieldcontracts") > -1  ) {
+          this.hasVerifiedYieldData = true
+          break
+        } 
+      }
+    }
 
     // populate the yield measurement unit dropdown
     if (changes.yieldMeasUnitList && this.yieldMeasUnitList && this.yieldMeasUnitList.collection && this.yieldMeasUnitList.collection.length ) {
