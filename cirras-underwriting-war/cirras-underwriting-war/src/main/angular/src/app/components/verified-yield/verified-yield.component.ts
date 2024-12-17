@@ -171,4 +171,12 @@ export class VerifiedYieldComponent extends BaseComponent {
     }
   }
 
+  isUpdateProductChecked(event) {
+    if ( event.checked ){
+      this.verifiedYieldContract.updateProductValuesInd = true
+    } else {
+      this.verifiedYieldContract.updateProductValuesInd = false
+    }
+    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true)); 
+  }
 }
