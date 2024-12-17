@@ -16,6 +16,8 @@ import { ADD_NEW_VERIFIED_YIELD, DELETE_VERIFIED_YIELD, DeleteVerifiedYieldContr
 import { VerifiedYieldContract } from "src/app/conversion/models-yield";
 import { displayDeleteSuccessSnackbar, displaySaveSuccessSnackbar } from "src/app/utils/user-feedback-utils";
 import { convertToVerifiedYieldContractRsrc } from "src/app/conversion/conversion-to-rest-yield";
+import { LoadGrowerContract } from "../grower-contract/grower-contract.actions";
+import { VERIFIED_YIELD_COMPONENT_ID } from "./verified-yield.state";
 
 @Injectable()
 export class VerifiedYieldEffects {
@@ -116,7 +118,7 @@ addNewVerifiedYield: Observable<Action> = createEffect (() => this.actions.pipe(
             let typedAction = <VerifiedYieldContractAction>action;
             let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
-            let payload = <VerifiedYieldContract>typedAction.payload.verifiedYieldContract;
+            const policyId = typedAction.payload.policyId
 
             const verifiedYieldContract = typedAction.payload.verifiedYieldContract 
             const body: VerifiedYieldContractRsrc = convertToVerifiedYieldContractRsrc(verifiedYieldContract)
@@ -136,6 +138,7 @@ addNewVerifiedYield: Observable<Action> = createEffect (() => this.actions.pipe(
 
                     let newVerifiedYieldContract: VerifiedYieldContract = convertToVerifiedYieldContract(response.body, response.headers ? response.headers.get("ETag") : null) 
 
+                    this.store.dispatch(LoadGrowerContract(VERIFIED_YIELD_COMPONENT_ID, policyId)) // to update the side navigation links
                     return [                                                                         
                       LoadVerifiedYieldContractSuccess(typedAction.componentId, newVerifiedYieldContract)                             
                     ]
@@ -159,6 +162,7 @@ updateDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
             let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
             let payload = <VerifiedYieldContract>typedAction.payload.verifiedYieldContract;
+            const policyId = typedAction.payload.policyId
 
             const verifiedYieldContract = typedAction.payload.verifiedYieldContract 
             const body: VerifiedYieldContractRsrc = convertToVerifiedYieldContractRsrc(verifiedYieldContract)
@@ -179,6 +183,8 @@ updateDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
                     displaySaveSuccessSnackbar(this.snackbarService, "Verified Yield ");
 
                     let newVerifiedYieldContract: VerifiedYieldContract = convertToVerifiedYieldContract(response.body, response.headers ? response.headers.get("ETag") : null) 
+
+                    this.store.dispatch(LoadGrowerContract(VERIFIED_YIELD_COMPONENT_ID, policyId)) // to update the side navigation links
 
                     return [                                                                         
                       LoadVerifiedYieldContractSuccess(typedAction.componentId, newVerifiedYieldContract)                             
@@ -221,6 +227,8 @@ deleteVerifiedYield: Observable<Action> = createEffect (() => this.actions.pipe(
                 map((response: any) => {
 
                   displayDeleteSuccessSnackbar(this.snackbarService, "Verified Yield ");
+
+                  this.store.dispatch(LoadGrowerContract(typedAction.componentId, typedAction.payload.policyId)) // to update the side navigation links
                   
                   return RolloverVerifiedYieldContract(typedAction.componentId, typedAction.payload.policyId);
 

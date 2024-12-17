@@ -467,6 +467,21 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		
 	}
 
+	@Override
+	public void updateDto(VerifiedYieldAmendmentDto dto, VerifiedYieldAmendment model) {
+		dto.setAcres(model.getAcres());
+		dto.setCropCommodityId(model.getCropCommodityId());
+		dto.setCropCommodityName(model.getCropCommodityName());
+		dto.setFieldId(model.getFieldId());
+		dto.setFieldLabel(model.getFieldLabel());
+		dto.setIsPedigreeInd(model.getIsPedigreeInd());
+		dto.setRationale(model.getRationale());
+		dto.setVerifiedYieldAmendmentCode(model.getVerifiedYieldAmendmentCode());
+		dto.setVerifiedYieldAmendmentGuid(model.getVerifiedYieldAmendmentGuid());
+		dto.setVerifiedYieldContractGuid(model.getVerifiedYieldContractGuid());
+		dto.setYieldPerAcre(model.getYieldPerAcre());
+	}
+	
 	private Double notNull(Double value, Double defaultValue) {
 		return (value == null) ? defaultValue : value;
 	}

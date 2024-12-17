@@ -12,6 +12,7 @@ export class VerifiedYieldComponentModel extends BaseComponentModel {
         
         this.formGroup = this.fb.group({
             // todo - add the summary grid
+            updateProductValuesInd: [false],
             verifiedYieldContractCommodities: new UntypedFormArray([]), // subform responsible for the commodities grid 
             verifiedYieldAmendments: new UntypedFormArray([]) , // subform responsible for the appraisals and assessments grid
         });
