@@ -20,4 +20,10 @@ public interface PolicyMapper {
 	List<PolicyDto> select(Map<String, Object> parameters);
 	
 	List<PolicyDto> selectByFieldAndYear(Map<String, Object> parameters);
+
+	List<PolicyDto> selectByOtherYearInventory(Map<String, Object> parameters);
+
+	List<PolicyDto> selectByOtherYearDop(Map<String, Object> parameters);
+
+	List<PolicyDto> selectByOtherYearVerified(Map<String, Object> parameters);
 }

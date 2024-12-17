@@ -28,6 +28,7 @@ import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasUnderwritingServic
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.AnnualFieldFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UwContractFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.UnderwritingServiceHelper;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.ScreenType;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.OutOfSync;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.ModelValidator;
 
@@ -59,6 +60,9 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 
 	public static final int DefaultMaximumResults = 800;
 
+	// Number of past or future years to search when loading UwContract.otherYearPolicies.
+	public static final Integer numOtherYearPoliciesToLoad = 5;
+	
 	public void setUnderwritingServiceHelper(UnderwritingServiceHelper underwritingServiceHelper) {
 		this.underwritingServiceHelper = underwritingServiceHelper;
 	}
@@ -197,7 +201,15 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 
 			List<PolicyDto> otherYearPolicyDtos = null;
 			if ( Boolean.TRUE.equals(loadOtherYearPolicies) ) {
-				// TODO: Load OtherYearPolicies.
+				if ( ScreenType.INVENTORY.name().equals(screenType) ) {
+					otherYearPolicyDtos = policyDao.selectByOtherYearInventory(dto.getContractId(), dto.getCropYear(), numOtherYearPoliciesToLoad);
+				} else if ( ScreenType.DOP.name().equals(screenType) ) {
+					otherYearPolicyDtos = policyDao.selectByOtherYearDop(dto.getContractId(), dto.getCropYear(), numOtherYearPoliciesToLoad);
+				} else if ( ScreenType.VERIFIED.name().equals(screenType) ) {
+					otherYearPolicyDtos = policyDao.selectByOtherYearVerified(dto.getContractId(), dto.getCropYear(), numOtherYearPoliciesToLoad);
+				} else {
+					throw new ServiceException("Invalid value for screenType: " + screenType);
+				}
 			}
 
 			result = uwContractFactory.getUwContract(dto, linkedPolicyDtos, otherYearPolicyDtos, loadLinkedPolicies, loadOtherYearPolicies, screenType, factoryContext, authentication);
