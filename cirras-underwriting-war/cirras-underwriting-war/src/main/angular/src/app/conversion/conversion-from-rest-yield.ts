@@ -85,10 +85,12 @@ export function convertToYieldMeasUnit(yieldMeasUnitRes: YieldMeasUnitTypeCodeRs
       defaultYieldMeasUnitTypeCode: verifiedYieldContract.defaultYieldMeasUnitTypeCode,
       insurancePlanId: verifiedYieldContract.insurancePlanId,
       growerContractYearId: verifiedYieldContract.growerContractYearId,
+      updateProductValuesInd: verifiedYieldContract.updateProductValuesInd,
 
       fields: verifiedYieldContract.fields,
       verifiedYieldContractCommodities: verifiedYieldContract.verifiedYieldContractCommodities,
       verifiedYieldAmendments: verifiedYieldContract.verifiedYieldAmendments,
+      productWarningMessages: verifiedYieldContract.productWarningMessages,
       
       etag: etag, 
       type: verifiedYieldContract.type   

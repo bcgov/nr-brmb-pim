@@ -121,10 +121,10 @@ export class VerifiedYieldComponent extends BaseComponent {
     this.cleanUpAmendments()
 
     if (this.verifiedYieldContract.verifiedYieldContractGuid) {
-      this.store.dispatch(UpdateVerifiedYieldContract(VERIFIED_YIELD_COMPONENT_ID, this.verifiedYieldContract))
+      this.store.dispatch(UpdateVerifiedYieldContract(VERIFIED_YIELD_COMPONENT_ID, this.verifiedYieldContract, this.policyId))
     } else {
       // add new
-      this.store.dispatch(AddNewVerifiedYieldContract(VERIFIED_YIELD_COMPONENT_ID, this.verifiedYieldContract))
+      this.store.dispatch(AddNewVerifiedYieldContract(VERIFIED_YIELD_COMPONENT_ID, this.verifiedYieldContract, this.policyId))
     }
 
     this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, false ));
@@ -171,4 +171,12 @@ export class VerifiedYieldComponent extends BaseComponent {
     }
   }
 
+  isUpdateProductChecked(event) {
+    if ( event.checked ){
+      this.verifiedYieldContract.updateProductValuesInd = true
+    } else {
+      this.verifiedYieldContract.updateProductValuesInd = false
+    }
+    this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true)); 
+  }
 }
