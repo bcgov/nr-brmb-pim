@@ -124,7 +124,8 @@ export function convertToUwContract(uwContract: any): UwContract {
       totalDopEligibleInventory: uwContract.totalDopEligibleInventory,
 
       linkedPolicies: uwContract.linkedPolicies,
-
+      otherYearPolicies: uwContract.otherYearPolicies,
+      
       isSelectedForPrint: false,
        
       etag: uwContract.etag,

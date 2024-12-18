@@ -1,0 +1,32 @@
+@import '../../../styles/variables';
+
+.other-year-policy{
+
+ .mat-mdc-text-field-wrapper {
+    width: 100px;
+    height: 36px;
+    padding-left: 6px; 
+    border: 0.5px solid  rgba(194, 194, 194, 1) !important;
+    border-radius: 5px !important;
+ }
+
+ .mat-mdc-form-field-flex {
+  width: 50px;
+  height: 36px;
+
+ }
+
+ .mat-mdc-form-field-infix {
+  width: 505px !important;
+  min-height: 36px;
+ }
+
+ .mat-mdc-select{
+  font-family:  $font-family-main;
+ }
+
+ .mdc-text-field--outlined .mat-mdc-form-field-infix { 
+  padding-top: 7px;
+ }
+
+}

@@ -101,7 +101,8 @@
             {{ (growerContract && growerContract.policyNumber) ? growerContract.policyNumber : "" }}            
         </div>
         <div class="grower-info-label">
-            {{ (growerContract && growerContract.cropYear) ? growerContract.cropYear : "" }}
+            <!-- {{ (growerContract && growerContract.cropYear) ? growerContract.cropYear : "" }} -->
+              <other-year-policy *ngIf="growerContract && growerContract.cropYear"></other-year-policy>
         </div>
         <div class="grower-info-label">
             {{ (growerContract && growerContract.growerPrimaryEmail) ? growerContract.growerPrimaryEmail : "" }}
