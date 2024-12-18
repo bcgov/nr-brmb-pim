@@ -58,7 +58,7 @@ jobs:
       # As such, the DB name is different from later environments - will need to eventually
       # delete and recreate object. For now, this updates it to match what's expected
       - name: Perform fix for dev environment
-        if: contains($inputs.ENVIRONMENT_NAME, "dev")
+        if: ${{contains($inputs.ENVIRONMENT_NAME, "dev")}}
         run: |
           sed -i 's/  name: {{ template "crunchy-postgres.fullname" . }}/  name: crunchy-postgres/' crunchy-postgres/charts/crunchy-postgres/templates/PostgresCluster.yaml
       
