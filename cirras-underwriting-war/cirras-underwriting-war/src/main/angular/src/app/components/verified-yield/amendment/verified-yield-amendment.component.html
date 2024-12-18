@@ -3,7 +3,8 @@
        
         <mat-form-field appearance="fill">
             <mat-select hideSingleSelectionIndicator="true"
-                formControlName="verifiedYieldAmendmentCode" >
+                formControlName="verifiedYieldAmendmentCode"
+                (selectionChange)="updateAmendmentCode($event)" >
                 <mat-option *ngFor="let option of amendmentOptions" [value]="option.code"
                 >{{ option.description | titlecase }}</mat-option>
             </mat-select>
@@ -24,7 +25,7 @@
                 [displayWith]="displayFieldsFn"
                 (optionSelected)="updateField()">
             <mat-option *ngFor="let option of filteredFieldOptions" [value]="option">
-                {{ option.fieldLabel | titlecase }}
+                {{ option.fieldLabel }}
             </mat-option>
             </mat-autocomplete>
         </mat-form-field>  

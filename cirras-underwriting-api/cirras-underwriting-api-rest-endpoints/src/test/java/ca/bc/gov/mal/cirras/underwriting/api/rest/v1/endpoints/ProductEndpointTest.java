@@ -166,6 +166,9 @@ public class ProductEndpointTest extends EndpointsTest {
 		resource.setProductId(productId);
 		resource.setProductionGuarantee(56.78);
 		resource.setProductStatusCode("OFFER");
+		resource.setInsurableValueHundredPercent(150.5);
+		resource.setCoverageDollars(1155.7);
+
 
 		resource.setDataSyncTransDate(createTransactionDate);
 		resource.setTransactionType(PoliciesSyncEventTypes.ProductCreated);
@@ -183,7 +186,9 @@ public class ProductEndpointTest extends EndpointsTest {
 		Assert.assertEquals(resource.getProductId(), fetchedResource.getProductId());
 		Assert.assertEquals(resource.getProductionGuarantee(), fetchedResource.getProductionGuarantee());
 		Assert.assertEquals(resource.getProductStatusCode(), fetchedResource.getProductStatusCode());
-		
+		Assert.assertEquals(resource.getInsurableValueHundredPercent(), fetchedResource.getInsurableValueHundredPercent());
+		Assert.assertEquals(resource.getCoverageDollars(), fetchedResource.getCoverageDollars());
+
 		Assert.assertTrue(resource.getDataSyncTransDate().compareTo(fetchedResource.getDataSyncTransDate()) == 0);
 
 		
@@ -196,6 +201,9 @@ public class ProductEndpointTest extends EndpointsTest {
 		fetchedResource.setProbableYield(11.22);
 		fetchedResource.setProductionGuarantee(33.44);
 		fetchedResource.setProductStatusCode("FINAL");
+		fetchedResource.setInsurableValueHundredPercent(234.5);
+		fetchedResource.setCoverageDollars(2233.5);
+
 
 		fetchedResource.setDataSyncTransDate(addSeconds(transactionDate, +1));
 		fetchedResource.setTransactionType(PoliciesSyncEventTypes.ProductUpdated);
@@ -213,7 +221,9 @@ public class ProductEndpointTest extends EndpointsTest {
 		Assert.assertEquals(fetchedResource.getProductId(), updatedResource.getProductId());
 		Assert.assertEquals(fetchedResource.getProductionGuarantee(), updatedResource.getProductionGuarantee());
 		Assert.assertEquals(fetchedResource.getProductStatusCode(), updatedResource.getProductStatusCode());
-		
+		Assert.assertEquals(fetchedResource.getInsurableValueHundredPercent(), updatedResource.getInsurableValueHundredPercent());
+		Assert.assertEquals(fetchedResource.getCoverageDollars(), updatedResource.getCoverageDollars());
+
 		Assert.assertTrue(fetchedResource.getDataSyncTransDate().compareTo(updatedResource.getDataSyncTransDate()) == 0);
 		
 		//DELETE PRODUCT
@@ -237,6 +247,8 @@ public class ProductEndpointTest extends EndpointsTest {
 		resource2.setProductId(productId);
 		resource2.setProductionGuarantee(56.78);
 		resource2.setProductStatusCode("OFFER");
+		resource2.setInsurableValueHundredPercent(188.3);
+		resource2.setCoverageDollars(8945.4);
 
 		resource2.setDataSyncTransDate(createTransactionDate);
 		resource2.setTransactionType(PoliciesSyncEventTypes.ProductCreated);
@@ -290,6 +302,9 @@ public class ProductEndpointTest extends EndpointsTest {
 		resource.setProductId(productId);
 		resource.setProductionGuarantee(56.78);
 		resource.setProductStatusCode("OFFER");
+		resource.setInsurableValueHundredPercent(150.5);
+		resource.setCoverageDollars(1155.7);
+		
 
 		resource.setDataSyncTransDate(createTransactionDate);
 
@@ -314,7 +329,9 @@ public class ProductEndpointTest extends EndpointsTest {
 		Assert.assertEquals(resource.getProductId(), fetchedResource.getProductId());
 		Assert.assertEquals(resource.getProductionGuarantee(), fetchedResource.getProductionGuarantee());
 		Assert.assertEquals(resource.getProductStatusCode(), fetchedResource.getProductStatusCode());
-		
+		Assert.assertEquals(resource.getInsurableValueHundredPercent(), fetchedResource.getInsurableValueHundredPercent());
+		Assert.assertEquals(resource.getCoverageDollars(), fetchedResource.getCoverageDollars());
+
 		Assert.assertTrue(resource.getDataSyncTransDate().compareTo(fetchedResource.getDataSyncTransDate()) == 0);
 		
 		//NO UPDATE EXPECTED BECAUSE TRANSACTION DATE IS EARLIER THAN STORED ONE
@@ -336,7 +353,9 @@ public class ProductEndpointTest extends EndpointsTest {
 		notUpdatedResource.setProbableYield(11.22);
 		notUpdatedResource.setProductionGuarantee(33.44);
 		notUpdatedResource.setProductStatusCode("FINAL");
-		
+		notUpdatedResource.setInsurableValueHundredPercent(222.5);
+		notUpdatedResource.setCoverageDollars(1235.7);
+
 		
 		//UPDATE EXPECTED BECAUSE RECORD EXISTS IT WILL UPDATE IT
 		notUpdatedResource.setTransactionType(PoliciesSyncEventTypes.ProductCreated);
@@ -354,7 +373,9 @@ public class ProductEndpointTest extends EndpointsTest {
 		Assert.assertEquals(notUpdatedResource.getProductId(), updatedResource.getProductId());
 		Assert.assertEquals(notUpdatedResource.getProductionGuarantee(), updatedResource.getProductionGuarantee());
 		Assert.assertEquals(notUpdatedResource.getProductStatusCode(), updatedResource.getProductStatusCode());
-		
+		Assert.assertEquals(notUpdatedResource.getInsurableValueHundredPercent(), updatedResource.getInsurableValueHundredPercent());
+		Assert.assertEquals(notUpdatedResource.getCoverageDollars(), updatedResource.getCoverageDollars());
+
 		Assert.assertTrue(notUpdatedResource.getDataSyncTransDate().compareTo(updatedResource.getDataSyncTransDate()) == 0);
 		
 		logger.debug(">testUpdateProductWithoutRecordNoUpdate");

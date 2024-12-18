@@ -15,6 +15,8 @@
 		<result property="productionGuarantee" column="production_guarantee" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="probableYield" column="probable_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="insuredByMeasType" column="insured_by_meas_type" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="insurableValueHundredPercent" column="insurable_value_hundred_percent" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="coverageDollars" column="coverage_dollars" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="dataSyncTransDate" column="data_sync_trans_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		<result property="nonPedigreeCropCommodityId" column="non_pedigree_crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="isPedigreeProduct" column="is_pedigree_product" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
@@ -36,6 +38,8 @@
 		t.production_guarantee, 
 		t.probable_yield, 
 		t.insured_by_meas_type, 
+		t.insurable_value_hundred_percent, 
+		t.coverage_dollars, 
 		t.data_sync_trans_date, 
 		t.create_user, 
 		t.create_date, 
@@ -79,6 +83,8 @@
 			production_guarantee, 
 			probable_yield, 
 			insured_by_meas_type, 
+			insurable_value_hundred_percent,
+			coverage_dollars,
 			data_sync_trans_date, 
 			create_user, 
 			create_date, 
@@ -94,6 +100,8 @@
 			#{dto.productionGuarantee, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.probableYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.insuredByMeasType, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.insurableValueHundredPercent, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.coverageDollars, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.dataSyncTransDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN},
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
 			now(),
@@ -112,7 +120,9 @@
 			production_guarantee = #{dto.productionGuarantee, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			probable_yield = #{dto.probableYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			insured_by_meas_type = #{dto.insuredByMeasType, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
-			data_sync_trans_date = #{dto.dataSyncTransDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN}, 
+			insurable_value_hundred_percent = #{dto.insurableValueHundredPercent, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			coverage_dollars = #{dto.coverageDollars, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			data_sync_trans_date = #{dto.dataSyncTransDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN},
 			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
 			update_date = now()
 		WHERE product_id = #{dto.productId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}

@@ -10,5 +10,6 @@
   {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.alter.underwriting_comment.sql"}},
   {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.product.sql"}},
   {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.crop_commodity_pedigree_xref.sql"}},
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.alter.declared_yield_contract_cmdty_forage.sql"}},
   {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
   ] } }]}

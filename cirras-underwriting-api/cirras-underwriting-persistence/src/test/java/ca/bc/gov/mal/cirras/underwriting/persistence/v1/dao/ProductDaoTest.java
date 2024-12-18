@@ -185,6 +185,9 @@ public class ProductDaoTest {
 		newDto.setProductId(productId);
 		newDto.setProductionGuarantee(56.78);
 		newDto.setProductStatusCode("OFFER");
+		newDto.setInsurableValueHundredPercent(150.5);
+		newDto.setCoverageDollars(1155.7);
+
 
 		newDto.setDataSyncTransDate(dataSyncTransDate);
 
@@ -207,6 +210,8 @@ public class ProductDaoTest {
 		fetchedDto.setProbableYield(11.22);
 		fetchedDto.setProductionGuarantee(33.44);
 		fetchedDto.setProductStatusCode("FINAL");
+		fetchedDto.setInsurableValueHundredPercent(210.5);
+		fetchedDto.setCoverageDollars(8899.7);
 		fetchedDto.setDataSyncTransDate(dataSyncTransDate);
 		
 		dao.update(fetchedDto, userId);
@@ -245,6 +250,8 @@ public class ProductDaoTest {
 		newDto.setProbableYield(22.2);
 		newDto.setProductId(productId2);
 		newDto.setProductionGuarantee(99.0);
+		newDto.setInsurableValueHundredPercent(180.5);
+		newDto.setCoverageDollars(3322.7);
 		newDto.setProductStatusCode("FINAL");
 		newDto.setNonPedigreeCropCommodityId(24);
 		newDto.setIsPedigreeProduct(true);
@@ -287,6 +294,8 @@ public class ProductDaoTest {
 		Assert.assertEquals("ProductId", expected.getProductId(), actual.getProductId());
 		Assert.assertEquals("ProductionGuarantee", expected.getProductionGuarantee(), actual.getProductionGuarantee());
 		Assert.assertEquals("ProductStatusCode", expected.getProductStatusCode(), actual.getProductStatusCode());
+		Assert.assertEquals("InsurableValueHundredPercent", expected.getInsurableValueHundredPercent(), actual.getInsurableValueHundredPercent());
+		Assert.assertEquals("CoverageDollars", expected.getCoverageDollars(), actual.getCoverageDollars());
 		Assert.assertEquals("DataSyncTransDate", expected.getDataSyncTransDate(), actual.getDataSyncTransDate());
 		
 		Assert.assertEquals("NonPedigreeCropCommodityId", expected.getNonPedigreeCropCommodityId(), actual.getNonPedigreeCropCommodityId());
