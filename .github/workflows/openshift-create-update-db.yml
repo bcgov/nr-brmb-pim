@@ -83,13 +83,4 @@ jobs:
       - name: zip and install helm chart
         run: |
           cd staging && tar -czvf crunchy-postgres.tar.gz crunchy-postgres
-          export STATUS_OUT=$(helm status crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} 2>&1 >/dev/null)
-          if [[ $STATUS_OUT == *"not found"* ]]; then
-            echo "Attempting helm install"
-            helm install crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} ./crunchy-postgres.tar.gz
-            exit 0
-          else
-            echo "Attempting helm upgrade"
-            helm upgrade crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} ./crunchy-postgres.tar.gz
-            exit 0
-          fi
+          helm upgrade -i crunchy-postgres-${{inputs.ENVIRONMENT_NAME}} ./crunchy-postgres.tar.gz
