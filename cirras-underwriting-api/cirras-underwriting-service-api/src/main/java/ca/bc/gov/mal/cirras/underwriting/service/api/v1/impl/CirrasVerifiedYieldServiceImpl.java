@@ -18,9 +18,11 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventorySeededGrainDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.PolicyDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ProductDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.UnderwritingCommentDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldAmendmentDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldContractDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldSummaryDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
@@ -28,9 +30,11 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingCommentDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldAmendmentDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldSummaryDto;
 import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.ConflictException;
@@ -70,7 +74,9 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	private VerifiedYieldContractDao verifiedYieldContractDao;
 	private VerifiedYieldContractCommodityDao verifiedYieldContractCommodityDao;
 	private VerifiedYieldAmendmentDao verifiedYieldAmendmentDao;
+	private VerifiedYieldSummaryDao verifiedYieldSummaryDao;
 	private ProductDao productDao;
+	private UnderwritingCommentDao underwritingCommentDao;
 
 	public void setApplicationProperties(Properties applicationProperties) {
 		this.applicationProperties = applicationProperties;
@@ -119,11 +125,18 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	public void setVerifiedYieldAmendmentDao(VerifiedYieldAmendmentDao verifiedYieldAmendmentDao) {
 		this.verifiedYieldAmendmentDao = verifiedYieldAmendmentDao;
 	}
+
+	public void setVerifiedYieldSummaryDao(VerifiedYieldSummaryDao verifiedYieldSummaryDao) {
+		this.verifiedYieldSummaryDao = verifiedYieldSummaryDao;
+	}
 	
 	public void setProductDao(ProductDao productDao) {
 		this.productDao = productDao;
 	}
-
+	
+	public void setUnderwritingCommentDao(UnderwritingCommentDao underwritingCommentDao) {
+		this.underwritingCommentDao = underwritingCommentDao;
+	}
 	
 	@Override
 	public VerifiedYieldContract<? extends AnnualField, ? extends Message> rolloverVerifiedYieldContract(Integer policyId,
@@ -283,6 +296,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		loadVerifiedYieldContractCommodities(dto);
 		loadVerifiedYieldAmendments(dto);
 		loadFields(dto);
+		loadVerifiedYieldSummaries(dto);
 
 		return verifiedYieldContractFactory.getVerifiedYieldContract(dto, productDtos, factoryContext, authentication);
 	}
@@ -299,6 +313,22 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	private void loadVerifiedYieldAmendments(VerifiedYieldContractDto dto) throws DaoException {
 		List<VerifiedYieldAmendmentDto> verifiedAmendments = verifiedYieldAmendmentDao.selectForVerifiedYieldContract(dto.getVerifiedYieldContractGuid());
 		dto.setVerifiedYieldAmendments(verifiedAmendments);
+	}
+	
+	private void loadVerifiedYieldSummaries(VerifiedYieldContractDto dto) throws DaoException {
+		List<VerifiedYieldSummaryDto> verifiedSummaries = verifiedYieldSummaryDao.selectForVerifiedYieldContract(dto.getVerifiedYieldContractGuid());
+		dto.setVerifiedYieldSummaries(verifiedSummaries);
+		
+		//Get comments
+		for (VerifiedYieldSummaryDto vyDto : dto.getVerifiedYieldSummaries()) {
+			loadUwComments(vyDto);
+		}
+	}
+	
+	private void loadUwComments(VerifiedYieldSummaryDto vyDto) throws DaoException {
+		//Returning all comments of a verified yield summary record
+		List<UnderwritingCommentDto> uwComments = underwritingCommentDao.selectForVerifiedYieldSummary(vyDto.getVerifiedYieldSummaryGuid());
+		vyDto.setUwComments(uwComments);
 	}
 	
 	@Override

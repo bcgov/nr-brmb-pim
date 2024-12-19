@@ -403,7 +403,9 @@ public class ServiceApiSpringConfig {
 		result.setVerifiedYieldContractDao(persistenceSpringConfig.verifiedYieldContractDao());
 		result.setVerifiedYieldContractCommodityDao(persistenceSpringConfig.verifiedYieldContractCommodityDao());
 		result.setVerifiedYieldAmendmentDao(persistenceSpringConfig.verifiedYieldAmendmentDao());
+		result.setVerifiedYieldSummaryDao(persistenceSpringConfig.verifiedYieldSummaryDao());
 		result.setProductDao(persistenceSpringConfig.productDao());
+		result.setUnderwritingCommentDao(persistenceSpringConfig.underwritingCommentDao());
 		
 		return result;
 	}	
