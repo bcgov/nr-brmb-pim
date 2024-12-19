@@ -24,7 +24,7 @@ export interface CropCommodityVarietyOptionsType {
 
 export function addPlantingObject(cropYear, fieldId, insurancePlanId, inventoryFieldGuid, lastYearCropCommodityId, 
                   lastYearCropCommodityName, lastYearCropVarietyId, lastYearCropVarietyName, plantingNumber, isHiddenOnPrintoutInd, underseededInventorySeededForageGuid,
-                  inventoryUnseeded: InventoryUnseeded, inventorySeededGrains: FormArray, inventorySeededForages: FormArray,) {
+                  inventoryUnseeded: InventoryUnseeded, inventorySeededGrains: FormArray, inventorySeededForages: FormArray) {
 
   return {
     cropYear:                  [ cropYear ],
@@ -39,8 +39,15 @@ export function addPlantingObject(cropYear, fieldId, insurancePlanId, inventoryF
     lastYearCropCommodityVarietyName: [ lastYearCropVarietyName || lastYearCropCommodityName ],
     plantingNumber:            [ plantingNumber ],
     acresToBeSeeded:           [ (inventoryUnseeded && inventoryUnseeded.acresToBeSeeded) ? inventoryUnseeded.acresToBeSeeded : '' ],
+    // to be consistent with the last year's crop
     cropCommodityId:           [ (inventoryUnseeded && inventoryUnseeded.cropCommodityId) ? inventoryUnseeded.cropCommodityId : CROP_COMMODITY_UNSPECIFIED.ID ],
     cropCommodityName:         [ (inventoryUnseeded && inventoryUnseeded.cropCommodityName) ? inventoryUnseeded.cropCommodityName : CROP_COMMODITY_UNSPECIFIED.NAME ],
+    cropVarietyId:             [ (inventoryUnseeded && inventoryUnseeded.cropVarietyId) ? inventoryUnseeded.cropVarietyId : CROP_COMMODITY_UNSPECIFIED.ID ],
+    cropVarietyName:           [ (inventoryUnseeded && inventoryUnseeded.cropVarietyName) ? inventoryUnseeded.cropVarietyName : CROP_COMMODITY_UNSPECIFIED.NAME ],
+    cropCommodityVarietyId:    [ `${(inventoryUnseeded && inventoryUnseeded.cropCommodityId)||0}_${(inventoryUnseeded && inventoryUnseeded.cropVarietyId)||0}` ],
+    cropCommodityVarietyName:  [ inventoryUnseeded ? 
+                                    (inventoryUnseeded.cropVarietyName ?  inventoryUnseeded.cropVarietyName : inventoryUnseeded.cropCommodityName)  
+                                    : '' ],
     deletedByUserInd:          [ (inventoryUnseeded && inventoryUnseeded.deletedByUserInd) ? inventoryUnseeded.deletedByUserInd : false ],
     isUnseededInsurableInd:    [ (!inventoryUnseeded || inventoryUnseeded.isUnseededInsurableInd == undefined) ? true : inventoryUnseeded.isUnseededInsurableInd], // defaults to true
     isHiddenOnPrintoutInd:     [ isHiddenOnPrintoutInd ],

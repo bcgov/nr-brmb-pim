@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, SimpleChanges } 
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { isBaseCommodity, makeTitleCase } from 'src/app/utils';
-import { CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
+import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { GrainInventoryComponent } from "../grain-inventory.component";
 import { CropCommodityVarietyOptionsType, roundUpDecimalAcres } from '../../inventory-common';
 import {ViewEncapsulation } from '@angular/core';
@@ -50,7 +50,9 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
     super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
   }
 
+  filteredLastYearCommodityVarietyOptions: CropCommodityVarietyOptionsType[];
   filteredCommodityVarietyOptions: CropCommodityVarietyOptionsType[];
+  isHiddenFieldInTotals = false;
 
   ngOnInit(): void {
     super.ngOnInit()
@@ -67,28 +69,29 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
   ngOnChanges3(changes: SimpleChanges) {
 
     if ( changes.inventoryContract && this.inventoryContract && this.inventoryContract.commodities ) {
-      this.addAllCommodities()
+      this.addAllCommodities();
+      this.checkForHiddenFieldInTotals()
     }
   }
 
-  commodityVarietyFocus(fieldIndex, plantingIndex) {
+  lastYearCommodityVarietyFocus(fieldIndex, plantingIndex) {
     const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
     const lastYearCropCommodityVarietyName = pltg.controls['lastYearCropCommodityVarietyName'].value?.toLowerCase();
 
     if (lastYearCropCommodityVarietyName) {
-      this.filteredCommodityVarietyOptions = this.lastYearsCropOptions.filter(option => {
+      this.filteredLastYearCommodityVarietyOptions = this.grainCropForageVrtyOptions.filter(option => {
         const name = (option.cropCommodityVarietyName || '').toLowerCase();
         return name.includes(lastYearCropCommodityVarietyName);
       });
     } else {
-      this.filteredCommodityVarietyOptions = this.lastYearsCropOptions.slice();
+      this.filteredLastYearCommodityVarietyOptions = this.grainCropForageVrtyOptions.slice();
     }
   }
 
-  searchCommodityVariety(value) {
+  searchLastYearCommodityVariety(value) {
     value = value.toLowerCase();
-    this.filteredCommodityVarietyOptions = this.lastYearsCropOptions.filter(option => {
+    this.filteredLastYearCommodityVarietyOptions = this.grainCropForageVrtyOptions.filter(option => {
       const name = (option.cropCommodityVarietyName || '').toLowerCase();
       return name.includes(value);
     });
@@ -97,31 +100,6 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
   displayCommodityVarietyFn(value: string): string {
     return value ? makeTitleCase(value) : '';
   }
-
-  commodityVarietySelected(event, fieldIndex, plantingIndex) {
-    const lastYearCropCommodityVarietyName = event.option.value;
-
-    // find the corresponding commodity variety id
-    let lastYearCropCommodityVarietyId = '0_0';
-    let isUnseededInsurableInd = null;
-    for (const option of this.lastYearsCropOptions) {
-      if (option.cropCommodityVarietyName === lastYearCropCommodityVarietyName) {
-        lastYearCropCommodityVarietyId = option.cropCommodityVarietyId;
-        isUnseededInsurableInd = option.isUnseededInsurableInd;
-        break;
-      }
-    }
-
-    // set the commodity variety id and name
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
-    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
-    pltg.controls['lastYearCropCommodityVarietyId'].setValue(lastYearCropCommodityVarietyId);
-    pltg.controls['lastYearCropCommodityVarietyName'].setValue(lastYearCropCommodityVarietyName);
-    if (isUnseededInsurableInd !== null) {
-      pltg.controls['isUnseededInsurableInd'].setValue(isUnseededInsurableInd);
-    }
-  }
-
 
   addAllCommodities() {
     // first add all commodities
@@ -174,6 +152,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
           cmdtyFC.controls.inventoryContractCommodityGuid.setValue(cmdty.inventoryContractCommodityGuid)
           cmdtyFC.controls.inventoryContractGuid.setValue(cmdty.inventoryContractGuid)
           cmdtyFC.controls.totalSeededAcres.setValue(cmdty.totalSeededAcres)
+          cmdtyFC.controls.totalSpotLossAcres.setValue(cmdty.totalSpotLossAcres)
           cmdtyFC.controls.totalUnseededAcres.setValue(cmdty.totalUnseededAcres)
           cmdtyFC.controls.totalUnseededAcresOverride.setValue(cmdty.totalUnseededAcresOverride)
         }
@@ -427,5 +406,179 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
     }
   }
 
+  checkForHiddenFieldInTotals() {
+    // raises a flag if there is a field with acres that is marked as hidden 
+    
+    const frmMain = this.viewModel.formGroup as FormGroup
+    const formFields: FormArray = frmMain.controls.fields as FormArray
+
+    for (let i = 0; i < formFields.controls.length; i++){
+      let frmField = formFields.controls[i] as FormArray
+	  
+      for (let k = 0; k < frmField.value.plantings.controls.length; k++){
+        let frmPlanting = frmField.value.plantings.controls[k] as FormArray
+
+        let acresToBeSeeded = !isNaN( parseFloat(frmPlanting.value.acresToBeSeeded)) ?  parseFloat(frmPlanting.value.acresToBeSeeded) : 0
+
+        if (frmPlanting.value.isHiddenOnPrintoutInd && acresToBeSeeded > 0 ) {
+          this.isHiddenFieldInTotals = true
+          return 
+        }
+      }
+	  }
+
+    this.isHiddenFieldInTotals = false // default
+  }
+
+  commodityVarietyFocus(fieldIndex, plantingIndex) {
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
+    const cropCommodityVarietyName = pltg.controls['cropCommodityVarietyName'].value?.toLowerCase();
+
+    if (cropCommodityVarietyName) {
+      this.filteredCommodityVarietyOptions = this.grainCropForageVrtyOptions.filter(option => {
+        const name = (option.cropCommodityVarietyName || '').toLowerCase();
+        return name.includes(cropCommodityVarietyName);
+      });
+    } else {
+      this.filteredCommodityVarietyOptions = this.grainCropForageVrtyOptions.slice();
+    }
+  }
+
+  searchCommodityVariety(value) {
+    value = value.toLowerCase();
+    this.filteredCommodityVarietyOptions = this.grainCropForageVrtyOptions.filter(option => {
+      const name = (option.cropCommodityVarietyName || '').toLowerCase();
+      return name.includes(value);
+    });
+  }
+
+  validateLastYearCommodityVariety(option, value, fieldIndex, plantingIndex){
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
+
+    // find the corresponding commodity variety id
+    if (!option.isOpen){
+      
+      let selectedOption = this.grainCropForageVrtyOptions.find(el => el.cropCommodityVarietyName == value.toUpperCase())
+
+      if (!selectedOption){
+
+        alert("Invalid Last Year's Crop. Please check your spelling or select a crop from the dropdown.")
+
+      } else {
+        
+        pltg.controls['lastYearCropCommodityVarietyId'].setValue(selectedOption.cropCommodityVarietyId);
+        pltg.controls['lastYearCropCommodityVarietyName'].setValue(selectedOption.cropCommodityVarietyName);
+       
+        if (selectedOption.isUnseededInsurableInd !== null) {
+          pltg.controls['isUnseededInsurableInd'].setValue(selectedOption.isUnseededInsurableInd);
+        }
+      }
+
+      this.isMyFormDirty()
+    } else {
+
+      if (value == "") { // when the user manually deletes the text in the intended crop autocomplete 
+        pltg.controls['lastYearCropCommodityVarietyId'].setValue('0_0')
+        this.isMyFormDirty()
+      }      
+    }
+  }
+
+
+  validateCommodityVariety(option, value, fieldIndex, plantingIndex){
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
+
+    
+    // find the corresponding commodity variety id
+    if (!option.isOpen){
+      
+      let selectedOption = this.grainCropForageVrtyOptions.find(el => el.cropCommodityVarietyName == value.toUpperCase())
+
+      if (!selectedOption){
+
+        alert("Invalid intended crop. Please check your spelling or select a crop from the dropdown.")
+
+      } else {
+
+        pltg.controls['cropCommodityVarietyId'].setValue(selectedOption.cropCommodityVarietyId);
+        pltg.controls['cropCommodityVarietyName'].setValue(selectedOption.cropCommodityVarietyName);
+        
+        // we have to set up the following controls so the totals work properly
+        pltg.controls['cropCommodityId'].setValue( parseInt( selectedOption.cropCommodityVarietyId.split('_')[0] ) || null)
+        pltg.controls['cropVarietyId'].setValue(parseInt( selectedOption.cropCommodityVarietyId.split('_')[1] ) || null)
+      }
+
+      this.isMyFormDirty()
+
+    } else {
+
+      if (value == "") { // when the user manually deletes the text in the intended crop autocomplete 
+        pltg.controls['cropCommodityId'].setValue(null)
+        pltg.controls['cropVarietyId'].setValue(null)
+        this.isMyFormDirty()
+      }      
+    }
+  }
+
+  isUnseededInsurableVisible( fieldIndex, plantingIndex) {
+
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
+    const cropCommodityVarietyName = pltg.controls['cropCommodityVarietyName'].value; // ?.toLowerCase();
+
+    let insurancePlanId = null;
+    for (const option of this.grainCropForageVrtyOptions) {
+      if (option.cropCommodityVarietyName === cropCommodityVarietyName) {
+        insurancePlanId = option.insurancePlanId;
+        break;
+      }
+    }
+
+    if (insurancePlanId && insurancePlanId == INSURANCE_PLAN.FORAGE) {
+      pltg.controls['isUnseededInsurableInd'].setValue(false); // should be false if it's a forage vrty
+      return false // hide the checkbox
+    }
+    return true // leave as is
+  }
+
+  shouldHighlightCropVariety(fieldIndex, plantingIndex) {
+
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
+    const cropCommodityVarietyName = pltg.controls['cropCommodityVarietyName'].value; 
+
+    if (cropCommodityVarietyName) {
+      let selectedOption = this.grainCropForageVrtyOptions.find(el => el.cropCommodityVarietyName == cropCommodityVarietyName.toUpperCase())
+
+      if (!selectedOption) {
+        
+          return true
+      }
+    }
+
+    return false
+  }
+
+  shouldHighlightLastYearCropVariety (fieldIndex, plantingIndex, invSeededIndex) {
+
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
+    const lastYearCropCommodityVarietyName = pltg.controls['lastYearCropCommodityVarietyName'].value; 
+
+    if (lastYearCropCommodityVarietyName) {
+      let selectedOption = this.grainCropForageVrtyOptions.find(el => el.cropCommodityVarietyName == lastYearCropCommodityVarietyName.toUpperCase())
+
+      if (!selectedOption) {
+        
+          return true
+      }
+    }
+    
+
+    return false
+  }
 
 }

@@ -63,9 +63,9 @@ public class DopYieldContractReportEndpointImpl extends BaseEndpointsImpl implem
 			
 			
 			byte[] result = cirrasDopYieldService.generateDopReport(
-					toString(cropYear),
-					toString(insurancePlanId),
-					toString(officeId),
+					toInteger(cropYear),
+					toInteger(insurancePlanId),
+					toInteger(officeId),
 					toString(policyStatusCode),
 					toString(policyNumber),
 					toString(growerInfo),

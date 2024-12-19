@@ -1,18 +1,17 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { BaseComponent } from 'src/app/components/common/base/base.component';
 import { AnnualField, CropCommodityList, InventoryContract, UwContract } from 'src/app/conversion/models';
 import { ForageInventoryComponentModel } from './forage-inventory.component.model';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN, PLANT_DURATION, UW_COMMENT_TYPE_CODE } from 'src/app/utils/constants';
+import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN, PLANT_DURATION, PLANT_INSURABILITY_TYPE_CODE } from 'src/app/utils/constants';
 import { CropVarietyCommodityType, InventorySeededForage, InventoryUnseeded, UnderwritingComment } from '@cirras/cirras-underwriting-api';
-import { addUwCommentsObject, areDatesNotEqual, areNotEqual, getUniqueKey, makeNumberOnly, makeTitleCase } from 'src/app/utils';
+import { addUwCommentsObject, areDatesNotEqual, areNotEqual, makeNumberOnly, makeTitleCase } from 'src/app/utils';
 import { AddNewFormField, CropVarietyOptionsType, addAnnualFieldObject, addPlantingObject, addSeededForagesObject, deleteFormField, deleteNewFormField, dragField, fieldHasInventory, getInventorySeededForagesObjForSave, isLinkedFieldCommon, isLinkedPlantingCommon, isThereAnyCommentForField, linkedFieldTooltipCommon, linkedPlantingTooltipCommon, navigateUpDownTextbox, openAddEditLandPopup, roundUpDecimalAcres, updateComments } from '../inventory-common';
 import { AddNewInventoryContract, DeleteInventoryContract, GetInventoryReport, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { AddLandPopupData } from '../add-land/add-land.component';
-import { getCodeOptions } from 'src/app/utils/code-table-utils';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { RemoveFieldPopupData } from '../remove-field/remove-field.component';
 import {ViewEncapsulation } from '@angular/core';
@@ -37,6 +36,7 @@ import { DecimalPipe } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
+
 export class ForageInventoryComponent extends BaseComponent implements OnChanges {
 
   @Input() inventoryContract: InventoryContract;
@@ -66,14 +66,17 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   cropVarietyOptions = [];
   filteredVarietyOptions: CropVarietyOptionsType[];  
 
-  plantInsurabilityOptions = getCodeOptions("plant_insurability_type_code");  
-
   cropYear = 0;
   insurancePlanId = 0;
   policyId = '';
 
   hasDataChanged = false;
   hasYieldData = false;
+
+  //plantInsurabilityOptions = getCodeOptions("plant_insurability_type_code");
+  plantInsurabilityOptions = []
+
+  isHiddenFieldInTotals = false;
 
   initModels() {
     this.viewModel = new ForageInventoryComponentModel(this.sanitizer, this.fb, this.inventoryContract);
@@ -143,6 +146,9 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
         flds.clear()
         this.inventoryContract.fields.forEach( f => this.addField( f ) )
 
+        // setup the plant insurability options for each field based on the variety
+        this.setInitialPlantInsurabilityOptions()
+        this.checkForHiddenFieldInTotals()
     }
 
     // populate commodity and variety lists
@@ -191,8 +197,8 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
         fldPlantings.push( self.fb.group( 
           addPlantingObject(pltg.cropYear, pltg.fieldId, pltg.insurancePlanId, pltg.inventoryFieldGuid, 
             pltg.lastYearCropCommodityId, pltg.lastYearCropCommodityName, pltg.lastYearCropVarietyId, pltg.lastYearCropVarietyName,
-            pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, 
-            pltg.inventoryUnseeded, null, new FormArray ([]), pltgInventorySeededForages ) ) )
+            pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, null,
+            pltg.inventoryUnseeded, new FormArray ([]), pltgInventorySeededForages ) ) )
         }
 
       )
@@ -317,6 +323,9 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
           cropVarietyCommodityTypes: <CropVarietyCommodityType>[]      
         })
 
+        // clear plant insurability
+        invSeeded.controls['plantInsurabilityTypeCode'].setValue(null) 
+
       } else {
 
         let selectedCropVarietyId = invSeeded.controls['cropVarietyCtrl'].value.cropVarietyId
@@ -338,11 +347,13 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
         } else {
           invSeeded.controls['seedingDate'].setValue(null)
           invSeeded.controls['acresToBeSeeded'].setValue(null)
-          // populate plant insurability is done on focus of the plant insurability dropdown 
+          // check plant insurability in case something was selected there 
+          this.checkPlantInsurability(fieldIndex, plantingIndex, invSeededIndex)
         }
       }
     }
 
+    this.checkForHiddenFieldInTotals()
     this.isMyFormDirty()
   }
 
@@ -375,24 +386,155 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
     return variety;
   }
 
-  getPlantInsurability(fieldIndex, plantingIndex, invSeededIndex) {
+  private getVarietySddYear(fieldIndex: any, plantingIndex: any, invSeededIndex: any) {
+
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
+    const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex];
+
+    let year = -1;
+  
+    if (invSeeded.controls['seedingYear'] && invSeeded.controls['seedingYear'].value) {
+      year = invSeeded.controls['seedingYear'].value
+    }
+    
+    return year
+  }
+
+  setPlantInsurability(fieldIndex, plantingIndex, invSeededIndex) {
 
     let variety = this.getVariety(fieldIndex, plantingIndex, invSeededIndex);
+    let yearSdd = this.getVarietySddYear(fieldIndex, plantingIndex, invSeededIndex); // this is either the year(seedingDate) or seedingYear
 
-    this.plantInsurabilityOptions = []
+    let plantInsurabilityOptionsLocal = this.plantInsurabilityOptions.find(x => x.fieldIndex == fieldIndex && x.plantingIndex == plantingIndex && x.invSeededIndex == invSeededIndex)
 
-    if (variety && variety.isPlantInsurableInd == true) {
+    if (plantInsurabilityOptionsLocal) {
 
-      var self = this
+      plantInsurabilityOptionsLocal.options = this.setPlantingInsurabilityOptionsByVarietyAndSddYearOrDate(variety, yearSdd)
+
+    } else {
+      // add an entry
+      this.plantInsurabilityOptions.push({
+          fieldIndex: fieldIndex,
+          plantingIndex: plantingIndex,
+          invSeededIndex: invSeededIndex,
+          options: this.setPlantingInsurabilityOptionsByVarietyAndSddYearOrDate(variety, yearSdd)
+        })
+    }  
+  }
+
+  setPlantingInsurabilityOptionsByVarietyAndSddYearOrDate(variety, yearSdd){
+
+    var self = this
+    let options = []
+
+    if ( variety && variety.isPlantInsurableInd == true) {
 
       variety.cropVarietyPlantInsurabilities.forEach( p => {
-        self.plantInsurabilityOptions.push({
-          code:         p.plantInsurabilityTypeCode,
-          description:  p.description
-        })
+        // add the year logic
+        if (self.isPlantInsurabilityAllowed(yearSdd, p.plantInsurabilityTypeCode)) {
+          options.push({
+            code:         p.plantInsurabilityTypeCode,
+            description:  p.description
+          })
+        }
+        
       })
-    } 
+    }
+    return options
   }
+
+  isPlantInsurabilityAllowed(yearSdd, pitc){
+    //Insurability is only enabled if there is a seeded year/date
+    if (yearSdd < 0) {
+      return false 
+    }
+
+    // EST 1 coverage can only be selected with a seeded year of the CURRENT Plan year.
+    if ( yearSdd == this.inventoryContract.cropYear && pitc == PLANT_INSURABILITY_TYPE_CODE.Establishment1) {
+      return true
+    }
+
+    // EST 2 & Winter 1 coverage is only applicable to Seeded dates of the Previous plan year
+    if ( yearSdd == this.inventoryContract.cropYear - 1
+        && (pitc == PLANT_INSURABILITY_TYPE_CODE.Establishment2 || pitc == PLANT_INSURABILITY_TYPE_CODE.WinterSurvival1)) {
+      return true
+    }
+
+    // Winter 2 coverage is applicable to Seeding dates 2 years prior to the Current Plan year
+    if ( yearSdd == this.inventoryContract.cropYear - 2 && pitc == PLANT_INSURABILITY_TYPE_CODE.WinterSurvival2) {
+      return true
+    }
+
+    // Winter 3 coverage is applicable to Seeding dates 3 years prior to the Current Plan year
+    if (yearSdd == this.inventoryContract.cropYear - 3 && pitc == PLANT_INSURABILITY_TYPE_CODE.WinterSurvival3) {
+      return true
+    }
+
+    return false // 
+  }
+
+  getPlantInsurabilityOptions(fieldIndex, plantingIndex, invSeededIndex) {
+    let options = []
+    this.plantInsurabilityOptions.forEach( x  => {
+      if ( x.fieldIndex == fieldIndex && x.plantingIndex == plantingIndex && x.invSeededIndex == invSeededIndex) {
+        
+        options =  x.options 
+        return
+      }
+    }) 
+    return options
+  }
+
+  setInitialPlantInsurabilityOptions(){
+    // for all fields
+    const formFields: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    
+    for (let fieldIndex = 0; fieldIndex < formFields.controls.length; fieldIndex++) { 
+
+      let formField = formFields.controls[fieldIndex] as FormArray
+
+      for (let plantingIndex = 0; plantingIndex < formField.value.plantings.length; plantingIndex++) {
+
+        for (let invSeededIndex = 0; invSeededIndex < formField.value.plantings.value[plantingIndex].inventorySeededForages.length; invSeededIndex++){
+
+          this.setPlantInsurability(fieldIndex, plantingIndex, invSeededIndex) 
+
+        }
+      }
+    }
+  }
+
+  checkPlantInsurability(fieldIndex, plantingIndex, invSeededIndex) {
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
+    const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex];
+
+    let cropVarietyId = invSeeded.controls['cropVarietyCtrl'].value.cropVarietyId
+    let seedingYear = invSeeded.controls['seedingYear'].value
+    let plantInsurabilityTypeCode = invSeeded.controls['plantInsurabilityTypeCode'].value
+
+    let isPitcAllowed = false 
+    
+    if ( cropVarietyId && seedingYear && plantInsurabilityTypeCode) {
+
+      let variety = this.getVarietyById(cropVarietyId)
+      if ( variety && variety.isPlantInsurableInd == true) {
+
+        let elem = variety.cropVarietyPlantInsurabilities.find( x => x.plantInsurabilityTypeCode == plantInsurabilityTypeCode)
+ 
+        if (elem && this.isPlantInsurabilityAllowed(seedingYear,plantInsurabilityTypeCode)) {
+          isPitcAllowed = true
+        }
+      }
+    } 
+    
+    if ( isPitcAllowed ==  false) {
+      invSeeded.controls['plantInsurabilityTypeCode'].setValue(null) 
+    }
+    
+  }
+
 
   setStyles(){
 
@@ -1338,15 +1480,19 @@ isFormValid() {
 
   isQuantityInsurable(fieldIndex, plantingIndex, invSeededIndex) {
 
+    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray;
+    const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex];
+    const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex];
+
     let variety = this.getVariety(fieldIndex, plantingIndex, invSeededIndex);
 
     // Only show Quantity Ins checkbox if variety is quantity insurable
     if(variety && variety.isQuantityInsurableInd) {
       return true
+    } else {
+      invSeeded.controls['isQuantityInsurableInd'].setValue(false)
+      return false
     }
-
-    return false
-
   }
 
   isUnseededInsurable(fieldIndex, plantingIndex, invSeededIndex) {
@@ -1433,6 +1579,9 @@ isFormValid() {
     const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
     const invSeeded = pltg.controls['inventorySeededForages'].value.controls[invSeededIndex]
+
+    // clear the selected plant insurability as it may change
+    invSeeded.controls['plantInsurabilityTypeCode'].setValue(null) 
 
     if (event.target.value && new Date(event.target.value).toString() == 'Invalid Date') {
       alert("The Seeding Date is invalid and it will not be saved.")
@@ -1621,6 +1770,41 @@ isFormValid() {
     }
 
     return true // all plantings are hidden
+  }
+
+  checkForHiddenFieldInTotals() {
+
+    // raises a flag if there is an insured field with acres that is marked as hidden 
+    const frmMain = this.viewModel.formGroup as FormGroup
+    const formFields: FormArray = frmMain.controls.fields as FormArray
+
+    for (let i = 0; i < formFields.controls.length; i++){
+      let frmField = formFields.controls[i] as FormArray
+      	  
+      for (let k = 0; k < frmField.value.plantings.controls.length; k++){
+        let frmPlanting = frmField.value.plantings.controls[k] as FormArray
+        
+        // now check inventory seeded forages 
+        for (let n = 0; n < frmPlanting.value.inventorySeededForages.controls.length; n++) {
+                  
+          let inventorySeededForages = frmPlanting.value.inventorySeededForages.controls[n] as FormArray
+    
+          let fieldAcres = !isNaN( parseFloat(inventorySeededForages.value.fieldAcres)) ?  parseFloat(inventorySeededForages.value.fieldAcres) : 0
+
+          if ( frmPlanting.value.isHiddenOnPrintoutInd && fieldAcres > 0 && 
+                (inventorySeededForages.value.isQuantityInsurableInd || inventorySeededForages.value.isUnseededInsurableInd ||
+                  inventorySeededForages.value.plantInsurabilityTypeCode
+                ) 
+             ) {
+            
+            this.isHiddenFieldInTotals = true
+            return
+          }
+        }
+      }
+	  }
+    
+    this.isHiddenFieldInTotals = false // default
   }
 }
 

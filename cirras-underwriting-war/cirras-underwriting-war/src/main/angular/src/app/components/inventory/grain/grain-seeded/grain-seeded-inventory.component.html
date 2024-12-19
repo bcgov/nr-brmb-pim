@@ -32,9 +32,24 @@
                 </button>
             </div>
             <div>
-                <button *ngIf="securityUtilService.canEditInventory() && !hasYieldData" mat-raised-button color="primary" class="button-large-text" [disabled]="!hasDataChanged" (click)="onSave()">
-                    Save
+                <button 
+                    *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
+                    mat-raised-button 
+                    [color]="isHiddenFieldInTotals ? 'secondary' : 'primary'"
+                    [ngClass]="isHiddenFieldInTotals ? 'header-button-red' : 'button-large-text'"
+                    [disabled]="!hasDataChanged" 
+                    (click)="onSave()">
+                        Save
                 </button>
+            </div>
+        </div>
+
+        <div id="hidden-totals-warning">
+            <div *ngIf="isHiddenFieldInTotals">
+                <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
+            </div>
+            <div *ngIf="isHiddenFieldInTotals">
+                Hidden fields are included in acre totals
             </div>
         </div>
 
@@ -243,7 +258,7 @@
                                                 <mat-select 
                                                     formControlName="cropCommodityId" 
                                                     (selectionChange)="cropCommodityChange($event, fieldIndex, plantingIndex, invSeededIndex)">
-                                                    <mat-option *ngFor="let option of cropCommodityOptions" [value]="option.cropCommodityId"
+                                                    <mat-option *ngFor="let option of seededCommodityOptions" [value]="option.cropCommodityId"
                                                     >{{ option.commodityName | titlecase }}</mat-option>
                                                 </mat-select>
                                                 </mat-form-field>
@@ -252,6 +267,10 @@
                                             <div *ngIf="inventorySeededGrains.value.deletedByUserInd != true"
                                                 class="inventory-fill" style="width:180px;"
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
+
+                                                <mat-icon *ngIf="isVarietyWarningVisible(fieldIndex, plantingIndex, invSeededIndex)"
+                                                    matTooltip="Probable Yield review required"
+                                                    [ngStyle]="{'color':'orangered', 'padding-top': '4px'}">warning</mat-icon>
 
                                                 <mat-form-field appearance="fill" 
                                                     [ngStyle]="{'background-color': shouldHighlightVariety(fieldIndex, plantingIndex, invSeededIndex) ? 'yellow' : '' }">
@@ -268,7 +287,7 @@
                                                     <mat-autocomplete #autoVrty="matAutocomplete"  
                                                         [displayWith]="displayVarietyFn"
                                                         (optionSelected)="varietySelected($event, fieldIndex, plantingIndex, invSeededIndex)">
-                                                    <mat-option *ngFor="let option of filteredVarietyOptions" [value]="option">
+                                                    <mat-option *ngFor="let option of filteredSeededVarietyOptions" [value]="option">
                                                         {{ option.varietyName | titlecase }}
                                                     </mat-option>
                                                     </mat-autocomplete>
@@ -313,7 +332,7 @@
                                                     <input matInput matInputCommified formControlName="seededAcres" 
                                                             (keyup)="geInvSeededTotals()"
                                                             (keypress)="numberOnly($event)" 
-                                                            (blur)="roundUpAcres(fieldIndex, plantingIndex, invSeededIndex)"
+                                                            (blur)="roundUpAcres(fieldIndex, plantingIndex, invSeededIndex); checkForHiddenFieldInTotals();"
                                                             maxlength="10">
                                                 </mat-form-field>
                                                 <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Seeded Acres is writeable">edit</mat-icon>
@@ -376,8 +395,9 @@
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
 
                                                 <mat-checkbox 
+                                                    *ngIf="isSeededCommodityQuantityInsurable(fieldIndex, plantingIndex, invSeededIndex)"
                                                     formControlName="isQuantityInsurableInd" 
-                                                    (change)="isChecked($event, fieldIndex, plantingIndex, invSeededIndex)">
+                                                    (change)="isChecked($event, fieldIndex, plantingIndex, invSeededIndex);checkForHiddenFieldInTotals();">
                                                 </mat-checkbox>
                                             </div>
 
@@ -385,8 +405,9 @@
                                                 class="border-bottom border-left" style="width:94px;"
                                                 [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
                                                 <mat-checkbox 
+                                                    *ngIf="isSeededCommoditySpotLossInsurable(fieldIndex, plantingIndex, invSeededIndex)"
                                                     formControlName="isSpotLossInsurableInd" 
-                                                    (change)="isChecked($event, fieldIndex, plantingIndex, invSeededIndex)">
+                                                    (change)="isChecked($event, fieldIndex, plantingIndex, invSeededIndex);checkForHiddenFieldInTotals();">
                                                 </mat-checkbox>
                                             </div>
                                             
@@ -475,7 +496,7 @@
                                                 <mat-icon 
                                                     matTooltip="Hide on printout" 
                                                     svgIcon="{{ isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'visibility_off' : 'visibility' }}" 
-                                                    (click)="toggleHiddenOnPrintout(fieldIndex, plantingIndex)"></mat-icon>
+                                                    (click)="toggleHiddenOnPrintout(fieldIndex, plantingIndex);checkForHiddenFieldInTotals();"></mat-icon>
 
                                             </div>
                                         </div>

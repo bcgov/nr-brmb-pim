@@ -21,12 +21,14 @@ import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasDopYieldService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasInventoryService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasMaintenanceService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasUwLandManagementService;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasVerifiedYieldService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl.CirrasCommodityServiceImpl;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl.CirrasDataSyncServiceImpl;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl.CirrasDopYieldServiceImpl;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl.CirrasInventoryServiceImpl;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl.CirrasMaintenanceServiceImpl;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl.CirrasUwLandManagementServiceImpl;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl.CirrasVerifiedYieldServiceImpl;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.CommodityFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.CommodityTypeCodeFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.ContractedFieldDetailFactory;
@@ -47,6 +49,7 @@ import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.RiskAreaFa
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.SeedingDeadlineFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UnderwritingYearFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UwContractFactory;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.VerifiedYieldContractFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.YieldMeasUnitConversionFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.YieldMeasUnitTypeCodeFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.reports.JasperReportService;
@@ -101,6 +104,7 @@ public class ServiceApiSpringConfig {
 	@Autowired UnderwritingYearFactory underwritingYearFactory;
 	@Autowired CropVarietyInsurabilityFactory cropVarietyInsurabilityFactory;
 	@Autowired YieldMeasUnitConversionFactory yieldMeasUnitConversionFactory;
+	@Autowired VerifiedYieldContractFactory verifiedYieldContractFactory;
 	
 	// Imported Spring Config
 	@Autowired CodeTableSpringConfig codeTableSpringConfig;
@@ -282,6 +286,7 @@ public class ServiceApiSpringConfig {
 		result.setDeclaredYieldFieldRollupDao(persistenceSpringConfig.declaredYieldFieldRollupDao());
 		result.setDeclaredYieldContractCommodityDao(persistenceSpringConfig.declaredYieldContractCommodityDao());
 		result.setDeclaredYieldContractCommodityForageDao(persistenceSpringConfig.declaredYieldContractCommodityForageDao());
+		result.setDeclaredYieldFieldRollupForageDao(persistenceSpringConfig.declaredYieldFieldRollupForageDao());
 
 		result.setUnderwritingServiceHelper(underwritingServiceHelper());
 		
@@ -312,6 +317,7 @@ public class ServiceApiSpringConfig {
 		result.setDeclaredYieldFieldRollupDao(persistenceSpringConfig.declaredYieldFieldRollupDao());
 		result.setDeclaredYieldContractCommodityDao(persistenceSpringConfig.declaredYieldContractCommodityDao());
 		result.setDeclaredYieldContractCommodityForageDao(persistenceSpringConfig.declaredYieldContractCommodityForageDao());
+		result.setDeclaredYieldFieldRollupForageDao(persistenceSpringConfig.declaredYieldFieldRollupForageDao());
 		result.setInventoryContractCommodityDao(persistenceSpringConfig.inventoryContractCommodityDao());
 		result.setInventorySeededForageDao(persistenceSpringConfig.inventorySeededForageDao());
 		result.setUnderwritingCommentDao(persistenceSpringConfig.underwritingCommentDao());
@@ -371,9 +377,26 @@ public class ServiceApiSpringConfig {
 		result.setDeclaredYieldFieldRollupDao(persistenceSpringConfig.declaredYieldFieldRollupDao());
 		result.setDeclaredYieldFieldDao(persistenceSpringConfig.declaredYieldFieldDao());
 		result.setDeclaredYieldContractCommodityForageDao(persistenceSpringConfig.declaredYieldContractCommodityForageDao());
+		result.setDeclaredYieldFieldRollupForageDao(persistenceSpringConfig.declaredYieldFieldRollupForageDao());
 		result.setDeclaredYieldFieldForageDao(persistenceSpringConfig.declaredYieldFieldForageDao());
 		
 		return result;
 	}
 
+	@Bean()
+	public CirrasVerifiedYieldService cirrasVerifiedYieldService() {
+		CirrasVerifiedYieldServiceImpl result;
+		
+		result = new CirrasVerifiedYieldServiceImpl();
+		result.setModelValidator(modelValidator());
+		result.setApplicationProperties(applicationProperties);
+
+		result.setVerifiedYieldContractFactory(verifiedYieldContractFactory);
+
+		result.setPolicyDao(persistenceSpringConfig.policyDao());
+		result.setDeclaredYieldContractDao(persistenceSpringConfig.declaredYieldContractDao());
+		result.setDeclaredYieldContractCommodityDao(persistenceSpringConfig.declaredYieldContractCommodityDao());
+		
+		return result;
+	}	
 }

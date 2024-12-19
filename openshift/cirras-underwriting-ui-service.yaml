@@ -8,5 +8,5 @@ spec:
     app: cirras-underwriting-ui-#{ENV}#
   ports:
     - protocol: TCP
-      port: #{TARGET_PORT}#
-      targetPort: #{ACTIVE_PORT}#
+      port: #{TOMCAT_PORT}#
+      targetPort: #{TOMCAT_PORT}#

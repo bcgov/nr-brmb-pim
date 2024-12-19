@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -500,9 +501,15 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			// Get sum of acres of commodities that have a acres to be seeded value and are
 			// not deleted
 			// It's possible that commodities are not specified
+			// Only commodities that are crop insurance eligible AND inventory crops are stored individually
+			// all other commodities are saved as OTHER
 			if (inventoryContractCommodity.getCropCommodityId() == null) {
 				unseededAcres = field.getPlantings().stream()
-						.filter(x -> x.getInventoryUnseeded().getCropCommodityId() == null
+						.filter(x -> (x.getInventoryUnseeded().getCropCommodityId() == null
+										|| (x.getInventoryUnseeded().getCropCommodityId() != null
+										&& x.getInventoryUnseeded().getCropVarietyId() == null //Only Grain commodities are in unseeded totals
+										&& (Boolean.FALSE.equals(x.getInventoryUnseeded().getIsCropInsuranceEligibleInd())
+											|| Boolean.FALSE.equals(x.getInventoryUnseeded().getIsInventoryCropInd()))))
 								&& x.getInventoryUnseeded().getAcresToBeSeeded() != null
 								&& (x.getInventoryUnseeded().getDeletedByUserInd() == null
 										|| x.getInventoryUnseeded().getDeletedByUserInd() == false))
@@ -510,8 +517,11 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 			} else {
 				unseededAcres = field.getPlantings().stream()
-						.filter(x -> (x.getInventoryUnseeded().getCropCommodityId() != null && x.getInventoryUnseeded()
-								.getCropCommodityId().equals(inventoryContractCommodity.getCropCommodityId()))
+						.filter(x -> x.getInventoryUnseeded().getCropCommodityId() != null 
+								&& x.getInventoryUnseeded().getCropCommodityId().equals(inventoryContractCommodity.getCropCommodityId())
+								&& x.getInventoryUnseeded().getCropVarietyId() == null //Only Grain commodities are in unseeded totals
+								&& Boolean.TRUE.equals(x.getInventoryUnseeded().getIsCropInsuranceEligibleInd())
+								&& Boolean.TRUE.equals(x.getInventoryUnseeded().getIsInventoryCropInd())
 								&& x.getInventoryUnseeded().getAcresToBeSeeded() != null
 								&& (x.getInventoryUnseeded().getDeletedByUserInd() == null
 										|| x.getInventoryUnseeded().getDeletedByUserInd() == false))
@@ -1231,7 +1241,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 
 	@Override
-	public byte[] generateInvReport(String cropYear, String insurancePlanId, String officeId,
+	public byte[] generateInvReport(Integer cropYear, Integer insurancePlanId, Integer officeId,
 			String policyStatusCode, String policyNumber, String growerInfo, String sortColumn, String policyIds,
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
@@ -1258,26 +1268,26 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			
 			//Ignore crop year if the policy number contains the year (i.e. 111111-21)
 			if(policyNumber != null && policyNumber.indexOf("-") > -1 && policyNumber.length() > 6) {
-				cropYear = "";
+				cropYear = null;
 			}
 
-			Map<String, String> queryParams = new HashMap<String, String>();
-			
-			queryParams.put("p_crop_year", notNull(cropYear, ""));
-			queryParams.put("p_insurance_plan_id", notNull(insurancePlanId, ""));
-			queryParams.put("p_office_id", notNull(officeId, ""));
-			queryParams.put("p_policy_status_code",  notNull(policyStatusCode, ""));
-			queryParams.put("p_policy_number",  notNull(policyNumber, ""));
-			queryParams.put("p_grower_info",  notNull(growerInfo, ""));
-			queryParams.put("p_grower_phone_number",  notNull(growerPhoneNumber, ""));
-			queryParams.put("p_sort_column",  notNull(sortColumn, "policyNumber"));
-			queryParams.put("p_policy_ids",  notNull(policyIds, ""));
+			Map<String, Object> queryParams = new HashMap<String, Object>();
+
+			if (cropYear != null) queryParams.put("p_crop_year", cropYear);
+			if (insurancePlanId != null) queryParams.put("p_insurance_plan_id", insurancePlanId);
+			if (officeId != null) queryParams.put("p_office_id", officeId);
+			if (StringUtils.isNotBlank(policyStatusCode)) queryParams.put("p_policy_status_code", policyStatusCode);
+			if (StringUtils.isNotBlank(policyNumber)) queryParams.put("p_policy_number", policyNumber);
+			if (StringUtils.isNotBlank(growerInfo)) queryParams.put("p_grower_info", growerInfo);
+			if (StringUtils.isNotBlank(growerPhoneNumber)) queryParams.put("p_grower_phone_number", growerPhoneNumber);
+			queryParams.put("p_sort_column", StringUtils.isNotBlank(sortColumn) ? sortColumn : "policyNumber");
+			if (StringUtils.isNotBlank(policyIds)) queryParams.put("p_policy_ids", policyIds);
 
 			// Pick the jasper report to run based on plan.
-			if ( InsurancePlans.GRAIN.getInsurancePlanId().toString().equals(insurancePlanId) ) {
+			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(insurancePlanId) ) {
 				result = jasperReportService.generateInvGrainReport(queryParams);
 
-			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().toString().equals(insurancePlanId) ) {
+			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(insurancePlanId) ) {
 				result = jasperReportService.generateInvForageReport(queryParams);
 			
 			} else {

@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
 		<artifactId>cirras-underwriting-war-parent</artifactId>
-		<version>3.4.0</version>
+		<version>3.5.0</version>
 	</parent>
 	<artifactId>cirras-underwriting-ear</artifactId>
 	<packaging>ear</packaging>

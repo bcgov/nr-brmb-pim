@@ -2,11 +2,11 @@
 <reportUnit exportedWithPermissions="true">
     <folder>/NRSRS/CUWS/Reports</folder>
     <name>CUWS_DOP_Forage</name>
-    <version>1</version>
+    <version>2</version>
     <label>CUWS_DOP_Forage</label>
     <description></description>
-    <creationDate>2024-06-11T12:20:23.036-07:00</creationDate>
-    <updateDate>2024-05-09T14:32:46.505-07:00</updateDate>
+    <creationDate>2024-09-27T21:19:19.000Z</creationDate>
+    <updateDate>2024-09-27T23:21:35.000Z</updateDate>
     <mainReport>
         <uri>/NRSRS/CUWS/Jrxml/CUWS_DOP_Forage</uri>
     </mainReport>
@@ -52,8 +52,8 @@
             <version>1</version>
             <label>SCAP_BCID_Can_Lockup.png</label>
             <description></description>
-            <creationDate>2024-06-11T12:20:23.036-07:00</creationDate>
-            <updateDate>2024-05-09T14:28:10.902-07:00</updateDate>
+            <creationDate>2024-09-27T21:19:19.000Z</creationDate>
+            <updateDate>2024-05-09T21:28:10.000Z</updateDate>
             <referenceUri>/NRSRS/CUWS/Images/SCAP_BCID_Can_Lockup.png</referenceUri>
         </localResource>
     </resource>
@@ -66,9 +66,23 @@
             <version>1</version>
             <label>CUWS_DOP_Forage_Plantings.jrxml</label>
             <description></description>
-            <creationDate>2024-06-11T12:20:23.036-07:00</creationDate>
-            <updateDate>2024-05-09T14:28:10.902-07:00</updateDate>
+            <creationDate>2024-09-27T21:19:19.000Z</creationDate>
+            <updateDate>2024-05-09T21:28:10.000Z</updateDate>
             <referenceUri>/NRSRS/CUWS/Jrxml/CUWS_DOP_Forage_Sub/CUWS_DOP_Forage_Plantings.jrxml</referenceUri>
+        </localResource>
+    </resource>
+    <resource>
+        <localResource
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            exportedWithPermissions="false" xsi:type="fileResource">
+            <folder>/NRSRS/CUWS/Reports/CUWS_DOP_Forage_files</folder>
+            <name>CUWS_DOP_Forage_Totals.jrxml</name>
+            <version>0</version>
+            <label>CUWS_DOP_Forage_Totals.jrxml</label>
+            <description></description>
+            <creationDate>2024-09-27T23:21:35.000Z</creationDate>
+            <updateDate>2024-09-27T23:21:35.000Z</updateDate>
+            <referenceUri>/NRSRS/CUWS/Jrxml/CUWS_DOP_Forage_Sub/CUWS_DOP_Forage_Totals.jrxml</referenceUri>
         </localResource>
     </resource>
     <inputControlRenderingView></inputControlRenderingView>

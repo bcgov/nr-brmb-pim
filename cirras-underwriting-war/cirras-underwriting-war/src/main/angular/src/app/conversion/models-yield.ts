@@ -43,6 +43,7 @@ export interface DopYieldContract {
     dopYieldFieldRollupList?: Array<DopYieldFieldRollup>;
     dopYieldContractCommodities?: Array<DopYieldContractCommodity>;
     dopYieldContractCommodityForageList?: Array<DopYieldContractCommodityForage>;
+    dopYieldFieldRollupForageList?: Array<DopYieldFieldRollupForage>;
     etag?: string;
     type: string;
   }
@@ -56,6 +57,18 @@ export interface DopYieldFieldRollup {
     estimatedYieldPerAcreTonnes?: number;
     estimatedYieldPerAcreBushels?: number;
     cropCommodityName?: string;
+}
+
+export interface DopYieldFieldRollupForage {
+	declaredYieldFieldRollupForageGuid?: string;
+	declaredYieldContractGuid?: string;
+	commodityTypeCode?: string;
+	totalFieldAcres?: number;
+	totalBalesLoads?: number;
+	harvestedAcres?: number;
+	quantityHarvestedTons?: number;
+	yieldPerAcre?: number;
+	commodityTypeDescription?: string;
 }
 
 export interface DopYieldContractCommodity {
@@ -121,11 +134,15 @@ export interface DopYieldFieldForage {
     fieldAcres?: number;
     cropVarietyName?: string;
     cropVarietyId?: number;
+    cropCommodityId?: number;
     plantDurationTypeCode?: string;
     insurancePlanId?: number;
     fieldId?: number;
     cropYear?: number;
     isHiddenOnPrintoutInd?: boolean;
+    plantInsurabilityTypeCode?: string;
+    seedingYear?: number;
+    seedingDate?: string;
     dopYieldFieldForageCuts?: Array<DopYieldFieldForageCut>;
 }
 
@@ -146,9 +163,13 @@ export interface DopYieldContractCommodityForage {
     commodityTypeCode?: string;
     totalFieldAcres?: number;
     harvestedAcres?: number;
-    harvestedAcresOverride?: number;
+    totalBalesLoads?: number;
+    weight?: number;
+    weightDefaultUnit?: number;
+    moisturePercent?: number;
     quantityHarvestedTons?: number;
-    quantityHarvestedTonsOverride?: number;
     yieldPerAcre?: number;
     commodityTypeDescription?: string;
+    cropCommodityId?: number;
+    plantDurationTypeCode?: string;
 }

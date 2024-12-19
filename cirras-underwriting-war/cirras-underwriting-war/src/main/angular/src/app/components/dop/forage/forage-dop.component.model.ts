@@ -19,6 +19,8 @@ export class ForageDopComponentModel extends BaseComponentModel {
             totalLivestock: [''],
             fields: new FormArray([]), // subform responsible for the field / commodity/estimated yield grid 
             dopYieldContractCommodityForageList: new FormArray([]),
+            dopYieldFieldRollupForageList: new FormArray([]),
+
         });
     }
 

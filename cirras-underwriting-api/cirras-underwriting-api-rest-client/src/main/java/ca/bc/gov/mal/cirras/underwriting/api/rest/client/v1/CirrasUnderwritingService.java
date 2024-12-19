@@ -34,6 +34,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.RiskAreaListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SeedingDeadlineListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.YieldMeasUnitConversionListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.YieldMeasUnitTypeCodeListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SyncCodeRsrc;
@@ -172,6 +173,12 @@ public interface CirrasUnderwritingService {
 	DopYieldContractRsrc updateDopYieldContract(DopYieldContractRsrc resource) throws CirrasUnderwritingServiceException, ValidationException;
 
 	void deleteDopYieldContract(DopYieldContractRsrc resource) throws CirrasUnderwritingServiceException;
+
+	//////////////////////////////////////////////////////
+	// Verified Yield Contract
+	//////////////////////////////////////////////////////
+	VerifiedYieldContractRsrc rolloverVerifiedYieldContract(UwContractRsrc resource) throws CirrasUnderwritingServiceException;
+	
 	
 	//////////////////////////////////////////////////////
 	// Seeding Deadline
