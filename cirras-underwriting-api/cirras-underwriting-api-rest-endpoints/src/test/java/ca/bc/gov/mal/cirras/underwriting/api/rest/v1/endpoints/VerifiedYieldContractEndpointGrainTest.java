@@ -1359,6 +1359,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		
 		return vya;
 	}
+
 	
 	private static Date addSeconds(Date date, Integer seconds) {
 		Calendar cal = Calendar.getInstance();

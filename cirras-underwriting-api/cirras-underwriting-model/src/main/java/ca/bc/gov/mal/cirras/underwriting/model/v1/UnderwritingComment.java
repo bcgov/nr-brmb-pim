@@ -17,6 +17,7 @@ public class UnderwritingComment implements Serializable {
 	private String underwritingComment;
 	private Integer growerContractYearId;
 	private String declaredYieldContractGuid;
+	private String verifiedYieldSummaryGuid;
 	private String createUser;
 	private Date createDate;
 	private String updateUser;
@@ -74,6 +75,14 @@ public class UnderwritingComment implements Serializable {
 	}
 	public void setDeclaredYieldContractGuid(String declaredYieldContractGuid) {
 		this.declaredYieldContractGuid = declaredYieldContractGuid;
+	}
+
+	public String getVerifiedYieldSummaryGuid() {
+		return verifiedYieldSummaryGuid;
+	}
+
+	public void setVerifiedYieldSummaryGuid(String verifiedYieldSummaryGuid) {
+		this.verifiedYieldSummaryGuid = verifiedYieldSummaryGuid;
 	}
 	
 	public String getCreateUser() {
