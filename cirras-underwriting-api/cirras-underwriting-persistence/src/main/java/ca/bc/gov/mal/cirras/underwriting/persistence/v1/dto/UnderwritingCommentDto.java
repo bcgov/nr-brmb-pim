@@ -29,6 +29,7 @@ public class UnderwritingCommentDto extends BaseDto<UnderwritingCommentDto> {
 	
 	private Integer growerContractYearId;
 	private String declaredYieldContractGuid;
+	private String verifiedYieldSummaryGuid;
 	
 	public UnderwritingCommentDto() {
 	}
@@ -48,6 +49,8 @@ public class UnderwritingCommentDto extends BaseDto<UnderwritingCommentDto> {
 		
 		this.growerContractYearId = dto.growerContractYearId;
 		this.declaredYieldContractGuid = dto.declaredYieldContractGuid;
+		this.verifiedYieldSummaryGuid = dto.verifiedYieldSummaryGuid;
+
 	}
 	
 
@@ -69,6 +72,7 @@ public class UnderwritingCommentDto extends BaseDto<UnderwritingCommentDto> {
 			result = result&&dtoUtils.equals("underwritingComment", underwritingComment, other.underwritingComment);
 			result = result&&dtoUtils.equals("growerContractYearId", growerContractYearId, other.growerContractYearId);
 			result = result&&dtoUtils.equals("declaredYieldContractGuid", declaredYieldContractGuid, other.declaredYieldContractGuid);
+			result = result&&dtoUtils.equals("verifiedYieldSummaryGuid", verifiedYieldSummaryGuid, other.verifiedYieldSummaryGuid);
 		}
 		
 		return result;
@@ -160,6 +164,14 @@ public class UnderwritingCommentDto extends BaseDto<UnderwritingCommentDto> {
 	}
 	public void setDeclaredYieldContractGuid(String declaredYieldContractGuid) {
 		this.declaredYieldContractGuid = declaredYieldContractGuid;
+	}
+
+	public String getVerifiedYieldSummaryGuid() {
+		return verifiedYieldSummaryGuid;
+	}
+
+	public void setVerifiedYieldSummaryGuid(String verifiedYieldSummaryGuid) {
+		this.verifiedYieldSummaryGuid = verifiedYieldSummaryGuid;
 	}
  
 }

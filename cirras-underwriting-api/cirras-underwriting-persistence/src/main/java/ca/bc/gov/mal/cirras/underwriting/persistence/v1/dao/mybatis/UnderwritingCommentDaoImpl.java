@@ -175,6 +175,41 @@ public class UnderwritingCommentDaoImpl extends BaseDao implements UnderwritingC
 	}	
 	
 	@Override
+	public void deleteForVerifiedYieldSummaryGuid(String verifiedYieldSummaryGuid)
+			throws DaoException, NotFoundDaoException {
+		logger.debug("<deleteForVerifiedYieldSummaryGuid");
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("verifiedYieldSummaryGuid", verifiedYieldSummaryGuid);
+			this.mapper.deleteForVerifiedYieldSummaryGuid(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">deleteForVerifiedYieldSummaryGuid");
+	}
+
+
+	@Override
+	public void deleteForVerifiedYieldContract(String verifiedYieldContractGuid)
+			throws DaoException, NotFoundDaoException {
+		logger.debug("<deleteForVerifiedYieldContract");
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("verifiedYieldContractGuid", verifiedYieldContractGuid);
+			this.mapper.deleteForVerifiedYieldContract(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">deleteForVerifiedYieldContract");
+	}	
+	
+	@Override
 	public List<UnderwritingCommentDto> select(Integer annualFieldDetailId) throws DaoException {
 		List<UnderwritingCommentDto> dtos = null;
 
@@ -231,6 +266,30 @@ public class UnderwritingCommentDaoImpl extends BaseDao implements UnderwritingC
 
 		logger.debug(">selectForField " + dtos);
 		return dtos;
-	}	
-	
+	}
+
+
+	@Override
+	public List<UnderwritingCommentDto> selectForVerifiedYieldSummary(String verifiedYieldSummaryGuid)
+			throws DaoException {
+		List<UnderwritingCommentDto> dtos = null;
+
+		logger.debug("<selectForVerifiedYieldSummary");
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			
+			parameters.put("verifiedYieldSummaryGuid", verifiedYieldSummaryGuid);
+						
+			dtos = this.mapper.selectForVerifiedYieldSummary(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectForVerifiedYieldSummary " + dtos);
+		return dtos;
+	}
+
+
 }
