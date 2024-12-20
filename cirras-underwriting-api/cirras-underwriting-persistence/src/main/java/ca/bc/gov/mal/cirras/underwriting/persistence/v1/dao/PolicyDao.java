@@ -50,6 +50,12 @@ public interface PolicyDao extends Serializable {
         	Integer fieldId,
         	Integer cropYear
         ) throws DaoException;
+
+	List<PolicyDto> selectByOtherYearInventory(Integer contractId, Integer currentCropYear, Integer numYears) throws DaoException;
+
+	List<PolicyDto> selectByOtherYearDop(Integer contractId, Integer currentCropYear, Integer numYears) throws DaoException;
+	
+	List<PolicyDto> selectByOtherYearVerified(Integer contractId, Integer currentCropYear, Integer numYears) throws DaoException;
     
 	String cleanGrowerPhoneNumber(String growerInfo);
        

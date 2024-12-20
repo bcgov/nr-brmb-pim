@@ -1,5 +1,6 @@
 package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -12,20 +13,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandManagementEventTypes;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.ScreenType;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PoliciesSyncEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.client.v1.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.client.v1.CirrasUnderwritingServiceException;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.client.v1.ValidationException;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldDetailRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.ContractedFieldDetailRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.DopYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.EndpointsRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.FieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.GrowerContractYearSyncRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.GrowerRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.InventoryContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PolicyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededGrain;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.OtherYearPolicy;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
@@ -39,7 +49,18 @@ public class UwContractEndpointTest extends EndpointsTest {
 		Scopes.GET_TOP_LEVEL, 
 		Scopes.SEARCH_UWCONTRACTS,
 		Scopes.GET_UWCONTRACT,
+		Scopes.CREATE_INVENTORY_CONTRACT,
+		Scopes.DELETE_INVENTORY_CONTRACT,
+		Scopes.GET_INVENTORY_CONTRACT,
+		Scopes.UPDATE_INVENTORY_CONTRACT,
+		Scopes.CREATE_DOP_YIELD_CONTRACT,
+		Scopes.DELETE_DOP_YIELD_CONTRACT,
 		Scopes.GET_DOP_YIELD_CONTRACT,		
+		Scopes.UPDATE_DOP_YIELD_CONTRACT,
+		Scopes.GET_VERIFIED_YIELD_CONTRACT,
+		Scopes.CREATE_VERIFIED_YIELD_CONTRACT,
+		Scopes.UPDATE_VERIFIED_YIELD_CONTRACT,
+		Scopes.DELETE_VERIFIED_YIELD_CONTRACT,
 		Scopes.CREATE_SYNC_UNDERWRITING,
 		Scopes.UPDATE_SYNC_UNDERWRITING,
 		Scopes.DELETE_SYNC_UNDERWRITING,
@@ -65,6 +86,16 @@ public class UwContractEndpointTest extends EndpointsTest {
 	private String policyNumber2 = "998899-20";
 	private String contractNumber2 = "998899";
 	private Integer growerContractYearId2 = 90000008;
+	private Integer cropYear2 = 2020;
+
+	// Note that policy 3 is deliberately meant to have the same contract as policy 2.
+	private Integer contractId3 = 90000006;
+	private Integer policyId3 = 90000013;
+	private String policyNumber3 = "998899-19";
+	private String contractNumber3 = "998899";
+	private Integer growerContractYearId3 = 90000014;
+	private Integer cropYear3 = 2019;
+	
 	
 	// Field
 	private Integer fieldId1 = 90000009;
@@ -88,12 +119,17 @@ public class UwContractEndpointTest extends EndpointsTest {
 	}
 
 	private void delete() throws NotFoundDaoException, DaoException, CirrasUnderwritingServiceException {
-				
+
+		deleteVerifiedYieldContract(policyNumber3);		
+		deleteDopYieldContract(policyNumber3);
+		deleteInventoryContract(policyNumber3);
+		
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId2.toString());
 
 		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId1.toString());
 		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId2.toString());
+		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId3.toString());
 
 		service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId1.toString());
 		
@@ -101,10 +137,98 @@ public class UwContractEndpointTest extends EndpointsTest {
 
 		service.deletePolicy(topLevelEndpoints, policyId1.toString());
 		service.deletePolicy(topLevelEndpoints, policyId2.toString());
+		service.deletePolicy(topLevelEndpoints, policyId3.toString());
 
 		service.deleteGrower(topLevelEndpoints, growerId1.toString());		
 		service.deleteGrower(topLevelEndpoints, growerId2.toString());		
 	}
+
+	private void deleteVerifiedYieldContract(String policyNumber) throws NotFoundDaoException, DaoException, CirrasUnderwritingServiceException {
+
+		Integer pageNumber = 1;
+		Integer pageRowCount = 20;
+		
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+		
+		if ( searchResults.getCollection() != null && searchResults.getCollection().size() == 1 ) {
+			UwContractRsrc referrer = searchResults.getCollection().get(0);
+						
+			if ( referrer.getVerifiedYieldContractGuid() != null ) { 
+				VerifiedYieldContractRsrc verifiedContract = service.getVerifiedYieldContract(referrer);
+				service.deleteVerifiedYieldContract(verifiedContract);
+			}
+		}		
+	}
+
+	private void deleteDopYieldContract(String policyNumber) throws NotFoundDaoException, DaoException, CirrasUnderwritingServiceException {
+
+		Integer pageNumber = 1;
+		Integer pageRowCount = 20;
+		
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+		
+		if ( searchResults.getCollection() != null && searchResults.getCollection().size() == 1 ) {
+			UwContractRsrc referrer = searchResults.getCollection().get(0);
+						
+			if ( referrer.getDeclaredYieldContractGuid() != null ) { 
+				DopYieldContractRsrc dopContract = service.getDopYieldContract(referrer);
+				service.deleteDopYieldContract(dopContract);
+			}
+		}		
+	}
+	
+	public void deleteInventoryContract(String policyNumber)
+			throws CirrasUnderwritingServiceException {
+		
+		Integer pageNumber = 1;
+		Integer pageRowCount = 20;
+		
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, 
+				pageRowCount);
+		
+		if ( searchResults.getCollection() != null && searchResults.getCollection().size() == 1 ) {
+			UwContractRsrc referrer = searchResults.getCollection().get(0);
+						
+			if ( referrer.getInventoryContractGuid() != null ) { 
+				InventoryContractRsrc invContract = service.getInventoryContract(referrer);
+				service.deleteInventoryContract(invContract);
+			}
+		}
+	}
+	
 	
 	private void createField(Integer fieldId, String fieldLabel, Integer activeFromCropYear, Integer activeToCropYear) throws CirrasUnderwritingServiceException, ValidationException {
 
@@ -168,7 +292,7 @@ public class UwContractEndpointTest extends EndpointsTest {
 		resource.setCropYear(cropYear);
 		resource.setDataSyncTransDate(createTransactionDate);
 		resource.setTransactionType(PoliciesSyncEventTypes.GrowerContractYearCreated);
-		
+
 		service.synchronizeGrowerContractYear(resource);
 	}
 	
@@ -228,7 +352,168 @@ public class UwContractEndpointTest extends EndpointsTest {
 		service.synchronizeGrower(resource);
 	}
 	
+	private String createInventoryContract(String policyNumber) throws ValidationException, CirrasUnderwritingServiceException {
+
+		boolean addedSeededGrain = false;
+		
+		Integer pageNumber = 1;
+		Integer pageRowCount = 20;
+
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+		Assert.assertNull(referrer.getInventoryContractGuid());
+
+		InventoryContractRsrc resource = service.rolloverInventoryContract(referrer);
+		
+		for ( AnnualFieldRsrc field : resource.getFields() ) {
+			for ( InventoryField planting : field.getPlantings() ) {
+				List<InventorySeededGrain> seededGrains = new ArrayList<InventorySeededGrain>();
+				seededGrains.add(createInventorySeededGrain(16, "BARLEY", false, 23.45));
+
+				planting.setInventorySeededGrains(seededGrains);
+				
+				addedSeededGrain = true;
+			}			
+		}
+		
+		InventoryContractCommodity icc = createInventoryContractCommodity(16, "BARLEY", false, 23.45, 23.45, 0.0);
+		resource.getCommodities().add(icc);
+
+		Assert.assertTrue(addedSeededGrain);
+
+		return service.createInventoryContract(topLevelEndpoints, resource).getInventoryContractGuid();
+	}
+
+	private InventorySeededGrain createInventorySeededGrain(Integer cropCommodityId, String cropCommodityName, Boolean isPedigreeInd, Double seededAcres) {
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(2020, Calendar.JANUARY, 15);
+		Date seededDate = cal.getTime();
+		
+		InventorySeededGrain invSeededGrain = new InventorySeededGrain();
+
+		invSeededGrain.setCommodityTypeCode("Two Row");
+		invSeededGrain.setCommodityTypeDesc("Two Row Standard");
+		invSeededGrain.setCropCommodityId(cropCommodityId);
+		invSeededGrain.setCropCommodityName(cropCommodityName);
+		invSeededGrain.setCropVarietyId(1010430);
+		invSeededGrain.setCropVarietyName("CHAMPION");
+		invSeededGrain.setInventoryFieldGuid(null);
+		invSeededGrain.setInventorySeededGrainGuid(null);
+		invSeededGrain.setIsPedigreeInd(isPedigreeInd);
+		invSeededGrain.setIsSpotLossInsurableInd(true);
+		invSeededGrain.setIsQuantityInsurableInd(true);
+		invSeededGrain.setIsReplacedInd(false);
+		invSeededGrain.setSeededAcres(seededAcres);
+		invSeededGrain.setSeededDate(seededDate);
+		return invSeededGrain;
+	}
+
+	private InventoryContractCommodity createInventoryContractCommodity(Integer cropCommodityId, String cropCommodityName, Boolean isPedigreeInd, Double totalSeededAcres, Double totalSpotLossAcres, Double totalUnseededAcres) {
+
+		InventoryContractCommodity icc = new InventoryContractCommodity();
+		icc.setCropCommodityId(cropCommodityId);
+		icc.setCropCommodityName(cropCommodityName);
+		icc.setInventoryContractCommodityGuid(null);
+		icc.setInventoryContractGuid(null);
+		icc.setIsPedigreeInd(isPedigreeInd);
+		icc.setTotalSeededAcres(totalSeededAcres);
+		icc.setTotalSpotLossAcres(totalSpotLossAcres);
+		icc.setTotalUnseededAcres(totalUnseededAcres);
+		icc.setTotalUnseededAcresOverride(null);
+		
+		return icc;
+	}
 	
+	
+	private String createDopYieldContract(String policyNumber) throws ValidationException, CirrasUnderwritingServiceException {
+
+		// Dop Date
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(2020, Calendar.JANUARY, 15);
+		Date dopDate = cal.getTime();
+		
+		Integer pageNumber = 1;
+		Integer pageRowCount = 20;
+
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+		Assert.assertNotNull(referrer.getInventoryContractGuid());
+		Assert.assertNull(referrer.getDeclaredYieldContractGuid());
+				
+		DopYieldContractRsrc resource = service.rolloverDopYieldContract(referrer);
+		
+		resource.setDeclarationOfProductionDate(dopDate);
+		resource.setDefaultYieldMeasUnitTypeCode("TONNE");
+		resource.setEnteredYieldMeasUnitTypeCode("TONNE");
+		resource.setGrainFromOtherSourceInd(true);
+
+		return service.createDopYieldContract(topLevelEndpoints, resource).getDeclaredYieldContractGuid();
+	}
+
+	private String createVerifiedYieldContract(String policyNumber) throws ValidationException, CirrasUnderwritingServiceException {
+		
+		Integer pageNumber = 1;
+		Integer pageRowCount = 20;
+
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+		Assert.assertNotNull(referrer.getInventoryContractGuid());
+		Assert.assertNotNull(referrer.getDeclaredYieldContractGuid());
+		Assert.assertNull(referrer.getVerifiedYieldContractGuid());
+				
+		VerifiedYieldContractRsrc resource = service.rolloverVerifiedYieldContract(referrer);
+		
+		resource.setDefaultYieldMeasUnitTypeCode("TONNE");
+
+		return service.createVerifiedYieldContract(topLevelEndpoints, resource).getVerifiedYieldContractGuid();
+	}
 	
 	
 	@Test
@@ -280,7 +565,7 @@ public class UwContractEndpointTest extends EndpointsTest {
 		Assert.assertEquals(1, searchResults.getCollection().size());
 
 		UwContractRsrc referrer = searchResults.getCollection().get(0);
-		UwContractRsrc fetchedResource = service.getUwContract(referrer, "false");
+		UwContractRsrc fetchedResource = service.getUwContract(referrer, "false", "false", null);
 		
 		Assert.assertNotNull(fetchedResource);
 		Assert.assertEquals(contractNumber, fetchedResource.getContractNumber());
@@ -349,7 +634,7 @@ public class UwContractEndpointTest extends EndpointsTest {
 		UwContractRsrc referrer = searchResults.getCollection().get(0);
 
 		// Test: No linked policies exist.
-		UwContractRsrc fetchedResource = service.getUwContract(referrer, "true");
+		UwContractRsrc fetchedResource = service.getUwContract(referrer, "true", "false", null);
 		Assert.assertNotNull(fetchedResource);
 		Assert.assertEquals(policyNumber1, fetchedResource.getPolicyNumber());
 		checkUwContractList(fetchedResource.getLinkedPolicies());
@@ -358,13 +643,13 @@ public class UwContractEndpointTest extends EndpointsTest {
 		createPolicy(policyId2, growerId1, 5, policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
 
 		// A. loadLinkedPolicies param is false.
-		fetchedResource = service.getUwContract(referrer, "false");
+		fetchedResource = service.getUwContract(referrer, "false", "false", null);
 		Assert.assertNotNull(fetchedResource);
 		Assert.assertEquals(policyNumber1, fetchedResource.getPolicyNumber());
 		checkUwContractList(fetchedResource.getLinkedPolicies());
 		
 		// B. loadLinkedPolicies param is true.
-		fetchedResource = service.getUwContract(referrer, "true");
+		fetchedResource = service.getUwContract(referrer, "true", "false", null);
 		Assert.assertNotNull(fetchedResource);
 		Assert.assertEquals(policyNumber1, fetchedResource.getPolicyNumber());
 		checkUwContractList(fetchedResource.getLinkedPolicies(), policyId2);
@@ -384,7 +669,7 @@ public class UwContractEndpointTest extends EndpointsTest {
 		createGrowerContractYear(growerContractYearId2, contractId2, growerId2, 2020, 5, createTransactionDate);
 		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId1, growerContractYearId2, 1);
 
-		fetchedResource = service.getUwContract(referrer, "true");
+		fetchedResource = service.getUwContract(referrer, "true", "false", null);
 		Assert.assertNotNull(fetchedResource);
 		Assert.assertEquals(policyNumber1, fetchedResource.getPolicyNumber());
 		checkUwContractList(fetchedResource.getLinkedPolicies(), policyId2);
@@ -413,7 +698,124 @@ public class UwContractEndpointTest extends EndpointsTest {
 			Assert.assertEquals(expectedPolicyIds[i], uwContracts.get(i).getPolicyId());
 		}
 	}
-	
+
+	@Test
+	public void testGetUwContractLoadOtherYearPolicies() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException, DaoException {
+		logger.debug("<testGetUwContractLoadOtherYearPolicies");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		Date transactionDate = cal.getTime();
+		Date createTransactionDate = addSeconds(transactionDate, -1);
+
+		createGrower(growerId2, 999777, "grower name 2", createTransactionDate);
+		createPolicy(policyId2, growerId2, 4, policyNumber2, contractNumber2, contractId2, cropYear2, createTransactionDate);
+		
+		Integer pageNumber = new Integer(1);
+		Integer pageRowCount = new Integer(20);
+
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber2,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+
+		// Test: No other year policies exist.
+		UwContractRsrc fetchedResource = service.getUwContract(referrer, "false", "true", ScreenType.INVENTORY.name());
+		Assert.assertNotNull(fetchedResource);
+		Assert.assertEquals(policyNumber2, fetchedResource.getPolicyNumber());
+		Assert.assertEquals(0, fetchedResource.getOtherYearPolicies().size());
+		
+		// Test: Other Year Policies by Inventory
+		createPolicy(policyId3, growerId2, 4, policyNumber3, contractNumber3, contractId3, cropYear3, createTransactionDate);
+		createGrowerContractYear(growerContractYearId3, contractId3, growerId2, cropYear3, 4, createTransactionDate);
+
+		createField(fieldId1, "LOT 1", 1980, null);
+		createAnnualFieldDetail(annualFieldDetailId1, null, fieldId1, cropYear3);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId3, 1);
+		
+		String invContractGuid3 = createInventoryContract(policyNumber3);
+
+		fetchedResource = service.getUwContract(referrer, "false", "true", ScreenType.INVENTORY.name());
+		Assert.assertNotNull(fetchedResource);
+		Assert.assertEquals(policyNumber2, fetchedResource.getPolicyNumber());
+		Assert.assertEquals(1, fetchedResource.getOtherYearPolicies().size());
+		
+		OtherYearPolicy oyp = fetchedResource.getOtherYearPolicies().get(0);
+		Assert.assertEquals(cropYear3, oyp.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), oyp.getInsurancePlanId());
+		Assert.assertEquals(policyId3, oyp.getPolicyId());
+		Assert.assertEquals(policyNumber3, oyp.getPolicyNumber());
+		Assert.assertEquals(invContractGuid3, oyp.getScreenRecordGuid());
+		Assert.assertEquals(ScreenType.INVENTORY.name(), oyp.getScreenType());
+		
+
+		// Test: Other Year Policies by DOP
+		String dopContractGuid3 = createDopYieldContract(policyNumber3);
+
+		fetchedResource = service.getUwContract(referrer, "false", "true", ScreenType.DOP.name());
+		Assert.assertNotNull(fetchedResource);
+		Assert.assertEquals(policyNumber2, fetchedResource.getPolicyNumber());
+		Assert.assertEquals(1, fetchedResource.getOtherYearPolicies().size());
+		
+		oyp = fetchedResource.getOtherYearPolicies().get(0);
+		Assert.assertEquals(cropYear3, oyp.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), oyp.getInsurancePlanId());
+		Assert.assertEquals(policyId3, oyp.getPolicyId());
+		Assert.assertEquals(policyNumber3, oyp.getPolicyNumber());
+		Assert.assertEquals(dopContractGuid3, oyp.getScreenRecordGuid());
+		Assert.assertEquals(ScreenType.DOP.name(), oyp.getScreenType());
+
+		// Test: Other Year Policies by VERIFIED
+		String verContractGuid3 = createVerifiedYieldContract(policyNumber3);
+
+		fetchedResource = service.getUwContract(referrer, "false", "true", ScreenType.VERIFIED.name());
+		Assert.assertNotNull(fetchedResource);
+		Assert.assertEquals(policyNumber2, fetchedResource.getPolicyNumber());
+		Assert.assertEquals(1, fetchedResource.getOtherYearPolicies().size());
+		
+		oyp = fetchedResource.getOtherYearPolicies().get(0);
+		Assert.assertEquals(cropYear3, oyp.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), oyp.getInsurancePlanId());
+		Assert.assertEquals(policyId3, oyp.getPolicyId());
+		Assert.assertEquals(policyNumber3, oyp.getPolicyNumber());
+		Assert.assertEquals(verContractGuid3, oyp.getScreenRecordGuid());
+		Assert.assertEquals(ScreenType.VERIFIED.name(), oyp.getScreenType());
+		
+		// Test: Other Year Policies exist, but not loaded.
+		fetchedResource = service.getUwContract(referrer, "false", "false", null);
+		Assert.assertNotNull(fetchedResource);
+		Assert.assertEquals(policyNumber2, fetchedResource.getPolicyNumber());
+		Assert.assertEquals(0, fetchedResource.getOtherYearPolicies().size());
+		
+		// Test: Load other year policies, but invalid screen type.
+		try {
+			fetchedResource = service.getUwContract(referrer, "false", "true", "NOSUCHTYPE");
+			Assert.fail("Invalid screen type did not throw exception");
+		} catch ( CirrasUnderwritingServiceException e) {
+			// Ok.
+		}
+
+		logger.debug(">testGetUwContractLoadOtherYearPolicies");
+	}
+
 	
 	@Test
 	public void testUwContractDopEligibleInventory() throws CirrasUnderwritingServiceException, Oauth2ClientException {
@@ -454,7 +856,7 @@ public class UwContractEndpointTest extends EndpointsTest {
 		Assert.assertEquals(policyNumber, referrer.getPolicyNumber());
 		Assert.assertEquals("Eligible Inventory 1", eligibleInventory, referrer.getTotalDopEligibleInventory());
 
-		UwContractRsrc fetchedResource = service.getUwContract(referrer, "false");
+		UwContractRsrc fetchedResource = service.getUwContract(referrer, "false", "false", null);
 		
 		Assert.assertNotNull(fetchedResource);
 		Assert.assertEquals(policyNumber, fetchedResource.getPolicyNumber());

@@ -29,7 +29,7 @@ public class UwContractEndpointImpl extends BaseEndpointsImpl implements UwContr
 	private CirrasUnderwritingService cirrasUnderwritingService;
 	
 	@Override
-	public Response getUwContract(final String policyId, String loadLinkedPolicies) {
+	public Response getUwContract(final String policyId, String loadLinkedPolicies, String loadOtherYearPolicies, String screenType) {
 		
 		Response response = null;
 		
@@ -43,6 +43,8 @@ public class UwContractEndpointImpl extends BaseEndpointsImpl implements UwContr
 			UwContractRsrc result = (UwContractRsrc) cirrasUnderwritingService.getUwContract(
 					toInteger(policyId),
 					toBoolean(loadLinkedPolicies),
+					toBoolean(loadOtherYearPolicies),
+					toString(screenType),
 					getFactoryContext(), 
 					getWebAdeAuthentication());
 			response = Response.ok(result).tag(result.getUnquotedETag()).build();

@@ -138,7 +138,75 @@ public class PolicyDaoImpl extends BaseDao implements PolicyDao {
 		logger.debug(">selectByFieldAndYear " + dtos);
 		return dtos;
 	}
-	
+
+	@Override
+	public List<PolicyDto> selectByOtherYearInventory(Integer contractId, Integer currentCropYear, Integer numYears) throws DaoException {
+
+		logger.debug("<selectByOtherYearInventory");
+
+		List<PolicyDto> dtos = null;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("contractId", contractId);
+			parameters.put("currentCropYear", currentCropYear);
+			parameters.put("numYears", numYears);
+						
+			dtos = this.mapper.selectByOtherYearInventory(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectByOtherYearInventory " + dtos);
+		return dtos;
+	}
+
+	@Override
+	public List<PolicyDto> selectByOtherYearDop(Integer contractId, Integer currentCropYear, Integer numYears) throws DaoException {
+		logger.debug("<selectByOtherYearDop");
+
+		List<PolicyDto> dtos = null;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("contractId", contractId);
+			parameters.put("currentCropYear", currentCropYear);
+			parameters.put("numYears", numYears);
+						
+			dtos = this.mapper.selectByOtherYearDop(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectByOtherYearDop " + dtos);
+		return dtos;
+	}	
+
+	@Override
+	public List<PolicyDto> selectByOtherYearVerified(Integer contractId, Integer currentCropYear, Integer numYears) throws DaoException {
+		logger.debug("<selectByOtherYearVerified");
+
+		List<PolicyDto> dtos = null;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("contractId", contractId);
+			parameters.put("currentCropYear", currentCropYear);
+			parameters.put("numYears", numYears);
+						
+			dtos = this.mapper.selectByOtherYearVerified(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectByOtherYearVerified " + dtos);
+		return dtos;
+	}
+
+
 	@Override
 	public PagedDtos<PolicyDto> select(
     	Integer cropYear,

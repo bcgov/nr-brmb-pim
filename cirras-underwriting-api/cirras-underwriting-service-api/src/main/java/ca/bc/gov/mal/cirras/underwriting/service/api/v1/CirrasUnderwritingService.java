@@ -36,6 +36,8 @@ public interface CirrasUnderwritingService {
 	UwContract<? extends UwContract<?>> getUwContract(
 		Integer policyId, 
 		Boolean loadLinkedPolicies,
+		Boolean loadOtherYearPolicies,
+		String screenType,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
 	)
