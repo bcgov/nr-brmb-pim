@@ -14,6 +14,7 @@ export interface LoadGrowerContractAction extends Action {
     componentId: string;
     payload: {
       value: string; 
+      screenType: string;
     };
   }
   
@@ -32,13 +33,14 @@ export interface LoadGrowerContractAction extends Action {
   }
   
   // add policy Id and inventoryContractGuid
-  export function LoadGrowerContract(componentId: string, value: string): LoadGrowerContractAction {
+  export function LoadGrowerContract(componentId: string, value: string, screenType: string): LoadGrowerContractAction {
     
     return {
       type: LOAD_GROWER_CONTRACT,
       componentId: componentId,
       payload: {
-          value
+          value,
+          screenType
       }
     };
   }

@@ -12,7 +12,7 @@ import { AddNewVerifiedYieldContract, DeleteVerifiedYieldContract, LoadVerifiedY
 import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { ClearCropCommodity, LoadCropCommodityList } from 'src/app/store/crop-commodity/crop-commodity.actions';
-import { CROP_COMMODITY_TYPE_CONST, INSURANCE_PLAN } from 'src/app/utils/constants';
+import { CROP_COMMODITY_TYPE_CONST, INSURANCE_PLAN, SCREEN_TYPE } from 'src/app/utils/constants';
 
 @Component({
   selector: 'verified-yield',
@@ -52,7 +52,7 @@ export class VerifiedYieldComponent extends BaseComponent {
           this.cropYear = params.get("cropYear") ? params.get("cropYear") : "";
           this.insurancePlanId = params.get("insurancePlanId") ? params.get("insurancePlanId") : "";
 
-          this.store.dispatch(LoadGrowerContract(this.componentId, this.policyId))
+          this.store.dispatch(LoadGrowerContract(this.componentId, this.policyId, SCREEN_TYPE.VERIFIED))
 
           if (this.verifiedYieldContractGuid.length > 0) {
             // get the already existing verified yield contract

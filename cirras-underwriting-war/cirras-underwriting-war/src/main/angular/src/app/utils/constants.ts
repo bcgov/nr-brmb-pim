@@ -158,3 +158,8 @@ export const VERIFIED_YIELD_AMENDMENT_CODE = {
     "APPRAISAL"     : "Appraisal",  
     "ASSESSMENT"    : "Assessment"
 }
+export const SCREEN_TYPE = {
+    INVENTORY: "INVENTORY",
+    DOP: "DOP",
+    VERIFIED: "VERIFIED"
+}

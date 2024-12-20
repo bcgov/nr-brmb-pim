@@ -24,6 +24,7 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import {ViewEncapsulation } from '@angular/core';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
+import { SCREEN_TYPE } from 'src/app/utils/constants';
 
 @Component({
   selector: 'forage-dop',
@@ -71,7 +72,7 @@ export class ForageDopComponent extends BaseComponent {
 
           this.store.dispatch(ClearDopYieldContract());
 
-          this.store.dispatch(LoadGrowerContract(this.componentId, this.policyId))
+          this.store.dispatch(LoadGrowerContract(this.componentId, this.policyId, SCREEN_TYPE.DOP))
 
           this.store.dispatch( LoadYieldMeasUnitList(this.componentId, this.insurancePlanId) )
 
@@ -301,10 +302,10 @@ export class ForageDopComponent extends BaseComponent {
     }
 
     if (this.dopYieldContract.declaredYieldContractGuid) {
-      this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract))
+      this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract, this.policyId))
     } else {
       // add new
-      this.store.dispatch(AddNewDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract))
+      this.store.dispatch(AddNewDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract, this.policyId))
     }
 
     this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, false ));

@@ -14,7 +14,7 @@ import { convertToInventoryContractRsrc } from "src/app/conversion/conversion-to
 import { InventoryContract } from "src/app/conversion/models";
 import { displayErrorMessage, displaySaveSuccessSnackbar, displayDeleteSuccessSnackbar, displaySuccessSnackbar } from "src/app/utils/user-feedback-utils";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { REST_VERSION } from "src/app/utils/constants";
+import { REST_VERSION, SCREEN_TYPE } from "src/app/utils/constants";
 import { HttpClient } from '@angular/common/http';
 import { GetReportError, GetReportSuccess } from "../dop/dop.actions";
 import { LoadGrowerContract } from "../grower-contract/grower-contract.actions";
@@ -140,7 +140,7 @@ addNewInventory: Observable<Action> = createEffect(() => this.actions.pipe(
 
                     let newInventoryContract: InventoryContract = convertToInventoryContract(response.body, response.headers ? response.headers.get("ETag") : null) 
 
-                    this.store.dispatch(LoadGrowerContract(INVENTORY_COMPONENT_ID, policyId)) // to update the side navigation links
+                    this.store.dispatch(LoadGrowerContract(INVENTORY_COMPONENT_ID, policyId, SCREEN_TYPE.INVENTORY)) // to update the side navigation links
 
                     return [                                                                         
                       LoadInventoryContractSuccess(typedAction.componentId, newInventoryContract)                             
@@ -189,7 +189,7 @@ updateInventory: Observable<Action> = createEffect(() => this.actions.pipe(
 
                     let newInventoryContract: InventoryContract = convertToInventoryContract(response.body, response.headers ? response.headers.get("ETag") : null) 
 
-                    this.store.dispatch(LoadGrowerContract(INVENTORY_COMPONENT_ID, policyId)) // to update the side navigation links
+                    this.store.dispatch(LoadGrowerContract(INVENTORY_COMPONENT_ID, policyId, SCREEN_TYPE.INVENTORY)) // to update the side navigation links
                     return [                                                                         
                       LoadInventoryContractSuccess(typedAction.componentId, newInventoryContract)                             
                     ]
@@ -291,7 +291,7 @@ deleteInventory: Observable<Action> = createEffect(() => this.actions.pipe(
 
                   displayDeleteSuccessSnackbar(this.snackbarService, "Inventory ");
 
-                  this.store.dispatch(LoadGrowerContract(typedAction.componentId, payload.policyId)) // to update the side navigation links
+                  this.store.dispatch(LoadGrowerContract(typedAction.componentId, payload.policyId, SCREEN_TYPE.INVENTORY)) // to update the side navigation links
 
                   return  [
                     RolloverInventoryContract(typedAction.componentId, payload.policyId) 
