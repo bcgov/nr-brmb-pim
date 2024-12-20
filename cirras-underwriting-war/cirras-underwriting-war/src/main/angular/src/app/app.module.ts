@@ -140,6 +140,7 @@ import { VerifiedYieldCommodityListComponent } from './components/verified-yield
 import { VerifiedYieldCommodityComponent } from './components/verified-yield/commodity/verified-yield-commodity.component';
 import { VerifiedYieldAmendmentListComponent } from "./components/verified-yield/amendment-list/verified-yield-amendment-list.component";
 import { VerifiedYieldAmendmentComponent } from "./components/verified-yield/amendment/verified-yield-amendment.component";
+import { OtherYearPolicyComponent } from "./components/grower-contract-header/other-year-policy/other-year-policy.component";
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -225,6 +226,7 @@ if (!environment.production || !environment.restrict_imports) {
         YieldConversionUnitsComponent,
         YieldConversionUnitsContainer,
         RelatedPoliciesComponent,
+        OtherYearPolicyComponent,
         UnsavedDialogComponent,
         ForageDopComponent,
         ForageDopFieldListComponent,

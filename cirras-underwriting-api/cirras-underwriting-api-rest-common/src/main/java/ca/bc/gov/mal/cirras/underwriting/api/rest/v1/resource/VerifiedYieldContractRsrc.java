@@ -13,6 +13,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceType
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
 
@@ -38,6 +39,7 @@ public class VerifiedYieldContractRsrc extends BaseResource implements VerifiedY
 	private List<AnnualFieldRsrc> fields = new ArrayList<AnnualFieldRsrc>();
 	private List<VerifiedYieldContractCommodity> verifiedYieldContractCommodities = new ArrayList<VerifiedYieldContractCommodity>();
 	private List<VerifiedYieldAmendment> verifiedYieldAmendments = new ArrayList<VerifiedYieldAmendment>();
+	private List<VerifiedYieldSummary> verifiedYieldSummaries = new ArrayList<VerifiedYieldSummary>();
 	private List<MessageRsrc> productWarningMessages = new ArrayList<MessageRsrc>();
 
 	public String getVerifiedYieldContractGuid() {
@@ -130,6 +132,13 @@ public class VerifiedYieldContractRsrc extends BaseResource implements VerifiedY
 	}
 	public void setVerifiedYieldAmendments(List<VerifiedYieldAmendment> verifiedYieldAmendments) {
 		this.verifiedYieldAmendments = verifiedYieldAmendments;
+	}
+
+	public List<VerifiedYieldSummary> getVerifiedYieldSummaries() {
+		return verifiedYieldSummaries;
+	}
+	public void setVerifiedYieldSummaries(List<VerifiedYieldSummary> verifiedYieldSummaries) {
+		this.verifiedYieldSummaries = verifiedYieldSummaries;
 	}
 
 	public List<MessageRsrc> getProductWarningMessages() {

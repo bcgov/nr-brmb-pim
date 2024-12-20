@@ -7,7 +7,7 @@ import { LoadCropCommodityList, LoadUnderSeededCropCommodityList } from 'src/app
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
 import { ClearInventoryContract,  LoadInventoryContract, RolloverInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
-import { CROP_COMMODITY_TYPE_CONST, INSURANCE_PLAN, ResourcesRoutes } from 'src/app/utils/constants';
+import { CROP_COMMODITY_TYPE_CONST, INSURANCE_PLAN, ResourcesRoutes, SCREEN_TYPE } from 'src/app/utils/constants';
 import { RootState } from "src/app/store";
 import { ErrorState, LoadState } from "src/app/store/application/application.state";
 
@@ -55,7 +55,7 @@ export class InventorySelectorComponent implements OnInit{
 
           this.store.dispatch(ClearInventoryContract());
 
-          this.store.dispatch(LoadGrowerContract(this.componentId, this.policyId))
+          this.store.dispatch(LoadGrowerContract(this.componentId, this.policyId, SCREEN_TYPE.INVENTORY ))
 
           if (this.inventoryContractGuid.length > 0) {
             this.store.dispatch(LoadInventoryContract(this.componentId, this.inventoryContractGuid ))

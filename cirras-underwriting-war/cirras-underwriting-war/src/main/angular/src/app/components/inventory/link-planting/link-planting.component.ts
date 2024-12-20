@@ -6,7 +6,7 @@ import { AddFieldValidationRsrc, AnnualFieldRsrc, LinkedPlanting, UwContractList
 import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
 import { InventoryContract, UwContract } from 'src/app/conversion/models';
 import { makeTitleCase, setHttpHeaders } from 'src/app/utils';
-import { INSURANCE_PLAN, LAND_UPDATE_TYPE, LINK_PLANTING_TYPE, PLANT_INSURABILITY_TYPE_CODE } from 'src/app/utils/constants';
+import { INSURANCE_PLAN, LAND_UPDATE_TYPE, LINK_PLANTING_TYPE, PLANT_INSURABILITY_TYPE_CODE, SCREEN_TYPE } from 'src/app/utils/constants';
 import { getInventorySeededForagesObjForSave } from '../inventory-common';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
@@ -430,7 +430,7 @@ export class LinkPlantingComponent implements OnInit {
           next: data => {
 
             // update left menu side navigation links
-            this.store.dispatch(LoadGrowerContract(INVENTORY_COMPONENT_ID, this.dataReceived.policyId)) 
+            this.store.dispatch(LoadGrowerContract(INVENTORY_COMPONENT_ID, this.dataReceived.policyId, SCREEN_TYPE.INVENTORY)) 
 
             if (operationType == 'LinkPlanting') {
               alert ("A new planting was successfully added to the field on the forage policy and linked to this grain planting.")

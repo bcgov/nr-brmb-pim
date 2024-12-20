@@ -60,4 +60,12 @@ public class InventoryServiceEnums {
 		unseeded,
 		seeded;
 	}
+	
+	// Valid options for screenType parameter for GET UwContractRsrc.
+	public enum ScreenType {
+		INVENTORY,
+		DOP,
+		VERIFIED;
+	}
+	
 }

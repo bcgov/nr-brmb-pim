@@ -297,7 +297,7 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 	}
 
 	@Override
-	public UwContractRsrc getUwContract(UwContractRsrc resource, String loadLinkedPolicies) throws CirrasUnderwritingServiceException {
+	public UwContractRsrc getUwContract(UwContractRsrc resource, String loadLinkedPolicies, String loadOtherYearPolicies, String screenType) throws CirrasUnderwritingServiceException {
 
 		GenericRestDAO<UwContractRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(UwContractRsrc.class);
 		
@@ -305,6 +305,8 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 			
 			Map<String, String> queryParams = new HashMap<String, String>();
 			putQueryParam(queryParams, "loadLinkedPolicies",  loadLinkedPolicies);
+			putQueryParam(queryParams, "loadOtherYearPolicies",  loadOtherYearPolicies);
+			putQueryParam(queryParams, "screenType",  screenType);
 			
 			Response<UwContractRsrc> response = dao.Process(ResourceTypes.SELF, this.getTransformer(), resource, queryParams, getWebClient());
 

@@ -28,8 +28,10 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiableCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
@@ -39,7 +41,9 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingCommentDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldAmendmentDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldSummaryDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.VerifiedYieldContractFactory;
@@ -185,6 +189,18 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 
 			resource.setVerifiedYieldAmendments(verifiedYieldAmendments);
 		}
+
+		// Verified Yield Summary
+		if (!dto.getVerifiedYieldSummaries().isEmpty()) {
+			List<VerifiedYieldSummary> verifiedYieldSummaries = new ArrayList<VerifiedYieldSummary>();
+
+			for (VerifiedYieldSummaryDto vysDto : dto.getVerifiedYieldSummaries()) {
+				VerifiedYieldSummary vysModel = createVerifiedYieldSummary(vysDto, authentication);
+				verifiedYieldSummaries.add(vysModel);
+			}
+
+			resource.setVerifiedYieldSummaries(verifiedYieldSummaries);
+		}
 		
 		resource.setProductWarningMessages(productWarnings);
 		
@@ -326,6 +342,38 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		model.setVerifiedYieldAmendmentGuid(dto.getVerifiedYieldAmendmentGuid());
 		model.setVerifiedYieldContractGuid(dto.getVerifiedYieldContractGuid());
 		model.setYieldPerAcre(dto.getYieldPerAcre());
+
+		return model;
+	}
+
+	private VerifiedYieldSummary createVerifiedYieldSummary(VerifiedYieldSummaryDto dto, WebAdeAuthentication authentication) {
+		VerifiedYieldSummary model = new VerifiedYieldSummary();
+
+		model.setVerifiedYieldSummaryGuid(dto.getVerifiedYieldSummaryGuid());
+		model.setVerifiedYieldContractGuid(dto.getVerifiedYieldContractGuid());
+		model.setCropCommodityId(dto.getCropCommodityId());
+		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setIsPedigreeInd(dto.getIsPedigreeInd());
+		model.setHarvestedYield(dto.getHarvestedYield());
+		model.setHarvestedYieldPerAcre(dto.getHarvestedYieldPerAcre());
+		model.setAppraisedYield(dto.getAppraisedYield());
+		model.setAssessedYield(dto.getAssessedYield());
+		model.setYieldToCount(dto.getYieldToCount());
+		model.setYieldPercentPy(dto.getYieldPercentPy());
+		model.setProductionGuarantee(dto.getProductionGuarantee());
+		model.setProbableYield(dto.getProbableYield());
+		
+		// UnderwritingComment
+		if (!dto.getUwComments().isEmpty()) {
+			List<UnderwritingComment> uwComments = new ArrayList<UnderwritingComment>();
+
+			for (UnderwritingCommentDto ucDto : dto.getUwComments()) {
+				UnderwritingComment ucModel = InventoryContractRsrcFactory.createUnderwritingComment(ucDto, authentication);
+				uwComments.add(ucModel);
+			}
+
+			model.setUwComments(uwComments);
+		}
 
 		return model;
 	}

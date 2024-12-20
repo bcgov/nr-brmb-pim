@@ -21,11 +21,14 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContactDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContactEmailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContactPhoneDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerContactDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerContractYearDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.spring.PersistenceSpringConfig;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
@@ -46,12 +49,29 @@ public class PolicyDaoTest {
 	private String policyNumber1 = "998877-20";
 	private String contractNumber1 = "998877";
 	private Integer gcyId1 = 90000003;
+	private Integer cropYear1 = 2020;
+	
 	
 	private Integer policyId2 = 90000004;
 	private Integer contractId2 = 90000005;
 	private String policyNumber2 = "998899-20";
 	private String contractNumber2 = "998899";
 	private Integer gcyId2 = 90000006;
+	private Integer cropYear2 = 2020;
+
+	private Integer policyId3 = 90000017;
+	private Integer contractId3 = 90000018;
+	private String policyNumber3 = "998866-20";
+	private String contractNumber3 = "998866";
+	private Integer gcyId3 = 90000019;
+	private Integer cropYear3 = 2020;
+
+	private Integer policyId4 = 90000020;
+	private Integer contractId4 = 90000021;
+	private String policyNumber4 = "998855-20";
+	private String contractNumber4 = "998855";
+	private Integer gcyId4 = 90000022;
+	private Integer cropYear4 = 2020;
 	
 	private Integer growerId1 = 90000007;
 	private Integer growerId2 = 90000008;
@@ -70,20 +90,36 @@ public class PolicyDaoTest {
 	@Before
 	public void prepareTests() throws NotFoundDaoException, DaoException{
 		delete();
+		resetTestDefaults();
 	}
 
 	@After 
 	public void cleanUp() throws NotFoundDaoException, DaoException{
 		delete();
+		resetTestDefaults();
 	}
 	
 
 	private void delete() throws NotFoundDaoException, DaoException {
 
+		deleteVerifiedYieldContract(gcyId1);
+		deleteVerifiedYieldContract(gcyId2);
+		deleteVerifiedYieldContract(gcyId3);
+		deleteVerifiedYieldContract(gcyId4);
+		deleteDeclaredYieldContract(gcyId1);
+		deleteDeclaredYieldContract(gcyId2);
+		deleteDeclaredYieldContract(gcyId3);
+		deleteDeclaredYieldContract(gcyId4);
+		deleteInventoryContract(gcyId1);
+		deleteInventoryContract(gcyId2);
+		deleteInventoryContract(gcyId3);
+		deleteInventoryContract(gcyId4);
 		deleteContractedFieldDetail(cfdId1);
 		deleteContractedFieldDetail(cfdId2);
 		deleteGrowerContractYear(gcyId1);
 		deleteGrowerContractYear(gcyId2);
+		deleteGrowerContractYear(gcyId3);
+		deleteGrowerContractYear(gcyId4);
 		deleteAnnualFieldDetail(afdId);
 		deleteField(fieldId);
 		deleteGrowerContact(growerContactId1);
@@ -93,10 +129,31 @@ public class PolicyDaoTest {
 		deletePolicy(policyId);
 		deletePolicy(policyId1);
 		deletePolicy(policyId2);
+		deletePolicy(policyId3);
+		deletePolicy(policyId4);
 		deleteGrower(growerId1);
 		deleteGrower(growerId2);
 	}
 
+	// Some tests modify these members so they have different contract numbers or crop years 
+	// than the defaults. This resets them afterward.
+	private void resetTestDefaults() {
+		contractId2 = 90000005;
+		policyNumber2 = "998899-20";
+		contractNumber2 = "998899";
+		cropYear2 = 2020;
+
+		contractId3 = 90000018;
+		policyNumber3 = "998866-20";
+		contractNumber3 = "998866";
+		cropYear3 = 2020;
+
+		contractId4 = 90000021;
+		policyNumber4 = "998855-20";
+		contractNumber4 = "998855";
+		cropYear4 = 2020;		
+	}
+	
 	private void deletePolicy(Integer policyId) throws NotFoundDaoException, DaoException{
 		
 		PolicyDao dao = persistenceSpringConfig.policyDao();
@@ -180,6 +237,30 @@ public class PolicyDaoTest {
 		}
 	}	
 
+	private void deleteInventoryContract(Integer gcyId) throws NotFoundDaoException, DaoException {
+		InventoryContractDao dao = persistenceSpringConfig.inventoryContractDao();
+		InventoryContractDto dto = dao.getByGrowerContract(gcyId);
+		if ( dto != null ) {
+			dao.delete(dto.getInventoryContractGuid());			
+		}		
+	}
+
+	private void deleteDeclaredYieldContract(Integer gcyId) throws NotFoundDaoException, DaoException {
+		DeclaredYieldContractDao dao = persistenceSpringConfig.declaredYieldContractDao();
+		DeclaredYieldContractDto dto = dao.getByGrowerContract(gcyId);
+		if ( dto != null ) {
+			dao.delete(dto.getDeclaredYieldContractGuid());			
+		}		
+	}
+	
+	private void deleteVerifiedYieldContract(Integer gcyId) throws NotFoundDaoException, DaoException {
+		VerifiedYieldContractDao dao = persistenceSpringConfig.verifiedYieldContractDao();
+		VerifiedYieldContractDto dto = dao.getByGrowerContract(gcyId);
+		if ( dto != null ) {
+			dao.delete(dto.getVerifiedYieldContractGuid());			
+		}		
+	}
+	
 	private void createField(Integer fieldId, String fieldLabel) throws DaoException {
 		String userId = "JUNIT_TEST";
 
@@ -435,12 +516,85 @@ public class PolicyDaoTest {
 		policyDto.setContractId(contractId);
 		policyDto.setCropYear(cropYear);
 		policyDto.setDataSyncTransDate(transDate);
-		
+
 		//INSERT
 		policyDao.insert(policyDto, userId);
 	}
 	
 
+	private String createInventoryContract(Integer contractId, Integer cropYear, String userId) throws DaoException {
+
+		//Date without time
+		Date date = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		
+		InventoryContractDao invContractDao = persistenceSpringConfig.inventoryContractDao();
+
+		// Create parent InventoryContract.
+		InventoryContractDto invContractDto = new InventoryContractDto();
+
+		invContractDto.setContractId(contractId);
+		invContractDto.setCropYear(cropYear);
+		invContractDto.setFertilizerInd(false);
+		invContractDto.setGrainFromPrevYearInd(false);
+		invContractDto.setHerbicideInd(false);
+		invContractDto.setOtherChangesComment(null);
+		invContractDto.setOtherChangesInd(false);
+		invContractDto.setSeededCropReportSubmittedInd(false);
+		invContractDto.setTilliageInd(false);
+		invContractDto.setUnseededIntentionsSubmittedInd(false);
+		invContractDto.setInvUpdateTimestamp(date);
+		invContractDto.setInvUpdateUser(userId);
+
+		invContractDao.insert(invContractDto, userId);
+		
+		return invContractDto.getInventoryContractGuid();
+	}
+
+	private String createDeclaredYieldContract(Integer contractId, Integer cropYear, String userId) throws DaoException {
+
+		// Create parent Declared Yield Contract.
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(2020, Calendar.JANUARY, 15);
+		Date dopDate = cal.getTime();
+		
+		DeclaredYieldContractDao dao = persistenceSpringConfig.declaredYieldContractDao();
+		
+		DeclaredYieldContractDto newDto = new DeclaredYieldContractDto();
+
+		newDto.setContractId(contractId);
+		newDto.setCropYear(cropYear);
+		newDto.setDeclarationOfProductionDate(dopDate);
+		newDto.setDefaultYieldMeasUnitTypeCode("TONNE");
+		newDto.setEnteredYieldMeasUnitTypeCode("BUSHEL");
+		newDto.setGrainFromOtherSourceInd(false);
+		newDto.setBalerWagonInfo(null);
+		newDto.setTotalLivestock(null);
+		
+		//INSERT
+		dao.insert(newDto, userId);
+		return newDto.getDeclaredYieldContractGuid();
+		
+	}
+	
+	private String createVerifiedYieldContract(Integer contractId, Integer cropYear, String declaredYieldContractGuid, String userId) throws DaoException {
+
+		VerifiedYieldContractDao dao = persistenceSpringConfig.verifiedYieldContractDao();
+		
+		VerifiedYieldContractDto newDto = new VerifiedYieldContractDto();
+
+		newDto.setContractId(contractId);
+		newDto.setCropYear(cropYear);
+		newDto.setDeclaredYieldContractGuid(declaredYieldContractGuid);
+		newDto.setDefaultYieldMeasUnitTypeCode("TONNE");
+		newDto.setInsurancePlanId(4);		
+		
+		//INSERT
+		dao.insert(newDto, userId);
+		return newDto.getVerifiedYieldContractGuid();
+	}
+
+	
 	@Test 
 	public void testInsertUpdateDeletePolicy() throws Exception {
 
@@ -1095,7 +1249,419 @@ public class PolicyDaoTest {
 	}	
 		
 
+	@Test 
+	public void testSelectByOtherYearInventory() throws Exception {	
+		
+		String userId = "JUNIT_TEST";
 
+		PolicyDao dao = persistenceSpringConfig.policyDao();
+
+		createGrower(growerId1, 999888, "grower name");
+		createPolicy(policyId1, growerId1, contractId1, cropYear1, policyNumber1, contractNumber1, 4, "ACTIVE", 1);
+		createGrowerContractYear(gcyId1, contractId1, growerId1, cropYear1, 4);
+		String invContractGuid1 = createInventoryContract(contractId1, cropYear1, userId);
+
+		// Test: No other years.
+		List<PolicyDto> dtos = dao.selectByOtherYearInventory(contractId1, cropYear1, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size());
+
+		// Test: Other prev years, but no inventory.
+		cropYear2 = 2019;
+		contractId2 = contractId1;
+		contractNumber2 = contractNumber1;
+		policyNumber2 = contractNumber2 + "-19";
+
+		cropYear3 = 2018;
+		contractId3 = contractId1;
+		contractNumber3 = contractNumber1;
+		policyNumber3 = contractNumber3 + "-18";
+
+		cropYear4 = 2017;
+		contractId4 = contractId1;
+		contractNumber4 = contractNumber1;
+		policyNumber4 = contractNumber4 + "-17";		
+		
+		createPolicy(policyId2, growerId1, contractId2, cropYear2, policyNumber2, contractNumber2, 4, "ACTIVE", 1);
+		createPolicy(policyId3, growerId1, contractId3, cropYear3, policyNumber3, contractNumber3, 4, "ACTIVE", 1);
+		createPolicy(policyId4, growerId1, contractId4, cropYear4, policyNumber4, contractNumber4, 4, "ACTIVE", 1);
+
+		createGrowerContractYear(gcyId2, contractId2, growerId1, cropYear2, 4);
+		createGrowerContractYear(gcyId3, contractId3, growerId1, cropYear3, 4);
+		createGrowerContractYear(gcyId4, contractId4, growerId1, cropYear4, 4);
+		
+		dtos = dao.selectByOtherYearInventory(contractId1, cropYear1, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size());
+
+		// Test: One year with inventory.
+		String invContractGuid2 = createInventoryContract(contractId2, cropYear2, userId);
+
+		dtos = dao.selectByOtherYearInventory(contractId1, cropYear1, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(1, dtos.size());
+
+		PolicyDto dto = dtos.get(0);
+		Assert.assertEquals(policyId2, dto.getPolicyId());
+		Assert.assertEquals(policyNumber2, dto.getPolicyNumber());
+		Assert.assertEquals(contractId2, dto.getContractId());
+		Assert.assertEquals(cropYear2, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(invContractGuid2, dto.getInventoryContractGuid());
+		
+
+		// Test: All prev years with inventory.
+		String invContractGuid3 = createInventoryContract(contractId3, cropYear3, userId);
+		String invContractGuid4 = createInventoryContract(contractId4, cropYear4, userId);
+
+		dtos = dao.selectByOtherYearInventory(contractId1, cropYear1, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(2, dtos.size());
+
+		dto = dtos.get(0);
+		Assert.assertEquals(policyId3, dto.getPolicyId());
+		Assert.assertEquals(policyNumber3, dto.getPolicyNumber());
+		Assert.assertEquals(contractId3, dto.getContractId());
+		Assert.assertEquals(cropYear3, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(invContractGuid3, dto.getInventoryContractGuid());
+		
+		dto = dtos.get(1);
+		Assert.assertEquals(policyId2, dto.getPolicyId());
+		Assert.assertEquals(policyNumber2, dto.getPolicyNumber());
+		Assert.assertEquals(contractId2, dto.getContractId());
+		Assert.assertEquals(cropYear2, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(invContractGuid2, dto.getInventoryContractGuid());
+
+		// Test: prev and future years with inventory.
+		dtos = dao.selectByOtherYearInventory(contractId2, cropYear2, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(3, dtos.size());
+
+		dto = dtos.get(0);
+		Assert.assertEquals(policyId4, dto.getPolicyId());
+		Assert.assertEquals(policyNumber4, dto.getPolicyNumber());
+		Assert.assertEquals(contractId4, dto.getContractId());
+		Assert.assertEquals(cropYear4, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(invContractGuid4, dto.getInventoryContractGuid());
+		
+		dto = dtos.get(1);
+		Assert.assertEquals(policyId3, dto.getPolicyId());
+		Assert.assertEquals(policyNumber3, dto.getPolicyNumber());
+		Assert.assertEquals(contractId3, dto.getContractId());
+		Assert.assertEquals(cropYear3, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(invContractGuid3, dto.getInventoryContractGuid());
+		
+		dto = dtos.get(2);
+		Assert.assertEquals(policyId1, dto.getPolicyId());
+		Assert.assertEquals(policyNumber1, dto.getPolicyNumber());
+		Assert.assertEquals(contractId1, dto.getContractId());
+		Assert.assertEquals(cropYear1, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(invContractGuid1, dto.getInventoryContractGuid());
+
+		// Test: future years with inventory.
+		dtos = dao.selectByOtherYearInventory(contractId4, cropYear4, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(2, dtos.size());
+
+		dto = dtos.get(0);
+		Assert.assertEquals(policyId3, dto.getPolicyId());
+		Assert.assertEquals(policyNumber3, dto.getPolicyNumber());
+		Assert.assertEquals(contractId3, dto.getContractId());
+		Assert.assertEquals(cropYear3, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(invContractGuid3, dto.getInventoryContractGuid());
+		
+		dto = dtos.get(1);
+		Assert.assertEquals(policyId2, dto.getPolicyId());
+		Assert.assertEquals(policyNumber2, dto.getPolicyNumber());
+		Assert.assertEquals(contractId2, dto.getContractId());
+		Assert.assertEquals(cropYear2, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(invContractGuid2, dto.getInventoryContractGuid());
+	}
+		
+	@Test 
+	public void testSelectByOtherYearDop() throws Exception {	
+		
+		String userId = "JUNIT_TEST";
+
+		PolicyDao dao = persistenceSpringConfig.policyDao();
+
+		createGrower(growerId1, 999888, "grower name");
+		createPolicy(policyId1, growerId1, contractId1, cropYear1, policyNumber1, contractNumber1, 4, "ACTIVE", 1);
+		createGrowerContractYear(gcyId1, contractId1, growerId1, cropYear1, 4);
+		String dyContractGuid1 = createDeclaredYieldContract(contractId1, cropYear1, userId);
+
+		// Test: No other years.
+		List<PolicyDto> dtos = dao.selectByOtherYearDop(contractId1, cropYear1, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size());
+
+		// Test: Other prev years, but no inventory.
+		cropYear2 = 2019;
+		contractId2 = contractId1;
+		contractNumber2 = contractNumber1;
+		policyNumber2 = contractNumber2 + "-19";
+
+		cropYear3 = 2018;
+		contractId3 = contractId1;
+		contractNumber3 = contractNumber1;
+		policyNumber3 = contractNumber3 + "-18";
+
+		cropYear4 = 2017;
+		contractId4 = contractId1;
+		contractNumber4 = contractNumber1;
+		policyNumber4 = contractNumber4 + "-17";		
+		
+		createPolicy(policyId2, growerId1, contractId2, cropYear2, policyNumber2, contractNumber2, 4, "ACTIVE", 1);
+		createPolicy(policyId3, growerId1, contractId3, cropYear3, policyNumber3, contractNumber3, 4, "ACTIVE", 1);
+		createPolicy(policyId4, growerId1, contractId4, cropYear4, policyNumber4, contractNumber4, 4, "ACTIVE", 1);
+
+		createGrowerContractYear(gcyId2, contractId2, growerId1, cropYear2, 4);
+		createGrowerContractYear(gcyId3, contractId3, growerId1, cropYear3, 4);
+		createGrowerContractYear(gcyId4, contractId4, growerId1, cropYear4, 4);
+		
+		dtos = dao.selectByOtherYearDop(contractId1, cropYear1, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size());
+
+		// Test: One year with dop.
+		String dyContractGuid2 = createDeclaredYieldContract(contractId2, cropYear2, userId);
+
+		dtos = dao.selectByOtherYearDop(contractId1, cropYear1, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(1, dtos.size());
+
+		PolicyDto dto = dtos.get(0);
+		Assert.assertEquals(policyId2, dto.getPolicyId());
+		Assert.assertEquals(policyNumber2, dto.getPolicyNumber());
+		Assert.assertEquals(contractId2, dto.getContractId());
+		Assert.assertEquals(cropYear2, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(dyContractGuid2, dto.getDeclaredYieldContractGuid());
+		
+
+		// Test: All prev years with inventory.
+		String dyContractGuid3 = createDeclaredYieldContract(contractId3, cropYear3, userId);
+		String dyContractGuid4 = createDeclaredYieldContract(contractId4, cropYear4, userId);
+
+		dtos = dao.selectByOtherYearDop(contractId1, cropYear1, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(2, dtos.size());
+
+		dto = dtos.get(0);
+		Assert.assertEquals(policyId3, dto.getPolicyId());
+		Assert.assertEquals(policyNumber3, dto.getPolicyNumber());
+		Assert.assertEquals(contractId3, dto.getContractId());
+		Assert.assertEquals(cropYear3, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(dyContractGuid3, dto.getDeclaredYieldContractGuid());
+		
+		dto = dtos.get(1);
+		Assert.assertEquals(policyId2, dto.getPolicyId());
+		Assert.assertEquals(policyNumber2, dto.getPolicyNumber());
+		Assert.assertEquals(contractId2, dto.getContractId());
+		Assert.assertEquals(cropYear2, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(dyContractGuid2, dto.getDeclaredYieldContractGuid());
+
+		// Test: prev and future years with inventory.
+		dtos = dao.selectByOtherYearDop(contractId2, cropYear2, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(3, dtos.size());
+
+		dto = dtos.get(0);
+		Assert.assertEquals(policyId4, dto.getPolicyId());
+		Assert.assertEquals(policyNumber4, dto.getPolicyNumber());
+		Assert.assertEquals(contractId4, dto.getContractId());
+		Assert.assertEquals(cropYear4, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(dyContractGuid4, dto.getDeclaredYieldContractGuid());
+		
+		dto = dtos.get(1);
+		Assert.assertEquals(policyId3, dto.getPolicyId());
+		Assert.assertEquals(policyNumber3, dto.getPolicyNumber());
+		Assert.assertEquals(contractId3, dto.getContractId());
+		Assert.assertEquals(cropYear3, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(dyContractGuid3, dto.getDeclaredYieldContractGuid());
+		
+		dto = dtos.get(2);
+		Assert.assertEquals(policyId1, dto.getPolicyId());
+		Assert.assertEquals(policyNumber1, dto.getPolicyNumber());
+		Assert.assertEquals(contractId1, dto.getContractId());
+		Assert.assertEquals(cropYear1, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(dyContractGuid1, dto.getDeclaredYieldContractGuid());
+
+		// Test: future years with dop.
+		dtos = dao.selectByOtherYearDop(contractId4, cropYear4, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(2, dtos.size());
+
+		dto = dtos.get(0);
+		Assert.assertEquals(policyId3, dto.getPolicyId());
+		Assert.assertEquals(policyNumber3, dto.getPolicyNumber());
+		Assert.assertEquals(contractId3, dto.getContractId());
+		Assert.assertEquals(cropYear3, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(dyContractGuid3, dto.getDeclaredYieldContractGuid());
+		
+		dto = dtos.get(1);
+		Assert.assertEquals(policyId2, dto.getPolicyId());
+		Assert.assertEquals(policyNumber2, dto.getPolicyNumber());
+		Assert.assertEquals(contractId2, dto.getContractId());
+		Assert.assertEquals(cropYear2, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(dyContractGuid2, dto.getDeclaredYieldContractGuid());
+	}
+
+	@Test 
+	public void testSelectByOtherYearVerified() throws Exception {	
+		
+		String userId = "JUNIT_TEST";
+
+		PolicyDao dao = persistenceSpringConfig.policyDao();
+
+		createGrower(growerId1, 999888, "grower name");
+		createPolicy(policyId1, growerId1, contractId1, cropYear1, policyNumber1, contractNumber1, 4, "ACTIVE", 1);
+		createGrowerContractYear(gcyId1, contractId1, growerId1, cropYear1, 4);
+		String dyContractGuid1 = createDeclaredYieldContract(contractId1, cropYear1, userId);
+		String verContractGuid1 = createVerifiedYieldContract(contractId1, cropYear1, dyContractGuid1, userId);
+
+		// Test: No other years.
+		List<PolicyDto> dtos = dao.selectByOtherYearVerified(contractId1, cropYear1, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size());
+
+		// Test: Other prev years, but no verified yield.
+		cropYear2 = 2019;
+		contractId2 = contractId1;
+		contractNumber2 = contractNumber1;
+		policyNumber2 = contractNumber2 + "-19";
+
+		cropYear3 = 2018;
+		contractId3 = contractId1;
+		contractNumber3 = contractNumber1;
+		policyNumber3 = contractNumber3 + "-18";
+
+		cropYear4 = 2017;
+		contractId4 = contractId1;
+		contractNumber4 = contractNumber1;
+		policyNumber4 = contractNumber4 + "-17";		
+		
+		createPolicy(policyId2, growerId1, contractId2, cropYear2, policyNumber2, contractNumber2, 4, "ACTIVE", 1);
+		createPolicy(policyId3, growerId1, contractId3, cropYear3, policyNumber3, contractNumber3, 4, "ACTIVE", 1);
+		createPolicy(policyId4, growerId1, contractId4, cropYear4, policyNumber4, contractNumber4, 4, "ACTIVE", 1);
+
+		createGrowerContractYear(gcyId2, contractId2, growerId1, cropYear2, 4);
+		createGrowerContractYear(gcyId3, contractId3, growerId1, cropYear3, 4);
+		createGrowerContractYear(gcyId4, contractId4, growerId1, cropYear4, 4);
+		
+		dtos = dao.selectByOtherYearVerified(contractId1, cropYear1, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size());
+
+		// Test: One year with verified yield.
+		String dyContractGuid2 = createDeclaredYieldContract(contractId2, cropYear2, userId);
+		String verContractGuid2 = createVerifiedYieldContract(contractId2, cropYear2, dyContractGuid2, userId);
+
+		dtos = dao.selectByOtherYearVerified(contractId1, cropYear1, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(1, dtos.size());
+
+		PolicyDto dto = dtos.get(0);
+		Assert.assertEquals(policyId2, dto.getPolicyId());
+		Assert.assertEquals(policyNumber2, dto.getPolicyNumber());
+		Assert.assertEquals(contractId2, dto.getContractId());
+		Assert.assertEquals(cropYear2, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(verContractGuid2, dto.getVerifiedYieldContractGuid());
+		
+
+		// Test: All prev years with verified yield.
+		String dyContractGuid3 = createDeclaredYieldContract(contractId3, cropYear3, userId);
+		String dyContractGuid4 = createDeclaredYieldContract(contractId4, cropYear4, userId);
+
+		String verContractGuid3 = createVerifiedYieldContract(contractId3, cropYear3, dyContractGuid3, userId);
+		String verContractGuid4 = createVerifiedYieldContract(contractId4, cropYear4, dyContractGuid4, userId);
+		
+		dtos = dao.selectByOtherYearVerified(contractId1, cropYear1, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(2, dtos.size());
+
+		dto = dtos.get(0);
+		Assert.assertEquals(policyId3, dto.getPolicyId());
+		Assert.assertEquals(policyNumber3, dto.getPolicyNumber());
+		Assert.assertEquals(contractId3, dto.getContractId());
+		Assert.assertEquals(cropYear3, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(verContractGuid3, dto.getVerifiedYieldContractGuid());
+		
+		dto = dtos.get(1);
+		Assert.assertEquals(policyId2, dto.getPolicyId());
+		Assert.assertEquals(policyNumber2, dto.getPolicyNumber());
+		Assert.assertEquals(contractId2, dto.getContractId());
+		Assert.assertEquals(cropYear2, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(verContractGuid2, dto.getVerifiedYieldContractGuid());
+
+		// Test: prev and future years with inventory.
+		dtos = dao.selectByOtherYearVerified(contractId2, cropYear2, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(3, dtos.size());
+
+		dto = dtos.get(0);
+		Assert.assertEquals(policyId4, dto.getPolicyId());
+		Assert.assertEquals(policyNumber4, dto.getPolicyNumber());
+		Assert.assertEquals(contractId4, dto.getContractId());
+		Assert.assertEquals(cropYear4, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(verContractGuid4, dto.getVerifiedYieldContractGuid());
+		
+		dto = dtos.get(1);
+		Assert.assertEquals(policyId3, dto.getPolicyId());
+		Assert.assertEquals(policyNumber3, dto.getPolicyNumber());
+		Assert.assertEquals(contractId3, dto.getContractId());
+		Assert.assertEquals(cropYear3, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(verContractGuid3, dto.getVerifiedYieldContractGuid());
+		
+		dto = dtos.get(2);
+		Assert.assertEquals(policyId1, dto.getPolicyId());
+		Assert.assertEquals(policyNumber1, dto.getPolicyNumber());
+		Assert.assertEquals(contractId1, dto.getContractId());
+		Assert.assertEquals(cropYear1, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(verContractGuid1, dto.getVerifiedYieldContractGuid());
+
+		// Test: future years with verified yield.
+		dtos = dao.selectByOtherYearVerified(contractId4, cropYear4, 2);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(2, dtos.size());
+
+		dto = dtos.get(0);
+		Assert.assertEquals(policyId3, dto.getPolicyId());
+		Assert.assertEquals(policyNumber3, dto.getPolicyNumber());
+		Assert.assertEquals(contractId3, dto.getContractId());
+		Assert.assertEquals(cropYear3, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(verContractGuid3, dto.getVerifiedYieldContractGuid());
+		
+		dto = dtos.get(1);
+		Assert.assertEquals(policyId2, dto.getPolicyId());
+		Assert.assertEquals(policyNumber2, dto.getPolicyNumber());
+		Assert.assertEquals(contractId2, dto.getContractId());
+		Assert.assertEquals(cropYear2, dto.getCropYear());
+		Assert.assertEquals(Integer.valueOf(4), dto.getInsurancePlanId());
+		Assert.assertEquals(verContractGuid2, dto.getVerifiedYieldContractGuid());
+	}
+	
 	private void compareStrings(String sortDirection) {
 		//First iteration of loop: previousValue = 0			
 		if(previousStringValue != ""){

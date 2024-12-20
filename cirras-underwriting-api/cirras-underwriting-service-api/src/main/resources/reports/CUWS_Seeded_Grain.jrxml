@@ -396,11 +396,11 @@ order by sort_column,
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="285" splitType="Prevent">
+			<band height="300" splitType="Prevent">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<property name="com.jaspersoft.studio.layout"/>
 				<rectangle>
-					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="325" height="260" uuid="562b0582-0569-4724-bc02-690bdbf1616f">
+					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="280" height="270" uuid="562b0582-0569-4724-bc02-690bdbf1616f">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -408,7 +408,7 @@ order by sort_column,
 					</reportElement>
 				</rectangle>
 				<rectangle>
-					<reportElement stretchType="ElementGroupHeight" x="330" y="0" width="225" height="260" uuid="8af4411a-58f7-47a6-a5ce-87fd7916500d">
+					<reportElement stretchType="ElementGroupHeight" x="285" y="0" width="269" height="270" uuid="8af4411a-58f7-47a6-a5ce-87fd7916500d">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -416,7 +416,7 @@ order by sort_column,
 					</reportElement>
 				</rectangle>
 				<staticText>
-					<reportElement x="2" y="5" width="347" height="15" uuid="192558ac-0bc9-40bc-8fe7-6c14b6fd873e">
+					<reportElement x="2" y="5" width="272" height="23" uuid="192558ac-0bc9-40bc-8fe7-6c14b6fd873e">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -428,7 +428,7 @@ order by sort_column,
 					<text><![CDATA[Do you expect to make any significant changes to your farm managerment this year?]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="5" y="21" width="15" height="15" uuid="510e5703-b83c-4222-84af-2d30d9afae63">
+					<reportElement x="5" y="32" width="15" height="15" uuid="510e5703-b83c-4222-84af-2d30d9afae63">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -446,7 +446,7 @@ order by sort_column,
 					<textFieldExpression><![CDATA[$F{fertilizer_ind}.equalsIgnoreCase( "Y" ) ? "X" : ""]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="25" y="21" width="65" height="15" uuid="7e21c904-2597-4c7e-ad07-53320a3799c1">
+					<reportElement x="25" y="32" width="35" height="15" uuid="7e21c904-2597-4c7e-ad07-53320a3799c1">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement>
@@ -455,7 +455,7 @@ order by sort_column,
 					<text><![CDATA[Fertilizer]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="5" y="40" width="15" height="15" uuid="b3fc655c-6be7-41f6-a067-ef16710e7fe0">
+					<reportElement x="5" y="51" width="15" height="15" uuid="b3fc655c-6be7-41f6-a067-ef16710e7fe0">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -473,8 +473,10 @@ order by sort_column,
 					<textFieldExpression><![CDATA[$F{tilliage_ind}.equalsIgnoreCase( "Y" ) ? "X" : ""]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="25" y="40" width="65" height="15" uuid="7c9f30c3-56f2-4af9-b4d0-764f1071e148">
+					<reportElement x="25" y="51" width="35" height="15" uuid="7c9f30c3-56f2-4af9-b4d0-764f1071e148">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement>
 						<font size="8"/>
@@ -482,7 +484,7 @@ order by sort_column,
 					<text><![CDATA[Tillage]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="114" y="21" width="15" height="15" uuid="b0b9da9f-457d-41ae-8f29-80809a473c61">
+					<reportElement x="66" y="32" width="15" height="15" uuid="b0b9da9f-457d-41ae-8f29-80809a473c61">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -500,8 +502,9 @@ order by sort_column,
 					<textFieldExpression><![CDATA[$F{herbicide_ind}.equalsIgnoreCase( "Y" ) ? "X" : ""]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="134" y="21" width="65" height="15" uuid="8fe775af-dc5b-4176-b9da-e1a7996dca0c">
+					<reportElement x="86" y="32" width="40" height="15" uuid="8fe775af-dc5b-4176-b9da-e1a7996dca0c">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement>
 						<font size="8"/>
@@ -509,7 +512,7 @@ order by sort_column,
 					<text><![CDATA[Herbicide]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="114" y="40" width="15" height="15" uuid="26fd5c81-fa16-4c6d-9821-19ae069c2606">
+					<reportElement x="66" y="51" width="15" height="15" uuid="26fd5c81-fa16-4c6d-9821-19ae069c2606">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -527,7 +530,7 @@ order by sort_column,
 					<textFieldExpression><![CDATA[$F{other_changes_ind}.equalsIgnoreCase( "Y" ) ? "X" : ""]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="134" y="40" width="32" height="15" uuid="0c0dec4b-9404-4ace-ae64-94b2e7016b32">
+					<reportElement x="86" y="51" width="32" height="15" uuid="0c0dec4b-9404-4ace-ae64-94b2e7016b32">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement>
@@ -536,7 +539,7 @@ order by sort_column,
 					<text><![CDATA[Other:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="333" y="7" width="200" height="25" uuid="54fce128-6f39-4c3e-9218-447fa2287655">
+					<reportElement x="289" y="5" width="260" height="25" uuid="54fce128-6f39-4c3e-9218-447fa2287655">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -547,7 +550,7 @@ order by sort_column,
 					<text><![CDATA[Do you expect to have grain stored from previous crop years on August 1st?]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="334" y="34" width="15" height="15" uuid="80d961b6-227e-47ef-88d0-5ff7632ba839">
+					<reportElement x="289" y="32" width="15" height="15" uuid="80d961b6-227e-47ef-88d0-5ff7632ba839">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -565,7 +568,7 @@ order by sort_column,
 					<textFieldExpression><![CDATA["Y".equalsIgnoreCase($F{grain_from_prev_year_ind}) ? "X" : ""]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="354" y="34" width="65" height="15" uuid="0a8cccb1-b748-4999-92c0-417ec1606d88">
+					<reportElement x="309" y="32" width="65" height="15" uuid="0a8cccb1-b748-4999-92c0-417ec1606d88">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement>
@@ -574,7 +577,7 @@ order by sort_column,
 					<text><![CDATA[Yes]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="449" y="34" width="15" height="15" uuid="f90b5629-0e1d-42de-aa65-8fc13583793b">
+					<reportElement x="404" y="32" width="15" height="15" uuid="f90b5629-0e1d-42de-aa65-8fc13583793b">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -592,7 +595,7 @@ order by sort_column,
 					<textFieldExpression><![CDATA["N".equalsIgnoreCase($F{grain_from_prev_year_ind}) ? "X" : ""]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="469" y="34" width="65" height="15" uuid="36a25b6e-6b30-4085-a555-60840ec5b42d">
+					<reportElement x="424" y="32" width="65" height="15" uuid="36a25b6e-6b30-4085-a555-60840ec5b42d">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement>
@@ -601,13 +604,13 @@ order by sort_column,
 					<text><![CDATA[No]]></text>
 				</staticText>
 				<line>
-					<reportElement x="171" y="55" width="150" height="1" uuid="d0834e2e-9ddc-4e00-8860-6b60a17fc350">
+					<reportElement x="125" y="68" width="150" height="1" uuid="d0834e2e-9ddc-4e00-8860-6b60a17fc350">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 				</line>
 				<staticText>
-					<reportElement x="0" y="60" width="324" height="15" uuid="69b5324f-b341-4999-adf8-4f07ff0dbfcd">
+					<reportElement x="0" y="74" width="280" height="15" uuid="69b5324f-b341-4999-adf8-4f07ff0dbfcd">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -625,7 +628,7 @@ order by sort_column,
 					<text><![CDATA[  PART 2 - UNSEEDED ACREAGE DECLARATION]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="2" y="75" width="322" height="30" uuid="f2839b4d-b4b9-4056-bb8c-cb4b96dc3e27">
+					<reportElement x="2" y="89" width="272" height="25" uuid="f2839b4d-b4b9-4056-bb8c-cb4b96dc3e27">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -637,7 +640,7 @@ order by sort_column,
 					<text><![CDATA[I declare that the information provided above is a true and accurate record of all lands, plants and crops identified for which I have an insurable interest.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="331" y="60" width="223" height="15" uuid="0c9b0306-6bb4-4557-9b75-acc6701469fd">
+					<reportElement x="285" y="74" width="269" height="15" uuid="0c9b0306-6bb4-4557-9b75-acc6701469fd">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -654,7 +657,7 @@ order by sort_column,
 					<text><![CDATA[  PART 4 - SEEDED CROP DECLARATION]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="333" y="75" width="222" height="40" uuid="7b129b8b-fe04-4f5f-91b8-870d80385b51">
+					<reportElement x="289" y="89" width="260" height="34" uuid="7b129b8b-fe04-4f5f-91b8-870d80385b51">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -665,12 +668,12 @@ order by sort_column,
 					<text><![CDATA[I declare that the information provided above is a true and accurate record of all lands, plants and crops identified for which I have an insurable interest.]]></text>
 				</staticText>
 				<line>
-					<reportElement x="1" y="136" width="100" height="1" uuid="fed5bc4b-694f-4b1d-b1c8-158fc81e0afc">
+					<reportElement x="1" y="145" width="100" height="1" uuid="fed5bc4b-694f-4b1d-b1c8-158fc81e0afc">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 				</line>
 				<staticText>
-					<reportElement x="2" y="137" width="140" height="20" uuid="033d8aae-6910-4825-bea1-faf69e702c8e">
+					<reportElement x="2" y="146" width="140" height="20" uuid="033d8aae-6910-4825-bea1-faf69e702c8e">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -681,12 +684,12 @@ order by sort_column,
 					<text><![CDATA[Signature of Applicant(s)]]></text>
 				</staticText>
 				<line>
-					<reportElement x="1" y="181" width="100" height="1" uuid="35dcd5e5-3c50-487f-a886-acc4995cbb90">
+					<reportElement x="1" y="190" width="100" height="1" uuid="35dcd5e5-3c50-487f-a886-acc4995cbb90">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 				</line>
 				<staticText>
-					<reportElement x="2" y="182" width="140" height="20" uuid="44d4a520-babe-4a60-8c74-25155a6fe51c">
+					<reportElement x="2" y="191" width="140" height="20" uuid="44d4a520-babe-4a60-8c74-25155a6fe51c">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -697,12 +700,12 @@ order by sort_column,
 					<text><![CDATA[Date (yyyy/mm/dd)]]></text>
 				</staticText>
 				<line>
-					<reportElement x="1" y="226" width="100" height="1" uuid="6d0bc01d-b80e-4851-b16c-a9aad7b747c3">
+					<reportElement x="1" y="235" width="100" height="1" uuid="6d0bc01d-b80e-4851-b16c-a9aad7b747c3">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 				</line>
 				<staticText>
-					<reportElement x="2" y="227" width="188" height="20" uuid="c98cbda4-108d-4279-b3c5-cb67abaf0f05">
+					<reportElement x="2" y="236" width="122" height="25" uuid="c98cbda4-108d-4279-b3c5-cb67abaf0f05">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -713,7 +716,7 @@ order by sort_column,
 					<text><![CDATA[Production Insurance Representative Initials]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="331" y="137" width="90" height="20" uuid="e8b27e99-5dbd-4af3-9515-e67492f7e531">
+					<reportElement x="289" y="146" width="90" height="20" uuid="e8b27e99-5dbd-4af3-9515-e67492f7e531">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -724,19 +727,19 @@ order by sort_column,
 					<text><![CDATA[Signature of Applicant(s)]]></text>
 				</staticText>
 				<line>
-					<reportElement x="331" y="136" width="98" height="1" uuid="51772468-09c7-4ac3-ab98-ce102609643e">
+					<reportElement x="289" y="145" width="98" height="1" uuid="51772468-09c7-4ac3-ab98-ce102609643e">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 				</line>
 				<line>
-					<reportElement x="331" y="181" width="98" height="1" uuid="227e1709-86a0-4851-ab4e-c172e2096b30">
+					<reportElement x="289" y="190" width="98" height="1" uuid="227e1709-86a0-4851-ab4e-c172e2096b30">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 				</line>
 				<staticText>
-					<reportElement x="331" y="182" width="80" height="20" uuid="25bc8b4e-0787-468b-8b8e-fce5416cda09">
+					<reportElement x="289" y="191" width="80" height="20" uuid="25bc8b4e-0787-468b-8b8e-fce5416cda09">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -747,13 +750,13 @@ order by sort_column,
 					<text><![CDATA[Date (yyyy/mm/dd)]]></text>
 				</staticText>
 				<line>
-					<reportElement x="331" y="221" width="98" height="1" uuid="2a603ed5-dfd5-4709-b5a9-2dbe657f54b7">
+					<reportElement x="289" y="235" width="98" height="1" uuid="2a603ed5-dfd5-4709-b5a9-2dbe657f54b7">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 				</line>
 				<staticText>
-					<reportElement x="331" y="222" width="96" height="25" uuid="b9c82767-a291-4a9a-a0da-da12587c8c84">
+					<reportElement x="289" y="236" width="96" height="25" uuid="b9c82767-a291-4a9a-a0da-da12587c8c84">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -765,7 +768,7 @@ order by sort_column,
 					<text><![CDATA[Production Insurance Representative Initials]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="171" y="21" width="150" height="34" uuid="0fe9890c-6abe-4c3a-a27d-7624fc790752">
+					<reportElement x="124" y="30" width="150" height="38" uuid="0fe9890c-6abe-4c3a-a27d-7624fc790752">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -777,7 +780,7 @@ order by sort_column,
 					<textFieldExpression><![CDATA[$F{other_changes_comment}]]></textFieldExpression>
 				</textField>
 				<frame>
-					<reportElement positionType="Float" x="1" y="265" width="553" height="20" uuid="1cefd45f-e277-4e95-bf6e-17e9b83f6cd5">
+					<reportElement positionType="Float" x="1" y="274" width="553" height="20" uuid="1cefd45f-e277-4e95-bf6e-17e9b83f6cd5">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="ShowOutOfBoundContent" value="false"/>
 					</reportElement>
@@ -853,7 +856,7 @@ order by sort_column,
 					</staticText>
 				</frame>
 				<subreport>
-					<reportElement x="199" y="115" width="125" height="140" uuid="753cc0e3-7fce-4365-a7b0-d5a870a8ce2e">
+					<reportElement x="148" y="124" width="125" height="140" uuid="753cc0e3-7fce-4365-a7b0-d5a870a8ce2e">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -869,7 +872,7 @@ order by sort_column,
 					<subreportExpression><![CDATA["subreports/CUWS_Inv_Grain_Acres_To_Seed.jasper"]]></subreportExpression>
 				</subreport>
 				<subreport>
-					<reportElement x="430" y="115" width="124" height="140" uuid="da161c3d-9d7e-49de-9629-8224268bec9b">
+					<reportElement x="424" y="124" width="125" height="140" uuid="da161c3d-9d7e-49de-9629-8224268bec9b">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>

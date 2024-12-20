@@ -24,9 +24,15 @@ public interface UnderwritingCommentDao extends Serializable {
     
     void deleteForField(Integer fieldId) throws DaoException, NotFoundDaoException;
     
+    void deleteForVerifiedYieldSummaryGuid(String verifiedYieldSummaryGuid) throws DaoException, NotFoundDaoException;
+    
+    void deleteForVerifiedYieldContract(String verifiedYieldContractGuid) throws DaoException, NotFoundDaoException;
+
     List<UnderwritingCommentDto> select(Integer annualFieldDetailId) throws DaoException;
     
     List<UnderwritingCommentDto> selectForDopContract(String declaredYieldContractGuid) throws DaoException;
 
     List<UnderwritingCommentDto> selectForField(Integer fieldId) throws DaoException;
+
+    List<UnderwritingCommentDto> selectForVerifiedYieldSummary(String verifiedYieldSummaryGuid) throws DaoException;
 }
