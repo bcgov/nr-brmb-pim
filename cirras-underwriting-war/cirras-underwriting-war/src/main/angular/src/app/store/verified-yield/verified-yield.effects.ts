@@ -9,7 +9,7 @@ import { catchError, concatMap, debounceTime, map, switchMap, withLatestFrom } f
 import { convertToErrorState } from "../../conversion/conversion-from-rest";  
 import { RootState } from "../index";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { REST_VERSION } from "src/app/utils/constants";
+import { REST_VERSION, SCREEN_TYPE } from "src/app/utils/constants";
 import { convertToVerifiedYieldContract } from "src/app/conversion/conversion-from-rest-yield";
 import { HttpClient } from '@angular/common/http';
 import { ADD_NEW_VERIFIED_YIELD, DELETE_VERIFIED_YIELD, DeleteVerifiedYieldContractAction, DeleteVerifiedYieldContractError, LOAD_VERIFIED_YIELD, LoadVerifiedYieldContractAction, LoadVerifiedYieldContractError, LoadVerifiedYieldContractSuccess, ROLLOVER_VERIFIED_YIELD, RolloverVerifiedYieldContract, RolloverVerifiedYieldContractAction, UPDATE_VERIFIED_YIELD, VerifiedYieldContractAction } from "./verified-yield.actions";
@@ -138,7 +138,7 @@ addNewVerifiedYield: Observable<Action> = createEffect (() => this.actions.pipe(
 
                     let newVerifiedYieldContract: VerifiedYieldContract = convertToVerifiedYieldContract(response.body, response.headers ? response.headers.get("ETag") : null) 
 
-                    this.store.dispatch(LoadGrowerContract(VERIFIED_YIELD_COMPONENT_ID, policyId)) // to update the side navigation links
+                    this.store.dispatch(LoadGrowerContract(VERIFIED_YIELD_COMPONENT_ID, policyId, SCREEN_TYPE.VERIFIED)) // to update the side navigation links
                     return [                                                                         
                       LoadVerifiedYieldContractSuccess(typedAction.componentId, newVerifiedYieldContract)                             
                     ]
@@ -184,7 +184,9 @@ updateDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
 
                     let newVerifiedYieldContract: VerifiedYieldContract = convertToVerifiedYieldContract(response.body, response.headers ? response.headers.get("ETag") : null) 
 
-                    this.store.dispatch(LoadGrowerContract(VERIFIED_YIELD_COMPONENT_ID, policyId)) // to update the side navigation links
+                    // for now, there is no need to update the navigation links, or related policies, or other crop years when updating the verified yield
+                    // may be in the future?
+                    // this.store.dispatch(LoadGrowerContract(VERIFIED_YIELD_COMPONENT_ID, policyId, SCREEN_TYPE.VERIFIED))
 
                     return [                                                                         
                       LoadVerifiedYieldContractSuccess(typedAction.componentId, newVerifiedYieldContract)                             
@@ -228,7 +230,7 @@ deleteVerifiedYield: Observable<Action> = createEffect (() => this.actions.pipe(
 
                   displayDeleteSuccessSnackbar(this.snackbarService, "Verified Yield ");
 
-                  this.store.dispatch(LoadGrowerContract(typedAction.componentId, typedAction.payload.policyId)) // to update the side navigation links
+                  this.store.dispatch(LoadGrowerContract(typedAction.componentId, typedAction.payload.policyId, SCREEN_TYPE.VERIFIED)) // to update the side navigation links
                   
                   return RolloverVerifiedYieldContract(typedAction.componentId, typedAction.payload.policyId);
 

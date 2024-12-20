@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GrowerContractHeaderComponent {
-
   @Input() growerContract: UwContract;  
 
   constructor(

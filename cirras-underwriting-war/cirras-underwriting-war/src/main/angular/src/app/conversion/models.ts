@@ -51,7 +51,8 @@ export interface UwContract {
 
   isSelectedForPrint?: boolean;
   linkedPolicies? : Array<UwContract>;
-  
+  otherYearPolicies?: Array<OtherYearPolicy>; 
+
   etag?: string;
   type?: string;
 }
@@ -238,3 +239,12 @@ export interface Field {
   etag?: string;
   type: string;
 }
+
+export interface  OtherYearPolicy {
+	policyId?: number;
+	insurancePlanId?: number ;
+	policyNumber?: string;
+	cropYear?: number;
+	screenRecordGuid?: string;
+	screenType?: string;
+	}

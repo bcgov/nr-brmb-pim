@@ -10,7 +10,7 @@ import { convertToErrorState} from "../../conversion/conversion-from-rest";
 
 import {RootState} from "../index";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { REST_VERSION } from "src/app/utils/constants";
+import { REST_VERSION, SCREEN_TYPE } from "src/app/utils/constants";
 import { 
   LoadDopYieldContractAction, 
   LoadDopYieldContractError, 
@@ -39,6 +39,7 @@ import { convertToDopYieldContractRsrc } from "src/app/conversion/conversion-to-
 import { displayDeleteSuccessSnackbar, displaySaveSuccessSnackbar, displayErrorMessage } from "src/app/utils/user-feedback-utils";
 
 import { HttpClient } from '@angular/common/http';
+import { LoadGrowerContract } from "../grower-contract/grower-contract.actions";
 
 @Injectable()
 export class DopEffects {
@@ -174,7 +175,6 @@ addNewDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
             let typedAction = <DopYieldContractAction>action;
             let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
-            let payload = <DopYieldContract>typedAction.payload.dopYieldContract;
 
             const dopYieldContract = typedAction.payload.dopYieldContract 
             const body: DopYieldContractRsrc = convertToDopYieldContractRsrc(dopYieldContract)
@@ -193,6 +193,8 @@ addNewDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
                     displaySaveSuccessSnackbar(this.snackbarService, "DOP Yield ");
 
                     let newdopYieldContract: DopYieldContract = convertToDopContract(response.body, response.headers ? response.headers.get("ETag") : null) 
+
+                    this.store.dispatch(LoadGrowerContract(typedAction.componentId, typedAction.payload.policyId, SCREEN_TYPE.DOP)) // to update the side navigation links
 
                     return [                                                                         
                       LoadDopYieldContractSuccess(typedAction.componentId, newdopYieldContract)                             
@@ -238,6 +240,8 @@ updateDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
 
                     let newInventoryContract: DopYieldContract = convertToDopContract(response.body, response.headers ? response.headers.get("ETag") : null) 
 
+                    // For now, there is no need to update the navigation links, or the related policies or other crop years on update DOP. May be for future use? 
+                    // this.store.dispatch(LoadGrowerContract(typedAction.componentId, typedAction.payload.policyId, SCREEN_TYPE.DOP)) 
                     return [                                                                         
                       LoadDopYieldContractSuccess(typedAction.componentId, newInventoryContract)                             
                     ]
@@ -279,6 +283,8 @@ deleteDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
                 map((response: any) => {
 
                   displayDeleteSuccessSnackbar(this.snackbarService, "DOP Yield ");
+                  
+                  this.store.dispatch(LoadGrowerContract(typedAction.componentId, typedAction.payload.policyId, SCREEN_TYPE.DOP)) // to update the side navigation links
                   
                   return RolloverDopYieldContract(typedAction.componentId, typedAction.payload.policyId);
 

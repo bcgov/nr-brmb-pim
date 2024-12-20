@@ -34,10 +34,11 @@ export class GrowerContractInfoEffects {
         let typedAction = <LoadGrowerContractAction>action;
   
         let authToken = this.tokenService.getOauthToken();
-        let requestId = `cirras-underwritingE${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+        let requestId = `cirras-underwriting${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
   
         const policyId = typedAction.payload.value;
-  
+        let screenType = typedAction.payload.screenType;
+
         return this.CirrasUnderwritingAPIService.getTheUwContract(
           policyId,
           requestId,
@@ -45,7 +46,9 @@ export class GrowerContractInfoEffects {
           "no-cache",  
           "no-cache",  
           `Bearer ${authToken}`,
-          "true"
+          "true",
+          "true",
+          screenType
         ).pipe(
           map((response: UwContractRsrc) => {
             return LoadGrowerContractSuccess(typedAction.componentId, convertToUwContract(response ) ); 

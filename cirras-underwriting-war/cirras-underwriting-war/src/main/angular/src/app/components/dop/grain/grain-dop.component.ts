@@ -24,6 +24,7 @@ import {ViewEncapsulation } from '@angular/core';
 import { GradeModifierOptionsType } from '../dop-common';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { roundUpDecimalYield } from '../../inventory/inventory-common';
+import { SCREEN_TYPE } from 'src/app/utils/constants';
 
 @Component({
   selector: 'grain-dop',
@@ -82,7 +83,7 @@ export class GrainDopComponent extends BaseComponent{
 
           this.store.dispatch(ClearDopYieldContract());
 
-          this.store.dispatch(LoadGrowerContract(this.componentId, this.policyId))
+          this.store.dispatch(LoadGrowerContract(this.componentId, this.policyId, SCREEN_TYPE.DOP))
 
           this.store.dispatch( LoadYieldMeasUnitList(this.componentId, this.insurancePlanId) )
 
@@ -714,10 +715,10 @@ export class GrainDopComponent extends BaseComponent{
     const newDopYieldContract: DopYieldContract = this.getUpdatedDopYieldContract()
 
     if (this.dopYieldContract.declaredYieldContractGuid) {
-      this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, newDopYieldContract))
+      this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, newDopYieldContract, this.policyId))
     } else {
       // add new
-      this.store.dispatch(AddNewDopYieldContract(DOP_COMPONENT_ID, newDopYieldContract))
+      this.store.dispatch(AddNewDopYieldContract(DOP_COMPONENT_ID, newDopYieldContract, this.policyId))
     }
 
     this.hasDataChanged = false   
