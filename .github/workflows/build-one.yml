@@ -39,6 +39,7 @@ jobs:
       API_TARGET: cirras-underwriting-api
       SWAGGER_TARGET_PATH: cirras-underwriting-ngclient-lib/cirras-underwriting-ngclient-lib/src/main/angular/src/swagger/swagger.json
       NPM_ARTIFACT_PATH: \@cirras/cirras-underwriting-api/-/@cirras
+      JAVA_VERSION: 17
 
   build-underwriting-war:
     uses: ./.github/workflows/build-package.yml
@@ -48,3 +49,4 @@ jobs:
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-war
       TAG: ${{ inputs.TAG }}
+      JAVA_VERSION: 17
