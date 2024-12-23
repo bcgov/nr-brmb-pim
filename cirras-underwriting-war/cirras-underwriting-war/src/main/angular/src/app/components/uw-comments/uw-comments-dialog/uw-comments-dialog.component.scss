@@ -19,6 +19,11 @@
         &.comments-info {
           grid-template-columns: 1fr 1fr 1fr 5fr 1fr;
 
+          .vys-comments-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 2fr 1fr;
+          }
+
           .dop-comments-header {
             display: grid;
             grid-template-columns: 1fr 1.5fr 1fr 3fr 1fr;

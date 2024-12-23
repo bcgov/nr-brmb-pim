@@ -1,5 +1,5 @@
 <div class="plcy-inv-cmdty-totals-header"
-    style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 125px 60px; padding-left: 10px;">
+    style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 125px 100px; padding-left: 10px;">
 
     <div *ngIf="isUnsaved" class="table-header border-top border-left border-right"
         style="grid-column-start: 1; grid-column-end: 10;">
@@ -12,7 +12,7 @@
         </span>
     </div>
 
-    <div class="table-header border-top border-left border-right" style="grid-column-start: 1; grid-column-end: 10; padding-top: 8px;">
+    <div class="table-header border-top border-left border-right" style="text-align: left; padding-left: 6px; grid-column-start: 1; grid-column-end: 10; padding-top: 8px; background-color: #F5F5FF;">
         Yield Summary
     </div>
 
@@ -45,10 +45,12 @@
         Comments
     </div>
 
-    <div class="grain-unsdd-inv-tot-cmdty-container"
-        style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 125px 60px; margin-left: 0px;">
-        <verified-yield-summary *ngFor="let summary of summaries" [summary]="summary"
+    <div class="verified-yield-summaries-container"
+        style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 125px 100px; margin-left: 0px;">
+        <verified-yield-summary *ngFor="let summary of summaries" 
+            [summary]="summary"
             [summariesFormArray]="summariesFormArray"
+            
             style="display: contents;"></verified-yield-summary>
     </div>
 

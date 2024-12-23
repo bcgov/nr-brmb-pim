@@ -5,15 +5,22 @@ import { UwCommentsDialogComponent } from "../uw-comments-dialog/uw-comments-dia
 
 export interface DialogData {
     underwritingCommentTypeCode: string;
+    // Inventory and DOP field data
     annualFieldDetailId: number;
+    fieldId: number;
+    fieldName: string;
+    legalLocation: string;
+    // DOP policy data
     growerContractYearId: number;
     declaredYieldContractGuid: string;
     policyNumber: string;
     growerName: string;
     growerNumber: string;
-    fieldId: number;
-    fieldName: string;
-    legalLocation: string;
+    // Verified Yield summary data:
+    verifiedYieldSummaryGuid: string;
+    commodityName: string,
+    insuredAcres: string,
+    // common data
     uwComments: UnderwritingComment[];
 }
 
@@ -33,6 +40,9 @@ export class UwCommentsButtonComponent {
     @Input() fieldId: number;
     @Input() fieldName: string;
     @Input() legalLocation: string;
+    @Input() verifiedYieldSummaryGuid: string;
+    @Input() commodityName: string;
+    @Input() insuredAcres: string;
     @Input() uwComments: UnderwritingComment[];
     @Output() onDone = new EventEmitter<UnderwritingComment[]>();
 
@@ -66,6 +76,9 @@ export class UwCommentsButtonComponent {
             fieldId: this.fieldId,
             fieldName: this.fieldName,
             legalLocation: this.legalLocation,
+            verifiedYieldSummaryGuid: this.verifiedYieldSummaryGuid,
+            commodityName: this.commodityName,
+            insuredAcres: this.insuredAcres,
             uwComments: this.uwCommentsForDialog
         };
     }

@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input, SimpleChanges } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { Store } from '@ngrx/store';
 import { VerifiedYieldSummary } from 'src/app/conversion/models-yield';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { RootState } from 'src/app/store';
+import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
+import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
 
 @Component({
   selector: 'verified-yield-summary',
@@ -14,6 +17,7 @@ import { RootState } from 'src/app/store';
 export class VerifiedYieldSummaryComponent {
   @Input() summary: VerifiedYieldSummary;
   @Input() summariesFormArray: UntypedFormArray;
+  @Input() isUnsaved: boolean;
 
   summaryFormGroup: UntypedFormGroup;
   
@@ -44,10 +48,14 @@ export class VerifiedYieldSummaryComponent {
         productionGuarantee: [this.summary.productionGuarantee],
         probableYield: [this.summary.probableYield],
         cropCommodityName: [this.summary.cropCommodityName],
-        uwComments: [this.summary.uwComments] // Array<UnderwritingComment>
+        uwComments: [this.summary.uwComments] 
       });
       this.summariesFormArray.push(this.summaryFormGroup);
     }
 
+      onVerifiedYieldCommentsDone(uwComments: UnderwritingComment[]) {
+        this.summary.uwComments = uwComments;
+        this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true));
+      }
 
 }

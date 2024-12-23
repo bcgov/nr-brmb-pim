@@ -1,6 +1,3 @@
-<!-- <p>grain-verified-yield-component works!</p> -->
-
-
 <base-wrapper [errorState]="errorState"> 
     <div class="base-container">
         <div class="base-container flex-y"> 
@@ -95,7 +92,7 @@
                 </div>
             </div>
 
-           <div style="margin-top: 8px;">
+           <div style="margin-top: 16px;">
             <!-- commodity totals -->
             <verified-yield-commodity-list
                 *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodities"
@@ -104,7 +101,7 @@
                 [isUnsaved]="isUnsaved"></verified-yield-commodity-list>
             </div>
 
-            <div style="margin-top: 16px;">
+            <div style="margin-top: 32px;">
                 <!-- amendments -->
                 <verified-yield-amendment-list
                     *ngIf="verifiedYieldContract && cropCommodityList"
@@ -117,16 +114,15 @@
                     ></verified-yield-amendment-list>
             </div>
 
-            <div style="margin-top: 16px;">
+            <div style="margin-top: 32px;">
                 <!-- yield summary -->
                 <verified-yield-summary-list
-                    *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldSummaries"
+                    *ngIf="growerContract && verifiedYieldContract && verifiedYieldContract.verifiedYieldSummaries"
                     [summaries]="verifiedYieldContract.verifiedYieldSummaries"
                     [summariesFormArray]="getViewModel().formGroup.controls.verifiedYieldSummaries"
                     [isUnsaved]="isUnsaved"
                     ></verified-yield-summary-list>
             </div>
-
 
         </form>
         </div>
