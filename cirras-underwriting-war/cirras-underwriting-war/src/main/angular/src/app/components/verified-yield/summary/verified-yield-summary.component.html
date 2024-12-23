@@ -1,0 +1,45 @@
+<div [formGroup]="summaryFormGroup" style="display: contents;">
+    <div class="readonly border-right border-bottom border-left" style="padding-left: 6px;">
+        {{ summaryFormGroup.value.cropCommodityName | titlecase }}
+        <span *ngIf="summaryFormGroup.value.isPedigreeInd == true" >&nbsp; Pedigreed</span>
+    </div>
+    <div class="readonly border-right border-bottom center">
+        {{ summaryFormGroup.value.totalInsuredAcres | number: '1.0-1' }}
+    </div>
+    <div class="readonly border-right border-bottom center">
+        {{ summaryFormGroup.value.harvestedYield | number: '1.0-3' }}
+    </div>
+
+    <div class="inventory-fill number border-right border-bottom">
+        {{ summaryFormGroup.value.harvestedYieldPerAcre | number: '1.0-3' }}
+    </div>
+
+    <div class="readonly border-right border-bottom center">
+        {{ summaryFormGroup.value.appraisedYield | number: '1.0-3' }}
+    </div>
+    <div class="readonly border-right border-bottom center">
+        {{ summaryFormGroup.value.assessedYield | number: '1.0-3' }}
+    </div>
+
+    <div class="inventory-fill number border-right border-bottom">
+        {{ summaryFormGroup.value.yieldToCount | number: '1.0-3' }}
+    </div> 
+    
+    <div class="readonly border-right border-bottom center">
+        {{ summaryFormGroup.value.yieldPercentPy | number: '1.0-3' }}
+    </div>
+
+    <div class="readonly border-right border-bottom center">
+        <!-- TODO add comments button -->
+        <!-- <uw-comments-button
+            [underwritingCommentTypeCode]="'DOP'"
+            [growerContractYearId]="dopYieldContract?.growerContractYearId"
+            [declaredYieldContractGuid]="dopYieldContract?.declaredYieldContractGuid"
+            [policyNumber]="growerContract?.policyNumber"
+            [growerName]="growerContract?.growerName"
+            [growerNumber]="growerContract?.growerNumber"
+            [uwComments]="dopYieldContract?.uwComments"
+            (onDone)="onDopCommentsDone($event)"></uw-comments-button> -->
+    </div>
+
+</div>

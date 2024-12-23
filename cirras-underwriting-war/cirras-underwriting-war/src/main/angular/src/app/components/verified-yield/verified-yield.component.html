@@ -117,6 +117,17 @@
                     ></verified-yield-amendment-list>
             </div>
 
+            <div style="margin-top: 16px;">
+                <!-- yield summary -->
+                <verified-yield-summary-list
+                    *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldSummaries"
+                    [summaries]="verifiedYieldContract.verifiedYieldSummaries"
+                    [summariesFormArray]="getViewModel().formGroup.controls.verifiedYieldSummaries"
+                    [isUnsaved]="isUnsaved"
+                    ></verified-yield-summary-list>
+            </div>
+
+
         </form>
         </div>
     </div>
