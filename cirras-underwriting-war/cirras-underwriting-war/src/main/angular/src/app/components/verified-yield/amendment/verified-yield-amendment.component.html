@@ -1,5 +1,5 @@
-<div [formGroup]="amendmentFormGroup" style="display: contents;">
-    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill border-right border-bottom border-left" style="padding-left: 6px;">
+<div id="divAmendmentContent" [formGroup]="amendmentFormGroup" style="display: contents;">
+    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill border-right border-bottom border-left" style="padding-left: 6px; background-color: inherit;">
        
         <mat-form-field appearance="fill">
             <mat-select hideSingleSelectionIndicator="true"
@@ -11,7 +11,7 @@
         </mat-form-field>
 
     </div>
-    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill border-right border-bottom center">
+    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill border-right border-bottom center" style="background-color: inherit;">
 
         <mat-form-field appearance="fill" style="width: 100%;">
             <input 
@@ -32,7 +32,7 @@
         <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
 
     </div>
-    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill border-right border-bottom center">
+    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill border-right border-bottom center" style="background-color: inherit;">
         <mat-form-field appearance="fill">
             <input 
                 type="text" 
@@ -52,7 +52,7 @@
         <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
     </div>
 
-    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill number border-right border-bottom">
+    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill number border-right border-bottom" style="background-color: inherit;">
         <mat-form-field appearance="fill">
             <input matInput matInputCommified formControlName="yieldPerAcre" maxlength="10"
                 (keypress)="numberOnly($event)" (blur)="updateYieldPerAcre()" />
@@ -61,7 +61,7 @@
             matTooltip="Editable field">edit</mat-icon>
     </div>
 
-    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill number border-right border-bottom">
+    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill number border-right border-bottom" style="background-color: inherit;">
         <mat-form-field appearance="fill">
             <input matInput matInputCommified formControlName="acres" maxlength="10"
                 (keypress)="numberOnly($event)" (blur)="updateAcres()" />
@@ -70,7 +70,7 @@
             matTooltip="Editable field">edit</mat-icon>
     </div> 
     
-    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="border-right border-bottom center">
+    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="border-right border-bottom center" style="background-color: inherit;">
         <mat-form-field appearance="fill"  style="width: 100%;" class="inventory-fill">
             <textarea matInput formControlName="rationale" 
                 cdkTextareaAutosize #autosize="cdkTextareaAutosize"
@@ -83,7 +83,7 @@
             matTooltip="Editable field">edit</mat-icon>
     </div>
 
-    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="readonly border-right border-bottom center">
+    <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="readonly border-right border-bottom center" style="background-color: inherit;">
         <mat-icon *ngIf="securityUtilService.canEditVerifiedYield()"
             matTooltip="Delete amendment." 
             style="margin-left: 4px; margin-right: 4px;"

@@ -160,9 +160,9 @@ export class GrowerContractHeaderComponent {
 
     if (routerUrl.indexOf(ResourcesRoutes.VERIFIED_YIELD_GRAIN) > -1 ) {
       styles = {  
-        'border': '1px solid #DEC7DE',
+        'border': '1px solid #C4C4FF',
         'border-radius': '5px',
-        'background': '#FFF5FF'
+        'background': '#F5F5FF'
       }
     }
 

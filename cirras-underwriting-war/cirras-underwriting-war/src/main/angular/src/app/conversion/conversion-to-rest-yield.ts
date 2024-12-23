@@ -49,6 +49,7 @@ export function convertToDopYieldContractRsrc(dopYieldContract: DopYieldContract
         fields: verifiedYieldContract.fields,
         verifiedYieldContractCommodities: verifiedYieldContract.verifiedYieldContractCommodities,
         verifiedYieldAmendments: verifiedYieldContract.verifiedYieldAmendments,
+        verifiedYieldSummaries: verifiedYieldContract.verifiedYieldSummaries,
         productWarningMessages: verifiedYieldContract.productWarningMessages,
         etag: verifiedYieldContract.etag,
         type:  "VerifiedYieldContractRsrc"     

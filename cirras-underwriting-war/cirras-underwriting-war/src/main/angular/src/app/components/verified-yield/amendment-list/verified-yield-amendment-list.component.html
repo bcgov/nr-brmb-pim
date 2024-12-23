@@ -1,10 +1,10 @@
 <div class="plcy-inv-cmdty-totals-header"
     style="grid-template-columns: 123px 250px 180px 125px 115px 500px 60px; padding-left: 10px;">
 
-    <div class="table-header border-top border-left" style="grid-column-start: 1; grid-column-end: 6; padding-top: 8px;">
+    <div class="table-header border-top border-left" style="text-align: left; padding-left: 6px; grid-column-start: 1; grid-column-end: 6; padding-top: 8px; background-color: #F5F5FF;">
         Amendments
     </div>
-    <div class="table-header border-top border-right" style="grid-column-start: 6; grid-column-end: 8; text-align: right; height:40px; padding-top:2px; padding-right: 2px;">
+    <div class="table-header border-top border-right" style="grid-column-start: 6; grid-column-end: 8; text-align: right; height:40px; padding-top:2px; padding-right: 2px; background-color: #F5F5FF;">
         <button 
             mat-raised-button class="secondary" 
             (click)="addAmendment()">
@@ -34,8 +34,8 @@
         Actions
     </div>
 
-    <div *ngIf="fieldOptions"
-        class="grain-unsdd-inv-tot-cmdty-container"
+    <div *ngIf="fieldOptions && cropCommodityOptions"
+        class="verified-yield-amendments-container"
         style="grid-template-columns: 123px 250px 180px 125px 115px 500px 60px; margin-left: 0px;">
         <verified-yield-amendment *ngFor="let amendment of amendments" [amendment]="amendment"
             [amendmentsFormArray]="amendmentsFormArray" 

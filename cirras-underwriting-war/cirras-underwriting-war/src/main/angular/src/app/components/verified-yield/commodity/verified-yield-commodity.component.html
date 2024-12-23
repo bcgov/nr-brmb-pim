@@ -1,16 +1,16 @@
-<div [formGroup]="commodityFormGroup" style="display: contents;">
-    <div class="readonly border-right border-bottom border-left" style="padding-left: 6px;">
+<div id="divCommodityContent" [formGroup]="commodityFormGroup" style="display: contents;">
+    <div class="readonly border-right border-bottom border-left" style="padding-left: 6px; background-color: inherit;">
         {{ commodityFormGroup.value.cropCommodityName | titlecase }}
         <span *ngIf="commodityFormGroup.value.isPedigreeInd == true" >&nbsp; Pedigreed</span>
     </div>
-    <div class="readonly border-right border-bottom center">
+    <div class="readonly border-right border-bottom center" style="background-color: inherit;">
         {{ commodityFormGroup.value.totalInsuredAcres | number: '1.0-1' }}
     </div>
-    <div class="readonly border-right border-bottom center">
+    <div class="readonly border-right border-bottom center" style="background-color: inherit;">
         {{ commodityFormGroup.value.harvestedAcres | number: '1.0-1' }}
     </div>
 
-    <div class="inventory-fill number border-right border-bottom">
+    <div class="inventory-fill number border-right border-bottom" style="background-color: inherit;">
         <mat-form-field appearance="fill">
             <input matInput matInputCommified formControlName="harvestedAcresOverride" maxlength="10"
                 (keypress)="numberOnly($event)" (blur)="updateHarvestedAcresOverride()" />
@@ -19,14 +19,14 @@
             matTooltip="Harvested Acres Override is writeable">edit</mat-icon>
     </div>
 
-    <div class="readonly border-right border-bottom center">
+    <div class="readonly border-right border-bottom center" style="background-color: inherit;">
         {{ commodityFormGroup.value.productionGuarantee | number: '1.0-1' }}
     </div>
-    <div class="readonly border-right border-bottom center">
+    <div class="readonly border-right border-bottom center" style="background-color: inherit;">
         {{ commodityFormGroup.value.harvestedYield | number: '1.0-3' }}
     </div>
 
-    <div class="inventory-fill number border-right border-bottom">
+    <div class="inventory-fill number border-right border-bottom" style="background-color: inherit;">
         <mat-form-field appearance="fill">
             <input matInput matInputCommified formControlName="harvestedYieldOverride" maxlength="10"
                 (keypress)="numberOnly($event)" (blur)="updateHarvestedYieldOverride()" />
@@ -35,11 +35,11 @@
             matTooltip="Harvested Yield Override is writeable">edit</mat-icon>
     </div> 
     
-    <div class="readonly border-right border-bottom center">
+    <div class="readonly border-right border-bottom center" style="background-color: inherit;">
         {{ commodityFormGroup.value.yieldPerAcre | number: '1.0-3' }}
     </div>
 
-    <div class="readonly border-right border-bottom center">
+    <div class="readonly border-right border-bottom center" style="background-color: inherit;">
         <mat-icon *ngIf="securityUtilService.canEditVerifiedYield()"
             matTooltip="Clear editable fields for commodity." 
             style="margin-left: 4px; margin-right: 4px;"

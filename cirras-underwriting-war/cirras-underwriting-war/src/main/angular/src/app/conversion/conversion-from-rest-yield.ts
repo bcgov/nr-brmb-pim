@@ -90,6 +90,7 @@ export function convertToYieldMeasUnit(yieldMeasUnitRes: YieldMeasUnitTypeCodeRs
       fields: verifiedYieldContract.fields,
       verifiedYieldContractCommodities: verifiedYieldContract.verifiedYieldContractCommodities,
       verifiedYieldAmendments: verifiedYieldContract.verifiedYieldAmendments,
+      verifiedYieldSummaries: verifiedYieldContract.verifiedYieldSummaries,
       productWarningMessages: verifiedYieldContract.productWarningMessages,
       
       etag: etag, 

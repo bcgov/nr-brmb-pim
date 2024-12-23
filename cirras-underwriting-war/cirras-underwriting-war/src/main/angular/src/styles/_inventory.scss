@@ -321,7 +321,11 @@
   }
 
   
-  .grain-unsdd-inv-tot-cmdty-container {
+  .grain-unsdd-inv-tot-cmdty-container, 
+  .verified-yield-amendments-container,
+  .verified-yield-commodities-container,
+  .verified-yield-summaries-container
+  {
     display: grid; 
     grid-auto-rows: minmax( 2em, auto );
     grid-template-columns: 136px 180px 160px;
