@@ -165,12 +165,6 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			for (VerifiedYieldContractCommodityDto vyccDto : dto.getVerifiedYieldContractCommodities()) {
 				VerifiedYieldContractCommodity vyccModel = createVerifiedYieldContractCommodity(vyccDto);
 				verifiedContractCommodities.add(vyccModel);
-				
-//				//Check product guarantee
-//				MessageRsrc warning = getProductWarning(vyccDto, productDtos);
-//				if(warning != null) {
-//					productWarnings.add(warning);
-//				}
 			}
 
 			resource.setVerifiedYieldContractCommodities(verifiedContractCommodities);
@@ -199,9 +193,9 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 				verifiedYieldSummaries.add(vysModel);
 				
 				//Check product guarantee
-				MessageRsrc warning = getProductWarning(vysDto, productDtos);
-				if(warning != null) {
-					productWarnings.add(warning);
+				List<MessageRsrc> warnings = getProductWarnings(vysDto, productDtos);
+				if(warnings != null && !warnings.isEmpty()) {
+					productWarnings.addAll(warnings);
 				}
 			}
 
@@ -243,10 +237,11 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 	public static final String PROBABLE_YIELD_NONE_MSG = "There is no probable yield for %s";
 	public static final String PROBABLE_YIELD_NO_PRODUCT_MSG = "There is no product for %s in CIRRAS. The shown probable yield is not valid anymore.";
 
-	private MessageRsrc getProductWarning(VerifiedYieldSummaryDto vysDto, List<ProductDto> productDtos) {
+	private List<MessageRsrc> getProductWarnings(VerifiedYieldSummaryDto vysDto, List<ProductDto> productDtos) {
 		
-		MessageRsrc messageRsrc = null;
-		
+		//MessageRsrc messageRsrc = null;
+		List<MessageRsrc> messageRsrcList = new ArrayList<MessageRsrc>();
+
 		String commodity = vysDto.getCropCommodityName();
 		if(vysDto.getIsPedigreeInd()) {
 			commodity = commodity + " Pedigreed";
@@ -266,7 +261,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 						msg = String.format(PRODUCTION_GUARANTEE_DIFFERENCE_MSG, commodity, product.getProductionGuarantee());
 					}
 					
-					messageRsrc = new MessageRsrc(msg);
+					messageRsrcList.add(new MessageRsrc(msg));
 				}
 				if (Double.compare(notNull(product.getProbableYield(), (double)-1), notNull(vysDto.getProbableYield(), (double)-1)) != 0) {
 					//Add warning if values are different -> Only if product is in status FINAL
@@ -277,25 +272,24 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 						msg = String.format(PROBABLE_YIELD_DIFFERENCE_MSG, commodity, product.getProbableYield());
 					}
 					
-					messageRsrc = new MessageRsrc(msg);
+					messageRsrcList.add(new MessageRsrc(msg));
+
 				}			}
 		} else {
 			//No product: Check if the production guarantee in the summary is null
 			if(vysDto.getProductionGuarantee() != null) {
 				//Add warning if there is no product but a saved production guarantee
 				String msg = String.format(PRODUCTION_GUARANTEE_NO_PRODUCT_MSG, commodity);
-				messageRsrc = new MessageRsrc(msg);
+				messageRsrcList.add(new MessageRsrc(msg));
 			}
 			//No product: Check if the probable yield in the summary is null
 			if(vysDto.getProbableYield() != null) {
 				//Add warning if there is no product but a saved probable yield
 				String msg = String.format(PROBABLE_YIELD_NO_PRODUCT_MSG, commodity);
-				messageRsrc = new MessageRsrc(msg);
+				messageRsrcList.add(new MessageRsrc(msg));
 			}
 		}
-		
-		
-		return messageRsrc;
+		return messageRsrcList;
 	}
 	
 	@Override
@@ -387,6 +381,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		model.setYieldPercentPy(dto.getYieldPercentPy());
 		model.setProductionGuarantee(dto.getProductionGuarantee());
 		model.setProbableYield(dto.getProbableYield());
+		model.setTotalInsuredAcres(dto.getTotalInsuredAcres());
 		
 		// UnderwritingComment
 		if (!dto.getUwComments().isEmpty()) {

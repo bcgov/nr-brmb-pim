@@ -69,7 +69,7 @@ public class InventoryServiceEnums {
 	}
 	
 	public enum AmendmentTypeCode {
-		APPRAISAL,
-		ASSESSMENT
+		Appraisal,
+		Assessment
 	}	
 }

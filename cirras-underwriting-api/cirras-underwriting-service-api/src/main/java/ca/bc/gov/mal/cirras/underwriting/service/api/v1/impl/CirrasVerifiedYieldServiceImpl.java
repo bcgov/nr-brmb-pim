@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
@@ -39,6 +40,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContrac
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldSummaryDto;
 import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
+import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.ConflictException;
 import ca.bc.gov.nrs.wfone.common.service.api.ForbiddenException;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
@@ -47,6 +49,7 @@ import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasVerifiedYieldService;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.InventoryContractFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.VerifiedYieldContractFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
@@ -66,6 +69,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 	// factories
 	private VerifiedYieldContractFactory verifiedYieldContractFactory;
+	private InventoryContractFactory inventoryContractFactory;
 
 	// daos
 	private PolicyDao policyDao;
@@ -91,6 +95,10 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	
 	public void setVerifiedYieldContractFactory(VerifiedYieldContractFactory verifiedYieldContractFactory) {
 		this.verifiedYieldContractFactory = verifiedYieldContractFactory;
+	}
+
+	public void setInventoryContractFactory(InventoryContractFactory inventoryContractFactory) {
+		this.inventoryContractFactory = inventoryContractFactory;
 	}
 
 	public void setPolicyDao(PolicyDao policyDao) {
@@ -381,7 +389,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				}
 				
 				//Verified Yield Summary
-				calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, null, userId);
+				calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, null, userId, authentication);
 			
 			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
 
@@ -405,7 +413,8 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			String verifiedYieldContractGuid, 
 			VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract,
 			List<ProductDto> productDtos,
-			String userId) throws DaoException {
+			String userId,
+			WebAdeAuthentication authentication) throws DaoException {
 		
 		List<VerifiedYieldContractCommodity> verifiedContractCommodities = verifiedYieldContract.getVerifiedYieldContractCommodities();
 		List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
@@ -458,37 +467,46 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			//Amendments can exist without a verified yield contract commodity
 			if(verifiedAmendments != null && !verifiedAmendments.isEmpty()) {
 				for (VerifiedYieldAmendment vya : verifiedAmendments) {
-					
-					VerifiedYieldSummary vys = null;
-					
-					if(verifiedYieldSummaries != null && verifiedYieldSummaries.size() > 0 ) {
-						vys = getVerifiedYieldSummary(vya.getCropCommodityId(), vya.getIsPedigreeInd(), verifiedYieldSummaries);
-					} 
-					
-					//Check if commodity/is pedigree already exists and if not add it
-					if(vys == null) {
-						//Create new one if it doesn't exist
-						vys = new VerifiedYieldSummary();
-						vys.setVerifiedYieldSummaryGuid(null);
-						vys.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
-						vys.setCropCommodityId(vya.getCropCommodityId());
-						vys.setIsPedigreeInd(vya.getIsPedigreeInd());
+					//Only if it's not deleted by the user
+					if(vya.getDeletedByUserInd() == null || vya.getDeletedByUserInd() == false) {
 						
-						//No verified yield contract commodity and therefore no harvested yield
-						vys.setHarvestedYield(null);
-						vys.setHarvestedYieldPerAcre(null);
-	
-						//Product Values (Production Guarantee and PY)
-						setProductValues(verifiedYieldContract, productDtos, vys);	
-	
-						//Calculate appraised and assessed yield
-						calculateAndSetAmendments(verifiedAmendments, vys);
+						VerifiedYieldSummary vys = null;
 						
-						vys.setYieldToCount(notNull(vys.getAppraisedYield(), 0.0));
+						if(verifiedYieldSummaries != null && !verifiedYieldSummaries.isEmpty() ) {
+							vys = getVerifiedYieldSummary(vya.getCropCommodityId(), vya.getIsPedigreeInd(), verifiedYieldSummaries);
+						} 
 						
-						vys.setYieldPercentPy(null);
-						
-						verifiedYieldSummaries.add(vys);
+						//Check if commodity/is pedigree already exists in the updated list and if not add it
+						if(vys == null) {
+							
+							//Check if it exists in the old list
+							vys = getVerifiedYieldSummary(vya.getCropCommodityId(), vya.getIsPedigreeInd(), verifiedYieldContract.getVerifiedYieldSummaries());
+							
+							if(vys == null) {
+								//Create new one if it doesn't exist
+								vys = new VerifiedYieldSummary();
+								vys.setVerifiedYieldSummaryGuid(null);
+								vys.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
+								vys.setCropCommodityId(vya.getCropCommodityId());
+								vys.setIsPedigreeInd(vya.getIsPedigreeInd());
+							}
+							
+							//No verified yield contract commodity and therefore no harvested yield
+							vys.setHarvestedYield(null);
+							vys.setHarvestedYieldPerAcre(null);
+		
+							//Product Values (Production Guarantee and PY)
+							setProductValues(verifiedYieldContract, productDtos, vys);	
+		
+							//Calculate appraised and assessed yield
+							calculateAndSetAmendments(verifiedAmendments, vys);
+							
+							vys.setYieldToCount(notNull(vys.getAppraisedYield(), 0.0));
+							
+							vys.setYieldPercentPy(null);
+							
+							verifiedYieldSummaries.add(vys);
+						}						
 					}
 				}
 			}
@@ -498,7 +516,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 					//Remove all records if they don't exist anymore
 					VerifiedYieldSummary existingVys = null;
 					
-					if(verifiedYieldSummaries != null && verifiedYieldSummaries.size() > 0 ) {
+					if(verifiedYieldSummaries != null && !verifiedYieldSummaries.isEmpty() ) {
 						existingVys = getVerifiedYieldSummary(vys.getCropCommodityId(), vys.getIsPedigreeInd(), verifiedYieldSummaries);
 					}
 					
@@ -510,9 +528,22 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			}
 			
 			//Save Verified Yield Summary Records
-			if(verifiedYieldSummaries != null && verifiedYieldSummaries.size() > 0 ) {
+			if(verifiedYieldSummaries != null && !verifiedYieldSummaries.isEmpty() ) {
 				for(VerifiedYieldSummary vys : verifiedYieldSummaries){
 					updateVerifiedYieldSummary(vys, userId);
+					
+					// update underwriting comments
+					List<UnderwritingComment> uwComments = vys.getUwComments();
+					if (uwComments != null && !uwComments.isEmpty()) {
+						for (UnderwritingComment underwritingComment : uwComments) {
+							if (underwritingComment.getDeletedByUserInd() != null
+									&& underwritingComment.getDeletedByUserInd()) {
+								deleteYieldSummaryComment(underwritingComment, userId, authentication);
+							} else {
+								updateUnderwritingComment(underwritingComment, vys.getVerifiedYieldSummaryGuid(), userId, authentication);
+							}
+						}
+					}
 				}
 			}
 	
@@ -523,6 +554,92 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			}
 		}
 	}
+	
+	private void updateUnderwritingComment(
+			UnderwritingComment underwritingComment, 
+			String verifiedYieldSummaryGuid,
+			String userId,
+			WebAdeAuthentication authentication) throws DaoException, ServiceException {
+
+		UnderwritingCommentDto dto = null;
+
+		if (underwritingComment.getUnderwritingCommentGuid() != null) {
+			dto = underwritingCommentDao.fetch(underwritingComment.getUnderwritingCommentGuid());
+		}
+
+		if (dto == null) {
+			// Insert if it doesn't exist
+			insertYieldSummaryComment(underwritingComment, verifiedYieldSummaryGuid, userId);
+		} else {
+
+			if (!dto.getUnderwritingComment().equals(underwritingComment.getUnderwritingComment()) || !dto
+					.getUnderwritingCommentTypeCode().equals(underwritingComment.getUnderwritingCommentTypeCode())) {
+
+				// Check that user is authorized to edit this comment.
+				// Note that this could return null if the current user or create user cannot be
+				// determined.
+				Boolean userCanEditComment = inventoryContractFactory.checkUserCanEditComment(dto, authentication);
+				if (!Boolean.TRUE.equals(userCanEditComment)) {
+					logger.error("User " + userId + " attempted to edit comment "
+							+ underwritingComment.getUnderwritingCommentGuid() + " created by " + dto.getCreateUser());
+					throw new ServiceException("The current user is not authorized to edit this comment.");
+				}
+
+			}
+
+			inventoryContractFactory.updateDto(dto, underwritingComment);
+
+			underwritingCommentDao.update(dto, userId);
+		}
+
+	}
+	
+	private String insertYieldSummaryComment(
+			UnderwritingComment underwritingComment, 
+			String verifiedYieldSummaryGuid, 
+			String userId) throws DaoException {
+
+		logger.debug("<insertYieldSummaryComment");
+		
+		UnderwritingCommentDto dto = new UnderwritingCommentDto();
+		inventoryContractFactory.updateDto(dto, underwritingComment);
+
+		dto.setUnderwritingCommentGuid(null);
+		dto.setVerifiedYieldSummaryGuid(verifiedYieldSummaryGuid);
+
+		underwritingCommentDao.insert(dto, userId);
+		
+		logger.debug(">insertYieldSummaryComment");
+		
+		return dto.getUnderwritingCommentGuid();
+	}
+	
+	private void deleteYieldSummaryComment(UnderwritingComment underwritingComment, String userId,
+			WebAdeAuthentication authentication) throws NotFoundDaoException, DaoException {
+		logger.debug("<deleteYieldSummaryComment");
+
+		UnderwritingCommentDto dto = null;
+
+		if (underwritingComment.getUnderwritingCommentGuid() != null) {
+			dto = underwritingCommentDao.fetch(underwritingComment.getUnderwritingCommentGuid());
+		}
+
+		if (dto != null) {
+			// Check that user is authorized to delete this comment.
+			// Note that this could return false if the current user or create user cannot
+			// be determined.
+			Boolean userCanDeleteComment = inventoryContractFactory.checkUserCanDeleteComment(dto, authentication);
+			if (!Boolean.TRUE.equals(userCanDeleteComment)) {
+				logger.error("User " + userId + " attempted to delete comment " + dto.getUnderwritingCommentGuid()
+						+ " created by " + dto.getCreateUser());
+				throw new ServiceException("The current user is not authorized to delete this comment.");
+			}
+
+			underwritingCommentDao.delete(underwritingComment.getUnderwritingCommentGuid());
+		}
+
+		logger.debug(">deleteYieldSummaryComment");
+	}	
 	
 	private void updateVerifiedYieldSummary(
 			VerifiedYieldSummary verifiedSummary,
@@ -549,17 +666,19 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	}
 	
 	
-	private void insertVerifiedYieldSummary(VerifiedYieldSummary verifiedSummary, String userId) throws DaoException {
+	private void insertVerifiedYieldSummary(VerifiedYieldSummary verifiedYieldSummary, String userId) throws DaoException {
 
 		logger.debug("<insertVerifiedYieldSummary");
 
 		VerifiedYieldSummaryDto dto = new VerifiedYieldSummaryDto();
 
-		verifiedYieldContractFactory.updateDto(dto, verifiedSummary);
+		verifiedYieldContractFactory.updateDto(dto, verifiedYieldSummary);
 
 		dto.setVerifiedYieldSummaryGuid(null);
 
 		verifiedYieldSummaryDao.insert(dto, userId);
+		
+		verifiedYieldSummary.setVerifiedYieldSummaryGuid(dto.getVerifiedYieldSummaryGuid());
 
 		logger.debug(">insertVerifiedYieldSummary");
 
@@ -606,14 +725,14 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		Double assessedYield = null;
 		
 		List<VerifiedYieldAmendment> filteredAmendments = getVerifiedYieldAmendments(vys.getCropCommodityId(), vys.getIsPedigreeInd(), verifiedAmendments);
-		if(filteredAmendments != null && filteredAmendments.size() > 0) {
+		if(filteredAmendments != null && !filteredAmendments.isEmpty()) {
 			for(VerifiedYieldAmendment vya : filteredAmendments) {
 				//Yield/acre * acres
 				Double totalYield = vya.getYieldPerAcre() * vya.getAcres();
 				
-				if(vya.getVerifiedYieldAmendmentCode().equalsIgnoreCase(InventoryServiceEnums.AmendmentTypeCode.APPRAISAL.toString())) {
+				if(vya.getVerifiedYieldAmendmentCode().equalsIgnoreCase(InventoryServiceEnums.AmendmentTypeCode.Appraisal.toString())) {
 					appraisedYield = notNull(appraisedYield, 0.0) + notNull(totalYield, 0.0);
-				} else if(vya.getVerifiedYieldAmendmentCode().equalsIgnoreCase(InventoryServiceEnums.AmendmentTypeCode.ASSESSMENT.toString())) {
+				} else if(vya.getVerifiedYieldAmendmentCode().equalsIgnoreCase(InventoryServiceEnums.AmendmentTypeCode.Assessment.toString())) {
 					assessedYield = notNull(assessedYield, 0.0) + notNull(totalYield, 0.0);
 				} else {
 					throw new IllegalArgumentException("(updateVerifiedYieldSummaries) Unexpected Verified Yield Amendment Code: " + vya.getVerifiedYieldAmendmentCode());
@@ -631,7 +750,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 		VerifiedYieldSummary vys = null;
 		
-		if(verifiedYieldSummaries != null && verifiedYieldSummaries.size() > 0 ) {
+		if(verifiedYieldSummaries != null && !verifiedYieldSummaries.isEmpty() ) {
 			vys = getVerifiedYieldSummary(vycc.getCropCommodityId(), vycc.getIsPedigreeInd(), verifiedYieldSummaries);
 		} 
 		
@@ -660,12 +779,12 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		
 		VerifiedYieldSummary vys = null;
 		
-		if(vysList != null && vysList.size() > 0) {
+		if(vysList != null && !vysList.isEmpty()) {
 			List<VerifiedYieldSummary> vysFiltered = vysList.stream()
 					.filter(x -> x.getCropCommodityId().equals(cropCommodityId) && x.getIsPedigreeInd().equals(isPedigree) )
 					.collect(Collectors.toList());
 			
-			if (vysFiltered != null && vysFiltered.size() > 0) {
+			if (vysFiltered != null && !vysFiltered.isEmpty()) {
 				vys = vysFiltered.get(0);
 			}
 		}
@@ -675,7 +794,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	
 	private List<VerifiedYieldAmendment> getVerifiedYieldAmendments(Integer cropCommodityId, Boolean isPedigree, List<VerifiedYieldAmendment> vyaList) {
 		
-		if(vyaList != null && vyaList.size() > 0) {
+		if(vyaList != null && !vyaList.isEmpty()) {
 		
 			return vyaList.stream()
 					.filter(x -> x.getCropCommodityId().equals(cropCommodityId) && x.getIsPedigreeInd().equals(isPedigree)
@@ -690,7 +809,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		
 		ProductDto product = null;
 		
-		if(productDtos != null && productDtos.size() > 0) {
+		if(productDtos != null && !productDtos.isEmpty()) {
 			//Products in CIRRAS use a different commodity id for pedigreed than in this app. A table maps the correct commodity ids and
 			//are returned to the NonPedigreeCropCommodityId property
 			List<ProductDto> products = productDtos.stream()
@@ -699,7 +818,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 							&& verifiedYieldContractFactory.getForageGrainCoverageCodes().contains(x.getCommodityCoverageCode()))
 					.collect(Collectors.toList());
 			
-			if (products != null && products.size() > 0) {
+			if (products != null && !products.isEmpty()) {
 				product = products.get(0);
 			}
 		}
@@ -877,7 +996,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				}
 				
 				//Verified Yield Summary
-				calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, productDtos, userId);
+				calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, productDtos, userId, authentication);
 
 				
 			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
