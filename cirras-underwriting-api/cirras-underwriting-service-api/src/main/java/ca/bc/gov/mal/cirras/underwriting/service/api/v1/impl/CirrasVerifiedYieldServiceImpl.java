@@ -1,6 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl;
 
 import java.util.Properties;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ContractedFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractDao;
@@ -46,6 +48,7 @@ import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasVerifiedYieldService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.VerifiedYieldContractFactory;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.ModelValidator;
 
@@ -376,6 +379,9 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 						}
 					}
 				}
+				
+				//Verified Yield Summary
+				calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, null, userId);
 			
 			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
 
@@ -393,6 +399,315 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		return result;
 	}	
 	
+	public static final String PRODUCT_STATUS_FINAL = "FINAL";
+	
+	private void calculateAndSaveVerifiedYieldSummaries(
+			String verifiedYieldContractGuid, 
+			VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract,
+			List<ProductDto> productDtos,
+			String userId) throws DaoException {
+		
+		List<VerifiedYieldContractCommodity> verifiedContractCommodities = verifiedYieldContract.getVerifiedYieldContractCommodities();
+		List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
+		List<VerifiedYieldSummary> verifiedYieldSummaries = new ArrayList<VerifiedYieldSummary>();
+		
+		//Summary records are calculated from commodity totals and amendments
+		//Add a yield summary record for each commodity (pedigree/non-pedigree) which is either in commodity totals OR amendments 
+		if ((verifiedContractCommodities != null && !verifiedContractCommodities.isEmpty())
+			|| (verifiedAmendments != null && !verifiedAmendments.isEmpty())) {
+			//Get products 
+			if(productDtos == null) {
+				productDtos = loadProducts(verifiedYieldContract.getContractId(), verifiedYieldContract.getCropYear());
+			}
+			
+			if(verifiedContractCommodities != null && !verifiedContractCommodities.isEmpty()) {
+				for (VerifiedYieldContractCommodity vycc : verifiedContractCommodities) {
+					//Get verified yield summary from list. Create empty one if it doesn't exist yet.
+					VerifiedYieldSummary vys = getVerifiedYieldSummary(verifiedYieldContractGuid, verifiedYieldContract.getVerifiedYieldSummaries(), vycc);
+					
+					//Set values and calculate
+					if(vys != null) {
+						Double effectiveYield = notNull(vycc.getHarvestedYieldOverride(), vycc.getHarvestedYield());
+						
+						vys.setHarvestedYield(effectiveYield);
+						vys.setHarvestedYieldPerAcre(vycc.getYieldPerAcre());
+						
+						//Product Values (Production Guarantee and PY)
+						setProductValues(verifiedYieldContract, productDtos, vys);	
+						
+						//Calculate appraised and assessed yield
+						calculateAndSetAmendments(verifiedAmendments, vys);
+						
+						//Calculate yield to count: Harvested Yield + Appraised Yield
+						Double yieldToCount = notNull(vys.getHarvestedYield(), 0.0) + notNull(vys.getAppraisedYield(), 0.0); 
+						vys.setYieldToCount(yieldToCount);
+						
+						//Calculate yield percent of py if py > 0 exists and insured acres are > 0
+						vys.setYieldPercentPy(null);
+						if(notNull(vys.getProbableYield(), 0.0) > 0 && notNull(vycc.getTotalInsuredAcres(), 0.0) > 0 ) {
+							//Yield to Count/(Insured Acres * PY)
+							Double yieldPercentPy = notNull(vys.getYieldToCount(), 0.0) / (vys.getProbableYield() * vycc.getTotalInsuredAcres());
+							vys.setYieldPercentPy(yieldPercentPy);
+						}
+						
+						verifiedYieldSummaries.add(vys);
+					}
+				}
+			}
+			
+			//Amendments can exist without a verified yield contract commodity
+			if(verifiedAmendments != null && !verifiedAmendments.isEmpty()) {
+				for (VerifiedYieldAmendment vya : verifiedAmendments) {
+					
+					VerifiedYieldSummary vys = null;
+					
+					if(verifiedYieldSummaries != null && verifiedYieldSummaries.size() > 0 ) {
+						vys = getVerifiedYieldSummary(vya.getCropCommodityId(), vya.getIsPedigreeInd(), verifiedYieldSummaries);
+					} 
+					
+					//Check if commodity/is pedigree already exists and if not add it
+					if(vys == null) {
+						//Create new one if it doesn't exist
+						vys = new VerifiedYieldSummary();
+						vys.setVerifiedYieldSummaryGuid(null);
+						vys.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
+						vys.setCropCommodityId(vya.getCropCommodityId());
+						vys.setIsPedigreeInd(vya.getIsPedigreeInd());
+						
+						//No verified yield contract commodity and therefore no harvested yield
+						vys.setHarvestedYield(null);
+						vys.setHarvestedYieldPerAcre(null);
+	
+						//Product Values (Production Guarantee and PY)
+						setProductValues(verifiedYieldContract, productDtos, vys);	
+	
+						//Calculate appraised and assessed yield
+						calculateAndSetAmendments(verifiedAmendments, vys);
+						
+						vys.setYieldToCount(notNull(vys.getAppraisedYield(), 0.0));
+						
+						vys.setYieldPercentPy(null);
+						
+						verifiedYieldSummaries.add(vys);
+					}
+				}
+			}
+			
+			if((verifiedYieldContract.getVerifiedYieldSummaries() != null && !verifiedYieldContract.getVerifiedYieldSummaries().isEmpty())) {
+				for(VerifiedYieldSummary vys : verifiedYieldContract.getVerifiedYieldSummaries()) {
+					//Remove all records if they don't exist anymore
+					VerifiedYieldSummary existingVys = null;
+					
+					if(verifiedYieldSummaries != null && verifiedYieldSummaries.size() > 0 ) {
+						existingVys = getVerifiedYieldSummary(vys.getCropCommodityId(), vys.getIsPedigreeInd(), verifiedYieldSummaries);
+					}
+					
+					if(existingVys == null) {
+						//Didn't find it in the new list, therefore delete it
+						deleteVerifiedYieldSummary(vys);
+					}
+				}
+			}
+			
+			//Save Verified Yield Summary Records
+			if(verifiedYieldSummaries != null && verifiedYieldSummaries.size() > 0 ) {
+				for(VerifiedYieldSummary vys : verifiedYieldSummaries){
+					updateVerifiedYieldSummary(vys, userId);
+				}
+			}
+	
+		} else {
+			if(verifiedYieldContract.getVerifiedYieldContractGuid() != null) {
+				underwritingCommentDao.deleteForVerifiedYieldContract(verifiedYieldContract.getVerifiedYieldContractGuid());
+				verifiedYieldSummaryDao.deleteForVerifiedYieldContract(verifiedYieldContract.getVerifiedYieldContractGuid());
+			}
+		}
+	}
+	
+	private void updateVerifiedYieldSummary(
+			VerifiedYieldSummary verifiedSummary,
+			String userId) throws DaoException {
+
+		logger.debug("<updateVerifiedYieldSummary");
+		
+		VerifiedYieldSummaryDto dto = null;
+
+		if (verifiedSummary.getVerifiedYieldSummaryGuid() != null) {
+			dto = verifiedYieldSummaryDao.fetch(verifiedSummary.getVerifiedYieldSummaryGuid());
+		}
+
+		if (dto == null) {
+			// Insert if it doesn't exist
+			insertVerifiedYieldSummary(verifiedSummary, userId);
+		} else {
+			verifiedYieldContractFactory.updateDto(dto, verifiedSummary);
+
+			verifiedYieldSummaryDao.update(dto, userId);
+		}
+
+		logger.debug(">updateVerifiedYieldSummary");
+	}
+	
+	
+	private void insertVerifiedYieldSummary(VerifiedYieldSummary verifiedSummary, String userId) throws DaoException {
+
+		logger.debug("<insertVerifiedYieldSummary");
+
+		VerifiedYieldSummaryDto dto = new VerifiedYieldSummaryDto();
+
+		verifiedYieldContractFactory.updateDto(dto, verifiedSummary);
+
+		dto.setVerifiedYieldSummaryGuid(null);
+
+		verifiedYieldSummaryDao.insert(dto, userId);
+
+		logger.debug(">insertVerifiedYieldSummary");
+
+	}
+
+	private void deleteVerifiedYieldSummary(VerifiedYieldSummary verifiedSummary) throws DaoException {
+
+		logger.debug("<deleteVerifiedYieldSummary");
+
+		if ( verifiedSummary.getVerifiedYieldSummaryGuid() != null ) {
+			underwritingCommentDao.deleteForVerifiedYieldSummaryGuid(verifiedSummary.getVerifiedYieldSummaryGuid());
+			verifiedYieldSummaryDao.delete(verifiedSummary.getVerifiedYieldSummaryGuid());
+		}
+
+		logger.debug(">deleteVerifiedYieldSummary");
+
+	}
+
+	private void setProductValues(VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract,
+			List<ProductDto> productDtos, VerifiedYieldSummary vys) {
+		//Get product
+		ProductDto product = getProductDto(vys.getCropCommodityId(), vys.getIsPedigreeInd(), productDtos);
+		Double productionGuarantee = vys.getProductionGuarantee();
+		Double probableYield = vys.getProbableYield();
+
+		//Set or Update product values
+		if(vys.getVerifiedYieldSummaryGuid() == null || Boolean.TRUE.equals(verifiedYieldContract.getUpdateProductValuesInd())) {
+			if(product != null && product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
+				productionGuarantee = product.getProductionGuarantee();
+				probableYield = product.getProbableYield();
+			} else {
+				productionGuarantee = null;
+				probableYield = null;
+			}
+		}
+
+		vys.setProductionGuarantee(productionGuarantee);
+		vys.setProbableYield(probableYield);
+	}
+
+	private void calculateAndSetAmendments(List<VerifiedYieldAmendment> verifiedAmendments, VerifiedYieldSummary vys) {
+		
+		Double appraisedYield = null;
+		Double assessedYield = null;
+		
+		List<VerifiedYieldAmendment> filteredAmendments = getVerifiedYieldAmendments(vys.getCropCommodityId(), vys.getIsPedigreeInd(), verifiedAmendments);
+		if(filteredAmendments != null && filteredAmendments.size() > 0) {
+			for(VerifiedYieldAmendment vya : filteredAmendments) {
+				//Yield/acre * acres
+				Double totalYield = vya.getYieldPerAcre() * vya.getAcres();
+				
+				if(vya.getVerifiedYieldAmendmentCode().equalsIgnoreCase(InventoryServiceEnums.AmendmentTypeCode.APPRAISAL.toString())) {
+					appraisedYield = notNull(appraisedYield, 0.0) + notNull(totalYield, 0.0);
+				} else if(vya.getVerifiedYieldAmendmentCode().equalsIgnoreCase(InventoryServiceEnums.AmendmentTypeCode.ASSESSMENT.toString())) {
+					assessedYield = notNull(assessedYield, 0.0) + notNull(totalYield, 0.0);
+				} else {
+					throw new IllegalArgumentException("(updateVerifiedYieldSummaries) Unexpected Verified Yield Amendment Code: " + vya.getVerifiedYieldAmendmentCode());
+				}
+			}
+		}
+		vys.setAppraisedYield(appraisedYield);
+		vys.setAssessedYield(assessedYield);
+	}
+
+	private VerifiedYieldSummary getVerifiedYieldSummary(
+			String verifiedYieldContractGuid,
+			List<VerifiedYieldSummary> verifiedYieldSummaries, 
+			VerifiedYieldContractCommodity vycc) {
+
+		VerifiedYieldSummary vys = null;
+		
+		if(verifiedYieldSummaries != null && verifiedYieldSummaries.size() > 0 ) {
+			vys = getVerifiedYieldSummary(vycc.getCropCommodityId(), vycc.getIsPedigreeInd(), verifiedYieldSummaries);
+		} 
+		
+		if(vys == null) {
+			
+			//Create new one if it doesn't exist
+			vys = new VerifiedYieldSummary();
+			vys.setVerifiedYieldSummaryGuid(null);
+			vys.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
+			vys.setCropCommodityId(vycc.getCropCommodityId());
+			vys.setIsPedigreeInd(vycc.getIsPedigreeInd());
+			vys.setHarvestedYield(null);
+			vys.setHarvestedYieldPerAcre(null);
+			vys.setAppraisedYield(null);
+			vys.setAssessedYield(null);
+			vys.setYieldToCount(null);
+			vys.setYieldPercentPy(null);
+			vys.setProductionGuarantee(null);
+			vys.setProbableYield(null);	
+		}
+		
+		return vys;
+	}
+	
+	private VerifiedYieldSummary getVerifiedYieldSummary(Integer cropCommodityId, Boolean isPedigree, List<VerifiedYieldSummary> vysList) {
+		
+		VerifiedYieldSummary vys = null;
+		
+		if(vysList != null && vysList.size() > 0) {
+			List<VerifiedYieldSummary> vysFiltered = vysList.stream()
+					.filter(x -> x.getCropCommodityId().equals(cropCommodityId) && x.getIsPedigreeInd().equals(isPedigree) )
+					.collect(Collectors.toList());
+			
+			if (vysFiltered != null && vysFiltered.size() > 0) {
+				vys = vysFiltered.get(0);
+			}
+		}
+
+		return vys;
+	}
+	
+	private List<VerifiedYieldAmendment> getVerifiedYieldAmendments(Integer cropCommodityId, Boolean isPedigree, List<VerifiedYieldAmendment> vyaList) {
+		
+		if(vyaList != null && vyaList.size() > 0) {
+		
+			return vyaList.stream()
+					.filter(x -> x.getCropCommodityId().equals(cropCommodityId) && x.getIsPedigreeInd().equals(isPedigree)
+							&& (x.getDeletedByUserInd() == null || x.getDeletedByUserInd() == false))
+					.collect(Collectors.toList());
+		} else {
+			return null;
+		}
+	}
+	
+	private ProductDto getProductDto(Integer cropCommodityId, Boolean isPedigree, List<ProductDto> productDtos) {
+		
+		ProductDto product = null;
+		
+		if(productDtos != null && productDtos.size() > 0) {
+			//Products in CIRRAS use a different commodity id for pedigreed than in this app. A table maps the correct commodity ids and
+			//are returned to the NonPedigreeCropCommodityId property
+			List<ProductDto> products = productDtos.stream()
+					.filter(x -> x.getNonPedigreeCropCommodityId().equals(cropCommodityId) 
+							&& x.getIsPedigreeProduct().equals(isPedigree)
+							&& verifiedYieldContractFactory.getForageGrainCoverageCodes().contains(x.getCommodityCoverageCode()))
+					.collect(Collectors.toList());
+			
+			if (products != null && products.size() > 0) {
+				product = products.get(0);
+			}
+		}
+
+		
+		return product;
+	}
+
 	private String insertVerifiedYieldContract(VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract, String userId)
 			throws DaoException {
 
@@ -561,6 +876,10 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 					}
 				}
 				
+				//Verified Yield Summary
+				calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, productDtos, userId);
+
+				
 			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
 
 			} else {
@@ -620,6 +939,8 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			
 			verifiedYieldContractCommodityDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
 			verifiedYieldAmendmentDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
+			underwritingCommentDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
+			verifiedYieldSummaryDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
 
 		} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
 

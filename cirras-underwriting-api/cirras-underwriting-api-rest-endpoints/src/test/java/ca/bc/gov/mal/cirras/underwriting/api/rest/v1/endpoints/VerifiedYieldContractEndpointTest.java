@@ -478,8 +478,8 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 	}
 	
 	@Test
-	public void testGetVerifiedYieldSummeries() throws CirrasUnderwritingServiceException, Oauth2ClientException {
-		logger.debug("<testGetVerifiedYieldSummeries");
+	public void testGetVerifiedYieldSummaries() throws CirrasUnderwritingServiceException, Oauth2ClientException {
+		logger.debug("<testGetVerifiedYieldSummaries");
 		
 		if(skipTests) {
 			logger.warn("Skipping tests");
@@ -571,7 +571,7 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		//AFTER TESTS: DELETE LAND, INVENTORY AND YIELD BY RUNNING THE DELETE SCRIPTS BELOW
 		//*****************************************************************
 
-		logger.debug(">testGetVerifiedYieldSummeries");
+		logger.debug(">testGetVerifiedYieldSummaries");
 	
 	/* 
 	 * 

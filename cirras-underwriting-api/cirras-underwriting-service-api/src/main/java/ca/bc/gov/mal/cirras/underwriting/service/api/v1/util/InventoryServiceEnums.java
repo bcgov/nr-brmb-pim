@@ -68,4 +68,8 @@ public class InventoryServiceEnums {
 		VERIFIED;
 	}
 	
+	public enum AmendmentTypeCode {
+		APPRAISAL,
+		ASSESSMENT
+	}	
 }
