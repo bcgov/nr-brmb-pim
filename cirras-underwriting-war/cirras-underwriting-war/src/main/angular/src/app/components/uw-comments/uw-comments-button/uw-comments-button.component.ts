@@ -19,7 +19,6 @@ export interface DialogData {
     // Verified Yield summary data:
     verifiedYieldSummaryGuid: string;
     commodityName: string,
-    insuredAcres: string,
     // common data
     uwComments: UnderwritingComment[];
 }
@@ -42,7 +41,6 @@ export class UwCommentsButtonComponent {
     @Input() legalLocation: string;
     @Input() verifiedYieldSummaryGuid: string;
     @Input() commodityName: string;
-    @Input() insuredAcres: string;
     @Input() uwComments: UnderwritingComment[];
     @Output() onDone = new EventEmitter<UnderwritingComment[]>();
 
@@ -78,7 +76,6 @@ export class UwCommentsButtonComponent {
             legalLocation: this.legalLocation,
             verifiedYieldSummaryGuid: this.verifiedYieldSummaryGuid,
             commodityName: this.commodityName,
-            insuredAcres: this.insuredAcres,
             uwComments: this.uwCommentsForDialog
         };
     }
