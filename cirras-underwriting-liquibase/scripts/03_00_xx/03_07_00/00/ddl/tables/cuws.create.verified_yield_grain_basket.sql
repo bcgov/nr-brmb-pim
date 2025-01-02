@@ -3,8 +3,8 @@
 CREATE TABLE cuws.verified_yield_grain_basket(
     verified_yield_grain_basket_guid    varchar(32)       NOT NULL,
     verified_yield_contract_guid        varchar(32)       NOT NULL,
-    basket_value                        numeric(10, 2)    NOT NULL,
-    harvested_value                     numeric(10, 2)    NOT NULL,
+    basket_value                        numeric(14, 4)    NOT NULL,
+    harvested_value                     numeric(14, 4)    NOT NULL,
     comment                             varchar(200),
     create_user                         varchar(64)       NOT NULL,
     create_date                         timestamp(0)      NOT NULL,
@@ -34,16 +34,14 @@ COMMENT ON COLUMN cuws.verified_yield_grain_basket.update_date IS 'Update Date i
 COMMENT ON TABLE cuws.verified_yield_grain_basket IS 'The table contains verified yield grain basket data by contract and commodity.'
 ;
 
-CREATE INDEX ix_vygs_vyc ON cuws.verified_yield_grain_basket(verified_yield_contract_guid)
+CREATE UNIQUE INDEX ix_vygb_vyc ON cuws.verified_yield_grain_basket(verified_yield_contract_guid)
  TABLESPACE pg_default
 ;
 ALTER TABLE cuws.verified_yield_grain_basket ADD 
-    CONSTRAINT pk_vygs PRIMARY KEY (verified_yield_grain_basket_guid) USING INDEX TABLESPACE pg_default 
+    CONSTRAINT pk_vygb PRIMARY KEY (verified_yield_grain_basket_guid) USING INDEX TABLESPACE pg_default 
 ;
 
 ALTER TABLE cuws.verified_yield_grain_basket ADD CONSTRAINT fk_vygb_vyc 
     FOREIGN KEY (verified_yield_contract_guid)
     REFERENCES cuws.verified_yield_contract(verified_yield_contract_guid)
 ;
-
-
