@@ -34,7 +34,6 @@
             [underwritingCommentTypeCode]="'VY'"
             [verifiedYieldSummaryGuid]="summary?.verifiedYieldSummaryGuid"
             [commodityName]="summary.cropCommodityName + (summary.isPedigreeInd ? ' Pedigreed' : '' )"
-            [insuredAcres]="summary.totalInsuredAcres"
             [uwComments]="summary?.uwComments"
             (onDone)="onVerifiedYieldCommentsDone($event)"></uw-comments-button>
     </div>

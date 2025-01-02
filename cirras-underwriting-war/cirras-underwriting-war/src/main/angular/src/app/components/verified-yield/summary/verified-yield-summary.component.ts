@@ -38,7 +38,6 @@ export class VerifiedYieldSummaryComponent {
         verifiedYieldContractGuid: [this.summary.verifiedYieldContractGuid],
         cropCommodityId: [this.summary.cropCommodityId],
         isPedigreeInd: [this.summary.isPedigreeInd],
-        // TODO: insuread acres is missing
         harvestedYield: [this.summary.harvestedYield],
         harvestedYieldPerAcre: [this.summary.harvestedYieldPerAcre],
         appraisedYield: [this.summary.appraisedYield],
@@ -48,6 +47,7 @@ export class VerifiedYieldSummaryComponent {
         productionGuarantee: [this.summary.productionGuarantee],
         probableYield: [this.summary.probableYield],
         cropCommodityName: [this.summary.cropCommodityName],
+        totalInsuredAcres: [this.summary.totalInsuredAcres],
         uwComments: [this.summary.uwComments] 
       });
       this.summariesFormArray.push(this.summaryFormGroup);

@@ -248,5 +248,6 @@ export interface VerifiedYieldContract {
     productionGuarantee?: number;
     probableYield?: number;
     cropCommodityName?: string;
+    totalInsuredAcres?: number;
     uwComments?: Array<UnderwritingComment>;
 }
