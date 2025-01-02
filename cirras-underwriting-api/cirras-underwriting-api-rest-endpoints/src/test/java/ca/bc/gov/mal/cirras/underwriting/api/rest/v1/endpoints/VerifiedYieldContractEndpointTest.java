@@ -478,8 +478,8 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 	}
 	
 	@Test
-	public void testGetVerifiedYieldSummeries() throws CirrasUnderwritingServiceException, Oauth2ClientException {
-		logger.debug("<testGetVerifiedYieldSummeries");
+	public void testGetVerifiedYieldSummaries() throws CirrasUnderwritingServiceException, Oauth2ClientException {
+		logger.debug("<testGetVerifiedYieldSummaries");
 		
 		if(skipTests) {
 			logger.warn("Skipping tests");
@@ -508,6 +508,8 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		vys.setYieldPercentPy(75.5);
 		vys.setProductionGuarantee(55.5);
 		vys.setProbableYield(17.5);
+		vys.setTotalInsuredAcres(null);  // Set based on existing inventory for selected policy.
+
 		
 		List<UnderwritingComment> expectedComments = new ArrayList<UnderwritingComment>();
 		UnderwritingComment uw = new UnderwritingComment();
@@ -535,6 +537,7 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		vys.setYieldPercentPy(76.5);
 		vys.setProductionGuarantee(56.5);
 		vys.setProbableYield(18.5);
+		vys.setTotalInsuredAcres(null);  // Set based on existing inventory for selected policy.
 		
 		expectedVys.add(vys);	
 		
@@ -571,7 +574,7 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		//AFTER TESTS: DELETE LAND, INVENTORY AND YIELD BY RUNNING THE DELETE SCRIPTS BELOW
 		//*****************************************************************
 
-		logger.debug(">testGetVerifiedYieldSummeries");
+		logger.debug(">testGetVerifiedYieldSummaries");
 	
 	/* 
 	 * 
@@ -724,6 +727,8 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		Assert.assertEquals(expected.getYieldPercentPy(), actual.getYieldPercentPy());
 		Assert.assertEquals(expected.getProductionGuarantee(), actual.getProductionGuarantee());
 		Assert.assertEquals(expected.getProbableYield(), actual.getProbableYield());
+		Assert.assertEquals(expected.getTotalInsuredAcres(), actual.getTotalInsuredAcres());
+
 		
 		if (expected.getUwComments() != null && expected.getUwComments().size() > 0) {
 			Assert.assertNotNull(actual.getUwComments());

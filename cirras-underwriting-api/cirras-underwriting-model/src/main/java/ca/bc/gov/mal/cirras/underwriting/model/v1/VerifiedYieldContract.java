@@ -47,6 +47,9 @@ public interface VerifiedYieldContract<A extends AnnualField, M extends Message>
 	public List<VerifiedYieldAmendment> getVerifiedYieldAmendments();
 	public void setVerifiedYieldAmendments(List<VerifiedYieldAmendment> verifiedYieldAmendments);
 	
+	public List<VerifiedYieldSummary> getVerifiedYieldSummaries();
+	public void setVerifiedYieldSummaries(List<VerifiedYieldSummary> verifiedYieldSummaries);
+	
 	public List<M> getProductWarningMessages();
 	public void setProductWarningMessages(List<M> productWarningMessages);
 

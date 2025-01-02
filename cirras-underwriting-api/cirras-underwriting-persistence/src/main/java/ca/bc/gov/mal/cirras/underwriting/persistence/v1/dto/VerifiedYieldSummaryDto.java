@@ -36,6 +36,7 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 
 	// Extended columns
 	private String cropCommodityName;
+	private Double totalInsuredAcres;
 	
 	//comments
 	private List<UnderwritingCommentDto> uwComments = new ArrayList<UnderwritingCommentDto>();
@@ -65,7 +66,8 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 		this.updateDate = dto.updateDate;
 
 		this.cropCommodityName = dto.cropCommodityName;
-		
+		this.totalInsuredAcres = dto.totalInsuredAcres;
+
 		if ( dto.uwComments != null ) {			
 			this.uwComments = new ArrayList<>();
 			
@@ -252,6 +254,14 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 
 	public void setCropCommodityName(String cropCommodityName) {
 		this.cropCommodityName = cropCommodityName;
+	}
+
+	public Double getTotalInsuredAcres() {
+		return totalInsuredAcres;
+	}
+
+	public void setTotalInsuredAcres(Double totalInsuredAcres) {
+		this.totalInsuredAcres = totalInsuredAcres;
 	}
 
 	public List<UnderwritingCommentDto> getUwComments() {

@@ -628,7 +628,7 @@ order by sort_column,
 					<text><![CDATA[  PART 2 - UNSEEDED ACREAGE DECLARATION]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="2" y="89" width="272" height="25" uuid="f2839b4d-b4b9-4056-bb8c-cb4b96dc3e27">
+					<reportElement x="2" y="89" width="272" height="34" uuid="f2839b4d-b4b9-4056-bb8c-cb4b96dc3e27">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>

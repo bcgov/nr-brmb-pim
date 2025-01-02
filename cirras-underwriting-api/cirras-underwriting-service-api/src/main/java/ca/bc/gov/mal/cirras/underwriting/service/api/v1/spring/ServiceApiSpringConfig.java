@@ -393,6 +393,7 @@ public class ServiceApiSpringConfig {
 		result.setApplicationProperties(applicationProperties);
 
 		result.setVerifiedYieldContractFactory(verifiedYieldContractFactory);
+		result.setInventoryContractFactory(inventoryContractFactory);
 
 		result.setPolicyDao(persistenceSpringConfig.policyDao());
 		result.setInventoryFieldDao(persistenceSpringConfig.inventoryFieldDao());

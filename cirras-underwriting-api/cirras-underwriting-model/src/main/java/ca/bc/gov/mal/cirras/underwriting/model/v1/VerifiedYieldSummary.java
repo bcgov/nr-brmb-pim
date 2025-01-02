@@ -25,6 +25,7 @@ public class VerifiedYieldSummary implements Serializable {
 
 	// Extended columns
 	private String cropCommodityName;
+	private Double totalInsuredAcres;
 	
 	private List<UnderwritingComment> uwComments = new ArrayList<UnderwritingComment>();
 	
@@ -138,6 +139,14 @@ public class VerifiedYieldSummary implements Serializable {
 
 	public void setUwComments(List<UnderwritingComment> uwComments) {
 		this.uwComments = uwComments;
+	}
+
+	public Double getTotalInsuredAcres() {
+		return totalInsuredAcres;
+	}
+
+	public void setTotalInsuredAcres(Double totalInsuredAcres) {
+		this.totalInsuredAcres = totalInsuredAcres;
 	}
 	
 }
