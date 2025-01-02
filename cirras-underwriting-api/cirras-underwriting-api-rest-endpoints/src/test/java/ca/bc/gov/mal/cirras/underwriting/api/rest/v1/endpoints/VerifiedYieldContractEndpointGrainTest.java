@@ -44,9 +44,12 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededGrain;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryUnseeded;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiableCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandManagementEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
@@ -254,13 +257,13 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		createAnnualFieldDetail(annualFieldDetailId1, legalLandId, fieldId, cropYear1);
 		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId1, 1);
 
-		createInventoryContract(policyNumber1, 4);
-		createDopYieldContract(policyNumber1, 4);
+		createInventoryContract(policyNumber1, 4, false);
+		createDopYieldContract(policyNumber1, 4, false);
 		
 		//Barley - NON Pedigree - Product
-		createUpdateProduct(policyId1, productId1, 16, 20, 15.5, barleyNonPediProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		createUpdateProduct(policyId1, productId1, 16, 20, barleyNonPedigreePY, barleyNonPediProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
 		//Barley - Pedigree
-		createUpdateProduct(policyId1, productId3, 17, 50, 20.5, barleyPedigreeProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		createUpdateProduct(policyId1, productId3, 17, 50, barleyPedigreePY, barleyPedigreeProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
 		
 		Integer pageNumber = 1;
 		Integer pageRowCount = 20;
@@ -306,7 +309,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 
 		// Check Rollover
 		//Barley - NON Pedigree
-		checkVerifiedContractCommodityRollover(newContract.getVerifiedYieldContractCommodities(), 16, false, barleyNonPediProductionGuarantee, 23.45); 
+		checkVerifiedContractCommodityRollover(newContract.getVerifiedYieldContractCommodities(), 16, false, barleyNonPediProductionGuarantee, barleyNonPedigreeSeededAcres); 
 		//Canola - Pedigree
 		checkVerifiedContractCommodityRollover(newContract.getVerifiedYieldContractCommodities(), 18, true, null, null); 
 		//Barley - Pedigree
@@ -335,10 +338,10 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		VerifiedYieldContractCommodity barleyCommodity = getVerifiedYieldContractCommodity(16, false, newContract.getVerifiedYieldContractCommodities());
 		Assert.assertNotNull(barleyCommodity);
 		barleyCommodity.setHarvestedAcresOverride(22.0);
-		barleyCommodity.setHarvestedYieldOverride(120.0);
+		barleyCommodity.setHarvestedYieldOverride(barleyNonPedigreeHarvestedYieldOverride);
 		
 		//Create product for Canola - Pedigree
-		createUpdateProduct(policyId1, productId2, 19, 10, 50.5, null, null, canolaPedigreeProductionGuarantee, "Open");
+		createUpdateProduct(policyId1, productId2, 19, 10, 50.5, null, canolaPedigreePY, canolaPedigreeProductionGuarantee, "Open");
 		
 		List<VerifiedYieldContractCommodity> expectedCommodities = newContract.getVerifiedYieldContractCommodities();
 		
@@ -360,7 +363,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 
 		// Check Contract Commodities
 		//Barley - NON Pedigree
-		checkVerifiedContractCommodityTotals(expectedCommodities, createdContract.getVerifiedYieldContractCommodities(), 16, false, barleyNonPediProductionGuarantee, 23.45); 
+		checkVerifiedContractCommodityTotals(expectedCommodities, createdContract.getVerifiedYieldContractCommodities(), 16, false, barleyNonPediProductionGuarantee, barleyNonPedigreeSeededAcres); 
 		//Canola - Pedigree
 		checkVerifiedContractCommodityTotals(expectedCommodities, createdContract.getVerifiedYieldContractCommodities(), 18, true, null, null); 
 		//Barley - Pedigree
@@ -370,7 +373,9 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		service.deleteProduct(topLevelEndpoints, productId1.toString());
 		//Update Barley Pedigree Product Guarantee - Expect warning
 		Double barleyPedProdGuaranteeNew = barleyPedigreeProductionGuarantee + 20;
-		createUpdateProduct(policyId1, productId3, 17, 50, 20.5, barleyPedProdGuaranteeNew, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		Double barleyNonPedigreePYNew = barleyNonPedigreePY + 10;
+		
+		createUpdateProduct(policyId1, productId3, 17, 50, barleyNonPedigreePYNew, barleyPedProdGuaranteeNew, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
 
 		//Get contract again to prevent precondition fails
 		createdContract = getVerifiedYieldContract(policyNumber1);
@@ -401,12 +406,12 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		Assert.assertEquals(createdContract.getVerifiedYieldUpdateUser(), updatedContract.getVerifiedYieldUpdateUser());
 		Assert.assertNotNull(updatedContract.getVerifiedYieldUpdateTimestamp());
 		
-		//2 warnings expected
-		Assert.assertEquals(2, updatedContract.getProductWarningMessages().size());
+		//4 warnings expected (2 Production Guarantee, 2 PY)
+		Assert.assertEquals(4, updatedContract.getProductWarningMessages().size());
 		
 		// Check Contract Commodities
 		//Barley - NON Pedigree
-		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 16, false, barleyNonPediProductionGuarantee, 23.45); 
+		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 16, false, barleyNonPediProductionGuarantee, barleyNonPedigreeSeededAcres); 
 		//Canola - Pedigree
 		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 18, true, null, null); 
 		//Barley - Pedigree
@@ -423,23 +428,23 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 
 		// Check Contract Commodities
 		//Barley - NON Pedigree
-		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 16, false, null, 23.45); 
+		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 16, false, null, barleyNonPedigreeSeededAcres); 
 		//Canola - Pedigree
 		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 18, true, null, null); 
 		//Barley - Pedigree
 		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 16, true, barleyPedProdGuaranteeNew, null); 
 
-		//Update Barley Pedigree Product Guarantee to NULL - Expect warning
+		//Update Barley Pedigree Product Guarantee and PY to NULL - Expect warning
 		createUpdateProduct(policyId1, productId3, 17, 50, 20.5, null, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
 		//Update Canola Pedigree to status final
-		createUpdateProduct(policyId1, productId2, 19, 10, 50.5, canolaPedigreeProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		createUpdateProduct(policyId1, productId2, 19, 10, canolaPedigreePY, canolaPedigreeProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
 		
 		//Get contract
 		VerifiedYieldContractRsrc vyContract = getVerifiedYieldContract(policyNumber1);
 		Assert.assertNotNull(vyContract);
 
-		//2 warnings expected
-		Assert.assertEquals(2, vyContract.getProductWarningMessages().size());
+		//4 warnings expected (2 Production Guarantee, 2 PY)
+		Assert.assertEquals(4, vyContract.getProductWarningMessages().size());
 
 		//UPDATE product values
 		vyContract.setUpdateProductValuesInd(true);
@@ -448,11 +453,11 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		Assert.assertNotNull(vyContract);
 
 		//0 warnings expected
-		Assert.assertEquals(0, updatedContract.getProductWarningMessages().size());
+		Assert.assertEquals(0, vyContract.getProductWarningMessages().size());
 		
 		// Check Contract Commodities
 		//Barley - NON Pedigree
-		checkVerifiedContractCommodityTotals(expectedCommodities, vyContract.getVerifiedYieldContractCommodities(), 16, false, null, 23.45); 
+		checkVerifiedContractCommodityTotals(expectedCommodities, vyContract.getVerifiedYieldContractCommodities(), 16, false, null, barleyNonPedigreeSeededAcres); 
 		//Canola - Pedigree
 		checkVerifiedContractCommodityTotals(expectedCommodities, vyContract.getVerifiedYieldContractCommodities(), 18, true, canolaPedigreeProductionGuarantee, null); 
 		//Barley - Pedigree
@@ -511,8 +516,8 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		createAnnualFieldDetail(annualFieldDetailId1, legalLandId, fieldId, cropYear1);
 		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId1, 1);
 
-		createInventoryContract(policyNumber1, 4);
-		createDopYieldContract(policyNumber1, 4);
+		createInventoryContract(policyNumber1, 4, false);
+		createDopYieldContract(policyNumber1, 4, false);
 				
 		Integer pageNumber = 1;
 		Integer pageRowCount = 20;
@@ -659,6 +664,325 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		logger.debug(">testInsertUpdateDeleteGrainVerifiedYieldAmendments");
 	}
 	
+	private String appraisal = InventoryServiceEnums.AmendmentTypeCode.Appraisal.toString();
+	private String assessment = InventoryServiceEnums.AmendmentTypeCode.Assessment.toString();
+	private Double oatAppraisalYield1 = 13.0;
+	private Double oatAppraisalAcres1 = 5.0;
+	private Double barleyNonPedAppraisalYield1 = 11.0;
+	private Double barleyNonPedAppraisalAcres1 = 2.0;
+	private Double barleyNonPedAppraisalYield2 = 12.0;
+	private Double barleyNonPedAppraisalAcres2 = 5.0;
+	private Double barleyNonPedAssessmentYield1 = 4.0;
+	private Double barleyNonPedAssessmentAcres1 = 3.0;
+	private Double barleyPedigreeAssessmentYield1 = 15.0;
+	private Double barleyPedigreeAssessmentAcres1 = 3.0;
+	private Double barleyPedigreeAssessmentYield2 = 3.0;
+	private Double barleyPedigreeAssessmentAcres2 = 5.0;
+	
+	@Test
+	public void testGrainVerifiedYieldSummary() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException, DaoException {
+		logger.debug("<testGrainVerifiedYieldSummary");
+
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+		
+		//Date and Time without millisecond
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		Date transactionDate = cal.getTime();
+		Date createTransactionDate = addSeconds(transactionDate, -1);
+
+		createGrower(growerId, 999888, "grower name", createTransactionDate);
+		
+		createLegalLand("test legal 9999", null, legalLandId, "999-888-000", 1980, null);
+		createField(fieldId, "LOT 3", 1980, null);
+
+		createGrowerContractYear(growerContractYearId1, contractId, growerId, cropYear1, 4, createTransactionDate);
+		createPolicy(policyId1, growerId, 4, policyNumber1, contractNumber, contractId, cropYear1, createTransactionDate);
+		createAnnualFieldDetail(annualFieldDetailId1, legalLandId, fieldId, cropYear1);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId1, 1);
+
+		createInventoryContract(policyNumber1, 4, true);
+		createDopYieldContract(policyNumber1, 4, true);
+		
+		//Barley - NON Pedigree - Product
+		createUpdateProduct(policyId1, productId1, 16, 20, barleyNonPedigreePY, barleyNonPediProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		//Barley - Pedigree
+		createUpdateProduct(policyId1, productId3, 17, 50, barleyPedigreePY, barleyPedigreeProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		
+		Integer pageNumber = 1;
+		Integer pageRowCount = 20;
+
+		// Rollover and create VerifiedYieldContract.
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber1,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+		Assert.assertNotNull(referrer.getInventoryContractGuid());
+		Assert.assertNotNull(referrer.getDeclaredYieldContractGuid());
+		Assert.assertNull(referrer.getVerifiedYieldContractGuid());
+		
+		// Check VerifiedYieldContract
+		VerifiedYieldContractRsrc newContract = service.rolloverVerifiedYieldContract(referrer);
+		Assert.assertNotNull(newContract);
+
+		Assert.assertEquals(contractId, newContract.getContractId());
+		Assert.assertEquals(cropYear1, newContract.getCropYear());
+		Assert.assertEquals(referrer.getDeclaredYieldContractGuid(), newContract.getDeclaredYieldContractGuid());
+		Assert.assertEquals("TONNE", newContract.getDefaultYieldMeasUnitTypeCode());
+		Assert.assertEquals(growerContractYearId1, newContract.getGrowerContractYearId());
+		Assert.assertEquals(Integer.valueOf(4), newContract.getInsurancePlanId());
+
+		// Check VerifiedYieldContractCommodities
+		Assert.assertEquals(2, newContract.getVerifiedYieldContractCommodities().size());
+		
+		// Check VerifiedYieldAmendments
+		Assert.assertEquals(0, newContract.getVerifiedYieldAmendments().size());
+
+		
+		//Create verified contract ******************************************************************************
+		//Add override values for barley non pedigree
+		VerifiedYieldContractCommodity barleyCommodity = getVerifiedYieldContractCommodity(16, false, newContract.getVerifiedYieldContractCommodities());
+		Assert.assertNotNull(barleyCommodity);
+		barleyCommodity.setHarvestedAcresOverride(22.0);
+		barleyCommodity.setHarvestedYieldOverride(barleyNonPedigreeHarvestedYieldOverride);
+		
+		//Create product for Canola - Pedigree
+		createUpdateProduct(policyId1, productId2, 19, 10, 50.5, null, canolaPedigreePY, canolaPedigreeProductionGuarantee, "Open");
+				
+		//Create Amendments
+		VerifiedYieldAmendment vya = createVerifiedYieldAmendment(appraisal, 24, "OAT", false, null, null, oatAppraisalAcres1, oatAppraisalYield1, "rationale 1");
+		newContract.getVerifiedYieldAmendments().add(vya);
+		
+		vya = createVerifiedYieldAmendment(appraisal, 16, "BARLEY", false, fieldId, "LOT 3", barleyNonPedAppraisalAcres1, barleyNonPedAppraisalYield1, "rationale 2");
+		newContract.getVerifiedYieldAmendments().add(vya);
+
+		vya = createVerifiedYieldAmendment(appraisal, 16, "BARLEY", false, null, null, barleyNonPedAppraisalAcres2, barleyNonPedAppraisalYield2, "rationale 2");
+		newContract.getVerifiedYieldAmendments().add(vya);
+
+		vya = createVerifiedYieldAmendment(assessment, 16, "BARLEY", false, null, null, barleyNonPedAssessmentAcres1, barleyNonPedAssessmentYield1, "rationale 2");
+		newContract.getVerifiedYieldAmendments().add(vya);
+		
+		vya = createVerifiedYieldAmendment(assessment, 16, "BARLEY", true, null, null, barleyPedigreeAssessmentAcres1, barleyPedigreeAssessmentYield1, "rationale 2");
+		newContract.getVerifiedYieldAmendments().add(vya);
+		
+		vya = createVerifiedYieldAmendment(assessment, 16, "BARLEY", true, null, null, barleyPedigreeAssessmentAcres2, barleyPedigreeAssessmentYield2, "rationale 2");
+		newContract.getVerifiedYieldAmendments().add(vya);
+		
+		List<VerifiedYieldSummary> expectedVys = createExpectedVerifiedYieldSummaries();
+
+		VerifiedYieldContractRsrc createdContract = service.createVerifiedYieldContract(topLevelEndpoints, newContract);
+		Assert.assertNotNull(createdContract);
+
+		Assert.assertEquals(newContract.getContractId(), createdContract.getContractId());
+		Assert.assertEquals(newContract.getCropYear(), createdContract.getCropYear());
+		Assert.assertEquals(newContract.getDeclaredYieldContractGuid(), createdContract.getDeclaredYieldContractGuid());
+		Assert.assertEquals(newContract.getDefaultYieldMeasUnitTypeCode(), createdContract.getDefaultYieldMeasUnitTypeCode());
+		Assert.assertEquals(newContract.getGrowerContractYearId(), createdContract.getGrowerContractYearId());
+		Assert.assertEquals(newContract.getInsurancePlanId(), createdContract.getInsurancePlanId());
+		
+		//Expect 3 verified yield summaries
+		Assert.assertEquals(3, createdContract.getVerifiedYieldSummaries().size());
+		
+		//Check Verified Yield Summary
+		checkVerifiedYieldSummaries(expectedVys, createdContract.getVerifiedYieldSummaries(), createdContract.getVerifiedYieldContractGuid());
+
+		//Add comments
+		List<UnderwritingComment> comments = new ArrayList<UnderwritingComment>();
+		//Oat
+		VerifiedYieldSummary oatVys = getVerifiedYieldSummary(24, false, createdContract.getVerifiedYieldSummaries());
+		Assert.assertNotNull(oatVys);
+		comments.add(createUwComment(oatVys.getVerifiedYieldSummaryGuid()));
+		oatVys.setUwComments(comments);
+		
+		//Barley non pedigree - 2 comments
+		VerifiedYieldSummary barleyVys = getVerifiedYieldSummary(16, false, createdContract.getVerifiedYieldSummaries());
+		Assert.assertNotNull(barleyVys);
+		comments = new ArrayList<UnderwritingComment>();
+		comments.add(createUwComment(barleyVys.getVerifiedYieldSummaryGuid()));
+		comments.add(createUwComment(barleyVys.getVerifiedYieldSummaryGuid()));
+		barleyVys.setUwComments(comments);
+		
+		//Add amendment of another commodity
+		vya = createVerifiedYieldAmendment(appraisal, 26, "WHEAT", false, null, null, oatAppraisalAcres1, oatAppraisalYield1, "rationale 1");
+		createdContract.getVerifiedYieldAmendments().add(vya);
+
+		VerifiedYieldContractRsrc updatedContract = service.updateVerifiedYieldContract(createdContract);
+		Assert.assertNotNull(updatedContract);
+		
+		//Expect 4 verified yield summaries
+		Assert.assertEquals(4, updatedContract.getVerifiedYieldSummaries().size());
+
+		//Check Comments
+		oatVys = getVerifiedYieldSummary(24, false, updatedContract.getVerifiedYieldSummaries());
+		Assert.assertNotNull(oatVys);
+		Assert.assertEquals(1, oatVys.getUwComments().size());
+
+		barleyVys = getVerifiedYieldSummary(16, false, updatedContract.getVerifiedYieldSummaries());
+		Assert.assertNotNull(barleyVys);
+		Assert.assertEquals(2, barleyVys.getUwComments().size());
+		//Remove one barley comment
+		barleyVys.getUwComments().get(0).setDeletedByUserInd(true);
+
+		VerifiedYieldSummary wheatVys = getVerifiedYieldSummary(26, false, updatedContract.getVerifiedYieldSummaries());
+		Assert.assertNotNull(wheatVys);
+		
+		//Remove Oat Amendment - Expect summary to be deleted
+		VerifiedYieldAmendment oatAmendment = getVerifiedYieldAmendment(24, false, updatedContract.getVerifiedYieldAmendments());
+		Assert.assertNotNull(oatAmendment);
+		oatAmendment.setDeletedByUserInd(true);
+		
+		//Remove 1 Barley non pedigree amendment - Expect updated summary
+		Boolean barleyAmendmentRemoved = false;
+		List<VerifiedYieldAmendment> barleyAmendments = getCommodityAmendments(16, false, updatedContract.getVerifiedYieldAmendments());
+		for (VerifiedYieldAmendment barleyAmendment : barleyAmendments) {
+
+			if(barleyAmendment.getVerifiedYieldAmendmentCode().equalsIgnoreCase(appraisal) &&
+					barleyAmendment.getAcres().equals(barleyNonPedAppraisalAcres2) &&
+					barleyAmendment.getYieldPerAcre().equals(barleyNonPedAppraisalYield2)) {
+
+				barleyAmendment.setDeletedByUserInd(true);
+				barleyAmendmentRemoved = true;
+			}
+		}
+		Assert.assertTrue(barleyAmendmentRemoved);
+		
+		//Update expected summary values
+		VerifiedYieldSummary expBarleyVys = getVerifiedYieldSummary(16, false, expectedVys);
+		Assert.assertNotNull(expBarleyVys);
+		Double appraisedYield = (barleyNonPedAppraisalYield1 * barleyNonPedAppraisalAcres1);
+		expBarleyVys.setAppraisedYield(appraisedYield);
+		Double yieldToCount = expBarleyVys.getHarvestedYield() + expBarleyVys.getAppraisedYield();
+		expBarleyVys.setYieldToCount(yieldToCount);
+		Double yieldPercentPy = expBarleyVys.getYieldToCount()/ (barleyNonPedigreeSeededAcres * barleyNonPedigreePY);
+		expBarleyVys.setYieldPercentPy(yieldPercentPy);
+		
+		updatedContract = service.updateVerifiedYieldContract(updatedContract);
+		Assert.assertNotNull(updatedContract);
+		
+		//Expect 3 verified yield summaries - Oat should be deleted
+		Assert.assertEquals(3, updatedContract.getVerifiedYieldSummaries().size());
+
+		barleyVys = getVerifiedYieldSummary(16, false, updatedContract.getVerifiedYieldSummaries());
+		Assert.assertNotNull(barleyVys);
+		//One comment should be deleted
+		Assert.assertEquals(1, barleyVys.getUwComments().size());
+
+		checkVerifiedYieldSummary(expBarleyVys, barleyVys, updatedContract.getVerifiedYieldContractGuid());				
+
+
+		//Delete verified contract ******************************************************************************
+		service.deleteVerifiedYieldContract(updatedContract);
+		
+		searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber1,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		referrer = searchResults.getCollection().get(0);
+		Assert.assertNotNull(referrer.getInventoryContractGuid());
+		Assert.assertNotNull(referrer.getDeclaredYieldContractGuid());
+		Assert.assertNull(referrer.getVerifiedYieldContractGuid());
+		
+		logger.debug(">testGrainVerifiedYieldSummary");
+	}	
+	
+	private List<VerifiedYieldSummary> createExpectedVerifiedYieldSummaries() {
+		
+		List<VerifiedYieldSummary> expVys = new ArrayList<VerifiedYieldSummary>();
+		
+		VerifiedYieldSummary vys = new VerifiedYieldSummary();
+		
+		//Barley Non Pedigree
+		vys.setCropCommodityId(16);
+		vys.setCropCommodityName("BARLEY");
+		vys.setIsPedigreeInd(false);
+		vys.setHarvestedYield(barleyNonPedigreeHarvestedYieldOverride); //Use Override
+		Double appraisedYield = (barleyNonPedAppraisalYield1 * barleyNonPedAppraisalAcres1) + (barleyNonPedAppraisalYield2 * barleyNonPedAppraisalAcres2);
+		vys.setAppraisedYield(appraisedYield);
+		Double assessedYield = (barleyNonPedAssessmentYield1 * barleyNonPedAssessmentAcres1);
+		vys.setAssessedYield(assessedYield);
+		Double yieldToCount = vys.getHarvestedYield() + vys.getAppraisedYield();
+		vys.setYieldToCount(yieldToCount);
+		Double yieldPercentPy = vys.getYieldToCount()/ (barleyNonPedigreeSeededAcres * barleyNonPedigreePY);
+		vys.setYieldPercentPy(yieldPercentPy);
+		vys.setProductionGuarantee(barleyNonPediProductionGuarantee);
+		vys.setProbableYield(barleyNonPedigreePY);
+		vys.setTotalInsuredAcres(barleyNonPedigreeSeededAcres);
+		
+		expVys.add(vys);
+
+		//Barley Pedigree
+		vys = new VerifiedYieldSummary();
+		
+		vys.setCropCommodityId(16);
+		vys.setCropCommodityName("BARLEY");
+		vys.setIsPedigreeInd(true);
+		vys.setHarvestedYield(barleyPedigreeSoldYield + barleyPedigreeStoredYield);
+		appraisedYield = null;
+		vys.setAppraisedYield(appraisedYield);
+		assessedYield = (barleyPedigreeAssessmentYield1 * barleyPedigreeAssessmentAcres1) + (barleyPedigreeAssessmentYield2 * barleyPedigreeAssessmentAcres2);
+		vys.setAssessedYield(assessedYield);
+		yieldToCount = vys.getHarvestedYield();
+		vys.setYieldToCount(yieldToCount);
+		yieldPercentPy = vys.getYieldToCount()/ (barleyPedigreeSeededAcres * barleyPedigreePY);
+		vys.setYieldPercentPy(yieldPercentPy);
+		vys.setProductionGuarantee(barleyPedigreeProductionGuarantee);
+		vys.setProbableYield(barleyPedigreePY );
+		vys.setTotalInsuredAcres(barleyPedigreeSeededAcres);
+		
+		expVys.add(vys);
+
+		//Oat Non Pedigree
+		vys = new VerifiedYieldSummary();
+		
+		vys.setCropCommodityId(24);
+		vys.setCropCommodityName("OAT");
+		vys.setIsPedigreeInd(false);
+		vys.setHarvestedYield(null);
+		appraisedYield = (oatAppraisalYield1 * oatAppraisalAcres1);
+		vys.setAppraisedYield(appraisedYield);
+		assessedYield = null;
+		vys.setAssessedYield(assessedYield);
+		yieldToCount = vys.getAppraisedYield();
+		vys.setYieldToCount(yieldToCount);
+		yieldPercentPy = null;
+		vys.setYieldPercentPy(yieldPercentPy);
+		vys.setProductionGuarantee(null);
+		vys.setProbableYield(null);
+		vys.setTotalInsuredAcres(null);
+		
+		expVys.add(vys);
+		
+		return expVys;
+	}
+
 	private void checkVerifiedContractCommodityTotals(
 			List<VerifiedYieldContractCommodity> expectedCommodities,
 			List<VerifiedYieldContractCommodity> actualCommodities,
@@ -836,13 +1160,83 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		VerifiedYieldContractCommodity vycc = null;
 		
 		List<VerifiedYieldContractCommodity> vyccFiltered = vyccList.stream()
-				.filter(x -> x.getCropCommodityId() == cropCommodityId && x.getIsPedigreeInd() == isPedigree )
+				.filter(x -> x.getCropCommodityId().equals(cropCommodityId) && x.getIsPedigreeInd().equals(isPedigree) )
 				.collect(Collectors.toList());
 		
 		if (vyccFiltered != null) {
 			vycc = vyccFiltered.get(0);
 		}
 		return vycc;
+	}
+	
+	private VerifiedYieldAmendment getVerifiedYieldAmendment(Integer cropCommodityId, Boolean isPedigree, List<VerifiedYieldAmendment> vyaList) {
+		
+		VerifiedYieldAmendment vya = null;
+		
+		List<VerifiedYieldAmendment> vyaFiltered = getCommodityAmendments(cropCommodityId, isPedigree, vyaList);
+		
+		if (vyaFiltered != null) {
+			vya = vyaFiltered.get(0);
+		}
+		return vya;
+	}
+
+	private List<VerifiedYieldAmendment> getCommodityAmendments(Integer cropCommodityId, Boolean isPedigree,
+			List<VerifiedYieldAmendment> vyaList) {
+		List<VerifiedYieldAmendment> vyaFiltered = vyaList.stream()
+				.filter(x -> x.getCropCommodityId().equals(cropCommodityId) && x.getIsPedigreeInd().equals(isPedigree) )
+				.collect(Collectors.toList());
+		return vyaFiltered;
+	}
+	
+	private VerifiedYieldSummary getVerifiedYieldSummary(Integer cropCommodityId, Boolean isPedigree, List<VerifiedYieldSummary> vysList) {
+		
+		VerifiedYieldSummary vys = null;
+		
+		List<VerifiedYieldSummary> vysFiltered = vysList.stream()
+				.filter(x -> x.getCropCommodityId().equals(cropCommodityId) && x.getIsPedigreeInd().equals(isPedigree) )
+				.collect(Collectors.toList());
+		
+		if (vysFiltered != null) {
+			vys = vysFiltered.get(0);
+		}
+		return vys;
+	}
+	
+	private void checkVerifiedYieldSummaries(List<VerifiedYieldSummary> expected, List<VerifiedYieldSummary> actual, String verifiedYieldContractGuid) {
+		if ( expected == null && actual != null || expected != null && actual == null ) {
+			Assert.fail();
+		} else if ( expected != null && actual != null ) {
+			Assert.assertEquals(expected.size(), actual.size());
+
+			for ( VerifiedYieldSummary expectedVys : expected ) {
+				
+				VerifiedYieldSummary actualVys = getVerifiedYieldSummary(expectedVys.getCropCommodityId(), expectedVys.getIsPedigreeInd(), actual);
+				Assert.assertNotNull(actualVys);
+				checkVerifiedYieldSummary(expectedVys, actualVys, verifiedYieldContractGuid);				
+			}
+		}
+	}
+	
+	private void checkVerifiedYieldSummary(VerifiedYieldSummary expected, VerifiedYieldSummary actual, String verifiedYieldContractGuid) {
+		Assert.assertNotNull("VerifiedYieldSummaryGuid", actual.getVerifiedYieldSummaryGuid());
+		Assert.assertEquals("VerifiedYieldContractGuid", verifiedYieldContractGuid, actual.getVerifiedYieldContractGuid());
+		Assert.assertEquals("CropCommodityId", expected.getCropCommodityId(), actual.getCropCommodityId());
+		Assert.assertEquals("CropCommodityName", expected.getCropCommodityName(), actual.getCropCommodityName());
+		Assert.assertEquals("IsPedigreeInd", expected.getIsPedigreeInd(), actual.getIsPedigreeInd());
+		Assert.assertEquals("HarvestedYield", expected.getHarvestedYield(), actual.getHarvestedYield());
+		//Assert.assertEquals("HarvestedYieldPerAcre", expected.getHarvestedYieldPerAcre(), actual.getHarvestedYieldPerAcre());
+		Assert.assertEquals("AppraisedYield", expected.getAppraisedYield(), actual.getAppraisedYield());
+		Assert.assertEquals("AssessedYield", expected.getAssessedYield(), actual.getAssessedYield());
+		Assert.assertEquals("YieldToCount", expected.getYieldToCount(), actual.getYieldToCount());
+		if(expected.getYieldPercentPy() == null) {
+			Assert.assertNull("YieldPercentPy Null", actual.getYieldPercentPy());
+		} else {
+			Assert.assertEquals("YieldPercentPy", expected.getYieldPercentPy(), actual.getYieldPercentPy(), 0.00005);
+		}
+		Assert.assertEquals("ProductionGuarantee", expected.getProductionGuarantee(), actual.getProductionGuarantee());
+		Assert.assertEquals("ProbableYield", expected.getProbableYield(), actual.getProbableYield());
+		Assert.assertEquals("TotalInsuredAcres", expected.getTotalInsuredAcres(), actual.getTotalInsuredAcres());
 	}
 	
 	private void createLegalLand(
@@ -1002,6 +1396,9 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 	private Double barleyNonPediProductionGuarantee = 222.5;
 	private Double barleyPedigreeProductionGuarantee = 15.1;
 	private Double canolaPedigreeProductionGuarantee = 77.0;
+	private Double barleyNonPedigreePY = 50.5;
+	private Double barleyPedigreePY = 20.1;
+	private Double canolaPedigreePY = 80.0;
 	
 	private void createUpdateProduct(
 			Integer policyId,
@@ -1045,7 +1442,13 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 
 	}
 	
-	private void createInventoryContract(String policyNumber, Integer insurancePlanId) throws ValidationException, CirrasUnderwritingServiceException {
+	private Double barleyNonPedigreeSeededAcres = 23.45;
+	private Double barleyPedigreeSeededAcres = 15.00;
+	
+	private void createInventoryContract(
+			String policyNumber, 
+			Integer insurancePlanId,
+			Boolean isVerifiedYieldSummaryTest) throws ValidationException, CirrasUnderwritingServiceException {
 
 		boolean addedSeededGrain = false;
 		boolean addedSeededForage = false;
@@ -1098,7 +1501,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 					
 					
 					List<InventorySeededGrain> seededGrains = new ArrayList<InventorySeededGrain>();
-					seededGrains.add(createInventorySeededGrain(16, "BARLEY", false, 23.45));
+					seededGrains.add(createInventorySeededGrain(16, "BARLEY", false, barleyNonPedigreeSeededAcres));
 
 					planting.setInventorySeededGrains(seededGrains);
 					
@@ -1111,18 +1514,22 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 				 
 				InventoryField newPlanting = createPlanting(field, 2, cropYear1, false, insurancePlanId);
 				List<InventorySeededGrain> seededGrains = new ArrayList<InventorySeededGrain>();
-				seededGrains.add(createInventorySeededGrain(16, "BARLEY", true, 18.0));
+				seededGrains.add(createInventorySeededGrain(16, "BARLEY", true, barleyPedigreeSeededAcres));
 
 				newPlanting.setInventorySeededGrains(seededGrains);
 				
-				//field.getPlantings().add(newPlanting);
 			}
 		}
 		
 		
 		if (insurancePlanId.equals(InsurancePlans.GRAIN.getInsurancePlanId())) {
-			InventoryContractCommodity icc = createInventoryContractCommodity(16, "BARLEY", false, 23.45, 23.45, 0.0);
+			InventoryContractCommodity icc = createInventoryContractCommodity(16, "BARLEY", false, barleyNonPedigreeSeededAcres, barleyNonPedigreeSeededAcres, 0.0);
 			resource.getCommodities().add(icc);
+
+			if(isVerifiedYieldSummaryTest) {
+				icc = createInventoryContractCommodity(16, "BARLEY", true, barleyPedigreeSeededAcres, barleyPedigreeSeededAcres, 0.0);
+				resource.getCommodities().add(icc);
+			}
 		}
 
 		service.createInventoryContract(topLevelEndpoints, resource);
@@ -1205,8 +1612,16 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 	}
 	
 	private List<DopYieldContractCommodity> dopYieldContractCommodityList;
+	private Double barleyNonPedigreeSoldYield = 66.77;
+	private Double barleyNonPedigreeStoredYield = 88.99;
+	private Double barleyPedigreeSoldYield = 67.8;
+	private Double barleyPedigreeStoredYield = 100.5;
+	private Double barleyNonPedigreeHarvestedYieldOverride = 120.0;
 	
-	private void createDopYieldContract(String policyNumber, Integer insurancePlanId) throws ValidationException, CirrasUnderwritingServiceException {
+	private void createDopYieldContract(
+			String policyNumber, 
+			Integer insurancePlanId,
+			Boolean isVerifiedYieldSummaryTest) throws ValidationException, CirrasUnderwritingServiceException {
 
 		boolean addedYieldGrain = false;
 		boolean addedYieldForage = false;
@@ -1253,14 +1668,15 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 			resource.getDopYieldContractCommodities().clear();
 			dopYieldContractCommodityList = new ArrayList<DopYieldContractCommodity>();
 
-			DopYieldContractCommodity dycc = createDopYieldContractCommodity(16, "BARLEY", 11.22, false, 66.77, 88.99);
+			DopYieldContractCommodity dycc = createDopYieldContractCommodity(16, "BARLEY", 11.22, false, barleyNonPedigreeSoldYield, barleyNonPedigreeStoredYield);
 			resource.getDopYieldContractCommodities().add(dycc);
 			
-			dycc = createDopYieldContractCommodity(18, "CANOLA", 33.44, true, 55.66, 77.88);
-			resource.getDopYieldContractCommodities().add(dycc);
+			if(!isVerifiedYieldSummaryTest) {
+				dycc = createDopYieldContractCommodity(18, "CANOLA", 33.44, true, 55.66, 77.88);
+				resource.getDopYieldContractCommodities().add(dycc);
+			}
 
-			//dycc = createDopYieldContractCommodity(20, "FALL RYE", null, false, null, null);
-			dycc = createDopYieldContractCommodity(16, "BARLEY", 22.0, true, 67.8, 100.5);
+			dycc = createDopYieldContractCommodity(16, "BARLEY", 11.22, true, barleyPedigreeSoldYield, barleyPedigreeStoredYield);
 			resource.getDopYieldContractCommodities().add(dycc);
 			
 			dopYieldContractCommodityList = resource.getDopYieldContractCommodities();
@@ -1360,6 +1776,18 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		return vya;
 	}
 
+	private UnderwritingComment createUwComment(String verifiedYieldSummaryGuid) {
+		UnderwritingComment uwComment = new UnderwritingComment();
+	
+		uwComment = new UnderwritingComment();
+		uwComment.setVerifiedYieldSummaryGuid(verifiedYieldSummaryGuid);
+		uwComment.setUnderwritingComment("Verified Yield Comment");
+		uwComment.setUnderwritingCommentGuid(null);
+		uwComment.setUnderwritingCommentTypeCode("VY");
+		uwComment.setUnderwritingCommentTypeDesc("Verified Yield");		
+
+		return uwComment;
+	}
 	
 	private static Date addSeconds(Date date, Integer seconds) {
 		Calendar cal = Calendar.getInstance();

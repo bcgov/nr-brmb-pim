@@ -25,6 +25,7 @@
 		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		
 		<result property="cropCommodityName" column="crop_commodity_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="totalInsuredAcres" column="total_insured_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
 
 	</resultMap>
 	
@@ -50,9 +51,16 @@
     
     <select id="fetch" resultMap="VerifiedYieldSummaryDtoMap">
 		<include refid="selectColumns"/>,
-		cc.commodity_name as crop_commodity_name
+		cc.commodity_name as crop_commodity_name,
+		icc.total_seeded_acres as total_insured_acres
 		from verified_yield_summary t
 		join crop_commodity cc ON cc.crop_commodity_id = t.crop_commodity_id
+		join verified_yield_contract vyc on vyc.verified_yield_contract_guid = t.verified_yield_contract_guid
+		left join inventory_contract ic on ic.contract_id = vyc.contract_id 
+									   and ic.crop_year = vyc.crop_year
+		left join inventory_contract_commodity icc on icc.inventory_contract_guid = ic.inventory_contract_guid 
+												   and icc.crop_commodity_id = t.crop_commodity_id
+												   and icc.is_pedigree_ind = t.is_pedigree_ind
 		where t.verified_yield_summary_guid = #{verifiedYieldSummaryGuid}
 	</select>
 
@@ -125,9 +133,16 @@
 			
 	<select id="selectForVerifiedYieldContract" resultMap="VerifiedYieldSummaryDtoMap">
 		<include refid="selectColumns"/>,
-		cc.commodity_name as crop_commodity_name
+		cc.commodity_name as crop_commodity_name,
+		icc.total_seeded_acres as total_insured_acres
 		from verified_yield_summary t
 		join crop_commodity cc ON cc.crop_commodity_id = t.crop_commodity_id
+		join verified_yield_contract vyc on vyc.verified_yield_contract_guid = t.verified_yield_contract_guid
+		left join inventory_contract ic on ic.contract_id = vyc.contract_id 
+									   and ic.crop_year = vyc.crop_year
+		left join inventory_contract_commodity icc on icc.inventory_contract_guid = ic.inventory_contract_guid 
+												   and icc.crop_commodity_id = t.crop_commodity_id
+												   and icc.is_pedigree_ind = t.is_pedigree_ind
 		where t.verified_yield_contract_guid = #{verifiedYieldContractGuid}
 		order by cc.commodity_name, t.is_pedigree_ind
 	</select>
