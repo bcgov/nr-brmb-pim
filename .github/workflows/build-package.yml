@@ -54,7 +54,7 @@ jobs:
       - name: Set up nodejs
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
 
         #NOTE: necessary to build client-war 
       - name: Add .npmrc file
@@ -69,7 +69,7 @@ jobs:
           mvn --settings=settings.xml --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }}  -DopenshiftRepo.login=${{ secrets.OPENSHIFT_ACCOUNT }} -DopenshiftRepo.password=${{ secrets.OPENSHIFT_PASSWORD }} deploy
 
       - name: Cache local Maven repository
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: staging
           key: ${{ runner.os }}-maven-${{ hashFiles('**war.xml') }}
