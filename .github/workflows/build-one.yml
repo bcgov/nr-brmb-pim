@@ -47,5 +47,4 @@ jobs:
     with:
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-war
-      JAVA_VERSION: 17
       TAG: ${{ inputs.TAG }}
