@@ -42,6 +42,8 @@ COMMENT ON COLUMN cuws.user_setting.update_user IS 'Update User is the user id o
 ;
 COMMENT ON COLUMN cuws.user_setting.update_date IS 'Update Date is the date when the record was updated last '
 ;
+COMMENT ON TABLE cuws.user_setting IS 'The table contains user''s preferred settings for search '
+;
 
 CREATE INDEX ix_us_lug ON cuws.user_setting(login_user_guid)
  TABLESPACE pg_default
