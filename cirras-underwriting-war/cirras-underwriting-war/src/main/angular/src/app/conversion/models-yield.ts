@@ -190,6 +190,7 @@ export interface VerifiedYieldContract {
     fields?: Array<AnnualField>;
     verifiedYieldContractCommodities?: Array<VerifiedYieldContractCommodity>;
     verifiedYieldAmendments?: Array<VerifiedYieldAmendment>;
+    verifiedYieldSummaries?: Array<VerifiedYieldSummary>;
     productWarningMessages?: Array<MessageRsrc>;
     etag?: string;
     type: string;
@@ -232,3 +233,21 @@ export interface VerifiedYieldContract {
     cropCommodityName?: string;
     isPedigreeInd?: boolean;
   }
+
+  export interface VerifiedYieldSummary {
+    verifiedYieldSummaryGuid?: string;
+    verifiedYieldContractGuid?: string;
+    cropCommodityId?: number;
+    isPedigreeInd?: boolean;
+    harvestedYield?: number;
+    harvestedYieldPerAcre?: number;
+    appraisedYield?: number;
+    assessedYield?: number;
+    yieldToCount?: number;
+    yieldPercentPy?: number;
+    productionGuarantee?: number;
+    probableYield?: number;
+    cropCommodityName?: string;
+    totalInsuredAcres?: number;
+    uwComments?: Array<UnderwritingComment>;
+}

@@ -1,0 +1,41 @@
+<div id="divSummaryContent" [formGroup]="summaryFormGroup" style="display: contents;">
+    <div class="readonly border-right border-bottom border-left" style="padding-left: 6px; background-color: inherit;">
+        {{ summaryFormGroup.value.cropCommodityName | titlecase }}
+        <span *ngIf="summaryFormGroup.value.isPedigreeInd == true" >&nbsp; Pedigreed</span>
+    </div>
+    <div class="readonly border-right border-bottom center" style="background-color: inherit;">
+        {{ summaryFormGroup.value.totalInsuredAcres | number: '1.0-1' }}
+    </div>
+    <div class="readonly border-right border-bottom center" style="background-color: inherit;">
+        {{ summaryFormGroup.value.harvestedYield | number: '1.0-3' }}
+    </div>
+
+    <div class="inventory-fill number border-right border-bottom" style="background-color: inherit;">
+        {{ summaryFormGroup.value.harvestedYieldPerAcre | number: '1.0-3' }}
+    </div>
+
+    <div class="readonly border-right border-bottom center" style="background-color: inherit;">
+        {{ summaryFormGroup.value.appraisedYield | number: '1.0-3' }}
+    </div>
+    <div class="readonly border-right border-bottom center" style="background-color: inherit;">
+        {{ summaryFormGroup.value.assessedYield | number: '1.0-3' }}
+    </div>
+
+    <div class="inventory-fill number border-right border-bottom" style="background-color: inherit;">
+        {{ summaryFormGroup.value.yieldToCount | number: '1.0-3' }}
+    </div> 
+    
+    <div class="readonly border-right border-bottom center" style="background-color: inherit;">
+        {{ summaryFormGroup.value.yieldPercentPy | number: '1.0-3' }}
+    </div>
+
+    <div class="readonly border-right border-bottom center" style="background-color: inherit;">
+        <uw-comments-button
+            [underwritingCommentTypeCode]="'VY'"
+            [verifiedYieldSummaryGuid]="summary?.verifiedYieldSummaryGuid"
+            [commodityName]="summary.cropCommodityName + (summary.isPedigreeInd ? ' Pedigreed' : '' )"
+            [uwComments]="summary?.uwComments"
+            (onDone)="onVerifiedYieldCommentsDone($event)"></uw-comments-button>
+    </div>
+
+</div>

@@ -60,7 +60,8 @@ export const CROP_COMMODITY_UNSPECIFIED = {
 
 export const UW_COMMENT_TYPE_CODE = {
     INVENTORY_GENERAL: 'INV',
-    DOP_GENERAL: 'DOP'
+    DOP_GENERAL: 'DOP',
+    VERIFIED_YIELD_GENERAL: 'VY'
 };
 
 export const LAND_UPDATE_TYPE = {
