@@ -4,5 +4,6 @@
 { "changeSet": {"author":"mhostettler","id":"87","changes": [
   {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.verified_yield_grain_basket.sql"}},
   {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.alter.verified_yield_summary.sql"}},
+  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.user_setting.sql"}},
   {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
   ] } }]}
