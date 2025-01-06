@@ -10,9 +10,9 @@ CREATE TABLE cuws.user_setting(
     policy_search_insurance_plan_id    numeric(9, 0)    NOT NULL,
     policy_search_office_id            numeric(9, 0)    NOT NULL,
     create_user                        varchar(64)      NOT NULL,
-    create_date                        timestamp(0)     NOT NULL,
+    create_date                        timestamp        NOT NULL,
     update_user                        varchar(64)      NOT NULL,
-    update_date                        timestamp(0)     NOT NULL
+    update_date                        timestamp        NOT NULL
 ) TABLESPACE pg_default
 ;
 
@@ -42,16 +42,14 @@ COMMENT ON COLUMN cuws.user_setting.update_user IS 'Update User is the user id o
 ;
 COMMENT ON COLUMN cuws.user_setting.update_date IS 'Update Date is the date when the record was updated last '
 ;
-COMMENT ON TABLE cuws.user_setting IS 'The table contains user''s preferred settings for search '
-;
 
 CREATE INDEX ix_us_lug ON cuws.user_setting(login_user_guid)
  TABLESPACE pg_default
 ;
-CREATE INDEX ix_us_psip ON cuws.user_setting(policy_search_insurance_plan_id)
+CREATE INDEX ix_us_ip ON cuws.user_setting(policy_search_insurance_plan_id)
  TABLESPACE pg_default
 ;
-CREATE INDEX ix_us_psof ON cuws.user_setting(policy_search_office_id)
+CREATE INDEX ix_us_of ON cuws.user_setting(policy_search_office_id)
  TABLESPACE pg_default
 ;
 ALTER TABLE cuws.user_setting ADD 
