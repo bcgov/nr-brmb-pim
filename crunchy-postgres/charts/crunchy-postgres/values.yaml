@@ -61,9 +61,9 @@ pgBackRest:
       storageClassName: netapp-file-backup
       storage: #{DB_BACKUP_VOLUME_SIZE}#
     configuration:
-      secretName: "#{ENV}#-postgres-s3-secret"
+      secretName: "#{S3_ENVIRONMENT}#-postgres-s3-secret"
     s3:
-      bucket: "pit#{ENV}#"
+      bucket: "pit#{S3_ENVIRONMENT}#"
       endpoint: "nrs.objectstore.gov.bc.ca"
       region: "ca-central-1"
       directoryName: pituw#{ENV}#
