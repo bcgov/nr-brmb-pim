@@ -32,6 +32,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiableCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
@@ -44,6 +45,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingCommentDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldAmendmentDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldSummaryDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldGrainBasketDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.VerifiedYieldContractFactory;
@@ -88,7 +90,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 
 			resource.setVerifiedYieldContractCommodities(vyContractCommodities);
 		}
-						
+		
 		String eTag = getEtag(resource);
 		resource.setETag(eTag);
 
@@ -202,6 +204,19 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			resource.setVerifiedYieldSummaries(verifiedYieldSummaries);
 		}
 		
+		// Verified Yield Grain Basket
+		if (!dto.getVerifiedYieldGrainBaskets().isEmpty()) {
+			List<VerifiedYieldGrainBasket> verifiedYieldGrainBaskets = new ArrayList<VerifiedYieldGrainBasket>();
+
+			for (VerifiedYieldGrainBasketDto vygbDto : dto.getVerifiedYieldGrainBaskets()) {
+				VerifiedYieldGrainBasket vygbModel = createVerifiedYieldGrainBasket(vygbDto, authentication);
+				verifiedYieldGrainBaskets.add(vygbModel);
+			}
+
+			resource.setVerifiedYieldGrainBaskets(verifiedYieldGrainBaskets);
+		}
+		
+				
 		resource.setProductWarningMessages(productWarnings);
 		
 		String eTag = getEtag(resource);
@@ -398,6 +413,19 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 
 		return model;
 	}
+		
+	private VerifiedYieldGrainBasket createVerifiedYieldGrainBasket(VerifiedYieldGrainBasketDto dto, WebAdeAuthentication authentication) {
+		VerifiedYieldGrainBasket model = new VerifiedYieldGrainBasket();
+		
+		model.setVerifiedYieldGrainBasketGuid(dto.getVerifiedYieldGrainBasketGuid());
+		model.setVerifiedYieldContractGuid(dto.getVerifiedYieldContractGuid());
+		model.setBasketValue(dto.getBasketValue());
+		model.setHarvestedValue(dto.getHarvestedValue());
+		model.setComment(dto.getComment());
+
+		return model;
+	}
+	
 	
 	// Creates an AnnualFieldRsrc and populates its verifiableCommodities.
 	private AnnualFieldRsrc createAnnualField(ContractedFieldDetailDto dto, WebAdeAuthentication authentication) {
@@ -566,6 +594,15 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		dto.setProductionGuarantee(model.getProductionGuarantee());
 		dto.setProbableYield(model.getProbableYield());
 		dto.setInsurableValueHundredPercent(model.getInsurableValueHundredPercent());
+	}
+	
+	
+	public void updateDto(VerifiedYieldGrainBasketDto dto, VerifiedYieldGrainBasket model) {
+		dto.setVerifiedYieldGrainBasketGuid(model.getVerifiedYieldGrainBasketGuid());
+		dto.setVerifiedYieldContractGuid(model.getVerifiedYieldContractGuid());
+		dto.setBasketValue(model.getBasketValue());
+		dto.setHarvestedValue(model.getHarvestedValue());
+		dto.setComment(model.getComment());
 	}
 	
 	private Double notNull(Double value, Double defaultValue) {

@@ -14,6 +14,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ContractedFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractDao;
@@ -26,6 +27,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldAmendme
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldContractDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldSummaryDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldGrainBasketDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
@@ -38,6 +40,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldAmendme
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldSummaryDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldGrainBasketDto;
 import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
@@ -82,6 +85,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	private VerifiedYieldContractCommodityDao verifiedYieldContractCommodityDao;
 	private VerifiedYieldAmendmentDao verifiedYieldAmendmentDao;
 	private VerifiedYieldSummaryDao verifiedYieldSummaryDao;
+	private VerifiedYieldGrainBasketDao verifiedYieldGrainBasketDao;
 	private ProductDao productDao;
 	private UnderwritingCommentDao underwritingCommentDao;
 
@@ -139,6 +143,10 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 	public void setVerifiedYieldSummaryDao(VerifiedYieldSummaryDao verifiedYieldSummaryDao) {
 		this.verifiedYieldSummaryDao = verifiedYieldSummaryDao;
+	}
+	
+	public void setVerifiedYieldGrainBasketDao(VerifiedYieldGrainBasketDao verifiedYieldGrainBasketDao) {
+		this.verifiedYieldGrainBasketDao = verifiedYieldGrainBasketDao;
 	}
 	
 	public void setProductDao(ProductDao productDao) {
@@ -419,6 +427,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		List<VerifiedYieldContractCommodity> verifiedContractCommodities = verifiedYieldContract.getVerifiedYieldContractCommodities();
 		List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
 		List<VerifiedYieldSummary> verifiedYieldSummaries = new ArrayList<VerifiedYieldSummary>();
+		List<VerifiedYieldGrainBasket> verifiedYieldGrainBaskets = new ArrayList<VerifiedYieldGrainBasket>();
 		
 		//Summary records are calculated from commodity totals and amendments
 		//Add a yield summary record for each commodity (pedigree/non-pedigree) which is either in commodity totals OR amendments 
@@ -553,6 +562,15 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				verifiedYieldSummaryDao.deleteForVerifiedYieldContract(verifiedYieldContract.getVerifiedYieldContractGuid());
 			}
 		}
+		
+		//TODO: Save Verified Yield Grain Basket Records
+//		if(verifiedYieldGrainBaskets != null && !verifiedYieldGrainBaskets.isEmpty() ) {
+//			for(VerifiedYieldGrainBasket vygb : verifiedYieldGrainBaskets){
+//				updateVerifiedYieldGrainBasket(vygb, userId);
+//	
+//			}
+//		}
+	
 	}
 	
 	private void updateUnderwritingComment(
@@ -697,6 +715,62 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 	}
 
+	
+	private void updateVerifiedYieldGrainBasket(
+			VerifiedYieldGrainBasket verifiedGrainBasket,
+			String userId) throws DaoException {
+
+		logger.debug("<updateVerifiedYieldGrainBasket");
+		
+		VerifiedYieldGrainBasketDto dto = null;
+
+		if (verifiedGrainBasket.getVerifiedYieldGrainBasketGuid() != null) {
+			dto = verifiedYieldGrainBasketDao.fetch(verifiedGrainBasket.getVerifiedYieldGrainBasketGuid());
+		}
+
+		if (dto == null) {
+			// Insert if it doesn't exist
+			insertVerifiedYieldGrainBasket(verifiedGrainBasket, userId);
+		} else {
+			verifiedYieldContractFactory.updateDto(dto, verifiedGrainBasket);
+
+			verifiedYieldGrainBasketDao.update(dto, userId);
+		}
+
+		logger.debug(">updateVerifiedYieldGrainSummary");
+	}
+	
+	private void insertVerifiedYieldGrainBasket(VerifiedYieldGrainBasket verifiedYieldGrainBasket, String userId) throws DaoException {
+
+		logger.debug("<insertVerifiedYieldGrainBasket");
+
+		VerifiedYieldGrainBasketDto dto = new VerifiedYieldGrainBasketDto();
+
+		verifiedYieldContractFactory.updateDto(dto, verifiedYieldGrainBasket);
+
+		dto.setVerifiedYieldGrainBasketGuid(null);
+
+		verifiedYieldGrainBasketDao.insert(dto, userId);
+		
+		verifiedYieldGrainBasket.setVerifiedYieldGrainBasketGuid(dto.getVerifiedYieldGrainBasketGuid());
+
+		logger.debug(">insertVerifiedYieldGrainBasket");
+
+	}
+	
+	private void deleteVerifiedYieldGrainBasket(VerifiedYieldGrainBasket verifiedGrainBasket) throws DaoException {
+
+		logger.debug("<deleteVerifiedYieldGrainBasket");
+
+		if ( verifiedGrainBasket.getVerifiedYieldGrainBasketGuid() != null ) {
+			verifiedYieldGrainBasketDao.delete(verifiedGrainBasket.getVerifiedYieldGrainBasketGuid());
+		}
+
+		logger.debug(">deleteVerifiedYieldSummary");
+
+	}
+	
+	
 	private void setProductValues(VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract,
 			List<ProductDto> productDtos, VerifiedYieldSummary vys) {
 		//Get product
