@@ -508,6 +508,7 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		vys.setYieldPercentPy(75.5);
 		vys.setProductionGuarantee(55.5);
 		vys.setProbableYield(17.5);
+		vys.setInsurableValueHundredPercent(32.14);
 		vys.setTotalInsuredAcres(null);  // Set based on existing inventory for selected policy.
 
 		
@@ -727,6 +728,7 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		Assert.assertEquals(expected.getYieldPercentPy(), actual.getYieldPercentPy());
 		Assert.assertEquals(expected.getProductionGuarantee(), actual.getProductionGuarantee());
 		Assert.assertEquals(expected.getProbableYield(), actual.getProbableYield());
+		Assert.assertEquals(expected.getInsurableValueHundredPercent(), actual.getInsurableValueHundredPercent());
 		Assert.assertEquals(expected.getTotalInsuredAcres(), actual.getTotalInsuredAcres());
 
 		

@@ -381,6 +381,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		model.setYieldPercentPy(dto.getYieldPercentPy());
 		model.setProductionGuarantee(dto.getProductionGuarantee());
 		model.setProbableYield(dto.getProbableYield());
+		model.setInsurableValueHundredPercent(dto.getInsurableValueHundredPercent());
 		model.setTotalInsuredAcres(dto.getTotalInsuredAcres());
 		
 		// UnderwritingComment
@@ -564,6 +565,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		dto.setYieldPercentPy(model.getYieldPercentPy());
 		dto.setProductionGuarantee(model.getProductionGuarantee());
 		dto.setProbableYield(model.getProbableYield());
+		dto.setInsurableValueHundredPercent(model.getInsurableValueHundredPercent());
 	}
 	
 	private Double notNull(Double value, Double defaultValue) {

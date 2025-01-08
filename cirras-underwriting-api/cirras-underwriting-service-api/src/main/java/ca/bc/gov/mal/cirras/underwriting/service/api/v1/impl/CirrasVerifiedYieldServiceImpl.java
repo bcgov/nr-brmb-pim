@@ -703,20 +703,24 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		ProductDto product = getProductDto(vys.getCropCommodityId(), vys.getIsPedigreeInd(), productDtos);
 		Double productionGuarantee = vys.getProductionGuarantee();
 		Double probableYield = vys.getProbableYield();
+		Double insurableValueHundredPercent = vys.getInsurableValueHundredPercent();
 
 		//Set or Update product values
 		if(vys.getVerifiedYieldSummaryGuid() == null || Boolean.TRUE.equals(verifiedYieldContract.getUpdateProductValuesInd())) {
 			if(product != null && product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
 				productionGuarantee = product.getProductionGuarantee();
 				probableYield = product.getProbableYield();
+				insurableValueHundredPercent = product.getInsurableValueHundredPercent();
 			} else {
 				productionGuarantee = null;
 				probableYield = null;
+				insurableValueHundredPercent = null;
 			}
 		}
 
 		vys.setProductionGuarantee(productionGuarantee);
 		vys.setProbableYield(probableYield);
+		vys.setInsurableValueHundredPercent(insurableValueHundredPercent);
 	}
 
 	private void calculateAndSetAmendments(List<VerifiedYieldAmendment> verifiedAmendments, VerifiedYieldSummary vys) {
@@ -770,6 +774,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			vys.setYieldPercentPy(null);
 			vys.setProductionGuarantee(null);
 			vys.setProbableYield(null);	
+			vys.setInsurableValueHundredPercent(null);
 		}
 		
 		return vys;
