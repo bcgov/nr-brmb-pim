@@ -14,7 +14,6 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ContractedFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractDao;
@@ -316,6 +315,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		loadVerifiedYieldAmendments(dto);
 		loadFields(dto);
 		loadVerifiedYieldSummaries(dto);
+		loadVerifiedYieldGrainBaskets(dto);
 
 		return verifiedYieldContractFactory.getVerifiedYieldContract(dto, productDtos, factoryContext, authentication);
 	}
@@ -348,6 +348,11 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		//Returning all comments of a verified yield summary record
 		List<UnderwritingCommentDto> uwComments = underwritingCommentDao.selectForVerifiedYieldSummary(vyDto.getVerifiedYieldSummaryGuid());
 		vyDto.setUwComments(uwComments);
+	}
+	
+	private void loadVerifiedYieldGrainBaskets(VerifiedYieldContractDto dto) throws DaoException {
+		List<VerifiedYieldGrainBasketDto> verifiedGrainBaskets = verifiedYieldGrainBasketDao.selectForVerifiedYieldContract(dto.getVerifiedYieldContractGuid());
+		dto.setVerifiedYieldGrainBaskets(verifiedGrainBaskets);
 	}
 	
 	@Override
@@ -427,7 +432,6 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		List<VerifiedYieldContractCommodity> verifiedContractCommodities = verifiedYieldContract.getVerifiedYieldContractCommodities();
 		List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
 		List<VerifiedYieldSummary> verifiedYieldSummaries = new ArrayList<VerifiedYieldSummary>();
-		List<VerifiedYieldGrainBasket> verifiedYieldGrainBaskets = new ArrayList<VerifiedYieldGrainBasket>();
 		
 		//Summary records are calculated from commodity totals and amendments
 		//Add a yield summary record for each commodity (pedigree/non-pedigree) which is either in commodity totals OR amendments 
@@ -562,14 +566,6 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				verifiedYieldSummaryDao.deleteForVerifiedYieldContract(verifiedYieldContract.getVerifiedYieldContractGuid());
 			}
 		}
-		
-		//TODO: Save Verified Yield Grain Basket Records
-//		if(verifiedYieldGrainBaskets != null && !verifiedYieldGrainBaskets.isEmpty() ) {
-//			for(VerifiedYieldGrainBasket vygb : verifiedYieldGrainBaskets){
-//				updateVerifiedYieldGrainBasket(vygb, userId);
-//	
-//			}
-//		}
 	
 	}
 	
@@ -715,62 +711,6 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 	}
 
-	
-	private void updateVerifiedYieldGrainBasket(
-			VerifiedYieldGrainBasket verifiedGrainBasket,
-			String userId) throws DaoException {
-
-		logger.debug("<updateVerifiedYieldGrainBasket");
-		
-		VerifiedYieldGrainBasketDto dto = null;
-
-		if (verifiedGrainBasket.getVerifiedYieldGrainBasketGuid() != null) {
-			dto = verifiedYieldGrainBasketDao.fetch(verifiedGrainBasket.getVerifiedYieldGrainBasketGuid());
-		}
-
-		if (dto == null) {
-			// Insert if it doesn't exist
-			insertVerifiedYieldGrainBasket(verifiedGrainBasket, userId);
-		} else {
-			verifiedYieldContractFactory.updateDto(dto, verifiedGrainBasket);
-
-			verifiedYieldGrainBasketDao.update(dto, userId);
-		}
-
-		logger.debug(">updateVerifiedYieldGrainSummary");
-	}
-	
-	private void insertVerifiedYieldGrainBasket(VerifiedYieldGrainBasket verifiedYieldGrainBasket, String userId) throws DaoException {
-
-		logger.debug("<insertVerifiedYieldGrainBasket");
-
-		VerifiedYieldGrainBasketDto dto = new VerifiedYieldGrainBasketDto();
-
-		verifiedYieldContractFactory.updateDto(dto, verifiedYieldGrainBasket);
-
-		dto.setVerifiedYieldGrainBasketGuid(null);
-
-		verifiedYieldGrainBasketDao.insert(dto, userId);
-		
-		verifiedYieldGrainBasket.setVerifiedYieldGrainBasketGuid(dto.getVerifiedYieldGrainBasketGuid());
-
-		logger.debug(">insertVerifiedYieldGrainBasket");
-
-	}
-	
-	private void deleteVerifiedYieldGrainBasket(VerifiedYieldGrainBasket verifiedGrainBasket) throws DaoException {
-
-		logger.debug("<deleteVerifiedYieldGrainBasket");
-
-		if ( verifiedGrainBasket.getVerifiedYieldGrainBasketGuid() != null ) {
-			verifiedYieldGrainBasketDao.delete(verifiedGrainBasket.getVerifiedYieldGrainBasketGuid());
-		}
-
-		logger.debug(">deleteVerifiedYieldSummary");
-
-	}
-	
-	
 	private void setProductValues(VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract,
 			List<ProductDto> productDtos, VerifiedYieldSummary vys) {
 		//Get product
