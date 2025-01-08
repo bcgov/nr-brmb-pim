@@ -1,6 +1,5 @@
-
 CREATE TABLE cuws.user_setting(
-    underwriting_user_guid             varchar(32)      NOT NULL,
+    underwriting_user_setting_guid     varchar(32)      NOT NULL,
     login_user_guid                    varchar(32)      NOT NULL,
     login_user_id                      varchar(64)      NOT NULL,
     login_user_type                    varchar(64)      NOT NULL,
@@ -16,7 +15,7 @@ CREATE TABLE cuws.user_setting(
 ) TABLESPACE pg_default
 ;
 
-COMMENT ON COLUMN cuws.user_setting.underwriting_user_guid IS 'Underwriting User Guid is a unique key of an underwriting user '
+COMMENT ON COLUMN cuws.user_setting.underwriting_user_setting_guid IS 'Underwriting User Guid is a unique key of an underwriting user '
 ;
 COMMENT ON COLUMN cuws.user_setting.login_user_guid IS 'Login User Guid is a unique key from the authentication for a user.'
 ;
@@ -55,7 +54,7 @@ CREATE INDEX ix_us_of ON cuws.user_setting(policy_search_office_id)
  TABLESPACE pg_default
 ;
 ALTER TABLE cuws.user_setting ADD 
-    CONSTRAINT pk_us PRIMARY KEY (underwriting_user_guid) USING INDEX TABLESPACE pg_default 
+    CONSTRAINT pk_us PRIMARY KEY (underwriting_user_setting_guid) USING INDEX TABLESPACE pg_default 
 ;
 
 ALTER TABLE cuws.user_setting ADD 
