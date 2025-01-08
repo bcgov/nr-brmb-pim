@@ -28,7 +28,8 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 	private Double yieldPercentPy;
 	private Double productionGuarantee;
 	private Double probableYield;
-
+	private Double insurableValueHundredPercent;
+	
 	private String createUser;
 	private Date createDate;
 	private String updateUser;
@@ -59,6 +60,7 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 		this.yieldPercentPy = dto.yieldPercentPy;
 		this.productionGuarantee = dto.productionGuarantee;
 		this.probableYield = dto.probableYield;
+		this.insurableValueHundredPercent = dto.insurableValueHundredPercent;
 		
 		this.createUser = dto.createUser;
 		this.createDate = dto.createDate;
@@ -105,6 +107,7 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 			result = result&&dtoUtils.equals("yieldPercentPy", yieldPercentPy, other.yieldPercentPy, decimalPrecision);
 			result = result&&dtoUtils.equals("productionGuarantee", productionGuarantee, other.productionGuarantee, decimalPrecision);
 			result = result&&dtoUtils.equals("probableYield", probableYield, other.probableYield, decimalPrecision);
+			result = result&&dtoUtils.equals("insurableValueHundredPercent", insurableValueHundredPercent, other.insurableValueHundredPercent, decimalPrecision);
 		}
 		
 		return result;
@@ -215,7 +218,15 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 	public void setProbableYield(Double probableYield) {
 		this.probableYield = probableYield;
 	}
+	
+	public Double getInsurableValueHundredPercent() {
+		return insurableValueHundredPercent;
+	}
 
+	public void setInsurableValueHundredPercent(Double insurableValueHundredPercent) {
+		this.insurableValueHundredPercent = insurableValueHundredPercent;
+	}
+	
 	public String getCreateUser() {
 		return createUser;
 	}

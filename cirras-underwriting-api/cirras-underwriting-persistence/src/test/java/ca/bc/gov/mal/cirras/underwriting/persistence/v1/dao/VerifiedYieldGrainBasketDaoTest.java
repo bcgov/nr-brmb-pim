@@ -21,7 +21,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContrac
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingCommentDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldSummaryDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldGrainBasketDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.spring.PersistenceSpringConfig;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
@@ -30,7 +30,7 @@ import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes= {TestConfig.class, PersistenceSpringConfig.class})
-public class VerifiedYieldSummaryDaoTest {
+public class VerifiedYieldGrainBasketDaoTest {
 	
 	@Autowired 
 	private PersistenceSpringConfig persistenceSpringConfig;
@@ -56,11 +56,11 @@ public class VerifiedYieldSummaryDaoTest {
 	
 	private void delete() throws NotFoundDaoException, DaoException{
 
-		// Delete VerifiedYieldSummary
-		VerifiedYieldSummaryDao vyaDao = persistenceSpringConfig.verifiedYieldSummaryDao();
-		List<VerifiedYieldSummaryDto> vyaDtos = vyaDao.selectForVerifiedYieldContract(verifiedYieldContractGuid);
-		if ( vyaDtos != null && !vyaDtos.isEmpty() ) {
-			vyaDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
+		// Delete VerifiedYieldGrainBasket
+		VerifiedYieldGrainBasketDao vygbDao = persistenceSpringConfig.verifiedYieldGrainBasketDao();
+		List<VerifiedYieldGrainBasketDto> vygbDtos = vygbDao.selectForVerifiedYieldContract(verifiedYieldContractGuid);
+		if ( vygbDtos != null && !vygbDtos.isEmpty() ) {
+			vygbDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
 		}
 		
 		// Delete VerifiedYieldContract
@@ -104,9 +104,9 @@ public class VerifiedYieldSummaryDaoTest {
 
 
 	@Test 
-	public void testVerifiedYieldSummary() throws Exception {
+	public void testVerifiedYieldGrainBasket() throws Exception {
 
-		String verifiedYieldSummaryGuid;
+		String verifiedYieldGrainBasketGuid;
 		String userId = "UNITTEST";
 
 		createField("Test Field Label", userId);
@@ -116,140 +116,88 @@ public class VerifiedYieldSummaryDaoTest {
 		createDeclaredYieldContract(userId);
 		createVerifiedYieldContract(userId);
 		
-		VerifiedYieldSummaryDao dao = persistenceSpringConfig.verifiedYieldSummaryDao();
+		VerifiedYieldGrainBasketDao dao = persistenceSpringConfig.verifiedYieldGrainBasketDao();
 
 		// INSERT
-		VerifiedYieldSummaryDto newDto = new VerifiedYieldSummaryDto();
+		VerifiedYieldGrainBasketDto newDto = new VerifiedYieldGrainBasketDto();
 
 		newDto.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
-		newDto.setCropCommodityId(16);
-		newDto.setCropCommodityName("BARLEY");
-		newDto.setIsPedigreeInd(false);
-		newDto.setHarvestedYield(100.0);
-		newDto.setHarvestedYieldPerAcre(10.0);
-		newDto.setAppraisedYield(1.5);
-		newDto.setAssessedYield(0.5);
-		newDto.setYieldToCount(15.5);
-		newDto.setYieldPercentPy(75.5);
-		newDto.setProductionGuarantee(20.5);
-		newDto.setProbableYield(17.5);
-		newDto.setInsurableValueHundredPercent(27.33);
-		newDto.setTotalInsuredAcres(23.45);
+		newDto.setBasketValue(200.45);
+		newDto.setHarvestedValue(140.23);
+		newDto.setComment("Basket Value Comment");
 
 		dao.insert(newDto, userId);
-		Assert.assertNotNull(newDto.getVerifiedYieldSummaryGuid());
-		verifiedYieldSummaryGuid = newDto.getVerifiedYieldSummaryGuid();
+		Assert.assertNotNull(newDto.getVerifiedYieldGrainBasketGuid());
+		verifiedYieldGrainBasketGuid = newDto.getVerifiedYieldGrainBasketGuid();
 		
 		//SELECT
-		List<VerifiedYieldSummaryDto> dtos = dao.selectForVerifiedYieldContract(verifiedYieldContractGuid);
+		List<VerifiedYieldGrainBasketDto> dtos = dao.selectForVerifiedYieldContract(verifiedYieldContractGuid);
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(1, dtos.size());
 
-		VerifiedYieldSummaryDto fetchedDto = dtos.get(0);
+		VerifiedYieldGrainBasketDto fetchedDto = dtos.get(0);
 		
-		Assert.assertEquals("VerifiedYieldSummaryGuid", newDto.getVerifiedYieldSummaryGuid(), fetchedDto.getVerifiedYieldSummaryGuid());
+		Assert.assertEquals("VerifiedYieldGrainBasketGuid", newDto.getVerifiedYieldGrainBasketGuid(), fetchedDto.getVerifiedYieldGrainBasketGuid());
 		Assert.assertEquals("VerifiedYieldContractGuid", newDto.getVerifiedYieldContractGuid(), fetchedDto.getVerifiedYieldContractGuid());
-		Assert.assertEquals("CropCommodityId", newDto.getCropCommodityId(), fetchedDto.getCropCommodityId());
-		Assert.assertEquals("CropCommodityName", newDto.getCropCommodityName(), fetchedDto.getCropCommodityName());
-		Assert.assertEquals("IsPedigreeInd", newDto.getIsPedigreeInd(), fetchedDto.getIsPedigreeInd());
-		Assert.assertEquals("HarvestedYield", newDto.getHarvestedYield(), fetchedDto.getHarvestedYield());
-		Assert.assertEquals("HarvestedYieldPerAcre", newDto.getHarvestedYieldPerAcre(), fetchedDto.getHarvestedYieldPerAcre());
-		Assert.assertEquals("AppraisedYield", newDto.getAppraisedYield(), fetchedDto.getAppraisedYield());
-		Assert.assertEquals("AssessedYield", newDto.getAssessedYield(), fetchedDto.getAssessedYield());
-		Assert.assertEquals("YieldToCount", newDto.getYieldToCount(), fetchedDto.getYieldToCount());
-		Assert.assertEquals("YieldPercentPy", newDto.getYieldPercentPy(), fetchedDto.getYieldPercentPy());
-		Assert.assertEquals("ProductionGuarantee", newDto.getProductionGuarantee(), fetchedDto.getProductionGuarantee());
-		Assert.assertEquals("ProbableYield", newDto.getProbableYield(), fetchedDto.getProbableYield());
-		Assert.assertEquals("InsurableValueHundredPercent", newDto.getInsurableValueHundredPercent(), fetchedDto.getInsurableValueHundredPercent());
-		Assert.assertEquals("TotalInsuredAcres", newDto.getTotalInsuredAcres(), fetchedDto.getTotalInsuredAcres());
-
+		Assert.assertEquals("BasketValue", newDto.getBasketValue(), fetchedDto.getBasketValue());
+		Assert.assertEquals("HarvestedValue", newDto.getHarvestedValue(), fetchedDto.getHarvestedValue());
+		Assert.assertEquals("Comment", newDto.getComment(), fetchedDto.getComment());
+		
 		//FETCH
-		fetchedDto = dao.fetch(verifiedYieldSummaryGuid);
+		fetchedDto = dao.fetch(verifiedYieldGrainBasketGuid);
 		
-		Assert.assertEquals("VerifiedYieldSummaryGuid", newDto.getVerifiedYieldSummaryGuid(), fetchedDto.getVerifiedYieldSummaryGuid());
+		Assert.assertEquals("VerifiedYieldGrainBasketGuid", newDto.getVerifiedYieldGrainBasketGuid(), fetchedDto.getVerifiedYieldGrainBasketGuid());
 		Assert.assertEquals("VerifiedYieldContractGuid", newDto.getVerifiedYieldContractGuid(), fetchedDto.getVerifiedYieldContractGuid());
-		Assert.assertEquals("CropCommodityId", newDto.getCropCommodityId(), fetchedDto.getCropCommodityId());
-		Assert.assertEquals("CropCommodityName", newDto.getCropCommodityName(), fetchedDto.getCropCommodityName());
-		Assert.assertEquals("IsPedigreeInd", newDto.getIsPedigreeInd(), fetchedDto.getIsPedigreeInd());
-		Assert.assertEquals("HarvestedYield", newDto.getHarvestedYield(), fetchedDto.getHarvestedYield());
-		Assert.assertEquals("HarvestedYieldPerAcre", newDto.getHarvestedYieldPerAcre(), fetchedDto.getHarvestedYieldPerAcre());
-		Assert.assertEquals("AppraisedYield", newDto.getAppraisedYield(), fetchedDto.getAppraisedYield());
-		Assert.assertEquals("AssessedYield", newDto.getAssessedYield(), fetchedDto.getAssessedYield());
-		Assert.assertEquals("YieldToCount", newDto.getYieldToCount(), fetchedDto.getYieldToCount());
-		Assert.assertEquals("YieldPercentPy", newDto.getYieldPercentPy(), fetchedDto.getYieldPercentPy());
-		Assert.assertEquals("ProductionGuarantee", newDto.getProductionGuarantee(), fetchedDto.getProductionGuarantee());
-		Assert.assertEquals("ProbableYield", newDto.getProbableYield(), fetchedDto.getProbableYield());
-		Assert.assertEquals("InsurableValueHundredPercent", newDto.getInsurableValueHundredPercent(), fetchedDto.getInsurableValueHundredPercent());
-		Assert.assertEquals("TotalInsuredAcres", newDto.getTotalInsuredAcres(), fetchedDto.getTotalInsuredAcres());
+		Assert.assertEquals("BasketValue", newDto.getBasketValue(), fetchedDto.getBasketValue());
+		Assert.assertEquals("HarvestedValue", newDto.getHarvestedValue(), fetchedDto.getHarvestedValue());
+		Assert.assertEquals("Comment", newDto.getComment(), fetchedDto.getComment());
 
 		//UPDATE
-		fetchedDto.setCropCommodityId(18);
-		fetchedDto.setCropCommodityName("CANOLA");
-		fetchedDto.setIsPedigreeInd(true);
-		fetchedDto.setHarvestedYield(120.0);
-		fetchedDto.setHarvestedYieldPerAcre(15.0);
-		fetchedDto.setAppraisedYield(2.5);
-		fetchedDto.setAssessedYield(1.5);
-		fetchedDto.setYieldToCount(10.5);
-		fetchedDto.setYieldPercentPy(85.5);
-		fetchedDto.setProductionGuarantee(11.5);
-		fetchedDto.setProbableYield(27.8);
-		fetchedDto.setInsurableValueHundredPercent(66.77);
-		fetchedDto.setTotalInsuredAcres(null);
+		fetchedDto.setBasketValue(300.98);
+		fetchedDto.setHarvestedValue(321.78);
+		fetchedDto.setComment("Basket Value Comment 2");
 				
 		dao.update(fetchedDto, userId);
 
 		//FETCH
-		VerifiedYieldSummaryDto updatedDto = dao.fetch(verifiedYieldSummaryGuid);
+		VerifiedYieldGrainBasketDto updatedDto = dao.fetch(verifiedYieldGrainBasketGuid);
 
-		Assert.assertEquals("VerifiedYieldSummaryGuid", fetchedDto.getVerifiedYieldSummaryGuid(), updatedDto.getVerifiedYieldSummaryGuid());
+		Assert.assertEquals("VerifiedYieldGrainBasketGuid", fetchedDto.getVerifiedYieldGrainBasketGuid(), updatedDto.getVerifiedYieldGrainBasketGuid());
 		Assert.assertEquals("VerifiedYieldContractGuid", fetchedDto.getVerifiedYieldContractGuid(), updatedDto.getVerifiedYieldContractGuid());
-		Assert.assertEquals("CropCommodityId", fetchedDto.getCropCommodityId(), updatedDto.getCropCommodityId());
-		Assert.assertEquals("CropCommodityName", fetchedDto.getCropCommodityName(), updatedDto.getCropCommodityName());
-		Assert.assertEquals("IsPedigreeInd", fetchedDto.getIsPedigreeInd(), updatedDto.getIsPedigreeInd());
-		Assert.assertEquals("HarvestedYield", fetchedDto.getHarvestedYield(), updatedDto.getHarvestedYield());
-		Assert.assertEquals("HarvestedYieldPerAcre", fetchedDto.getHarvestedYieldPerAcre(), updatedDto.getHarvestedYieldPerAcre());
-		Assert.assertEquals("AppraisedYield", fetchedDto.getAppraisedYield(), updatedDto.getAppraisedYield());
-		Assert.assertEquals("AssessedYield", fetchedDto.getAssessedYield(), updatedDto.getAssessedYield());
-		Assert.assertEquals("YieldToCount", fetchedDto.getYieldToCount(), updatedDto.getYieldToCount());
-		Assert.assertEquals("YieldPercentPy", fetchedDto.getYieldPercentPy(), updatedDto.getYieldPercentPy());
-		Assert.assertEquals("ProductionGuarantee", fetchedDto.getProductionGuarantee(), updatedDto.getProductionGuarantee());
-		Assert.assertEquals("ProbableYield", fetchedDto.getProbableYield(), updatedDto.getProbableYield());	
-		Assert.assertEquals("InsurableValueHundredPercent", fetchedDto.getInsurableValueHundredPercent(), updatedDto.getInsurableValueHundredPercent());
-		Assert.assertEquals("TotalInsuredAcres", fetchedDto.getTotalInsuredAcres(), updatedDto.getTotalInsuredAcres());
+		Assert.assertEquals("BasketValue", fetchedDto.getBasketValue(), updatedDto.getBasketValue());
+		Assert.assertEquals("HarvestedValue", fetchedDto.getHarvestedValue(), updatedDto.getHarvestedValue());
+		Assert.assertEquals("Comment", fetchedDto.getComment(), updatedDto.getComment());
 
+		// There can only be one record per contract
+		// DELETE for verifiedYieldGrainBasketGuid
+		dao.delete(verifiedYieldGrainBasketGuid);
+		VerifiedYieldGrainBasketDto deletedDto = dao.fetch(verifiedYieldGrainBasketGuid);
+		Assert.assertNull(deletedDto);
+		
+		dtos = dao.selectForVerifiedYieldContract(verifiedYieldContractGuid);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size());
+		
+		
 		//INSERT second record
-		VerifiedYieldSummaryDto newDto2 = new VerifiedYieldSummaryDto();
+		VerifiedYieldGrainBasketDto newDto2 = new VerifiedYieldGrainBasketDto();
 
 		newDto2.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
-		newDto2.setCropCommodityId(16);
-		newDto2.setCropCommodityName("BARLEY");
-		newDto2.setIsPedigreeInd(false);
-		newDto2.setHarvestedYield(100.0);
-		newDto2.setHarvestedYieldPerAcre(10.0);
-		newDto2.setAppraisedYield(1.5);
-		newDto2.setAssessedYield(0.5);
-		newDto2.setYieldToCount(15.5);
-		newDto2.setYieldPercentPy(75.5);
-		newDto2.setProductionGuarantee(20.5);
-		newDto2.setProbableYield(17.5);
-		newDto2.setInsurableValueHundredPercent(23.33);
-		newDto2.setTotalInsuredAcres(null);
+		newDto2.setBasketValue(123.45);
+		newDto2.setHarvestedValue(133.66);
+		newDto2.setComment("Basket Value Comment 3");
 		
 		dao.insert(newDto2, userId);
 		
 		//SELECT
 		dtos = dao.selectForVerifiedYieldContract(verifiedYieldContractGuid);
 		Assert.assertNotNull(dtos);
-		Assert.assertEquals(2, dtos.size());
+		Assert.assertEquals(1, dtos.size());
 				
-		//DELETE
-		dao.delete(verifiedYieldSummaryGuid);
-		VerifiedYieldSummaryDto deletedDto = dao.fetch(verifiedYieldSummaryGuid);
-		Assert.assertNull(deletedDto);
-
+		//DELETE for verifiedYieldContractGuid 
+		
 		dao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
-		deletedDto = dao.fetch(newDto2.getVerifiedYieldSummaryGuid());
+		deletedDto = dao.fetch(newDto2.getVerifiedYieldGrainBasketGuid());
 		Assert.assertNull(deletedDto);
 
 		dtos = dao.selectForVerifiedYieldContract(verifiedYieldContractGuid);
