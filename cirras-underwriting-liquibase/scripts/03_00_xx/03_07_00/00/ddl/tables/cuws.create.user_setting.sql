@@ -1,4 +1,4 @@
-\qecho Create user_setting table
+
 CREATE TABLE cuws.user_setting(
     underwriting_user_guid             varchar(32)      NOT NULL,
     login_user_guid                    varchar(32)      NOT NULL,

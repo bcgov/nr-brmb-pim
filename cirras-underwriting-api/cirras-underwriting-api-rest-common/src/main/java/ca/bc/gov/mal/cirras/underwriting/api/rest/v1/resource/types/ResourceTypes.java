@@ -230,6 +230,13 @@ public class ResourceTypes extends BaseResourceTypes {
 	public static final String PRODUCT = NAMESPACE + PRODUCT_NAME;
 	public static final String SYNCHRONIZE_PRODUCT = NAMESPACE + "synchronizeProduct";
 	public static final String DELETE_SYNC_PRODUCT = NAMESPACE + "deleteProduct";
+
+	//User Setting
+	public static final String USER_SETTING_NAME = "userSetting";
+	public static final String USER_SETTING = NAMESPACE + USER_SETTING_NAME;
+	public static final String CREATE_USER_SETTING = NAMESPACE + "createUserSetting";
+	public static final String UPDATE_USER_SETTING = NAMESPACE + "updateUserSetting";
+	public static final String DELETE_USER_SETTING = NAMESPACE + "deleteUserSetting";
 	
 }
 
