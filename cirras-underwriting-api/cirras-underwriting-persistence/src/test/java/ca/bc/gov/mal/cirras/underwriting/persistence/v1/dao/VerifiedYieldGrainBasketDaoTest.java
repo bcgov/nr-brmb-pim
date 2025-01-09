@@ -111,8 +111,6 @@ public class VerifiedYieldGrainBasketDaoTest {
 
 		createField("Test Field Label", userId);
 		createGrowerContractYear();
-		createInventoryContract(userId);
-		createInventoryContractCommodity(16, "BARLEY", false, 23.45, userId);
 		createDeclaredYieldContract(userId);
 		createVerifiedYieldContract(userId);
 		
