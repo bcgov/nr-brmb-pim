@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public interface UserSetting extends Serializable {
 
-	public String getUnderwritingUserGuid();
-	public void setUnderwritingUserGuid(String underwritingUserGuid);
+	public String getUserSettingGuid();
+	public void setUserSettingGuid(String userSettingGuid);
 
 	public String getLoginUserGuid();
 	public void setLoginUserGuid(String loginUserGuid);

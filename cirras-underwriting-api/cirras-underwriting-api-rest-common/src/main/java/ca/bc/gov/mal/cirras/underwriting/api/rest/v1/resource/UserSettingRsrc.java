@@ -16,8 +16,7 @@ public class UserSettingRsrc extends BaseResource implements UserSetting {
 
 	private static final long serialVersionUID = 1L;
 
-	// TODO: Rename to userSettingGuid?
-	private String underwritingUserGuid;
+	private String userSettingGuid;
 	private String loginUserGuid;
 	private String loginUserId;
 	private String loginUserType;
@@ -34,11 +33,11 @@ public class UserSettingRsrc extends BaseResource implements UserSetting {
 	private String policySearchOfficeName;
 
 	
-	public String getUnderwritingUserGuid() {
-		return underwritingUserGuid;
+	public String getUserSettingGuid() {
+		return userSettingGuid;
 	}
-	public void setUnderwritingUserGuid(String underwritingUserGuid) {
-		this.underwritingUserGuid = underwritingUserGuid;
+	public void setUserSettingGuid(String userSettingGuid) {
+		this.userSettingGuid = userSettingGuid;
 	}
 
 	public String getLoginUserGuid() {
