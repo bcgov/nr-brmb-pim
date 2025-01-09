@@ -58,4 +58,21 @@ export class VerifiedYieldSummaryComponent {
         this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true));
       }
 
+    getYieldPercentPy(){
+      
+      if(this.summary.yieldPercentPy != null){
+        return this.summary.yieldPercentPy * 100;
+      }
+      
+      return this.summary.yieldPercentPy;
+      
+    }
+
+    ytcIsLessThanProductionGuarantee():boolean {
+      if(this.summary.yieldToCount != null && this.summary.productionGuarantee != null && this.summary.yieldToCount < this.summary.productionGuarantee ){
+        return true
+      } 
+      return false
+    }
+    
 }
