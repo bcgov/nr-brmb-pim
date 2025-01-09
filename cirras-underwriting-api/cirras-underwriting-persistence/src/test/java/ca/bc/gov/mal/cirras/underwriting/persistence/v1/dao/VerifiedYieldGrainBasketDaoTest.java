@@ -1,7 +1,5 @@
 package ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -16,11 +14,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerContractYearDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingCommentDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldGrainBasketDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.spring.PersistenceSpringConfig;
@@ -247,51 +243,6 @@ public class VerifiedYieldGrainBasketDaoTest {
 		
 	}
 	
-	private void createInventoryContract(String userId) throws DaoException {
-
-		//Date without time
-		Date date = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
-		
-		InventoryContractDao invContractDao = persistenceSpringConfig.inventoryContractDao();
-
-		// Create parent InventoryContract.
-		InventoryContractDto invContractDto = new InventoryContractDto();
-
-		invContractDto.setContractId(contractId);
-		invContractDto.setCropYear(cropYear);
-		invContractDto.setFertilizerInd(false);
-		invContractDto.setGrainFromPrevYearInd(true);
-		invContractDto.setHerbicideInd(true);
-		invContractDto.setOtherChangesComment("Other changes comment");
-		invContractDto.setOtherChangesInd(true);
-		invContractDto.setSeededCropReportSubmittedInd(false);
-		invContractDto.setTilliageInd(false);
-		invContractDto.setUnseededIntentionsSubmittedInd(false);
-		invContractDto.setInvUpdateTimestamp(date);
-		invContractDto.setInvUpdateUser(userId);
-		
-		invContractDao.insert(invContractDto, userId);
-		inventoryContractGuid = invContractDto.getInventoryContractGuid();
-	}
-
-	private void createInventoryContractCommodity(Integer cropCommodityId, String cropCommodityName, Boolean isPedigreeInd, Double totalSeededAcres, String userId) throws DaoException {
-		
-		InventoryContractCommodityDao invContractCommodityDao = persistenceSpringConfig.inventoryContractCommodityDao();
-
-		// INSERT
-		InventoryContractCommodityDto newDto = new InventoryContractCommodityDto();
-		newDto.setCropCommodityId(cropCommodityId);
-		newDto.setCropCommodityName(cropCommodityName);
-		newDto.setInventoryContractGuid(inventoryContractGuid);
-		newDto.setTotalSeededAcres(totalSeededAcres);
-		newDto.setTotalSpotLossAcres(87.65);
-		newDto.setTotalUnseededAcres(12.34);
-		newDto.setTotalUnseededAcresOverride(56.78);
-		newDto.setIsPedigreeInd(isPedigreeInd);
-		
-		invContractCommodityDao.insert(newDto, userId);
-
-	}
 	
 	private void createGrowerContractYear() throws DaoException {
 		GrowerContractYearDao dao = persistenceSpringConfig.growerContractYearDao();

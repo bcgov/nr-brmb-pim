@@ -20,7 +20,6 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCom
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingCommentDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldSummaryDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.spring.PersistenceSpringConfig;

@@ -1,8 +1,6 @@
 package ca.bc.gov.mal.cirras.underwriting.model.v1;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 //
 // This is not going to be a resource.
