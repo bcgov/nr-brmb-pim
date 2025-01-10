@@ -22,6 +22,7 @@ public class VerifiedYieldSummary implements Serializable {
 	private Double yieldPercentPy;
 	private Double productionGuarantee;
 	private Double probableYield;
+	private Double insurableValueHundredPercent;
 
 	// Extended columns
 	private String cropCommodityName;
@@ -123,6 +124,14 @@ public class VerifiedYieldSummary implements Serializable {
 
 	public void setProbableYield(Double probableYield) {
 		this.probableYield = probableYield;
+	}
+	
+	public Double getInsurableValueHundredPercent() {
+		return insurableValueHundredPercent;
+	}
+
+	public void setInsurableValueHundredPercent(Double insurableValueHundredPercent) {
+		this.insurableValueHundredPercent = insurableValueHundredPercent;
 	}
 
 	public String getCropCommodityName() {
