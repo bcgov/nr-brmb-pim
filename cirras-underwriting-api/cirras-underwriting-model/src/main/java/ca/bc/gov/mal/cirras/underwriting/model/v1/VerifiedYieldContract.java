@@ -50,6 +50,9 @@ public interface VerifiedYieldContract<A extends AnnualField, M extends Message>
 	public List<VerifiedYieldSummary> getVerifiedYieldSummaries();
 	public void setVerifiedYieldSummaries(List<VerifiedYieldSummary> verifiedYieldSummaries);
 	
+	public List<VerifiedYieldGrainBasket> getVerifiedYieldGrainBaskets();
+	public void setVerifiedYieldGrainBaskets(List<VerifiedYieldGrainBasket> verifiedYieldGrainBaskets);
+	
 	public List<M> getProductWarningMessages();
 	public void setProductWarningMessages(List<M> productWarningMessages);
 

@@ -29,6 +29,7 @@ public class VerifiedYieldContractDto extends BaseDto<VerifiedYieldContractDto> 
 	private List<VerifiedYieldContractCommodityDto> verifiedYieldContractCommodities = new ArrayList<VerifiedYieldContractCommodityDto>();
 	private List<VerifiedYieldAmendmentDto> verifiedYieldAmendments = new ArrayList<VerifiedYieldAmendmentDto>();
 	private List<VerifiedYieldSummaryDto> verifiedYieldSummaries = new ArrayList<VerifiedYieldSummaryDto>();
+	private List<VerifiedYieldGrainBasketDto> verifiedYieldGrainBaskets = new ArrayList<VerifiedYieldGrainBasketDto>();
 	
 	private String createUser;
 	private Date createDate;
@@ -82,6 +83,14 @@ public class VerifiedYieldContractDto extends BaseDto<VerifiedYieldContractDto> 
 			
 			for ( VerifiedYieldSummaryDto vyaDto : dto.verifiedYieldSummaries) {
 				this.verifiedYieldSummaries.add(vyaDto.copy());
+			}
+		}
+		
+		if ( dto.verifiedYieldGrainBaskets != null ) {			
+			this.verifiedYieldGrainBaskets = new ArrayList<>();
+			
+			for ( VerifiedYieldGrainBasketDto vyaDto : dto.verifiedYieldGrainBaskets) {
+				this.verifiedYieldGrainBaskets.add(vyaDto.copy());
 			}
 		}
 		
@@ -207,6 +216,15 @@ public class VerifiedYieldContractDto extends BaseDto<VerifiedYieldContractDto> 
 	public void setVerifiedYieldSummaries(List<VerifiedYieldSummaryDto> verifiedYieldSummaries) {
 		this.verifiedYieldSummaries = verifiedYieldSummaries;
 	}
+	
+	
+	public List<VerifiedYieldGrainBasketDto> getVerifiedYieldGrainBaskets() {
+		return verifiedYieldGrainBaskets;
+	}
+	public void setVerifiedYieldGrainBaskets(List<VerifiedYieldGrainBasketDto> verifiedYieldGrainBaskets) {
+		this.verifiedYieldGrainBaskets = verifiedYieldGrainBaskets;
+	}
+	
 
 	public String getCreateUser() {
 		return createUser;

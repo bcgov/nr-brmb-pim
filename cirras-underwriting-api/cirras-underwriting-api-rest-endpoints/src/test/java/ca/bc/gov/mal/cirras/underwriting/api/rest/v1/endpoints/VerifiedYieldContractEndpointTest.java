@@ -22,6 +22,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
@@ -508,6 +509,7 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		vys.setYieldPercentPy(75.5);
 		vys.setProductionGuarantee(55.5);
 		vys.setProbableYield(17.5);
+		vys.setInsurableValueHundredPercent(32.14);
 		vys.setTotalInsuredAcres(null);  // Set based on existing inventory for selected policy.
 
 		
@@ -671,7 +673,86 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 */ 
 	}	
 	
+	@Test
+	public void testGetVerifiedYieldBaskets() throws CirrasUnderwritingServiceException, Oauth2ClientException {
+		logger.debug("<testGetVerifiedYieldGrainBasket");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+		
+		//*****************************************************************
+		//BEFORE TESTS: CREATE YIELD BY RUNNING THE INSERT SCRIPTS BELOW.
+		//*****************************************************************
+
+		String policyNumber = "713036-23";   // Set to valid policy number.
+		
+		List<VerifiedYieldGrainBasket> expectedVygb = new ArrayList<VerifiedYieldGrainBasket>();
+		VerifiedYieldGrainBasket vygb = new VerifiedYieldGrainBasket();
+		
+		vygb.setVerifiedYieldGrainBasketGuid("unit_test_grain_basket1");
+		vygb.setVerifiedYieldContractGuid("5abc58c8f5734374a7ac7e7be01d044f");
+		vygb.setBasketValue(1.23);
+		vygb.setHarvestedValue(4.56);
+		vygb.setComment("grain basket comment 1");  // Set based on existing policy.
+
+		expectedVygb.add(vygb);
+
+		Integer pageNumber = (1);
+		Integer pageRowCount = (20);
+
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+		Assert.assertNotNull(referrer.getVerifiedYieldContractGuid());
+
+		VerifiedYieldContractRsrc verifiedYldContract = service.getVerifiedYieldContract(referrer);
+		Assert.assertNotNull(verifiedYldContract);
+
+		checkVerifiedYieldGrainBaskets(expectedVygb, verifiedYldContract.getVerifiedYieldGrainBaskets());
+		
+		//*****************************************************************
+		//AFTER TESTS: DELETE LAND, INVENTORY AND YIELD BY RUNNING THE DELETE SCRIPTS BELOW
+		//*****************************************************************
+
+		logger.debug(">testGetVerifiedYieldGrainBasket");
 	
+	/* 
+	 * 
+	*****************
+	INSERT STATEMENTS
+	*****************
+
+	INSERT INTO cuws.verified_yield_grain_basket(
+		verified_yield_grain_basket_guid, verified_yield_contract_guid, basket_value, harvested_value, comment, create_user, create_date, update_user, update_date)
+	VALUES ('unit_test_grain_basket1', '5abc58c8f5734374a7ac7e7be01d044f', 1.23, 4.56, 'grain basket comment 1', 'admin',	now(), 'admin',	now());
+
+	delete from cuws.verified_yield_grain_basket
+	where verified_yield_grain_basket_guid = 'unit_test_grain_basket1';
+
+	*****************
+	SELECT STATEMENTS
+	*****************
+	select * from verified_yield_grain_basket
+	where verified_yield_grain_basket_guid = 'unit_test_grain_basket1';
+
+*/ 
+	}
 	
 	private void checkVerifiedYieldContract(VerifiedYieldContractRsrc expected, VerifiedYieldContractRsrc actual) {
 		Assert.assertEquals(expected.getContractId(), actual.getContractId());
@@ -683,6 +764,22 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		Assert.assertEquals(expected.getVerifiedYieldContractGuid(), actual.getVerifiedYieldContractGuid());
 		Assert.assertNotNull(actual.getVerifiedYieldUpdateUser());
 		Assert.assertNotNull(actual.getVerifiedYieldUpdateTimestamp());
+	}
+	
+	private void checkVerifiedYieldGrainBaskets(List<VerifiedYieldGrainBasket> expected, List<VerifiedYieldGrainBasket> actual) {
+		if ( expected == null && actual != null || expected != null && actual == null ) {
+			Assert.fail();
+		} else if ( expected != null && actual != null ) {
+			Assert.assertEquals(expected.size(), actual.size());
+			VerifiedYieldGrainBasket expectedVygb = expected.get(0);
+			Assert.assertNotNull(expectedVygb);
+			
+			Assert.assertEquals(expectedVygb.getVerifiedYieldGrainBasketGuid(), actual.get(0).getVerifiedYieldGrainBasketGuid());
+			Assert.assertEquals(expectedVygb.getVerifiedYieldContractGuid(), actual.get(0).getVerifiedYieldContractGuid());
+			Assert.assertEquals(expectedVygb.getBasketValue(), actual.get(0).getBasketValue());
+			Assert.assertEquals(expectedVygb.getHarvestedValue(), actual.get(0).getHarvestedValue());
+			Assert.assertEquals(expectedVygb.getComment(), actual.get(0).getComment());
+		}
 	}
 	
 	private void checkVerifiedYieldSummaries(List<VerifiedYieldSummary> expected, List<VerifiedYieldSummary> actual) {
@@ -727,6 +824,7 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		Assert.assertEquals(expected.getYieldPercentPy(), actual.getYieldPercentPy());
 		Assert.assertEquals(expected.getProductionGuarantee(), actual.getProductionGuarantee());
 		Assert.assertEquals(expected.getProbableYield(), actual.getProbableYield());
+		Assert.assertEquals(expected.getInsurableValueHundredPercent(), actual.getInsurableValueHundredPercent());
 		Assert.assertEquals(expected.getTotalInsuredAcres(), actual.getTotalInsuredAcres());
 
 		

@@ -261,9 +261,9 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		createDopYieldContract(policyNumber1, 4, false);
 		
 		//Barley - NON Pedigree - Product
-		createUpdateProduct(policyId1, productId1, 16, 20, barleyNonPedigreePY, barleyNonPediProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		createUpdateProduct(policyId1, productId1, 16, 20, barleyNonPedigreePY, barleyNonPediProductionGuarantee, barleyNonPedigreeIV100, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
 		//Barley - Pedigree
-		createUpdateProduct(policyId1, productId3, 17, 50, barleyPedigreePY, barleyPedigreeProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		createUpdateProduct(policyId1, productId3, 17, 50, barleyPedigreePY, barleyPedigreeProductionGuarantee, barleyPedigreeIV100, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
 		
 		Integer pageNumber = 1;
 		Integer pageRowCount = 20;
@@ -708,9 +708,9 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		createDopYieldContract(policyNumber1, 4, true);
 		
 		//Barley - NON Pedigree - Product
-		createUpdateProduct(policyId1, productId1, 16, 20, barleyNonPedigreePY, barleyNonPediProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		createUpdateProduct(policyId1, productId1, 16, 20, barleyNonPedigreePY, barleyNonPediProductionGuarantee, barleyNonPedigreeIV100, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
 		//Barley - Pedigree
-		createUpdateProduct(policyId1, productId3, 17, 50, barleyPedigreePY, barleyPedigreeProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
+		createUpdateProduct(policyId1, productId3, 17, 50, barleyPedigreePY, barleyPedigreeProductionGuarantee, barleyPedigreeIV100, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL);
 		
 		Integer pageNumber = 1;
 		Integer pageRowCount = 20;
@@ -934,6 +934,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		vys.setYieldPercentPy(yieldPercentPy);
 		vys.setProductionGuarantee(barleyNonPediProductionGuarantee);
 		vys.setProbableYield(barleyNonPedigreePY);
+		vys.setInsurableValueHundredPercent(barleyNonPedigreeIV100);
 		vys.setTotalInsuredAcres(barleyNonPedigreeSeededAcres);
 		
 		expVys.add(vys);
@@ -955,6 +956,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		vys.setYieldPercentPy(yieldPercentPy);
 		vys.setProductionGuarantee(barleyPedigreeProductionGuarantee);
 		vys.setProbableYield(barleyPedigreePY );
+		vys.setInsurableValueHundredPercent(barleyPedigreeIV100 );
 		vys.setTotalInsuredAcres(barleyPedigreeSeededAcres);
 		
 		expVys.add(vys);
@@ -1236,6 +1238,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		}
 		Assert.assertEquals("ProductionGuarantee", expected.getProductionGuarantee(), actual.getProductionGuarantee());
 		Assert.assertEquals("ProbableYield", expected.getProbableYield(), actual.getProbableYield());
+		Assert.assertEquals("InsurableValueHundredPercent", expected.getInsurableValueHundredPercent(), actual.getInsurableValueHundredPercent());
 		Assert.assertEquals("TotalInsuredAcres", expected.getTotalInsuredAcres(), actual.getTotalInsuredAcres());
 	}
 	
@@ -1397,7 +1400,9 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 	private Double barleyPedigreeProductionGuarantee = 15.1;
 	private Double canolaPedigreeProductionGuarantee = 77.0;
 	private Double barleyNonPedigreePY = 50.5;
+	private Double barleyNonPedigreeIV100 = 76.31;
 	private Double barleyPedigreePY = 20.1;
+	private Double barleyPedigreeIV100 = 56.21;
 	private Double canolaPedigreePY = 80.0;
 	
 	private void createUpdateProduct(

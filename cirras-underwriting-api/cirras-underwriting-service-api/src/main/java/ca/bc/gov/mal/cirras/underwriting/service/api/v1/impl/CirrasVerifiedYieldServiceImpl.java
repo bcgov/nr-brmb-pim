@@ -26,6 +26,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldAmendme
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldContractDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldSummaryDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldGrainBasketDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
@@ -38,6 +39,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldAmendme
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldSummaryDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldGrainBasketDto;
 import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
@@ -82,6 +84,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	private VerifiedYieldContractCommodityDao verifiedYieldContractCommodityDao;
 	private VerifiedYieldAmendmentDao verifiedYieldAmendmentDao;
 	private VerifiedYieldSummaryDao verifiedYieldSummaryDao;
+	private VerifiedYieldGrainBasketDao verifiedYieldGrainBasketDao;
 	private ProductDao productDao;
 	private UnderwritingCommentDao underwritingCommentDao;
 
@@ -139,6 +142,10 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 	public void setVerifiedYieldSummaryDao(VerifiedYieldSummaryDao verifiedYieldSummaryDao) {
 		this.verifiedYieldSummaryDao = verifiedYieldSummaryDao;
+	}
+	
+	public void setVerifiedYieldGrainBasketDao(VerifiedYieldGrainBasketDao verifiedYieldGrainBasketDao) {
+		this.verifiedYieldGrainBasketDao = verifiedYieldGrainBasketDao;
 	}
 	
 	public void setProductDao(ProductDao productDao) {
@@ -308,6 +315,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		loadVerifiedYieldAmendments(dto);
 		loadFields(dto);
 		loadVerifiedYieldSummaries(dto);
+		loadVerifiedYieldGrainBaskets(dto);
 
 		return verifiedYieldContractFactory.getVerifiedYieldContract(dto, productDtos, factoryContext, authentication);
 	}
@@ -340,6 +348,11 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		//Returning all comments of a verified yield summary record
 		List<UnderwritingCommentDto> uwComments = underwritingCommentDao.selectForVerifiedYieldSummary(vyDto.getVerifiedYieldSummaryGuid());
 		vyDto.setUwComments(uwComments);
+	}
+	
+	private void loadVerifiedYieldGrainBaskets(VerifiedYieldContractDto dto) throws DaoException {
+		List<VerifiedYieldGrainBasketDto> verifiedGrainBaskets = verifiedYieldGrainBasketDao.selectForVerifiedYieldContract(dto.getVerifiedYieldContractGuid());
+		dto.setVerifiedYieldGrainBaskets(verifiedGrainBaskets);
 	}
 	
 	@Override
@@ -553,6 +566,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				verifiedYieldSummaryDao.deleteForVerifiedYieldContract(verifiedYieldContract.getVerifiedYieldContractGuid());
 			}
 		}
+	
 	}
 	
 	private void updateUnderwritingComment(
@@ -703,20 +717,24 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		ProductDto product = getProductDto(vys.getCropCommodityId(), vys.getIsPedigreeInd(), productDtos);
 		Double productionGuarantee = vys.getProductionGuarantee();
 		Double probableYield = vys.getProbableYield();
+		Double insurableValueHundredPercent = vys.getInsurableValueHundredPercent();
 
 		//Set or Update product values
 		if(vys.getVerifiedYieldSummaryGuid() == null || Boolean.TRUE.equals(verifiedYieldContract.getUpdateProductValuesInd())) {
 			if(product != null && product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
 				productionGuarantee = product.getProductionGuarantee();
 				probableYield = product.getProbableYield();
+				insurableValueHundredPercent = product.getInsurableValueHundredPercent();
 			} else {
 				productionGuarantee = null;
 				probableYield = null;
+				insurableValueHundredPercent = null;
 			}
 		}
 
 		vys.setProductionGuarantee(productionGuarantee);
 		vys.setProbableYield(probableYield);
+		vys.setInsurableValueHundredPercent(insurableValueHundredPercent);
 	}
 
 	private void calculateAndSetAmendments(List<VerifiedYieldAmendment> verifiedAmendments, VerifiedYieldSummary vys) {
@@ -770,6 +788,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			vys.setYieldPercentPy(null);
 			vys.setProductionGuarantee(null);
 			vys.setProbableYield(null);	
+			vys.setInsurableValueHundredPercent(null);
 		}
 		
 		return vys;

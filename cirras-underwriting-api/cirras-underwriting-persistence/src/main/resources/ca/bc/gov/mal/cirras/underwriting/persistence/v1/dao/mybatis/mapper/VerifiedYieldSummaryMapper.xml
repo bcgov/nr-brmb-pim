@@ -18,6 +18,7 @@
 		<result property="yieldPercentPy" column="yield_percent_py" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="productionGuarantee" column="production_guarantee" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="probableYield" column="probable_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="insurableValueHundredPercent" column="insurable_value_hundred_percent" javaType="java.lang.Double" jdbcType="NUMERIC" />
 
 		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
@@ -43,6 +44,7 @@
 			   t.yield_percent_py, 
 			   t.production_guarantee, 
 			   t.probable_yield, 
+			   t.insurable_value_hundred_percent,
 			   t.create_user, 
 			   t.create_date, 
 			   t.update_user, 
@@ -82,6 +84,7 @@
 			yield_percent_py,
 			production_guarantee,
 			probable_yield,
+			insurable_value_hundred_percent,
 			create_user, 
 			create_date, 
 			update_user, 
@@ -99,6 +102,7 @@
 			#{dto.yieldPercentPy, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.productionGuarantee, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.probableYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.insurableValueHundredPercent, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
 			now(),
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
@@ -117,7 +121,8 @@
 			yield_to_count = #{dto.yieldToCount, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			yield_percent_py = #{dto.yieldPercentPy, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			production_guarantee = #{dto.productionGuarantee, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
-			probable_yield = #{dto.probableYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			probable_yield = #{dto.probableYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			insurable_value_hundred_percent = #{dto.insurableValueHundredPercent, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},  
 			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
 			update_date = now()
 		where verified_yield_summary_guid = #{dto.verifiedYieldSummaryGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
