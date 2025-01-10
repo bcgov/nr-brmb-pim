@@ -58,6 +58,4 @@ spec:
               configMapKeyRef:
                 key: LIQUIBASE_COMMAND_URL
                 name: cirras-underwriting-liquibase-config-#{ENV}#
-        command: ["liquibase"]
-        args: ["update","--changelog-file=#{CHANGELOG_FILE}#"]
       restartPolicy: Never
