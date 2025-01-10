@@ -14,7 +14,8 @@ export class VerifiedYieldComponentModel extends BaseComponentModel {
             updateProductValuesInd: [false],
             verifiedYieldContractCommodities: new UntypedFormArray([]), // subform responsible for the commodities grid 
             verifiedYieldAmendments: new UntypedFormArray([]) , // subform responsible for the appraisals and assessments grid
-            verifiedYieldSummaries: new UntypedFormArray([]) // subform responsible for the yield summary and comments
+            verifiedYieldSummaries: new UntypedFormArray([]), // subform responsible for the yield summary and comments
+            verifiedYieldGrainBaskets: new UntypedFormArray([]) // subform responsible for the yield summary and comments
         });
     }
 

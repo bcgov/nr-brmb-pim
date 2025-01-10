@@ -1,0 +1,20 @@
+<div id="divSummaryContent" [formGroup]="grainBasketFormGroup" style="display: contents;">
+    <div class="readonly border-right border-bottom border-left" style="padding-left: 6px; background-color: inherit;">
+        {{ grainBasketFormGroup.value.basketValue | number: '1.0-2'}}
+    </div>
+    <div class="readonly border-bottom center" style="background-color: inherit;">
+        {{ grainBasketFormGroup.value.harvestedValue | number: '1.0-2' }}
+    </div>
+
+    <div class="inventory-fill number border-right border-bottom" style="background-color: inherit;">
+        <!-- warnng sign -->
+        <mat-icon *ngIf="grainBasketFormGroup.value.harvestedValue && grainBasketFormGroup.value.basketValue && grainBasketFormGroup.value.harvestedValue < grainBasketFormGroup.value.basketValue"
+        [ngStyle]="{'color':'orange', 'font-size':'x-large'}" 
+        matTooltip="Harvested Value < Coverage Value"
+        >warning</mat-icon>
+    </div>
+
+    <div class="readonly border-right border-bottom center" style="background-color: inherit;">
+        {{ grainBasketFormGroup.value.comment}}
+    </div>
+</div>

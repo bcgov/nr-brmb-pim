@@ -191,6 +191,7 @@ export interface VerifiedYieldContract {
     verifiedYieldContractCommodities?: Array<VerifiedYieldContractCommodity>;
     verifiedYieldAmendments?: Array<VerifiedYieldAmendment>;
     verifiedYieldSummaries?: Array<VerifiedYieldSummary>;
+    verifiedYieldGrainBaskets?: Array<VerifiedYieldGrainBasket>;
     productWarningMessages?: Array<MessageRsrc>;
     etag?: string;
     type: string;
@@ -250,4 +251,12 @@ export interface VerifiedYieldContract {
     cropCommodityName?: string;
     totalInsuredAcres?: number;
     uwComments?: Array<UnderwritingComment>;
+}
+
+export interface VerifiedYieldGrainBasket {
+    verifiedYieldGrainBasketGuid?: string;
+    verifiedYieldContractGuid?: string;
+    basketValue?: number;
+    harvestedValue?: number;
+    comment?: string;
 }
