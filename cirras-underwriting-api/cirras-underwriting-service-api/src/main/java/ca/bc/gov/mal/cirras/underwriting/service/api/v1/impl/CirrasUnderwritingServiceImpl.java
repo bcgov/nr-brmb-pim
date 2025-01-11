@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualFieldList;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.UserSetting;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContractList;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
@@ -26,6 +27,7 @@ import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.AnnualFieldFactory;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UserSettingFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UwContractFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.UnderwritingServiceHelper;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.ScreenType;
@@ -44,6 +46,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	// factories
 	private AnnualFieldFactory annualFieldFactory;
 	private UwContractFactory uwContractFactory;
+	private UserSettingFactory userSettingFactory;
 	
 	// utils
 	private OutOfSync outOfSync;
@@ -81,6 +84,10 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	
 	public void setUwContractFactory(UwContractFactory uwContractFactory) {
 		this.uwContractFactory = uwContractFactory;
+	}
+
+	public void setUserSettingFactory(UserSettingFactory userSettingFactory) {
+		this.userSettingFactory = userSettingFactory;
 	}
 	
 	public void setFieldDao(FieldDao fieldDao) {
@@ -262,6 +269,13 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 
 		return results;
 
+	}
+
+	@Override
+	public UserSetting searchUserSetting(FactoryContext factoryContext, WebAdeAuthentication authentication)
+			throws ServiceException, NotFoundException {
+		// TODO: Implement.
+		return null;
 	}
 	
 }
