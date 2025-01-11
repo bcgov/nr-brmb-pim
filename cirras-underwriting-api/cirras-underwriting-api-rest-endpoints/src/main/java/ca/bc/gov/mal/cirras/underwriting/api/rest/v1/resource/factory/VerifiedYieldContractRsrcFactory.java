@@ -203,19 +203,6 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 
 			resource.setVerifiedYieldSummaries(verifiedYieldSummaries);
 		}
-		
-		// Verified Yield Grain Basket
-		if (!dto.getVerifiedYieldGrainBaskets().isEmpty()) {
-			List<VerifiedYieldGrainBasket> verifiedYieldGrainBaskets = new ArrayList<VerifiedYieldGrainBasket>();
-
-			for (VerifiedYieldGrainBasketDto vygbDto : dto.getVerifiedYieldGrainBaskets()) {
-				VerifiedYieldGrainBasket vygbModel = createVerifiedYieldGrainBasket(vygbDto, authentication);
-				verifiedYieldGrainBaskets.add(vygbModel);
-			}
-
-			resource.setVerifiedYieldGrainBaskets(verifiedYieldGrainBaskets);
-		}
-		
 				
 		resource.setProductWarningMessages(productWarnings);
 		
@@ -241,6 +228,8 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		resource.setVerifiedYieldUpdateTimestamp(dto.getVerifiedYieldUpdateTimestamp());
 		resource.setVerifiedYieldUpdateUser(dto.getVerifiedYieldUpdateUser());
 		resource.setUpdateProductValuesInd(false);
+		resource.setVerifiedYieldGrainBasket(createVerifiedYieldGrainBasket(dto.getVerifiedYieldGrainBasket()));
+
 		
 	}
 	
@@ -414,7 +403,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		return model;
 	}
 		
-	private VerifiedYieldGrainBasket createVerifiedYieldGrainBasket(VerifiedYieldGrainBasketDto dto, WebAdeAuthentication authentication) {
+	private VerifiedYieldGrainBasket createVerifiedYieldGrainBasket(VerifiedYieldGrainBasketDto dto) {
 		VerifiedYieldGrainBasket model = new VerifiedYieldGrainBasket();
 		
 		model.setVerifiedYieldGrainBasketGuid(dto.getVerifiedYieldGrainBasketGuid());
@@ -422,6 +411,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		model.setBasketValue(dto.getBasketValue());
 		model.setHarvestedValue(dto.getHarvestedValue());
 		model.setComment(dto.getComment());
+		model.setCoverageDollars(dto.getCoverageDollars());
 
 		return model;
 	}
@@ -603,6 +593,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		dto.setBasketValue(model.getBasketValue());
 		dto.setHarvestedValue(model.getHarvestedValue());
 		dto.setComment(model.getComment());
+		dto.setCoverageDollars(model.getCoverageDollars());
 	}
 	
 	private Double notNull(Double value, Double defaultValue) {

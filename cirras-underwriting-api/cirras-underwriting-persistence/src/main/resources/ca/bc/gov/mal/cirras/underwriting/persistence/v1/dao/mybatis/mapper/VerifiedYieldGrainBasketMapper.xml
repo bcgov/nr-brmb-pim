@@ -17,6 +17,7 @@
 		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		
+		<result property="coverageDollars" column="coverage_dollars" javaType="java.lang.Double" jdbcType="NUMERIC" />
 	</resultMap>
 	
 	
@@ -86,7 +87,11 @@
 			
 	<select id="selectForVerifiedYieldContract" resultMap="VerifiedYieldGrainBasketDtoMap">
 		<include refid="selectColumns"/>
+			, prd.coverage_dollars
 		from verified_yield_grain_basket t
+		join verified_yield_contract vyc on vyc.verified_yield_contract_guid = t.verified_yield_contract_guid
+		left join policy p on p.crop_year = vyc.crop_year and p.contract_id = vyc.contract_id
+		left join product prd on prd.policy_id = p.policy_id and prd.commodity_coverage_code = 'GB'
 		where t.verified_yield_contract_guid = #{verifiedYieldContractGuid}
 	</select>
 
