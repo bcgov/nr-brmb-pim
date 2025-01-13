@@ -1,0 +1,78 @@
+<base-wrapper [errorState]="errorState">
+    <div class="cirras-underwriting-base-container page-width-container desktop">
+        <div class="cirras-underwriting-base personnel flex-y">
+
+            <div class="policy-header-container">
+                <div class="grower-header">
+                    <div>User Settings</div>
+                    <div>Manage preferences for policy search</div>
+                </div>
+            </div>
+
+            <div class="user-settings-table-header flex-y-fixed">
+              <div class="set-preferences">                
+
+                <div>Preferred Plan</div>
+                <div>
+                <select appWFSingleSelect appWFPlaceholder="All"
+                        class="select-selectedPlan"
+                        aria-label="Plan"
+                        [options]="insurancePlans"
+                        [selected]="selectedInsurancePlan"
+                        (updated)="selectFilterUpdated('selectedInsurancePlan', $event)">
+                    <option value="">
+                        <span class="placeholder">All</span>
+                    </option>
+                    <option *ngFor="let option of insurancePlans" value="{{option.code}}">
+                        <span>{{option.description}}</span>
+                    </option>
+                </select>
+                </div>               
+                
+                <div>Preferred Crop Year</div>
+                <div>
+                    <select appWFSingleSelect appWFPlaceholder="All"
+                            class="select-selectedCropYear"
+                            aria-label="Crop Year"
+                            [options]="cropYearOptions"
+                            [selected]="selectedCropYear"
+                            (updated)="selectFilterUpdated('selectedCropYear', $event)">
+                        <option value="">
+                            <span class="placeholder">All</span>
+                        </option>
+                        <option *ngFor="let option of cropYearOptions" value="{{option.code}}">
+                            <span>{{option.description}}</span>
+                        </option>
+                    </select>
+                </div>
+
+                <div>Preferred Office</div>
+                <div>
+                    <select appWFSingleSelect
+                            class="select-selectedOffice"
+                            appWFPlaceholder="All"
+                            aria-label="Office"
+                            [selected]="selectedOffice"
+                            [options]="officeOptions"
+                            (updated)="selectFilterUpdated('selectedOffice', $event)">
+                        <option value="">
+                            <span class="placeholder">All</span>
+                        </option>
+                        <option *ngFor="let option of officeOptions" value="{{option.code}}">
+                            <span>{{option.description}}</span>
+                        </option>
+                    </select>
+                </div>
+                
+                <div></div>
+                <div>
+                    <button mat-raised-button class="primary" (click)="onSave()">Save</button>
+                </div>
+
+              </div>
+            </div> 
+
+
+        </div>
+    </div>
+    </base-wrapper>

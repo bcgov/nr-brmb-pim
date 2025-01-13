@@ -21,9 +21,11 @@ import { YieldConversionContainer } from "./containers/maintenance/yield-convers
 import { DeactivateGuard } from "./services/util/DeactivateGuard";
 import { ForageDopContainer } from "./containers/dop/forage-dop-container.component";
 import { VerifiedYieldContainer } from "./containers/verified-yield/verified-yield-container.component";
+import { UserSettingsComponent } from "./components/user-settings/user-settings.component";
 
 const routesDesktop: Routes = [
     { path: R.LANDING, component: UwContractsListContainer, data: {scopes: [ROUTE_SCOPES.LANDING]},  pathMatch: "full" },
+    { path: R.USER_SETTINGS, component: UserSettingsComponent, data: {scopes: [ROUTE_SCOPES.USER_SETTINGS]},  pathMatch: "full" },
     { path: R.INVENTORY_GRAIN_UNSEEDED, children: [
         { 
           path: ':insurancePlanId/:cropYear/:policyId/:inventoryContractGuid', component: InventoryContractContainer, data: {scopes: [ROUTE_SCOPES.INVENTORY]},
