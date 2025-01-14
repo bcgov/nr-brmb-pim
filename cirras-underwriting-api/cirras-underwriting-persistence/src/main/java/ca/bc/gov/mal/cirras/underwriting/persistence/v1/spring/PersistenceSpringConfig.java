@@ -63,6 +63,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.RiskAreaDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.SeedingDeadlineDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.UnderwritingCommentDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.UnderwritingYearDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.UserSettingDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldAmendmentDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.VerifiedYieldContractDao;
@@ -113,6 +114,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.RiskAreaDaoI
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.SeedingDeadlineDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.UnderwritingCommentDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.UnderwritingYearDaoImpl;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.UserSettingDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.VerifiedYieldAmendmentDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.VerifiedYieldContractCommodityDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.VerifiedYieldContractDaoImpl;
@@ -427,5 +429,11 @@ public class PersistenceSpringConfig {
 	public VerifiedYieldSummaryDao verifiedYieldSummaryDao() { 
 		return new VerifiedYieldSummaryDaoImpl();
 	}
-		
+
+	@Bean
+	public UserSettingDao userSettingDao() { 
+		return new UserSettingDaoImpl();
+	}
+	
+	
 }

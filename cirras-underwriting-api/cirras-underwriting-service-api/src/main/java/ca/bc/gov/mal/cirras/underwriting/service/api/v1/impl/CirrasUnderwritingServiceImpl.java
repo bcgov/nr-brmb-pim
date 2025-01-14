@@ -1,12 +1,10 @@
 package ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualFieldList;
@@ -15,8 +13,10 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContractList;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UserSettingDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.FieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.PolicyDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.UserSettingDao;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.TooManyRecordsException;
 import ca.bc.gov.nrs.wfone.common.persistence.dto.PagedDtos;
@@ -54,6 +54,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	// daos
 	private FieldDao fieldDao;
 	private PolicyDao policyDao;
+	private UserSettingDao userSettingDao;
 
 	//utils
 	//@Autowired
@@ -96,6 +97,10 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	
 	public void setPolicyDao(PolicyDao policyDao) {
 		this.policyDao = policyDao;
+	}
+
+	public void setUserSettingDao(UserSettingDao userSettingDao) {
+		this.userSettingDao = userSettingDao;
 	}
 
 	public void setOutOfSync(OutOfSync outOfSync) {
@@ -274,8 +279,33 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	@Override
 	public UserSetting searchUserSetting(FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
-		// TODO: Implement.
-		return null;
+		logger.debug("<searchUserSetting");
+
+		UserSetting result = null;
+
+		String loginUserGuid = null;
+		if ( authentication != null && authentication.getUserGuid() != null ) {
+			loginUserGuid = authentication.getUserGuid();
+		
+			try {
+				UserSettingDto dto = userSettingDao.getByLoginUserGuid(loginUserGuid);
+	
+				if (dto == null) {
+					// TODO: Should this return a default resource instead?
+					throw new NotFoundException("Did not find user settings for: " + loginUserGuid);
+				}
+	
+				result = userSettingFactory.getUserSetting(dto, factoryContext, authentication);
+	
+			} catch (DaoException e) {
+				throw new ServiceException("DAO threw an exception", e);
+			}
+		} else {
+			throw new NotFoundException("Did not find user settings");
+		}
+		
+		logger.debug(">searchUserSetting");
+		return result;
 	}
 	
 }
