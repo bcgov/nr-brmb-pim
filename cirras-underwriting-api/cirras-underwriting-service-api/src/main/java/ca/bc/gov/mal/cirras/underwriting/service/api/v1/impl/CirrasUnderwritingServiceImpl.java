@@ -291,11 +291,10 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 				UserSettingDto dto = userSettingDao.getByLoginUserGuid(loginUserGuid);
 	
 				if (dto == null) {
-					// TODO: Should this return a default resource instead?
-					throw new NotFoundException("Did not find user settings for: " + loginUserGuid);
+					result = userSettingFactory.getDefaultUserSetting(factoryContext, authentication);
+				} else {	
+					result = userSettingFactory.getUserSetting(dto, factoryContext, authentication);
 				}
-	
-				result = userSettingFactory.getUserSetting(dto, factoryContext, authentication);
 	
 			} catch (DaoException e) {
 				throw new ServiceException("DAO threw an exception", e);

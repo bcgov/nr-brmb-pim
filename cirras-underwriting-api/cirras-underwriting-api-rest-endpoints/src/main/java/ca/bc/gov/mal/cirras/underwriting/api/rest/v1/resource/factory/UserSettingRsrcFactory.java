@@ -18,6 +18,34 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UserSettingDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UserSettingFactory;
 
 public class UserSettingRsrcFactory extends BaseResourceFactory implements UserSettingFactory { 
+
+	@Override
+	public UserSetting getDefaultUserSetting(FactoryContext context, WebAdeAuthentication authentication)
+			throws FactoryException {
+
+		UserSettingRsrc resource = new UserSettingRsrc();
+
+		populateDefaultResource(resource, authentication);
+
+		String eTag = getEtag(resource);
+		resource.setETag(eTag);
+
+		return resource;
+	}
+
+	private void populateDefaultResource(UserSettingRsrc resource, WebAdeAuthentication authentication) {
+		resource.setFamilyName(authentication.getFamilyName());
+		resource.setGivenName(authentication.getGivenName());
+		resource.setLoginUserGuid(authentication.getUserGuid());
+		resource.setLoginUserId(authentication.getUserId());
+		resource.setLoginUserType(authentication.getUserTypeCode());
+		resource.setPolicySearchCropYear(null);      // Default is current calendar year
+		resource.setPolicySearchInsurancePlanId(null);
+		resource.setPolicySearchInsurancePlanName(null);
+		resource.setPolicySearchOfficeId(null);
+		resource.setPolicySearchOfficeName(null);
+		resource.setUserSettingGuid(null);
+	}
 	
 	@Override
 	public UserSetting getUserSetting(

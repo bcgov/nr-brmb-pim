@@ -8,6 +8,11 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.UserSetting;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UserSettingDto;
 
 public interface UserSettingFactory {
+
+	UserSetting getDefaultUserSetting(
+			FactoryContext context, 
+			WebAdeAuthentication authentication
+		) throws FactoryException;
 	
 	UserSetting getUserSetting(
 			UserSettingDto dto, 
