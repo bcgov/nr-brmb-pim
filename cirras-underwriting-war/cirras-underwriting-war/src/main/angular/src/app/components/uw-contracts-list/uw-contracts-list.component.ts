@@ -8,6 +8,8 @@ import { initUwContractsListPaging, UW_CONTRACTS_SEARCH_COMPONENT_ID } from 'src
 import { clearUwContractsSearch, searchUwContracts, clearReportPrint } from 'src/app/store/uw-contracts-list/uw-contracts-list.actions';
 import { INSURANCE_PLAN, REPORT_CHOICES, REPORT_SORT_BY, REPORT_TYPE, ResourcesRoutes, SORT_BY_CHOICES } from "src/app/utils/constants";
 import { goToLinkGlobal, userCanAccessDop, userCanAccessInventory, userCanAccessVerifiedYield } from "src/app/utils";
+import { LoadUserSettings } from "src/app/store/maintenance/maintenance.actions";
+import { UserSetting } from "src/app/conversion/models-maintenance";
 
 @Component({
   selector: "cirras-uw-contracts-list",
@@ -21,6 +23,8 @@ import { goToLinkGlobal, userCanAccessDop, userCanAccessInventory, userCanAccess
 export class UwContractsListComponent extends CollectionComponent implements OnChanges, AfterViewInit {
 
   @Input() cropCommodityList: CropCommodityList;
+
+  @Input() userSettings: UserSetting;
 
   columnsToDisplay = [ "selectGUIDs", "policyNumber", "growerNumber", "growerName", "insurancePlanName", "policyStatus", "actions" ]; 
 
@@ -54,10 +58,12 @@ export class UwContractsListComponent extends CollectionComponent implements OnC
     this.updateView();
     this.initSortingAndPaging(initUwContractsListPaging);
     this.config = this.getPagingConfig();
-    this.selectedCropYear = new Date().getFullYear().toString()
     this.selectedReportType = REPORT_CHOICES.INVENTORY;
     this.selectedReportSortBy = SORT_BY_CHOICES.POLICY_NUMBER;
     this.doSearch();
+
+    // get user's preferences for search 
+    this.store.dispatch(LoadUserSettings())
   }
 
   checkUncheckAll() {
@@ -103,6 +109,16 @@ export class UwContractsListComponent extends CollectionComponent implements OnC
           window.print()
           this.isPrintClicked = false
     }
+
+    if ( changes.userSettings && this.userSettings) {
+
+      this.selectedCropYear = (this.userSettings.policySearchCropYear ? this.userSettings.policySearchCropYear.toString() : new Date().getFullYear().toString())
+      this.selectedInsurancePlan = (this.userSettings.policySearchInsurancePlanId ? this.userSettings.policySearchInsurancePlanId.toString() : "")
+      this.selectedOffice = ( this.userSettings.policySearchOfficeId ? this.userSettings.policySearchOfficeId.toString() : "")
+      
+      this.cdr.detectChanges()
+    }
+
   }
 
   ngAfterViewInit() {

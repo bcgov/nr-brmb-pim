@@ -15,6 +15,8 @@ import { UW_CONTRACTS_SEARCH_COMPONENT_ID } from "src/app/store/uw-contracts-lis
 import {SearchState} from "@wf1/wfcc-core-lib";
 import { CropCommodityList } from "src/app/conversion/models";
 import {selectCropCommodityList} from "src/app/store/crop-commodity/crop-commodity.selectors";
+import { UserSetting } from "src/app/conversion/models-maintenance";
+import { selectUserSetting } from "src/app/store/maintenance/maintenance.selectors";
 
 @Component({
     selector: "cirras-uw-contracts-list-container",
@@ -23,6 +25,7 @@ import {selectCropCommodityList} from "src/app/store/crop-commodity/crop-commodi
                 [collection]="collection$ | async"
                 [searchState]="searchState$ | async"
                 [cropCommodityList]="cropCommodityList$ | async"
+                [userSettings]="userSettings$ | async"
                 [loadState]="loadState$ | async"
                 [errorState]="errorState$ | async"
                 [reportCollection]="reportCollection$ | async"
@@ -33,6 +36,7 @@ export class UwContractsListContainer extends BaseContainer {
     collection$: Observable<any> = this.store.pipe(select(selectUwContractsList()));
     searchState$: Observable<SearchState> = this.store.pipe(select(selectSearchState(UW_CONTRACTS_SEARCH_COMPONENT_ID)));
     cropCommodityList$: Observable<CropCommodityList> = this.store.pipe(select(selectCropCommodityList()));
+    userSettings$: Observable<UserSetting> = this.store.pipe(select(selectUserSetting()))
     loadState$: Observable<LoadState> = this.store.pipe(select(selectUwContractsListLoadState()));
     errorState$: Observable<ErrorState[]> = this.store.pipe(select(selectUwContractsListErrorState()));
     reportCollection$: Observable<any> = this.store.pipe(select(selectInventoryContractList()));
