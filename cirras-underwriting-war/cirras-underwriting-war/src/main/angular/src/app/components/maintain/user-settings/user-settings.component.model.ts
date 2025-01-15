@@ -1,5 +1,5 @@
 import { UntypedFormBuilder } from "@angular/forms";
-import {BaseComponentModel} from "../common/base/base.component.model";
+import {BaseComponentModel} from "../../common/base/base.component.model";
 import {DomSanitizer} from "@angular/platform-browser";
 
 export class UserSettingsComponentModel extends BaseComponentModel {
@@ -9,9 +9,9 @@ export class UserSettingsComponentModel extends BaseComponentModel {
         super(sanitizer);
 
         this.formGroup = this.fb.group({
-            selectedCropYear: [],
-            selectedInsurancePlanId: [],
-            selecteOffice: []
+            selectedCropYear: [''],
+            selectedInsurancePlanId: [''],
+            selectedOfficeId: ['']
         });
 
     }
