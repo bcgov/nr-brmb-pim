@@ -54,6 +54,7 @@ import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasVerifiedYieldService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.InventoryContractFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.VerifiedYieldContractFactory;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.CommodityCoverageCode;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.ModelValidator;
@@ -316,7 +317,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		loadVerifiedYieldAmendments(dto);
 		loadFields(dto);
 		loadVerifiedYieldSummaries(dto);
-		loadVerifiedYieldGrainBaskets(dto);
+		loadVerifiedYieldGrainBasket(dto);
 
 		return verifiedYieldContractFactory.getVerifiedYieldContract(dto, productDtos, factoryContext, authentication);
 	}
@@ -351,7 +352,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		vyDto.setUwComments(uwComments);
 	}
 	
-	private void loadVerifiedYieldGrainBaskets(VerifiedYieldContractDto dto) throws DaoException {
+	private void loadVerifiedYieldGrainBasket(VerifiedYieldContractDto dto) throws DaoException {
 		List<VerifiedYieldGrainBasketDto> verifiedGrainBaskets = verifiedYieldGrainBasketDao.selectForVerifiedYieldContract(dto.getVerifiedYieldContractGuid());
 		if (verifiedGrainBaskets.size() > 0) {
 			dto.setVerifiedYieldGrainBasket(verifiedGrainBaskets.get(0));
@@ -408,7 +409,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, null, userId, authentication);
 				
 				//Grain Basket
-				calculateAndSaveGrainBasket(verifiedYieldContractGuid, verifiedYieldContract, userId, authentication);
+				calculateAndSaveGrainBasket(verifiedYieldContractGuid, verifiedYieldContract, null, userId, authentication);
 
 			
 			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
@@ -431,31 +432,83 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	private void calculateAndSaveGrainBasket(
 			String verifiedYieldContractGuid, 
 			VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract,
+			List<ProductDto> productDtos, 
 			String userId,
 			WebAdeAuthentication authentication) throws DaoException {
 		
-		//Calculate Harvested Value: SUM(Commodity YTC* Commodity 100%IV)
-		Double harvestedValue = null;
-		if((verifiedYieldContract.getVerifiedYieldSummaries() != null && !verifiedYieldContract.getVerifiedYieldSummaries().isEmpty())) {
-			for(VerifiedYieldSummary vys : verifiedYieldContract.getVerifiedYieldSummaries()) {
-				Double commodityHarvestedValue = null;
-				
-				if(vys.getYieldToCount() != null && vys.getInsurableValueHundredPercent() != null) {
-					commodityHarvestedValue = vys.getYieldToCount() * vys.getInsurableValueHundredPercent();
-				}
-				
-				if(commodityHarvestedValue != null) {
-					harvestedValue = harvestedValue + commodityHarvestedValue;
-				}
+		//Get products 
+		if(productDtos == null) {
+			productDtos = loadProducts(verifiedYieldContract.getContractId(), verifiedYieldContract.getCropYear());
+		}
+		
+		//Get product
+		ProductDto productDto = getProductDtoByCoverageCode(CommodityCoverageCode.GRAIN_BASKET, productDtos);
+
+		//Only save or update if
+		if(productDto != null && productDto.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
+			if(verifiedYieldContract.getVerifiedYieldGrainBasket() == null) {
+				//Create grain basket
+				VerifiedYieldGrainBasket grainBasket = new VerifiedYieldGrainBasket();
+				grainBasket.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
+				verifiedYieldContract.setVerifiedYieldGrainBasket(grainBasket);
+			}
+			
+			//Set basket value if it's a new record or the user want to update it
+			if((verifiedYieldContract.getVerifiedYieldGrainBasket() != null && verifiedYieldContract.getVerifiedYieldGrainBasket().getVerifiedYieldGrainBasketGuid() == null)
+					|| Boolean.TRUE.equals(verifiedYieldContract.getUpdateProductValuesInd())) {
+				verifiedYieldContract.getVerifiedYieldGrainBasket().setBasketValue(productDto.getCoverageDollars());
+			}
+		} else {
+			//No product exists but grain basket in verified yield exists
+			if(verifiedYieldContract.getVerifiedYieldGrainBasket() != null && Boolean.TRUE.equals(verifiedYieldContract.getUpdateProductValuesInd())) {
+				//Delete record if user wants to update verified yield data
+				deleteVerifiedYieldGrainBasket(verifiedYieldContract.getVerifiedYieldGrainBasket());
+				verifiedYieldContract.setVerifiedYieldGrainBasket(null);
 			}
 		}
 		
-		verifiedYieldContract.getVerifiedYieldGrainBasket().setHarvestedValue(harvestedValue);
+		if(verifiedYieldContract.getVerifiedYieldGrainBasket() != null) {
+			//Calculate Harvested Value: SUM(Commodity YTC * Commodity 100%IV)
+			Double harvestedValue = null;
+			if((verifiedYieldContract.getVerifiedYieldSummaries() != null && !verifiedYieldContract.getVerifiedYieldSummaries().isEmpty())) {
+				for(VerifiedYieldSummary vys : verifiedYieldContract.getVerifiedYieldSummaries()) {
+					Double commodityHarvestedValue = null;
+					
+					if(vys.getYieldToCount() != null && vys.getInsurableValueHundredPercent() != null) {
+						commodityHarvestedValue = vys.getYieldToCount() * vys.getInsurableValueHundredPercent();
+					}
+					
+					if(commodityHarvestedValue != null) {
+						harvestedValue = notNull(harvestedValue, 0.0) + commodityHarvestedValue;
+					}
+				}
+			}
+			
+			verifiedYieldContract.getVerifiedYieldGrainBasket().setHarvestedValue(harvestedValue);
+
+			//Save Grain Basket
+			updateVerifiedYieldGrainBasket(verifiedYieldContractGuid, verifiedYieldContract.getVerifiedYieldGrainBasket(), userId);
+		}
+	}
+	
+	private ProductDto getProductDtoByCoverageCode(String coverageCode, List<ProductDto> productDtos) {
 		
-		//Save Grain Basket
-		updateVerifiedYieldGrainBasket(verifiedYieldContractGuid, verifiedYieldContract.getVerifiedYieldGrainBasket(), userId);
+		ProductDto product = null;
 		
-	}	
+		if(productDtos != null && productDtos.size() > 0) {
+			//There is only one grain basket product for a contract
+			List<ProductDto> products = productDtos.stream()
+					.filter(x -> x.getCommodityCoverageCode().equalsIgnoreCase(coverageCode))
+					.collect(Collectors.toList());
+			
+			if (products != null && products.size() > 0) {
+				product = products.get(0);
+			}
+		}
+
+		
+		return product;
+	}
 	
 	public static final String PRODUCT_STATUS_FINAL = "FINAL";
 	
@@ -747,6 +800,18 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		}
 
 		logger.debug(">deleteVerifiedYieldSummary");
+
+	}
+	
+	private void deleteVerifiedYieldGrainBasket(VerifiedYieldGrainBasket verifiedGrainBasket) throws DaoException {
+
+		logger.debug("<deleteVerifiedYieldGrainBasket");
+
+		if ( verifiedGrainBasket.getVerifiedYieldGrainBasketGuid() != null ) {
+			verifiedYieldGrainBasketDao.delete(verifiedGrainBasket.getVerifiedYieldGrainBasketGuid());
+		}
+
+		logger.debug(">deleteVerifiedYieldGrainBasket");
 
 	}
 	
@@ -1105,7 +1170,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, productDtos, userId, authentication);
 				
 				//Grain Basket
-				calculateAndSaveGrainBasket(verifiedYieldContractGuid, verifiedYieldContract, userId, authentication);
+				calculateAndSaveGrainBasket(verifiedYieldContractGuid, verifiedYieldContract, productDtos, userId, authentication);
 
 				
 			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {

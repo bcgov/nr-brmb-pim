@@ -24,8 +24,6 @@ public class VerifiedYieldGrainBasketDto extends BaseDto<VerifiedYieldGrainBaske
 	private String updateUser;
 	private Date updateDate;
 
-	private Double coverageDollars;
-
 	public VerifiedYieldGrainBasketDto() {
 	}
 
@@ -41,8 +39,6 @@ public class VerifiedYieldGrainBasketDto extends BaseDto<VerifiedYieldGrainBaske
 		this.createDate = dto.createDate;
 		this.updateUser = dto.updateUser;
 		this.updateDate = dto.updateDate;
-		
-		this.coverageDollars = dto.coverageDollars;
 
 	}
 
@@ -121,14 +117,6 @@ public class VerifiedYieldGrainBasketDto extends BaseDto<VerifiedYieldGrainBaske
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-
-	public Double getCoverageDollars() {
-		return coverageDollars;
-	}
-
-	public void setCoverageDollars(Double coverageDollars) {
-		this.coverageDollars = coverageDollars;
 	}
 
 	public String getCreateUser() {

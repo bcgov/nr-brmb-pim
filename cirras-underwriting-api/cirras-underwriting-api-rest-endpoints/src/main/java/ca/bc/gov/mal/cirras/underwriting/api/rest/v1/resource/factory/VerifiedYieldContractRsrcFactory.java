@@ -203,6 +203,8 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 
 			resource.setVerifiedYieldSummaries(verifiedYieldSummaries);
 		}
+		
+		getGrainBasketProductWarnings(resource.getVerifiedYieldGrainBasket(), productDtos, productWarnings);
 				
 		resource.setProductWarningMessages(productWarnings);
 		
@@ -228,18 +230,21 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		resource.setVerifiedYieldUpdateTimestamp(dto.getVerifiedYieldUpdateTimestamp());
 		resource.setVerifiedYieldUpdateUser(dto.getVerifiedYieldUpdateUser());
 		resource.setUpdateProductValuesInd(false);
-		resource.setVerifiedYieldGrainBasket(createVerifiedYieldGrainBasket(dto.getVerifiedYieldGrainBasket()));
-
-		
+		if(dto.getVerifiedYieldGrainBasket() != null) {
+			resource.setVerifiedYieldGrainBasket(createVerifiedYieldGrainBasket(dto.getVerifiedYieldGrainBasket()));
+		}
 	}
 	
 	public static final String PRODUCT_STATUS_FINAL = "FINAL";
 	public static final String PRODUCTION_GUARANTEE_DIFFERENCE_MSG = "Production guarantee for %s is different in the product: %.2f";
-	public static final String PRODUCTION_GUARANTEE_NONE_MSG = "There is no production guarantee for %s";
+	public static final String PRODUCTION_GUARANTEE_NONE_MSG = "There is no production guarantee for %s in CIRRAS.";
 	public static final String PRODUCTION_GUARANTEE_NO_PRODUCT_MSG = "There is no product for %s in CIRRAS. The shown production guarantee is not valid anymore.";
 	public static final String PROBABLE_YIELD_DIFFERENCE_MSG = "Probable yield for %s is different in the product: %.2f";
-	public static final String PROBABLE_YIELD_NONE_MSG = "There is no probable yield for %s";
+	public static final String PROBABLE_YIELD_NONE_MSG = "There is no probable yield for %s in CIRRAS.";
 	public static final String PROBABLE_YIELD_NO_PRODUCT_MSG = "There is no product for %s in CIRRAS. The shown probable yield is not valid anymore.";
+	public static final String HUNDRED_PERCENT_IV_DIFFERENCE_MSG = "100%% IV for %s is different in the product: %.2f";
+	public static final String HUNDRED_PERCENT_IV_NONE_MSG = "There is no 100%% IV for %s in CIRRAS.";
+	public static final String HUNDRED_PERCENT_IV_NO_PRODUCT_MSG = "There is no product for %s in CIRRAS but 100%% IV is stored with the verified yield.";
 
 	private List<MessageRsrc> getProductWarnings(VerifiedYieldSummaryDto vysDto, List<ProductDto> productDtos) {
 		
@@ -256,29 +261,43 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		
 		if(product != null) {
 			if(product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
+				//Production Guarantee
 				if (Double.compare(notNull(product.getProductionGuarantee(), (double)-1), notNull(vysDto.getProductionGuarantee(), (double)-1)) != 0) {
 					//Add warning if values are different -> Only if product is in status FINAL
 					String msg = "";
 					if(product.getProductionGuarantee() == null) {
-						msg = String.format(PRODUCTION_GUARANTEE_NONE_MSG, commodity, product.getProductionGuarantee());
+						msg = String.format(PRODUCTION_GUARANTEE_NONE_MSG, commodity);
 					} else {
 						msg = String.format(PRODUCTION_GUARANTEE_DIFFERENCE_MSG, commodity, product.getProductionGuarantee());
 					}
 					
 					messageRsrcList.add(new MessageRsrc(msg));
 				}
+				//Probable Yield
 				if (Double.compare(notNull(product.getProbableYield(), (double)-1), notNull(vysDto.getProbableYield(), (double)-1)) != 0) {
 					//Add warning if values are different -> Only if product is in status FINAL
 					String msg = "";
 					if(product.getProbableYield() == null) {
-						msg = String.format(PROBABLE_YIELD_NONE_MSG, commodity, product.getProbableYield());
+						msg = String.format(PROBABLE_YIELD_NONE_MSG, commodity);
 					} else {
 						msg = String.format(PROBABLE_YIELD_DIFFERENCE_MSG, commodity, product.getProbableYield());
 					}
 					
 					messageRsrcList.add(new MessageRsrc(msg));
 
-				}			}
+				}
+				//100% IV
+				if (Double.compare(notNull(product.getInsurableValueHundredPercent(), (double)-1), notNull(vysDto.getInsurableValueHundredPercent(), (double)-1)) != 0) {
+					//Add warning if values are different -> Only if product is in status FINAL
+					String msg = "";
+					if(product.getInsurableValueHundredPercent() == null) {
+						msg = String.format(HUNDRED_PERCENT_IV_NONE_MSG, commodity);
+					} else {
+						msg = String.format(HUNDRED_PERCENT_IV_DIFFERENCE_MSG, commodity, product.getInsurableValueHundredPercent());
+					}
+					messageRsrcList.add(new MessageRsrc(msg));
+				}
+			}
 		} else {
 			//No product: Check if the production guarantee in the summary is null
 			if(vysDto.getProductionGuarantee() != null) {
@@ -292,8 +311,70 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 				String msg = String.format(PROBABLE_YIELD_NO_PRODUCT_MSG, commodity);
 				messageRsrcList.add(new MessageRsrc(msg));
 			}
+			//No product: Check if 100% IV in the summary is null
+			if(vysDto.getProbableYield() != null) {
+				//Add warning if there is no product but a saved 100% IV
+				String msg = String.format(HUNDRED_PERCENT_IV_NO_PRODUCT_MSG, commodity);
+				messageRsrcList.add(new MessageRsrc(msg));
+			}
 		}
 		return messageRsrcList;
+	}
+	
+	public static final String GRAIN_BASKET_DIFFERENCE_MSG = "The grain basket coverage/basket value in CIRRAS is different: %.2f";
+	public static final String GRAIN_BASKET_NONE_MSG = "There is no grain basket coverage/basket value in CIRRAS.";
+	public static final String GRAIN_BASKET_NO_PRODUCT_MSG = "There is no grain basket product or no product in status FINAL in CIRRAS. The shown basket value is not valid anymore.";
+	public static final String GRAIN_BASKET_NO_GB_MSG = "There is no grain basket saved but there is one in CIRRAS.";
+
+	
+	private void getGrainBasketProductWarnings(VerifiedYieldGrainBasket gbDto, List<ProductDto> productDtos, List<MessageRsrc> messageRsrcList) {
+		
+		//Find product
+		ProductDto product = getProductDtoByCoverageCode(CommodityCoverageCode.GRAIN_BASKET, productDtos);
+		
+		//Warnings:
+		/* product exists -> grain basket doesn't exist
+		 * product doesn't exist -> grain basket exists
+		 * product coverage dollar is different from grain basket basket value
+		 * */
+		
+		if(product != null) {
+			if(product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
+				if(gbDto != null) {
+					//Coverage Dollars
+					if (Double.compare(notNull(product.getCoverageDollars(), (double)-1), notNull(gbDto.getBasketValue(), (double)-1)) != 0) {
+						//Add warning if values are different -> Only if product is in status FINAL
+						String msg = "";
+						if(product.getCoverageDollars() == null) {
+							msg = GRAIN_BASKET_NONE_MSG;
+						} else {
+							msg = String.format(GRAIN_BASKET_DIFFERENCE_MSG, product.getCoverageDollars());
+						}
+						
+						messageRsrcList.add(new MessageRsrc(msg));
+					}
+				} else {
+					//No GB in verified yield
+					//This is possible if the verified yield was saved when there was no grain basket in CIRRAS
+					String msg = GRAIN_BASKET_NO_GB_MSG;
+					messageRsrcList.add(new MessageRsrc(msg));
+				}
+			} else if(gbDto != null) {
+				//GB but no valid product
+				//Add warning if there is no product but a saved grain basket
+				String msg = GRAIN_BASKET_NO_PRODUCT_MSG;
+				messageRsrcList.add(new MessageRsrc(msg));
+			}
+		} else {
+			//No product: Check if there is a grain basket
+			if(gbDto != null) {
+				//Add warning if there is no product but a saved grain basket
+				String msg = GRAIN_BASKET_NO_PRODUCT_MSG;
+				messageRsrcList.add(new MessageRsrc(msg));
+			}
+		}
+		
+		
 	}
 	
 	@Override
@@ -319,6 +400,26 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 					.filter(x -> x.getNonPedigreeCropCommodityId().equals(cropCommodityId) 
 							&& x.getIsPedigreeProduct().equals(isPedigree)
 							&& coverageCodesQuantityForageGrain.contains(x.getCommodityCoverageCode()))
+					.collect(Collectors.toList());
+			
+			if (products != null && products.size() > 0) {
+				product = products.get(0);
+			}
+		}
+
+		
+		return product;
+	}
+	
+	
+	private ProductDto getProductDtoByCoverageCode(String coverageCode, List<ProductDto> productDtos) {
+		
+		ProductDto product = null;
+		
+		if(productDtos != null && productDtos.size() > 0) {
+			//There is only one grain basket product for a contract
+			List<ProductDto> products = productDtos.stream()
+					.filter(x -> x.getCommodityCoverageCode().equalsIgnoreCase(coverageCode))
 					.collect(Collectors.toList());
 			
 			if (products != null && products.size() > 0) {
@@ -411,7 +512,6 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		model.setBasketValue(dto.getBasketValue());
 		model.setHarvestedValue(dto.getHarvestedValue());
 		model.setComment(dto.getComment());
-		model.setCoverageDollars(dto.getCoverageDollars());
 
 		return model;
 	}
@@ -593,7 +693,6 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		dto.setBasketValue(model.getBasketValue());
 		dto.setHarvestedValue(model.getHarvestedValue());
 		dto.setComment(model.getComment());
-		dto.setCoverageDollars(model.getCoverageDollars());
 	}
 	
 	private Double notNull(Double value, Double defaultValue) {

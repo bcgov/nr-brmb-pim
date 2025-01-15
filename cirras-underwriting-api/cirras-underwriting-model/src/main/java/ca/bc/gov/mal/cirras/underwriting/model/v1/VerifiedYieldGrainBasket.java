@@ -13,8 +13,6 @@ public class VerifiedYieldGrainBasket implements Serializable {
 	private Double basketValue;
 	private Double harvestedValue;
 	private String comment;
-
-	private Double coverageDollars;
 	
 	
 	public String getVerifiedYieldGrainBasketGuid() {
@@ -56,13 +54,4 @@ public class VerifiedYieldGrainBasket implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
-	public Double getCoverageDollars() {
-		return coverageDollars;
-	}
-
-	public void setCoverageDollars(Double coverageDollars) {
-		this.coverageDollars = coverageDollars;
-	}
-	
 }

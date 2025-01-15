@@ -16,9 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerContractYearDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldGrainBasketDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.spring.PersistenceSpringConfig;
@@ -39,8 +37,6 @@ public class VerifiedYieldGrainBasketDaoTest {
 	private String verifiedYieldContractGuid;
 	private String declaredYieldContractGuid;
 
-	private Integer productId = 99999997;
-	private Integer productId2 = 99999988;
 	private Integer policyId = 90000015;
 	private String policyNumber = "998877-20";
 	private String contractNumber = "998877";
@@ -80,9 +76,7 @@ public class VerifiedYieldGrainBasketDaoTest {
 		if (dycDto != null) {
 			dycDao.delete(declaredYieldContractGuid);
 		}
-		
-		deleteProduct(productId);
-		deleteProduct(productId2);
+
 		deletePolicy(policyId);
 		deleteGrower(growerId);
 		
@@ -93,15 +87,7 @@ public class VerifiedYieldGrainBasketDaoTest {
 		}
 		
 	}
-	
-	private void deleteProduct(Integer productId) throws NotFoundDaoException, DaoException{
-		
-		ProductDao dao = persistenceSpringConfig.productDao();
-		ProductDto dto = dao.fetch(productId);
-		if (dto != null) {
-			dao.delete(productId);
-		}
-	}
+
 	
 	private void deletePolicy(Integer policyId) throws NotFoundDaoException, DaoException{
 		
@@ -120,8 +106,6 @@ public class VerifiedYieldGrainBasketDaoTest {
 		}
 	}
 
-	private Double coverageDollars = 2500.5;
-
 	@Test 
 	public void testVerifiedYieldGrainBasket() throws Exception {
 
@@ -134,7 +118,6 @@ public class VerifiedYieldGrainBasketDaoTest {
 		createGrower(growerId, 999888, "grower name");
 		createPolicy(policyId, growerId, contractId, cropYear, policyNumber, contractNumber, insurancePlanId, policyStatusCode, officeId);
 		createGrowerContractYear();
-		createProduct(policyId, productId2, null, "CQG", userId); //Test the joins and make sure only one record is returned when selecting for contract
 		createDeclaredYieldContract(userId);
 		createVerifiedYieldContract(userId);
 		
@@ -164,7 +147,6 @@ public class VerifiedYieldGrainBasketDaoTest {
 		Assert.assertEquals("BasketValue", newDto.getBasketValue(), fetchedDto.getBasketValue());
 		Assert.assertEquals("HarvestedValue", newDto.getHarvestedValue(), fetchedDto.getHarvestedValue());
 		Assert.assertEquals("Comment", newDto.getComment(), fetchedDto.getComment());
-		Assert.assertNull("CoverageDollars", fetchedDto.getCoverageDollars());
 		
 		//FETCH
 		fetchedDto = dao.fetch(verifiedYieldGrainBasketGuid);
@@ -212,16 +194,10 @@ public class VerifiedYieldGrainBasketDaoTest {
 		
 		dao.insert(newDto2, userId);
 		
-		//Add product for grain basket
-		createProduct(policyId, productId, coverageDollars, "GB", userId);
-
-		
 		//SELECT
 		dtos = dao.selectForVerifiedYieldContract(verifiedYieldContractGuid);
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(1, dtos.size());
-		
-		Assert.assertEquals("CoverageDollars", coverageDollars, dtos.get(0).getCoverageDollars());
 
 				
 		//DELETE for verifiedYieldContractGuid 
@@ -368,36 +344,6 @@ public class VerifiedYieldGrainBasketDaoTest {
 			
 			//INSERT
 			policyDao.insert(policyDto, userId);
-		}
-		
-		private void createProduct(Integer policyId, Integer productId, Double coverageDollars, String commodityCoverageCode, String userId) throws DaoException {
-
-			Calendar cal = Calendar.getInstance();
-			cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 because they are not set in the database
-			Date dateTime = cal.getTime();
-
-			
-			ProductDao dao = persistenceSpringConfig.productDao();
-			
-			ProductDto newDto = new ProductDto();
-
-			newDto.setCommodityCoverageCode(commodityCoverageCode);
-			newDto.setCropCommodityId(16);
-			newDto.setDeductibleLevel(20);
-			newDto.setInsuredByMeasType("ACRES");
-			newDto.setPolicyId(policyId);
-			newDto.setProbableYield(12.34);
-			newDto.setProductId(productId);
-			newDto.setProductionGuarantee(56.78);
-			newDto.setProductStatusCode("OFFER");
-			newDto.setInsurableValueHundredPercent(150.5);
-			newDto.setCoverageDollars(coverageDollars);
-
-
-			newDto.setDataSyncTransDate(dateTime);
-
-			//INSERT
-			dao.insert(newDto, userId);
 		}
 		
 }
