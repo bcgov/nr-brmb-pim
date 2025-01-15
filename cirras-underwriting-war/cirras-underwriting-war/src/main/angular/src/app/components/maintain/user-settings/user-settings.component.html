@@ -25,10 +25,11 @@
                     </button>
                 </div>
                 <div>
-                    <button *ngIf="securityUtilService.canEditUserSettings()" mat-raised-button class="primary"
+                    <!-- TODO -->
+                    <!-- <button *ngIf="securityUtilService.canEditUserSettings()" mat-raised-button class="primary"
                         [disabled]="!hasDataChanged" (click)="onSave()">
                         Save
-                    </button>
+                    </button> -->
                 </div>
 
             </div>
@@ -81,6 +82,16 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
+                </div>
+
+
+                <div style="grid-column-start: 1; grid-column-end: 3; padding-top: 16px;;">
+                    Restore Default Settings:
+
+                    <mat-checkbox style="padding-left: 10px;"
+                        formControlName="setDefaultSettings" 
+                        (change)="isChecked($event)">
+                    </mat-checkbox>
                 </div>
 
               </div>

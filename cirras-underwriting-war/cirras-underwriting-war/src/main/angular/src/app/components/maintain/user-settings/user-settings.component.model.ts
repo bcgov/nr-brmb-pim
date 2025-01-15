@@ -11,7 +11,8 @@ export class UserSettingsComponentModel extends BaseComponentModel {
         this.formGroup = this.fb.group({
             selectedCropYear: [''],
             selectedInsurancePlanId: [''],
-            selectedOfficeId: ['']
+            selectedOfficeId: [''],
+            setDefaultSettings: [false]
         });
 
     }

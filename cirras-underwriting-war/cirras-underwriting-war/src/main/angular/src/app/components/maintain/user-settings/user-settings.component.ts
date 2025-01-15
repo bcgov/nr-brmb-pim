@@ -53,8 +53,19 @@ export class UserSettingsComponent extends BaseComponent implements OnChanges {
   }
 
   dropDownChanged(){
+    this.viewModel.formGroup.controls.setDefaultSettings.setValue(false)
     this.hasDataChanged = true
   }
+
+    isChecked(event) {
+  
+      if ( event.checked ){
+        this.viewModel.formGroup.controls.selectedCropYear.setValue("")
+        this.viewModel.formGroup.controls.selectedInsurancePlanId.setValue("")
+        this.viewModel.formGroup.controls.selectedOfficeId.setValue("")
+      }
+      this.hasDataChanged = true
+    }
 
   onSave() {
     
