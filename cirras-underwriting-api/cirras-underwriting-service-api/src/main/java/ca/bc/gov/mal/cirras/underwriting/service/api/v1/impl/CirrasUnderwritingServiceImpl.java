@@ -1,21 +1,22 @@
 package ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualFieldList;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.UserSetting;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContractList;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UserSettingDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.FieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.PolicyDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.UserSettingDao;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.TooManyRecordsException;
 import ca.bc.gov.nrs.wfone.common.persistence.dto.PagedDtos;
@@ -26,6 +27,7 @@ import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.AnnualFieldFactory;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UserSettingFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UwContractFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.UnderwritingServiceHelper;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.ScreenType;
@@ -44,6 +46,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	// factories
 	private AnnualFieldFactory annualFieldFactory;
 	private UwContractFactory uwContractFactory;
+	private UserSettingFactory userSettingFactory;
 	
 	// utils
 	private OutOfSync outOfSync;
@@ -51,6 +54,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	// daos
 	private FieldDao fieldDao;
 	private PolicyDao policyDao;
+	private UserSettingDao userSettingDao;
 
 	//utils
 	//@Autowired
@@ -82,6 +86,10 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	public void setUwContractFactory(UwContractFactory uwContractFactory) {
 		this.uwContractFactory = uwContractFactory;
 	}
+
+	public void setUserSettingFactory(UserSettingFactory userSettingFactory) {
+		this.userSettingFactory = userSettingFactory;
+	}
 	
 	public void setFieldDao(FieldDao fieldDao) {
 		this.fieldDao = fieldDao;
@@ -89,6 +97,10 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	
 	public void setPolicyDao(PolicyDao policyDao) {
 		this.policyDao = policyDao;
+	}
+
+	public void setUserSettingDao(UserSettingDao userSettingDao) {
+		this.userSettingDao = userSettingDao;
 	}
 
 	public void setOutOfSync(OutOfSync outOfSync) {
@@ -262,6 +274,37 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 
 		return results;
 
+	}
+
+	@Override
+	public UserSetting searchUserSetting(FactoryContext factoryContext, WebAdeAuthentication authentication)
+			throws ServiceException, NotFoundException {
+		logger.debug("<searchUserSetting");
+
+		UserSetting result = null;
+
+		String loginUserGuid = null;
+		if ( authentication != null && authentication.getUserGuid() != null ) {
+			loginUserGuid = authentication.getUserGuid();
+		
+			try {
+				UserSettingDto dto = userSettingDao.getByLoginUserGuid(loginUserGuid);
+	
+				if (dto == null) {
+					result = userSettingFactory.getDefaultUserSetting(factoryContext, authentication);
+				} else {	
+					result = userSettingFactory.getUserSetting(dto, factoryContext, authentication);
+				}
+	
+			} catch (DaoException e) {
+				throw new ServiceException("DAO threw an exception", e);
+			}
+		} else {
+			throw new NotFoundException("Did not find user settings");
+		}
+		
+		logger.debug(">searchUserSetting");
+		return result;
 	}
 	
 }
