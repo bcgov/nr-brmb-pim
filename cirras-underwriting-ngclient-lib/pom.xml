@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
     <artifactId>cirras-underwriting-ngclient-lib-parent</artifactId>
-    <version>3.6.0-SNAPSHOT</version>
+    <version>3.7.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>cirras-underwriting-ngclient-lib-parent</name>
     <modules>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
             <artifactId>cirras-underwriting-api-rest-endpoints</artifactId>
-            <version>3.6.0-SNAPSHOT</version>
+            <version>3.7.0-SNAPSHOT</version>
             <type>json</type>
             <classifier>swagger</classifier>
 

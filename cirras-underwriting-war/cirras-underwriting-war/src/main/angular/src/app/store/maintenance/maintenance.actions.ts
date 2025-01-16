@@ -1,6 +1,7 @@
 import {Action} from "@ngrx/store";
 import {ErrorState} from "../application/application.state";
-import { CropVarietyInsurabilityList, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, UnderwritingYear, UnderwritingYearList, YieldMeasUnitConversionList } from "src/app/conversion/models-maintenance";
+import { CropVarietyInsurabilityList, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, UnderwritingYear, UnderwritingYearList, UserSetting, YieldMeasUnitConversionList } from "src/app/conversion/models-maintenance";
+import { USER_SETTINGS_COMPONENT_ID } from "./maintenance.state";
 
 export const LOAD_UW_YEARS = "LOAD_UW_YEARS";
 export const LOAD_UW_YEARS_SUCCESS = "LOAD_UW_YEARS_SUCCESS";
@@ -46,6 +47,10 @@ export const SAVE_YIELD_CONVERSION = "SAVE_YIELD_CONVERSION";
 export const SAVE_YIELD_CONVERSION_SUCCESS = "SAVE_YIELD_CONVERSION_SUCCESS";
 
 export const CLEAR_YIELD_CONVERSION = "CLEAR_YIELD_CONVERSION"
+
+export const LOAD_USER_SETTINGS = "LOAD_USER_SETTINGS";
+export const LOAD_USER_SETTINGS_SUCCESS = "LOAD_USER_SETTINGS_SUCCESS";
+export const LOAD_USER_SETTINGS_ERROR = "LOAD_USER_SETTINGS_ERROR";
 
 // Load uw years
 export interface LoadUwYearsAction extends Action {
@@ -557,6 +562,48 @@ export function SaveYieldConversionSuccess(componentId: string, value: YieldMeas
     componentId: componentId,
     payload: {
       value
+    }
+  };
+}
+
+
+// User Settings
+export interface LoadUserSettingsAction extends Action {
+  componentId: string;
+  payload: { };
+}
+
+export interface LoadUserSettingsSuccessAction extends Action {
+  componentId: string;
+  payload: {
+    value: UserSetting; 
+  };
+}
+
+export function LoadUserSettings(): LoadUserSettingsAction {
+  return {
+    type: LOAD_USER_SETTINGS,
+    componentId: USER_SETTINGS_COMPONENT_ID,
+    payload: { }
+  };
+}
+
+export function LoadUserSettingsSuccess(value: UserSetting): LoadUserSettingsSuccessAction {
+  return {
+    type: LOAD_USER_SETTINGS_SUCCESS,
+    componentId: USER_SETTINGS_COMPONENT_ID,
+    payload: {
+      value
+    }
+  };
+}
+
+export function LoadUserSettingsError(error: ErrorState): LoadErrorAction {
+  return {
+    type: LOAD_USER_SETTINGS_ERROR,
+    componentId: USER_SETTINGS_COMPONENT_ID,
+    payload: {
+      error
     }
   };
 }

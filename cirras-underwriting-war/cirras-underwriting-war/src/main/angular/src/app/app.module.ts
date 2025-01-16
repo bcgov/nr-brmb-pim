@@ -145,6 +145,8 @@ import { VerifiedYieldSummaryListComponent } from "./components/verified-yield/s
 import { VerifiedYieldSummaryComponent } from "./components/verified-yield/summary/verified-yield-summary.component";
 import { VerifiedYieldGrainBasketListComponent } from "./components/verified-yield/grain-basket-list/verified-yield-grain-basket-list.component";
 import { VerifiedYieldGrainBasketComponent } from "./components/verified-yield/grain-basket/verified-yield-grain-basket.component";
+import { UserSettingsComponent } from "./components/maintain/user-settings/user-settings.component";
+import { UserSettingsContainer } from "./containers/maintenance/user-settings-container";
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -253,7 +255,9 @@ if (!environment.production || !environment.restrict_imports) {
         VerifiedYieldSummaryListComponent,
         VerifiedYieldSummaryComponent,
         VerifiedYieldGrainBasketListComponent,
-        VerifiedYieldGrainBasketComponent
+        VerifiedYieldGrainBasketComponent,
+        UserSettingsComponent,
+        UserSettingsContainer
     ],
     bootstrap: [AppComponent], imports: [CirrasUnderwritingAPIServiceModule,
         DragDropModule,

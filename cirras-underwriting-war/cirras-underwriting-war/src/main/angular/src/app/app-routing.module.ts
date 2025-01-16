@@ -21,6 +21,7 @@ import { YieldConversionContainer } from "./containers/maintenance/yield-convers
 import { DeactivateGuard } from "./services/util/DeactivateGuard";
 import { ForageDopContainer } from "./containers/dop/forage-dop-container.component";
 import { VerifiedYieldContainer } from "./containers/verified-yield/verified-yield-container.component";
+import { UserSettingsContainer } from "./containers/maintenance/user-settings-container";
 
 const routesDesktop: Routes = [
     { path: R.LANDING, component: UwContractsListContainer, data: {scopes: [ROUTE_SCOPES.LANDING]},  pathMatch: "full" },
@@ -105,7 +106,9 @@ const routesDesktop: Routes = [
     { path: R.MAINTAIN_GRADE_MODIFIERS, component: GradeModifiersContainer, data: {scopes: [ROUTE_SCOPES.MAINTAIN_GRADE_MODIFIERS]}, pathMatch: "full", canActivate: [ResourcesAuthGuard], canDeactivate: [DeactivateGuard] },
     { path: R.MAINTAIN_FORAGE_VARIETY_INSURABILITY, component: ForageVarietyInsurabilityContainer, data: {scopes: [ROUTE_SCOPES.MAINTAIN_FORAGE_VARIETY_INSURABILITY]},  pathMatch: "full", canActivate: [ResourcesAuthGuard], canDeactivate: [DeactivateGuard] },
     { path: R.MAINTAIN_YIELD_CONVERSION, component: YieldConversionContainer, data: {scopes: [ROUTE_SCOPES.MAINTAIN_YIELD_CONVERSION]},  pathMatch: "full", canActivate: [ResourcesAuthGuard], canDeactivate: [DeactivateGuard] },
-
+  
+    { path: R.USER_SETTINGS, component: UserSettingsContainer, data: {scopes: [ROUTE_SCOPES.USER_SETTINGS]},  pathMatch: "full", canActivate: [ResourcesAuthGuard], canDeactivate: [DeactivateGuard]  },
+    
     { path: R.UNAUTHORIZED, component: UnauthorizedPageComponent },
     { path: R.SIGN_OUT, component: SignOutPageComponent, pathMatch: "full" },
     { path: "**", redirectTo: R.LANDING }

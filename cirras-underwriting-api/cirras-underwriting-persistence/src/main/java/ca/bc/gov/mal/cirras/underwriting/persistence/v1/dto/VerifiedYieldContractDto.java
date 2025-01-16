@@ -29,7 +29,7 @@ public class VerifiedYieldContractDto extends BaseDto<VerifiedYieldContractDto> 
 	private List<VerifiedYieldContractCommodityDto> verifiedYieldContractCommodities = new ArrayList<VerifiedYieldContractCommodityDto>();
 	private List<VerifiedYieldAmendmentDto> verifiedYieldAmendments = new ArrayList<VerifiedYieldAmendmentDto>();
 	private List<VerifiedYieldSummaryDto> verifiedYieldSummaries = new ArrayList<VerifiedYieldSummaryDto>();
-	private List<VerifiedYieldGrainBasketDto> verifiedYieldGrainBaskets = new ArrayList<VerifiedYieldGrainBasketDto>();
+	private VerifiedYieldGrainBasketDto verifiedYieldGrainBasket;
 	
 	private String createUser;
 	private Date createDate;
@@ -86,13 +86,7 @@ public class VerifiedYieldContractDto extends BaseDto<VerifiedYieldContractDto> 
 			}
 		}
 		
-		if ( dto.verifiedYieldGrainBaskets != null ) {			
-			this.verifiedYieldGrainBaskets = new ArrayList<>();
-			
-			for ( VerifiedYieldGrainBasketDto vyaDto : dto.verifiedYieldGrainBaskets) {
-				this.verifiedYieldGrainBaskets.add(vyaDto.copy());
-			}
-		}
+		this.verifiedYieldGrainBasket = dto.verifiedYieldGrainBasket;
 		
 		this.createUser = dto.createUser;
 		this.createDate = dto.createDate;
@@ -218,11 +212,11 @@ public class VerifiedYieldContractDto extends BaseDto<VerifiedYieldContractDto> 
 	}
 	
 	
-	public List<VerifiedYieldGrainBasketDto> getVerifiedYieldGrainBaskets() {
-		return verifiedYieldGrainBaskets;
+	public VerifiedYieldGrainBasketDto getVerifiedYieldGrainBasket() {
+		return verifiedYieldGrainBasket;
 	}
-	public void setVerifiedYieldGrainBaskets(List<VerifiedYieldGrainBasketDto> verifiedYieldGrainBaskets) {
-		this.verifiedYieldGrainBaskets = verifiedYieldGrainBaskets;
+	public void setVerifiedYieldGrainBasket(VerifiedYieldGrainBasketDto verifiedYieldGrainBasket) {
+		this.verifiedYieldGrainBasket = verifiedYieldGrainBasket;
 	}
 	
 
