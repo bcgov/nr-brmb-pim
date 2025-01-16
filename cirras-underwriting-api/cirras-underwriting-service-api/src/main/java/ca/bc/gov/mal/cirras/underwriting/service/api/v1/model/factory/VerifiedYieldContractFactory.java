@@ -13,6 +13,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto;
@@ -20,6 +21,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldAmendme
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldSummaryDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldGrainBasketDto;
 
 public interface VerifiedYieldContractFactory {
 
@@ -56,6 +58,10 @@ public interface VerifiedYieldContractFactory {
 	void updateDto(
 			VerifiedYieldSummaryDto dto, 
 			VerifiedYieldSummary verifiedSummary);
+	
+	void updateDto(
+			VerifiedYieldGrainBasketDto dto, 
+			VerifiedYieldGrainBasket verifiedYieldGrainBasket);
 
 	Set<String> getForageGrainCoverageCodes();
 

@@ -20,7 +20,6 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCom
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingCommentDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldSummaryDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.spring.PersistenceSpringConfig;
@@ -133,6 +132,7 @@ public class VerifiedYieldSummaryDaoTest {
 		newDto.setYieldPercentPy(75.5);
 		newDto.setProductionGuarantee(20.5);
 		newDto.setProbableYield(17.5);
+		newDto.setInsurableValueHundredPercent(27.33);
 		newDto.setTotalInsuredAcres(23.45);
 
 		dao.insert(newDto, userId);
@@ -159,6 +159,7 @@ public class VerifiedYieldSummaryDaoTest {
 		Assert.assertEquals("YieldPercentPy", newDto.getYieldPercentPy(), fetchedDto.getYieldPercentPy());
 		Assert.assertEquals("ProductionGuarantee", newDto.getProductionGuarantee(), fetchedDto.getProductionGuarantee());
 		Assert.assertEquals("ProbableYield", newDto.getProbableYield(), fetchedDto.getProbableYield());
+		Assert.assertEquals("InsurableValueHundredPercent", newDto.getInsurableValueHundredPercent(), fetchedDto.getInsurableValueHundredPercent());
 		Assert.assertEquals("TotalInsuredAcres", newDto.getTotalInsuredAcres(), fetchedDto.getTotalInsuredAcres());
 
 		//FETCH
@@ -177,6 +178,7 @@ public class VerifiedYieldSummaryDaoTest {
 		Assert.assertEquals("YieldPercentPy", newDto.getYieldPercentPy(), fetchedDto.getYieldPercentPy());
 		Assert.assertEquals("ProductionGuarantee", newDto.getProductionGuarantee(), fetchedDto.getProductionGuarantee());
 		Assert.assertEquals("ProbableYield", newDto.getProbableYield(), fetchedDto.getProbableYield());
+		Assert.assertEquals("InsurableValueHundredPercent", newDto.getInsurableValueHundredPercent(), fetchedDto.getInsurableValueHundredPercent());
 		Assert.assertEquals("TotalInsuredAcres", newDto.getTotalInsuredAcres(), fetchedDto.getTotalInsuredAcres());
 
 		//UPDATE
@@ -191,6 +193,7 @@ public class VerifiedYieldSummaryDaoTest {
 		fetchedDto.setYieldPercentPy(85.5);
 		fetchedDto.setProductionGuarantee(11.5);
 		fetchedDto.setProbableYield(27.8);
+		fetchedDto.setInsurableValueHundredPercent(66.77);
 		fetchedDto.setTotalInsuredAcres(null);
 				
 		dao.update(fetchedDto, userId);
@@ -210,7 +213,8 @@ public class VerifiedYieldSummaryDaoTest {
 		Assert.assertEquals("YieldToCount", fetchedDto.getYieldToCount(), updatedDto.getYieldToCount());
 		Assert.assertEquals("YieldPercentPy", fetchedDto.getYieldPercentPy(), updatedDto.getYieldPercentPy());
 		Assert.assertEquals("ProductionGuarantee", fetchedDto.getProductionGuarantee(), updatedDto.getProductionGuarantee());
-		Assert.assertEquals("ProbableYield", fetchedDto.getProbableYield(), updatedDto.getProbableYield());		
+		Assert.assertEquals("ProbableYield", fetchedDto.getProbableYield(), updatedDto.getProbableYield());	
+		Assert.assertEquals("InsurableValueHundredPercent", fetchedDto.getInsurableValueHundredPercent(), updatedDto.getInsurableValueHundredPercent());
 		Assert.assertEquals("TotalInsuredAcres", fetchedDto.getTotalInsuredAcres(), updatedDto.getTotalInsuredAcres());
 
 		//INSERT second record
@@ -228,6 +232,7 @@ public class VerifiedYieldSummaryDaoTest {
 		newDto2.setYieldPercentPy(75.5);
 		newDto2.setProductionGuarantee(20.5);
 		newDto2.setProbableYield(17.5);
+		newDto2.setInsurableValueHundredPercent(23.33);
 		newDto2.setTotalInsuredAcres(null);
 		
 		dao.insert(newDto2, userId);
