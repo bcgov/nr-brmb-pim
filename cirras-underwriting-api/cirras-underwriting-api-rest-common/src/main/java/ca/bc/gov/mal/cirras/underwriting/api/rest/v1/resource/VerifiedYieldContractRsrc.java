@@ -41,7 +41,7 @@ public class VerifiedYieldContractRsrc extends BaseResource implements VerifiedY
 	private List<VerifiedYieldContractCommodity> verifiedYieldContractCommodities = new ArrayList<VerifiedYieldContractCommodity>();
 	private List<VerifiedYieldAmendment> verifiedYieldAmendments = new ArrayList<VerifiedYieldAmendment>();
 	private List<VerifiedYieldSummary> verifiedYieldSummaries = new ArrayList<VerifiedYieldSummary>();
-	private List<VerifiedYieldGrainBasket> verifiedYieldGrainBaskets = new ArrayList<VerifiedYieldGrainBasket>();
+	private VerifiedYieldGrainBasket verifiedYieldGrainBasket;
 	private List<MessageRsrc> productWarningMessages = new ArrayList<MessageRsrc>();
 
 	public String getVerifiedYieldContractGuid() {
@@ -143,11 +143,11 @@ public class VerifiedYieldContractRsrc extends BaseResource implements VerifiedY
 		this.verifiedYieldSummaries = verifiedYieldSummaries;
 	}
 	
-	public List<VerifiedYieldGrainBasket> getVerifiedYieldGrainBaskets() {
-		return verifiedYieldGrainBaskets;
+	public VerifiedYieldGrainBasket getVerifiedYieldGrainBasket() {
+		return verifiedYieldGrainBasket;
 	}
-	public void setVerifiedYieldGrainBaskets(List<VerifiedYieldGrainBasket> verifiedYieldGrainBaskets) {
-		this.verifiedYieldGrainBaskets = verifiedYieldGrainBaskets;
+	public void setVerifiedYieldGrainBasket(VerifiedYieldGrainBasket verifiedYieldGrainBasket) {
+		this.verifiedYieldGrainBasket = verifiedYieldGrainBasket;
 	}
 
 	public List<MessageRsrc> getProductWarningMessages() {

@@ -688,16 +688,13 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 
 		String policyNumber = "713036-23";   // Set to valid policy number.
 		
-		List<VerifiedYieldGrainBasket> expectedVygb = new ArrayList<VerifiedYieldGrainBasket>();
-		VerifiedYieldGrainBasket vygb = new VerifiedYieldGrainBasket();
+		VerifiedYieldGrainBasket expectedVygb = new VerifiedYieldGrainBasket();
 		
-		vygb.setVerifiedYieldGrainBasketGuid("unit_test_grain_basket1");
-		vygb.setVerifiedYieldContractGuid("5abc58c8f5734374a7ac7e7be01d044f");
-		vygb.setBasketValue(1.23);
-		vygb.setHarvestedValue(4.56);
-		vygb.setComment("grain basket comment 1");  // Set based on existing policy.
-
-		expectedVygb.add(vygb);
+		expectedVygb.setVerifiedYieldGrainBasketGuid("unit_test_grain_basket1");
+		expectedVygb.setVerifiedYieldContractGuid("5abc58c8f5734374a7ac7e7be01d044f");
+		expectedVygb.setBasketValue(1.23);
+		expectedVygb.setHarvestedValue(4.56);
+		expectedVygb.setComment("grain basket comment 1");  // Set based on existing policy.
 
 		Integer pageNumber = (1);
 		Integer pageRowCount = (20);
@@ -724,7 +721,7 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		VerifiedYieldContractRsrc verifiedYldContract = service.getVerifiedYieldContract(referrer);
 		Assert.assertNotNull(verifiedYldContract);
 
-		checkVerifiedYieldGrainBaskets(expectedVygb, verifiedYldContract.getVerifiedYieldGrainBaskets());
+		checkVerifiedYieldGrainBasket(expectedVygb, verifiedYldContract.getVerifiedYieldGrainBasket());
 		
 		//*****************************************************************
 		//AFTER TESTS: DELETE LAND, INVENTORY AND YIELD BY RUNNING THE DELETE SCRIPTS BELOW
@@ -766,19 +763,16 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		Assert.assertNotNull(actual.getVerifiedYieldUpdateTimestamp());
 	}
 	
-	private void checkVerifiedYieldGrainBaskets(List<VerifiedYieldGrainBasket> expected, List<VerifiedYieldGrainBasket> actual) {
+	private void checkVerifiedYieldGrainBasket(VerifiedYieldGrainBasket expected, VerifiedYieldGrainBasket actual) {
 		if ( expected == null && actual != null || expected != null && actual == null ) {
 			Assert.fail();
 		} else if ( expected != null && actual != null ) {
-			Assert.assertEquals(expected.size(), actual.size());
-			VerifiedYieldGrainBasket expectedVygb = expected.get(0);
-			Assert.assertNotNull(expectedVygb);
 			
-			Assert.assertEquals(expectedVygb.getVerifiedYieldGrainBasketGuid(), actual.get(0).getVerifiedYieldGrainBasketGuid());
-			Assert.assertEquals(expectedVygb.getVerifiedYieldContractGuid(), actual.get(0).getVerifiedYieldContractGuid());
-			Assert.assertEquals(expectedVygb.getBasketValue(), actual.get(0).getBasketValue());
-			Assert.assertEquals(expectedVygb.getHarvestedValue(), actual.get(0).getHarvestedValue());
-			Assert.assertEquals(expectedVygb.getComment(), actual.get(0).getComment());
+			Assert.assertEquals(expected.getVerifiedYieldGrainBasketGuid(), actual.getVerifiedYieldGrainBasketGuid());
+			Assert.assertEquals(expected.getVerifiedYieldContractGuid(), actual.getVerifiedYieldContractGuid());
+			Assert.assertEquals(expected.getBasketValue(), actual.getBasketValue());
+			Assert.assertEquals(expected.getHarvestedValue(), actual.getHarvestedValue());
+			Assert.assertEquals(expected.getComment(), actual.getComment());
 		}
 	}
 	

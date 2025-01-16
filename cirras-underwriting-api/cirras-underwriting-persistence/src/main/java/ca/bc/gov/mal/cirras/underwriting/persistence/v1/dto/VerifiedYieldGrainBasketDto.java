@@ -1,8 +1,6 @@
 package ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +23,10 @@ public class VerifiedYieldGrainBasketDto extends BaseDto<VerifiedYieldGrainBaske
 	private Date createDate;
 	private String updateUser;
 	private Date updateDate;
-	
+
 	public VerifiedYieldGrainBasketDto() {
 	}
-	
-	
+
 	public VerifiedYieldGrainBasketDto(VerifiedYieldGrainBasketDto dto) {
 
 		this.verifiedYieldGrainBasketGuid = dto.verifiedYieldGrainBasketGuid;
@@ -37,13 +34,13 @@ public class VerifiedYieldGrainBasketDto extends BaseDto<VerifiedYieldGrainBaske
 		this.basketValue = dto.basketValue;
 		this.harvestedValue = dto.harvestedValue;
 		this.comment = dto.comment;
-		
+
 		this.createUser = dto.createUser;
 		this.createDate = dto.createDate;
 		this.updateUser = dto.updateUser;
 		this.updateDate = dto.updateDate;
+
 	}
-	
 
 	@Override
 	public boolean equalsBK(VerifiedYieldGrainBasketDto other) {
@@ -53,22 +50,25 @@ public class VerifiedYieldGrainBasketDto extends BaseDto<VerifiedYieldGrainBaske
 	@Override
 	public boolean equalsAll(VerifiedYieldGrainBasketDto other) {
 		boolean result = false;
-		
-		if(other!=null) {
+
+		if (other != null) {
 			Integer decimalPrecision = 4;
 			result = true;
 			DtoUtils dtoUtils = new DtoUtils(getLogger());
-			
-			result = result&&dtoUtils.equals("verifiedYieldGrainBasketGuid", verifiedYieldGrainBasketGuid, other.verifiedYieldGrainBasketGuid);
-			result = result&&dtoUtils.equals("verifiedYieldContractGuid", verifiedYieldContractGuid, other.verifiedYieldContractGuid);
-			result = result&&dtoUtils.equals("basketValue", basketValue, other.basketValue, decimalPrecision);
-			result = result&&dtoUtils.equals("harvestedValue", harvestedValue, other.harvestedValue, decimalPrecision);
-			result = result&&dtoUtils.equals("comment", comment, other.comment);
+
+			result = result && dtoUtils.equals("verifiedYieldGrainBasketGuid", verifiedYieldGrainBasketGuid,
+					other.verifiedYieldGrainBasketGuid);
+			result = result && dtoUtils.equals("verifiedYieldContractGuid", verifiedYieldContractGuid,
+					other.verifiedYieldContractGuid);
+			result = result && dtoUtils.equals("basketValue", basketValue, other.basketValue, decimalPrecision);
+			result = result
+					&& dtoUtils.equals("harvestedValue", harvestedValue, other.harvestedValue, decimalPrecision);
+			result = result && dtoUtils.equals("comment", comment, other.comment);
 		}
-		
+
 		return result;
 	}
-	
+
 	@Override
 	public Logger getLogger() {
 		return logger;

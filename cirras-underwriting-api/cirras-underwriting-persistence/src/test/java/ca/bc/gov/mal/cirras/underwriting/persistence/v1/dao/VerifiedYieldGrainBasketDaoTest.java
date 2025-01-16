@@ -14,9 +14,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerContractYearDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldGrainBasketDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.spring.PersistenceSpringConfig;
@@ -36,8 +36,12 @@ public class VerifiedYieldGrainBasketDaoTest {
 	private Integer cropYear = 2020;
 	private String verifiedYieldContractGuid;
 	private String declaredYieldContractGuid;
-	private String inventoryContractGuid;
-	private Integer fieldId = 90000003;
+
+	private Integer policyId = 90000015;
+	private String policyNumber = "998877-20";
+	private String contractNumber = "998877";
+		
+	private Integer growerId = 90000007;
 
 
 	@Before
@@ -72,17 +76,9 @@ public class VerifiedYieldGrainBasketDaoTest {
 		if (dycDto != null) {
 			dycDao.delete(declaredYieldContractGuid);
 		}
-		
-		// Delete InventoryContractCommodities
-		InventoryContractCommodityDao iccDao = persistenceSpringConfig.inventoryContractCommodityDao();
-		iccDao.deleteForInventoryContract(inventoryContractGuid);
-		
-		// Delete InventoryContract
-		InventoryContractDao icDao = persistenceSpringConfig.inventoryContractDao();
-		InventoryContractDto icDto = icDao.fetch(inventoryContractGuid);
-		if (icDto != null) {
-			icDao.delete(inventoryContractGuid);
-		}
+
+		deletePolicy(policyId);
+		deleteGrower(growerId);
 		
 		GrowerContractYearDao gcyDao = persistenceSpringConfig.growerContractYearDao();
 		GrowerContractYearDto gcyDto = gcyDao.fetch(growerContractYearId);
@@ -90,22 +86,37 @@ public class VerifiedYieldGrainBasketDaoTest {
 			gcyDao.delete(growerContractYearId);
 		}
 		
-		FieldDao fldDao = persistenceSpringConfig.fieldDao();
-		FieldDto fldDto = fldDao.fetch(fieldId);
-		if (fldDto != null) {
-			fldDao.delete(fieldId);
-		}	
-		
 	}
 
+	
+	private void deletePolicy(Integer policyId) throws NotFoundDaoException, DaoException{
+		
+		PolicyDao dao = persistenceSpringConfig.policyDao();
+		PolicyDto dto = dao.fetch(policyId);
+		if (dto != null) {
+			dao.delete(policyId);
+		}
+	}
+	
+	private void deleteGrower(Integer growerId) throws DaoException {
+		GrowerDao dao = persistenceSpringConfig.growerDao();
+		GrowerDto dto = dao.fetch(growerId);
+		if (dto != null) {
+			dao.delete(growerId);
+		}
+	}
 
 	@Test 
 	public void testVerifiedYieldGrainBasket() throws Exception {
 
 		String verifiedYieldGrainBasketGuid;
 		String userId = "UNITTEST";
+		Integer insurancePlanId = 4;
+		String policyStatusCode = "ACTIVE";
+		Integer officeId = 1;
 
-		createField("Test Field Label", userId);
+		createGrower(growerId, 999888, "grower name");
+		createPolicy(policyId, growerId, contractId, cropYear, policyNumber, contractNumber, insurancePlanId, policyStatusCode, officeId);
 		createGrowerContractYear();
 		createDeclaredYieldContract(userId);
 		createVerifiedYieldContract(userId);
@@ -187,6 +198,7 @@ public class VerifiedYieldGrainBasketDaoTest {
 		dtos = dao.selectForVerifiedYieldContract(verifiedYieldContractGuid);
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(1, dtos.size());
+
 				
 		//DELETE for verifiedYieldContractGuid 
 		
@@ -266,19 +278,72 @@ public class VerifiedYieldGrainBasketDaoTest {
 		dao.insert(newDto, userId);
 	}
 
-	private void createField(String fieldLabel, String userId) throws DaoException {
-		// INSERT FIELD
+	private void createGrower(
+			Integer growerId,
+			Integer growerNumber,
+			String growerName
+		) throws DaoException {
+			String userId = "JUNIT_TEST";
+
+			//Date and Time without millisecond
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+			Date transDate = cal.getTime();
+
+			GrowerDao growerDao = persistenceSpringConfig.growerDao();
+			GrowerDto growerDto = new GrowerDto();
+			
+			//INSERT
+			growerDto.setGrowerId(growerId);
+			growerDto.setGrowerNumber(growerNumber);
+			growerDto.setGrowerName(growerName);
+			growerDto.setGrowerAddressLine1("address line 1");
+			growerDto.setGrowerAddressLine2("address line 2");
+			growerDto.setGrowerPostalCode("V8P 4N8");
+			growerDto.setGrowerCity("Victoria");
+			growerDto.setCityId(1);
+			growerDto.setGrowerProvince("BC");
+			growerDto.setDataSyncTransDate(transDate);
+
+			growerDao.insert(growerDto, userId);
+		}
+
 		
-		Integer activeFromCropYear = 1980;
+		private void createPolicy(
+				Integer policyId,
+				Integer growerId,
+				Integer contractId,
+				Integer cropYear,
+				String policyNumber,
+				String contractNumber,
+				Integer insurancePlanId,
+				String policyStatus,
+				Integer officeId) throws DaoException {
+			String userId = "JUNIT_TEST";
 
-		FieldDao fieldDao = persistenceSpringConfig.fieldDao();
-		FieldDto newFieldDto = new FieldDto();
-		newFieldDto.setFieldId(fieldId);
-		newFieldDto.setFieldLabel(fieldLabel);
-		newFieldDto.setActiveFromCropYear(activeFromCropYear);
-		newFieldDto.setActiveToCropYear(null);
+			//Date and Time without millisecond
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+			Date transDate = cal.getTime();		
 
-		fieldDao.insertDataSync(newFieldDto, userId);
-	}
-	
+			// Policy
+			PolicyDao policyDao = persistenceSpringConfig.policyDao();
+			
+			PolicyDto policyDto = new PolicyDto();
+			
+			policyDto.setPolicyId(policyId);
+			policyDto.setGrowerId(growerId);
+			policyDto.setInsurancePlanId(insurancePlanId);
+			policyDto.setPolicyStatusCode(policyStatus);
+			policyDto.setOfficeId(officeId);
+			policyDto.setPolicyNumber(policyNumber);
+			policyDto.setContractNumber(contractNumber);
+			policyDto.setContractId(contractId);
+			policyDto.setCropYear(cropYear);
+			policyDto.setDataSyncTransDate(transDate);
+			
+			//INSERT
+			policyDao.insert(policyDto, userId);
+		}
+		
 }
