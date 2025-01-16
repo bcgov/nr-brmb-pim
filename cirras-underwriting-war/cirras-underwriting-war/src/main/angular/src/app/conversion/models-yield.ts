@@ -191,7 +191,7 @@ export interface VerifiedYieldContract {
     verifiedYieldContractCommodities?: Array<VerifiedYieldContractCommodity>;
     verifiedYieldAmendments?: Array<VerifiedYieldAmendment>;
     verifiedYieldSummaries?: Array<VerifiedYieldSummary>;
-    verifiedYieldGrainBaskets?: Array<VerifiedYieldGrainBasket>;
+    verifiedYieldGrainBasket?: VerifiedYieldGrainBasket;
     productWarningMessages?: Array<MessageRsrc>;
     etag?: string;
     type: string;

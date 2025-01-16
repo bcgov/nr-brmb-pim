@@ -127,12 +127,12 @@
 
                 <div style="margin-top: 32px; margin-bottom: 40px;">
                     <!-- basket coverage -->
-                    <verified-yield-grain-basket-list
-                        *ngIf="growerContract && verifiedYieldContract && verifiedYieldContract.verifiedYieldGrainBaskets"
-                        [grainBaskets]="verifiedYieldContract.verifiedYieldGrainBaskets"
-                        [grainBasketsFormArray]="getViewModel().formGroup.controls.verifiedYieldGrainBaskets"
+                    <verified-yield-grain-basket
+                        *ngIf="growerContract && verifiedYieldContract && verifiedYieldContract.verifiedYieldGrainBasket"
+                        [grainBasket]="verifiedYieldContract.verifiedYieldGrainBasket"
+                        [grainBasketsFormArray]="getViewModel().formGroup.controls.verifiedYieldGrainBasket"
                         [isUnsaved]="isUnsaved"
-                        ></verified-yield-grain-basket-list>
+                        ></verified-yield-grain-basket>
                 </div>
             </div>
         </form>

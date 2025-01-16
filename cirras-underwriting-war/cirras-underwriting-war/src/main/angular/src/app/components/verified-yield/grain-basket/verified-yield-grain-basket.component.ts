@@ -16,6 +16,7 @@ import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verifi
 export class VerifiedYieldGrainBasketComponent {
   @Input() grainBasket: VerifiedYieldGrainBasket;
   @Input() grainBasketsFormArray: UntypedFormArray;
+  @Input() isUnsaved: boolean;  
 
   grainBasketFormGroup: UntypedFormGroup;
     
@@ -41,7 +42,7 @@ export class VerifiedYieldGrainBasketComponent {
       this.grainBasketsFormArray.push(this.grainBasketFormGroup);
     }
 
-    updateRationale(){
+    updateComment(){
       let comment = this.grainBasketFormGroup.value.comment;
       this.grainBasket.comment = comment || null;
   
