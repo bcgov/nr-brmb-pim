@@ -93,18 +93,18 @@
             </div>
 
            <div style="margin-top: 16px;">
-            <!-- commodity totals -->
+            <!-- GRAIN commodity totals -->
             <verified-yield-commodity-list
-                *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodities"
+                *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodities && isGrainPolicy()"
                 [commodities]="verifiedYieldContract.verifiedYieldContractCommodities"
                 [commoditiesFormArray]="getViewModel().formGroup.controls.verifiedYieldContractCommodities"
                 [isUnsaved]="isUnsaved"></verified-yield-commodity-list>
             </div>
 
             <div style="margin-top: 32px;">
-                <!-- amendments -->
+                <!-- GRAIN amendments -->
                 <verified-yield-amendment-list
-                    *ngIf="verifiedYieldContract && cropCommodityList"
+                    *ngIf="verifiedYieldContract && cropCommodityList && isGrainPolicy() "
                     [verifiedYieldContractGuid]="verifiedYieldContractGuid"
                     [amendments]="verifiedYieldContract.verifiedYieldAmendments"
                     [amendmentsFormArray]="getViewModel().formGroup.controls.verifiedYieldAmendments"
@@ -115,9 +115,9 @@
             </div>
 
             <div style="margin-top: 32px;">
-                <!-- yield summary -->
+                <!-- GRAIN yield summary -->
                 <verified-yield-summary-list
-                    *ngIf="growerContract && verifiedYieldContract && verifiedYieldContract.verifiedYieldSummaries"
+                    *ngIf="growerContract && verifiedYieldContract && verifiedYieldContract.verifiedYieldSummaries && isGrainPolicy()"
                     [summaries]="verifiedYieldContract.verifiedYieldSummaries"
                     [summariesFormArray]="getViewModel().formGroup.controls.verifiedYieldSummaries"
                     [isUnsaved]="isUnsaved"
