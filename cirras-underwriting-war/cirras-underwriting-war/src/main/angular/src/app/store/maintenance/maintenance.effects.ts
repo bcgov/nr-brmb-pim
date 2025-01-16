@@ -20,8 +20,12 @@ import { ADD_UW_YEAR, AddUwYearAction, LOAD_VARIETY_INSURABILITY, LOAD_GRADE_MOD
     loadGradeModifierTypesSuccess, 
     loadGradeModifiersError, 
     loadGradeModifiersSuccess, 
-    loadSeedingDeadlinesError, loadSeedingDeadlinesSuccess, loadUwYears, loadUwYearsError, loadUwYearsSuccess, saveGradeModifierTypesSuccess, saveGradeModifiersSuccess, saveSeedingDeadlinesSuccess, SAVE_VARIETY_INSURABILITY, SaveVarietyInsurabilityAction, saveVarietyInsurabilitySuccess, LOAD_YIELD_CONVERSION, LoadYieldConversionAction, LoadYieldConversionError, LoadYieldConversionSuccess, SAVE_YIELD_CONVERSION, SaveYieldConversionAction, SaveYieldConversionSuccess } from "./maintenance.actions";
-import { convertToCropVarietyInsurabilityList, convertToGradeModifierList, convertToGradeModifierTypesList, convertToSeedingDeadlinesList, convertToUnderwritingYear, convertToUnderwritingYearList, convertToYieldConversionList } from "src/app/conversion/conversion-from-rest-maintenance";
+    loadSeedingDeadlinesError, loadSeedingDeadlinesSuccess, loadUwYears, loadUwYearsError, loadUwYearsSuccess, saveGradeModifierTypesSuccess, saveGradeModifiersSuccess, saveSeedingDeadlinesSuccess, SAVE_VARIETY_INSURABILITY, SaveVarietyInsurabilityAction, saveVarietyInsurabilitySuccess, LOAD_YIELD_CONVERSION, LoadYieldConversionAction, LoadYieldConversionError, LoadYieldConversionSuccess, SAVE_YIELD_CONVERSION, SaveYieldConversionAction, SaveYieldConversionSuccess, 
+    LOAD_USER_SETTINGS,
+    LoadUserSettingsAction,
+    LoadUserSettingsSuccess,
+    LoadUserSettingsError} from "./maintenance.actions";
+import { convertToCropVarietyInsurabilityList, convertToGradeModifierList, convertToGradeModifierTypesList, convertToSeedingDeadlinesList, convertToUnderwritingYear, convertToUnderwritingYearList, convertToUserSettings, convertToYieldConversionList } from "src/app/conversion/conversion-from-rest-maintenance";
 import { CropVarietyInsurabilityList, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, YieldMeasUnitConversionList } from "src/app/conversion/models-maintenance";
 import { convertToCropVarietyInsurabilityListRsrc, convertToGradeModifierListRsrc, convertToGradeModifierTypeListRsrc, convertToSeedingDeadlineListRsrc, convertToUnderwritingYearRsrc, convertToYieldConversionListRsrc } from "src/app/conversion/conversion-to-rest-maintenance";
 import { displaySaveSuccessSnackbar } from "src/app/utils/user-feedback-utils";
@@ -506,5 +510,36 @@ saveYieldConversion: Observable<Action> = createEffect (() => this.actions.pipe(
       }                  
   )
 ));
+
+
+getUserSettings: Observable<Action> = createEffect (() => this.actions.pipe(
+  ofType(LOAD_USER_SETTINGS),
+  withLatestFrom(this.store),
+  debounceTime(500),
+  switchMap(
+    ([action,store]) =>{
+      let typedAction = <LoadUserSettingsAction>action;
+      
+      let authToken = this.tokenService.getOauthToken();
+      let requestId = `${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+  
+      return this.CirrasUnderwritingAPIService.searchForUserSetting(
+        requestId,
+        REST_VERSION,
+        "no-cache",  
+        "no-cache",  
+        `Bearer ${authToken}`
+      ).pipe(
+        map((response: any) => {
+            return LoadUserSettingsSuccess(convertToUserSettings(response ) ); 
+        }),
+        
+        catchError(
+          error => of( LoadUserSettingsError(convertToErrorState(error, "Load User Settings ")))
+          )
+      );
+    }
+  )
+))
 
 }

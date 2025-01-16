@@ -20,7 +20,8 @@ export enum ResourcesRoutes {
     UNAUTHORIZED = "unauthorized",
     ERROR_PAGE = "error",
     SIGN_UP = "sign-up",
-    SIGN_OUT = "sign-out-page"
+    SIGN_OUT = "sign-out-page",
+    USER_SETTINGS = "user-settings"
 }
 
 export const CODE_TABLE_CACHE = {};
