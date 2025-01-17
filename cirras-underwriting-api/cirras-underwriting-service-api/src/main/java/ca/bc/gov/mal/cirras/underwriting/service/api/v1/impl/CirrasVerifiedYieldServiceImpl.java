@@ -182,12 +182,19 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			}
 
 			List<ProductDto> productDtos = loadProducts(dycDto.getContractId(), dycDto.getCropYear());
-			loadDopYieldContractCommodities(dycDto);
-			loadFields(dycDto);
+			
+			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(policyDto.getInsurancePlanId()) ) {
+				// TODO: modify for FORAGE verified Yield
+				loadDopYieldContractCommodities(dycDto);
+				loadFields(dycDto);
+			}
 			
 			result = verifiedYieldContractFactory.getDefaultVerifiedYieldContract(policyDto, dycDto, productDtos, factoryContext, authentication);
 
-			calculateVerifiedYieldContractCommodities(result);
+			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(policyDto.getInsurancePlanId()) ) {
+				// TODO: modify for FORAGE verified Yield
+				calculateVerifiedYieldContractCommodities(result);
+			}			
 			
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);
