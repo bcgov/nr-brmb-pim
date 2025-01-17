@@ -1,5 +1,3 @@
-\qecho Create Product table
-
 CREATE TABLE cuws.product(
     product_id                 numeric(9, 0)     NOT NULL,
     policy_id                  numeric(9, 0)     NOT NULL,

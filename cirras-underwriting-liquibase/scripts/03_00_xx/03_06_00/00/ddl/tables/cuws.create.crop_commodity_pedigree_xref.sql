@@ -1,5 +1,3 @@
-\qecho Create Crop Commodity Pedigree Xref table
-
 CREATE TABLE cuws.crop_commodity_pedigree_xref(
     crop_commodity_id             numeric(9, 0)    NOT NULL,
     crop_commodity_id_pedigree    numeric(9, 0)    NOT NULL,

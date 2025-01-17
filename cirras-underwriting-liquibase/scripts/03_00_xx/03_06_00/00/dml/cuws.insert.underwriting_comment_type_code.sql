@@ -1,5 +1,3 @@
-\qecho Insert UW Comment Type Code Record;
-
 INSERT INTO cuws.underwriting_comment_type_code(
 	underwriting_comment_type_code, 
 	description, 
