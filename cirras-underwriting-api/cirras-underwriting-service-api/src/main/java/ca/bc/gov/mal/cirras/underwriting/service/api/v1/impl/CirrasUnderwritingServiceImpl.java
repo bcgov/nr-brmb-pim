@@ -20,9 +20,12 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.UserSettingDao;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.TooManyRecordsException;
 import ca.bc.gov.nrs.wfone.common.persistence.dto.PagedDtos;
+import ca.bc.gov.nrs.wfone.common.service.api.ConflictException;
+import ca.bc.gov.nrs.wfone.common.service.api.ForbiddenException;
 import ca.bc.gov.nrs.wfone.common.service.api.MaxResultsExceededException;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
+import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasUnderwritingService;
@@ -305,6 +308,67 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 		
 		logger.debug(">searchUserSetting");
 		return result;
+	}
+
+	@Override
+	public UserSetting getUserSetting(
+			String userSettingGuid, 
+			FactoryContext factoryContext,
+			WebAdeAuthentication authentication) throws ServiceException, NotFoundException {
+
+		logger.debug("<getUserSetting");
+		
+		UserSetting result = null;
+
+		try {
+			
+			UserSettingDto dto = userSettingDao.fetch(userSettingGuid);
+			
+			if (dto == null) {
+				throw new NotFoundException("Did not find the user setting: " + userSettingGuid);
+			}
+
+			result = userSettingFactory.getUserSetting(dto, factoryContext, authentication);
+
+		} catch (DaoException e) {
+			throw new ServiceException("DAO threw an exception", e);
+		}
+		
+		logger.debug(">getUserSetting");
+
+		return result;
+	}
+
+	@Override
+	public UserSetting createUserSetting(
+			UserSetting userSetting, 
+			FactoryContext factoryContext,
+			WebAdeAuthentication authentication
+			) throws ServiceException, NotFoundException, ValidationFailureException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserSetting updateUserSetting(
+			String userSettingGuid, 
+			String optimisticLock, 
+			UserSetting userSetting,
+			FactoryContext factoryContext, 
+			WebAdeAuthentication authentication
+			) throws ServiceException, NotFoundException, ForbiddenException, ConflictException, ValidationFailureException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteUserSetting(
+			String userSettingGuid, 
+			String optimisticLock,
+			WebAdeAuthentication authentication)
+			throws ServiceException, NotFoundException, ForbiddenException, ConflictException {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

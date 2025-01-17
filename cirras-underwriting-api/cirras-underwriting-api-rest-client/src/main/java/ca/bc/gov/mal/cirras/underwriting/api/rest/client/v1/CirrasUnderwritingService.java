@@ -287,7 +287,15 @@ public interface CirrasUnderwritingService {
 	// User Setting
 	//////////////////////////////////////////////////////
 	UserSettingRsrc searchUserSetting(EndpointsRsrc parent) throws CirrasUnderwritingServiceException;
+
+	UserSettingRsrc getUserSetting(UserSettingRsrc resource) throws CirrasUnderwritingServiceException;
 	
+	UserSettingRsrc createUserSetting(EndpointsRsrc parent, UserSettingRsrc resource) throws CirrasUnderwritingServiceException, ValidationException;
+	
+	UserSettingRsrc updateUserSetting(UserSettingRsrc resource) throws CirrasUnderwritingServiceException, ValidationException;
+
+	void deleteUserSetting(UserSettingRsrc resource) throws CirrasUnderwritingServiceException;
+
 	
 	//////////////////////////////////////////////////////
 	//DATA SYNC METHODS
