@@ -4,6 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualFieldList;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.UserSetting;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContractList;
 import ca.bc.gov.nrs.wfone.common.service.api.MaxResultsExceededException;
@@ -53,5 +54,11 @@ public interface CirrasUnderwritingService {
 	) 
 	throws ServiceException, MaxResultsExceededException;
 
+	@Transactional(readOnly = true, rollbackFor = Exception.class)
+	UserSetting searchUserSetting(
+		FactoryContext factoryContext, 
+		WebAdeAuthentication authentication
+	)
+	throws ServiceException, NotFoundException;
 
 }

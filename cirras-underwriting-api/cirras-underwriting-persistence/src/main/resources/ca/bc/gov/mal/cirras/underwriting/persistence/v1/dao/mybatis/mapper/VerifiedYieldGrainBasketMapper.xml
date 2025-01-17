@@ -16,7 +16,6 @@
 		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-		
 	</resultMap>
 	
 	

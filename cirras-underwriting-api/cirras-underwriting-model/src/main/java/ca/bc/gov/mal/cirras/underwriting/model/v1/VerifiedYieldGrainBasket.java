@@ -14,6 +14,7 @@ public class VerifiedYieldGrainBasket implements Serializable {
 	private Double harvestedValue;
 	private String comment;
 	
+	
 	public String getVerifiedYieldGrainBasketGuid() {
 		return verifiedYieldGrainBasketGuid;
 	}
@@ -53,6 +54,4 @@ public class VerifiedYieldGrainBasket implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
-	
 }

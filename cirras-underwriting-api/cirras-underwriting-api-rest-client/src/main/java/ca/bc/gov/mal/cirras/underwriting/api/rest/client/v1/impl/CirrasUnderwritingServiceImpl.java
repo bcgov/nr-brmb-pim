@@ -53,6 +53,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SyncCommodityTypeV
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SyncCommodityVarietyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UnderwritingYearListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UnderwritingYearRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UserSettingRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.client.v1.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.client.v1.CirrasUnderwritingServiceException;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.client.v1.ValidationException;
@@ -1287,6 +1288,24 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 		}
 	}	
 	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	// User Setting
+	/////////////////////////////////////////////////////////////////////////////////////////////////////	
+	@Override
+	public UserSettingRsrc searchUserSetting(EndpointsRsrc parent) throws CirrasUnderwritingServiceException {
+		
+		GenericRestDAO<UserSettingRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(UserSettingRsrc.class);
+		
+		try {
+		
+			Response<UserSettingRsrc> response = dao.Process(ResourceTypes.SEARCH_USER_SETTING, this.getTransformer(), parent, getWebClient());
+			
+			return response.getResource();
+
+		} catch (RestDAOException e) {
+			throw new CirrasUnderwritingServiceException(e);
+		}
+	}
 	
 	//////////////////////////////////////////////////////
 	//DATA SYNC METHODS

@@ -60,7 +60,6 @@ export class UwContractsListComponent extends CollectionComponent implements OnC
     this.config = this.getPagingConfig();
     this.selectedReportType = REPORT_CHOICES.INVENTORY;
     this.selectedReportSortBy = SORT_BY_CHOICES.POLICY_NUMBER;
-    this.doSearch();
 
     // get user's preferences for search 
     this.store.dispatch(LoadUserSettings())
@@ -116,7 +115,8 @@ export class UwContractsListComponent extends CollectionComponent implements OnC
       this.selectedInsurancePlan = (this.userSettings.policySearchInsurancePlanId ? this.userSettings.policySearchInsurancePlanId.toString() : "")
       this.selectedOffice = ( this.userSettings.policySearchOfficeId ? this.userSettings.policySearchOfficeId.toString() : "")
       
-      this.cdr.detectChanges()
+      this.doSearch() // to search for the prefered crop year, plan and office
+
     }
 
   }
