@@ -1,5 +1,6 @@
 package ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -8,15 +9,24 @@ import org.slf4j.LoggerFactory;
 
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualFieldList;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.Field;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.LegalLand;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UserSetting;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContractList;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UserSettingDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.FieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.PolicyDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.UserSettingDao;
+import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.TooManyRecordsException;
 import ca.bc.gov.nrs.wfone.common.persistence.dto.PagedDtos;
@@ -345,9 +355,27 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 			FactoryContext factoryContext,
 			WebAdeAuthentication authentication
 			) throws ServiceException, NotFoundException, ValidationFailureException {
-		// TODO Auto-generated method stub
-		return null;
+
+		logger.debug("<createUserSetting");
+
+		UserSetting result = null;
+
+		try {
+			
+			saveUserSetting(userSetting, authentication);
+			
+			result = getUserSetting(userSetting.getUserSettingGuid(), factoryContext, authentication);
+
+		} catch (DaoException e) {
+			e.printStackTrace();
+			throw new ServiceException("DAO threw an exception: " + e.getMessage(), e);
+		}
+
+		logger.debug(">createUserSetting");
+
+		return result;
 	}
+	
 
 	@Override
 	public UserSetting updateUserSetting(
@@ -357,9 +385,82 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 			FactoryContext factoryContext, 
 			WebAdeAuthentication authentication
 			) throws ServiceException, NotFoundException, ForbiddenException, ConflictException, ValidationFailureException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		logger.debug("<updateUserSetting");
+
+		UserSetting result = null;
+
+		try {
+			List<Message> errors = new ArrayList<Message>();
+			// errors.addAll(modelValidator.validateInsuranceClaim(insuranceClaim)); // TODO
+
+			if (!errors.isEmpty()) {
+				throw new ValidationFailureException(errors);
+			}
+			
+			saveUserSetting(userSetting, authentication);
+
+			result = getUserSetting(userSettingGuid, factoryContext, authentication);
+
+		} catch (DaoException e) {
+			throw new ServiceException("DAO threw an exception", e);
+		}
+
+		logger.debug(">updateUserSetting");
+		
+		return result;
+		
 	}
+	
+	private void saveUserSetting(
+			UserSetting userSetting, 
+			WebAdeAuthentication authentication) throws DaoException {
+
+		logger.debug("<updateUserSetting");
+		
+		String userId = getUserId(authentication);
+		
+		UserSettingDto dto = null;
+		
+		//Always update family and given name from authentication
+		userSetting.setFamilyName(authentication.getFamilyName());
+		userSetting.setGivenName(authentication.getGivenName());
+
+		if (userSetting.getUserSettingGuid() != null) {
+			dto = userSettingDao.fetch(userSetting.getUserSettingGuid());
+		}
+
+		if (dto == null) {
+			// Insert if it doesn't exist
+			insertUserSetting(userSetting, userId);
+		} else {
+			userSettingFactory.updateDto(dto, userSetting);
+
+			userSettingDao.update(dto, userId);
+		}
+
+		logger.debug(">updateUserSetting");
+	}
+
+	private void insertUserSetting(UserSetting userSetting, String userId) throws DaoException {
+
+		logger.debug("<insertUserSetting");
+
+		UserSettingDto dto = new UserSettingDto();
+
+		userSettingFactory.updateDto(dto, userSetting);
+
+		userSetting.setUserSettingGuid(null);
+
+		userSettingDao.insert(dto, userId);
+		
+		userSetting.setUserSettingGuid(dto.getUserSettingGuid());
+
+		logger.debug(">insertUserSetting");
+
+	}
+
+
 
 	@Override
 	public void deleteUserSetting(
@@ -367,8 +468,34 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 			String optimisticLock,
 			WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, ForbiddenException, ConflictException {
-		// TODO Auto-generated method stub
+		
+			logger.debug("<deleteUserSetting");
+
+			try {
+				
+				UserSettingDto dto = userSettingDao.fetch(userSettingGuid);
+
+				if (dto == null) {
+					throw new NotFoundException("Did not find the user setting: " + userSettingGuid);
+				}
+
+				userSettingDao.delete(userSettingGuid);
+				
+			} catch (DaoException e) {
+				throw new ServiceException("DAO threw an exception", e);
+			}
+			logger.debug(">deleteUserSetting");
 		
 	}
 	
+	private String getUserId(WebAdeAuthentication authentication) {
+		String userId = "DEFAULT_USERID";
+
+		if (authentication != null) {
+			userId = authentication.getUserId();
+			authentication.getClientId();
+		}
+
+		return userId;
+	}
 }
