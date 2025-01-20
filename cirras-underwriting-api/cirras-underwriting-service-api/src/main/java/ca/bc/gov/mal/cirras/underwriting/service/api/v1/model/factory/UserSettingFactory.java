@@ -19,4 +19,9 @@ public interface UserSettingFactory {
 			FactoryContext context, 
 			WebAdeAuthentication authentication
 		) throws FactoryException;
+
+	void updateDto(
+			UserSettingDto dto, 
+			UserSetting model
+		) throws FactoryException;
 }

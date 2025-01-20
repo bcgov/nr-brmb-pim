@@ -9,6 +9,7 @@ import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFa
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UserSettingEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UserSettingListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UserSettingRsrc;
@@ -64,10 +65,26 @@ public class UserSettingRsrcFactory extends BaseResourceFactory implements UserS
 		resource.setETag(eTag);
 
 		setSelfLink(dto.getUserSettingGuid(), resource, baseUri);
-		setLinks(resource, baseUri, authentication);
-
+		setLinks(dto.getUserSettingGuid(), resource, baseUri, authentication);
+		
 		return resource;
 	}
+	
+	@Override
+	public void updateDto(UserSettingDto dto, UserSetting model) throws FactoryException {
+
+		dto.setUserSettingGuid(model.getUserSettingGuid());
+		dto.setLoginUserGuid(model.getLoginUserGuid());
+		dto.setLoginUserId(model.getLoginUserId());
+		dto.setLoginUserType(model.getLoginUserType());
+		dto.setGivenName(model.getGivenName());
+		dto.setFamilyName(model.getFamilyName());
+		dto.setPolicySearchCropYear(model.getPolicySearchCropYear());
+		dto.setPolicySearchInsurancePlanId(model.getPolicySearchInsurancePlanId());
+		dto.setPolicySearchOfficeId(model.getPolicySearchOfficeId());
+		
+	}
+
 	
 	private void populateResource(UserSettingRsrc resource, UserSettingDto dto) {
 		resource.setFamilyName(dto.getFamilyName());
@@ -85,33 +102,36 @@ public class UserSettingRsrcFactory extends BaseResourceFactory implements UserS
 	
 	static void setSelfLink(String userSettingGuid, UserSettingRsrc resource, URI baseUri) {
 		if (userSettingGuid != null) {
-			// TODO
-//			String selfUri = getUserSettingSelfUri(userSettingGuid, baseUri);
-//			resource.getLinks().add(new RelLink(ResourceTypes.SELF, selfUri, "GET"));
+			String selfUri = getUserSettingSelfUri(userSettingGuid, baseUri);
+			resource.getLinks().add(new RelLink(ResourceTypes.SELF, selfUri, "GET"));
 		}
 	}
 
 	public static String getUserSettingSelfUri(String userSettingGuid, URI baseUri) {
-/*
- * TODO
+
 		String result = UriBuilder
 				.fromUri(baseUri)
 				.path(UserSettingEndpoint.class)
 				.build(userSettingGuid).toString();
 		return result;
-*/
-		return null;
 	}
 	
 	private static void setLinks(
-		UserSettingRsrc resource, 
-		URI baseUri, 
-		WebAdeAuthentication authentication) {
+			String userSettingGuid,
+			UserSettingRsrc resource, 
+			URI baseUri, 
+			WebAdeAuthentication authentication) {
+			
+		String result = getUserSettingSelfUri(userSettingGuid, baseUri);
+
+		if (authentication.hasAuthority(Scopes.UPDATE_USER_SETTING)) {
+			resource.getLinks().add(new RelLink(ResourceTypes.UPDATE_USER_SETTING, result, "PUT"));
+		}
 		
-		// TODO
-
+		if (authentication.hasAuthority(Scopes.DELETE_USER_SETTING)) {
+			resource.getLinks().add(new RelLink(ResourceTypes.DELETE_USER_SETTING, result, "DELETE"));
+		}
 	}
-
 	
 	public static String getUserSettingListSelfUri(URI baseUri) {
 

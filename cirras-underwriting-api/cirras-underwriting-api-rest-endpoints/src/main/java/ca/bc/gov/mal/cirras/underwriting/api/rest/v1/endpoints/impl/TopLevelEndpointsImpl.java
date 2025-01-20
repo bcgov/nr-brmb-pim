@@ -237,6 +237,11 @@ public class TopLevelEndpointsImpl extends BaseEndpointsImpl implements TopLevel
 				result.getLinks().add(new RelLink(ResourceTypes.SEARCH_USER_SETTING, selfURI, HttpMethod.GET));
 			}
 			
+			if (hasAuthority(Scopes.CREATE_USER_SETTING)) {
+				selfURI = UserSettingRsrcFactory.getUserSettingListSelfUri(baseUri);
+				result.getLinks().add(new RelLink(ResourceTypes.CREATE_USER_SETTING, selfURI, HttpMethod.POST));
+			}
+			
 			//**********************************************************
 			//Data Sync
 			//**********************************************************
