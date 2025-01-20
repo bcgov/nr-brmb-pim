@@ -79,19 +79,16 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			resource.setFields(fields);
 		}
 		
-		if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(policyDto.getInsurancePlanId()) ) {
-			// TODO: modify for Forage
-			// Verified Yield Contract Commodity
-			if (!dycDto.getDeclaredYieldContractCommodities().isEmpty()) {
-				List<VerifiedYieldContractCommodity> vyContractCommodities = new ArrayList<VerifiedYieldContractCommodity>();
-	
-				for (DeclaredYieldContractCommodityDto dyccDto : dycDto.getDeclaredYieldContractCommodities()) {
-					VerifiedYieldContractCommodity vyccModel = createDefaultVerifiedYieldContractCommodity(dyccDto, productDtos);
-					vyContractCommodities.add(vyccModel);
-				}
-	
-				resource.setVerifiedYieldContractCommodities(vyContractCommodities);
+		// Verified Yield Contract Commodity
+		if (!dycDto.getDeclaredYieldContractCommodities().isEmpty()) {
+			List<VerifiedYieldContractCommodity> vyContractCommodities = new ArrayList<VerifiedYieldContractCommodity>();
+
+			for (DeclaredYieldContractCommodityDto dyccDto : dycDto.getDeclaredYieldContractCommodities()) {
+				VerifiedYieldContractCommodity vyccModel = createDefaultVerifiedYieldContractCommodity(dyccDto, productDtos);
+				vyContractCommodities.add(vyccModel);
 			}
+
+			resource.setVerifiedYieldContractCommodities(vyContractCommodities);
 		}
 		
 		String eTag = getEtag(resource);
