@@ -93,37 +93,37 @@
                     </div>
                 </div>
 
-            <div style="margin-top: 16px;">
-                <!-- commodity totals -->
-                <verified-yield-commodity-list
-                    *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodities"
-                    [commodities]="verifiedYieldContract.verifiedYieldContractCommodities"
-                    [commoditiesFormArray]="getViewModel().formGroup.controls.verifiedYieldContractCommodities"
-                    [isUnsaved]="isUnsaved"></verified-yield-commodity-list>
-                </div>
+           <div style="margin-top: 16px;">
+            <!-- GRAIN commodity totals -->
+            <verified-yield-commodity-list
+                *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodities && isGrainPolicy()"
+                [commodities]="verifiedYieldContract.verifiedYieldContractCommodities"
+                [commoditiesFormArray]="getViewModel().formGroup.controls.verifiedYieldContractCommodities"
+                [isUnsaved]="isUnsaved"></verified-yield-commodity-list>
+            </div>
 
-                <div style="margin-top: 32px;">
-                    <!-- amendments -->
-                    <verified-yield-amendment-list
-                        *ngIf="verifiedYieldContract && cropCommodityList"
-                        [verifiedYieldContractGuid]="verifiedYieldContractGuid"
-                        [amendments]="verifiedYieldContract.verifiedYieldAmendments"
-                        [amendmentsFormArray]="getViewModel().formGroup.controls.verifiedYieldAmendments"
-                        [cropCommodityList]="cropCommodityList"
-                        [fields]="verifiedYieldContract.fields"
-                        [isUnsaved]="isUnsaved"
-                        ></verified-yield-amendment-list>
-                </div>
+            <div style="margin-top: 32px;">
+                <!-- GRAIN amendments -->
+                <verified-yield-amendment-list
+                    *ngIf="verifiedYieldContract && cropCommodityList && isGrainPolicy() "
+                    [verifiedYieldContractGuid]="verifiedYieldContractGuid"
+                    [amendments]="verifiedYieldContract.verifiedYieldAmendments"
+                    [amendmentsFormArray]="getViewModel().formGroup.controls.verifiedYieldAmendments"
+                    [cropCommodityList]="cropCommodityList"
+                    [fields]="verifiedYieldContract.fields"
+                    [isUnsaved]="isUnsaved"
+                    ></verified-yield-amendment-list>
+            </div>
 
-                <div style="margin-top: 32px;">
-                    <!-- yield summary -->
-                    <verified-yield-summary-list
-                        *ngIf="growerContract && verifiedYieldContract && verifiedYieldContract.verifiedYieldSummaries"
-                        [summaries]="verifiedYieldContract.verifiedYieldSummaries"
-                        [summariesFormArray]="getViewModel().formGroup.controls.verifiedYieldSummaries"
-                        [isUnsaved]="isUnsaved"
-                        ></verified-yield-summary-list>
-                </div>
+            <div style="margin-top: 32px;">
+                <!-- GRAIN yield summary -->
+                <verified-yield-summary-list
+                    *ngIf="growerContract && verifiedYieldContract && verifiedYieldContract.verifiedYieldSummaries && isGrainPolicy()"
+                    [summaries]="verifiedYieldContract.verifiedYieldSummaries"
+                    [summariesFormArray]="getViewModel().formGroup.controls.verifiedYieldSummaries"
+                    [isUnsaved]="isUnsaved"
+                    ></verified-yield-summary-list>
+            </div>
 
                 <div style="margin-top: 32px; margin-bottom: 40px;">
                     <!-- basket coverage -->

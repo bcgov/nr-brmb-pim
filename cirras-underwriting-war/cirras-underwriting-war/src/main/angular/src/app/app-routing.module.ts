@@ -72,7 +72,7 @@ const routesDesktop: Routes = [
     },
 
     // grain verified yield
-    { path: R.VERIFIED_YIELD_GRAIN, 
+    { path: R.VERIFIED_YIELD, 
       children: [
       { 
         path: ':insurancePlanId/:cropYear/:policyId/:verifiedYieldContractGuid', component: VerifiedYieldContainer, data: {scopes: [ROUTE_SCOPES.VERIFIED_YEILD]},
