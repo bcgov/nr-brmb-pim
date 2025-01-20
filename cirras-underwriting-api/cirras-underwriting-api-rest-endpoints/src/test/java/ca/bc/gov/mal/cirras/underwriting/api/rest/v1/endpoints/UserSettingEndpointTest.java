@@ -15,6 +15,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.client.v1.CirrasUnderwritingSe
 import ca.bc.gov.mal.cirras.underwriting.api.rest.client.v1.CirrasUnderwritingServiceException;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.client.v1.ValidationException;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.ContactEmailRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.EndpointsRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UserSettingRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.test.EndpointsTest;
@@ -65,6 +66,12 @@ public class UserSettingEndpointTest extends EndpointsTest {
 		if (user != null && user.getUserSettingGuid() != null) {
 			service.deleteUserSetting(user);
 		}
+
+		//delete user setting
+		user = serviceUser2.searchUserSetting(topLevelEndpointsUser2);
+		if (user != null && user.getUserSettingGuid() != null) {
+			serviceUser2.deleteUserSetting(user);
+		}
 	}
 	
 	@Test
@@ -85,6 +92,15 @@ public class UserSettingEndpointTest extends EndpointsTest {
 		UserSettingRsrc user = service.searchUserSetting(topLevelEndpoints);
 		
 		Assert.assertNotNull(user);
+		
+		try {
+			//Expect error: Users are only allowed to create their own user settings
+			UserSettingRsrc user2 = serviceUser2.createUserSetting(topLevelEndpointsUser2, user);
+			Assert.fail("Should have failed: Users are only allowed to create their own user settings");
+		
+		} catch (CirrasUnderwritingServiceException e) {
+			// Expected
+		}
 		
 		user.setPolicySearchCropYear(2020);
 		user.setPolicySearchInsurancePlanId(4);
@@ -108,6 +124,13 @@ public class UserSettingEndpointTest extends EndpointsTest {
 		Assert.assertEquals("PolicySearchInsurancePlanId", user.getPolicySearchInsurancePlanId(), createdUser.getPolicySearchInsurancePlanId());
 		Assert.assertEquals("PolicySearchOfficeId", user.getPolicySearchOfficeId(), createdUser.getPolicySearchOfficeId());
 
+		try {
+			//Expect error: Users are only allowed to update their own user settings
+			UserSettingRsrc user2 = serviceUser2.updateUserSetting(createdUser);
+			Assert.fail("Should have failed: Users are only allowed to update their own user settings");
+		} catch (CirrasUnderwritingServiceException e) {
+			// Expected
+		}
 		
 		createdUser.setPolicySearchCropYear(2021);
 		createdUser.setPolicySearchInsurancePlanId(5);
@@ -115,10 +138,10 @@ public class UserSettingEndpointTest extends EndpointsTest {
 		createdUser.setPolicySearchOfficeId(6);
 		createdUser.setPolicySearchOfficeName("Oliver");
 		
-		UserSettingRsrc updatedUser = service.createUserSetting(topLevelEndpoints, createdUser);
+		UserSettingRsrc updatedUser = service.updateUserSetting(createdUser);
 		
 		Assert.assertNotNull(updatedUser);
-
+		
 		Assert.assertEquals("UserSettingGuid", createdUser.getUserSettingGuid(), updatedUser.getUserSettingGuid());
 		Assert.assertEquals("LoginUserGuid", createdUser.getLoginUserGuid(), updatedUser.getLoginUserGuid());
 		Assert.assertEquals("LoginUserId", createdUser.getLoginUserId(), updatedUser.getLoginUserId());
@@ -128,6 +151,15 @@ public class UserSettingEndpointTest extends EndpointsTest {
 		Assert.assertEquals("PolicySearchCropYear", createdUser.getPolicySearchCropYear(), updatedUser.getPolicySearchCropYear());
 		Assert.assertEquals("PolicySearchInsurancePlanId", createdUser.getPolicySearchInsurancePlanId(), updatedUser.getPolicySearchInsurancePlanId());
 		Assert.assertEquals("PolicySearchOfficeId", createdUser.getPolicySearchOfficeId(), updatedUser.getPolicySearchOfficeId());
+
+		try {
+			//Expect error: Users are only allowed to delete their own user settings
+			serviceUser2.deleteUserSetting(updatedUser);
+			Assert.fail("Should have failed: Users are only allowed to delete their own user settings");
+		} catch (CirrasUnderwritingServiceException e) {
+			// Expected
+		}		
+		
 		
 		service.deleteUserSetting(updatedUser);
 		
@@ -135,8 +167,6 @@ public class UserSettingEndpointTest extends EndpointsTest {
 		user = service.searchUserSetting(topLevelEndpoints);
 		Assert.assertNotNull(user);
 		Assert.assertNull("UserSettingGuid", user.getUserSettingGuid());
-		
-		//TODO: Add tests with second user to create, update and delete the user and expect an error 
 
 	}
 
