@@ -1,5 +1,5 @@
-import { CropVarietyInsurabilityListRsrc, GradeModifierListRsrc, GradeModifierRsrc, GradeModifierTypeListRsrc, SeedingDeadlineListRsrc, UnderwritingYearRsrc, YieldMeasUnitConversionListRsrc } from "@cirras/cirras-underwriting-api";
-import { CropVarietyInsurability, CropVarietyInsurabilityList, GradeModifier, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, UnderwritingYear, YieldMeasUnitConversionList } from "./models-maintenance";
+import { CropVarietyInsurabilityListRsrc, GradeModifierListRsrc, GradeModifierRsrc, GradeModifierTypeListRsrc, SeedingDeadlineListRsrc, UnderwritingYearRsrc, UserSettingRsrc, YieldMeasUnitConversionListRsrc } from "@cirras/cirras-underwriting-api";
+import { CropVarietyInsurability, CropVarietyInsurabilityList, GradeModifier, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, UnderwritingYear, UserSetting, YieldMeasUnitConversionList } from "./models-maintenance";
 
 export function convertToUnderwritingYearRsrc(uwYear: UnderwritingYear): UnderwritingYearRsrc {   
   let ret = {
@@ -101,3 +101,26 @@ export function convertToSeedingDeadlineListRsrc(sdList: SeedingDeadlineList): S
     }
     return ret
   }
+
+  export function convertToUserSettingRsrc(userSetting: UserSetting): UserSettingRsrc {
+      let ret = {
+        '@type': "UserSettingRsrc",
+          links: (userSetting.links) ? userSetting.links : null,
+
+          userSettingGuid: userSetting.userSettingGuid ? userSetting.userSettingGuid : null,
+          loginUserGuid: userSetting.loginUserGuid,
+          loginUserId: userSetting.loginUserId,
+          loginUserType: userSetting.loginUserType,
+          givenName: userSetting.givenName,
+          familyName: userSetting.familyName,
+          policySearchCropYear: userSetting.policySearchCropYear,
+          policySearchInsurancePlanId: userSetting.policySearchInsurancePlanId,
+          policySearchInsurancePlanName: userSetting.policySearchInsurancePlanName,
+          policySearchOfficeId: userSetting.policySearchOfficeId,
+          policySearchOfficeName: userSetting.policySearchOfficeName,
+
+          etag: userSetting.etag,
+          type:  "UserSettingRsrc"     
+      };
+      return ret;
+    }

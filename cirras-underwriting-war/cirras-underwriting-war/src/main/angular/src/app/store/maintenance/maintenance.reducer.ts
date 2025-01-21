@@ -11,7 +11,8 @@ import { LOAD_VARIETY_INSURABILITY_SUCCESS, LOAD_GRADE_MODIFIERS_SUCCESS, LOAD_G
     CleaYieldConversionAction,
     CLEAR_YIELD_CONVERSION,
     LOAD_USER_SETTINGS_SUCCESS,
-    LoadUserSettingsSuccessAction} from "./maintenance.actions";
+    LoadUserSettingsSuccessAction,
+    UPDATE_USER_SETTINGS} from "./maintenance.actions";
 
 export function maintenanceReducer(state: MaintenanceState = getDefaultMaintenanceState(), action: Action): MaintenanceState {
 
@@ -61,7 +62,6 @@ export function maintenanceReducer(state: MaintenanceState = getDefaultMaintenan
     }
 
     case LOAD_USER_SETTINGS_SUCCESS:
-      // TODO: Save user preferences
     {
         const typedAction = <LoadUserSettingsSuccessAction>action;
         return {...state, userSetting: typedAction.payload.value};

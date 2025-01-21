@@ -133,7 +133,7 @@ export function convertToUnderwritingYear(uwYear: any, etag?: string): Underwrit
   }
 
 
-  export function convertToUserSettings(userSettings: UserSettingRsrc): UserSetting {
+  export function convertToUserSettings(userSettings: UserSettingRsrc, etag: string): UserSetting {
 
     let ret: UserSetting = {
   
@@ -149,7 +149,7 @@ export function convertToUnderwritingYear(uwYear: any, etag?: string): Underwrit
       policySearchInsurancePlanName: userSettings.policySearchInsurancePlanName,
       policySearchOfficeId: userSettings.policySearchOfficeId,
       policySearchOfficeName: userSettings.policySearchOfficeName,
-      etag: userSettings.etag,
+      etag: etag, // userSettings.etag,
       type: userSettings['@type']
     };  
 
