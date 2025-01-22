@@ -31,9 +31,14 @@
     if (cirrasunderwritingRestUri.endsWith("/")) {
       cirrasunderwritingRestUri = cirrasunderwritingRestUri.substring(0, cirrasunderwritingRestUri.length() - 1); //Strip off trailing slash, if it exists.
     }
+	
+	String grainVerifiedYieldCalculatorUri = EnvironmentVariable.getVariable("CIRRAS_UNDERWRITING_GRAIN_VERIFIED_YIELD_CALCULATOR_URI");	
+	String forageVerifiedYieldCalculatorUri = EnvironmentVariable.getVariable("CIRRAS_UNDERWRITING_FORAGE_VERIFIED_YIELD_CALCULATOR_URI");	
 
     json = json.append("\"rest\":{");
-    json = json.append("\"cirras_underwriting\":\"").append(cirrasunderwritingRestUri).append("\"");
+    json = json.append("\"cirras_underwriting\":\"").append(cirrasunderwritingRestUri).append("\"").append(",");
+	json = json.append("\"grain_verified_yield_calculator_url\":\"").append(grainVerifiedYieldCalculatorUri).append("\"").append(",");
+	json = json.append("\"forage_verified_yield_calculator_url\":\"").append(forageVerifiedYieldCalculatorUri).append("\"");
     json = json.append("},");
 
     String WEBADE_OAUTH2_AUTHORIZE_URL = EnvironmentVariable.getVariable("WEBADE_OAUTH2_AUTHORIZE_URL");
