@@ -1,0 +1,59 @@
+<div class="plcy-inv-cmdty-totals-header"
+    style="grid-template-columns: 140px 140px 25px 500px; padding-left: 10px;">
+
+    <div class="table-header border-top border-left border-right" style="text-align: left; padding-left: 6px; padding-top: 8px; grid-column-start: 1; grid-column-end: 5; background-color: #F5F5FF;">
+        Basket Coverage
+    </div>
+
+    <div class="header border-top border-bottom border-right  border-left">
+        Basket Value
+    </div>
+    <div class=" header border-top border-bottom">
+        Harvested Value
+    </div>
+    <div class="border-right header border-top border-bottom">
+        <!-- warning sign-->
+    </div>
+
+    <div class="header border-top border-bottom border-right">
+        Comments
+    </div>
+
+    <div class="verified-yield-summaries-container"
+        style="grid-template-columns: 140px 140px 25px 500px; margin-left: 0px;">
+
+        <div id="divSummaryContent" [formGroup]="grainBasketFormGroup" style="display: contents;">
+            <div class="readonly border-right border-bottom border-left" style="padding-left: 6px; background-color: inherit;">
+                {{ grainBasketFormGroup.value.basketValue | number: '1.0-2'}}
+            </div>
+            <div class="readonly border-bottom center" style="background-color: inherit;">
+                {{ grainBasketFormGroup.value.harvestedValue | number: '1.0-2' }}
+            </div>
+
+            <div class="inventory-fill number border-right border-bottom" style="background-color: inherit;">
+                <!-- warnng sign -->
+                <mat-icon *ngIf="grainBasketFormGroup.value.harvestedValue && grainBasketFormGroup.value.basketValue && grainBasketFormGroup.value.harvestedValue < grainBasketFormGroup.value.basketValue"
+                [ngStyle]="{'color':'orange', 'font-size':'x-large'}" 
+                matTooltip="Harvested Value < Basket Value"
+                >warning</mat-icon>
+            </div>
+
+            <div class="readonly border-right border-bottom center" style="background-color: inherit;">
+                <mat-form-field appearance="fill"  style="width: 100%;" class="inventory-fill">
+                    <textarea matInput formControlName="comment" 
+                        cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" 
+                        maxlength="200" (blur)="updateComment()" style="overflow-y:scroll;">
+                        {{ grainBasketFormGroup.value.comment}}
+                    </textarea>
+                </mat-form-field>
+                <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;"
+                    matTooltip="Editable field">edit</mat-icon>
+
+            </div>
+        </div>
+
+
+</div>
+
+</div>

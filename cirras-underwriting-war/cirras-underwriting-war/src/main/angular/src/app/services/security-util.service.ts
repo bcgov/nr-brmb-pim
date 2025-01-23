@@ -99,4 +99,8 @@ export class SecurityUtilService {
     canEditYieldConversion() {
         return this.doesUserHaveScopes ([SCOPES_UI.SAVE_YIELD_MEAS_UNIT_CONVERSIONS] ) 
     }
+
+    canEditUserSettings() {
+        return this.doesUserHaveScopes ([SCOPES_UI.CREATE_USER_SETTING, SCOPES_UI.UPDATE_USER_SETTING] ) 
+    }
 }

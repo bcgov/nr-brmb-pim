@@ -494,23 +494,27 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 		for ( AnnualFieldRsrc field : resource.getFields() ) {
 			for ( InventoryField planting : field.getPlantings() ) {
 				if ( planting.getInventorySeededForages() != null && insurancePlanId.equals(InsurancePlans.FORAGE.getInsurancePlanId()) ) {
-					for ( InventorySeededForage isf : planting.getInventorySeededForages() ) {
+					
+					InventorySeededForage invSeededForage = new InventorySeededForage();
+					
+					invSeededForage.setIsIrrigatedInd(false);
+					invSeededForage.setIsQuantityInsurableInd(true);
+					invSeededForage.setCommodityTypeCode("CPSW");
+					invSeededForage.setCropCommodityId(26);
+					invSeededForage.setCropVarietyId(1010602);
+					invSeededForage.setCropVarietyName("AAC ENTICE");
+					invSeededForage.setFieldAcres(10.4);
+					invSeededForage.setSeedingYear(2018);
+					invSeededForage.setSeedingDate(null);
+					invSeededForage.setPlantInsurabilityTypeCode("E1");
+					invSeededForage.setIsAwpEligibleInd(true);
 
-						// Fix Seeded Forage, which sets null defaults for a few mandatory columns.
-						isf.setIsIrrigatedInd(false);
-						isf.setIsQuantityInsurableInd(true);
-						isf.setCommodityTypeCode("CPSW");
-						isf.setCropCommodityId(26);
-						isf.setCropVarietyId(1010602);
-						isf.setCropVarietyName("AAC ENTICE");
-						isf.setFieldAcres(10.4);
-						isf.setSeedingYear(2018);
-						isf.setSeedingDate(null);
-						isf.setPlantInsurabilityTypeCode("E1");
-						isf.setIsAwpEligibleInd(true);
-							
-						addedSeededForage = true;
-					}
+					List<InventorySeededForage> seededForages = new ArrayList<InventorySeededForage>();
+					seededForages.add(invSeededForage);
+
+					planting.setInventorySeededForages(seededForages);
+					
+					addedSeededForage = true;
 				} else if ( planting.getInventorySeededGrains() != null && insurancePlanId.equals(InsurancePlans.GRAIN.getInsurancePlanId()) ) {
 					
 					Calendar cal = Calendar.getInstance();
@@ -702,5 +706,79 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 		cal.add(Calendar.SECOND, seconds);
 		return cal.getTime();
 	}
+	
+	@Test
+	public void testRolloverForageVerifiedYieldContract() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException, DaoException {
+		logger.debug("<testRolloverForageVerifiedYieldContract");
+
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+		
+		//Date and Time without millisecond
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		Date transactionDate = cal.getTime();
+		Date createTransactionDate = addSeconds(transactionDate, -1);
+
+		createGrower(growerId, 999888, "grower name", createTransactionDate);
+		
+		createLegalLand("test legal 9999", null, legalLandId, "999-888-000", 1980, null);
+		createField(fieldId, "LOT 3", 1980, null);
+
+		createGrowerContractYear(growerContractYearId1, contractId, growerId, cropYear1, InsurancePlans.FORAGE.getInsurancePlanId(), createTransactionDate);
+		createPolicy(policyId1, growerId, InsurancePlans.FORAGE.getInsurancePlanId(), policyNumber1, contractNumber, contractId, cropYear1, createTransactionDate);
+		createAnnualFieldDetail(annualFieldDetailId1, legalLandId, fieldId, cropYear1);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId1, 1);
+
+		createInventoryContract(policyNumber1, InsurancePlans.FORAGE.getInsurancePlanId());
+		createDopYieldContract(policyNumber1, InsurancePlans.FORAGE.getInsurancePlanId());
+		
+		Integer pageNumber = new Integer(1);
+		Integer pageRowCount = new Integer(20);
+
+		// Rollover and create VerifiedYieldContract.
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber1,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+		Assert.assertNotNull(referrer.getInventoryContractGuid());
+		Assert.assertNotNull(referrer.getDeclaredYieldContractGuid());
+		Assert.assertNull(referrer.getVerifiedYieldContractGuid());
+		
+		// Check VerifiedYieldContract
+		VerifiedYieldContractRsrc vyContract = service.rolloverVerifiedYieldContract(referrer);
+		Assert.assertNotNull(vyContract);
+
+		Assert.assertEquals(contractId, vyContract.getContractId());
+		Assert.assertEquals(cropYear1, vyContract.getCropYear());
+		Assert.assertEquals(referrer.getDeclaredYieldContractGuid(), vyContract.getDeclaredYieldContractGuid());
+		Assert.assertEquals("TON", vyContract.getDefaultYieldMeasUnitTypeCode());
+		Assert.assertEquals(growerContractYearId1, vyContract.getGrowerContractYearId());
+		Assert.assertEquals(Integer.valueOf(5), vyContract.getInsurancePlanId());
+		Assert.assertNull(vyContract.getVerifiedYieldContractGuid());
+		Assert.assertNull(vyContract.getVerifiedYieldUpdateUser());
+		Assert.assertNull(vyContract.getVerifiedYieldUpdateTimestamp());
+
+		// TODO: Check VerifiedYieldContractCommodities
+		
+		logger.debug(">testRolloverForageVerifiedYieldContract");
+	}
+	
+	
 
 }

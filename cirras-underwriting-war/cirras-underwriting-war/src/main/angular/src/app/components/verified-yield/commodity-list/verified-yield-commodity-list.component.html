@@ -12,10 +12,10 @@
         </span>
     </div>
 
-    <div class="table-header border-top border-left" style="grid-column-start: 1; grid-column-end: 7; padding-top: 8px;">
+    <div class="table-header border-top border-left" style="text-align: left; padding-left: 6px; padding-top: 8px; background-color: #F5F5FF; grid-column-start: 1; grid-column-end: 7;">
         Commodity Totals
     </div>
-    <div class="table-header border-top border-right" style="grid-column-start: 7; grid-column-end: 10; text-align: right; height:40px; padding-top:2px; padding-right: 1px;">
+    <div class="table-header border-top border-right" style="grid-column-start: 7; grid-column-end: 10; text-align: right; height:40px; padding-top:2px; padding-right: 1px; background-color: #F5F5FF;">
         <button 
             mat-raised-button class="secondary" 
             (click)="goToYieldCalculatorLink()">
@@ -55,10 +55,11 @@
         Actions
     </div>
 
-    <div class="grain-unsdd-inv-tot-cmdty-container"
+    <div class="verified-yield-commodities-container"
         style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 125px 60px; margin-left: 0px;">
-        <verified-yield-commodity *ngFor="let commodity of commodities" [commodity]="commodity"
-            [commoditiesFormArray]="commoditiesFormArray"
+        <verified-yield-commodity *ngFor="let commodity of commodities" 
+            [commodity]="commodity"
+            [commoditiesFormArray]="commoditiesFormArray"            
             style="display: contents;"></verified-yield-commodity>
 
     </div>

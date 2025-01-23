@@ -32,6 +32,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiableCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
@@ -44,6 +45,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingCommentDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldAmendmentDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldSummaryDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldGrainBasketDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.VerifiedYieldContractFactory;
@@ -88,7 +90,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 
 			resource.setVerifiedYieldContractCommodities(vyContractCommodities);
 		}
-						
+		
 		String eTag = getEtag(resource);
 		resource.setETag(eTag);
 
@@ -158,8 +160,6 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			resource.setFields(fields);
 		}
 		
-		List<MessageRsrc> productWarnings = new ArrayList<MessageRsrc>();
-		
 		// Verified Yield Contract Commodity
 		if (!dto.getVerifiedYieldContractCommodities().isEmpty()) {
 			List<VerifiedYieldContractCommodity> verifiedContractCommodities = new ArrayList<VerifiedYieldContractCommodity>();
@@ -167,12 +167,6 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			for (VerifiedYieldContractCommodityDto vyccDto : dto.getVerifiedYieldContractCommodities()) {
 				VerifiedYieldContractCommodity vyccModel = createVerifiedYieldContractCommodity(vyccDto);
 				verifiedContractCommodities.add(vyccModel);
-				
-				//Check product guarantee
-				MessageRsrc warning = getProductWarning(vyccDto, productDtos);
-				if(warning != null) {
-					productWarnings.add(warning);
-				}
 			}
 
 			resource.setVerifiedYieldContractCommodities(verifiedContractCommodities);
@@ -190,6 +184,8 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			resource.setVerifiedYieldAmendments(verifiedYieldAmendments);
 		}
 
+		List<MessageRsrc> productWarnings = new ArrayList<MessageRsrc>();
+		
 		// Verified Yield Summary
 		if (!dto.getVerifiedYieldSummaries().isEmpty()) {
 			List<VerifiedYieldSummary> verifiedYieldSummaries = new ArrayList<VerifiedYieldSummary>();
@@ -197,11 +193,19 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			for (VerifiedYieldSummaryDto vysDto : dto.getVerifiedYieldSummaries()) {
 				VerifiedYieldSummary vysModel = createVerifiedYieldSummary(vysDto, authentication);
 				verifiedYieldSummaries.add(vysModel);
+				
+				//Check product guarantee
+				List<MessageRsrc> warnings = getProductWarnings(vysDto, productDtos);
+				if(warnings != null && !warnings.isEmpty()) {
+					productWarnings.addAll(warnings);
+				}
 			}
 
 			resource.setVerifiedYieldSummaries(verifiedYieldSummaries);
 		}
 		
+		getGrainBasketProductWarnings(resource.getVerifiedYieldGrainBasket(), productDtos, productWarnings);
+				
 		resource.setProductWarningMessages(productWarnings);
 		
 		String eTag = getEtag(resource);
@@ -226,59 +230,159 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		resource.setVerifiedYieldUpdateTimestamp(dto.getVerifiedYieldUpdateTimestamp());
 		resource.setVerifiedYieldUpdateUser(dto.getVerifiedYieldUpdateUser());
 		resource.setUpdateProductValuesInd(false);
-		
+		if(dto.getVerifiedYieldGrainBasket() != null) {
+			resource.setVerifiedYieldGrainBasket(createVerifiedYieldGrainBasket(dto.getVerifiedYieldGrainBasket()));
+		}
 	}
 	
 	public static final String PRODUCT_STATUS_FINAL = "FINAL";
 	public static final String PRODUCTION_GUARANTEE_DIFFERENCE_MSG = "Production guarantee for %s is different in the product: %.2f";
-	public static final String PRODUCTION_GUARANTEE_NONE_MSG = "There is no production guarantee for %s";
-	public static final String PRODUCTION_GUARANTEE_NO_PRODUCT_MSG = "There is no product for %s in CIRRAS. The shown Production guarantee is not valid anymore.";
+	public static final String PRODUCTION_GUARANTEE_NONE_MSG = "There is no production guarantee for %s in CIRRAS.";
+	public static final String PRODUCTION_GUARANTEE_NO_PRODUCT_MSG = "There is no product for %s in CIRRAS. The shown production guarantee is not valid anymore.";
+	public static final String PROBABLE_YIELD_DIFFERENCE_MSG = "Probable yield for %s is different in the product: %.2f";
+	public static final String PROBABLE_YIELD_NONE_MSG = "There is no probable yield for %s in CIRRAS.";
+	public static final String PROBABLE_YIELD_NO_PRODUCT_MSG = "There is no product for %s in CIRRAS. The shown probable yield is not valid anymore.";
+	public static final String HUNDRED_PERCENT_IV_DIFFERENCE_MSG = "100%% IV for %s is different in the product: %.2f";
+	public static final String HUNDRED_PERCENT_IV_NONE_MSG = "There is no 100%% IV for %s in CIRRAS.";
+	public static final String HUNDRED_PERCENT_IV_NO_PRODUCT_MSG = "There is no product for %s in CIRRAS but 100%% IV is stored with the verified yield.";
 
-	private MessageRsrc getProductWarning(VerifiedYieldContractCommodityDto vyccDto, List<ProductDto> productDtos) {
+	private List<MessageRsrc> getProductWarnings(VerifiedYieldSummaryDto vysDto, List<ProductDto> productDtos) {
 		
-		MessageRsrc messageRsrc = null;
+		//MessageRsrc messageRsrc = null;
+		List<MessageRsrc> messageRsrcList = new ArrayList<MessageRsrc>();
+
+		String commodity = vysDto.getCropCommodityName();
+		if(vysDto.getIsPedigreeInd()) {
+			commodity = commodity + " Pedigreed";
+		}
 		
 		//Find product
-		ProductDto product = getProductDto(vyccDto.getCropCommodityId(), vyccDto.getIsPedigreeInd(), productDtos);
+		ProductDto product = getProductDto(vysDto.getCropCommodityId(), vysDto.getIsPedigreeInd(), productDtos);
 		
 		if(product != null) {
 			if(product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
-				if (Double.compare(notNull(product.getProductionGuarantee(), (double)-1), notNull(vyccDto.getProductionGuarantee(), (double)-1)) != 0) {
+				//Production Guarantee
+				if (Double.compare(notNull(product.getProductionGuarantee(), (double)-1), notNull(vysDto.getProductionGuarantee(), (double)-1)) != 0) {
 					//Add warning if values are different -> Only if product is in status FINAL
-					String commodity = vyccDto.getCropCommodityName();
-					if(vyccDto.getIsPedigreeInd()) {
-						commodity = commodity + " Pedigreed";
-					}
-					
 					String msg = "";
 					if(product.getProductionGuarantee() == null) {
-						msg = String.format(PRODUCTION_GUARANTEE_NONE_MSG, commodity, product.getProductionGuarantee());
+						msg = String.format(PRODUCTION_GUARANTEE_NONE_MSG, commodity);
 					} else {
 						msg = String.format(PRODUCTION_GUARANTEE_DIFFERENCE_MSG, commodity, product.getProductionGuarantee());
 					}
 					
-					messageRsrc = new MessageRsrc(msg);
+					messageRsrcList.add(new MessageRsrc(msg));
+				}
+				//Probable Yield
+				if (Double.compare(notNull(product.getProbableYield(), (double)-1), notNull(vysDto.getProbableYield(), (double)-1)) != 0) {
+					//Add warning if values are different -> Only if product is in status FINAL
+					String msg = "";
+					if(product.getProbableYield() == null) {
+						msg = String.format(PROBABLE_YIELD_NONE_MSG, commodity);
+					} else {
+						msg = String.format(PROBABLE_YIELD_DIFFERENCE_MSG, commodity, product.getProbableYield());
+					}
+					
+					messageRsrcList.add(new MessageRsrc(msg));
+
+				}
+				//100% IV
+				if (Double.compare(notNull(product.getInsurableValueHundredPercent(), (double)-1), notNull(vysDto.getInsurableValueHundredPercent(), (double)-1)) != 0) {
+					//Add warning if values are different -> Only if product is in status FINAL
+					String msg = "";
+					if(product.getInsurableValueHundredPercent() == null) {
+						msg = String.format(HUNDRED_PERCENT_IV_NONE_MSG, commodity);
+					} else {
+						msg = String.format(HUNDRED_PERCENT_IV_DIFFERENCE_MSG, commodity, product.getInsurableValueHundredPercent());
+					}
+					messageRsrcList.add(new MessageRsrc(msg));
 				}
 			}
 		} else {
-			//No product: Check if the production guarantee in commodity totals is null
-			if(vyccDto.getProductionGuarantee() != null) {
+			//No product: Check if the production guarantee in the summary is null
+			if(vysDto.getProductionGuarantee() != null) {
 				//Add warning if there is no product but a saved production guarantee
-				String commodity = vyccDto.getCropCommodityName();
-				if(vyccDto.getIsPedigreeInd()) {
-					commodity = commodity + " Pedigreed";
-				}
-				
 				String msg = String.format(PRODUCTION_GUARANTEE_NO_PRODUCT_MSG, commodity);
-				messageRsrc = new MessageRsrc(msg);
+				messageRsrcList.add(new MessageRsrc(msg));
+			}
+			//No product: Check if the probable yield in the summary is null
+			if(vysDto.getProbableYield() != null) {
+				//Add warning if there is no product but a saved probable yield
+				String msg = String.format(PROBABLE_YIELD_NO_PRODUCT_MSG, commodity);
+				messageRsrcList.add(new MessageRsrc(msg));
+			}
+			//No product: Check if 100% IV in the summary is null
+			if(vysDto.getProbableYield() != null) {
+				//Add warning if there is no product but a saved 100% IV
+				String msg = String.format(HUNDRED_PERCENT_IV_NO_PRODUCT_MSG, commodity);
+				messageRsrcList.add(new MessageRsrc(msg));
+			}
+		}
+		return messageRsrcList;
+	}
+	
+	public static final String GRAIN_BASKET_DIFFERENCE_MSG = "The grain basket coverage/basket value in CIRRAS is different: %.2f";
+	public static final String GRAIN_BASKET_NONE_MSG = "There is no grain basket coverage/basket value in CIRRAS.";
+	public static final String GRAIN_BASKET_NO_PRODUCT_MSG = "There is no grain basket product or no product in status FINAL in CIRRAS. The shown basket value is not valid anymore.";
+	public static final String GRAIN_BASKET_NO_GB_MSG = "There is no grain basket saved but there is one in CIRRAS.";
+
+	
+	private void getGrainBasketProductWarnings(VerifiedYieldGrainBasket gbDto, List<ProductDto> productDtos, List<MessageRsrc> messageRsrcList) {
+		
+		//Find product
+		ProductDto product = getProductDtoByCoverageCode(CommodityCoverageCode.GRAIN_BASKET, productDtos);
+		
+		//Warnings:
+		/* product exists -> grain basket doesn't exist
+		 * product doesn't exist -> grain basket exists
+		 * product coverage dollar is different from grain basket basket value
+		 * */
+		
+		if(product != null) {
+			if(product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
+				if(gbDto != null) {
+					//Coverage Dollars
+					if (Double.compare(notNull(product.getCoverageDollars(), (double)-1), notNull(gbDto.getBasketValue(), (double)-1)) != 0) {
+						//Add warning if values are different -> Only if product is in status FINAL
+						String msg = "";
+						if(product.getCoverageDollars() == null) {
+							msg = GRAIN_BASKET_NONE_MSG;
+						} else {
+							msg = String.format(GRAIN_BASKET_DIFFERENCE_MSG, product.getCoverageDollars());
+						}
+						
+						messageRsrcList.add(new MessageRsrc(msg));
+					}
+				} else {
+					//No GB in verified yield
+					//This is possible if the verified yield was saved when there was no grain basket in CIRRAS
+					String msg = GRAIN_BASKET_NO_GB_MSG;
+					messageRsrcList.add(new MessageRsrc(msg));
+				}
+			} else if(gbDto != null) {
+				//GB but no valid product
+				//Add warning if there is no product but a saved grain basket
+				String msg = GRAIN_BASKET_NO_PRODUCT_MSG;
+				messageRsrcList.add(new MessageRsrc(msg));
+			}
+		} else {
+			//No product: Check if there is a grain basket
+			if(gbDto != null) {
+				//Add warning if there is no product but a saved grain basket
+				String msg = GRAIN_BASKET_NO_PRODUCT_MSG;
+				messageRsrcList.add(new MessageRsrc(msg));
 			}
 		}
 		
 		
-		return messageRsrc;
 	}
 	
-	private static final Set<String> coverageCodes = new HashSet<String>(Arrays.asList(
+	@Override
+	public Set<String> getForageGrainCoverageCodes(){
+		return coverageCodesQuantityForageGrain;
+	}
+	
+	private static final Set<String> coverageCodesQuantityForageGrain = new HashSet<String>(Arrays.asList(
 											     new String[] {
 											    		 	CommodityCoverageCode.QUANTITY_GRAIN, 
 											    		 	CommodityCoverageCode.QUANTITY_FORAGE, 
@@ -295,7 +399,27 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			List<ProductDto> products = productDtos.stream()
 					.filter(x -> x.getNonPedigreeCropCommodityId().equals(cropCommodityId) 
 							&& x.getIsPedigreeProduct().equals(isPedigree)
-							&& coverageCodes.contains(x.getCommodityCoverageCode()))
+							&& coverageCodesQuantityForageGrain.contains(x.getCommodityCoverageCode()))
+					.collect(Collectors.toList());
+			
+			if (products != null && products.size() > 0) {
+				product = products.get(0);
+			}
+		}
+
+		
+		return product;
+	}
+	
+	
+	private ProductDto getProductDtoByCoverageCode(String coverageCode, List<ProductDto> productDtos) {
+		
+		ProductDto product = null;
+		
+		if(productDtos != null && productDtos.size() > 0) {
+			//There is only one grain basket product for a contract
+			List<ProductDto> products = productDtos.stream()
+					.filter(x -> x.getCommodityCoverageCode().equalsIgnoreCase(coverageCode))
 					.collect(Collectors.toList());
 			
 			if (products != null && products.size() > 0) {
@@ -362,6 +486,8 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		model.setYieldPercentPy(dto.getYieldPercentPy());
 		model.setProductionGuarantee(dto.getProductionGuarantee());
 		model.setProbableYield(dto.getProbableYield());
+		model.setInsurableValueHundredPercent(dto.getInsurableValueHundredPercent());
+		model.setTotalInsuredAcres(dto.getTotalInsuredAcres());
 		
 		// UnderwritingComment
 		if (!dto.getUwComments().isEmpty()) {
@@ -377,6 +503,19 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 
 		return model;
 	}
+		
+	private VerifiedYieldGrainBasket createVerifiedYieldGrainBasket(VerifiedYieldGrainBasketDto dto) {
+		VerifiedYieldGrainBasket model = new VerifiedYieldGrainBasket();
+		
+		model.setVerifiedYieldGrainBasketGuid(dto.getVerifiedYieldGrainBasketGuid());
+		model.setVerifiedYieldContractGuid(dto.getVerifiedYieldContractGuid());
+		model.setBasketValue(dto.getBasketValue());
+		model.setHarvestedValue(dto.getHarvestedValue());
+		model.setComment(dto.getComment());
+
+		return model;
+	}
+	
 	
 	// Creates an AnnualFieldRsrc and populates its verifiableCommodities.
 	private AnnualFieldRsrc createAnnualField(ContractedFieldDetailDto dto, WebAdeAuthentication authentication) {
@@ -528,6 +667,32 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		dto.setVerifiedYieldAmendmentGuid(model.getVerifiedYieldAmendmentGuid());
 		dto.setVerifiedYieldContractGuid(model.getVerifiedYieldContractGuid());
 		dto.setYieldPerAcre(model.getYieldPerAcre());
+	}
+
+	@Override
+	public void updateDto(VerifiedYieldSummaryDto dto, VerifiedYieldSummary model) {
+		dto.setVerifiedYieldSummaryGuid(model.getVerifiedYieldSummaryGuid());
+		dto.setVerifiedYieldContractGuid(model.getVerifiedYieldContractGuid());
+		dto.setCropCommodityId(model.getCropCommodityId());
+		dto.setIsPedigreeInd(model.getIsPedigreeInd());
+		dto.setHarvestedYield(model.getHarvestedYield());
+		dto.setHarvestedYieldPerAcre(model.getHarvestedYieldPerAcre());
+		dto.setAppraisedYield(model.getAppraisedYield());
+		dto.setAssessedYield(model.getAssessedYield());
+		dto.setYieldToCount(model.getYieldToCount());
+		dto.setYieldPercentPy(model.getYieldPercentPy());
+		dto.setProductionGuarantee(model.getProductionGuarantee());
+		dto.setProbableYield(model.getProbableYield());
+		dto.setInsurableValueHundredPercent(model.getInsurableValueHundredPercent());
+	}
+	
+	
+	public void updateDto(VerifiedYieldGrainBasketDto dto, VerifiedYieldGrainBasket model) {
+		dto.setVerifiedYieldGrainBasketGuid(model.getVerifiedYieldGrainBasketGuid());
+		dto.setVerifiedYieldContractGuid(model.getVerifiedYieldContractGuid());
+		dto.setBasketValue(model.getBasketValue());
+		dto.setHarvestedValue(model.getHarvestedValue());
+		dto.setComment(model.getComment());
 	}
 	
 	private Double notNull(Double value, Double defaultValue) {

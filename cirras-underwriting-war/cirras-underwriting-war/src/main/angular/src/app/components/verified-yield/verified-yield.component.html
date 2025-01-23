@@ -1,6 +1,3 @@
-<!-- <p>grain-verified-yield-component works!</p> -->
-
-
 <base-wrapper [errorState]="errorState"> 
     <div class="base-container">
         <div class="base-container flex-y"> 
@@ -77,37 +74,38 @@
                 </div>
             </div>
 
-            <!-- warning messages -->
-            <div *ngIf="verifiedYieldContract && verifiedYieldContract.productWarningMessages && verifiedYieldContract.productWarningMessages.length > 0"  
-                class="vy-warning-msgs-container vy-warning-messages">
+            <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
+                <!-- warning messages -->
+                <div *ngIf="verifiedYieldContract && verifiedYieldContract.productWarningMessages && verifiedYieldContract.productWarningMessages.length > 0"  
+                    class="vy-warning-msgs-container vy-warning-messages">
 
-                <div *ngFor="let msg of verifiedYieldContract.productWarningMessages" style="display:contents">
-                    <div><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
-                    <div><span>{{ msg.message }}</span></div>
-                </div>
-                <div style="display:contents">
-                    <div>
-                        <mat-checkbox 
-                            formControlName="updateProductValuesInd" (change)="isUpdateProductChecked($event)">
-                        </mat-checkbox>
+                    <div *ngFor="let msg of verifiedYieldContract.productWarningMessages" style="display:contents">
+                        <div><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+                        <div><span>{{ msg.message }}</span></div>
                     </div>
-                    <div>Refresh Product Data from CIRRAS on save</div>
+                    <div style="display:contents">
+                        <div>
+                            <mat-checkbox 
+                                formControlName="updateProductValuesInd" (change)="isUpdateProductChecked($event)">
+                            </mat-checkbox>
+                        </div>
+                        <div>Refresh Product Data from CIRRAS on save</div>
+                    </div>
                 </div>
-            </div>
 
-           <div style="margin-top: 8px;">
-            <!-- commodity totals -->
+           <div style="margin-top: 16px;">
+            <!-- GRAIN commodity totals -->
             <verified-yield-commodity-list
-                *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodities"
+                *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodities && isGrainPolicy()"
                 [commodities]="verifiedYieldContract.verifiedYieldContractCommodities"
                 [commoditiesFormArray]="getViewModel().formGroup.controls.verifiedYieldContractCommodities"
                 [isUnsaved]="isUnsaved"></verified-yield-commodity-list>
             </div>
 
-            <div style="margin-top: 16px;">
-                <!-- amendments -->
+            <div style="margin-top: 32px;">
+                <!-- GRAIN amendments -->
                 <verified-yield-amendment-list
-                    *ngIf="verifiedYieldContract && cropCommodityList"
+                    *ngIf="verifiedYieldContract && cropCommodityList && isGrainPolicy() "
                     [verifiedYieldContractGuid]="verifiedYieldContractGuid"
                     [amendments]="verifiedYieldContract.verifiedYieldAmendments"
                     [amendmentsFormArray]="getViewModel().formGroup.controls.verifiedYieldAmendments"
@@ -117,6 +115,26 @@
                     ></verified-yield-amendment-list>
             </div>
 
+            <div style="margin-top: 32px;">
+                <!-- GRAIN yield summary -->
+                <verified-yield-summary-list
+                    *ngIf="growerContract && verifiedYieldContract && verifiedYieldContract.verifiedYieldSummaries && isGrainPolicy()"
+                    [summaries]="verifiedYieldContract.verifiedYieldSummaries"
+                    [summariesFormArray]="getViewModel().formGroup.controls.verifiedYieldSummaries"
+                    [isUnsaved]="isUnsaved"
+                    ></verified-yield-summary-list>
+            </div>
+
+                <div style="margin-top: 32px; margin-bottom: 40px;">
+                    <!-- basket coverage -->
+                    <verified-yield-grain-basket
+                        *ngIf="growerContract && verifiedYieldContract && verifiedYieldContract.verifiedYieldGrainBasket"
+                        [grainBasket]="verifiedYieldContract.verifiedYieldGrainBasket"
+                        [grainBasketsFormArray]="getViewModel().formGroup.controls.verifiedYieldGrainBasket"
+                        [isUnsaved]="isUnsaved"
+                        ></verified-yield-grain-basket>
+                </div>
+            </div>
         </form>
         </div>
     </div>

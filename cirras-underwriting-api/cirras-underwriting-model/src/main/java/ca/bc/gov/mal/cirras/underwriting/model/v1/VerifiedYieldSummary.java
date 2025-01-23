@@ -22,9 +22,11 @@ public class VerifiedYieldSummary implements Serializable {
 	private Double yieldPercentPy;
 	private Double productionGuarantee;
 	private Double probableYield;
+	private Double insurableValueHundredPercent;
 
 	// Extended columns
 	private String cropCommodityName;
+	private Double totalInsuredAcres;
 	
 	private List<UnderwritingComment> uwComments = new ArrayList<UnderwritingComment>();
 	
@@ -123,6 +125,14 @@ public class VerifiedYieldSummary implements Serializable {
 	public void setProbableYield(Double probableYield) {
 		this.probableYield = probableYield;
 	}
+	
+	public Double getInsurableValueHundredPercent() {
+		return insurableValueHundredPercent;
+	}
+
+	public void setInsurableValueHundredPercent(Double insurableValueHundredPercent) {
+		this.insurableValueHundredPercent = insurableValueHundredPercent;
+	}
 
 	public String getCropCommodityName() {
 		return cropCommodityName;
@@ -138,6 +148,14 @@ public class VerifiedYieldSummary implements Serializable {
 
 	public void setUwComments(List<UnderwritingComment> uwComments) {
 		this.uwComments = uwComments;
+	}
+
+	public Double getTotalInsuredAcres() {
+		return totalInsuredAcres;
+	}
+
+	public void setTotalInsuredAcres(Double totalInsuredAcres) {
+		this.totalInsuredAcres = totalInsuredAcres;
 	}
 	
 }

@@ -71,5 +71,19 @@
         font-family: 'Material Icons Outlined' !important; 
     }
   }
+
+  .system-and-user-info {
+    // changes the text in the top right menu, next to the user icon
+    // from Training and Support, which is hardcoded in the wf library
+    // to User Settings
+    span.training  {
+      visibility: hidden;
+    }
+
+    .training:after  {
+      visibility: visible;
+      content: 'User Settings';
+    }
+  }
   
 }
