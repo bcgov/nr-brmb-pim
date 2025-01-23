@@ -23,6 +23,8 @@ join annual_field_detail afd on afd.field_id = ifld.field_id and afd.crop_year =
 join contracted_field_detail cfd on cfd.annual_field_detail_id = afd.annual_field_detail_id
 join grower_contract_year gcy on gcy.grower_contract_year_id = cfd.grower_contract_year_id
 where isf.commodity_type_code in ('PERENNIAL', 'Silage Corn' )
+and isf.is_quantity_insurable_ind = 'Y'
+and gcy.insurance_plan_id = ifld.insurance_plan_id
 and gcy.contract_id = $P{p_contract_id} 
 and gcy.crop_year = $P{p_crop_year}
 group by commodity_type_code
@@ -38,6 +40,8 @@ join annual_field_detail afd on afd.field_id = ifld.field_id and afd.crop_year =
 join contracted_field_detail cfd on cfd.annual_field_detail_id = afd.annual_field_detail_id
 join grower_contract_year gcy on gcy.grower_contract_year_id = cfd.grower_contract_year_id
 where isf.commodity_type_code in ('Spring Annual', 'Winter Annual' )
+and isf.is_quantity_insurable_ind = 'Y'
+and gcy.insurance_plan_id = ifld.insurance_plan_id
 and gcy.contract_id = $P{p_contract_id} 
 and gcy.crop_year = $P{p_crop_year}
 having sum(field_acres) > 0
