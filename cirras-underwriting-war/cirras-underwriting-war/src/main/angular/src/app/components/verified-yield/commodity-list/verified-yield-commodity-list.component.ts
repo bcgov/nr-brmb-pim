@@ -15,17 +15,11 @@ export class VerifiedYieldCommodityListComponent  {
   @Input() commoditiesFormArray: UntypedFormArray;
   @Input() isUnsaved: boolean;
 
-  // yieldCalculatorLink = "ms-excel:ofe|u|https://bcgov.sharepoint.com/sites/AF-BRMB-DATA/Shared%20Documents/Yield%20Calculators/PI%20Grain%20Yield%20&%20Claim%20Calculator.xlsm"
-
   constructor(protected appConfigService: AppConfigService,) { }
 
   goToYieldCalculatorLink(){
 
     let yieldCalculatorLink = this.appConfigService.getConfig().rest["grain_verified_yield_calculator_url"]
-
-    // TODO remove console.log
-
-    console.log("yieldCalculatorLink: " + yieldCalculatorLink )
     window.open(yieldCalculatorLink, "_blank");
   }
 
