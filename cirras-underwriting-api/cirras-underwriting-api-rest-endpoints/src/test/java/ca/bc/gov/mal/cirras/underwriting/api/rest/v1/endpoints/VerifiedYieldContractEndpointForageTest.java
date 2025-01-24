@@ -3,7 +3,10 @@ package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.junit.After;
@@ -52,6 +55,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.YieldMeasUnitConversionDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.CommodityCoverageCode;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandManagementEventTypes;
@@ -311,8 +315,39 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		
 		//Check rolled up rows
 		//Forage
-//TODO: create check commodity rows		
+		checkVerifiedContractCommodityRolloverRolledUpRows(newContract.getVerifiedYieldContractCommodities(), cropIdForage, forageProductionGuarantee);
 		//Silage Corn
+		checkVerifiedContractCommodityRolloverRolledUpRows(newContract.getVerifiedYieldContractCommodities(), cropIdSilageCorn, silageCornProductionGuarantee);
+		
+		//Check order: rollup rows first before its commodity type rows
+		String[] commodities = {
+				cropIdForage.toString(), 
+				cropIdForage.toString() + "_" + ctcAlfalfa, 
+				cropIdForage.toString() + "_" + ctcPasture, 
+				cropIdSilageCorn.toString(), 
+				cropIdSilageCorn.toString() + "_" + ctcSilageCorn 
+				};
+		
+		Assert.assertEquals(commodities.length, newContract.getVerifiedYieldContractCommodities().size());
+		
+		for(int i = 0; i < commodities.length; i++) {
+			String commodity = commodities[i];
+			VerifiedYieldContractCommodity vycc = newContract.getVerifiedYieldContractCommodities().get(i);
+			
+			String commodityId = commodity;
+			String commodityType = null;
+			
+			if(commodity.contains("_")) {
+				String[] splitString = commodity.split("_");
+				commodityId = splitString[0];
+				commodityType = splitString[1];
+			}
+			
+			Assert.assertEquals(commodityId, vycc.getCropCommodityId().toString());
+			Assert.assertEquals(commodityType, vycc.getCommodityTypeCode());
+		}
+		
+		
 		
 //		//Check verifiable Commodities and field
 //		Assert.assertEquals(1, newContract.getFields().size());
@@ -1087,6 +1122,43 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		Assert.assertNotNull(actualCommodity.getVerifiedYieldContractGuid());
 		Assert.assertEquals(yieldPerAcre, actualCommodity.getYieldPerAcre(), 0.00005);
 	}	
+	
+	private void checkVerifiedContractCommodityRolloverRolledUpRows(
+			List<VerifiedYieldContractCommodity> verifiedCommodities,
+			Integer cropCommodityId,
+			Double productionGuarantee) {
+		
+		DopYieldContractCommodityForage dopCommodity = getDopYieldContractCommodityForage(cropCommodityId, null, dopYieldContractCommodityList);
+		VerifiedYieldContractCommodity verifiedCommodity = getVerifiedYieldContractCommodity(cropCommodityId, null, verifiedCommodities);
+
+		//Yield per acre: 0 if yield and acres are null
+		Double yieldPerAcre = null;
+		Double effectiveAcres = notNull(verifiedCommodity.getHarvestedAcresOverride(), verifiedCommodity.getHarvestedAcres());
+		Double effectiveYield = notNull(verifiedCommodity.getHarvestedYieldOverride(), verifiedCommodity.getHarvestedYield());
+
+		if ( effectiveAcres != null && effectiveYield != null ) {
+			if ( effectiveAcres == 0.0 ) {
+				yieldPerAcre = 0.0;
+			} else {
+				yieldPerAcre = effectiveYield / effectiveAcres;
+			}
+		}
+		
+		Assert.assertEquals(dopCommodity.getCropCommodityId(), verifiedCommodity.getCropCommodityId());
+		Assert.assertEquals(yieldPerAcre, verifiedCommodity.getYieldPerAcre(), 0.00005);
+		Assert.assertEquals(productionGuarantee, verifiedCommodity.getProductionGuarantee());
+		Assert.assertEquals(dopCommodity.getHarvestedAcres(), verifiedCommodity.getHarvestedAcres());
+		Assert.assertEquals(dopCommodity.getTotalFieldAcres(), verifiedCommodity.getTotalInsuredAcres());
+		Assert.assertTrue(verifiedCommodity.getIsRolledupInd()); //True for rolled up rows
+		Assert.assertNull(verifiedCommodity.getCommodityTypeCode());
+		Assert.assertNull(verifiedCommodity.getHarvestedAcresOverride());
+		Assert.assertNull(verifiedCommodity.getHarvestedYieldOverride());
+		Assert.assertNull(verifiedCommodity.getVerifiedYieldContractCommodityGuid());
+		Assert.assertNull(verifiedCommodity.getVerifiedYieldContractGuid());
+		Assert.assertNull(verifiedCommodity.getIsPedigreeInd());
+		Assert.assertNull(verifiedCommodity.getSoldYieldDefaultUnit());
+		Assert.assertNull(verifiedCommodity.getStoredYieldDefaultUnit());
+	}
 
 	private void checkVerifiedContractCommodityRollover(
 			List<VerifiedYieldContractCommodity> verifiedCommodities,
@@ -1171,7 +1243,10 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		DopYieldContractCommodityForage dyccf = null;
 		
 		List<DopYieldContractCommodityForage> dyccfFiltered = dyccfList.stream()
-				.filter(x -> x.getCropCommodityId() == cropCommodityId && x.getCommodityTypeCode().equals(commodityTypeCode))
+				.filter(x -> x.getCropCommodityId() == cropCommodityId
+						&& ((x.getCommodityTypeCode() != null && x.getCommodityTypeCode().equals(commodityTypeCode))
+								|| (commodityTypeCode == null && x.getCommodityTypeCode() == null)) )
+				
 				.collect(Collectors.toList());
 		
 		if (dyccfFiltered != null) {
@@ -1214,7 +1289,9 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		VerifiedYieldContractCommodity vycc = null;
 		
 		List<VerifiedYieldContractCommodity> vyccFiltered = vyccList.stream()
-				.filter(x -> x.getCropCommodityId().equals(cropCommodityId) && x.getCommodityTypeCode() != null && x.getCommodityTypeCode().equals(commodityTypeCode) )
+				.filter(x -> x.getCropCommodityId().equals(cropCommodityId) 
+						&& ((x.getCommodityTypeCode() != null && x.getCommodityTypeCode().equals(commodityTypeCode))
+								|| (commodityTypeCode == null && x.getCommodityTypeCode() == null)) )
 				.collect(Collectors.toList());
 		
 		if (vyccFiltered != null) {
@@ -1826,8 +1903,58 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		
 		DopYieldContractRsrc createdContract = service.createDopYieldContract(topLevelEndpoints, resource);
 		
-		dopYieldContractCommodityList = resource.getDopYieldContractCommodityForageList();
+		dopYieldContractCommodityList = createdContract.getDopYieldContractCommodityForageList();
+		
+		addExpectedRollupDopCommodities(createdContract);
 
+	}
+
+	private void addExpectedRollupDopCommodities(DopYieldContractRsrc resource) {
+		//Add expected rollup dop items
+		//FORAGE
+		Double forageInsuredAcres = alfalfaInsuredAcres1 + alfalfaInsuredAcres2 + pastureInsuredAcres;
+		Double forageHarvestedAcres = alfalfaQuantityHarestedAcres + pastureQuantityHarestedAcres;
+		DopYieldContractCommodityForage dopAlfalfa = getDopYieldContractCommodityForage(cropIdForage, ctcAlfalfa, resource.getDopYieldContractCommodityForageList());
+		DopYieldContractCommodityForage dopPasture = getDopYieldContractCommodityForage(cropIdForage, ctcPasture, resource.getDopYieldContractCommodityForageList());
+		Double forageQuantityHarvestedTons = dopAlfalfa.getQuantityHarvestedTons() + dopPasture.getQuantityHarvestedTons();
+
+		DopYieldContractCommodityForage forageDccf = createDopYieldContractCommodityForage(
+			null,							//commodityTypeCode, 
+			forageInsuredAcres, 			//totalFieldAcres, 
+			forageHarvestedAcres,			//harvestedAcres, 
+			null,							//totalBales, 
+			null,							//weight, 
+			null,							//weightDefaultUnit, 
+			null,							//moisturePercent,
+			forageQuantityHarvestedTons,	//quantityHarvestedTons, 
+			null,							//yieldPerAcre,
+			cropIdForage,					//cropCommodityId, 
+			null							//plantDurationTypeCode
+		);
+		
+		dopYieldContractCommodityList.add(forageDccf);
+		
+		//SILAGECORN
+		Double silageCornInsuredAcres = silageCornInsuredAcres1 + silageCornInsuredAcres2;
+		//Double silageCornHarvestedAcres = alfalfaQuantityHarestedAcres + pastureQuantityHarestedAcres;
+		DopYieldContractCommodityForage dopSilageCorn = getDopYieldContractCommodityForage(cropIdSilageCorn, ctcSilageCorn, resource.getDopYieldContractCommodityForageList());
+		Double silageCornQuantityHarvestedTons = dopSilageCorn.getQuantityHarvestedTons();
+
+		DopYieldContractCommodityForage silageCornDccf = createDopYieldContractCommodityForage(
+			null,								//commodityTypeCode, 
+			silageCornInsuredAcres, 			//totalFieldAcres, 
+			silageCornQuantityHarestedAcres,	//harvestedAcres, 
+			null,								//totalBales, 
+			null,								//weight, 
+			null,								//weightDefaultUnit, 
+			null,								//moisturePercent,
+			silageCornQuantityHarvestedTons,	//quantityHarvestedTons, 
+			null,								//yieldPerAcre,
+			cropIdSilageCorn,						//cropCommodityId, 
+			null								//plantDurationTypeCode
+		);
+		
+		dopYieldContractCommodityList.add(silageCornDccf);
 	}
 
 	private void enterDopCommodityTotals(
@@ -1855,24 +1982,24 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		return dyccfs.get(0);
 	}
 	
-	DopYieldContractCommodity createDopYieldContractCommodity(Integer cropCommodityId, String cropCommodityName, Double harvestedAcres, Boolean isPedigreeInd, Double soldYield, Double storedYield) {
-		
-		DopYieldContractCommodity dycc = new DopYieldContractCommodity();
-
-		dycc.setCropCommodityId(cropCommodityId);
-		dycc.setCropCommodityName(cropCommodityName);
-		dycc.setDeclaredYieldContractCommodityGuid(null);
-		dycc.setDeclaredYieldContractGuid(null);
-		dycc.setGradeModifierTypeCode(null);
-		dycc.setHarvestedAcres(harvestedAcres);
-		dycc.setIsPedigreeInd(isPedigreeInd);
-		dycc.setSoldYield(soldYield);
-		dycc.setSoldYieldDefaultUnit(soldYield);
-		dycc.setStoredYield(storedYield);
-		dycc.setStoredYieldDefaultUnit(storedYield);
-		
-		return dycc;
-	}
+//	DopYieldContractCommodity createDopYieldContractCommodity(Integer cropCommodityId, String cropCommodityName, Double harvestedAcres, Boolean isPedigreeInd, Double soldYield, Double storedYield) {
+//		
+//		DopYieldContractCommodity dycc = new DopYieldContractCommodity();
+//
+//		dycc.setCropCommodityId(cropCommodityId);
+//		dycc.setCropCommodityName(cropCommodityName);
+//		dycc.setDeclaredYieldContractCommodityGuid(null);
+//		dycc.setDeclaredYieldContractGuid(null);
+//		dycc.setGradeModifierTypeCode(null);
+//		dycc.setHarvestedAcres(harvestedAcres);
+//		dycc.setIsPedigreeInd(isPedigreeInd);
+//		dycc.setSoldYield(soldYield);
+//		dycc.setSoldYieldDefaultUnit(soldYield);
+//		dycc.setStoredYield(storedYield);
+//		dycc.setStoredYieldDefaultUnit(storedYield);
+//		
+//		return dycc;
+//	}
 
 	VerifiedYieldAmendment createVerifiedYieldAmendment(
 			String verifiedYieldAmendmentCode, 
