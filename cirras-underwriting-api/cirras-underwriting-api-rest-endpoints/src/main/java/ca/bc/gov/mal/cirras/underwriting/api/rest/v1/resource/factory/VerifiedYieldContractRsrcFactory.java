@@ -37,6 +37,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
@@ -91,6 +92,17 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			resource.setVerifiedYieldContractCommodities(vyContractCommodities);
 		}
 		
+		if (!dycDto.getDeclaredYieldContractCommodityForageList().isEmpty()) {
+			List<VerifiedYieldContractCommodity> vyContractCommodities = new ArrayList<VerifiedYieldContractCommodity>();
+
+			for (DeclaredYieldContractCommodityForageDto dyccfDto : dycDto.getDeclaredYieldContractCommodityForageList()) {
+				VerifiedYieldContractCommodity vyccModel = createDefaultVerifiedYieldContractCommodity(dyccfDto, productDtos);
+				vyContractCommodities.add(vyccModel);
+			}
+
+			resource.setVerifiedYieldContractCommodities(vyContractCommodities);
+		}
+		
 		String eTag = getEtag(resource);
 		resource.setETag(eTag);
 
@@ -124,6 +136,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 
 		model.setCropCommodityId(dto.getCropCommodityId());
 		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setDisplayName(dto.getCropCommodityName());
 		model.setHarvestedAcres(dto.getHarvestedAcres());
 		model.setHarvestedAcresOverride(null);
 		model.setHarvestedYield(null);   // Calculated later
@@ -133,6 +146,45 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		model.setSoldYieldDefaultUnit(dto.getSoldYieldDefaultUnit());
 		model.setStoredYieldDefaultUnit(dto.getStoredYieldDefaultUnit());
 		model.setTotalInsuredAcres(dto.getTotalInsuredAcres());
+		model.setVerifiedYieldContractCommodityGuid(null);
+		model.setVerifiedYieldContractGuid(null);
+		model.setYieldPerAcre(null); // Calculated later
+
+		return model;
+	}
+	
+	private VerifiedYieldContractCommodity createDefaultVerifiedYieldContractCommodity(DeclaredYieldContractCommodityForageDto dto, List<ProductDto> productDtos) {
+		VerifiedYieldContractCommodity model = new VerifiedYieldContractCommodity();
+		
+		//Get production guarantee 
+		Boolean isRolledUpInd = false;
+		String displayName = dto.getCommodityTypeDescription();
+		Double productionGuarantee = null;
+		if(Boolean.TRUE.equals(dto.getIsRolledupInd())) {
+			//Show commodity name if it's a rolled up row
+			displayName = dto.getCropCommodityName();
+			isRolledUpInd = true;
+			ProductDto product = getProductDto(dto.getCropCommodityId(), false, productDtos);
+			if(product != null && product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
+				productionGuarantee = product.getProductionGuarantee();
+			}
+		}
+
+		model.setCropCommodityId(dto.getCropCommodityId());
+		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setDisplayName(displayName);
+		model.setCommodityTypeCode(dto.getCommodityTypeCode());
+		model.setCommodityTypeDescription(dto.getCommodityTypeDescription());
+		model.setIsRolledupInd(isRolledUpInd);
+		model.setHarvestedAcres(dto.getHarvestedAcres());
+		model.setHarvestedAcresOverride(null);
+		model.setHarvestedYield(dto.getQuantityHarvestedTons());
+		model.setHarvestedYieldOverride(null);
+		model.setIsPedigreeInd(null);
+		model.setProductionGuarantee(productionGuarantee);
+		model.setSoldYieldDefaultUnit(null);
+		model.setStoredYieldDefaultUnit(null);
+		model.setTotalInsuredAcres(dto.getTotalFieldAcres());
 		model.setVerifiedYieldContractCommodityGuid(null);
 		model.setVerifiedYieldContractGuid(null);
 		model.setYieldPerAcre(null); // Calculated later
