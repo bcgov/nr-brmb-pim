@@ -2,8 +2,10 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } f
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
 import { UserSettingsComponentModel } from './user-settings.component.model';
 import { BaseComponent } from '../../common/base/base.component';
-import { LoadUserSettings } from 'src/app/store/maintenance/maintenance.actions';
+import { AddNewUserSettings, LoadUserSettings, UpdateUserSettings } from 'src/app/store/maintenance/maintenance.actions';
 import { UserSetting } from 'src/app/conversion/models-maintenance';
+import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
+import { USER_SETTINGS_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
 
 @Component({
   selector: 'user-settings',
@@ -14,14 +16,12 @@ import { UserSetting } from 'src/app/conversion/models-maintenance';
 export class UserSettingsComponent extends BaseComponent implements OnChanges {
 
   @Input() userSettings: UserSetting;
+  @Input() isUnsaved: boolean;
 
   cropYearOptions = getCodeOptions("policy_crop_year");
   officeOptions = getCodeOptions("office"); 
   insurancePlanOptions = getCodeOptions("insurance_plan");
 
-  hasDataChanged = false
-
-  
   initModels() {
     this.model = new UserSettingsComponentModel(this.sanitizer, this.fb);
     this.viewModel = new UserSettingsComponentModel(this.sanitizer, this.fb);
@@ -40,9 +40,9 @@ export class UserSettingsComponent extends BaseComponent implements OnChanges {
     super.ngOnChanges(changes);
 
     if ( changes.userSettings && this.userSettings) {
-      this.viewModel.formGroup.controls.selectedCropYear.setValue(this.userSettings.policySearchCropYear.toString())
-      this.viewModel.formGroup.controls.selectedInsurancePlanId.setValue(this.userSettings.policySearchInsurancePlanId.toString())
-      this.viewModel.formGroup.controls.selectedOfficeId.setValue(this.userSettings.policySearchOfficeId.toString())
+      this.viewModel.formGroup.controls.selectedCropYear.setValue( this.userSettings.policySearchCropYear ? this.userSettings.policySearchCropYear.toString() : "" ) 
+      this.viewModel.formGroup.controls.selectedInsurancePlanId.setValue( this.userSettings.policySearchInsurancePlanId ? this.userSettings.policySearchInsurancePlanId.toString() : "" )
+      this.viewModel.formGroup.controls.selectedOfficeId.setValue( this.userSettings.policySearchOfficeId ? this.userSettings.policySearchOfficeId.toString() : "" )
 
       this.cdr.detectChanges()
     }
@@ -54,38 +54,35 @@ export class UserSettingsComponent extends BaseComponent implements OnChanges {
 
   dropDownChanged(){
     this.viewModel.formGroup.controls.setDefaultSettings.setValue(false)
-    this.hasDataChanged = true
+    this.store.dispatch(setFormStateUnsaved(USER_SETTINGS_COMPONENT_ID, true ));
   }
 
-    isChecked(event) {
-  
-      if ( event.checked ){
-        this.viewModel.formGroup.controls.selectedCropYear.setValue("")
-        this.viewModel.formGroup.controls.selectedInsurancePlanId.setValue("")
-        this.viewModel.formGroup.controls.selectedOfficeId.setValue("")
-      }
-      this.hasDataChanged = true
+  onRestoreDefaultSettings() {
+
+      this.viewModel.formGroup.controls.selectedCropYear.setValue("")
+      this.viewModel.formGroup.controls.selectedInsurancePlanId.setValue("")
+      this.viewModel.formGroup.controls.selectedOfficeId.setValue("")
+    
+      this.store.dispatch(setFormStateUnsaved(USER_SETTINGS_COMPONENT_ID, true ));
     }
 
   onSave() {
     
     // prepare the updated user settings
-    let newUserSettings: UserSetting = this.userSettings
+    let newUserSettings: UserSetting = JSON.parse(JSON.stringify(this.userSettings));
 
-    newUserSettings.policySearchCropYear = this.viewModel.formGroup.controls.selectedCropYear.value
-    newUserSettings.policySearchInsurancePlanId = this.viewModel.formGroup.controls.selectedInsurancePlanId.value
-    newUserSettings.policySearchOfficeId = this.viewModel.formGroup.controls.selecteOfficeId.value
+    newUserSettings.policySearchCropYear = (this.viewModel.formGroup.controls.selectedCropYear.value ? parseInt(this.viewModel.formGroup.controls.selectedCropYear.value) : null)
+    newUserSettings.policySearchInsurancePlanId = parseInt(this.viewModel.formGroup.controls.selectedInsurancePlanId.value)
+    newUserSettings.policySearchOfficeId = parseInt(this.viewModel.formGroup.controls.selectedOfficeId.value)
 
-    // TODO when create/update endpoints are ready
-    // if (this.userSettings.userSettingGuid) {
-    //   this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, newDopYieldContract, this.policyId))
-    // } else {
-    //   // add new
-    //   this.store.dispatch(AddNewDopYieldContract(DOP_COMPONENT_ID, newDopYieldContract, this.policyId))
-    // }
+    if (this.userSettings.userSettingGuid) {
+      this.store.dispatch(UpdateUserSettings( newUserSettings ))
+    } else {
+      // add new
+      this.store.dispatch(AddNewUserSettings( newUserSettings ))
+    }
 
-    this.hasDataChanged = false   
-    // this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, false ));
+    this.store.dispatch(setFormStateUnsaved(USER_SETTINGS_COMPONENT_ID, false ));
   }
     
 }

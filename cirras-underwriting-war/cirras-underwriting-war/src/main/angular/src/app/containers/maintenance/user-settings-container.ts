@@ -20,6 +20,7 @@ import { selectUserSetting } from "src/app/store/maintenance/maintenance.selecto
     template: `
         <user-settings
             [userSettings]="userSettings$ | async"
+            [isUnsaved]="isUnsaved$ | async"   
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"        
         ></user-settings>`, 
@@ -28,7 +29,7 @@ import { selectUserSetting } from "src/app/store/maintenance/maintenance.selecto
 export class UserSettingsContainer extends BaseContainer {
 
     userSettings$: Observable<UserSetting> = this.store.pipe(select(selectUserSetting()))
-
+    isUnsaved$: Observable<boolean> = this.store.pipe(select(selectFormStateUnsaved(USER_SETTINGS_COMPONENT_ID)));
     loadState$: Observable<LoadState> = this.store.pipe(select(selectMaintainUwYearsLoadState()));
     errorState$: Observable<ErrorState[]> = this.store.pipe(select(selectMaintainUwYearsErrorState()));
     
