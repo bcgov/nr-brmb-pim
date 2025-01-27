@@ -751,6 +751,444 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 */ 
 	}
 	
+	
+	@Test
+	public void testGetVerifiedYieldContractCommoditiesForage() throws CirrasUnderwritingServiceException, Oauth2ClientException {
+		logger.debug("<testGetVerifiedYieldContractCommoditiesForage");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+		
+		//*****************************************************************
+		//BEFORE TESTS: CREATE YIELD BY RUNNING THE INSERT SCRIPTS BELOW.
+		//*****************************************************************
+
+		String policyNumber = "301848-23";   // Set to valid policy number.
+		
+		List<VerifiedYieldContractCommodity> expectedVycc = new ArrayList<VerifiedYieldContractCommodity>();
+		VerifiedYieldContractCommodity vycc = new VerifiedYieldContractCommodity();
+		vycc.setCropCommodityId(65);
+		vycc.setCropCommodityName("FORAGE");
+		vycc.setCommodityTypeCode(null);
+		vycc.setHarvestedAcres(11.21);
+		vycc.setHarvestedAcresOverride(33.41);
+		vycc.setHarvestedYield(66.71);
+		vycc.setHarvestedYieldOverride(88.91);
+		vycc.setIsPedigreeInd(false);
+		vycc.setProductionGuarantee(13.51);
+		vycc.setSoldYieldDefaultUnit(null);
+		vycc.setStoredYieldDefaultUnit(null);
+		vycc.setTotalInsuredAcres(null);  // Set based on existing inventory for selected policy.
+		vycc.setVerifiedYieldContractCommodityGuid("vyccg-65-rollup");
+		vycc.setVerifiedYieldContractGuid("vyc-guid-3939");
+		vycc.setYieldPerAcre(55.41);
+		vycc.setIsRolledupInd(true);
+		vycc.setCommodityTypeDescription(null);
+		vycc.setDisplayName("FORAGE");
+
+		expectedVycc.add(vycc);
+		
+		vycc = new VerifiedYieldContractCommodity();
+		vycc.setCropCommodityId(65);
+		vycc.setCropCommodityName("FORAGE");
+		vycc.setCommodityTypeCode("Alfalfa");
+		vycc.setHarvestedAcres(11.22);
+		vycc.setHarvestedAcresOverride(33.42);
+		vycc.setHarvestedYield(66.72);
+		vycc.setHarvestedYieldOverride(88.92);
+		vycc.setIsPedigreeInd(false);
+		vycc.setProductionGuarantee(null);
+		vycc.setSoldYieldDefaultUnit(null);
+		vycc.setStoredYieldDefaultUnit(null);
+		vycc.setTotalInsuredAcres(null);  // Set based on existing inventory for selected policy.
+		vycc.setVerifiedYieldContractCommodityGuid("vyccg-65-Alfalfa-1");
+		vycc.setVerifiedYieldContractGuid("vyc-guid-3939");
+		vycc.setYieldPerAcre(55.42);
+		vycc.setIsRolledupInd(false);
+		vycc.setCommodityTypeDescription("Alfalfa");
+		vycc.setDisplayName("Alfalfa");
+
+		expectedVycc.add(vycc);
+
+		vycc = new VerifiedYieldContractCommodity();
+		vycc.setCropCommodityId(65);
+		vycc.setCropCommodityName("FORAGE");
+		vycc.setCommodityTypeCode("Pasture");
+		vycc.setHarvestedAcres(11.28);
+		vycc.setHarvestedAcresOverride(33.48);
+		vycc.setHarvestedYield(66.78);
+		vycc.setHarvestedYieldOverride(88.98);
+		vycc.setIsPedigreeInd(false);
+		vycc.setProductionGuarantee(null);
+		vycc.setSoldYieldDefaultUnit(null);
+		vycc.setStoredYieldDefaultUnit(null);
+		vycc.setTotalInsuredAcres(null);  // Set based on existing inventory for selected policy.
+		vycc.setVerifiedYieldContractCommodityGuid("vyccg-65-Alfalfa-2");
+		vycc.setVerifiedYieldContractGuid("vyc-guid-3939");
+		vycc.setYieldPerAcre(55.48);
+		vycc.setIsRolledupInd(false);
+		vycc.setCommodityTypeDescription("Pasture");
+		vycc.setDisplayName("Pasture");
+
+		expectedVycc.add(vycc);
+
+		vycc = new VerifiedYieldContractCommodity();
+		vycc.setCropCommodityId(71);
+		vycc.setCropCommodityName("SILAGE CORN");
+		vycc.setCommodityTypeCode(null);
+		vycc.setHarvestedAcres(11.23);
+		vycc.setHarvestedAcresOverride(33.43);
+		vycc.setHarvestedYield(66.73);
+		vycc.setHarvestedYieldOverride(88.93);
+		vycc.setIsPedigreeInd(false);
+		vycc.setProductionGuarantee(13.53);
+		vycc.setSoldYieldDefaultUnit(null);
+		vycc.setStoredYieldDefaultUnit(null);
+		vycc.setTotalInsuredAcres(null);  // Set based on existing inventory for selected policy.
+		vycc.setVerifiedYieldContractCommodityGuid("vyccg-71-rollup");
+		vycc.setVerifiedYieldContractGuid("vyc-guid-3939");
+		vycc.setYieldPerAcre(55.43);
+		vycc.setIsRolledupInd(true);
+		vycc.setCommodityTypeDescription(null);
+		vycc.setDisplayName("SILAGE CORN");		
+
+		expectedVycc.add(vycc);
+		
+		vycc = new VerifiedYieldContractCommodity();
+		vycc.setCropCommodityId(71);
+		vycc.setCropCommodityName("SILAGE CORN");
+		vycc.setCommodityTypeCode("Silage Corn");
+		vycc.setHarvestedAcres(11.25);
+		vycc.setHarvestedAcresOverride(33.45);
+		vycc.setHarvestedYield(66.75);
+		vycc.setHarvestedYieldOverride(88.95);
+		vycc.setIsPedigreeInd(false);
+		vycc.setProductionGuarantee(null);
+		vycc.setSoldYieldDefaultUnit(null);
+		vycc.setStoredYieldDefaultUnit(null);
+		vycc.setTotalInsuredAcres(null);  // Set based on existing inventory for selected policy.
+		vycc.setVerifiedYieldContractCommodityGuid("vyccg-71-SilageCorn-1");
+		vycc.setVerifiedYieldContractGuid("vyc-guid-3939");
+		vycc.setYieldPerAcre(55.45);
+		vycc.setIsRolledupInd(false);
+		vycc.setCommodityTypeDescription("Silage Corn");
+		vycc.setDisplayName("Silage Corn");
+
+		expectedVycc.add(vycc);		
+
+		Integer pageNumber = (1);
+		Integer pageRowCount = (20);
+
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+		//Assert.assertNotNull(referrer.getInventoryContractGuid());
+		Assert.assertNotNull(referrer.getDeclaredYieldContractGuid());
+		Assert.assertNotNull(referrer.getVerifiedYieldContractGuid());
+
+		VerifiedYieldContractRsrc verifiedYldContract = service.getVerifiedYieldContract(referrer);
+		Assert.assertNotNull(verifiedYldContract);
+
+		checkVerifiedYieldContractCommodities(expectedVycc, verifiedYldContract.getVerifiedYieldContractCommodities());
+		
+		//checkVerifiedYieldAmendments(expectedVya, verifiedYldContract.getVerifiedYieldAmendments());
+		
+		//*****************************************************************
+		//AFTER TESTS: DELETE LAND, INVENTORY AND YIELD BY RUNNING THE DELETE SCRIPTS BELOW
+		//*****************************************************************
+
+		logger.debug(">testGetVerifiedYieldContractCommoditiesForage");
+	
+	/* 
+	 * 
+	*****************
+	INSERT STATEMENTS
+	*****************
+
+		-- Declared Yield Contract
+		INSERT INTO cuws.declared_yield_contract(
+		declared_yield_contract_guid, 
+			contract_id, crop_year, 
+			declaration_of_production_date, 
+			dop_update_timestamp, 
+			dop_update_user, 
+			entered_yield_meas_unit_type_code, 
+			default_yield_meas_unit_type_code, 
+			grain_from_other_source_ind, 
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date, 
+			baler_wagon_info, 
+			total_livestock)
+		VALUES ('dyc-guid',
+				3939,
+				2023,
+				now(),
+				now(),
+				'admin',
+				'TON',
+				'TON',
+				'N',
+				'admin',
+				now(),
+				'admin',
+				now(),
+				null,
+				null);
+		
+		-- Verified Yield Contract
+		insert into verified_yield_contract(
+			verified_yield_contract_guid, 
+			contract_id, 
+			crop_year, 
+			declared_yield_contract_guid, 
+			default_yield_meas_unit_type_code, 
+			verified_yield_update_timestamp, 
+			verified_yield_update_user, 
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date
+		) values (
+			'vyc-guid-3939', 
+			3939,
+			2023,
+			'dyc-guid',
+			'TON',
+			now(),
+			'admin',
+			'admin',
+			now(),
+			'admin',
+			now()
+		);
+
+
+
+		insert into verified_yield_contract_commodity(
+			verified_yield_contract_commodity_guid, 
+			verified_yield_contract_guid, 
+			crop_commodity_id, 
+			commodity_type_code,
+			is_pedigree_ind, 
+			harvested_acres, 
+			harvested_acres_override, 
+			stored_yield_default_unit, 
+			sold_yield_default_unit, 
+			production_guarantee, 
+			harvested_yield, 
+			harvested_yield_override, 
+			yield_per_acre, 
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date
+		) values (
+			'vyccg-65-rollup',
+			'vyc-guid-3939',
+			65,
+			null,
+			'N',
+			11.21,
+			33.41,
+			null,
+			null,
+			13.51,
+			66.71,
+			88.91,
+			55.41,
+			'admin',
+			now(),
+			'admin',
+			now()
+		);
+
+		insert into verified_yield_contract_commodity(
+			verified_yield_contract_commodity_guid, 
+			verified_yield_contract_guid, 
+			crop_commodity_id, 
+			commodity_type_code,
+			is_pedigree_ind, 
+			harvested_acres, 
+			harvested_acres_override, 
+			stored_yield_default_unit, 
+			sold_yield_default_unit, 
+			production_guarantee, 
+			harvested_yield, 
+			harvested_yield_override, 
+			yield_per_acre, 
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date
+		) values (
+			'vyccg-65-Alfalfa-1',
+			'vyc-guid-3939',
+			65,
+			'Alfalfa',
+			'N',
+			11.22,
+			33.42,
+			null,
+			null,
+			null,
+			66.72,
+			88.92,
+			55.42,
+			'admin',
+			now(),
+			'admin',
+			now()
+		);
+
+		insert into verified_yield_contract_commodity(
+			verified_yield_contract_commodity_guid, 
+			verified_yield_contract_guid, 
+			crop_commodity_id, 
+			commodity_type_code,
+			is_pedigree_ind, 
+			harvested_acres, 
+			harvested_acres_override, 
+			stored_yield_default_unit, 
+			sold_yield_default_unit, 
+			production_guarantee, 
+			harvested_yield, 
+			harvested_yield_override, 
+			yield_per_acre, 
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date
+		) values (
+			'vyccg-65-Alfalfa-2',
+			'vyc-guid-3939',
+			65,
+			'Pasture',
+			'N',
+			11.28,
+			33.48,
+			null,
+			null,
+			null,
+			66.78,
+			88.98,
+			55.48,
+			'admin',
+			now(),
+			'admin',
+			now()
+		);
+
+		insert into verified_yield_contract_commodity(
+			verified_yield_contract_commodity_guid, 
+			verified_yield_contract_guid, 
+			crop_commodity_id, 
+			commodity_type_code,
+			is_pedigree_ind, 
+			harvested_acres, 
+			harvested_acres_override, 
+			stored_yield_default_unit, 
+			sold_yield_default_unit, 
+			production_guarantee, 
+			harvested_yield, 
+			harvested_yield_override, 
+			yield_per_acre, 
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date
+		) values (
+			'vyccg-71-rollup',
+			'vyc-guid-3939',
+			71,
+			null,
+			'N',
+			11.23,
+			33.43,
+			null,
+			null,
+			13.53,
+			66.73,
+			88.93,
+			55.43,
+			'admin',
+			now(),
+			'admin',
+			now()
+		);
+
+		insert into verified_yield_contract_commodity(
+			verified_yield_contract_commodity_guid, 
+			verified_yield_contract_guid, 
+			crop_commodity_id, 
+			commodity_type_code,
+			is_pedigree_ind, 
+			harvested_acres, 
+			harvested_acres_override, 
+			stored_yield_default_unit, 
+			sold_yield_default_unit, 
+			production_guarantee, 
+			harvested_yield, 
+			harvested_yield_override, 
+			yield_per_acre, 
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date
+		) values (
+			'vyccg-71-SilageCorn-1',
+			'vyc-guid-3939',
+			71,
+			'Silage Corn',
+			'N',
+			11.25,
+			33.45,
+			null,
+			null,
+			null,
+			66.75,
+			88.95,
+			55.45,
+			'admin',
+			now(),
+			'admin',
+			now()
+		);
+
+		
+	delete from verified_yield_amendment where verified_yield_contract_guid = 'vyc-guid-3939';
+	delete from verified_yield_contract_commodity where verified_yield_contract_guid = 'vyc-guid-3939';
+	delete from verified_yield_contract where verified_yield_contract_guid = 'vyc-guid-3939';
+	delete from declared_yield_contract where declared_yield_contract_guid = 'dyc-guid';
+
+	 
+	*****************
+	SELECT STATEMENTS
+	*****************
+	select * from declared_yield_contract where declared_yield_contract_guid = 'dyc-guid';
+	select * from verified_yield_contract vyc where vyc.verified_yield_contract_guid = 'vyc-guid-3939';
+	select * from verified_yield_contract_commodity vycc where vycc.verified_yield_contract_guid = 'vyc-guid-3939';	
+	select * from verified_yield_amendment where verified_yield_contract_guid = 'vyc-guid-3939';
+*/ 
+	}	
+	
 	private void checkVerifiedYieldContract(VerifiedYieldContractRsrc expected, VerifiedYieldContractRsrc actual) {
 		Assert.assertEquals(expected.getContractId(), actual.getContractId());
 		Assert.assertEquals(expected.getCropYear(), actual.getCropYear());
@@ -894,6 +1332,10 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 
 		Assert.assertEquals(expected.getCropCommodityId(), actual.getCropCommodityId());
 		Assert.assertEquals(expected.getCropCommodityName(), actual.getCropCommodityName());
+		Assert.assertEquals(expected.getCommodityTypeCode(), actual.getCommodityTypeCode());
+		Assert.assertEquals(expected.getCommodityTypeDescription(), actual.getCommodityTypeDescription());
+		Assert.assertEquals(expected.getDisplayName(), actual.getDisplayName());
+		Assert.assertEquals(expected.getIsRolledupInd(), actual.getIsRolledupInd());
 		Assert.assertEquals(expected.getHarvestedAcres(), actual.getHarvestedAcres());
 		Assert.assertEquals(expected.getHarvestedAcresOverride(), actual.getHarvestedAcresOverride());
 		Assert.assertEquals(expected.getHarvestedYield(), actual.getHarvestedYield());
