@@ -49,7 +49,8 @@ public interface VerifiedYieldContractFactory {
 			VerifiedYieldContractCommodityDto dto, 
 			VerifiedYieldContractCommodity model, 
 			List<ProductDto> productDtos,
-			Boolean updateProductValues);
+			Boolean updateProductValues, 
+			Integer insurancePlanId);
 
 	void updateDto(
 			VerifiedYieldAmendmentDto dto, 

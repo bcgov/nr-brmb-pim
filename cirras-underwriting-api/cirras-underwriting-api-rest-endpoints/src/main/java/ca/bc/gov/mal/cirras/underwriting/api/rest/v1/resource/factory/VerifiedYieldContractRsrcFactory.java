@@ -183,7 +183,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		model.setHarvestedAcresOverride(null);
 		model.setHarvestedYield(dto.getQuantityHarvestedTons());
 		model.setHarvestedYieldOverride(null);
-		model.setIsPedigreeInd(null);
+		model.setIsPedigreeInd(false);
 		model.setProductionGuarantee(productionGuarantee);
 		model.setSoldYieldDefaultUnit(null);
 		model.setStoredYieldDefaultUnit(null);
@@ -704,19 +704,28 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			VerifiedYieldContractCommodityDto dto, 
 			VerifiedYieldContractCommodity model, 
 			List<ProductDto> productDtos,
-			Boolean updateProductValues) {
+			Boolean updateProductValues, 
+			Integer insurancePlanId) {
 		
 		Double productionGuarantee = model.getProductionGuarantee();
 		//Get production guarantee if user wants to update the values
 		if(Boolean.TRUE.equals(updateProductValues)) {
-			ProductDto product = getProductDto(dto.getCropCommodityId(), dto.getIsPedigreeInd(), productDtos);
-			if(product != null && product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
-				productionGuarantee = product.getProductionGuarantee();
-			} else {
-				productionGuarantee = null;
+			Boolean setProductionGuarantee = true;
+			//Default
+			productionGuarantee = null;
+			if(InsurancePlans.FORAGE.getInsurancePlanId().equals(insurancePlanId)) {
+				//Production Guarantee for forage is only set for rolled up rows
+				setProductionGuarantee = Boolean.TRUE.equals(model.getIsRolledupInd());
+			} 
+			
+			if(setProductionGuarantee) {
+				ProductDto product = getProductDto(dto.getCropCommodityId(), dto.getIsPedigreeInd(), productDtos);
+				if(product != null && product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
+					productionGuarantee = product.getProductionGuarantee();
+				} 
 			}
-		}		
-
+		}
+		
 		dto.setVerifiedYieldContractCommodityGuid(model.getVerifiedYieldContractCommodityGuid());
 		dto.setVerifiedYieldContractGuid(model.getVerifiedYieldContractGuid());
 		dto.setCropCommodityId(model.getCropCommodityId());

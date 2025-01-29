@@ -182,28 +182,39 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				throw new NotFoundException("Did not find the policy: " + policyId);
 			}
 
-			DeclaredYieldContractDto dycDto = declaredYieldContractDao.fetch(policyDto.getDeclaredYieldContractGuid());
-			
-			if (dycDto == null) {
-				throw new NotFoundException("Did not find the dop: " + policyDto.getDeclaredYieldContractGuid());
-			}
-
-			List<ProductDto> productDtos = loadProducts(dycDto.getContractId(), dycDto.getCropYear());
-			
-			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(policyDto.getInsurancePlanId()) ) {
-				loadDopYieldContractCommodities(dycDto);
-				loadFields(dycDto);
-			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(policyDto.getInsurancePlanId()) ) {
-				loadDopYieldContractCommodities(dycDto);
-				rollupVerifiedYield(dycDto);
-			}
-			
-			result = verifiedYieldContractFactory.getDefaultVerifiedYieldContract(policyDto, dycDto, productDtos, factoryContext, authentication);
-
 			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(policyDto.getInsurancePlanId()) ||
 					InsurancePlans.FORAGE.getInsurancePlanId().equals(policyDto.getInsurancePlanId())) {
+	
+				DeclaredYieldContractDto dycDto = declaredYieldContractDao.fetch(policyDto.getDeclaredYieldContractGuid());
+				
+				if (dycDto == null) {
+					throw new NotFoundException("Did not find the dop: " + policyDto.getDeclaredYieldContractGuid());
+				}
+	
+				List<ProductDto> productDtos = loadProducts(dycDto.getContractId(), dycDto.getCropYear());
+
+				loadDopYieldContractCommodities(dycDto);
+				loadFields(dycDto);
+
+				if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(policyDto.getInsurancePlanId()) ) {
+					rollupVerifiedYield(dycDto);
+				}
+				
+//				if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(policyDto.getInsurancePlanId()) ) {
+//					loadDopYieldContractCommodities(dycDto);
+//					loadFields(dycDto);
+//				} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(policyDto.getInsurancePlanId()) ) {
+//					loadDopYieldContractCommodities(dycDto);
+//					rollupVerifiedYield(dycDto);
+//				}
+				
+				result = verifiedYieldContractFactory.getDefaultVerifiedYieldContract(policyDto, dycDto, productDtos, factoryContext, authentication);
+
 				calculateVerifiedYieldContractCommodities(result);
-			} 		
+				
+			} else{ 
+				throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
+			}	
 			
 			
 		} catch (DaoException e) {
@@ -212,6 +223,86 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 		logger.debug(">rolloverVerifiedYieldContract");
 		return result;
+	}
+	
+	private void rollupVerifiedYield(VerifiedYieldContract<? extends AnnualField, ? extends Message> vyc) {
+		
+		if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(vyc.getInsurancePlanId()) ) {
+		
+			if(vyc.getVerifiedYieldContractCommodities() != null && vyc.getVerifiedYieldContractCommodities().size() > 0) {
+
+				List<VerifiedYieldContractCommodity> rolledUpRows = new ArrayList<VerifiedYieldContractCommodity>();
+				//Get all rolled up rows (commodity level)
+				rolledUpRows = vyc.getVerifiedYieldContractCommodities().stream()
+								.filter(x -> x.getCommodityTypeCode() == null && Boolean.TRUE.equals(x.getIsRolledupInd()))
+								.collect(Collectors.toList());
+
+				if(rolledUpRows != null && rolledUpRows.size() > 0) {
+			
+					for(VerifiedYieldContractCommodity vycc : rolledUpRows){
+
+						//Set default values for override columns
+						vycc.setHarvestedAcresOverride(null);
+						vycc.setHarvestedYieldOverride(null);
+						
+						//Get all rows that are rolled up (commodity type level)
+						List<VerifiedYieldContractCommodity> rowsToRollup = getVerifiedYieldContractCommoditiesToRollup(vycc.getCropCommodityId(), vyc.getVerifiedYieldContractCommodities());
+						
+						//Check if at least one row has an override value -> Only then an override value is set
+						//Harvested Acres
+						List<VerifiedYieldContractCommodity> rowsWithOverride = rowsToRollup.stream()
+								.filter(x -> x.getHarvestedAcresOverride() != null)
+								.collect(Collectors.toList());
+						
+						Boolean rollupHarvestedAcresOverride = (rowsWithOverride != null && rowsWithOverride.size() > 0);
+						
+						//Harvested Yield
+						rowsWithOverride = rowsToRollup.stream()
+								.filter(x -> x.getHarvestedYieldOverride() != null)
+								.collect(Collectors.toList());
+						
+						Boolean rollupHarvestedYieldOverride = (rowsWithOverride != null && rowsWithOverride.size() > 0);
+						
+						if(rowsToRollup != null && rowsToRollup.size() > 0) {
+							
+							for(VerifiedYieldContractCommodity row : rowsToRollup) {
+								
+								if(Boolean.TRUE.equals(rollupHarvestedAcresOverride)) {
+									//Take override value if it exists otherwise take the calculated value
+									Double effectiveAcres = notNull(row.getHarvestedAcresOverride(), row.getHarvestedAcres());
+									
+									//Can be null if both values at commodity level are null
+									if(effectiveAcres != null) {
+										vycc.setHarvestedAcresOverride(notNull(vycc.getHarvestedAcresOverride(), 0.0) + effectiveAcres);
+									}
+								}
+								
+								if(Boolean.TRUE.equals(rollupHarvestedYieldOverride)) {
+									//Take override value if it exists otherwise take the calculated value
+									Double effectiveYield = notNull(row.getHarvestedYieldOverride(), row.getHarvestedYield());
+									//Can be null if both values at commodity level are null
+									if(effectiveYield != null) {
+										vycc.setHarvestedYieldOverride(notNull(vycc.getHarvestedYieldOverride(), 0.0) + effectiveYield);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private List<VerifiedYieldContractCommodity> getVerifiedYieldContractCommoditiesToRollup(Integer cropCommodityId, List<VerifiedYieldContractCommodity> vyccList) {
+		
+		if(vyccList != null && !vyccList.isEmpty()) {
+		
+			return vyccList.stream()
+					.filter(x -> x.getCropCommodityId().equals(cropCommodityId) && Boolean.FALSE.equals(x.getIsRolledupInd()))
+					.collect(Collectors.toList());
+		} else {
+			return null;
+		}
 	}
 
 	private void rollupVerifiedYield(DeclaredYieldContractDto dycDto) {
@@ -462,7 +553,13 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 			String verifiedYieldContractGuid = insertVerifiedYieldContract(verifiedYieldContract, userId);
 
-			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
+			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) 
+					|| InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId())) {
+
+				if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
+					//Rollup to commodity level has to be done before calculating contract commodities
+					rollupVerifiedYield(verifiedYieldContract);
+				}
 				
 				//Calculate harvested yield and yield per acre
 				calculateVerifiedYieldContractCommodities(verifiedYieldContract);
@@ -471,32 +568,33 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				List<VerifiedYieldContractCommodity> verifiedContractCommodities = verifiedYieldContract.getVerifiedYieldContractCommodities();
 				if (verifiedContractCommodities != null && !verifiedContractCommodities.isEmpty()) {
 					for (VerifiedYieldContractCommodity verifiedContractCommodity : verifiedContractCommodities) {
-						updateVerifiedYieldContractCommodity(verifiedYieldContractGuid, verifiedContractCommodity, null, false, userId);
+						updateVerifiedYieldContractCommodity(verifiedYieldContractGuid, verifiedContractCommodity, null, false, verifiedYieldContract.getInsurancePlanId(), userId);
 					}
 				}
-
-				// Verified Yield Amendment
-				List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
-				if (verifiedAmendments != null && !verifiedAmendments.isEmpty()) {
-					for (VerifiedYieldAmendment verifiedAmendment : verifiedAmendments) {
-
-						// Double check that it wasn't added then deleted.
-						if ( !Boolean.TRUE.equals(verifiedAmendment.getDeletedByUserInd()) ) {
-							updateVerifiedYieldAmendment(verifiedYieldContractGuid, verifiedAmendment, userId);
+				
+				if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
+					
+					// Verified Yield Amendment
+					List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
+					if (verifiedAmendments != null && !verifiedAmendments.isEmpty()) {
+						for (VerifiedYieldAmendment verifiedAmendment : verifiedAmendments) {
+	
+							// Double check that it wasn't added then deleted.
+							if ( !Boolean.TRUE.equals(verifiedAmendment.getDeletedByUserInd()) ) {
+								updateVerifiedYieldAmendment(verifiedYieldContractGuid, verifiedAmendment, userId);
+							}
 						}
 					}
+					
+					//Verified Yield Summary
+					calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, null, userId, authentication);
+					
+					//Grain Basket
+					calculateAndSaveGrainBasket(verifiedYieldContractGuid, verifiedYieldContract, null, userId, authentication);
+				
 				}
-				
-				//Verified Yield Summary
-				calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, null, userId, authentication);
-				
-				//Grain Basket
-				calculateAndSaveGrainBasket(verifiedYieldContractGuid, verifiedYieldContract, null, userId, authentication);
-
-			
-			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
-
-			} else {
+			}
+			else {
 				throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
 			}
 
@@ -1095,7 +1193,8 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			String verifiedYieldContractGuid, 
 			VerifiedYieldContractCommodity verifiedContractCommodity,
 			List<ProductDto> productDtos,
-			Boolean updateProductValues,
+			Boolean updateProductValues, 
+			Integer insurancePlanId,
 			String userId) throws DaoException {
 
 		logger.debug("<updateVerifiedYieldContractCommodity");
@@ -1108,9 +1207,9 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 		if (dto == null) {
 			// Insert if it doesn't exist
-			insertVerifiedYieldContractCommodity(verifiedYieldContractGuid, verifiedContractCommodity, userId);
+			insertVerifiedYieldContractCommodity(verifiedYieldContractGuid, verifiedContractCommodity, insurancePlanId, userId);
 		} else {
-			verifiedYieldContractFactory.updateDto(dto, verifiedContractCommodity, productDtos, updateProductValues);
+			verifiedYieldContractFactory.updateDto(dto, verifiedContractCommodity, productDtos, updateProductValues, insurancePlanId);
 
 			verifiedYieldContractCommodityDao.update(dto, userId);
 		}
@@ -1118,14 +1217,17 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		logger.debug(">updateVerifiedYieldContractCommodity");
 	}
 
-	private void insertVerifiedYieldContractCommodity(String verifiedYieldContractGuid,
-			VerifiedYieldContractCommodity verifiedContractCommodity, String userId) throws DaoException {
+	private void insertVerifiedYieldContractCommodity(
+			String verifiedYieldContractGuid,
+			VerifiedYieldContractCommodity verifiedContractCommodity, 
+			Integer insurancePlanId,
+			String userId) throws DaoException {
 
 		logger.debug("<insertVerifiedYieldContractCommodity");
 
 		VerifiedYieldContractCommodityDto dto = new VerifiedYieldContractCommodityDto();
 
-		verifiedYieldContractFactory.updateDto(dto, verifiedContractCommodity, null, false);
+		verifiedYieldContractFactory.updateDto(dto, verifiedContractCommodity, null, false, insurancePlanId);
 
 		dto.setVerifiedYieldContractCommodityGuid(null);
 		dto.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
@@ -1217,8 +1319,14 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 			updateVerifiedYieldContract(verifiedYieldContract, userId);
 
-			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
+			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) 
+					|| InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId())) {
 
+				if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
+					//Rollup to commodity level has to be done before calculating contract commodities
+					rollupVerifiedYield(verifiedYieldContract);
+				}
+			
 				List<ProductDto> productDtos = null;
 				//Get products if the user wants to update the product data
 				if(Boolean.TRUE.equals(verifiedYieldContract.getUpdateProductValuesInd())) {
@@ -1232,31 +1340,31 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				List<VerifiedYieldContractCommodity> verifiedContractCommodities = verifiedYieldContract.getVerifiedYieldContractCommodities();
 				if (verifiedContractCommodities != null && !verifiedContractCommodities.isEmpty()) {
 					for (VerifiedYieldContractCommodity verifiedContractCommodity : verifiedContractCommodities) {
-						updateVerifiedYieldContractCommodity(verifiedYieldContractGuid, verifiedContractCommodity, productDtos, verifiedYieldContract.getUpdateProductValuesInd(), userId);
+						updateVerifiedYieldContractCommodity(verifiedYieldContractGuid, verifiedContractCommodity, productDtos, verifiedYieldContract.getUpdateProductValuesInd(), verifiedYieldContract.getInsurancePlanId(), userId);
 					}
 				}
-
-				// Verified Yield Amendment
-				List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
-				if (verifiedAmendments != null && !verifiedAmendments.isEmpty()) {
-					for (VerifiedYieldAmendment verifiedAmendment : verifiedAmendments) {
-						if ( Boolean.TRUE.equals(verifiedAmendment.getDeletedByUserInd())) {
-							deleteVerifiedYieldAmendment(verifiedAmendment);
-						} else {
-							updateVerifiedYieldAmendment(verifiedYieldContractGuid, verifiedAmendment, userId);
+			
+				if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
+	
+					// Verified Yield Amendment
+					List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
+					if (verifiedAmendments != null && !verifiedAmendments.isEmpty()) {
+						for (VerifiedYieldAmendment verifiedAmendment : verifiedAmendments) {
+							if ( Boolean.TRUE.equals(verifiedAmendment.getDeletedByUserInd())) {
+								deleteVerifiedYieldAmendment(verifiedAmendment);
+							} else {
+								updateVerifiedYieldAmendment(verifiedYieldContractGuid, verifiedAmendment, userId);
+							}
 						}
 					}
+					
+					//Verified Yield Summary
+					calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, productDtos, userId, authentication);
+					
+					//Grain Basket
+					calculateAndSaveGrainBasket(verifiedYieldContractGuid, verifiedYieldContract, productDtos, userId, authentication);
+					
 				}
-				
-				//Verified Yield Summary
-				calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, productDtos, userId, authentication);
-				
-				//Grain Basket
-				calculateAndSaveGrainBasket(verifiedYieldContractGuid, verifiedYieldContract, productDtos, userId, authentication);
-
-				
-			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
-
 			} else {
 				throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
 			}
@@ -1309,18 +1417,16 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		if (dto == null) {
 			throw new NotFoundException("Did not find the verified yield contract: " + verifiedYieldContractGuid);
 		}
+
+		verifiedYieldContractCommodityDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
+		verifiedYieldAmendmentDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
+		underwritingCommentDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
+		verifiedYieldSummaryDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
+
 		
 		if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
-			
-			verifiedYieldContractCommodityDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
-			verifiedYieldAmendmentDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
-			underwritingCommentDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
-			verifiedYieldSummaryDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
 			verifiedYieldGrainBasketDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
-
 		} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
-
-			
 		} else {
 			throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
 		}

@@ -137,17 +137,53 @@
 	<select id="selectForVerifiedYieldContract" resultMap="VerifiedYieldContractCommodityDtoMap">
 		<include refid="selectColumns"/>,
 			cc.commodity_name as crop_commodity_name,
-			icc.total_seeded_acres as total_insured_acres,
+			--Insured Acres are loaded differently for grain and forage
+			CASE WHEN cc.insurance_plan_id = 4 THEN
+				--GRAIN
+				(
+					SELECT icc.total_seeded_acres
+					FROM inventory_contract_commodity icc
+					JOIN inventory_contract ic ON icc.inventory_contract_guid = ic.inventory_contract_guid 
+					WHERE ic.contract_id = vyc.contract_id 
+						AND ic.crop_year = vyc.crop_year
+						AND icc.crop_commodity_id = t.crop_commodity_id
+						AND icc.is_pedigree_ind = t.is_pedigree_ind
+				)
+			ELSE
+				CASE WHEN cc.insurance_plan_id = 5 THEN
+				--FORAGE
+					CASE WHEN t.commodity_type_code is null THEN
+					--Rolled Up Commodity Level
+						(
+							SELECT SUM(dyccf.total_field_acres)
+							FROM declared_yield_contract_cmdty_forage dyccf
+							JOIN commodity_type_code ctc ON ctc.commodity_type_code = dyccf.commodity_type_code
+							JOIN declared_yield_contract dyc ON dyc.declared_yield_contract_guid = dyccf.declared_yield_contract_guid
+							WHERE dyc.contract_id = vyc.contract_id 
+								AND dyc.crop_year = vyc.crop_year
+								AND ctc.crop_commodity_id = t.crop_commodity_id
+							GROUP BY ctc.crop_commodity_id
+						)
+					ELSE
+					--Commodity Type Level
+						(
+							SELECT dyccf.total_field_acres
+							FROM declared_yield_contract_cmdty_forage dyccf
+							JOIN declared_yield_contract dyc ON dyc.declared_yield_contract_guid = dyccf.declared_yield_contract_guid
+							WHERE dyc.contract_id = vyc.contract_id 
+								AND dyc.crop_year = vyc.crop_year
+								AND dyccf.commodity_type_code = t.commodity_type_code
+						)
+					END
+				ELSE
+					NULL
+				END
+			END AS total_insured_acres,
 			ctc.description as commodity_type_description
 		from verified_yield_contract_commodity t
 		join crop_commodity cc on cc.crop_commodity_id = t.crop_commodity_id
 		left join commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code
 		join verified_yield_contract vyc on vyc.verified_yield_contract_guid = t.verified_yield_contract_guid
-		left join inventory_contract ic on ic.contract_id = vyc.contract_id 
-									   and ic.crop_year = vyc.crop_year
-		left join inventory_contract_commodity icc on icc.inventory_contract_guid = ic.inventory_contract_guid 
-												   and icc.crop_commodity_id = t.crop_commodity_id
-												   and icc.is_pedigree_ind = t.is_pedigree_ind
 		where t.verified_yield_contract_guid = #{verifiedYieldContractGuid}
 		order by cc.commodity_name, t.is_pedigree_ind, ctc.description NULLS FIRST
 	</select> 
