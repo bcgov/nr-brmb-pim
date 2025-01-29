@@ -2,34 +2,42 @@
     <div class="base-container">
         <div class="base-container flex-y">
 
-            <div class="policy-header-container">
+            <div class="policy-header-container" style="grid-template-columns:  auto 28px 140px 147px 12px 214px 12px 70px;">
                 <div class="grower-header">
                     <div>User Settings</div>
                     <div>Manage preferences for policy search</div>
                 </div>
 
                 <!-- unsaved messages -->
-                <div *ngIf="hasDataChanged; else noWarningDiv">
+                <div *ngIf="isUnsaved; else noWarningDiv">
                     <mat-icon [ngStyle]="{'color':'orange', 'width':'24px', 'margin-top':'9px'}">warning</mat-icon>
                 </div>
-                <div *ngIf="hasDataChanged; else noWarningDiv" class="unsaved-changes">
+                <div *ngIf="isUnsaved; else noWarningDiv" class="unsaved-changes">
                     Unsaved Changes
                 </div>
                 <ng-template #noWarningDiv>
                     <div><!-- empty div to account for space when there is no warning --> </div>
                 </ng-template>
+
                 <div>
                     <button *ngIf="securityUtilService.canEditUserSettings()" mat-raised-button class="secondary"
-                        [disabled]="!hasDataChanged" (click)="onCancel()">
+                        [disabled]="!isUnsaved" (click)="onCancel()">
                         Clear Changes
                     </button>
                 </div>
+                <div class="vertical-line"></div>
                 <div>
-                    <!-- TODO -->
-                    <!-- <button *ngIf="securityUtilService.canEditUserSettings()" mat-raised-button class="primary"
-                        [disabled]="!hasDataChanged" (click)="onSave()">
+                    <button mat-raised-button class="secondary"
+                        (click)="onRestoreDefaultSettings()">
+                        Restore Default Settings
+                    </button>
+                </div>
+                <div class="vertical-line"></div>
+                <div>
+                    <button *ngIf="securityUtilService.canEditUserSettings()" mat-raised-button class="primary"
+                        [disabled]="!isUnsaved" (click)="onSave()">
                         Save
-                    </button> -->
+                    </button>
                 </div>
 
             </div>
@@ -84,14 +92,13 @@
                     </mat-form-field>
                 </div>
 
-
                 <div style="grid-column-start: 1; grid-column-end: 3; padding-top: 16px;;">
-                    Restore Default Settings:
 
-                    <mat-checkbox style="padding-left: 10px;"
-                        formControlName="setDefaultSettings" 
-                        (change)="isChecked($event)">
-                    </mat-checkbox>
+                    <!-- <button mat-raised-button class="primary"
+                        (click)="onRestoreDefaultSettings()">
+                        Restore Default Settings
+                    </button> -->
+
                 </div>
 
               </div>

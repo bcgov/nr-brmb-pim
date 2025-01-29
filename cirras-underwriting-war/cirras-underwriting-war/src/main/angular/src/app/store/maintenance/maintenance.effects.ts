@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {Action, Store} from "@ngrx/store";
-import {DefaultService as CirrasUnderwritingAPIService, CropVarietyInsurabilityListRsrc, GradeModifierListRsrc, SeedingDeadlineListRsrc, UnderwritingYearRsrc, YieldMeasUnitConversionListRsrc} from "@cirras/cirras-underwriting-api";
+import {DefaultService as CirrasUnderwritingAPIService, CropVarietyInsurabilityListRsrc, GradeModifierListRsrc, SeedingDeadlineListRsrc, UnderwritingYearRsrc, UserSettingRsrc, YieldMeasUnitConversionListRsrc} from "@cirras/cirras-underwriting-api";
 import {TokenService} from "@wf1/wfcc-core-lib";
 import {UUID} from "angular2-uuid";
 import {Observable, of} from 'rxjs';
@@ -24,10 +24,13 @@ import { ADD_UW_YEAR, AddUwYearAction, LOAD_VARIETY_INSURABILITY, LOAD_GRADE_MOD
     LOAD_USER_SETTINGS,
     LoadUserSettingsAction,
     LoadUserSettingsSuccess,
-    LoadUserSettingsError} from "./maintenance.actions";
+    LoadUserSettingsError,
+    ADD_NEW_USER_SETTINGS,
+    UserSettingsAction,
+    UPDATE_USER_SETTINGS} from "./maintenance.actions";
 import { convertToCropVarietyInsurabilityList, convertToGradeModifierList, convertToGradeModifierTypesList, convertToSeedingDeadlinesList, convertToUnderwritingYear, convertToUnderwritingYearList, convertToUserSettings, convertToYieldConversionList } from "src/app/conversion/conversion-from-rest-maintenance";
-import { CropVarietyInsurabilityList, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, YieldMeasUnitConversionList } from "src/app/conversion/models-maintenance";
-import { convertToCropVarietyInsurabilityListRsrc, convertToGradeModifierListRsrc, convertToGradeModifierTypeListRsrc, convertToSeedingDeadlineListRsrc, convertToUnderwritingYearRsrc, convertToYieldConversionListRsrc } from "src/app/conversion/conversion-to-rest-maintenance";
+import { CropVarietyInsurabilityList, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, UserSetting, YieldMeasUnitConversionList } from "src/app/conversion/models-maintenance";
+import { convertToCropVarietyInsurabilityListRsrc, convertToGradeModifierListRsrc, convertToGradeModifierTypeListRsrc, convertToSeedingDeadlineListRsrc, convertToUnderwritingYearRsrc, convertToUserSettingRsrc, convertToYieldConversionListRsrc } from "src/app/conversion/conversion-to-rest-maintenance";
 import { displaySaveSuccessSnackbar } from "src/app/utils/user-feedback-utils";
 
 @Injectable()
@@ -512,7 +515,7 @@ saveYieldConversion: Observable<Action> = createEffect (() => this.actions.pipe(
 ));
 
 
-getUserSettings: Observable<Action> = createEffect (() => this.actions.pipe(
+getUserSetting: Observable<Action> = createEffect (() => this.actions.pipe(
   ofType(LOAD_USER_SETTINGS),
   withLatestFrom(this.store),
   debounceTime(500),
@@ -528,10 +531,11 @@ getUserSettings: Observable<Action> = createEffect (() => this.actions.pipe(
         REST_VERSION,
         "no-cache",  
         "no-cache",  
-        `Bearer ${authToken}`
+        `Bearer ${authToken}`,
+        "response"
       ).pipe(
         map((response: any) => {
-            return LoadUserSettingsSuccess(convertToUserSettings(response ) ); 
+            return LoadUserSettingsSuccess(convertToUserSettings(response.body, response.headers ? response.headers.get("ETag") : null ) ); 
         }),
         
         catchError(
@@ -541,5 +545,96 @@ getUserSettings: Observable<Action> = createEffect (() => this.actions.pipe(
     }
   )
 ))
+
+
+addNewUserSetting: Observable<Action> = createEffect (() => this.actions.pipe(
+    ofType(ADD_NEW_USER_SETTINGS),
+    withLatestFrom(this.store),
+    debounceTime(500),
+    switchMap(
+        ([action, store]) => {
+            let typedAction = <UserSettingsAction>action;
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let authToken = this.tokenService.getOauthToken();
+
+            const userSettings = typedAction.payload.userSettings 
+            const body: UserSettingRsrc = convertToUserSettingRsrc(userSettings)
+            
+              return this.CirrasUnderwritingAPIService.addANewUserSetting(
+                body,
+                requestId,
+                REST_VERSION, 
+                "no-cache",  
+                "no-cache",  
+                `Bearer ${authToken}`,
+                "response")
+              .pipe(
+                  concatMap((response: any) => {
+
+                    displaySaveSuccessSnackbar(this.snackbarService, "User Settings ");
+
+                    let newUserSettings: UserSetting = convertToUserSettings(response.body, response.headers ? response.headers.get("ETag") : null) 
+
+                    return [                                                                         
+                      LoadUserSettingsSuccess(newUserSettings)                             
+                    ]
+                  }),
+                  catchError(error =>{
+                     return of(LoadUserSettingsError(convertToErrorState(error, "Load User Settings "))) 
+                  }
+              ),
+              )   
+        }                  
+    )
+))
+
+updateUserSettings: Observable<Action> = createEffect (() => this.actions.pipe(
+    ofType(UPDATE_USER_SETTINGS),
+    withLatestFrom(this.store),
+    debounceTime(500),
+    switchMap(
+        ([action, store]) => {
+            let typedAction = <UserSettingsAction>action;
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let authToken = this.tokenService.getOauthToken();
+
+            let payload = <UserSetting>typedAction.payload.userSettings
+
+            const userSettings = typedAction.payload.userSettings 
+            const body: UserSettingRsrc = convertToUserSettingRsrc(userSettings)
+            
+              return this.CirrasUnderwritingAPIService.updateUserSetting(
+                payload.etag,
+                userSettings.userSettingGuid,
+                body,
+                requestId,
+                REST_VERSION, 
+                "no-cache",  
+                "no-cache",  
+                `Bearer ${authToken}`,
+                "response")
+              .pipe(
+                  concatMap((response: any) => {
+
+                    displaySaveSuccessSnackbar(this.snackbarService, "User Settings ");
+
+                    let newUserSettings: UserSetting = convertToUserSettings(response.body, response.headers ? response.headers.get("ETag") : null) 
+
+
+                    return [                                                                         
+                      LoadUserSettingsSuccess(newUserSettings)                            
+                    ]
+                  }),
+                  catchError(error =>{
+                      return of(LoadUserSettingsError(convertToErrorState(error, "Load User Settings "))) 
+                  }
+              ),
+              )            
+        }                  
+    )
+));
+
+
+
 
 }

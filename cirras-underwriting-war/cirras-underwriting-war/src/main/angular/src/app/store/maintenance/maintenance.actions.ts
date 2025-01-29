@@ -52,6 +52,9 @@ export const LOAD_USER_SETTINGS = "LOAD_USER_SETTINGS";
 export const LOAD_USER_SETTINGS_SUCCESS = "LOAD_USER_SETTINGS_SUCCESS";
 export const LOAD_USER_SETTINGS_ERROR = "LOAD_USER_SETTINGS_ERROR";
 
+export const ADD_NEW_USER_SETTINGS = "ADD_NEW_USER_SETTINGS"
+export const UPDATE_USER_SETTINGS = "UPDATE_USER_SETTINGS"
+
 // Load uw years
 export interface LoadUwYearsAction extends Action {
     componentId: string;
@@ -604,6 +607,35 @@ export function LoadUserSettingsError(error: ErrorState): LoadErrorAction {
     componentId: USER_SETTINGS_COMPONENT_ID,
     payload: {
       error
+    }
+  };
+}
+
+export interface UserSettingsAction extends Action {
+  componentId: string;
+  payload: {
+    userSettings: UserSetting; 
+  };
+}
+
+export function AddNewUserSettings(userSettings: UserSetting): UserSettingsAction {
+  
+  return {
+    type: ADD_NEW_USER_SETTINGS,
+    componentId: USER_SETTINGS_COMPONENT_ID,
+    payload: {
+      userSettings
+    }
+  };
+}
+
+export function UpdateUserSettings(userSettings: UserSetting): UserSettingsAction {
+  
+  return {
+    type: UPDATE_USER_SETTINGS,
+    componentId: USER_SETTINGS_COMPONENT_ID,
+    payload: {
+      userSettings
     }
   };
 }
