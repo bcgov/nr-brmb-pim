@@ -200,14 +200,6 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 					rollupVerifiedYield(dycDto);
 				}
 				
-//				if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(policyDto.getInsurancePlanId()) ) {
-//					loadDopYieldContractCommodities(dycDto);
-//					loadFields(dycDto);
-//				} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(policyDto.getInsurancePlanId()) ) {
-//					loadDopYieldContractCommodities(dycDto);
-//					rollupVerifiedYield(dycDto);
-//				}
-				
 				result = verifiedYieldContractFactory.getDefaultVerifiedYieldContract(policyDto, dycDto, productDtos, factoryContext, authentication);
 
 				calculateVerifiedYieldContractCommodities(result);
