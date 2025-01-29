@@ -32,8 +32,8 @@
       cirrasunderwritingRestUri = cirrasunderwritingRestUri.substring(0, cirrasunderwritingRestUri.length() - 1); //Strip off trailing slash, if it exists.
     }
 	
-	String grainVerifiedYieldCalculatorUri = EnvironmentVariable.getVariable("CIRRAS_UNDERWRITING_GRAIN_VERIFIED_YIELD_CALCULATOR_URI");	
-	String forageVerifiedYieldCalculatorUri = EnvironmentVariable.getVariable("CIRRAS_UNDERWRITING_FORAGE_VERIFIED_YIELD_CALCULATOR_URI");	
+	String grainVerifiedYieldCalculatorUri = EnvironmentVariable.getVariable("GRAIN_VERIFIED_YIELD_CALCULATOR_URI");	
+	String forageVerifiedYieldCalculatorUri = EnvironmentVariable.getVariable("FORAGE_VERIFIED_YIELD_CALCULATOR_URI");	
 
     json = json.append("\"rest\":{");
     json = json.append("\"cirras_underwriting\":\"").append(cirrasunderwritingRestUri).append("\"").append(",");
