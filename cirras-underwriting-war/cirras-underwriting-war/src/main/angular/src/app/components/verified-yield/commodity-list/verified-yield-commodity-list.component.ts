@@ -20,7 +20,6 @@ export class VerifiedYieldCommodityListComponent  {
   goToYieldCalculatorLink(){
 
     let yieldCalculatorLink = this.appConfigService.getConfig().rest["grain_verified_yield_calculator_url"]
-    console.log("yieldCalculatorLink : " + yieldCalculatorLink)
     window.open(yieldCalculatorLink, "_blank");
   }
 
