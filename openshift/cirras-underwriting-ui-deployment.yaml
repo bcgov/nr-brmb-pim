@@ -74,6 +74,16 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-ui-config-#{ENV}#
                   key: CIRRAS_UNDERWRITING_REST_URI
+            - name: GRAIN_VERIFIED_YIELD_CALCULATOR_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: GRAIN_VERIFIED_YIELD_CALCULATOR_URI
+            - name: FORAGE_VERIFIED_YIELD_CALCULATOR_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-ui-config-#{ENV}#
+                  key: FORAGE_VERIFIED_YIELD_CALCULATOR_URI
             - name: WEBADE_OAUTH2_AUTHORIZE_URL
               valueFrom:
                 configMapKeyRef:
