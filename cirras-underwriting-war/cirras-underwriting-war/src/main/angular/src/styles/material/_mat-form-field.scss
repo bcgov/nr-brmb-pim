@@ -58,6 +58,9 @@
     }
 }
 .number{
+    .mdc-text-field {
+        padding-right: 0px;
+    }
     .mat-mdc-form-field-input-control {
         text-align: center;
     }

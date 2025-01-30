@@ -87,30 +87,13 @@ export class GrowerContractHeaderComponent {
     return false
   }
 
-  isForageScreen(){
-
-    let routerUrl = this.router.url.toString()
-
-    if (routerUrl.indexOf(ResourcesRoutes.INVENTORY_FORAGE) > -1 ||
-        routerUrl.indexOf(ResourcesRoutes.DOP_FORAGE) > -1 ) {
-
-      return true
-
-    } else {
-
-      return false
-      
-    }
-    
-  }
-
   setStyles(){
 
     let styles = { // default - for Grain
       'grid-template-columns':  '26px 154px 35px 26px 134px 35px 26px 190px 35px 26px 110px auto'
     }
 
-    if (this.isForageScreen()) {
+    if (this.growerContract && this.growerContract.insurancePlanId == INSURANCE_PLAN.FORAGE ) {
       styles = {
         'grid-template-columns':  '26px 134px 35px 26px 200px 35px 26px 110px auto'
       }
