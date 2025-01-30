@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.VerifiedYieldGrainBasketMapper">
+
+	<resultMap id="VerifiedYieldGrainBasketDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldGrainBasketDto">
+
+		<id property="verifiedYieldGrainBasketGuid" column="verified_yield_grain_basket_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+
+		<result property="verifiedYieldContractGuid" column="verified_yield_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="basketValue" column="basket_value" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="harvestedValue" column="harvested_value" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="comment" column="comment" javaType="java.lang.String" jdbcType="VARCHAR" />
+
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	
+    <sql id="selectColumns">
+		select t.verified_yield_grain_basket_guid, 
+			   t.verified_yield_contract_guid, 
+			   t.basket_value,
+			   t.harvested_value, 
+			   t.comment,
+			   t.create_user, 
+			   t.create_date, 
+			   t.update_user, 
+			   t.update_date
+    </sql>
+    
+    <select id="fetch" resultMap="VerifiedYieldGrainBasketDtoMap">
+		<include refid="selectColumns"/>
+		from verified_yield_grain_basket t
+		where t.verified_yield_grain_basket_guid = #{verifiedYieldGrainBasketGuid}
+	</select>
+
+	<insert id="insert">
+		<selectKey keyProperty="verifiedYieldGrainBasketGuid" resultType="java.lang.String" order="BEFORE"> 
+			select replace(cast(gen_random_uuid() as text), '-', '')
+		</selectKey>
+
+		insert into verified_yield_grain_basket(
+			verified_yield_grain_basket_guid,
+			verified_yield_contract_guid,
+			basket_value,
+			harvested_value, 
+			comment,
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date
+		) values (
+			#{verifiedYieldGrainBasketGuid},
+			#{dto.verifiedYieldContractGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.basketValue, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.harvestedValue, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.comment, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+	</insert> 
+
+	<update id="update">
+		update verified_yield_grain_basket
+		set basket_value = #{dto.basketValue, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			harvested_value = #{dto.harvestedValue, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			comment = #{dto.comment, javaType=java.lang.String , jdbcType=NUMERIC, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where verified_yield_grain_basket_guid = #{dto.verifiedYieldGrainBasketGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
+	</update> 
+
+	<delete id="delete">
+		delete from verified_yield_grain_basket where verified_yield_grain_basket_guid = #{verifiedYieldGrainBasketGuid}
+	</delete>
+	
+	<delete id="deleteForVerifiedYieldContract">
+		delete from verified_yield_grain_basket where verified_yield_contract_guid = #{verifiedYieldContractGuid}
+	</delete>
+			
+	<select id="selectForVerifiedYieldContract" resultMap="VerifiedYieldGrainBasketDtoMap">
+		<include refid="selectColumns"/>
+		from verified_yield_grain_basket t
+		where t.verified_yield_contract_guid = #{verifiedYieldContractGuid}
+	</select>
+
+</mapper>

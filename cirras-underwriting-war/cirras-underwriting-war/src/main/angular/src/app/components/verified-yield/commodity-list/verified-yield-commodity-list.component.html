@@ -57,9 +57,9 @@
 
     <div class="verified-yield-commodities-container"
         style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 125px 60px; margin-left: 0px;">
-        <verified-yield-commodity *ngFor="let commodity of commodities" [commodity]="commodity"
-            [commoditiesFormArray]="commoditiesFormArray"
-            [isUnsaved]="isUnsaved"
+        <verified-yield-commodity *ngFor="let commodity of commodities" 
+            [commodity]="commodity"
+            [commoditiesFormArray]="commoditiesFormArray"            
             style="display: contents;"></verified-yield-commodity>
 
     </div>

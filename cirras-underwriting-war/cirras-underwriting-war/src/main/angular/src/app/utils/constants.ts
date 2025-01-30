@@ -8,7 +8,7 @@ export enum ResourcesRoutes {
     INVENTORY_FORAGE = "inventory/forage",
     DOP_GRAIN = "dop/grain",
     DOP_FORAGE = "dop/forage",
-    VERIFIED_YIELD_GRAIN = "verified-yield/grain",
+    VERIFIED_YIELD = "verified-yield",
     MAINTAIN_DASHBOARD = "maintain/dashboard",
     MAINTAIN_SEEDING_DEADLINES = "maintain/seeding-deadlines",
     MAINTAIN_GRADE_MODIFIERS = "maintain/grade-modifiers",
@@ -20,7 +20,8 @@ export enum ResourcesRoutes {
     UNAUTHORIZED = "unauthorized",
     ERROR_PAGE = "error",
     SIGN_UP = "sign-up",
-    SIGN_OUT = "sign-out-page"
+    SIGN_OUT = "sign-out-page",
+    USER_SETTINGS = "user-settings"
 }
 
 export const CODE_TABLE_CACHE = {};

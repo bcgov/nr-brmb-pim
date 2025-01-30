@@ -25,6 +25,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.LegalLandR
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.RiskAreaRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.SeedingDeadlineRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.UnderwritingYearRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.UserSettingRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.UwContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.VerifiedYieldContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.YieldMeasUnitConversionRsrcFactory;
@@ -179,4 +180,10 @@ public class ResourceFactorySpringConfig {
 		return result;
 	}	
 
+	@Bean
+	public UserSettingRsrcFactory userSettingRsrcFactory() {
+		UserSettingRsrcFactory result = new UserSettingRsrcFactory();
+		return result;
+	}
+	
 }
