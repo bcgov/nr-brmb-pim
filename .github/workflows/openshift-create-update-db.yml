@@ -64,7 +64,6 @@ jobs:
         if: ${{ inputs.ENVIRONMENT_NAME == 'dev' }}
         run: |
           sed -i 's/  name: {{ template "crunchy-postgres.fullname" . }}/  name: crunchy-postgres/' crunchy-postgres/charts/crunchy-postgres/templates/PostgresCluster.yaml
-          cat crunchy-postgres/charts/crunchy-postgres/templates/PostgresCluster.yaml
       
       - name: install helm
         run: |
