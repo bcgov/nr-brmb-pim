@@ -1,5 +1,5 @@
 <div class="plcy-inv-cmdty-totals-header"
-    style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 125px 60px; padding-left: 10px;">
+    style="grid-template-columns: 180px 100px 115px 115px 115px 115px 130px 125px 60px; padding-left: 10px;">
 
     <div *ngIf="isUnsaved" class="table-header border-top border-left border-right"
         style="grid-column-start: 1; grid-column-end: 10;">
@@ -23,40 +23,40 @@
         </button>
     </div>
 
-    <div class="header border-top border-bottom border-right  border-left">
-        Commodity
+    <div class="header border-top border-bottom border-right border-left">
+        {{ ( isGrainPolicy() ? "Commodity" : "Type" ) }}
     </div>
-    <div class="border-right header border-top border-bottom"
+    <div class="border-right header border-top border-bottom" style="text-align: center;"
         matTooltip="Acres are rounded to the nearest tenth after the decimal point.">
         Insured Acres
     </div>
-    <div class="border-right header border-top border-bottom"
+    <div class="border-right header border-top border-bottom" style="text-align: center;"
         matTooltip="Acres are rounded to the nearest tenth after the decimal point.">
         Harvested Acres
     </div>
-    <div class="border-right header border-top border-bottom"
+    <div class="border-right header border-top border-bottom" style="text-align: center;"
         matTooltip="Acres are rounded to the nearest tenth after the decimal point.">
         Override Acres
     </div>
-    <div class="header border-top border-bottom border-right">
+    <div class="header border-top border-bottom border-right" style="text-align: center;">
         Production Guarantee
     </div>
-    <div class="header border-top border-bottom border-right">
+    <div class="header border-top border-bottom border-right" style="text-align: center;">
         Harvested Yield
     </div>
-    <div class="header border-top border-bottom border-right">
+    <div class="header border-top border-bottom border-right" style="text-align: center;">
         Override Yield
     </div>
-    <div class="header border-top border-bottom border-right">
+    <div class="header border-top border-bottom border-right" style="text-align: center;">
         Yield/ac
     </div>
 
-    <div class="header border-top border-bottom border-right">
+    <div class="header border-top border-bottom border-right" style="text-align: center;">
         Actions
     </div>
 
     <div class="verified-yield-commodities-container"
-        style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 125px 60px; margin-left: 0px;">
+        style="grid-template-columns: 180px 100px 115px 115px 115px 115px 130px 125px 60px; margin-left: 0px;">
         <verified-yield-commodity *ngFor="let commodity of commodities" 
             [commodity]="commodity"
             [commoditiesFormArray]="commoditiesFormArray"            

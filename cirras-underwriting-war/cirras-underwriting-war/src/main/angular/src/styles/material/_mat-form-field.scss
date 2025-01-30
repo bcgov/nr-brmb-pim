@@ -56,7 +56,11 @@
     .mat-mdc-form-field-type-mat-select:not(.mat-form-field-disabled) .mat-mdc-text-field-wrapper {
         padding-left:2px;
     }
-
+}
+.number{
+    .mat-mdc-form-field-input-control {
+        text-align: center;
+    }
 }
 
 .inventory-date{

@@ -96,9 +96,10 @@
            <div style="margin-top: 16px;">
             <!-- GRAIN commodity totals -->
             <verified-yield-commodity-list
-                *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodities && isGrainPolicy()"
+                *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodities"
                 [commodities]="verifiedYieldContract.verifiedYieldContractCommodities"
                 [commoditiesFormArray]="getViewModel().formGroup.controls.verifiedYieldContractCommodities"
+                [insurancePlanId]="verifiedYieldContract.insurancePlanId"
                 [isUnsaved]="isUnsaved"></verified-yield-commodity-list>
             </div>
 
