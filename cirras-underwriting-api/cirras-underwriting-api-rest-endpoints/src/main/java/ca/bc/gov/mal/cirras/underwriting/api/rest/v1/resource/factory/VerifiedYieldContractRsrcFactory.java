@@ -37,6 +37,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
@@ -91,6 +92,17 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			resource.setVerifiedYieldContractCommodities(vyContractCommodities);
 		}
 		
+		if (!dycDto.getDeclaredYieldContractCommodityForageList().isEmpty()) {
+			List<VerifiedYieldContractCommodity> vyContractCommodities = new ArrayList<VerifiedYieldContractCommodity>();
+
+			for (DeclaredYieldContractCommodityForageDto dyccfDto : dycDto.getDeclaredYieldContractCommodityForageList()) {
+				VerifiedYieldContractCommodity vyccModel = createDefaultVerifiedYieldContractCommodity(dyccfDto, productDtos);
+				vyContractCommodities.add(vyccModel);
+			}
+
+			resource.setVerifiedYieldContractCommodities(vyContractCommodities);
+		}
+		
 		String eTag = getEtag(resource);
 		resource.setETag(eTag);
 
@@ -124,6 +136,10 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 
 		model.setCropCommodityId(dto.getCropCommodityId());
 		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setDisplayName(dto.getCropCommodityName());
+		model.setCommodityTypeCode(null); //Irrelevant for Grain
+		model.setCommodityTypeDescription(null); //Irrelevant for Grain
+		model.setIsRolledupInd(false); //Always false for Grain
 		model.setHarvestedAcres(dto.getHarvestedAcres());
 		model.setHarvestedAcresOverride(null);
 		model.setHarvestedYield(null);   // Calculated later
@@ -133,6 +149,45 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		model.setSoldYieldDefaultUnit(dto.getSoldYieldDefaultUnit());
 		model.setStoredYieldDefaultUnit(dto.getStoredYieldDefaultUnit());
 		model.setTotalInsuredAcres(dto.getTotalInsuredAcres());
+		model.setVerifiedYieldContractCommodityGuid(null);
+		model.setVerifiedYieldContractGuid(null);
+		model.setYieldPerAcre(null); // Calculated later
+
+		return model;
+	}
+	
+	private VerifiedYieldContractCommodity createDefaultVerifiedYieldContractCommodity(DeclaredYieldContractCommodityForageDto dto, List<ProductDto> productDtos) {
+		VerifiedYieldContractCommodity model = new VerifiedYieldContractCommodity();
+		
+		//Get production guarantee 
+		Boolean isRolledUpInd = false;
+		String displayName = dto.getCommodityTypeDescription();
+		Double productionGuarantee = null;
+		if(Boolean.TRUE.equals(dto.getIsRolledupInd())) {
+			//Show commodity name if it's a rolled up row
+			displayName = dto.getCropCommodityName();
+			isRolledUpInd = true;
+			ProductDto product = getProductDto(dto.getCropCommodityId(), false, productDtos);
+			if(product != null && product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
+				productionGuarantee = product.getProductionGuarantee();
+			}
+		}
+
+		model.setCropCommodityId(dto.getCropCommodityId());
+		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setDisplayName(displayName);
+		model.setCommodityTypeCode(dto.getCommodityTypeCode());
+		model.setCommodityTypeDescription(dto.getCommodityTypeDescription());
+		model.setIsRolledupInd(isRolledUpInd);
+		model.setHarvestedAcres(dto.getHarvestedAcres());
+		model.setHarvestedAcresOverride(null);
+		model.setHarvestedYield(dto.getQuantityHarvestedTons());
+		model.setHarvestedYieldOverride(null);
+		model.setIsPedigreeInd(false);
+		model.setProductionGuarantee(productionGuarantee);
+		model.setSoldYieldDefaultUnit(null);
+		model.setStoredYieldDefaultUnit(null);
+		model.setTotalInsuredAcres(dto.getTotalFieldAcres());
 		model.setVerifiedYieldContractCommodityGuid(null);
 		model.setVerifiedYieldContractGuid(null);
 		model.setYieldPerAcre(null); // Calculated later
@@ -165,7 +220,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			List<VerifiedYieldContractCommodity> verifiedContractCommodities = new ArrayList<VerifiedYieldContractCommodity>();
 
 			for (VerifiedYieldContractCommodityDto vyccDto : dto.getVerifiedYieldContractCommodities()) {
-				VerifiedYieldContractCommodity vyccModel = createVerifiedYieldContractCommodity(vyccDto);
+				VerifiedYieldContractCommodity vyccModel = createVerifiedYieldContractCommodity(vyccDto, dto.getInsurancePlanId());
 				verifiedContractCommodities.add(vyccModel);
 			}
 
@@ -204,7 +259,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			resource.setVerifiedYieldSummaries(verifiedYieldSummaries);
 		}
 		
-		getGrainBasketProductWarnings(resource.getVerifiedYieldGrainBasket(), productDtos, productWarnings);
+		getGrainBasketProductWarnings(resource.getVerifiedYieldGrainBasket(), productDtos, productWarnings, dto.getInsurancePlanId());
 				
 		resource.setProductWarningMessages(productWarnings);
 		
@@ -327,53 +382,59 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 	public static final String GRAIN_BASKET_NO_GB_MSG = "There is no grain basket saved but there is one in CIRRAS.";
 
 	
-	private void getGrainBasketProductWarnings(VerifiedYieldGrainBasket gbDto, List<ProductDto> productDtos, List<MessageRsrc> messageRsrcList) {
+	private void getGrainBasketProductWarnings(
+			VerifiedYieldGrainBasket gbDto, 
+			List<ProductDto> productDtos, 
+			List<MessageRsrc> messageRsrcList,
+			Integer insurancePlanId) {
 		
-		//Find product
-		ProductDto product = getProductDtoByCoverageCode(CommodityCoverageCode.GRAIN_BASKET, productDtos);
-		
-		//Warnings:
-		/* product exists -> grain basket doesn't exist
-		 * product doesn't exist -> grain basket exists
-		 * product coverage dollar is different from grain basket basket value
-		 * */
-		
-		if(product != null) {
-			if(product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
-				if(gbDto != null) {
-					//Coverage Dollars
-					if (Double.compare(notNull(product.getCoverageDollars(), (double)-1), notNull(gbDto.getBasketValue(), (double)-1)) != 0) {
-						//Add warning if values are different -> Only if product is in status FINAL
-						String msg = "";
-						if(product.getCoverageDollars() == null) {
-							msg = GRAIN_BASKET_NONE_MSG;
-						} else {
-							msg = String.format(GRAIN_BASKET_DIFFERENCE_MSG, product.getCoverageDollars());
+		if(InsurancePlans.GRAIN.getInsurancePlanId().equals(insurancePlanId)) {
+			
+			//Find product
+			ProductDto product = getProductDtoByCoverageCode(CommodityCoverageCode.GRAIN_BASKET, productDtos);
+			
+			//Warnings:
+			/* product exists -> grain basket doesn't exist
+			 * product doesn't exist -> grain basket exists
+			 * product coverage dollar is different from grain basket basket value
+			 * */
+			
+			if(product != null) {
+				if(product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
+					if(gbDto != null) {
+						//Coverage Dollars
+						if (Double.compare(notNull(product.getCoverageDollars(), (double)-1), notNull(gbDto.getBasketValue(), (double)-1)) != 0) {
+							//Add warning if values are different -> Only if product is in status FINAL
+							String msg = "";
+							if(product.getCoverageDollars() == null) {
+								msg = GRAIN_BASKET_NONE_MSG;
+							} else {
+								msg = String.format(GRAIN_BASKET_DIFFERENCE_MSG, product.getCoverageDollars());
+							}
+							
+							messageRsrcList.add(new MessageRsrc(msg));
 						}
-						
+					} else {
+						//No GB in verified yield
+						//This is possible if the verified yield was saved when there was no grain basket in CIRRAS
+						String msg = GRAIN_BASKET_NO_GB_MSG;
 						messageRsrcList.add(new MessageRsrc(msg));
 					}
-				} else {
-					//No GB in verified yield
-					//This is possible if the verified yield was saved when there was no grain basket in CIRRAS
-					String msg = GRAIN_BASKET_NO_GB_MSG;
+				} else if(gbDto != null) {
+					//GB but no valid product
+					//Add warning if there is no product but a saved grain basket
+					String msg = GRAIN_BASKET_NO_PRODUCT_MSG;
 					messageRsrcList.add(new MessageRsrc(msg));
 				}
-			} else if(gbDto != null) {
-				//GB but no valid product
-				//Add warning if there is no product but a saved grain basket
-				String msg = GRAIN_BASKET_NO_PRODUCT_MSG;
-				messageRsrcList.add(new MessageRsrc(msg));
-			}
-		} else {
-			//No product: Check if there is a grain basket
-			if(gbDto != null) {
-				//Add warning if there is no product but a saved grain basket
-				String msg = GRAIN_BASKET_NO_PRODUCT_MSG;
-				messageRsrcList.add(new MessageRsrc(msg));
+			} else {
+				//No product: Check if there is a grain basket
+				if(gbDto != null) {
+					//Add warning if there is no product but a saved grain basket
+					String msg = GRAIN_BASKET_NO_PRODUCT_MSG;
+					messageRsrcList.add(new MessageRsrc(msg));
+				}
 			}
 		}
-		
 		
 	}
 	
@@ -431,11 +492,28 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		return product;
 	}
 
-	private VerifiedYieldContractCommodity createVerifiedYieldContractCommodity(VerifiedYieldContractCommodityDto dto) {
+	private VerifiedYieldContractCommodity createVerifiedYieldContractCommodity(VerifiedYieldContractCommodityDto dto, Integer insurancePlanId) {
 		VerifiedYieldContractCommodity model = new VerifiedYieldContractCommodity();
 
+		//Set display name: Grain = Commodity name, Forage = commodity type, Forage Rolled up = Commodity name
+		Boolean isRolledUpInd = false;
+		String displayName = dto.getCropCommodityName();
+		if(InsurancePlans.FORAGE.getInsurancePlanId().equals(insurancePlanId)) {
+			if(dto.getCommodityTypeCode() == null) {
+				//forage rolled up row doesn't have the commodity type set
+				isRolledUpInd = true;
+			} else {
+				//Show commodity type if it's NOT a rolled up row
+				displayName = dto.getCommodityTypeDescription();
+			}
+		}		
+		
+		model.setDisplayName(displayName);
 		model.setCropCommodityId(dto.getCropCommodityId());
 		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setCommodityTypeCode(dto.getCommodityTypeCode());
+		model.setCommodityTypeDescription(dto.getCommodityTypeDescription());
+		model.setIsRolledupInd(isRolledUpInd);
 		model.setHarvestedAcres(dto.getHarvestedAcres());
 		model.setHarvestedAcresOverride(dto.getHarvestedAcresOverride());
 		model.setHarvestedYield(dto.getHarvestedYield());
@@ -626,22 +704,32 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			VerifiedYieldContractCommodityDto dto, 
 			VerifiedYieldContractCommodity model, 
 			List<ProductDto> productDtos,
-			Boolean updateProductValues) {
+			Boolean updateProductValues, 
+			Integer insurancePlanId) {
 		
 		Double productionGuarantee = model.getProductionGuarantee();
 		//Get production guarantee if user wants to update the values
 		if(Boolean.TRUE.equals(updateProductValues)) {
-			ProductDto product = getProductDto(dto.getCropCommodityId(), dto.getIsPedigreeInd(), productDtos);
-			if(product != null && product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
-				productionGuarantee = product.getProductionGuarantee();
-			} else {
-				productionGuarantee = null;
+			Boolean setProductionGuarantee = true;
+			//Default
+			productionGuarantee = null;
+			if(InsurancePlans.FORAGE.getInsurancePlanId().equals(insurancePlanId)) {
+				//Production Guarantee for forage is only set for rolled up rows
+				setProductionGuarantee = Boolean.TRUE.equals(model.getIsRolledupInd());
+			} 
+			
+			if(setProductionGuarantee) {
+				ProductDto product = getProductDto(dto.getCropCommodityId(), dto.getIsPedigreeInd(), productDtos);
+				if(product != null && product.getProductStatusCode().equals(PRODUCT_STATUS_FINAL)) {
+					productionGuarantee = product.getProductionGuarantee();
+				} 
 			}
-		}		
-
+		}
+		
 		dto.setVerifiedYieldContractCommodityGuid(model.getVerifiedYieldContractCommodityGuid());
 		dto.setVerifiedYieldContractGuid(model.getVerifiedYieldContractGuid());
 		dto.setCropCommodityId(model.getCropCommodityId());
+		dto.setCommodityTypeCode(model.getCommodityTypeCode());
 		dto.setIsPedigreeInd(model.getIsPedigreeInd());
 		dto.setHarvestedAcres(model.getHarvestedAcres());
 		dto.setHarvestedAcresOverride(model.getHarvestedAcresOverride());

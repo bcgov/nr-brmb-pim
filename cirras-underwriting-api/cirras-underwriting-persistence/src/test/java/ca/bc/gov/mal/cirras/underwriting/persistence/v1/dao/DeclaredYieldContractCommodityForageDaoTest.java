@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityForageDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityForageDao.sortOrder;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerContractYearDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CommodityTypeCodeDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CropCommodityDto;
@@ -37,10 +37,15 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 	private Integer contractId = 888888888;
 	private Integer cropYear = 2020;
 	private String declaredYieldContractGuid;
-	private String commodityTypeCode1 = "TESTCODE DYF";
-	private String commodityTypeCode2 = "TESTCODE DYF2";
+	private String commodityTypeCode1 = "C TESTCODE DYF";
+	private String commodityTypeCode2 = "B TESTCODE DYF2";
+	private String commodityTypeCode3 = "A TESTCODE DYF";
 	private String declaredYieldContractCmdtyForageGuid;
-	private Integer cropCommodityId = 88995566;
+	private Integer cropCommodityId1 = 88995566;
+	private Integer cropCommodityId2 = 88995577;
+	private String commodityName1 = "A Test Commodity";
+	private String commodityName2 = "B Test Commodity";
+
 	private Integer insurancePlanId = 5;
 
 
@@ -77,13 +82,19 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		
 		deleteCommodityTypeCode(commodityTypeCode1);
 		deleteCommodityTypeCode(commodityTypeCode2);
+		deleteCommodityTypeCode(commodityTypeCode3);
 
+		deleteCommodity(cropCommodityId1);
+		deleteCommodity(cropCommodityId2);
+
+	}
+
+	private void deleteCommodity(Integer cropCommodityId) throws DaoException, NotFoundDaoException {
 		CropCommodityDao daoCommodity = persistenceSpringConfig.cropCommodityDao();
 		CropCommodityDto dtoCommodity = daoCommodity.fetch(cropCommodityId);
 		if (dtoCommodity != null) {
 			daoCommodity.delete(cropCommodityId);
 		}
-
 	}
 
 	protected void deleteCommodityTypeCode(String commodityTypeCode) throws DaoException, NotFoundDaoException {
@@ -102,9 +113,11 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 
 		createGrowerContractYear();
 		createDeclaredYieldContract(userId);
-		createCropCommodity();
-		createCommodityTypeCode(commodityTypeCode1);
-		createCommodityTypeCode(commodityTypeCode2);
+		createCropCommodity(cropCommodityId1, commodityName1);
+		createCropCommodity(cropCommodityId2, commodityName2);
+		createCommodityTypeCode(cropCommodityId1, commodityTypeCode1);
+		createCommodityTypeCode(cropCommodityId1, commodityTypeCode2);
+		createCommodityTypeCode(cropCommodityId2, commodityTypeCode3);
 		
 		DeclaredYieldContractCommodityForageDao dao = persistenceSpringConfig.declaredYieldContractCommodityForageDao();
 
@@ -126,7 +139,7 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		declaredYieldContractCmdtyForageGuid = newDto.getDeclaredYieldContractCmdtyForageGuid();
 		
 		//SELECT for declared yield contract
-		List<DeclaredYieldContractCommodityForageDto> dtos = dao.selectForDeclaredYieldContract(declaredYieldContractGuid);
+		List<DeclaredYieldContractCommodityForageDto> dtos = dao.selectForDeclaredYieldContract(declaredYieldContractGuid, DeclaredYieldContractCommodityForageDao.sortOrder.CommodityType);
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(1, dtos.size());
 		
@@ -198,7 +211,7 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		dao.insert(newDto2, userId);
 
 		//SELECT
-		dtos = dao.selectForDeclaredYieldContract(declaredYieldContractGuid);
+		dtos = dao.selectForDeclaredYieldContract(declaredYieldContractGuid, DeclaredYieldContractCommodityForageDao.sortOrder.CommodityType);
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(2, dtos.size());
 		
@@ -207,11 +220,41 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 			Assert.assertEquals(dyccfDto.getDeclaredYieldContractGuid(), declaredYieldContractGuid);
 		}
 		
-		dtos = dao.selectToRecalculate(cropCommodityId, "LB", cropYear, cropYear);
+		dtos = dao.selectToRecalculate(cropCommodityId1, "LB", cropYear, cropYear);
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(2, dtos.size());
 		
+		//INSERT third commodity
+		DeclaredYieldContractCommodityForageDto newDto3 = new DeclaredYieldContractCommodityForageDto();
+		newDto3.setDeclaredYieldContractGuid(declaredYieldContractGuid);
+		newDto3.setCommodityTypeCode(commodityTypeCode3);
+		newDto3.setTotalFieldAcres(40.0);
+		newDto3.setHarvestedAcres(15.0);
+		newDto3.setTotalBalesLoads(20);
+		newDto3.setWeight(31.5);
+		newDto3.setWeightDefaultUnit(21.1);
+		newDto3.setMoisturePercent(51.1);
+		newDto3.setQuantityHarvestedTons(18.0);
+		newDto3.setYieldPerAcre(1.0);
+
+		dao.insert(newDto3, userId);
+		
+		//SELECT Order by commodity type description
+		dtos = dao.selectForDeclaredYieldContract(declaredYieldContractGuid, DeclaredYieldContractCommodityForageDao.sortOrder.CommodityType);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(3, dtos.size());
+		
+		compareStrings(dtos, DeclaredYieldContractCommodityForageDao.sortOrder.CommodityType);
+
+		//SELECT Order by commodity name and then commodity type description
+		dtos = dao.selectForDeclaredYieldContract(declaredYieldContractGuid, DeclaredYieldContractCommodityForageDao.sortOrder.CommodityNameCommodityType);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(3, dtos.size());
+
+		compareStrings(dtos, DeclaredYieldContractCommodityForageDao.sortOrder.CommodityNameCommodityType);
+		
 		//DELETE
+		dao.delete(newDto3.getDeclaredYieldContractCmdtyForageGuid());
 		dao.delete(newDto2.getDeclaredYieldContractCmdtyForageGuid());
 		dao.delete(declaredYieldContractCmdtyForageGuid);
 		
@@ -220,12 +263,46 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		Assert.assertNull(deletedDto);
 
 		//SELECT
-		dtos = dao.selectForDeclaredYieldContract(declaredYieldContractGuid);
+		dtos = dao.selectForDeclaredYieldContract(declaredYieldContractGuid, DeclaredYieldContractCommodityForageDao.sortOrder.CommodityType);
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(0, dtos.size());
 
 		delete();
 
+	}
+
+	private void compareStrings(List<DeclaredYieldContractCommodityForageDto> dtos, sortOrder order) {
+
+		String formerCommodity = null;
+		String formerType = null;
+		
+		for(DeclaredYieldContractCommodityForageDto dto : dtos) {
+			
+			if(order.equals(DeclaredYieldContractCommodityForageDao.sortOrder.CommodityType)) {
+				//Only check commodity type order
+				if(formerType != null) {
+					Assert.assertTrue((formerType.compareTo(dto.getCommodityTypeDescription()) <= 0));
+				}
+				formerType = dto.getCommodityTypeDescription();
+				
+			} else if(order.equals(DeclaredYieldContractCommodityForageDao.sortOrder.CommodityNameCommodityType)) {
+				//Check commodity name and commodity type order
+				if(formerCommodity != null) {
+					int compareCommodityName = formerCommodity.compareTo(dto.getCropCommodityName());
+					
+					Assert.assertTrue((compareCommodityName <= 0));
+					
+					if(compareCommodityName == 0 && formerType != null) {
+						//Only compare type if it's the same commodity as the previous one
+						Assert.assertTrue((formerType.compareTo(dto.getCommodityTypeDescription()) <= 0));
+					} 
+				}
+				formerCommodity = dto.getCropCommodityName();
+				formerType = dto.getCommodityTypeDescription();
+			}
+			
+		}
+		
 	}
 
 	private void createDeclaredYieldContract(String userId) throws DaoException {
@@ -255,11 +332,10 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		
 	}
 	
-	private void createCropCommodity() throws DaoException {
+	private void createCropCommodity(Integer cropCommodityId, String commodityName) throws DaoException {
 		CropCommodityDao dao = persistenceSpringConfig.cropCommodityDao();
 		CropCommodityDto newDto = new CropCommodityDto();
 		
-		String commodityName = "Test Commodity";
 		String shortLabel = "TC";
 		String plantDurationTypeCode = "PERENNIAL";
 		Boolean isInventoryCropInd = true;
@@ -303,7 +379,7 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		dao.insert(newDto, userId);
 	}
 	
-	private void createCommodityTypeCode(String commodityTypeCode) throws DaoException {
+	private void createCommodityTypeCode(Integer cropCommodityId, String commodityTypeCode) throws DaoException {
 		CommodityTypeCodeDao dao = persistenceSpringConfig.commodityTypeCodeDao();
 		CommodityTypeCodeDto newDto = new CommodityTypeCodeDto();
 		
@@ -319,14 +395,12 @@ public class DeclaredYieldContractCommodityForageDaoTest {
 		Date effectiveDate = addDays(date, -1);
 		Date expiryDate = addDays(date, 1);
 
-		String description = "Test Type";
-		
 		String userId = "JUNIT_TEST";
 		
 		//INSERT
 		newDto.setCommodityTypeCode(commodityTypeCode);
 		newDto.setCropCommodityId(cropCommodityId);
-		newDto.setDescription(description);
+		newDto.setDescription(commodityTypeCode);
 		newDto.setEffectiveDate(effectiveDate);
 		newDto.setExpiryDate(expiryDate);
 

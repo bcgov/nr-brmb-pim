@@ -137,6 +137,8 @@ jobs:
           MAX_UI_COUNT: ${{ vars.MAX_UI_COUNT }}
           BASE_URL: https://cirras-underwriting-ui-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/pub/cirras-underwriting/
           CIRRAS_UNDERWRITING_REST_URI: https://cirras-underwriting-api-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/cirras-underwriting-api/v1
+          GRAIN_VERIFIED_YIELD_CALCULATOR_URI: ${{ vars.GRAIN_VERIFIED_YIELD_CALCULATOR_URI }}
+          FORAGE_VERIFIED_YIELD_CALCULATOR_URI: ${{ vars.FORAGE_VERIFIED_YIELD_CALCULATOR_URI }}
 
           ACTIVE_PORT: ${{ vars.TOMCAT_PORT }}
           LOCAL_CHECKTOKEN_ENDPOINT: ${{ vars.LOCAL_CHECKTOKEN_ENDPOINT }}
