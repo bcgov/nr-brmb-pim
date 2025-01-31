@@ -333,8 +333,17 @@
   
     div {
         display: flex;
-        justify-content: flex-start;
+        //justify-content: flex-start;
         align-items: center;
+        // .justify-center {
+        //   justify-content: center;
+        // }
+        // .justify-left{
+        //   justify-content: flex-start;
+        // }
+        // .justify-right{
+        //   justify-content: flex-end;
+        // }
     }
   
     .header {

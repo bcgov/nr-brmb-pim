@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { UwContract } from 'src/app/conversion/models';
 import { INSURANCE_PLAN, ResourcesRoutes } from 'src/app/utils/constants';
-import { goToLinkGlobal, makeTitleCase, userCanAccessDop, userCanAccessInventory } from "src/app/utils";
+import { goToLinkGlobal, makeTitleCase, userCanAccessDop, userCanAccessInventory, userCanAccessVerifiedYield } from "src/app/utils";
 import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { Router } from '@angular/router';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
@@ -113,22 +113,28 @@ export class RelatedPoliciesComponent implements OnInit, OnChanges {
     
     if (policy) {
 
+      if (routerUrl.lastIndexOf(ResourcesRoutes.VERIFIED_YIELD) > -1 ) {
+        // if the user is currently on a VERIFIED YIELD screen try to transfer him to the VERIFIED YIELD screen of the related policy 
+
+        if (userCanAccessVerifiedYield(this.securityUtilService, policy.links)) {
+          goToLinkGlobal(policy, 'verifiedYield', this.router )
+          return
+        }
+      }
+
       if (routerUrl.lastIndexOf(ResourcesRoutes.DOP_GRAIN) > -1 || routerUrl.lastIndexOf(ResourcesRoutes.DOP_FORAGE) > -1 ) {
-      // if the user is currently on a DOP screen try to transfer him to the DOP screen of the related policy 
+        // if the user is currently on a DOP screen try to transfer him to the DOP screen of the related policy 
 
         if (userCanAccessDop(this.securityUtilService, policy.links)) {
           // if the related policy has a DOP link and the user can view it  
 
           goToLinkGlobal(policy, 'dop', this.router )
-
-        } else {
-
-          this.goToInventoryScreen(policy, routerUrl)
+          return
         }
-
-      } else {
-        this.goToInventoryScreen(policy, routerUrl)
-      }
+      } 
+      
+      // default: transfer the user to the inventory screen
+      this.goToInventoryScreen(policy, routerUrl)
     }    
   }
 

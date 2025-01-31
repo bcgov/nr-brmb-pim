@@ -199,19 +199,23 @@ export interface VerifiedYieldContract {
 
   export interface VerifiedYieldContractCommodity {
     verifiedYieldContractCommodityGuid?: string;
-	verifiedYieldContractGuid?: string;
-	cropCommodityId?: number;
-	isPedigreeInd?: boolean;
-	harvestedAcres?: number;
-	harvestedAcresOverride?: number;
-	storedYieldDefaultUnit?: number;
-	soldYieldDefaultUnit?: number;
-	productionGuarantee?: number;
-	harvestedYield?: number;
-	harvestedYieldOverride?: number;
-	yieldPerAcre?: number;
+    verifiedYieldContractGuid?: string;
+    cropCommodityId?: number;
+    commodityTypeCode?: string;
+    isPedigreeInd?: boolean;
+    harvestedAcres?: number;
+    harvestedAcresOverride?: number;
+    storedYieldDefaultUnit?: number;
+    soldYieldDefaultUnit?: number;
+    productionGuarantee?: number;
+    harvestedYield?: number;
+    harvestedYieldOverride?: number;
+    yieldPerAcre?: number;
     cropCommodityName?: string;
     totalInsuredAcres?: number;
+    commodityTypeDescription?: string;
+    displayName?: string;
+    isRolledupInd?: boolean;
   }
 
   export interface VerifiedYieldAmendment {

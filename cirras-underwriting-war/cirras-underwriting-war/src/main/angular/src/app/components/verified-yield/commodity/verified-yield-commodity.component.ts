@@ -39,6 +39,7 @@ export class VerifiedYieldCommodityComponent implements OnChanges {
       verifiedYieldContractCommodityGuid: [this.commodity.verifiedYieldContractCommodityGuid],
       verifiedYieldContractGuid: [this.commodity.verifiedYieldContractGuid],
       cropCommodityId: [this.commodity.cropCommodityId],
+      commodityTypeCode: [this.commodity.commodityTypeCode],
       isPedigreeInd: [this.commodity.isPedigreeInd],
       harvestedAcres: [this.commodity.harvestedAcres],
       harvestedAcresOverride: [this.commodity.harvestedAcresOverride],
@@ -49,7 +50,10 @@ export class VerifiedYieldCommodityComponent implements OnChanges {
       harvestedYieldOverride: [this.commodity.harvestedYieldOverride],
       yieldPerAcre: [this.commodity.yieldPerAcre],
       cropCommodityName: [this.commodity.cropCommodityName],
-      totalInsuredAcres: [this.commodity.totalInsuredAcres]
+      totalInsuredAcres: [this.commodity.totalInsuredAcres],
+      commodityTypeDescription: [this.commodity.commodityTypeDescription],
+      displayName: [this.commodity.displayName],
+      isRolledupInd: [this.commodity.isRolledupInd]
     });
     this.commoditiesFormArray.push(this.commodityFormGroup);
   }
