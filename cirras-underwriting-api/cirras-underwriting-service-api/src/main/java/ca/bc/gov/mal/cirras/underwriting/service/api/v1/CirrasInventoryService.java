@@ -165,6 +165,7 @@ public interface CirrasInventoryService {
 		String growerInfo,
 		String sortColumn,
 		String policyIds, 
+		String reportType,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
 	)

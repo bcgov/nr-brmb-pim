@@ -1,8 +1,19 @@
 <cuws-base-dialog [titleLabel]="titleLabel" [type]="dialogType">
     <div mat-dialog-content>
+
+        <mat-label *ngIf="isGrainInventoryReport()" class="label filter-label">Report Type</mat-label>
+        <mat-form-field *ngIf="isGrainInventoryReport()" appearance="fill" style="padding-bottom: 16px;">
+            <mat-select hideSingleSelectionIndicator="true" (selectionChange)="onReportTypeSelectionChange($event)">
+                <mat-option *ngFor="let option of reportTypeOptions" [value]="option.code">
+                    {{option.description}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+
         <mat-label class="label filter-label">Sort By</mat-label>
         <mat-form-field appearance="fill">
-            <mat-select (selectionChange)="onSelectionChange($event)">
+            <mat-select hideSingleSelectionIndicator="true" (selectionChange)="onSelectionChange($event)">
                 <mat-option *ngFor="let option of reportSortByOptions" [value]="option.code">
                     {{option.description}}
                 </mat-option>
@@ -11,8 +22,8 @@
     </div>
 
     <div mat-dialog-actions align="end">
-        <button mat-raised-button color="secondary" (click)="onCancel()">Cancel</button>
-        <button mat-raised-button color="primary" [disabled]="!selectedReportSortBy" (click)="onDownload()">
+        <button mat-raised-button class="secondary" (click)="onCancel()">Cancel</button>
+        <button mat-raised-button color="primary" class="primary" [disabled]="!isDownloadPossible()" (click)="onDownload()">
             <mat-icon
                 style="padding-right: 4px; margin-right: 4px; vertical-align: text-top;">download</mat-icon>Download
         </button>

@@ -1,5 +1,5 @@
 import {  InventoryContractCommodity, InventoryCoverageTotalForage, InventoryField, PolicySimple, UnderwritingComment } from "@cirras/cirras-underwriting-api";
-import {  DopYieldFieldForage, DopYieldFieldGrain } from "./models-yield";
+import {  DopYieldFieldForage, DopYieldFieldGrain, VerifiableCommodity } from "./models-yield";
 
 
 export interface PagedCollection {
@@ -46,11 +46,13 @@ export interface UwContract {
   growerPrimaryPhone?: string;
   inventoryContractGuid?: string;
   declaredYieldContractGuid?: string;
+  verifiedYieldContractGuid?: string;
   totalDopEligibleInventory?: number;
 
   isSelectedForPrint?: boolean;
   linkedPolicies? : Array<UwContract>;
-  
+  otherYearPolicies?: Array<OtherYearPolicy>; 
+
   etag?: string;
   type?: string;
 }
@@ -74,6 +76,7 @@ export interface AnnualField {
   dopYieldFieldForageList?: Array<DopYieldFieldForage>;
   uwComments?: Array<UnderwritingComment>;
   policies?: Array<PolicySimple>;
+  verifiableCommodities?: Array<VerifiableCommodity>
   etag?: string;
   type: string;
 
@@ -236,3 +239,12 @@ export interface Field {
   etag?: string;
   type: string;
 }
+
+export interface  OtherYearPolicy {
+	policyId?: number;
+	insurancePlanId?: number ;
+	policyNumber?: string;
+	cropYear?: number;
+	screenRecordGuid?: string;
+	screenType?: string;
+	}

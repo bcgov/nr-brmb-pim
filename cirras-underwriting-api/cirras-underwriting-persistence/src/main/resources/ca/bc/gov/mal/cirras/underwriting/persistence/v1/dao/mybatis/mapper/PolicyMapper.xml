@@ -31,6 +31,7 @@
 
 		<result property="inventoryContractGuid" column="inventory_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="declaredYieldContractGuid" column="declared_yield_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="verifiedYieldContractGuid" column="verified_yield_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="totalDopEligibleInventory" column="total_dop_eligible_inventory" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 
 	</resultMap>
@@ -56,7 +57,8 @@
 		g.grower_name,
 		ic.inventory_contract_guid,
 		gcy.grower_contract_year_id,
-		dyc.declared_yield_contract_guid
+		dyc.declared_yield_contract_guid,
+		vyc.verified_yield_contract_guid
     </sql>
 
     <sql id="selectColumnsExtended">
@@ -72,6 +74,7 @@
 								  AND gcy.crop_year = p.crop_year
 		LEFT JOIN inventory_contract ic on ic.contract_id = p.contract_id and ic.crop_year = p.crop_year
 		LEFT JOIN declared_yield_contract dyc on dyc.contract_id = p.contract_id and dyc.crop_year = p.crop_year
+		LEFT JOIN verified_yield_contract vyc on vyc.contract_id = p.contract_id and vyc.crop_year = p.crop_year
 	</sql>
 
 <!-- TODO: Do we need to filter on active contacts, or does the contact table only contain active contacts? -->
@@ -148,6 +151,160 @@
 		AND afd.crop_year = #{cropYear}
 		ORDER BY p.policy_number
 	</select>
+
+	<select id="selectByOtherYearInventory" resultMap="PolicyDtoMap">
+		SELECT prev_yr.policy_id, 
+		       prev_yr.policy_number,
+		       prev_yr.contract_id,
+		       prev_yr.crop_year,
+		       prev_yr.insurance_plan_id, 
+		       prev_yr.inventory_contract_guid
+		FROM (
+				SELECT p.policy_id, 
+				       p.policy_number,
+				       p.contract_id,
+				       p.crop_year,
+				       p.insurance_plan_id, 
+				       ic.inventory_contract_guid
+				FROM inventory_contract ic
+				JOIN grower_contract_year gcy ON gcy.contract_id = ic.contract_id 
+				                             AND gcy.crop_year = ic.crop_year
+				JOIN policy p ON p.contract_id = gcy.contract_id 
+				             AND p.crop_year = gcy.crop_year
+				WHERE p.contract_id = #{contractId}
+				  AND p.crop_year <![CDATA[ < ]]> #{currentCropYear}
+				ORDER BY p.crop_year DESC
+				LIMIT #{numYears}
+		) prev_yr
+		UNION
+		SELECT next_yr.policy_id, 
+		       next_yr.policy_number,
+		       next_yr.contract_id,
+		       next_yr.crop_year,
+		       next_yr.insurance_plan_id, 
+		       next_yr.inventory_contract_guid
+		FROM (
+				SELECT p.policy_id, 
+				       p.policy_number,
+				       p.contract_id,
+				       p.crop_year,
+				       p.insurance_plan_id, 
+				       ic.inventory_contract_guid
+				FROM inventory_contract ic
+				JOIN grower_contract_year gcy ON gcy.contract_id = ic.contract_id 
+				                             AND gcy.crop_year = ic.crop_year
+				JOIN policy p ON p.contract_id = gcy.contract_id 
+				             AND p.crop_year = gcy.crop_year
+				WHERE p.contract_id = #{contractId}
+				  AND p.crop_year <![CDATA[ > ]]> #{currentCropYear}
+				ORDER BY p.crop_year
+				LIMIT #{numYears}
+		) next_yr
+		ORDER BY crop_year
+	</select>
+
+	<select id="selectByOtherYearDop" resultMap="PolicyDtoMap">
+		SELECT prev_yr.policy_id, 
+		       prev_yr.policy_number,
+		       prev_yr.contract_id,
+		       prev_yr.crop_year,
+		       prev_yr.insurance_plan_id, 
+		       prev_yr.declared_yield_contract_guid
+		FROM (
+				SELECT p.policy_id, 
+				       p.policy_number,
+				       p.contract_id,
+				       p.crop_year,
+				       p.insurance_plan_id, 
+				       dyc.declared_yield_contract_guid
+				FROM declared_yield_contract dyc
+				JOIN grower_contract_year gcy ON gcy.contract_id = dyc.contract_id 
+				                             AND gcy.crop_year = dyc.crop_year
+				JOIN policy p ON p.contract_id = gcy.contract_id 
+				             AND p.crop_year = gcy.crop_year
+				WHERE p.contract_id = #{contractId}
+				  AND p.crop_year <![CDATA[ < ]]> #{currentCropYear}
+				ORDER BY p.crop_year DESC
+				LIMIT #{numYears}
+		) prev_yr
+		UNION
+		SELECT next_yr.policy_id, 
+		       next_yr.policy_number,
+		       next_yr.contract_id,
+		       next_yr.crop_year,
+		       next_yr.insurance_plan_id, 
+		       next_yr.declared_yield_contract_guid
+		FROM (
+				SELECT p.policy_id, 
+				       p.policy_number,
+				       p.contract_id,
+				       p.crop_year,
+				       p.insurance_plan_id, 
+				       dyc.declared_yield_contract_guid
+				FROM declared_yield_contract dyc
+				JOIN grower_contract_year gcy ON gcy.contract_id = dyc.contract_id 
+				                             AND gcy.crop_year = dyc.crop_year
+				JOIN policy p ON p.contract_id = gcy.contract_id 
+				             AND p.crop_year = gcy.crop_year
+				WHERE p.contract_id = #{contractId}
+				  AND p.crop_year <![CDATA[ > ]]> #{currentCropYear}
+				ORDER BY p.crop_year
+				LIMIT #{numYears}
+		) next_yr
+		ORDER BY crop_year
+	</select>
+
+	<select id="selectByOtherYearVerified" resultMap="PolicyDtoMap">
+		SELECT prev_yr.policy_id, 
+		       prev_yr.policy_number,
+		       prev_yr.contract_id,
+		       prev_yr.crop_year,
+		       prev_yr.insurance_plan_id, 
+		       prev_yr.verified_yield_contract_guid
+		FROM (
+				SELECT p.policy_id, 
+				       p.policy_number,
+				       p.contract_id,
+				       p.crop_year,
+				       p.insurance_plan_id, 
+				       vyc.verified_yield_contract_guid
+				FROM verified_yield_contract vyc
+				JOIN grower_contract_year gcy ON gcy.contract_id = vyc.contract_id 
+				                             AND gcy.crop_year = vyc.crop_year
+				JOIN policy p ON p.contract_id = gcy.contract_id 
+				             AND p.crop_year = gcy.crop_year
+				WHERE p.contract_id = #{contractId}
+				  AND p.crop_year <![CDATA[ < ]]> #{currentCropYear}
+				ORDER BY p.crop_year DESC
+				LIMIT #{numYears}
+		) prev_yr
+		UNION
+		SELECT next_yr.policy_id, 
+		       next_yr.policy_number,
+		       next_yr.contract_id,
+		       next_yr.crop_year,
+		       next_yr.insurance_plan_id, 
+		       next_yr.verified_yield_contract_guid
+		FROM (
+				SELECT p.policy_id, 
+				       p.policy_number,
+				       p.contract_id,
+				       p.crop_year,
+				       p.insurance_plan_id, 
+				       vyc.verified_yield_contract_guid
+				FROM verified_yield_contract vyc
+				JOIN grower_contract_year gcy ON gcy.contract_id = vyc.contract_id 
+				                             AND gcy.crop_year = vyc.crop_year
+				JOIN policy p ON p.contract_id = gcy.contract_id 
+				             AND p.crop_year = gcy.crop_year
+				WHERE p.contract_id = #{contractId}
+				  AND p.crop_year <![CDATA[ > ]]> #{currentCropYear}
+				ORDER BY p.crop_year
+				LIMIT #{numYears}
+		) next_yr
+		ORDER BY crop_year
+	</select>
+
 	
 	<insert id="insert">
 

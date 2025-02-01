@@ -1,0 +1,63 @@
+@import '../variables';
+
+.mat-checkbox {
+    height: 30px;
+}
+// mat-checkbox.mat-mdc-checkbox.mat-accent
+mat-checkbox.mat-mdc-checkbox.mat-accent, 
+mat-selection-list .mat-mdc-list-option {
+    font-family: $font-family-main;
+    font-size: $font-size;
+
+    .mdc-checkbox {
+        padding-left: 0;
+        padding-right: 0;
+
+        .mdc-checkbox__native-control {
+            height: 22px;
+            width: 30px;
+        }
+        .mat-mdc-checkbox-touch-target {
+            padding-left: 0;
+            padding-right: 0;
+            height: 22px;
+            width: 30px;
+        }
+
+        .mdc-checkbox__native-control:enabled {
+            &:checked, 
+            &:not(:checked) {
+                &~.mdc-checkbox__background {
+                    left: 0;
+                    background-color: $colour-white;
+                    border: 1px solid $colour-light-grey;
+                } 
+            }
+        }   
+
+        &:hover .mdc-checkbox__native-control:not([disabled])~.mdc-checkbox__ripple,
+        .mat-mdc-checkbox-ripple, 
+        .mdc-checkbox__ripple {
+            position: absolute;
+            top: 10%;
+            height: 28px;
+            right: 80%;
+            width: 28px;
+            transform: translate(-15%, -5%);     
+            background-color: transparent !important;       
+        }
+    }
+}
+
+.inventory-fill {
+    .mdc-checkbox {
+        padding-top: 0px;
+        padding-bottom: 0px
+    }
+
+    .mdc-checkbox__background{
+        position: absolute;
+        top: 30%;
+        left: 10%;
+    }
+}

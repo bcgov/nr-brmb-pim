@@ -1,5 +1,5 @@
 import {Injectable, Injector} from "@angular/core";
-import {TokenService} from "@wf1/core-ui";
+import {TokenService} from "@wf1/wfcc-core-lib";
 import {ROLES_UI, SCOPES_UI} from "../utils/scopes";
 
 
@@ -62,6 +62,14 @@ export class SecurityUtilService {
 
     canDeleteDop() {
         return this.doesUserHaveScopes ([SCOPES_UI.DELETE_DOP_YIELD_CONTRACT] ) 
+    }
+
+    canEditVerifiedYield() {
+        return this.doesUserHaveScopes([SCOPES_UI.CREATE_VERIFIED_YIELD_CONTRACT, SCOPES_UI.UPDATE_VERIFIED_YIELD_CONTRACT]) 
+    }
+
+    canDeleteVerifiedYield() {
+        return this.doesUserHaveScopes ([SCOPES_UI.DELETE_VERIFIED_YIELD_CONTRACT] ) 
     }
 
     canEditLegalLand() {

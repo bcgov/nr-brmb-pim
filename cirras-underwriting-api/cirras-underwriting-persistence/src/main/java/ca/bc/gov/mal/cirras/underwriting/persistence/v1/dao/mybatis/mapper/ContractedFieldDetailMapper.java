@@ -34,6 +34,8 @@ public interface ContractedFieldDetailMapper {
 	List<ContractedFieldDetailDto> select(Map<String, Object> parameters);
 
 	List<ContractedFieldDetailDto> selectForDeclaredYield(Map<String, Object> parameters);
+
+	List<ContractedFieldDetailDto> selectForVerifiedYield(Map<String, Object> parameters);
 	
 	List<ContractedFieldDetailDto> selectForDisplayOrderUpdate(Map<String, Object> parameters);
 

@@ -14,10 +14,34 @@ spec:
       labels:
         app: cirras-underwriting-api-#{ENV}#
         project: brmb-pim-#{ENV}#
+      annotations:
+        # 1. Vault injector configuration goes here, inside the template.
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-inject-token: 'false' # set to 'true' if you are going to connect and query vault from your application
+        vault.hashicorp.com/agent-pre-populate-only: 'true' # this makes sure the secret vault will only change during pod restart
+        vault.hashicorp.com/auth-path: auth/k8s-silver  # Must match cluster. Use one of: k8s-silver, k8s-gold, k8s-golddr, k8s-emerald
+        vault.hashicorp.com/namespace: platform-services
+        vault.hashicorp.com/role: #{LICENSE_PLATE}#-#{VAULT_RESOURCE}#  # licenseplate-nonprod or licenseplate-prod are your options
+        # Configure how to retrieve and populate the secrets from Vault:
+        # - The name of the secret is any unique string after vault.hashicorp.com/agent-inject-secret-<name>
+        # - The value is the path in Vault where the secret is located.
+        vault.hashicorp.com/agent-inject-secret-env: #{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets
+        # - The template Vault Agent should use for rendering a secret:
+        vault.hashicorp.com/agent-inject-template-env: |
+          {{- with secret "#{LICENSE_PLATE}#-#{VAULT_RESOURCE}#/data/#{ENV}#/secrets" }}
+            export POSTGRES_PASSWORD="{{ .Data.data.POSTGRES_PASSWORD }}"
+            export CIRRAS_UNDERWRITING_REST_SECRET="{{ .Data.data.CIRRAS_UNDERWRITING_REST_SECRET }}"
+            export JASPER_PASSWORD="{{ .Data.data.JASPER_PASSWORD }}"
+          {{- end }}          
     spec:
+      serviceAccountName: #{LICENSE_PLATE}#-vault
       containers:
         - name: container
           image: '#{IMAGE_BY_DIGEST}#'
+          command:
+            ['sh', '-c']
+          args:
+            ['. /vault/secrets/env && catalina.sh run']
           imagePullPolicy: Always
           ports:
             - containerPort: #{TOMCAT_PORT}#
@@ -54,11 +78,6 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: WEBADE_USERNAME
-            - name: WEBADE_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-api-config-#{ENV}#
-                  key: WEBADE_PASSWORD
             - name: WEBADE_MAXACTIVE
               valueFrom:
                 configMapKeyRef:
@@ -84,11 +103,6 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: POSTGRES_USERNAME
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-api-config-#{ENV}#
-                  key: POSTGRES_PASSWORD
             - name: POSTGRES_MAXACTIVE
               valueFrom:
                 configMapKeyRef:
@@ -99,11 +113,6 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: CIRRAS_UNDERWRITING_REST_CLIENT_ID
-            - name: CIRRAS_UNDERWRITING_REST_SECRET
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-api-config-#{ENV}#
-                  key: CIRRAS_UNDERWRITING_REST_SECRET
             - name: CIRRAS_POLICIES_API_URL
               valueFrom:
                 configMapKeyRef:
@@ -119,11 +128,6 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: JASPER_USERNAME
-            - name: JASPER_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-api-config-#{ENV}#
-                  key: JASPER_PASSWORD
             - name: TZ
               valueFrom:
                 configMapKeyRef:

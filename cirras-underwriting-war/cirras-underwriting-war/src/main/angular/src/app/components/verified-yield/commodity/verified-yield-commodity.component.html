@@ -1,0 +1,50 @@
+<div [formGroup]="commodityFormGroup" style="display: contents;">
+    <div class="readonly border-right border-bottom border-left" style="padding-left: 6px;">
+        {{ commodityFormGroup.value.cropCommodityName | titlecase }}
+        <span *ngIf="commodityFormGroup.value.isPedigreeInd == true" >&nbsp; Pedigreed</span>
+    </div>
+    <div class="readonly border-right border-bottom center">
+        {{ commodityFormGroup.value.totalInsuredAcres | number: '1.0-1' }}
+    </div>
+    <div class="readonly border-right border-bottom center">
+        {{ commodityFormGroup.value.harvestedAcres | number: '1.0-1' }}
+    </div>
+
+    <div class="inventory-fill number border-right border-bottom">
+        <mat-form-field appearance="fill">
+            <input matInput matInputCommified formControlName="harvestedAcresOverride" maxlength="10"
+                (keypress)="numberOnly($event)" (blur)="updateHarvestedAcresOverride()" />
+        </mat-form-field>
+        <mat-icon style="padding-right: 10px; font-size: 18px; margin-top: 6px;"
+            matTooltip="Harvested Acres Override is writeable">edit</mat-icon>
+    </div>
+
+    <div class="readonly border-right border-bottom center">
+        {{ commodityFormGroup.value.productionGuarantee | number: '1.0-1' }}
+    </div>
+    <div class="readonly border-right border-bottom center">
+        {{ commodityFormGroup.value.harvestedYield | number: '1.0-3' }}
+    </div>
+
+    <div class="inventory-fill number border-right border-bottom">
+        <mat-form-field appearance="fill">
+            <input matInput matInputCommified formControlName="harvestedYieldOverride" maxlength="10"
+                (keypress)="numberOnly($event)" (blur)="updateHarvestedYieldOverride()" />
+        </mat-form-field>
+        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;"
+            matTooltip="Harvested Yield Override is writeable">edit</mat-icon>
+    </div> 
+    
+    <div class="readonly border-right border-bottom center">
+        {{ commodityFormGroup.value.yieldPerAcre | number: '1.0-3' }}
+    </div>
+
+    <div class="readonly border-right border-bottom center">
+        <mat-icon *ngIf="securityUtilService.canEditVerifiedYield()"
+            matTooltip="Clear editable fields for commodity." 
+            style="margin-left: 4px; margin-right: 4px;"
+            (click)="onDeleteCommodity()"
+            svgIcon="cancel"></mat-icon>
+    </div>
+
+</div>

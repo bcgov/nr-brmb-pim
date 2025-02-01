@@ -1,10 +1,7 @@
 import {Action, ActionReducerMap} from "@ngrx/store";
-import {routerReducer} from "@ngrx/router-store";
-
 import {applicationReducer} from "./application/application.reducer";
 import {ApplicationEffects} from "./application/application.effects";
 import {ApplicationState, PagingSearchState} from "./application/application.state";
-
 import {pageSearchReducer} from "./common/page-search.reducer";
 import { UwContractsListEffects } from "./uw-contracts-list/uw-contracts-list.effects";
 import { initialUwContractsListSearchState, UwContractsListState } from "./uw-contracts-list/uw-contracts-list.state";
@@ -27,10 +24,12 @@ import { landManagementReducer, manageLegalLandReducer } from "./land-management
 import { maintenanceReducer } from "./maintenance/maintenance.reducer";
 import { MaintenanceState } from "./maintenance/maintenance.state";
 import { MaintenanceEffects } from "./maintenance/maintenance.effects";
+import { VerifiedYieldState } from "./verified-yield/verified-yield.state";
+import { verifiedYieldReducer } from "./verified-yield/verified-yield.reducer";
+import { VerifiedYieldEffects } from "./verified-yield/verified-yield.effects";
 
 
 export const rootReducers: ActionReducerMap<any> = {
-    router: routerReducer,
     searchUwContracts: pageSearchReducer,
     application: applicationReducer,
     uwContractsList: uwContractsListReducer,
@@ -38,6 +37,7 @@ export const rootReducers: ActionReducerMap<any> = {
     cropCommodityList: cropCommodityReducer,
     growerContract: growerContractInfoReducer,
     dop: dopReducer,
+    verifiedYield: verifiedYieldReducer,
     landSearch: landManagementReducer,
     searchLand: pageSearchReducer,
     manageLegalLand: manageLegalLandReducer,
@@ -54,6 +54,7 @@ export interface RootState {
     cropCommodityList?: CropCommodityState;
     growerContract?: GrowerContractState;
     dop?:   DopState;
+    verifiedYield?: VerifiedYieldState;
     manageLegalLand?: ManageLegalLandState;
     maintenance?: MaintenanceState;
 }
@@ -70,6 +71,7 @@ export const rootEffects: any[] = [
     CropCommodityEffects,
     GrowerContractInfoEffects,
     DopEffects,
+    VerifiedYieldEffects,
     LandListEffects,
     MaintenanceEffects
 ];

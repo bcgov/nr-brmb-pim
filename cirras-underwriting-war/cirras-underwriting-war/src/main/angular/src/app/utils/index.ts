@@ -1,9 +1,8 @@
 import {APP_BOOTSTRAP_LISTENER, Inject, InjectionToken, Renderer2, Type} from "@angular/core";
 import {EffectSources} from "@ngrx/effects";
 import {PagingInfoRequest} from "../store/application/application.state";
-import {SortDirection} from "@wf1/core-ui";
-import * as moment from "moment";
-import {Moment} from "moment";
+import {SortDirection} from "@wf1/wfcc-core-lib";
+import moment, { Moment } from "moment";
 import {Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import { CropCommodityList, RelLink, UwContract } from "../conversion/models";
@@ -449,6 +448,22 @@ export function setHttpHeaders(authToken) {
     return false
   }
 
+  export function userCanAccessVerifiedYield(securityUtilService, links: Array<RelLink>){
+
+    for (let i = 0; i< links.length; i++ ) {
+
+      if ( ( securityUtilService.doesUserHaveScope(SCOPES_UI.CREATE_VERIFIED_YIELD_CONTRACT) 
+            || securityUtilService.doesUserHaveScope(SCOPES_UI.GET_VERIFIED_YIELD_CONTRACT) ) 
+        && (links[i].href.toLocaleLowerCase().indexOf("rolloververifiedyieldcontract") > -1 
+            || links[i].href.toLocaleLowerCase().indexOf("verifiedyieldcontracts") > -1  ) ) {
+
+          return true;
+      } 
+    }
+
+    return false
+  }
+
   export function goToLinkGlobal (item: UwContract, linkType: string, router: Router) {
 
     let resourceRoute = ""
@@ -508,6 +523,27 @@ export function setHttpHeaders(authToken) {
 
         break;
 
+      case 'verifiedYield': 
+
+        resourceRoute = ResourcesRoutes.VERIFIED_YIELD_GRAIN
+
+        // extract verifiedYieldContractGuid from the haetus link here
+        let verifiedYieldContractGuid = ""
+
+        let vyLinkHref = item.links.find(x => x.href.indexOf("verifiedYieldContracts") > -1 )?.href
+        
+        if (vyLinkHref) {
+          verifiedYieldContractGuid = vyLinkHref.substring(vyLinkHref.indexOf("verifiedYieldContracts") + 23 )
+        }
+
+        router.navigate([resourceRoute,
+          item.insurancePlanId.toString(), 
+          item.cropYear.toString(),
+          item.policyId.toString(),
+          verifiedYieldContractGuid
+        ]);
+
+    break;
       default:
         resourceRoute = ""
     }
@@ -574,4 +610,8 @@ export function setHttpHeaders(authToken) {
 
   export function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  export function replaceNonAlphanumericCharacters(str: string) : string {
+    return str.replace(/[^a-zA-Z0-9]/g, ' ').trim()
   }

@@ -1,0 +1,123 @@
+<!-- <p>grain-verified-yield-component works!</p> -->
+
+
+<base-wrapper [errorState]="errorState"> 
+    <div class="base-container">
+        <div class="base-container flex-y"> 
+        
+        <div class="policy-header-container">
+            <div class="grower-header">
+                {{ ( (growerContract && growerContract.growerName) ? growerContract.growerName : "" ) | titlecase}} 
+                ({{ ((verifiedYieldContract && verifiedYieldContract.insurancePlanId) ? getInsPlanName(verifiedYieldContract.insurancePlanId) : "" ) | titlecase }})
+                {{ (growerContract && growerContract.policyNumber) ? growerContract.policyNumber : "" }}   
+            </div>
+            <!-- unsaved messages -->
+             <div *ngIf="isUnsaved; else noWarningDiv">
+                <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
+            </div>
+            <div *ngIf="isUnsaved; else noWarningDiv" class="unsaved-changes">
+                Unsaved Changes 
+            </div>
+            <ng-template #noWarningDiv>
+                <div><!-- empty div to account for space when there is no warning --> </div>
+            </ng-template>
+            <!-- related policies -->
+            <div>
+                <related-policies
+                    [growerContract]="growerContract"
+                ></related-policies> 
+            </div>
+            <div></div> <!-- class="vertical-line"-->
+            <div> 
+                <!-- Placeholder for a Download button  -->
+            </div>
+            <div>
+                <button 
+                    *ngIf="securityUtilService.canEditVerifiedYield()" 
+                    mat-raised-button
+                    class="primary button-large-text" 
+                    [disabled]="!isUnsaved" 
+                    (click)="onSave()">
+                        Save
+                </button>
+            </div>
+        </div>        
+            
+        <cirras-grower-contract-header
+            [growerContract]="growerContract"
+        ></cirras-grower-contract-header>  
+
+        <form [formGroup]="getViewModel().formGroup">
+
+            <div class="plcy-inv-form-header" [ngStyle]="setFormStyles()">
+                <div>
+                    <h2>Verified Yield</h2>
+                    <p>Last Updated: {{ ((verifiedYieldContract && verifiedYieldContract.verifiedYieldUpdateTimestamp) ? verifiedYieldContract.verifiedYieldUpdateTimestamp : "" ) | date }} </p>
+                </div>            
+               
+                <div>
+                    <button
+                        mat-raised-button 
+                        class="secondary header-button"  
+                        matTooltip="Clear unsaved changes"
+                        (click)="onCancel()">
+                        Clear Changes
+                    </button>
+                </div>
+                <div class="vertical-line"></div>
+                <div>
+                    <button *ngIf="securityUtilService.canDeleteVerifiedYield() && 
+                        verifiedYieldContract && 
+                        verifiedYieldContract.verifiedYieldContractGuid" 
+                        mat-raised-button
+                        class="secondary header-button-red" 
+                        (click)="onDeleteVerifiedYield()">
+                        <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset Verified Yield
+                    </button>
+                </div>
+            </div>
+
+            <!-- warning messages -->
+            <div *ngIf="verifiedYieldContract && verifiedYieldContract.productWarningMessages && verifiedYieldContract.productWarningMessages.length > 0"  
+                class="vy-warning-msgs-container vy-warning-messages">
+
+                <div *ngFor="let msg of verifiedYieldContract.productWarningMessages" style="display:contents">
+                    <div><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+                    <div><span>{{ msg.message }}</span></div>
+                </div>
+                <div style="display:contents">
+                    <div>
+                        <mat-checkbox 
+                            formControlName="updateProductValuesInd" (change)="isUpdateProductChecked($event)">
+                        </mat-checkbox>
+                    </div>
+                    <div>Refresh Product Data from CIRRAS on save</div>
+                </div>
+            </div>
+
+           <div style="margin-top: 8px;">
+            <!-- commodity totals -->
+            <verified-yield-commodity-list
+                *ngIf="verifiedYieldContract && verifiedYieldContract.verifiedYieldContractCommodities"
+                [commodities]="verifiedYieldContract.verifiedYieldContractCommodities"
+                [commoditiesFormArray]="getViewModel().formGroup.controls.verifiedYieldContractCommodities"
+                [isUnsaved]="isUnsaved"></verified-yield-commodity-list>
+            </div>
+
+            <div style="margin-top: 16px;">
+                <!-- amendments -->
+                <verified-yield-amendment-list
+                    *ngIf="verifiedYieldContract && cropCommodityList"
+                    [verifiedYieldContractGuid]="verifiedYieldContractGuid"
+                    [amendments]="verifiedYieldContract.verifiedYieldAmendments"
+                    [amendmentsFormArray]="getViewModel().formGroup.controls.verifiedYieldAmendments"
+                    [cropCommodityList]="cropCommodityList"
+                    [fields]="verifiedYieldContract.fields"
+                    [isUnsaved]="isUnsaved"
+                    ></verified-yield-amendment-list>
+            </div>
+
+        </form>
+        </div>
+    </div>
+</base-wrapper>

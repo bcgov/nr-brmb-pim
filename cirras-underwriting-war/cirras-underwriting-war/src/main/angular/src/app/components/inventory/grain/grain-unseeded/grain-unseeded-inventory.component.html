@@ -25,8 +25,8 @@
         </div>
         <div class="vertical-line"></div>
         <div matTooltip="Changes must be saved before download is possible.">
-            <button mat-raised-button color="secondary" [disabled]="hasDataChanged == true"
-            class="button-large-text" (click)="onPrint()">
+            <button mat-raised-button [disabled]="hasDataChanged == true"
+            class="secondary button-large-text" (click)="onPrint('unseeded')">
                 <mat-icon class="button-mat-icon">download</mat-icon>Download
             </button>
         </div>
@@ -34,8 +34,7 @@
             <button 
                 *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
                 mat-raised-button
-                [color]="isHiddenFieldInTotals ? 'secondary' : 'primary'"
-                [ngClass]="isHiddenFieldInTotals ? 'header-button-red' : 'button-large-text'"
+                [ngClass]="isHiddenFieldInTotals ? 'secondary header-button-red' : 'primary button-large-text'"
                 [disabled]="!hasDataChanged && inventoryContract?.inventoryContractGuid" 
                 (click)="onSave()">
                     Save
@@ -75,15 +74,14 @@
             </div>
             
             <div>
-                <button *ngIf="securityUtilService.canEditInventory() && !hasYieldData" mat-raised-button color="secondary" class="header-button"  (click)="onAddNewField()">
+                <button *ngIf="securityUtilService.canEditInventory() && !hasYieldData" mat-raised-button class="secondary header-button"  (click)="onAddNewField()">
                     <mat-icon class="button-mat-icon">add</mat-icon>Add Field
                 </button>
             </div>
             <div>
                 <button *ngIf="!hasYieldData" 
                     mat-raised-button 
-                    color="secondary" 
-                    class="header-button"  
+                    class="secondary header-button"  
                     matTooltip="Clear unsaved changes"
                     (click)="onCancel()">
                     Clear Changes
@@ -94,8 +92,8 @@
                 <button *ngIf="securityUtilService.canDeleteInventory() && 
                                 inventoryContract && inventoryContract.inventoryContractGuid &&
                                 hasYieldData == false"  
-                    mat-raised-button color="secondary" 
-                    class="header-button-red"  
+                    mat-raised-button 
+                    class="secondary header-button-red"  
                     (click)="onDeleteInventory()">
                     <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset Inventory
                 </button>
@@ -211,7 +209,7 @@
                                             (focus)="lastYearCommodityVarietyFocus(fieldIndex, plantingIndex)"
                                             (keyup)="searchLastYearCommodityVariety($event.target.value)"
                                             (blur)="validateLastYearCommodityVariety(autoCmdtyVrty, $event.target.value, fieldIndex, plantingIndex)">
-                                        <mat-autocomplete #autoCmdtyVrty="matAutocomplete"
+                                        <mat-autocomplete #autoCmdtyVrty="matAutocomplete" hideSingleSelectionIndicator="true"
                                             [displayWith]="displayCommodityVarietyFn">
                                             <mat-option *ngFor="let option of filteredLastYearCommodityVarietyOptions" [value]="option.cropCommodityVarietyName">
                                                 {{ option.cropCommodityVarietyName | titlecase }}
@@ -229,7 +227,7 @@
                                 <div *ngIf="planting.value.deletedByUserInd != true"  
                                     class="inventory-fill" style="width:106px;"
                                     [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
-                                    <mat-form-field appearance="fill">
+                                    <mat-form-field appearance="fill" style="width: 96px;">
                                         <input matInput matInputCommified formControlName="acresToBeSeeded" 
                                                 (keydown)="navigateUpDown($event, 1)"
                                                 (keypress)="numberOnly($event)" 
@@ -238,7 +236,7 @@
                                                 maxlength="10"
                                                 >
                                     </mat-form-field>
-                                    <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Acres is writeable">edit</mat-icon>
+                                    <mat-icon style="font-size:18px; margin-top:6px;" matTooltip="Acres is writeable">edit</mat-icon>
                                 </div>
                         
                                 <div *ngIf="planting.value.deletedByUserInd != true" 
@@ -254,7 +252,7 @@
                                             (focus)="commodityVarietyFocus(fieldIndex, plantingIndex)"
                                             (keyup)="searchCommodityVariety($event.target.value)"
                                             (blur)="validateCommodityVariety(autoCurrentCmdtyVrty, $event.target.value, fieldIndex, plantingIndex)">
-                                        <mat-autocomplete #autoCurrentCmdtyVrty="matAutocomplete"
+                                        <mat-autocomplete #autoCurrentCmdtyVrty="matAutocomplete" hideSingleSelectionIndicator="true"
                                             [displayWith]="displayCommodityVarietyFn">
                                             <mat-option *ngFor="let option of filteredCommodityVarietyOptions" [value]="option.cropCommodityVarietyName">
                                                 {{ option.cropCommodityVarietyName | titlecase }}
@@ -264,9 +262,9 @@
                                     <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Intended Crop is writeable">edit</mat-icon>
                                 </div>
                                 
-                                <div *ngIf="planting.value.deletedByUserInd != true" style="width:100px;"
+                                <div *ngIf="planting.value.deletedByUserInd != true" class="inventory-fill" style="width:100px;"
                                     [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
-                                    <mat-checkbox 
+                                    <mat-checkbox
                                         *ngIf="isUnseededInsurableVisible( fieldIndex, plantingIndex)" 
                                         formControlName="isUnseededInsurableInd" 
                                         [checked]="isChecked(field.value.isUnseededInsurableInd)">
@@ -274,7 +272,7 @@
                                 </div>
                                     
                                 <div *ngIf="planting.value.deletedByUserInd != true" 
-                                    class="border-bottom border-right border-left" style="width:90px;"
+                                    class="action-icons border-bottom border-right border-left" style="width:90px;"
                                     [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout border-right-exclude-printout' :  'inventory-border' )">
                                    
                                     <mat-icon 
@@ -350,7 +348,7 @@
                         <div><mat-checkbox formControlName="tilliageInd" labelPosition="before" (change)="isMyFormDirty()">Tilliage</mat-checkbox></div>
                         <div class="comment-fill">
                             <mat-checkbox labelPosition="before" style="margin-right:10px;" formControlName="otherChangesInd" (change)="otherChangesIndClicked()">Other</mat-checkbox>                
-                            <mat-form-field appearance="fill">
+                            <mat-form-field appearance="outline">
                                 <input matInput formControlName="otherChangesComment" maxlength="128" (blur)="isMyFormDirty()">
                                 <mat-hint *ngIf="changeCommentRequired()" style="color: red">Required</mat-hint>
                             </mat-form-field>
@@ -381,7 +379,7 @@
                             </div>
                 
                             <div *ngIf="showBaseCmdty(commodity.value.cropCommodityId)" 
-                                class="fill border-right border-bottom number" >
+                                class="inventory-fill border-right border-bottom number" >
                                 <mat-form-field appearance="fill"> 
                                     <input matInput matInputCommified  
                                         formControlName="totalUnseededAcresOverride" 

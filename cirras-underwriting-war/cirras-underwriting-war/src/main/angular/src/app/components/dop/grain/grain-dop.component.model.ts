@@ -1,5 +1,5 @@
 import {DomSanitizer} from "@angular/platform-browser";
-import {FormBuilder, FormArray} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormArray} from "@angular/forms";
 import {BaseComponentModel} from "../../common/base/base.component.model";
 
 
@@ -7,7 +7,7 @@ export class GrainDopComponentModel extends BaseComponentModel {
     
 
     constructor(protected sanitizer: DomSanitizer,
-                private fb: FormBuilder) {
+                private fb: UntypedFormBuilder) {
 
         super(sanitizer);
         
@@ -16,8 +16,8 @@ export class GrainDopComponentModel extends BaseComponentModel {
             yieldMeasUnitTypeCode: [''],  
             declarationOfProductionDate: [''],
             grainFromOtherSourceInd: [''],
-            fields: new FormArray([]), // subform responsible for the field / commodity/estimated yield grid 
-            dopYieldContractCommodities: new FormArray([]),
+            fields: new UntypedFormArray([]), // subform responsible for the field / commodity/estimated yield grid 
+            dopYieldContractCommodities: new UntypedFormArray([]),
             uwComments: [] //new FormArray([])
         });
     }

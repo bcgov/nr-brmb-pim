@@ -36,7 +36,7 @@
     </div>
     <div class="filler"><!-- empty div --> </div>
     <div 
-        *ngIf="userCanAccessDop(); else noDOPLink" 
+        *ngIf="userCanAccessDop(); else noLink" 
         (click)="goToLink('dop')"
         [ngClass]="isLinkActive('dop') ? 'active' : 'inactive'">
             <mat-icon 
@@ -46,17 +46,38 @@
             </mat-icon>
     </div>
     <div 
-        *ngIf="userCanAccessDop(); else noDOPLink" 
+        *ngIf="userCanAccessDop(); else noLink" 
         (click)="goToLink('dop')"
         [ngClass]="isLinkActive('dop') ? 'active' : 'inactive'">
             Declaration of Production
     </div>
 
-    <ng-template #noDOPLink>
+    <ng-template #noLink>
         <div class="filler"><!-- empty div to account for space when there is no dop link --> </div>
     </ng-template>
 
     <div class="filler"></div>
+    
+    <!-- verified link -->
+    <div 
+        *ngIf="userCanAccessVerifiedYield(); else noLink" 
+        (click)="goToLink('verifiedYield')"
+        [ngClass]="isLinkActive('verifiedYield') ? 'active' : 'inactive'">
+            <mat-icon 
+                matTooltip="Verified Yield" 
+                svgIcon="tractor" 
+                [ngClass]="isLinkActive('verifiedYield') ? 'svg-active' : 'svg-inactive'">
+            </mat-icon>
+    </div>
+    <div 
+        *ngIf="userCanAccessVerifiedYield(); else noLink" 
+        (click)="goToLink('verifiedYield')"
+        [ngClass]="isLinkActive('verifiedYield') ? 'active' : 'inactive'">
+            Verified Yield
+    </div>
+
+    <div class="filler"></div>
+
 </div>
 
 <!-- grower info -->
@@ -80,7 +101,11 @@
             {{ (growerContract && growerContract.policyNumber) ? growerContract.policyNumber : "" }}            
         </div>
         <div class="grower-info-label">
-            {{ (growerContract && growerContract.cropYear) ? growerContract.cropYear : "" }}
+            <!-- {{ (growerContract && growerContract.cropYear) ? growerContract.cropYear : "" }} -->
+              <other-year-policy *ngIf="growerContract"
+              [currentPolicyCropYear]="growerContract.cropYear"
+              [otherYearPolicies]="growerContract.otherYearPolicies"
+              ></other-year-policy>
         </div>
         <div class="grower-info-label">
             {{ (growerContract && growerContract.growerPrimaryEmail) ? growerContract.growerPrimaryEmail : "" }}

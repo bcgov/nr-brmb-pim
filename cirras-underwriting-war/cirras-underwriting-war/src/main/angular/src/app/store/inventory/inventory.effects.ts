@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {Action, Store} from "@ngrx/store";
 import {DefaultService as CirrasUnderwritingAPIService, InventoryContractRsrc} from "@cirras/cirras-underwriting-api";
-import {AppConfigService, TokenService} from "@wf1/core-ui";
+import {AppConfigService, TokenService} from "@wf1/wfcc-core-lib";
 import {UUID} from "angular2-uuid";
 import {Observable, of} from 'rxjs';
 import {catchError, concatMap, debounceTime, map, switchMap, withLatestFrom} from 'rxjs/operators';
@@ -14,7 +14,7 @@ import { convertToInventoryContractRsrc } from "src/app/conversion/conversion-to
 import { InventoryContract } from "src/app/conversion/models";
 import { displayErrorMessage, displaySaveSuccessSnackbar, displayDeleteSuccessSnackbar, displaySuccessSnackbar } from "src/app/utils/user-feedback-utils";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { REST_VERSION } from "src/app/utils/constants";
+import { REST_VERSION, SCREEN_TYPE } from "src/app/utils/constants";
 import { HttpClient } from '@angular/common/http';
 import { GetReportError, GetReportSuccess } from "../dop/dop.actions";
 import { LoadGrowerContract } from "../grower-contract/grower-contract.actions";
@@ -118,7 +118,7 @@ addNewInventory: Observable<Action> = createEffect(() => this.actions.pipe(
     switchMap(
         ([action, store]) => {
             let typedAction = <InventoryContractAction>action;
-            let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
 
             const policyId = typedAction.policyId
@@ -140,7 +140,7 @@ addNewInventory: Observable<Action> = createEffect(() => this.actions.pipe(
 
                     let newInventoryContract: InventoryContract = convertToInventoryContract(response.body, response.headers ? response.headers.get("ETag") : null) 
 
-                    this.store.dispatch(LoadGrowerContract(INVENTORY_COMPONENT_ID, policyId)) // to update the side navigation links
+                    this.store.dispatch(LoadGrowerContract(INVENTORY_COMPONENT_ID, policyId, SCREEN_TYPE.INVENTORY)) // to update the side navigation links
 
                     return [                                                                         
                       LoadInventoryContractSuccess(typedAction.componentId, newInventoryContract)                             
@@ -164,7 +164,7 @@ updateInventory: Observable<Action> = createEffect(() => this.actions.pipe(
     switchMap(
         ([action, store]) => {
             let typedAction = <InventoryContractAction>action;
-            let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+            let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
             let payload = <InventoryContract>typedAction.payload.inventoryContract;
 
@@ -189,7 +189,7 @@ updateInventory: Observable<Action> = createEffect(() => this.actions.pipe(
 
                     let newInventoryContract: InventoryContract = convertToInventoryContract(response.body, response.headers ? response.headers.get("ETag") : null) 
 
-                    this.store.dispatch(LoadGrowerContract(INVENTORY_COMPONENT_ID, policyId)) // to update the side navigation links
+                    this.store.dispatch(LoadGrowerContract(INVENTORY_COMPONENT_ID, policyId, SCREEN_TYPE.INVENTORY)) // to update the side navigation links
                     return [                                                                         
                       LoadInventoryContractSuccess(typedAction.componentId, newInventoryContract)                             
                     ]
@@ -221,10 +221,11 @@ getInventoryReportBytes: Observable<Action> = createEffect (() =>  this.actions.
           let policyNumber = typedAction.payload.policyNumber ? typedAction.payload.policyNumber : "";
           let growerInfo = typedAction.payload.growerInfo ? typedAction.payload.growerInfo : "";
           let sortColumn = typedAction.payload.sortColumn ? typedAction.payload.sortColumn : "";
- 
+          let reportType = typedAction.payload.reportType ? typedAction.payload.reportType : "";
+
           let endpoint = this.appConfig.getConfig().rest["cirras_underwriting"] +"/inventoryContracts/report?policyIds=" + policyId +
             "&cropYear=" + cropYear + "&insurancePlanId=" + insurancePlanId + "&officeId=" + officeId + "&policyStatusCode=" + policyStatusCode +
-            "&policyNumber=" + policyNumber + "&growerInfo=" + encodeURI(growerInfo) + "&sortColumn=" + sortColumn
+            "&policyNumber=" + policyNumber + "&growerInfo=" + encodeURI(growerInfo) + "&sortColumn=" + sortColumn + "&reportType=" + reportType
 
           return this.httpClient
           .get(endpoint, {observe: 'response', responseType:'blob'})
@@ -271,7 +272,7 @@ deleteInventory: Observable<Action> = createEffect(() => this.actions.pipe(
   switchMap(
       ([action, store]) => {
           let typedAction = <DeleteInventoryContractAction>action;
-          let requestId = `WFDME${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+          let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
           let authToken = this.tokenService.getOauthToken();
 
           let payload = typedAction.payload;
@@ -290,7 +291,7 @@ deleteInventory: Observable<Action> = createEffect(() => this.actions.pipe(
 
                   displayDeleteSuccessSnackbar(this.snackbarService, "Inventory ");
 
-                  this.store.dispatch(LoadGrowerContract(typedAction.componentId, payload.policyId)) // to update the side navigation links
+                  this.store.dispatch(LoadGrowerContract(typedAction.componentId, payload.policyId, SCREEN_TYPE.INVENTORY)) // to update the side navigation links
 
                   return  [
                     RolloverInventoryContract(typedAction.componentId, payload.policyId) 

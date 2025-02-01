@@ -1,5 +1,5 @@
-import { DopYieldContractRsrc, YieldMeasUnitTypeCodeListRsrc, YieldMeasUnitTypeCodeRsrc } from "@cirras/cirras-underwriting-api";
-import { DopYieldContract, YieldMeasUnitTypeCode, YieldMeasUnitTypeCodeList } from "./models-yield";
+import { DopYieldContractRsrc, VerifiedYieldContractRsrc, YieldMeasUnitTypeCodeListRsrc, YieldMeasUnitTypeCodeRsrc } from "@cirras/cirras-underwriting-api";
+import { DopYieldContract, VerifiedYieldContract, YieldMeasUnitTypeCode, YieldMeasUnitTypeCodeList } from "./models-yield";
 
 const EMPTY_ARRAY = [];
 
@@ -64,6 +64,36 @@ export function convertToYieldMeasUnit(yieldMeasUnitRes: YieldMeasUnitTypeCodeRs
 
       etag: etag, 
       type: dopContract.type         
+    };  
+    return ret;
+  }
+
+  
+  export function convertToVerifiedYieldContract(verifiedYieldContractRsrc: VerifiedYieldContractRsrc, etag?: string): VerifiedYieldContract {
+    let verifiedYieldContract = <VerifiedYieldContractRsrc>verifiedYieldContractRsrc;
+  
+    let ret: VerifiedYieldContract = {
+  
+      links: verifiedYieldContract.links ? verifiedYieldContract.links : null,
+      
+      verifiedYieldContractGuid: verifiedYieldContract.verifiedYieldContractGuid,
+      declaredYieldContractGuid: verifiedYieldContract.declaredYieldContractGuid,
+      contractId: verifiedYieldContract.contractId,
+      cropYear: verifiedYieldContract.cropYear,
+      verifiedYieldUpdateTimestamp:  verifiedYieldContract.verifiedYieldUpdateTimestamp,
+      verifiedYieldUpdateUser: verifiedYieldContract.verifiedYieldUpdateUser,
+      defaultYieldMeasUnitTypeCode: verifiedYieldContract.defaultYieldMeasUnitTypeCode,
+      insurancePlanId: verifiedYieldContract.insurancePlanId,
+      growerContractYearId: verifiedYieldContract.growerContractYearId,
+      updateProductValuesInd: verifiedYieldContract.updateProductValuesInd,
+
+      fields: verifiedYieldContract.fields,
+      verifiedYieldContractCommodities: verifiedYieldContract.verifiedYieldContractCommodities,
+      verifiedYieldAmendments: verifiedYieldContract.verifiedYieldAmendments,
+      productWarningMessages: verifiedYieldContract.productWarningMessages,
+      
+      etag: etag, 
+      type: verifiedYieldContract.type   
     };  
     return ret;
   }

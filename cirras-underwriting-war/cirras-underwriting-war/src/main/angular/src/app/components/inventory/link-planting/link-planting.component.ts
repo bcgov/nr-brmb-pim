@@ -1,18 +1,19 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { AddFieldValidationRsrc, AnnualFieldRsrc, LinkedPlanting, UwContractListRsrc } from '@cirras/cirras-underwriting-api';
-import { AppConfigService, TokenService } from '@wf1/core-ui';
+import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
 import { InventoryContract, UwContract } from 'src/app/conversion/models';
 import { makeTitleCase, setHttpHeaders } from 'src/app/utils';
-import { INSURANCE_PLAN, LAND_UPDATE_TYPE, LINK_PLANTING_TYPE, PLANT_INSURABILITY_TYPE_CODE } from 'src/app/utils/constants';
+import { INSURANCE_PLAN, LAND_UPDATE_TYPE, LINK_PLANTING_TYPE, PLANT_INSURABILITY_TYPE_CODE, SCREEN_TYPE } from 'src/app/utils/constants';
 import { getInventorySeededForagesObjForSave } from '../inventory-common';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { Store } from '@ngrx/store';
 import { RootState } from 'src/app/store';
 import { RemovePlantingDialogComponent } from './remove-planting-dialog/remove-planting-dialog.component';
+import { DIALOG_TYPE } from '../../dialogs/base-dialog/base-dialog.component';
 
 export interface AddPlantingPopupData {
   fieldId: number;
@@ -43,11 +44,14 @@ export interface AddPlantingPopupData {
 })
 export class LinkPlantingComponent implements OnInit {
 
-  httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
+  titleLabel = "Link Planting for Field"
+  dialogType = DIALOG_TYPE.INFO;
+
+  httpOptions; // = setHttpHeaders(this.tokenService.getOauthToken())
 
   dataReceived : AddPlantingPopupData;
 
-  linkPlantingForm: FormGroup;
+  linkPlantingForm: UntypedFormGroup;
 
   uwContract: UwContract;
 
@@ -59,7 +63,7 @@ export class LinkPlantingComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AddPlantingPopupData>,
     @Inject(MAT_DIALOG_DATA) public data: AddPlantingPopupData,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private tokenService: TokenService,
     private appConfig: AppConfigService, 
     private http: HttpClient,
@@ -67,12 +71,21 @@ export class LinkPlantingComponent implements OnInit {
     protected dialog: MatDialog,  ) {  
 
       if (data) {
+
+        this.httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
+
         //capture the data that comes from the main page
         this.dataReceived = data;
 
         if (this.dataReceived && this.dataReceived.policyNumber) {
           this.searchPolicy(this.dataReceived.policyNumber)
         }
+
+        this.titleLabel = "Link Planting for Field " + 
+        ( (this.dataReceived)  ?  
+        ": " + this.dataReceived.fieldLabel + " (Field Id: " + this.dataReceived.fieldId + "), Location: " + this.dataReceived.otherLegalDescription
+            : "" )
+        
       } 
     }
 
@@ -122,7 +135,7 @@ export class LinkPlantingComponent implements OnInit {
     url = url +"/uwcontracts?cropYear=&policyNumber=" + encodeURI(searchPolicyNumber) + "&sortColumn=policyNumber&sortDirection=ASC&pageNumber=1&pageRowCount=20"
 
     this.http.get<UwContractListRsrc>(url, this.httpOptions).subscribe({
-      next: data => {
+      next: (data : any) => {
           this.validatePolicy(data)
       },
       error: error => {
@@ -364,7 +377,7 @@ export class LinkPlantingComponent implements OnInit {
     url = url + "&insurancePlanId=" +  INSURANCE_PLAN.FORAGE
 
     this.http.get<AnnualFieldRsrc>(url, this.httpOptions).subscribe({
-      next: data => {
+      next: (data : any) => {
           // the rollover endpoint should return plantings and comments 
           // in case the field has inventory but it's not on the policy to which we want to add it 
           
@@ -417,7 +430,7 @@ export class LinkPlantingComponent implements OnInit {
           next: data => {
 
             // update left menu side navigation links
-            this.store.dispatch(LoadGrowerContract(INVENTORY_COMPONENT_ID, this.dataReceived.policyId)) 
+            this.store.dispatch(LoadGrowerContract(INVENTORY_COMPONENT_ID, this.dataReceived.policyId, SCREEN_TYPE.INVENTORY)) 
 
             if (operationType == 'LinkPlanting') {
               alert ("A new planting was successfully added to the field on the forage policy and linked to this grain planting.")

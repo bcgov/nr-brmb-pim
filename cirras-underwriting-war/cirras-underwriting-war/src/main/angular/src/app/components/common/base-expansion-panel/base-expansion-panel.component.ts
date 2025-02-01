@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output} from "@angular/core";
 
 import {DomSanitizer} from "@angular/platform-browser";
-import {FormBuilder} from "@angular/forms";
+import {UntypedFormBuilder} from "@angular/forms";
 import {Store} from "@ngrx/store";
 import {ApplicationStateService} from "../../../services/application-state.service";
 import {RootState} from "../../../store";
@@ -48,7 +48,7 @@ export class BaseExpansionPanelComponent {
         protected applicationStateService: ApplicationStateService,
         protected sanitizer: DomSanitizer,
         protected cdr: ChangeDetectorRef,
-        protected fb: FormBuilder,
+        protected fb: UntypedFormBuilder,
         protected store: Store<RootState>
     ) {
         this.mobile = applicationStateService.getIsMobileResolution();

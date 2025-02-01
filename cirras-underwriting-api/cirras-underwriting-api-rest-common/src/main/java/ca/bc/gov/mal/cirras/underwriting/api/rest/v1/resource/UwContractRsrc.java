@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.OtherYearPolicy;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContract;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 
@@ -50,6 +51,8 @@ public class UwContractRsrc extends BaseResource implements UwContract<UwContrac
 	private Integer totalDopEligibleInventory;
 
 	private List<UwContractRsrc> linkedPolicies = new ArrayList<UwContractRsrc>();
+	
+	private List<OtherYearPolicy> otherYearPolicies = new ArrayList<OtherYearPolicy>();
 	
 	public Integer getContractId() {
 		return contractId;
@@ -252,6 +255,14 @@ public class UwContractRsrc extends BaseResource implements UwContract<UwContrac
 
 	public void setLinkedPolicies(List<UwContractRsrc> linkedPolicies) {
 		this.linkedPolicies = linkedPolicies;
+	}
+
+	public List<OtherYearPolicy> getOtherYearPolicies() {
+		return otherYearPolicies;
+	}
+
+	public void setOtherYearPolicies(List<OtherYearPolicy> otherYearPolicies) {
+		this.otherYearPolicies = otherYearPolicies;
 	}
 	
 }

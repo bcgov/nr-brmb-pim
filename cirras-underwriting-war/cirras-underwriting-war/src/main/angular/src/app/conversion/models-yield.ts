@@ -1,5 +1,5 @@
 
-import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
+import { MessageRsrc, UnderwritingComment } from "@cirras/cirras-underwriting-api";
 import { AnnualField, RelLink } from "./models";
 
 export interface YieldMeasUnitTypeCodeList {
@@ -173,3 +173,62 @@ export interface DopYieldContractCommodityForage {
     cropCommodityId?: number;
     plantDurationTypeCode?: string;
 }
+
+
+export interface VerifiedYieldContract {
+    links?: Array<RelLink>;
+    verifiedYieldContractGuid?: string;
+    declaredYieldContractGuid?: string;
+    contractId?: number;
+    cropYear?: number;
+    verifiedYieldUpdateTimestamp?: string;
+    verifiedYieldUpdateUser?: string;
+    defaultYieldMeasUnitTypeCode?: string;
+    insurancePlanId?: number;
+    growerContractYearId?: number;
+    updateProductValuesInd?: boolean;
+    fields?: Array<AnnualField>;
+    verifiedYieldContractCommodities?: Array<VerifiedYieldContractCommodity>;
+    verifiedYieldAmendments?: Array<VerifiedYieldAmendment>;
+    productWarningMessages?: Array<MessageRsrc>;
+    etag?: string;
+    type: string;
+  }
+
+  export interface VerifiedYieldContractCommodity {
+    verifiedYieldContractCommodityGuid?: string;
+	verifiedYieldContractGuid?: string;
+	cropCommodityId?: number;
+	isPedigreeInd?: boolean;
+	harvestedAcres?: number;
+	harvestedAcresOverride?: number;
+	storedYieldDefaultUnit?: number;
+	soldYieldDefaultUnit?: number;
+	productionGuarantee?: number;
+	harvestedYield?: number;
+	harvestedYieldOverride?: number;
+	yieldPerAcre?: number;
+    cropCommodityName?: string;
+    totalInsuredAcres?: number;
+  }
+
+  export interface VerifiedYieldAmendment {
+    verifiedYieldAmendmentGuid?: string;
+    verifiedYieldAmendmentCode?: string;
+    verifiedYieldContractGuid?: string;
+    cropCommodityId?: number;
+    isPedigreeInd?: boolean;
+    fieldId?: number;
+    yieldPerAcre?: number;
+    acres?: number;
+    rationale?: string;
+    cropCommodityName?: string;
+    fieldLabel?: string;
+    deletedByUserInd?: boolean;
+  }
+
+  export interface VerifiableCommodity  {
+    cropCommodityId?: number;
+    cropCommodityName?: string;
+    isPedigreeInd?: boolean;
+  }

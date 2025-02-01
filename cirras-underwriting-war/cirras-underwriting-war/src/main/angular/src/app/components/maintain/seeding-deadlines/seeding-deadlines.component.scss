@@ -1,165 +1,7 @@
 @import '../../../../styles/variables';
 
-.uw-year-row-group{
-  padding: 30px 10px 0px 10px;
-    margin: 10px 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-
-    .cuw-container {
-      display: grid;
-      grid-auto-rows: minmax( 2em, auto );
-
-      div {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-    }
-
-      &.cuw-grower-info {
-        grid-template-columns: 80px 230px auto;
-    }
-
-    }
-}
-
-.cuw-row-group {
-    //padding: 30px 10px 10px 10px;
-    margin: 10px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    
-    .cuw-container {
-        display: grid;
-        grid-auto-rows: minmax( 2em, auto );
-        
-        div {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-        }
-  
-        .header {
-            font-weight: bold;            
-        }
-
-        .border-right {
-            border-right: 2px solid #ccc;          
-        }
-  
-        .border-top {
-            border-top: 2px solid #ccc;          
-        }
-  
-        .border-left {
-            border-left: 2px solid #ccc;          
-        }
-  
-        .justify-center {
-            justify-content: center;   
-        }
-  
-        .border-bottom {
-            border-bottom: 2px solid #ccc;
-        }
-
-        &.sd-info {
-            // width: 850px;
-            grid-template-columns: 200px 190px 190px 190px 190px 30px;
-        }
-
-        .sd-info-fill {
-    
-            & > * {
-                  flex-grow: 1;
-              }
-              .mat-form-field{
-                width: 99px;
-                height: 60px;
-                //margin-bottom: -1.4em
-              }
-        
-              .mat-form-field-wrapper {
-                bottom: 0;
-              }
-         
-              ::ng-deep .mat-form-field-underline {
-                display: none;
-              }  
-            
-              ::ng-deep .mat-form-field-infix {
-                display: flex;
-                justify-content: center;
-              }
-              
-              ::ng-deep .mat-form-field-wrapper {
-                padding-bottom: 0;
-              }
-
-              ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
-                height: 60px;
-              }
-          }
-
-    }
-  }
-  
-
-  .grower-header-label{    
-    width: 80px;
-  }
-
-  h2 {
-    font-size: 22px;
-    font-weight: bold;
-    margin-left: 20px;
-    display: inline;
-  }
-
-
-  .button-row {
-    padding-top: 12px;
-    margin-left: 20px;
-    margin-right: 20px;
-  
-    ::ng-deep .mat-raised-button {
-      padding: 0 10px;
-    }
-  }
-
   .button-mat-icon {
     margin-right: 4px;
-  }
-
-  .button-large-text {
-    font-size: 20px !important;
-  }
-  
-  .button-right {
-    float: right;
-  }
-
-  .unsaved-changes-warning {
-    display: flex; 
-    flex-direction: row; 
-    justify-content:center; 
-    align-items: center; 
-    max-width: 400px;
-    margin-left: 20px; 
-    border: 2px solid orangered; 
-    border-radius: 5px;
-  }
-
-  .table-wrapper {
-    max-height: calc(var(--vh, 1vh) * 100 - 25em);
-    width: calc(100% - 2 * var(--cirras-underwriting-gutter-space));
-    width: 1010px;
-    margin: 0;
-    border-top: 1px solid $colour-light-grey;
-    border-bottom: 1px solid $colour-light-grey;
-    overflow-y: auto;
   }
 
 .grower-header {
@@ -173,12 +15,12 @@
 
 .top-filter {
   display: grid;
-  grid-template-columns: 174px 146px auto 406px;
+  grid-template-columns: 174px 146px 300px 420px;
 
   ::ng-deep .ms-parent:nth-of-type(1) {
-    width: 158px !important;
+    width: 120px !important;
     > ::ng-deep .ms-choice {
-      width: 158px !important;
+      width: 120px !important;
     }
   }
 
@@ -191,6 +33,21 @@
       margin-bottom: 4px;
     }
   }
+
+  ::ng-deep .mat-internal-form-field>label {
+    padding-left: 0px !important; 
+  }
+
+  ::ng-deep .mat-mdc-radio-button .mat-internal-form-field {
+    color: $colour-dark-grey !important;
+  }
+}
+
+.change-radio-group{
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  align-items: flex-start;
 }
 
 .policy-header-container {
@@ -227,9 +84,6 @@
     padding-top: 0;
   }
 
-  ::ng-deep .mat-form-field-infix {
-    border-top: 0;
-  }
 }
 
 .plcy-inv-fld-tbl-outer-wrapper {

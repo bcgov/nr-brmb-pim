@@ -8,6 +8,7 @@ export enum ResourcesRoutes {
     INVENTORY_FORAGE = "inventory/forage",
     DOP_GRAIN = "dop/grain",
     DOP_FORAGE = "dop/forage",
+    VERIFIED_YIELD_GRAIN = "verified-yield/grain",
     MAINTAIN_DASHBOARD = "maintain/dashboard",
     MAINTAIN_SEEDING_DEADLINES = "maintain/seeding-deadlines",
     MAINTAIN_GRADE_MODIFIERS = "maintain/grade-modifiers",
@@ -104,6 +105,16 @@ export const SORT_BY_CHOICES = {
     POLICY_NUMBER: "policyNumber",  
     GROWER_NAME: "growerName",   
 }
+export const REPORT_TYPE_OPTIONS = [
+    {
+        code: "unseeded",
+        description: "Unseeded Inventory"
+    },
+    {
+        code: "seeded",
+        description: "Seeded Inventory"
+    },
+];
 
 export const BASE_COMMODITIES = ['BARLEY', 'CANOLA', 'FALL RYE', 'FIELD PEA', 'OAT', 'WHEAT', 'WINTER WHEAT']
 
@@ -141,4 +152,14 @@ export const PLANT_INSURABILITY_TYPE_CODE ={
     WinterSurvival1: "W1",
     WinterSurvival2: "W2",
     WinterSurvival3: "W3",
+}
+
+export const VERIFIED_YIELD_AMENDMENT_CODE = {
+    "APPRAISAL"     : "Appraisal",  
+    "ASSESSMENT"    : "Assessment"
+}
+export const SCREEN_TYPE = {
+    INVENTORY: "INVENTORY",
+    DOP: "DOP",
+    VERIFIED: "VERIFIED"
 }

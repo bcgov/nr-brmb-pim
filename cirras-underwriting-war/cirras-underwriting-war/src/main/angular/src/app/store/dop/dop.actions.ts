@@ -1,7 +1,6 @@
 import {Action} from "@ngrx/store";
 import { DopYieldContract, YieldMeasUnitTypeCodeList } from "src/app/conversion/models-yield";
 import {ErrorState} from "../application/application.state";
-import { UnderwritingComment } from "@cirras/cirras-underwriting-api/model/models";
 
 export const LOAD_DOP = "LOAD_DOP";
 export const LOAD_DOP_SUCCESS = "LOAD_DOP_SUCCESS";
@@ -226,6 +225,7 @@ export interface DopYieldContractAction extends Action {
   componentId: string;
   payload: {
     dopYieldContract: DopYieldContract; 
+    policyId: string;
   };
 }
 
@@ -237,24 +237,26 @@ export interface DeleteDopYieldContractAction extends Action {
   };
 }
 
-export function AddNewDopYieldContract(componentId: string, dopYieldContract: DopYieldContract): DopYieldContractAction {
+export function AddNewDopYieldContract(componentId: string, dopYieldContract: DopYieldContract, policyId: string): DopYieldContractAction {
   
   return {
     type: ADD_NEW_DOP,
     componentId: componentId,
     payload: {
-      dopYieldContract
+      dopYieldContract,
+      policyId
     }
   };
 }
 
-export function UpdateDopYieldContract(componentId: string, dopYieldContract: DopYieldContract): DopYieldContractAction {
+export function UpdateDopYieldContract(componentId: string, dopYieldContract: DopYieldContract, policyId: string): DopYieldContractAction {
   
   return {
     type: UPDATE_DOP,
     componentId: componentId,
     payload: {
-      dopYieldContract
+      dopYieldContract,
+      policyId
     }
   };
 }

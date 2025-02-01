@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public interface VerifiedYieldContract<A extends AnnualField> extends Serializable {
+import ca.bc.gov.nrs.wfone.common.model.Message;
+
+public interface VerifiedYieldContract<A extends AnnualField, M extends Message> extends Serializable {
 
  	public String getVerifiedYieldContractGuid();
 	public void setVerifiedYieldContractGuid(String verifiedYieldContractGuid);
@@ -31,8 +33,21 @@ public interface VerifiedYieldContract<A extends AnnualField> extends Serializab
 	public void setInsurancePlanId(Integer insurancePlanId);
 				
 	public Integer getGrowerContractYearId();
-	public void setGrowerContractYearId(Integer growerContractYearId);	
+	public void setGrowerContractYearId(Integer growerContractYearId);
+	
+	public Boolean getUpdateProductValuesInd();
+	public void setUpdateProductValuesInd(Boolean updateProductValuesInd);
 
+	public List<A> getFields();
+	public void setFields(List<A> fields);
+	
 	public List<VerifiedYieldContractCommodity> getVerifiedYieldContractCommodities();
 	public void setVerifiedYieldContractCommodities(List<VerifiedYieldContractCommodity> verifiedYieldContractCommodities);
+
+	public List<VerifiedYieldAmendment> getVerifiedYieldAmendments();
+	public void setVerifiedYieldAmendments(List<VerifiedYieldAmendment> verifiedYieldAmendments);
+	
+	public List<M> getProductWarningMessages();
+	public void setProductWarningMessages(List<M> productWarningMessages);
+
 }

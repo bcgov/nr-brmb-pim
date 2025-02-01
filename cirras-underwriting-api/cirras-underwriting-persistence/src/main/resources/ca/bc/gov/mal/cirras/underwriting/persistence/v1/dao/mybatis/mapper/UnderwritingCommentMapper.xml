@@ -19,6 +19,7 @@
 		
 		<result property="growerContractYearId" column="grower_contract_year_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="declaredYieldContractGuid" column="declared_yield_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="verifiedYieldSummaryGuid" column="verified_yield_summary_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
 		
 		<result property="growerContractYearId" column="grower_contract_year_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		
@@ -36,7 +37,8 @@
 		uc.update_user, 
 		uc.update_date,
 		uc.grower_contract_year_id,
-		uc.declared_yield_contract_guid
+		uc.declared_yield_contract_guid,
+		uc.verified_yield_summary_guid
     </sql>
     
     
@@ -59,6 +61,7 @@
 			underwriting_comment, 
 			grower_contract_year_id,
 			declared_yield_contract_guid,
+			verified_yield_summary_guid,
 			create_user, 
 			create_date, 
 			update_user, 
@@ -70,6 +73,7 @@
 			#{dto.underwritingComment, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{dto.growerContractYearId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.declaredYieldContractGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.verifiedYieldSummaryGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
 			now(),
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
@@ -103,6 +107,15 @@
 		delete from underwriting_comment 
 		where annual_field_detail_id in (select afd.annual_field_detail_id from annual_field_detail afd where afd.field_id = #{fieldId})
 	</delete>
+	
+	<delete id="deleteForVerifiedYieldSummaryGuid">
+		delete from underwriting_comment where verified_yield_summary_guid = #{verifiedYieldSummaryGuid}
+	</delete>
+
+	<delete id="deleteForVerifiedYieldContract">
+		delete from underwriting_comment 
+		where verified_yield_summary_guid in (select verified_yield_summary_guid from verified_yield_summary where verified_yield_contract_guid = #{verifiedYieldContractGuid})
+	</delete>
 		
 	<select id="select" resultMap="UnderwritingCommentDtoMap">
 		<include refid="selectColumns"/>
@@ -131,5 +144,12 @@
 		order by afd.crop_year desc, uc.create_date desc, uc.underwriting_comment_guid
 	</select>
 	
+	<select id="selectForVerifiedYieldSummary" resultMap="UnderwritingCommentDtoMap">
+		<include refid="selectColumns"/>
+		from underwriting_comment uc
+		join underwriting_comment_type_code uctc on uctc.underwriting_comment_type_code = uc.underwriting_comment_type_code
+		where verified_yield_summary_guid = #{verifiedYieldSummaryGuid}
+		order by uc.create_date desc, uc.underwriting_comment_guid
+	</select>
 	
 </mapper>

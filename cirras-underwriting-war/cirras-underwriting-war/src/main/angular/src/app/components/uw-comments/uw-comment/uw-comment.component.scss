@@ -14,21 +14,6 @@ div {
     align-items: center;
 }
 
-.entire {
-    ::ng-deep .mat-form-field {
-        width: 100%;
-    }
-
-    ::ng-deep .mat-form-field-wrapper {
-        padding-bottom: 0;
-    }
-
-    ::ng-deep .mat-form-field-infix {
-        padding: 0;
-        border-top: 0;
-    }
-}
-
 :host:nth-child(even) {
     div {
         div {
@@ -37,6 +22,6 @@ div {
     }
 }
 
-textarea.mat-input-element.cdk-textarea-autosize {
+textarea.mat-mdc-input-element.cdk-textarea-autosize {
     overflow: auto;
 }

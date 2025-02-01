@@ -10,14 +10,17 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
+import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.VERIFIED_YIELD_CONTRACT_NAME)
 @XmlSeeAlso({ VerifiedYieldContractRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class VerifiedYieldContractRsrc extends BaseResource implements VerifiedYieldContract<AnnualFieldRsrc> {
+public class VerifiedYieldContractRsrc extends BaseResource implements VerifiedYieldContract<AnnualFieldRsrc, MessageRsrc> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -31,8 +34,13 @@ public class VerifiedYieldContractRsrc extends BaseResource implements VerifiedY
 
 	private Integer insurancePlanId;
 	private Integer growerContractYearId;
+	private Boolean updateProductValuesInd;
 	
+	private List<AnnualFieldRsrc> fields = new ArrayList<AnnualFieldRsrc>();
 	private List<VerifiedYieldContractCommodity> verifiedYieldContractCommodities = new ArrayList<VerifiedYieldContractCommodity>();
+	private List<VerifiedYieldAmendment> verifiedYieldAmendments = new ArrayList<VerifiedYieldAmendment>();
+	private List<VerifiedYieldSummary> verifiedYieldSummaries = new ArrayList<VerifiedYieldSummary>();
+	private List<MessageRsrc> productWarningMessages = new ArrayList<MessageRsrc>();
 
 	public String getVerifiedYieldContractGuid() {
 		return verifiedYieldContractGuid;
@@ -97,10 +105,47 @@ public class VerifiedYieldContractRsrc extends BaseResource implements VerifiedY
 		this.growerContractYearId = growerContractYearId;
 	}
 
+	public Boolean getUpdateProductValuesInd() {
+		return updateProductValuesInd;
+	}
+
+	public void setUpdateProductValuesInd(Boolean updateProductValuesInd) {
+		this.updateProductValuesInd = updateProductValuesInd;
+	}
+
+	public List<AnnualFieldRsrc> getFields() {
+		return fields;
+	}
+	public void setFields(List<AnnualFieldRsrc> fields) {
+		this.fields = fields;
+	}
+	
 	public List<VerifiedYieldContractCommodity> getVerifiedYieldContractCommodities() {
 		return verifiedYieldContractCommodities;
 	}
 	public void setVerifiedYieldContractCommodities(List<VerifiedYieldContractCommodity> verifiedYieldContractCommodities) {
 		this.verifiedYieldContractCommodities = verifiedYieldContractCommodities;
 	}
+
+	public List<VerifiedYieldAmendment> getVerifiedYieldAmendments() {
+		return verifiedYieldAmendments;
+	}
+	public void setVerifiedYieldAmendments(List<VerifiedYieldAmendment> verifiedYieldAmendments) {
+		this.verifiedYieldAmendments = verifiedYieldAmendments;
+	}
+
+	public List<VerifiedYieldSummary> getVerifiedYieldSummaries() {
+		return verifiedYieldSummaries;
+	}
+	public void setVerifiedYieldSummaries(List<VerifiedYieldSummary> verifiedYieldSummaries) {
+		this.verifiedYieldSummaries = verifiedYieldSummaries;
+	}
+
+	public List<MessageRsrc> getProductWarningMessages() {
+		return productWarningMessages;
+	}
+	public void setProductWarningMessages(List<MessageRsrc> productWarningMessages) {
+		this.productWarningMessages = productWarningMessages;
+	}
+
 }

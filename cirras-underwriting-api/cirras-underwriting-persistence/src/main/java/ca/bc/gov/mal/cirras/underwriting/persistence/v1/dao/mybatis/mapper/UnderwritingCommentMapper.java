@@ -21,10 +21,16 @@ public interface UnderwritingCommentMapper {
 	
 	int deleteForField(Map<String, Object> parameters);
 	
+	void deleteForVerifiedYieldSummaryGuid(Map<String, Object> parameters);
+
+	void deleteForVerifiedYieldContract(Map<String, Object> parameters);
+
 	List<UnderwritingCommentDto> select(Map<String, Object> parameters);
 	
 	List<UnderwritingCommentDto> selectForDopContract(Map<String, Object> parameters);
 
 	List<UnderwritingCommentDto> selectForField(Map<String, Object> parameters);
+	
+	List<UnderwritingCommentDto> selectForVerifiedYieldSummary(Map<String, Object> parameters);
 
 }

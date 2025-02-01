@@ -21,16 +21,16 @@ import {
     isElementTruncated
 } from "../../../utils";
 import { ResourcesRoutes } from "src/app/utils/constants";
-import {AbstractControl, FormBuilder, FormControlDirective, FormControlName, FormGroup} from "@angular/forms";
+import {AbstractControl, UntypedFormBuilder, FormControlDirective, FormControlName, UntypedFormGroup} from "@angular/forms";
 import {ErrorMessages, getDisplayErrorMessage} from "../../../utils/error-messages";
 import {ERROR_TYPE, ErrorState, LoadState, ApplicationState} from "../../../store/application/application.state";
 import {ConnectionService} from "ngx-connection-service";
 import {ActionItem} from "../base-wrapper/base-wrapper.component";
 import {Overlay} from "@angular/cdk/overlay";
 import {ApplicationStateService} from "../../../services/application-state.service";
-import {AppConfigService, TokenService} from "@wf1/core-ui";
+import {AppConfigService, TokenService} from "@wf1/wfcc-core-lib";
 import {PaginationInstance} from "ngx-pagination";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SCOPES_UI} from "../../../utils/scopes";
@@ -116,7 +116,7 @@ export class BaseComponent implements OnInit, OnChanges, AfterViewInit {
                 protected route: ActivatedRoute,
                 protected sanitizer: DomSanitizer,
                 protected store: Store<RootState>,
-                protected fb: FormBuilder,
+                protected fb: UntypedFormBuilder,
                 protected dialog: MatDialog,
                 protected applicationStateService: ApplicationStateService,
                 public securityUtilService: SecurityUtilService,                
@@ -260,19 +260,19 @@ export class BaseComponent implements OnInit, OnChanges, AfterViewInit {
       window.location.href = url;
     }
 
-    getAsFormGroup(ac: AbstractControl): FormGroup {
-        return ac as FormGroup;
+    getAsFormGroup(ac: AbstractControl): UntypedFormGroup {
+        return ac as UntypedFormGroup;
     }
 
-    disableSaveForm(form?: FormGroup): boolean {
+    disableSaveForm(form?: UntypedFormGroup): boolean {
         let fg = form ? form : this.viewModel.formGroup;
         return !fg.dirty || !fg.valid;
     }
 
-    disableBatchSaveForm(arrayProperty: string, form?: FormGroup): boolean {
+    disableBatchSaveForm(arrayProperty: string, form?: UntypedFormGroup): boolean {
         let fg = form ? form : this.viewModel.formGroup;
         //Check form array for dirty flag
-        let fgArray: FormGroup[] = fg?.controls[arrayProperty]['controls'];
+        let fgArray: UntypedFormGroup[] = fg?.controls[arrayProperty]['controls'];
 
         let arrayHasDirtyFlag = fgArray.some(contactFg => contactFg.dirty);
         let arrayHasInvalidFlag = fgArray.some(contactFg => !contactFg.valid);
@@ -292,7 +292,7 @@ export class BaseComponent implements OnInit, OnChanges, AfterViewInit {
         return false;
     }
 
-    unsavedForm(form?: FormGroup, arrayProperty?: string): boolean {
+    unsavedForm(form?: UntypedFormGroup, arrayProperty?: string): boolean {
         //console.log("unsaved", this.componentId);
         let fg = form ? form : this.viewModel.formGroup;
         if (arrayProperty) {
@@ -306,7 +306,7 @@ export class BaseComponent implements OnInit, OnChanges, AfterViewInit {
     unsavedBatchForm(arrayProperty: string): boolean {
         let fg = this.viewModel.formGroup;
         //Check form array for dirty flag
-        let fgArray: FormGroup[] = fg?.controls[arrayProperty]['controls'];
+        let fgArray: UntypedFormGroup[] = fg?.controls[arrayProperty]['controls'];
         let arrayHasDirtyFlag = fgArray.some(contactFg => contactFg.dirty);
         let hasAddedUnsavedItem = this.hasAddedUnsavedItemNotBlank(fg, arrayProperty);
         //console.log("arrayHasDirtyFlag", arrayHasDirtyFlag, "fgDirty", fg.dirty, "hasAddedUnsavedItem", hasAddedUnsavedItem);
@@ -323,10 +323,10 @@ export class BaseComponent implements OnInit, OnChanges, AfterViewInit {
         }
     }
 
-    hasAddedUnsavedItemNotBlank(fgMain: FormGroup, arrayProperty: string) {
+    hasAddedUnsavedItemNotBlank(fgMain: UntypedFormGroup, arrayProperty: string) {
         let controls = fgMain?.controls[arrayProperty]['controls'];
         let ret = controls.some(ac => {
-                let fg: FormGroup = <FormGroup>ac;
+                let fg: UntypedFormGroup = <UntypedFormGroup>ac;
                 if (!fg.get("id").value && controls.length > 1) { //not a default empty entry
                     //console.log("not default entry");
                     return true;

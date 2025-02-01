@@ -1,14 +1,13 @@
-
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Input, OnChanges, SimpleChanges, Directive, ChangeDetectorRef, } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Input, OnChanges, SimpleChanges, Directive } from '@angular/core';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ParamMap } from '@angular/router';
 import { CropVarietyCommodityType, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { CropCommodityList, InventoryContract, UwContract } from 'src/app/conversion/models';
 import { AddNewInventoryContract, DeleteInventoryContract, GetInventoryReport, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
-import { addUwCommentsObject, areDatesNotEqual, areNotEqual, areNullableBooleanNotEqual, isBaseCommodity, makeNumberOnly } from 'src/app/utils';
-import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN, UW_COMMENT_TYPE_CODE } from 'src/app/utils/constants';
+import { addUwCommentsObject, areDatesNotEqual, areNotEqual, areNullableBooleanNotEqual, isBaseCommodity, makeNumberOnly, replaceNonAlphanumericCharacters } from 'src/app/utils';
+import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { BaseComponent } from '../../common/base/base.component';
 import { AddLandPopupData } from '../add-land/add-land.component';
 import { GrainInventoryComponentModel } from './grain-inventory.component.model';
@@ -16,47 +15,15 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { AddNewFormField, addAnnualFieldObject, addPlantingObject, addSeededGrainsObject, deleteFormField, deleteNewFormField, dragField, fieldHasInventory, isLinkedFieldCommon, isLinkedPlantingCommon, isThereAnyCommentForField, linkedFieldTooltipCommon, linkedPlantingTooltipCommon, navigateUpDownTextbox, openAddEditLandPopup, updateComments } from '../inventory-common';
 import { RemoveFieldPopupData } from '../remove-field/remove-field.component';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
-import { DomSanitizer, Title } from '@angular/platform-browser';
-import { Store } from '@ngrx/store';
-import { RootState } from 'src/app/store';
-import { MatDialog } from '@angular/material/dialog';
-import { ApplicationStateService } from 'src/app/services/application-state.service';
-import { SecurityUtilService } from 'src/app/services/security-util.service';
-import { AppConfigService, TokenService } from '@wf1/core-ui';
-import { ConnectionService } from 'ngx-connection-service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Overlay } from '@angular/cdk/overlay';
-import { HttpClient } from '@angular/common/http';
-import { DecimalPipe } from '@angular/common';
+import { asapScheduler } from 'rxjs';
 
 @Directive()
 export class GrainInventoryComponent extends BaseComponent implements OnChanges {
-
-
+  
   @Input() inventoryContract: InventoryContract;
   @Input() cropCommodityList: CropCommodityList;
   @Input() underSeededCropCommodityList: CropCommodityList;
   @Input() growerContract: UwContract;
-
-  constructor(protected router: Router,
-    protected route: ActivatedRoute,
-    protected sanitizer: DomSanitizer,
-    protected store: Store<RootState>,
-    protected fb: FormBuilder,
-    protected dialog: MatDialog,
-    protected applicationStateService: ApplicationStateService,
-    public securityUtilService: SecurityUtilService,                
-    protected tokenService: TokenService,
-    protected connectionService: ConnectionService,
-    protected snackbarService: MatSnackBar,
-    protected overlay: Overlay,
-    protected cdr: ChangeDetectorRef,
-    protected appConfigService: AppConfigService,
-    protected http: HttpClient,
-    protected titleService: Title,
-    protected decimalPipe: DecimalPipe) {
-    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
-  }
 
   cropCommodityOptions = [];
   cropVarietyOptions = [];
@@ -164,7 +131,7 @@ ngOnChanges2(changes: SimpleChanges) {
 
     if ( changes.inventoryContract && this.inventoryContract && this.inventoryContract.fields ) {
 
-        let flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+        let flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
         flds.clear()
         this.inventoryContract.fields.forEach( f => this.addField( f ) )
 
@@ -213,9 +180,9 @@ ngOnChanges2(changes: SimpleChanges) {
 
   addField( field ) {
 
-    let fldPlantings = new FormArray ([]) 
+    let fldPlantings = new UntypedFormArray ([]) 
 
-    let pltgInventorySeededGrains = new FormArray ([]) 
+    let pltgInventorySeededGrains = new UntypedFormArray ([]) 
 
     var self = this
 
@@ -224,7 +191,7 @@ ngOnChanges2(changes: SimpleChanges) {
       field.plantings.forEach( function(pltg) {
 
         // add seededGrain if any
-        pltgInventorySeededGrains = new FormArray ([])
+        pltgInventorySeededGrains = new UntypedFormArray ([])
 
         if (pltg.inventorySeededGrains && pltg.inventorySeededGrains.length > 0 ) {
 
@@ -246,7 +213,7 @@ ngOnChanges2(changes: SimpleChanges) {
           addPlantingObject(pltg.cropYear, pltg.fieldId, pltg.insurancePlanId, pltg.inventoryFieldGuid, 
             pltg.lastYearCropCommodityId, pltg.lastYearCropCommodityName, pltg.lastYearCropVarietyId, pltg.lastYearCropVarietyName,
             pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, 
-            pltg.underseededInventorySeededForageGuid, pltg.inventoryUnseeded, pltgInventorySeededGrains, new FormArray([]) ) ) )
+            pltg.underseededInventorySeededForageGuid, pltg.inventoryUnseeded, pltgInventorySeededGrains, new UntypedFormArray([]) ) ) )
         }
 
       )
@@ -267,7 +234,7 @@ ngOnChanges2(changes: SimpleChanges) {
       ))
     } 
     
-    let fld: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    let fld: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
     const formGroup = this.fb.group( addAnnualFieldObject(field, fldPlantings, fldComments) )
 
@@ -370,8 +337,8 @@ ngOnChanges2(changes: SimpleChanges) {
     this.getPlantingCommodityTotals()
 
     // update the unseeded acres in the commodity form based on the commodityTotals array
-    const cmdtiesFA: FormArray = self.viewModel.formGroup.controls.commodities as FormArray
-    cmdtiesFA.controls.forEach ( function(cmdtyFC: FormGroup){
+    const cmdtiesFA: UntypedFormArray = self.viewModel.formGroup.controls.commodities as UntypedFormArray
+    cmdtiesFA.controls.forEach ( function(cmdtyFC: UntypedFormGroup){
 
       let cmdtyTot =  self.commodityTotals.find( c => c.cropCommodityId ==  cmdtyFC.controls.cropCommodityId.value)
       if (cmdtyTot) {
@@ -411,11 +378,11 @@ ngOnChanges2(changes: SimpleChanges) {
     this.sumEligibleUnseededAcres = 0
 
     // populate the commodityTotals array based on the planting form values
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
-    flds.controls.forEach( function(fld : FormControl) {
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
+    flds.controls.forEach( function(fld : UntypedFormControl) {
 
-      let pltgs : FormArray = fld.value.plantings as FormArray
-      pltgs.controls.forEach (function (pltg: FormGroup){
+      let pltgs : UntypedFormArray = fld.value.plantings as UntypedFormArray
+      pltgs.controls.forEach (function (pltg: UntypedFormGroup){
 
         const pltgCropCommodityId = pltg.value.cropCommodityId
 
@@ -462,15 +429,15 @@ ngOnChanges2(changes: SimpleChanges) {
       self.sumCommodityTotalUnseededAcres += cmdtyTot.totalUnseededAcres;
     })
     
-    const cmdtiesFA: FormArray = self.viewModel.formGroup.controls.commodities as FormArray
-    cmdtiesFA.controls.forEach ( function(cmdtyFC: FormGroup){
+    const cmdtiesFA: UntypedFormArray = self.viewModel.formGroup.controls.commodities as UntypedFormArray
+    cmdtiesFA.controls.forEach ( function(cmdtyFC: UntypedFormGroup){
       let tmpAcres = parseFloat(cmdtyFC.controls.totalUnseededAcresOverride.value)
       self.sumCommodityProjectedAcres += ( isNaN(tmpAcres) ? 0 : tmpAcres)
     })
   }
 
   addCmdtyIfNotExist(cropCommodityId, isPedigreeInd) {
-    let cmdtiesFA: FormArray = this.viewModel.formGroup.controls.commodities as FormArray
+    let cmdtiesFA: UntypedFormArray = this.viewModel.formGroup.controls.commodities as UntypedFormArray
     
     let fcCmdty = cmdtiesFA.controls.find( cmdtyFC => cmdtyFC.value.cropCommodityId == cropCommodityId && cmdtyFC.value.isPedigreeInd == isPedigreeInd ) 
 
@@ -553,9 +520,9 @@ ngOnChanges2(changes: SimpleChanges) {
     var self = this;   
 
     // update unseededInventory values
-    const formFields: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const formFields: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
-    formFields.controls.forEach( function(formField : FormArray) {
+    formFields.controls.forEach( function(formField : UntypedFormArray) {
       // go through each field and update its planting information
       // TODO: update field and legal land autocomplete info 
       let updField = updatedInventoryContract.fields.find( f => f.fieldId == formField.value.fieldId)
@@ -780,8 +747,8 @@ ngOnChanges2(changes: SimpleChanges) {
    })
 
     //update InventoryContractCommodity values
-    let cmdtiesFA: FormArray = this.viewModel.formGroup.controls.commodities as FormArray
-      cmdtiesFA.controls.forEach ( function(cmdtyFC: FormGroup){         
+    let cmdtiesFA: UntypedFormArray = this.viewModel.formGroup.controls.commodities as UntypedFormArray
+      cmdtiesFA.controls.forEach ( function(cmdtyFC: UntypedFormGroup){         
 
         const tempTotalUnseededAcres = 
           isNaN( parseFloat(cmdtyFC.value.totalUnseededAcres)) ? 0 : parseFloat(cmdtyFC.value.totalUnseededAcres)
@@ -865,7 +832,7 @@ ngOnChanges2(changes: SimpleChanges) {
     // TODO: add more validations as needed 
 
     // check for empty legal land / field id for new fields
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
     let landHasName = true
 
@@ -965,13 +932,13 @@ ngOnChanges2(changes: SimpleChanges) {
 
     var self = this
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
-    flds.controls.forEach( function(field : FormControl) {
+    flds.controls.forEach( function(field : UntypedFormControl) {
 
       if (field.value.fieldId == planting.value.fieldId) {
 
-        let pltgInventorySeededGrains = new FormArray ([])
+        let pltgInventorySeededGrains = new UntypedFormArray ([])
 
         pltgInventorySeededGrains.push( self.fb.group( 
           addSeededGrainsObject(planting.value.inventoryFieldGuid, null, null, null, false, <InventorySeededGrain>[])
@@ -982,7 +949,7 @@ ngOnChanges2(changes: SimpleChanges) {
           addPlantingObject(planting.value.cropYear, planting.value.fieldId, planting.value.insurancePlanId, planting.value.inventoryFieldGuid, 
             planting.value.lastYearCropCommodityId, planting.value.lastYearCropCommodityName, planting.value.lastYearCropVarietyId, planting.value.lastYearCropVarietyName,
             planting.value.plantingNumber + 1, false, null,
-            <InventoryUnseeded>{}, pltgInventorySeededGrains, new FormArray ([]) )
+            <InventoryUnseeded>{}, pltgInventorySeededGrains, new UntypedFormArray ([]) )
 
          ) )
          
@@ -993,7 +960,7 @@ ngOnChanges2(changes: SimpleChanges) {
 
   onInventoryCommentsDone(fieldId: number, uwComments: UnderwritingComment[]) {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
     updateComments(fieldId, uwComments, flds)
 
@@ -1023,11 +990,9 @@ ngOnChanges2(changes: SimpleChanges) {
     
   }
 
-  onPrint() {
-
-    let reportName = this.growerContract.growerName + "-Inventory" 
-    reportName = reportName.replace(".", "")
-    this.store.dispatch(GetInventoryReport(reportName, this.policyId, "", INSURANCE_PLAN.GRAIN.toString(), "", "", "", "", ""))
+  onPrint(reportType) {
+    let reportName = replaceNonAlphanumericCharacters(this.growerContract.growerName) + "-Inventory" 
+    this.store.dispatch(GetInventoryReport(reportName, this.policyId, "", INSURANCE_PLAN.GRAIN.toString(), "", "", "", "", "", reportType))
 
   }
 
@@ -1051,7 +1016,7 @@ onDeleteField(field) {
       }  
     }
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
     deleteFormField(field, flds, this.dialog, dataToSend, this.cdr)
     }
@@ -1059,7 +1024,7 @@ onDeleteField(field) {
 
   deleteNewField(field) {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     deleteNewFormField(field, flds)
 
     this.isMyFormDirty()
@@ -1075,7 +1040,7 @@ onDeleteField(field) {
 
     } else {
 
-      const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+      const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
       const dataToSend : AddLandPopupData = {
         fieldId: field.value.fieldId,
@@ -1094,7 +1059,7 @@ onDeleteField(field) {
 
   onAddNewField() {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
     AddNewFormField(this.fb, flds, this.dialog, this.cropYear, this.policyId, this.insurancePlanId, this.cdr)
 
@@ -1103,7 +1068,7 @@ onDeleteField(field) {
 
   
   addEmptyPlantingObject (fieldId) {
-    return addPlantingObject( this.cropYear, fieldId, this.insurancePlanId, '', '', '', '', '', 1, false, null, <InventoryUnseeded>{}, new FormArray ([]), new FormArray ([]))
+    return addPlantingObject( this.cropYear, fieldId, this.insurancePlanId, '', '', '', '', '', 1, false, null, <InventoryUnseeded>{}, new UntypedFormArray ([]), new UntypedFormArray ([]))
   }
 
   
@@ -1113,7 +1078,8 @@ onDeleteField(field) {
     if (!this.hasYieldData) {
 
       this.hasDataChanged = this.isMyFormReallyDirty()
-      this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, this.hasDataChanged ));
+      // this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, this.hasDataChanged )); // this generates a bug surprisingly
+      asapScheduler.schedule(() => this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, this.hasDataChanged ))); 
     }
 
   }
@@ -1125,7 +1091,7 @@ onDeleteField(field) {
 
     if (!this.inventoryContract) return false
 
-    const frmMain = this.viewModel.formGroup as FormGroup
+    const frmMain = this.viewModel.formGroup as UntypedFormGroup
 
     if ( areNotEqual (this.inventoryContract.fertilizerInd, frmMain.controls.fertilizerInd.value) || 
          areNotEqual (this.inventoryContract.herbicideInd, frmMain.controls.herbicideInd.value)	||
@@ -1138,10 +1104,10 @@ onDeleteField(field) {
     }
 
     // check the commodity total projected values
-    const formCmdties: FormArray = frmMain.controls.commodities as FormArray
+    const formCmdties: UntypedFormArray = frmMain.controls.commodities as UntypedFormArray
     for (let j = 0; j < formCmdties.controls.length; j++){
 
-      let frmCmdty = formCmdties.controls[j] as FormArray
+      let frmCmdty = formCmdties.controls[j] as UntypedFormArray
       let originalCmdty = this.inventoryContract.commodities.find( f => f.cropCommodityId == frmCmdty.value.cropCommodityId && f.isPedigreeInd == frmCmdty.value.isPedigreeInd )
 
       if (originalCmdty) {
@@ -1165,10 +1131,10 @@ onDeleteField(field) {
     }
 
     // start checking if the information for each field and planting was changed from the original one
-    const formFields: FormArray = frmMain.controls.fields as FormArray
+    const formFields: UntypedFormArray = frmMain.controls.fields as UntypedFormArray
 
     for (let i = 0; i < formFields.controls.length; i++){
-      let frmField = formFields.controls[i] as FormArray
+      let frmField = formFields.controls[i] as UntypedFormArray
 
       if (frmField.value.deletedByUserInd == true ) {
         return true
@@ -1190,7 +1156,7 @@ onDeleteField(field) {
 
         // check the plantings
         for (let k = 0; k < frmField.value.plantings.controls.length; k++){
-          let frmPlanting = frmField.value.plantings.controls[k] as FormArray
+          let frmPlanting = frmField.value.plantings.controls[k] as UntypedFormArray
 
           let originalPlanting = originalField.plantings.find( p => p.plantingNumber == frmPlanting.value.plantingNumber)
 
@@ -1225,7 +1191,7 @@ onDeleteField(field) {
             // now check inventory seeded grains 
             for (let n = 0; n < frmPlanting.value.inventorySeededGrains.controls.length; n++) {
               
-              let frmInvSeededGrains = frmPlanting.value.inventorySeededGrains.controls[n] as FormArray
+              let frmInvSeededGrains = frmPlanting.value.inventorySeededGrains.controls[n] as UntypedFormArray
               let originalInvSeededGrains = originalPlanting.inventorySeededGrains.find( p => p.inventorySeededGrainGuid == frmInvSeededGrains.value.inventorySeededGrainGuid)
 
               if (originalInvSeededGrains) {
@@ -1352,7 +1318,7 @@ onDeleteField(field) {
 
   drop(event: CdkDragDrop<string[]>) {
     
-    let fields = this.getViewModel().formGroup.controls.fields as FormArray
+    let fields = this.getViewModel().formGroup.controls.fields as UntypedFormArray
     dragField(event, fields)
 
     this.isMyFormDirty()
@@ -1392,7 +1358,7 @@ onDeleteField(field) {
 
   toggleHiddenOnPrintout(fieldIndex, plantingIndex) {  
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
     
     // get the current value
@@ -1403,7 +1369,7 @@ onDeleteField(field) {
   }
 
   isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) {
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     const pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[plantingIndex]
 
     return pltg.controls['isHiddenOnPrintoutInd'].value
@@ -1412,7 +1378,7 @@ onDeleteField(field) {
   isFieldHiddenOnPrintout(fieldIndex) {
 
     // return false unless at least one planting is not hidden
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     for (let i = 0; i < flds.controls[fieldIndex]['controls']['plantings'].value.controls.length; i++ ) {
 
       let pltg = flds.controls[fieldIndex]['controls']['plantings'].value.controls[i]

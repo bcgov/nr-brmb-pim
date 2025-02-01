@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, SimpleChanges, } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, Input, SimpleChanges, } from '@angular/core';
+import { ParamMap } from '@angular/router';
 import { UwContract } from 'src/app/conversion/models';
 import {  DopYieldContract, DopYieldFieldGrain, GradeModifierList, YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
 import { 
@@ -16,25 +16,15 @@ import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
 import { BaseComponent } from '../../common/base/base.component';
 import { GrainDopComponentModel } from './grain-dop.component.model';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { addUwCommentsObject, areDatesNotEqual, areNotEqual, getInsurancePlanName, makeNumberOnly, setHttpHeaders } from 'src/app/utils';
+import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import { addUwCommentsObject, areDatesNotEqual, areNotEqual, getInsurancePlanName, makeNumberOnly, replaceNonAlphanumericCharacters, setHttpHeaders } from 'src/app/utils';
 import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import {ViewEncapsulation } from '@angular/core';
 import { GradeModifierOptionsType } from '../dop-common';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
-import { DomSanitizer, Title } from '@angular/platform-browser';
-import { Store } from '@ngrx/store';
-import { RootState } from 'src/app/store';
-import { MatDialog } from '@angular/material/dialog';
-import { ApplicationStateService } from 'src/app/services/application-state.service';
-import { SecurityUtilService } from 'src/app/services/security-util.service';
-import { AppConfigService, TokenService } from '@wf1/core-ui';
-import { ConnectionService } from 'ngx-connection-service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Overlay } from '@angular/cdk/overlay';
-import { HttpClient } from '@angular/common/http';
-import { DecimalPipe } from '@angular/common';
+import { roundUpDecimalYield } from '../../inventory/inventory-common';
+import { SCREEN_TYPE } from 'src/app/utils/constants';
 
 @Component({
   selector: 'grain-dop',
@@ -48,26 +38,6 @@ export class GrainDopComponent extends BaseComponent{
   @Input() growerContract: UwContract;
   @Input() dopYieldContract: DopYieldContract;
   @Input() yieldMeasUnitList: YieldMeasUnitTypeCodeList;
-
-  constructor(protected router: Router,
-    protected route: ActivatedRoute,
-    protected sanitizer: DomSanitizer,
-    protected store: Store<RootState>,
-    protected fb: FormBuilder,
-    protected dialog: MatDialog,
-    protected applicationStateService: ApplicationStateService,
-    public securityUtilService: SecurityUtilService,                
-    protected tokenService: TokenService,
-    protected connectionService: ConnectionService,
-    protected snackbarService: MatSnackBar,
-    protected overlay: Overlay,
-    protected cdr: ChangeDetectorRef,
-    protected appConfigService: AppConfigService,
-    protected http: HttpClient,
-    protected titleService: Title,
-    protected decimalPipe: DecimalPipe) {
-    super(router, route, sanitizer, store, fb, dialog, applicationStateService, securityUtilService, tokenService, connectionService, snackbarService, overlay, cdr, appConfigService, http, titleService, decimalPipe);
-  }
 
   acceptableRangeCommodityPercentage = 0.1 // 10% difference between declared and estimated commodity totals 
 
@@ -90,6 +60,8 @@ export class GrainDopComponent extends BaseComponent{
 
   flaggedTotalEstimatedYield = [];
 
+  hasVerifiedYieldData = false
+
   initModels() {
     this.viewModel = new GrainDopComponentModel(this.sanitizer, this.fb);
   }
@@ -111,7 +83,7 @@ export class GrainDopComponent extends BaseComponent{
 
           this.store.dispatch(ClearDopYieldContract());
 
-          this.store.dispatch(LoadGrowerContract(this.componentId, this.policyId))
+          this.store.dispatch(LoadGrowerContract(this.componentId, this.policyId, SCREEN_TYPE.DOP))
 
           this.store.dispatch( LoadYieldMeasUnitList(this.componentId, this.insurancePlanId) )
 
@@ -137,6 +109,20 @@ export class GrainDopComponent extends BaseComponent{
   }
 
   ngOnChanges2(changes: SimpleChanges) {
+
+    if ( changes.growerContract && this.growerContract ) {
+
+      this.hasVerifiedYieldData = false
+
+      // check for verified yield data
+      for (let i = 0; i< this.growerContract.links.length; i++ ) {
+
+        if ( this.growerContract.links[i].href.toLocaleLowerCase().indexOf("verifiedyieldcontracts") > -1  ) {
+          this.hasVerifiedYieldData = true
+          break
+        } 
+      }
+    }
 
     // populate the yield measurement unit dropdown
     if (changes.yieldMeasUnitList && this.yieldMeasUnitList && this.yieldMeasUnitList.collection && this.yieldMeasUnitList.collection.length ) {
@@ -189,7 +175,7 @@ export class GrainDopComponent extends BaseComponent{
 
     if ( changes.dopYieldContract && this.dopYieldContract && this.dopYieldContract.fields ) {
 
-      let flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+      let flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
       flds.clear()
       this.dopYieldContract.fields.forEach( f => this.addField( f ) )
 
@@ -198,7 +184,7 @@ export class GrainDopComponent extends BaseComponent{
     // dopYieldContractCommodities
     if ( changes.dopYieldContract && this.dopYieldContract && this.dopYieldContract.dopYieldContractCommodities ) {
       
-      let frmCommodities: FormArray = this.viewModel.formGroup.controls.dopYieldContractCommodities as FormArray
+      let frmCommodities: UntypedFormArray = this.viewModel.formGroup.controls.dopYieldContractCommodities as UntypedFormArray
       frmCommodities.clear()
       this.dopYieldContract.dopYieldContractCommodities.forEach( cmdty => this.addDopContractCommodity( cmdty ) )
 
@@ -353,40 +339,22 @@ export class GrainDopComponent extends BaseComponent{
 
   }
 
-  roundUpDecimals(numberToRound) {
-    if (!numberToRound) {
-      return ""
-    }
-
-    if (isNaN(parseFloat(numberToRound))) {
-      alert ("Yield must be a valid number" )
-    } else {
-
-      if (parseFloat(numberToRound) % 1 == 0 ) {
-        // return integer if it's an integer, no zeros after the decimal point
-        return parseInt(numberToRound)
-      }
-      
-      return parseFloat(numberToRound).toFixed(this.decimalPrecision)
-    }
-  }
-
   roundUpEstimatedYield(dopYieldField, dopYieldFieldIndex){
-    const formFields: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const formFields: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     if(formFields) {
       let formField =  formFields.controls.find( f => f.value.fieldId == dopYieldField.value.fieldId )
         if(formField) {
           let formDopYieldField = formField.value.dopYieldFieldGrainList.controls[dopYieldFieldIndex].controls
           if(formDopYieldField) {
             let acres = formDopYieldField.estimatedYieldPerAcre.value
-            formDopYieldField.estimatedYieldPerAcre.setValue(this.roundUpDecimals(acres))
+            formDopYieldField.estimatedYieldPerAcre.setValue(roundUpDecimalYield(acres,this.decimalPrecision))
           }
         }
     }
   }
 
   updateEstimatedYieldRounding(){
-    const formFields: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const formFields: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     if(formFields) {
 
       for (let i = 0; i < formFields.controls.length; i++) {
@@ -397,7 +365,7 @@ export class GrainDopComponent extends BaseComponent{
             let formDopYieldField = formField.value.dopYieldFieldGrainList.controls[i].controls
             if(formDopYieldField) {
               let estYield = formDopYieldField.estimatedYieldPerAcre.value
-              formDopYieldField.estimatedYieldPerAcre.setValue(this.roundUpDecimals(estYield))
+              formDopYieldField.estimatedYieldPerAcre.setValue(roundUpDecimalYield(estYield, this.decimalPrecision))
             }
           }
         }
@@ -407,7 +375,7 @@ export class GrainDopComponent extends BaseComponent{
 
   roundUpCommodityTotalYield(cmdty, fieldName){
     
-    const formCommodities: FormArray = this.viewModel.formGroup.controls.dopYieldContractCommodities as FormArray
+    const formCommodities: UntypedFormArray = this.viewModel.formGroup.controls.dopYieldContractCommodities as UntypedFormArray
     if(formCommodities) {
       let formCommodity =  formCommodities.controls.find( f => f.value.cropCommodityId == cmdty.value.cropCommodityId 
                                                             && f.value.isPedigreeInd == cmdty.value.isPedigreeInd)
@@ -420,13 +388,13 @@ export class GrainDopComponent extends BaseComponent{
   updateCommodityTotalField(formCommodity, fieldName){
     if(formCommodity) {
       let fieldValue = formCommodity['controls'][fieldName].value
-      formCommodity['controls'][fieldName].setValue(this.roundUpDecimals(fieldValue))
+      formCommodity['controls'][fieldName].setValue(roundUpDecimalYield(fieldValue, this.decimalPrecision))
     }
   }
 
   updateCommodityTotalRounding(){
       
-    let formCommodities: FormArray = this.viewModel.formGroup.controls.dopYieldContractCommodities as FormArray
+    let formCommodities: UntypedFormArray = this.viewModel.formGroup.controls.dopYieldContractCommodities as UntypedFormArray
     if(formCommodities) {
       for (let i = 0; i < formCommodities.controls.length; i++) {
         this.updateCommodityTotalField(formCommodities.controls[i], 'storedYield');
@@ -446,7 +414,7 @@ export class GrainDopComponent extends BaseComponent{
 
   addField( field ) {
 
-    let frmDopYieldFields = new FormArray ([]) 
+    let frmDopYieldFields = new UntypedFormArray ([]) 
 
     var self = this
 
@@ -475,7 +443,7 @@ export class GrainDopComponent extends BaseComponent{
     } 
     
 
-    let fld: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    let fld: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
     fld.push( this.fb.group( {  
       annualFieldDetailId:   [ field.annualFieldDetailId ],
@@ -492,7 +460,7 @@ export class GrainDopComponent extends BaseComponent{
 
   addDopContractCommodity( dopCommodity ) {
 
-    let frmDopCommodities: FormArray = this.viewModel.formGroup.controls.dopYieldContractCommodities as FormArray
+    let frmDopCommodities: UntypedFormArray = this.viewModel.formGroup.controls.dopYieldContractCommodities as UntypedFormArray
     
     // add dopYieldContractCommodities to the form
     frmDopCommodities.push( this.fb.group(  {
@@ -541,7 +509,7 @@ export class GrainDopComponent extends BaseComponent{
   onDeleteFieldYield(dopYieldField, dopYieldFieldIndex){
 
     //Reset a dop field record
-    const formFields: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const formFields: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
     if(formFields) {
       let formField =  formFields.controls.find( f => f.value.fieldId == dopYieldField.value.fieldId )
         if(formField) {
@@ -568,7 +536,7 @@ export class GrainDopComponent extends BaseComponent{
 
     this.showEstimatedYieldMessage = false
 
-    const frmMain = this.viewModel.formGroup as FormGroup
+    const frmMain = this.viewModel.formGroup as UntypedFormGroup
 
     if ( areNotEqual (this.dopYieldContract.enteredYieldMeasUnitTypeCode, frmMain.controls.yieldMeasUnitTypeCode.value) || 
          areDatesNotEqual (this.dopYieldContract.declarationOfProductionDate, frmMain.controls.declarationOfProductionDate.value)	||
@@ -578,18 +546,18 @@ export class GrainDopComponent extends BaseComponent{
     }
 
     // check if estimated yield has changed
-    const formFields: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const formFields: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
     for (let i = 0; i < formFields.controls.length; i++) {
 
-      let formField = formFields.controls[i] as FormArray
+      let formField = formFields.controls[i] as UntypedFormArray
 
       let originalField = this.dopYieldContract.fields.find( f => f.fieldId == formField.value.fieldId)
 
       if (originalField) {
 
         for (let k = 0; k < formField.value.dopYieldFieldGrainList.controls.length; k++) {
-          let formDopYieldField = formField.value.dopYieldFieldGrainList.controls[k] as FormArray
+          let formDopYieldField = formField.value.dopYieldFieldGrainList.controls[k] as UntypedFormArray
   
           let originalDopYieldField = originalField.dopYieldFieldGrainList.find( elem => elem.inventorySeededGrainGuid == formDopYieldField.value.inventorySeededGrainGuid) 
 
@@ -640,10 +608,10 @@ export class GrainDopComponent extends BaseComponent{
 
 
     // check if commodity totals have changed
-    const formDopYieldContractCommodities: FormArray = this.viewModel.formGroup.controls.dopYieldContractCommodities as FormArray
+    const formDopYieldContractCommodities: UntypedFormArray = this.viewModel.formGroup.controls.dopYieldContractCommodities as UntypedFormArray
     for (let n = 0; n < formDopYieldContractCommodities.controls.length; n++) {
 
-      let formdDopYieldContractCommodity = formDopYieldContractCommodities.controls[n] as FormArray
+      let formdDopYieldContractCommodity = formDopYieldContractCommodities.controls[n] as UntypedFormArray
 
       let originalDopYieldContractCommodity = 
         this.dopYieldContract.dopYieldContractCommodities
@@ -747,10 +715,10 @@ export class GrainDopComponent extends BaseComponent{
     const newDopYieldContract: DopYieldContract = this.getUpdatedDopYieldContract()
 
     if (this.dopYieldContract.declaredYieldContractGuid) {
-      this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, newDopYieldContract))
+      this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, newDopYieldContract, this.policyId))
     } else {
       // add new
-      this.store.dispatch(AddNewDopYieldContract(DOP_COMPONENT_ID, newDopYieldContract))
+      this.store.dispatch(AddNewDopYieldContract(DOP_COMPONENT_ID, newDopYieldContract, this.policyId))
     }
 
     this.hasDataChanged = false   
@@ -789,9 +757,9 @@ export class GrainDopComponent extends BaseComponent{
     var self = this;   
 
     // update fields Estimated Yield values
-    const formFields: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const formFields: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
-    formFields.controls.forEach( function(formField : FormArray) {
+    formFields.controls.forEach( function(formField : UntypedFormArray) {
 
       // find the corresponding field in updatedDopYieldContract object
       let updField = updatedDopYieldContract.fields.find( f => f.fieldId == formField.value.fieldId)
@@ -818,9 +786,9 @@ export class GrainDopComponent extends BaseComponent{
     })
 
     // update dopYieldContractCommodities values 
-    const formCommodities: FormArray = this.viewModel.formGroup.controls.dopYieldContractCommodities as FormArray
+    const formCommodities: UntypedFormArray = this.viewModel.formGroup.controls.dopYieldContractCommodities as UntypedFormArray
 
-    formCommodities.controls.forEach( function (formCommodity: FormArray) {
+    formCommodities.controls.forEach( function (formCommodity: UntypedFormArray) {
 
       // find the corresponding commodity in updDopYieldField object 
       let updCommodity = updatedDopYieldContract.dopYieldContractCommodities
@@ -883,11 +851,9 @@ export class GrainDopComponent extends BaseComponent{
   }
 
   onPrint() {
-
-    let reportName = this.growerContract.growerName + "-DOP" 
-    reportName = reportName.replace(".", "")
+    let reportName = replaceNonAlphanumericCharacters(this.growerContract.growerName) + "-DOP" 
     this.store.dispatch(GetDopReport(reportName, this.policyId, "", this.insurancePlanId, "", "", "", "", ""))
-    
+
   }
 
 
@@ -901,11 +867,11 @@ export class GrainDopComponent extends BaseComponent{
 
   updateComments(fieldId: number, uwComments: UnderwritingComment[]) {
 
-    const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
 
     var self = this 
 
-    flds.controls.forEach( function(field : FormArray) {
+    flds.controls.forEach( function(field : UntypedFormArray) {
 
       if (field.value.fieldId == fieldId) {
 
@@ -940,7 +906,7 @@ export class GrainDopComponent extends BaseComponent{
 
   setFormStyles(){
     return {
-      'grid-template-columns':  'auto 148px 110px 186px 146px 12px 155px'
+      'grid-template-columns':  'auto 148px 120px 186px 146px 12px 155px'
     }
   }
 

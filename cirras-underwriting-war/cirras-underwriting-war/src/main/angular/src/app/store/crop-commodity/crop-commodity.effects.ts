@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {Action, Store} from "@ngrx/store";
 import {DefaultService as CirrasUnderwritingAPIService, InventoryContractRsrc, UwContractListRsrc} from "@cirras/cirras-underwriting-api";
-import {TokenService} from "@wf1/core-ui";
+import {TokenService} from "@wf1/wfcc-core-lib";
 import {UUID} from "angular2-uuid";
 import {Observable, of} from 'rxjs';
 import {catchError, concatMap, debounceTime, map, switchMap, withLatestFrom} from 'rxjs/operators';
@@ -34,7 +34,7 @@ getCropCommodityList: Observable<Action> = createEffect (() => this.actions.pipe
       let typedAction = <LoadCropCommodityListAction>action;
       
       let authToken = this.tokenService.getOauthToken();
-      let requestId = `cirras-underwritingE${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+      let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
 
       let insurancePlanId = typedAction.payload.insurancePlanId ? typedAction.payload.insurancePlanId : ""
       let cropYear = typedAction.payload.cropYear ? typedAction.payload.cropYear : ""
@@ -76,7 +76,7 @@ getUnderSeededCropCommodityList: Observable<Action> = createEffect (() => this.a
       let typedAction = <LoadCropCommodityListAction>action;
       
       let authToken = this.tokenService.getOauthToken();
-      let requestId = `cirras-underwritingE${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
+      let requestId = `CUWS$${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
 
       let insurancePlanId = typedAction.payload.insurancePlanId ? typedAction.payload.insurancePlanId : ""
       let cropYear = typedAction.payload.cropYear ? typedAction.payload.cropYear : ""

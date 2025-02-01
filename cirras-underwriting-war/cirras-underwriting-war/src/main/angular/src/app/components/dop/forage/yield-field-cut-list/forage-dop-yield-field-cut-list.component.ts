@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FormArray } from "@angular/forms";
+import { UntypedFormArray } from "@angular/forms";
 import { DopYieldFieldForage, DopYieldFieldForageCut } from "src/app/conversion/models-yield";
 
 @Component({
@@ -11,5 +11,5 @@ import { DopYieldFieldForage, DopYieldFieldForageCut } from "src/app/conversion/
 export class ForageDopYieldFieldCutListComponent {
     @Input() yieldField: DopYieldFieldForage;
     @Input() yieldFieldCuts: Array<DopYieldFieldForageCut>;
-    @Input() yieldFieldCutsFormArray: FormArray;
+    @Input() yieldFieldCutsFormArray: UntypedFormArray;
 }

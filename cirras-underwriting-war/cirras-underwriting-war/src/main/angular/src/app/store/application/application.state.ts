@@ -1,4 +1,4 @@
-import {SearchState} from "@wf1/core-ui";
+import {SearchState} from "@wf1/wfcc-core-lib";
 
 export enum ERROR_TYPE {
   VALIDATION,
@@ -90,6 +90,7 @@ export interface LoadStates {
   uwContractsList: LoadState;
   inventoryContract: LoadState;
   dopYieldContract: LoadState;
+  verifiedYieldContract: LoadState;
   legalLandList: LoadState;
   maintenance: LoadState;
 }
@@ -97,12 +98,14 @@ export interface LoadStates {
 export interface FormStates { 
   inventoryContract: FormState;
   dopYieldContract: FormState;
+  verifiedYieldContract: FormState;
 }
 
 export interface ErrorStates {
   uwContractsList: ErrorState[];
   inventoryContract: ErrorState[];
   dopYieldContract: ErrorState[];
+  verifiedYieldContract: ErrorState[];
   legalLandList: ErrorState[];
   maintenance: ErrorState[];
 }
@@ -118,6 +121,7 @@ export function getDefaultLoadStates(): LoadStates {
     uwContractsList: {isLoading: false},
     inventoryContract: {isLoading: false},
     dopYieldContract: {isLoading: false},
+    verifiedYieldContract: {isLoading: false},
     legalLandList: {isLoading: false},
     maintenance: {isLoading: false},
   };
@@ -128,6 +132,7 @@ export function getDefaultErrorStates(): ErrorStates {
     uwContractsList: [],
     inventoryContract: [],
     dopYieldContract: [],
+    verifiedYieldContract: [],
     legalLandList: [],
     maintenance: []
   };
@@ -142,7 +147,8 @@ export function getDefaultFormState(): FormState {
 export function getDefaultFormStates(): FormStates {
   return {
     inventoryContract: getDefaultFormState(),
-    dopYieldContract: getDefaultFormState()
+    dopYieldContract: getDefaultFormState(),
+    verifiedYieldContract: getDefaultFormState()
   };
 }
 

@@ -1,4 +1,4 @@
-import {HttpErrorResponse} from "@angular/common/http";
+import { HttpErrorResponse } from "@angular/common/http";
 import {ERROR_TYPE, ErrorState} from "../store/application/application.state";
 import {UUID} from "angular2-uuid";
 import { 
@@ -124,7 +124,8 @@ export function convertToUwContract(uwContract: any): UwContract {
       totalDopEligibleInventory: uwContract.totalDopEligibleInventory,
 
       linkedPolicies: uwContract.linkedPolicies,
-
+      otherYearPolicies: uwContract.otherYearPolicies,
+      
       isSelectedForPrint: false,
        
       etag: uwContract.etag,

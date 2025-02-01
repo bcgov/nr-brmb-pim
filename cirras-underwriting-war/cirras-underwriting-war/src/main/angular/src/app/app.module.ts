@@ -6,39 +6,37 @@ import {
   Configuration as CirrasUnderwritingAPIServiceConfiguration
 } from "@cirras/cirras-underwriting-api";
 import {BrowserModule, Title} from "@angular/platform-browser";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // or NoopAnimationsModule
 import {ServiceWorkerModule} from "@angular/service-worker";
 import {EffectsModule} from "@ngrx/effects";
 import {StoreModule} from "@ngrx/store";
 import {StoreDevtoolsModule} from "@ngrx/store-devtools";
-import {StoreRouterConnectingModule} from "@ngrx/router-store";
-import {AppConfigService, CoreUIModule, MapService, PublicApplicationHeaderModule, TokenService} from "@wf1/core-ui";
+import {AppConfigService, CoreUIModule, TokenService} from "@wf1/wfcc-core-lib";  
 import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./containers/application-root/app.component";
 import {environment} from "../environments/environment";
 import {initialRootState, rootEffects, rootReducers} from "./store";
 import {DATE_FORMATS, provideBootstrapEffects} from "./utils";
-import {NgxMaskModule} from "ngx-mask";
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from "ngx-mask";
 import {MomentModule} from "ngx-moment";
 import {UnauthorizedPageComponent} from "./components/unauthorized-page/unauthorized-page.component";
-import {NgxTrimModule} from "ngx-trim";
 import {ErrorPanelComponent} from "./components/common/error-panel/error-panel.component";
 import {ConnectionServiceOptions, ConnectionServiceOptionsToken} from "ngx-connection-service";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {RouteReuseStrategy} from "@angular/router";
 import {CustomReuseStrategy} from "./utils/custom-route-reuse-strategy";
 import {BaseWrapperComponent} from "./components/common/base-wrapper/base-wrapper.component";
-import {HTTP_INTERCEPTORS, HttpClientModule, HttpHandler} from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpHandler, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import {ResourcesInterceptor} from "./interceptors/resources-interceptor";
 import {NgxPaginationModule} from "ngx-pagination";
 import { DecimalPipe } from "@angular/common";
-
 import {CdkTableModule} from "@angular/cdk/table";
 import {appInitFn} from "./utils/app-initializer";
 import {AutoFocusDirective} from "./directives/auto-focus.directive";
 import {BaseDialogComponent} from "./components/dialogs/base-dialog/base-dialog.component";
 import {UpdateService} from "./services/update.service";
 import {MatToolbarModule} from "@angular/material/toolbar";
-import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatFormFieldModule, MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
 import {MatSelectModule} from "@angular/material/select";
 import {MatIconModule} from "@angular/material/icon";
 import {MatPaginatorModule} from "@angular/material/paginator";
@@ -72,15 +70,10 @@ import {DateRangeMaskDirective} from "./directives/date-range-mask.directive";
 import {ReadonlyFieldDirective} from "./directives/readonly-field.directive";
 import {ReadonlyFormDirective} from "./directives/readonly-form.directive";
 import {A11yModule} from "@angular/cdk/a11y";
-
-import {NgSelectModule} from "@ng-select/ng-select";
 import {MultiSelectDirective} from "./directives/multi-select.directive";
 import {SingleSelectDirective} from "./directives/singleselect.directive";
-
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-
-// import { UwContractsListContainerDesktop } from "./containers/uw-contracts-list/uw-contracts-list-container.component.desktop";
 import { InventoryContractContainer } from "./containers/inventory/inventory-contract-container.component";
 import { InventorySelectorComponent } from './components/inventory/inventory-selector/inventory-selector.component';
 import { GrowerContractHeaderComponent } from './components/grower-contract-header/grower-contract-header.component';
@@ -123,7 +116,7 @@ import { YieldConversionComponent } from './components/maintain/yield-conversion
 import { YieldConversionContainer } from "./containers/maintenance/yield-conversion-container.component";
 import { YieldConversionUnitsComponent } from './components/maintain/yield-conversion/yield-conversion-units/yield-conversion-units.component';
 import { YieldConversionUnitsContainer } from "./containers/maintenance/yield-conversion-units-container.component";
-import { WildfireApplicationModule } from "@wf1/wfcc-application-ui";
+import { WildfireApplicationModule , WildfireResourceManagerModule } from "@wf1/wfcc-application-ui";
 import { RelatedPoliciesComponent } from './components/related-policies/related-policies.component';
 import { UnsavedDialogComponent } from './components/dialogs/unsaved-dialog/unsaved-dialog.component';
 import { ForageDopComponent } from './components/dop/forage/forage-dop.component';
@@ -136,12 +129,18 @@ import { ForageDopYieldFieldCutComponent } from "./components/dop/forage/yield-f
 import { ForageDopCommodityListComponent } from "./components/dop/forage/commodity-list/forage-dop-commodity-list.component";
 import { ForageDopCommodityComponent } from "./components/dop/forage/commodity/forage-dop-commodity.component";
 import { ForageDopContainer } from "./containers/dop/forage-dop-container.component";
-
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { MatInputCommifiedDirective } from "./directives/input-comified.directive";
 import { ForageDopYieldSummaryListComponent } from "./components/dop/forage/yield-summary-list/forage-dop-yield-summary-list.component";
 import { ForageDopYieldSummaryComponent } from './components/dop/forage/yield-summary/forage-dop-yield-summary.component';
+import { VerifiedYieldComponent } from './components/verified-yield/verified-yield.component';
+import { VerifiedYieldContainer } from "./containers/verified-yield/verified-yield-container.component";
+import { VerifiedYieldCommodityListComponent } from './components/verified-yield/commodity-list/verified-yield-commodity-list.component';
+import { VerifiedYieldCommodityComponent } from './components/verified-yield/commodity/verified-yield-commodity.component';
+import { VerifiedYieldAmendmentListComponent } from "./components/verified-yield/amendment-list/verified-yield-amendment-list.component";
+import { VerifiedYieldAmendmentComponent } from "./components/verified-yield/amendment/verified-yield-amendment.component";
+import { OtherYearPolicyComponent } from "./components/grower-contract-header/other-year-policy/other-year-policy.component";
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -159,12 +158,11 @@ if (!environment.production || !environment.restrict_imports) {
     devOnlyImports = [
         StoreDevtoolsModule.instrument({
             maxAge: 50,
-        }),
+        connectInZone: true}),
     ];
 }
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         DateMaskDirective,
         TimeMaskDirective,
         DateTimeMaskDirective,
@@ -175,20 +173,15 @@ if (!environment.production || !environment.restrict_imports) {
         SingleSelectDirective,
         MultiSelectDirective,
         SingleSelectDirective,
-
         MatInputCommifiedDirective,
-
         WFSnackbarComponent,
         BaseExpansionPanelComponent,
         BaseDialogComponent,
         AutoFocusDirective,
-
-       // UwContractsListContainerDesktop,
         UwContractsListContainer,
         UwContractsListComponent,
         AppComponent,
         BaseWrapperComponent,
-
         UnauthorizedPageComponent,
         ErrorPanelComponent,
         ErrorDialogComponent,
@@ -204,55 +197,61 @@ if (!environment.production || !environment.restrict_imports) {
         PrintoutLogoComponent,
         AddLandComponent,
         EditLandComponent,
-       GrainUnseededInventoryComponent,
-       GrainSeededInventoryComponent,
-       GrainDopComponent,
-       GrainDopContainer,
-       ForageInventoryComponent,
-       LandListComponent,
-       LandListContainer,
-       ManageLandComponent,
-       ManageLandComponentContainer,
-       RemoveFieldComponent,
-       LandingPageComponent,
-       LinkPlantingComponent,
-       RemovePlantingDialogComponent,
-       DashboardComponent,
-       DashboardContainer,
-       SeedingDeadlinesComponent,
-       SeedingDeadlinesContainer,
-       GradeModifiersComponent,
-       GradeModifiersContainer,
-       GradeModifiersTypesComponent,
-       GradeModifierTypesContainer,
-       ForageVarietyInsurabilityComponent,
-       ForageVarietyInsurabilityContainer,
-       PlantInsurabilityComponent,
-       YieldConversionComponent,
-       YieldConversionContainer,
-       YieldConversionUnitsComponent,
-       YieldConversionUnitsContainer,
-       RelatedPoliciesComponent,
-       UnsavedDialogComponent,
-       ForageDopComponent,
-       ForageDopFieldListComponent,
-       ForageDopFieldComponent,
-       ForageDopYieldFieldListComponent,
-       ForageDopYieldFieldComponent,
-       ForageDopYieldFieldCutListComponent,
-       ForageDopYieldFieldCutComponent,
-       ForageDopCommodityListComponent,
-       ForageDopCommodityComponent,
-       ForageDopContainer,
-       ForageDopYieldSummaryListComponent,
-       ForageDopYieldSummaryComponent
+        GrainUnseededInventoryComponent,
+        GrainSeededInventoryComponent,
+        GrainDopComponent,
+        GrainDopContainer,
+        ForageInventoryComponent,
+        LandListComponent,
+        LandListContainer,
+        ManageLandComponent,
+        ManageLandComponentContainer,
+        RemoveFieldComponent,
+        LandingPageComponent,
+        LinkPlantingComponent,
+        RemovePlantingDialogComponent,
+        DashboardComponent,
+        DashboardContainer,
+        SeedingDeadlinesComponent,
+        SeedingDeadlinesContainer,
+        GradeModifiersComponent,
+        GradeModifiersContainer,
+        GradeModifiersTypesComponent,
+        GradeModifierTypesContainer,
+        ForageVarietyInsurabilityComponent,
+        ForageVarietyInsurabilityContainer,
+        PlantInsurabilityComponent,
+        YieldConversionComponent,
+        YieldConversionContainer,
+        YieldConversionUnitsComponent,
+        YieldConversionUnitsContainer,
+        RelatedPoliciesComponent,
+        OtherYearPolicyComponent,
+        UnsavedDialogComponent,
+        ForageDopComponent,
+        ForageDopFieldListComponent,
+        ForageDopFieldComponent,
+        ForageDopYieldFieldListComponent,
+        ForageDopYieldFieldComponent,
+        ForageDopYieldFieldCutListComponent,
+        ForageDopYieldFieldCutComponent,
+        ForageDopCommodityListComponent,
+        ForageDopCommodityComponent,
+        ForageDopContainer,
+        ForageDopYieldSummaryListComponent,
+        ForageDopYieldSummaryComponent,
+        VerifiedYieldComponent,
+        VerifiedYieldContainer,
+        VerifiedYieldCommodityListComponent,
+        VerifiedYieldCommodityComponent,
+        VerifiedYieldAmendmentListComponent,
+        VerifiedYieldAmendmentComponent
     ],
-    imports: [
-        CirrasUnderwritingAPIServiceModule,
-        HttpClientModule,
+    bootstrap: [AppComponent], imports: [CirrasUnderwritingAPIServiceModule,
         DragDropModule,
         CdkTableModule,
         BrowserModule,
+        BrowserAnimationsModule,
         FormsModule,
         MatExpansionModule,
         MatBadgeModule,
@@ -280,29 +279,24 @@ if (!environment.production || !environment.restrict_imports) {
         MatToolbarModule,
         MomentModule,
         MatProgressSpinnerModule,
-        NgxTrimModule,
-        NgxMaskModule.forRoot(),
+        NgxMaskDirective,
+        NgxMaskPipe,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
         ReactiveFormsModule,
-        NgSelectModule,
         ScrollingModule,
-        PublicApplicationHeaderModule,
-        CoreUIModule.forRoot({configurationPath: environment.app_config_location}),
-        StoreModule.forRoot(rootReducers, {initialState: initialRootState}),
+        CoreUIModule.forRoot({ configurationPath: environment.app_config_location }),
+        StoreModule.forRoot(rootReducers, { initialState: initialRootState }),
         AppRoutingModule,
         NgxPaginationModule,
-        // Connects RouterModule with StoreModule
-        StoreRouterConnectingModule.forRoot(),
         EffectsModule.forRoot([]),
-        ServiceWorkerModule.register("ngsw-worker.js", {enabled: environment.production, scope: "./"}),
+        ServiceWorkerModule.register("ngsw-worker.js", { enabled: environment.production, scope: "./" }),
         ...devOnlyImports,
         A11yModule,
         MatNativeDateModule,
         MatDatepickerModule,
         WildfireApplicationModule.forRoot(),
-    ],
-    providers: [
+        WildfireResourceManagerModule.forRoot()], providers: [
         // Added provideBootstrapEffects function to handle the ngrx issue that loads effects before APP_INITIALIZER
         // providers have finished initializing.
         // See https://github.com/ngrx/platform/issues/931 for more information.
@@ -310,7 +304,6 @@ if (!environment.production || !environment.restrict_imports) {
         UpdateService,
         AppConfigService,
         TokenService,
-        MapService,
         Title,
         {
             provide: APP_INITIALIZER,
@@ -319,55 +312,51 @@ if (!environment.production || !environment.restrict_imports) {
             deps: [HttpHandler, Injector]
         },
         {
-          provide: CirrasUnderwritingAPIServiceConfiguration,
-          useFactory: cirrasUnderwritingRestInitializerFn,
-          multi: false,
-          deps: [AppConfigService]
+            provide: CirrasUnderwritingAPIServiceConfiguration,
+            useFactory: cirrasUnderwritingRestInitializerFn,
+            multi: false,
+            deps: [AppConfigService]
         },
-        {provide: OWL_DATE_TIME_FORMATS, useValue: DATE_FORMATS},
-        {provide: RouteReuseStrategy, useClass: CustomReuseStrategy},
+        { provide: OWL_DATE_TIME_FORMATS, useValue: DATE_FORMATS },
+        { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: ResourcesInterceptor,
             multi: true
         },
         {
-          provide: ConnectionServiceOptionsToken,
-          useValue: <ConnectionServiceOptions>{
-              enableHeartbeat: false,
-          }
+            provide: ConnectionServiceOptionsToken,
+            useValue: <ConnectionServiceOptions>{
+                enableHeartbeat: false
+            }
         },
-        { // sets the datepicker to display month with a 3 letter word
-        provide: DateAdapter,
-        useClass: MomentDateAdapter,
-        deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
         },
-    
-        {provide: MAT_DATE_FORMATS, 
+        { provide: MAT_DATE_FORMATS,
             useValue: {
-                    parse: {
-                    dateInput: 'LL',
+                parse: {
+                    dateInput: 'LL'
                 },
-                    display: {
+                display: {
                     dateInput: 'MMM DD, YYYY',
                     monthYearLabel: 'MMM YYYY',
                     dateA11yLabel: 'LL',
-                    monthYearA11yLabel: 'MMM YYYY',
-                },
-          } },
-        DecimalPipe
-
-    ],
-    entryComponents: [
-        BaseDialogComponent,
-        // ClaimsContainerMobile,
-        // ClaimsComponentMobile,
-        // CalculationsContainerMobile,
-        // CalculationsComponentMobile,        
-        ErrorDialogComponent,
-    ],
-    bootstrap: [AppComponent]
-})
+                    monthYearA11yLabel: 'MMM YYYY'
+                }
+            } },
+        { // to remove padding-bottom at the bottom of the text-fields
+            provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+            useValue: {
+                subscriptSizing: 'dynamic'
+            }
+        },
+        provideNgxMask(),
+        DecimalPipe,
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {
 
 }

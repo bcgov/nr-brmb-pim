@@ -17,11 +17,15 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.UnderwritingCommentDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.AnnualFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerContractYearDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingCommentDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldSummaryDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.spring.PersistenceSpringConfig;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
@@ -75,12 +79,46 @@ public class UnderwritingCommentDaoTest {
 			fieldDao.delete(fieldId);
 		}
 		
+		//Delete Verified Yield Summary Comments
+		underwritingCommentDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
+		
+		// Delete VerifiedYieldSummary
+		VerifiedYieldSummaryDao vyaDao = persistenceSpringConfig.verifiedYieldSummaryDao();
+		List<VerifiedYieldSummaryDto> vyaDtos = vyaDao.selectForVerifiedYieldContract(verifiedYieldContractGuid);
+		if ( vyaDtos != null && !vyaDtos.isEmpty() ) {
+			vyaDao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
+		}
+		
+		// Delete VerifiedYieldContract
+		VerifiedYieldContractDao vycDao = persistenceSpringConfig.verifiedYieldContractDao();
+		VerifiedYieldContractDto vycDto = vycDao.fetch(verifiedYieldContractGuid);
+		if (vycDto != null) {
+			vycDao.delete(verifiedYieldContractGuid);
+		}
+
+		// Delete DeclaredYieldContract
+		DeclaredYieldContractDao dycDao = persistenceSpringConfig.declaredYieldContractDao();
+		DeclaredYieldContractDto dycDto = dycDao.fetch(declaredYieldContractGuid);
+		if (dycDto != null) {
+			dycDao.delete(declaredYieldContractGuid);
+		}
+		
+		GrowerContractYearDao gcyDao = persistenceSpringConfig.growerContractYearDao();
+		GrowerContractYearDto gcyDto = gcyDao.fetch(growerContractYearId);
+		if (gcyDto != null) {
+			gcyDao.delete(growerContractYearId);
+		}
+		
 	}
 	
 	private Integer fieldId = 99999999;;
 	private Integer legalLandId = 99999999;
 	private Integer annualFieldDetailId = 99999999;
-
+	private Integer growerContractYearId = 90000001;
+	private Integer contractId = 90000002;
+	private Integer cropYear = 2020;
+	private String verifiedYieldContractGuid;
+	private String declaredYieldContractGuid;
 	
 	@Test 
 	public void testUnderwritingComment() throws Exception {
@@ -294,6 +332,76 @@ public class UnderwritingCommentDaoTest {
 
 	}
 	
+	@Test 
+	public void testVerifiedYieldSummaryComments() throws Exception {
+		
+		String userId = "UNITTEST";
+		
+		createGrowerContractYear();
+		createDeclaredYieldContract(userId);
+		createVerifiedYieldContract(userId);
+		
+		String verifiedYieldSummaryGuid1 = createVerifiedYieldSummary(userId, 16);
+		String verifiedYieldSummaryGuid2 = createVerifiedYieldSummary(userId, 18);
+
+		createVerifiedYieldSummaryComment(verifiedYieldSummaryGuid1, "test comment 1");
+		createVerifiedYieldSummaryComment(verifiedYieldSummaryGuid1, "test comment 2");
+
+		createVerifiedYieldSummaryComment(verifiedYieldSummaryGuid2, "test comment 3");
+
+		UnderwritingCommentDao dao = persistenceSpringConfig.underwritingCommentDao();
+		
+		//Select for first verified yield summary
+		List<UnderwritingCommentDto> fetchedDtos = dao.selectForVerifiedYieldSummary(verifiedYieldSummaryGuid1);
+		Assert.assertNotNull(fetchedDtos);
+		Assert.assertEquals(2, fetchedDtos.size());
+
+		//Select for second verified yield summary
+		fetchedDtos = dao.selectForVerifiedYieldSummary(verifiedYieldSummaryGuid2);
+		Assert.assertNotNull(fetchedDtos);
+		Assert.assertEquals(1, fetchedDtos.size());
+		
+		//DELETE for second verified yield summary
+		dao.deleteForVerifiedYieldSummaryGuid(verifiedYieldSummaryGuid2);
+		fetchedDtos = dao.selectForVerifiedYieldSummary(verifiedYieldSummaryGuid2);
+		Assert.assertNotNull(fetchedDtos);
+		Assert.assertEquals(0, fetchedDtos.size());
+
+		//Select for first verified yield summary again
+		fetchedDtos = dao.selectForVerifiedYieldSummary(verifiedYieldSummaryGuid1);
+		Assert.assertNotNull(fetchedDtos);
+		Assert.assertEquals(2, fetchedDtos.size());
+
+		//DELETE for verified yield contract
+		dao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
+		fetchedDtos = dao.selectForVerifiedYieldSummary(verifiedYieldSummaryGuid1);
+		Assert.assertNotNull(fetchedDtos);
+		Assert.assertEquals(0, fetchedDtos.size());
+
+		//clean up 
+		deleteUwCommentDetail();
+
+	}
+	
+	
+	private String createVerifiedYieldSummaryComment(String verifiedYieldSummaryGuid, String comment) throws DaoException {
+		String userId = "UNITTEST";
+
+		UnderwritingCommentDao dao = persistenceSpringConfig.underwritingCommentDao();
+		UnderwritingCommentDto newDto = new UnderwritingCommentDto();
+
+		newDto.setVerifiedYieldSummaryGuid(verifiedYieldSummaryGuid);
+		newDto.setUnderwritingComment(comment);
+		newDto.setUnderwritingCommentTypeCode("VY");
+		newDto.setUnderwritingCommentTypeDesc("Verified Yield");
+		
+		dao.insert(newDto, userId);
+		Assert.assertNotNull(newDto.getUnderwritingCommentGuid());
+		return newDto.getUnderwritingCommentGuid();
+
+		
+	}
+	
 	private String createUwComment() throws DaoException {
 		String userId = "UNITTEST";
 
@@ -344,4 +452,96 @@ public class UnderwritingCommentDaoTest {
 		dao.insertDataSync(newDto, userId);
 
 	}
+	
+	private void createGrowerContractYear() throws DaoException {
+		GrowerContractYearDao dao = persistenceSpringConfig.growerContractYearDao();
+		GrowerContractYearDto newDto = new GrowerContractYearDto();
+		
+		//Date and Time without millisecond
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		Date dateTime = cal.getTime();
+		
+		String userId = "JUNIT_TEST";
+
+		//INSERT
+		newDto.setGrowerContractYearId(growerContractYearId);
+		newDto.setContractId(contractId);
+		newDto.setGrowerId(null);
+		newDto.setInsurancePlanId(4);
+		newDto.setCropYear(cropYear);
+		newDto.setDataSyncTransDate(dateTime);
+		
+		dao.insert(newDto, userId);
+	}
+	
+	private void createDeclaredYieldContract(String userId) throws DaoException {
+
+		// Create parent Declared Yield Contract.
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(2020, Calendar.JANUARY, 15);
+		Date dopDate = cal.getTime();
+		
+		DeclaredYieldContractDao dao = persistenceSpringConfig.declaredYieldContractDao();
+		
+		DeclaredYieldContractDto newDto = new DeclaredYieldContractDto();
+
+		newDto.setContractId(contractId);
+		newDto.setCropYear(cropYear);
+		newDto.setDeclarationOfProductionDate(dopDate);
+		newDto.setDefaultYieldMeasUnitTypeCode("TONNE");
+		newDto.setEnteredYieldMeasUnitTypeCode("BUSHEL");
+		newDto.setGrainFromOtherSourceInd(true);
+		newDto.setBalerWagonInfo(null);
+		newDto.setTotalLivestock(null);
+		
+		//INSERT
+		dao.insert(newDto, userId);
+		declaredYieldContractGuid = newDto.getDeclaredYieldContractGuid();
+		
+	}
+	
+	private void createVerifiedYieldContract(String userId) throws DaoException {
+
+		VerifiedYieldContractDao dao = persistenceSpringConfig.verifiedYieldContractDao();
+		
+		VerifiedYieldContractDto newDto = new VerifiedYieldContractDto();
+
+		newDto.setContractId(contractId);
+		newDto.setCropYear(cropYear);
+		newDto.setDeclaredYieldContractGuid(declaredYieldContractGuid);
+		newDto.setDefaultYieldMeasUnitTypeCode("TONNE");
+		newDto.setInsurancePlanId(4);		
+		
+		//INSERT
+		dao.insert(newDto, userId);
+		verifiedYieldContractGuid = newDto.getVerifiedYieldContractGuid();
+	}
+	
+	private String createVerifiedYieldSummary(String userId, Integer cropCommodityId) throws DaoException {
+
+		VerifiedYieldSummaryDao dao = persistenceSpringConfig.verifiedYieldSummaryDao();
+
+		VerifiedYieldSummaryDto newDto = new VerifiedYieldSummaryDto();
+
+		newDto.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
+		newDto.setCropCommodityId(cropCommodityId);
+		//newDto.setCropCommodityName("BARLEY");
+		newDto.setIsPedigreeInd(false);
+		newDto.setHarvestedYield(100.0);
+		newDto.setHarvestedYieldPerAcre(10.0);
+		newDto.setAppraisedYield(1.5);
+		newDto.setAssessedYield(0.5);
+		newDto.setYieldToCount(15.5);
+		newDto.setYieldPercentPy(75.5);
+		newDto.setProductionGuarantee(20.5);
+		newDto.setProbableYield(17.5);
+
+		dao.insert(newDto, userId);
+		Assert.assertNotNull(newDto.getVerifiedYieldSummaryGuid());
+		
+		return newDto.getVerifiedYieldSummaryGuid();
+	}
+
 }

@@ -1,12 +1,11 @@
 import { Component, Inject, Input, OnChanges, OnInit , SimpleChanges} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store} from "@ngrx/store";
 import { RootState} from "../../../../store";
 import { GradeModifierType, GradeModifierTypeList } from 'src/app/conversion/models-maintenance';
 import { loadGradeModifierTypes, saveGradeModifierTypes } from 'src/app/store/maintenance/maintenance.actions';
 import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
-import { INSURANCE_PLAN } from 'src/app/utils/constants';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { areNotEqual, makeNumberOnly } from 'src/app/utils';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
@@ -25,14 +24,14 @@ export class GradeModifiersTypesComponent implements OnInit, OnChanges {
   dialogType = DIALOG_TYPE.INFO;
 
   dataReceived: any;
-  gradeModifierTypesForm: FormGroup;
+  gradeModifierTypesForm: UntypedFormGroup;
 
   hasDataChanged = false;
 
   constructor(
     public dialogRef: MatDialogRef<GradeModifiersTypesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,  
-    private fb: FormBuilder,  
+    private fb: UntypedFormBuilder,  
     protected store: Store<RootState>,
     public securityUtilService: SecurityUtilService, 
     ) {  
@@ -47,7 +46,7 @@ export class GradeModifiersTypesComponent implements OnInit, OnChanges {
     
     // initialize the form
     this.gradeModifierTypesForm = this.fb.group({
-      gradeModifierTypes: new FormArray([])
+      gradeModifierTypes: new UntypedFormArray([])
     })
 
     setTimeout(() => { 
@@ -63,7 +62,7 @@ export class GradeModifiersTypesComponent implements OnInit, OnChanges {
       if ( this.gradeModifierTypesList && this.gradeModifierTypesList.collection && this.gradeModifierTypesList.collection.length > 0 && this.gradeModifierTypesForm) {
         // pre-fill the form
         
-        let frmgGradeModifierTypes: FormArray = this.gradeModifierTypesForm.controls.gradeModifierTypes as FormArray
+        let frmgGradeModifierTypes: UntypedFormArray = this.gradeModifierTypesForm.controls.gradeModifierTypes as UntypedFormArray
         frmgGradeModifierTypes.clear()
 
         this.gradeModifierTypesList.collection.forEach ((gmt: GradeModifierType) => {
@@ -90,7 +89,7 @@ export class GradeModifiersTypesComponent implements OnInit, OnChanges {
   }
 
   onAddGradeModifierType() {
-    const frmGradeModifierTypes: FormArray = this.gradeModifierTypesForm.controls.gradeModifierTypes as FormArray
+    const frmGradeModifierTypes: UntypedFormArray = this.gradeModifierTypesForm.controls.gradeModifierTypes as UntypedFormArray
 
     frmGradeModifierTypes.push (this.fb.group({
       gradeModifierTypeCode: [],
@@ -105,8 +104,8 @@ export class GradeModifiersTypesComponent implements OnInit, OnChanges {
   }
 
   onDeleteGradeModifierType(rowIndex) {
-    const frmGradeModifierTypes: FormArray = this.gradeModifierTypesForm.controls.gradeModifierTypes as FormArray
-    const frmGMT = frmGradeModifierTypes.controls[rowIndex] as FormArray
+    const frmGradeModifierTypes: UntypedFormArray = this.gradeModifierTypesForm.controls.gradeModifierTypes as UntypedFormArray
+    const frmGMT = frmGradeModifierTypes.controls[rowIndex] as UntypedFormArray
 
     frmGMT.controls['deletedByUserInd'].setValue(true)
 
@@ -133,11 +132,11 @@ export class GradeModifiersTypesComponent implements OnInit, OnChanges {
 
   isFormValid() {
     
-    const frmGradeModifierTypes: FormArray = this.gradeModifierTypesForm.controls.gradeModifierTypes as FormArray
+    const frmGradeModifierTypes: UntypedFormArray = this.gradeModifierTypesForm.controls.gradeModifierTypes as UntypedFormArray
 
     for (let i = 0; i < frmGradeModifierTypes.controls.length; i++) {
 
-      let frmGMT = frmGradeModifierTypes.controls[i] as FormArray
+      let frmGMT = frmGradeModifierTypes.controls[i] as UntypedFormArray
       let maxYearUsed = (!isNaN(parseInt(frmGMT.value.maxYearUsed))) ? parseInt(frmGMT.value.maxYearUsed) : 0
       
       if (!frmGMT.value.gradeModifierTypeCode || !frmGMT.value.description ) {
@@ -195,9 +194,9 @@ export class GradeModifiersTypesComponent implements OnInit, OnChanges {
      //make a deep copy
     let updatedGradeModifierTypes : GradeModifierTypeList = JSON.parse(JSON.stringify(this.gradeModifierTypesList));
 
-    const frmGradeModifierTypes: FormArray = this.gradeModifierTypesForm.controls.gradeModifierTypes as FormArray
+    const frmGradeModifierTypes: UntypedFormArray = this.gradeModifierTypesForm.controls.gradeModifierTypes as UntypedFormArray
  
-    frmGradeModifierTypes.controls.forEach( function(frmGMT : FormArray) {
+    frmGradeModifierTypes.controls.forEach( function(frmGMT : UntypedFormArray) {
  
       // find the corresponding field in updatedDopYieldContract object
       let origGradeModifierType = updatedGradeModifierTypes.collection.find( el => el.gradeModifierTypeCode == frmGMT.value.gradeModifierTypeCode)
@@ -237,11 +236,11 @@ export class GradeModifiersTypesComponent implements OnInit, OnChanges {
     
     if (!this.gradeModifierTypesList) return false;
 
-    const frmGradeModifierTypes: FormArray = this.gradeModifierTypesForm.controls.gradeModifierTypes as FormArray
+    const frmGradeModifierTypes: UntypedFormArray = this.gradeModifierTypesForm.controls.gradeModifierTypes as UntypedFormArray
 
     for (let i = 0; i < frmGradeModifierTypes.controls.length; i++) {
 
-      let frmGMT = frmGradeModifierTypes.controls[i] as FormArray
+      let frmGMT = frmGradeModifierTypes.controls[i] as UntypedFormArray
 
       if ( frmGMT.value.addedByUserInd == true) {
         return true

@@ -646,7 +646,7 @@ public class UwContractListEndpointTest extends EndpointsTest {
 		Assert.assertEquals(0, searchResults.getCollection().get(0).getTotalDopEligibleInventory().intValue());
 
 		// B: Fetch - 0
-		UwContractRsrc uwContract = service.getUwContract(searchResults.getCollection().get(0), "false");
+		UwContractRsrc uwContract = service.getUwContract(searchResults.getCollection().get(0), "false", "false", null);
 		Assert.assertEquals(0, uwContract.getTotalDopEligibleInventory().intValue());
 
 		// C: Select - 1
@@ -670,7 +670,7 @@ public class UwContractListEndpointTest extends EndpointsTest {
 		Assert.assertEquals(1, searchResults.getCollection().get(0).getTotalDopEligibleInventory().intValue());
 
 		// D: Fetch - 1
-		uwContract = service.getUwContract(searchResults.getCollection().get(0), "false");
+		uwContract = service.getUwContract(searchResults.getCollection().get(0), "false", "false", null);
 		Assert.assertEquals(1, uwContract.getTotalDopEligibleInventory().intValue());
 		
 				

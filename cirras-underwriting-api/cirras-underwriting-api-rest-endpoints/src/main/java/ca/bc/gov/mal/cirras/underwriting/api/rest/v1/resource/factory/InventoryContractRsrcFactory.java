@@ -421,6 +421,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setUnderwritingCommentTypeCode(dto.getUnderwritingCommentTypeCode());
 		model.setUnderwritingCommentTypeDesc(dto.getUnderwritingCommentTypeDesc());
 		model.setDeclaredYieldContractGuid(dto.getDeclaredYieldContractGuid());
+		model.setVerifiedYieldSummaryGuid(dto.getVerifiedYieldSummaryGuid());
 		model.setGrowerContractYearId(dto.getGrowerContractYearId());
 		model.setUpdateDate(dto.getUpdateDate());
 		model.setUpdateUser(dto.getUpdateUser());

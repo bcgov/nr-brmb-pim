@@ -44,7 +44,10 @@ public interface UwContractFactory {
 	UwContract<? extends UwContract<?>> getUwContract(
 			PolicyDto dto, 
 			List<PolicyDto> linkedPolicyDtos,
+			List<PolicyDto> otherYearPolicyDtos,
 			Boolean loadLinkedPolicies,
+			Boolean loadOtherYearPolicies,
+			String screenType,
 			FactoryContext context, 
 			WebAdeAuthentication authentication
 		) throws FactoryException;

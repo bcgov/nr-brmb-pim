@@ -5,6 +5,7 @@
   &.device-desktop{
     .body .menu{
       min-height: calc(100vh - var(--wf-header-height) - 2px);
+      font-family: $font-family-main;
     }
   }
 
@@ -21,7 +22,8 @@
           // overflow: auto;
           white-space: pre-line;
           //text-overflow: ellipsis;
-          font-weight: 200 !important;
+          
+          font-weight: 400 !important;
           font-size: 15px;
           
           margin-top: 14px !important;
