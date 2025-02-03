@@ -26,11 +26,11 @@ $theme: mat.m2-define-light-theme((
     warn: $theme-warn,
   ),
   typography: mat.m2-define-typography-config(
-    $body-1: mat.m2-define-typography-level( 16px, 24px, 500, 'BCSans', 'normal' ), 
-    $body-2: mat.m2-define-typography-level( 15px, 24px, 200, 'BCSans', 'normal' ), 
-    $headline-5: mat.m2-define-typography-level( 20px, 32px, 700, 'BCSans', 'normal' ), 
-    $headline-6: mat.m2-define-typography-level( 20px, 32px, 700, 'BCSans', 'normal' ), 
-    $button: mat.m2-define-typography-level( 15px, 24px, 700, 'BCSans', 'normal' ), 
+    $body-1: mat.m2-define-typography-level( 16px, 24px, 500, 'Noto Sans', 'normal' ), 
+    $body-2: mat.m2-define-typography-level( 15px, 24px, 200, 'Noto Sans', 'normal' ), 
+    $headline-5: mat.m2-define-typography-level( 20px, 32px, 700, 'Noto Sans', 'normal' ), 
+    $headline-6: mat.m2-define-typography-level( 20px, 32px, 700, 'Noto Sans', 'normal' ), 
+    $button: mat.m2-define-typography-level( 15px, 24px, 700, 'Noto Sans', 'normal' ), 
   ),
 ));
 
