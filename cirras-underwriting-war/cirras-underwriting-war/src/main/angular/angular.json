@@ -35,12 +35,7 @@
               "src/assets",
               "src/dev-config",
               "src/manifest.json",
-              "src/refresh-token.html",
-              {
-                "glob": "bc-sans/**/*",
-                "input": "node_modules/@wf1/wfcc-application-ui",
-                "output": "assets"
-              }
+              "src/refresh-token.html"
             ],
             "styles": [
               "src/styles/main.scss",
@@ -72,12 +67,7 @@
                 "src/assets",
                 "src/dev-config",
                 "src/manifest.json",
-                "src/refresh-token.html",
-                {
-                  "glob": "bc-sans/**/*",
-                  "input": "node_modules/@wf1/wfcc-application-ui",
-                  "output": "assets"
-                }
+                "src/refresh-token.html"
               ],
               "optimization": {
                 "fonts": false
