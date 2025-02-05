@@ -3,6 +3,7 @@
 	"extends": [
 	"local>bcgov/renovate-config"
 	],
+	"baseBranches": ["feature/renovate"],
 	"prConcurrentLimit": 5,
 	"timezone": "Canada/Pacific",
 	"packageRules": [
