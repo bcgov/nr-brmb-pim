@@ -536,6 +536,8 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		model.setAcres(dto.getAcres());
 		model.setCropCommodityId(dto.getCropCommodityId());
 		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setCropVarietyId(dto.getCropVarietyId());
+		model.setCropVarietyName(dto.getCropVarietyName());
 		model.setFieldId(dto.getFieldId());
 		model.setFieldLabel(dto.getFieldLabel());
 		model.setIsPedigreeInd(dto.getIsPedigreeInd());
@@ -747,6 +749,8 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		dto.setAcres(model.getAcres());
 		dto.setCropCommodityId(model.getCropCommodityId());
 		dto.setCropCommodityName(model.getCropCommodityName());
+		dto.setCropVarietyId(model.getCropVarietyId());
+		dto.setCropVarietyName(model.getCropVarietyName());
 		dto.setFieldId(model.getFieldId());
 		dto.setFieldLabel(model.getFieldLabel());
 		dto.setIsPedigreeInd(model.getIsPedigreeInd());
