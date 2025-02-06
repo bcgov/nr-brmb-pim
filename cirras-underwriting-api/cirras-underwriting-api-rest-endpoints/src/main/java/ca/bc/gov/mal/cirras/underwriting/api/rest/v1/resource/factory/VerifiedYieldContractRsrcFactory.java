@@ -30,6 +30,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceType
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiableCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiableVariety;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldGrainBasket;
@@ -40,6 +41,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContrac
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto;
@@ -607,6 +609,8 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		if (!dto.getPlantings().isEmpty()) {
 			List<VerifiableCommodity> verifiableCommodities = new ArrayList<VerifiableCommodity>();
 			Map<String, VerifiableCommodity> vcMap = new HashMap<String, VerifiableCommodity>();
+			List<VerifiableVariety> verifiableVarieties = new ArrayList<VerifiableVariety>();
+			Map<Integer, VerifiableVariety> vvMap = new HashMap<Integer, VerifiableVariety>();
 
 			for (InventoryFieldDto ifDto : dto.getPlantings()) {
 				
@@ -620,26 +624,45 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 					}
 					
 				} else if (InsurancePlans.FORAGE.getInsurancePlanId().equals(ifDto.getInsurancePlanId())) {
-					
+					for ( InventorySeededForageDto isfDto : ifDto.getInventorySeededForages() ) {
+						if ( isfDto.getCropVarietyId() != null) {						
+							VerifiableVariety vv = createVerifiableVariety(isfDto);
+							vvMap.put(vv.getCropVarietyId(), vv);
+						}
+					}
 				}
 			}
-
-			verifiableCommodities.addAll(vcMap.values());
-			verifiableCommodities.sort(new Comparator<VerifiableCommodity>() {
-				
-				@Override
-				public int compare(VerifiableCommodity vc1, VerifiableCommodity vc2) {
-					
-					int cmpResult = vc1.getCropCommodityName().compareTo(vc2.getCropCommodityName());
-					if ( cmpResult == 0 ) {
-						cmpResult = vc1.getIsPedigreeInd().compareTo(vc2.getIsPedigreeInd());
-					}
-					return cmpResult;
-				}
-				
-			} );
 			
-			model.setVerifiableCommodities(verifiableCommodities);
+			if (InsurancePlans.GRAIN.getInsurancePlanId().equals(dto.getInsurancePlanId())) {
+				verifiableCommodities.addAll(vcMap.values());
+				verifiableCommodities.sort(new Comparator<VerifiableCommodity>() {
+					
+					@Override
+					public int compare(VerifiableCommodity vc1, VerifiableCommodity vc2) {
+						
+						int cmpResult = vc1.getCropCommodityName().compareTo(vc2.getCropCommodityName());
+						if ( cmpResult == 0 ) {
+							cmpResult = vc1.getIsPedigreeInd().compareTo(vc2.getIsPedigreeInd());
+						}
+						return cmpResult;
+					}
+					
+				} );
+				
+				model.setVerifiableCommodities(verifiableCommodities);
+			} else if (InsurancePlans.FORAGE.getInsurancePlanId().equals(dto.getInsurancePlanId())) {
+				verifiableVarieties.addAll(vvMap.values());
+				verifiableVarieties.sort(new Comparator<VerifiableVariety>() {
+					@Override
+					public int compare(VerifiableVariety vc1, VerifiableVariety vc2) {
+						
+						int cmpResult = vc1.getCropVarietyName().compareTo(vc2.getCropVarietyName());
+						return cmpResult;
+					}
+				} );
+				model.setVerifiableVarieties(verifiableVarieties);
+			}
+
 		}
 
 		return model;
@@ -653,6 +676,15 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		vc.setIsPedigreeInd(isgDto.getIsPedigreeInd());
 		
 		return vc;		
+	}
+	
+	private VerifiableVariety createVerifiableVariety(InventorySeededForageDto isfDto) {
+
+		VerifiableVariety vv = new VerifiableVariety();
+		vv.setCropVarietyId(isfDto.getCropVarietyId());
+		vv.setCropVarietyName(isfDto.getCropVarietyName());
+		
+		return vv;		
 	}
 	
 	static void setSelfLink(String verifiedYieldContractGuid, VerifiedYieldContractRsrc resource, URI baseUri) {

@@ -49,17 +49,15 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededGrain;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryUnseeded;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiableCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiableVariety;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.YieldMeasUnitConversionDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.CommodityCoverageCode;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandManagementEventTypes;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
@@ -330,24 +328,30 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		
 		checkCommoditiesSortOrder(commodities, newContract.getVerifiedYieldContractCommodities());
 		
-		//TODO: Will be implemented when Amendments are implemented 
-//		//Check verifiable Commodities and field
-//		Assert.assertEquals(1, newContract.getFields().size());
-//		AnnualFieldRsrc field = newContract.getFields().get(0);
-//		Assert.assertEquals(fieldId, field.getFieldId());
-//		Assert.assertEquals(2, field.getVerifiableCommodities().size());
-//		Boolean pedigreed = false;
-//		Boolean nonPedigreed = false;
-//		for(VerifiableCommodity vc : field.getVerifiableCommodities()) {
-//			Assert.assertEquals(16, vc.getCropCommodityId().intValue());
-//			if(vc.getIsPedigreeInd()) {
-//				pedigreed = true;
-//			} else if(vc.getIsPedigreeInd() == false) {
-//				nonPedigreed = true;
-//			}
-//		}
-//		Assert.assertTrue(pedigreed);
-//		Assert.assertTrue(nonPedigreed);
+		//Check verifiable Varieties and field
+		Assert.assertEquals(1, newContract.getFields().size());
+		AnnualFieldRsrc field = newContract.getFields().get(0);
+		Assert.assertEquals(fieldId, field.getFieldId());
+		Assert.assertEquals(3, field.getVerifiableVarieties().size());
+		Map<Integer, String> expectedVarieties = new HashMap<Integer, String>();
+		expectedVarieties.put(varietyIdAlfalafaGrass, varietyNameAlfalafaGrass);
+		expectedVarieties.put(varietyIdCrownNative, varietyNameCrownNative);
+		expectedVarieties.put(varietyIdSilageCorn, varietyNameSilageCorn);
+		HashSet<Integer> actualVarieties = new HashSet<Integer>(); 
+
+		for(VerifiableVariety vv : field.getVerifiableVarieties()) {
+			//Check varietyId
+			Assert.assertTrue(expectedVarieties.containsKey(vv.getCropVarietyId()));
+			//Check variety name
+			Assert.assertEquals(expectedVarieties.get(vv.getCropVarietyId()), vv.getCropVarietyName());
+
+			actualVarieties.add(vv.getCropVarietyId()); //Add only adds a varietyId if it doesn't exist yet 
+			
+		}
+		
+		//Add variety id to make sure all expected varieties were returned
+		Assert.assertEquals(expectedVarieties.size(), actualVarieties.size());
+
 		
 		//Create verified contract ******************************************************************************
 		//Add override values for alfalfa
@@ -498,10 +502,6 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 //		//Update Canola Pedigree to status final
 //		//createUpdateProduct(policyId1, productId2, 19, 10, canolaPedigreePY, canolaPedigreeProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
 //		createUpdateProduct(policyId1, productId2, 19, 10, canolaPedigreePY, canolaPedigreeProductionGuarantee, canolaPedigreeIV100, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
-//		//Update product for Grain Basket
-//		Double grainBasketCoverageDollarNew = grainBasketCoverageDollar + 10;
-//		createUpdateProduct(policyId1, productId4, 1010076, 20, null, null, null, grainBasketCoverageDollarNew, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.GRAIN_BASKET);
-
 		
 		//Get contract
 		VerifiedYieldContractRsrc vyContract = getVerifiedYieldContract(policyNumber1);
@@ -586,166 +586,146 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 			return;
 		}
 		
-//		//Date and Time without millisecond
-//		Calendar cal = Calendar.getInstance();
-//		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 because they are not set in the database
-//		Date transactionDate = cal.getTime();
-//		Date createTransactionDate = addSeconds(transactionDate, -1);
-//
-//		createGrower(growerId, 999888, "grower name", createTransactionDate);
-//		
-//		createLegalLand("test legal 9999", null, legalLandId, "999-888-000", 1980, null);
-//		createField(fieldId, "LOT 3", 1980, null);
-//
-//		createGrowerContractYear(growerContractYearId1, contractId, growerId, cropYear1, 4, createTransactionDate);
-//		createPolicy(policyId1, growerId, 4, policyNumber1, contractNumber, contractId, cropYear1, createTransactionDate);
-//		createAnnualFieldDetail(annualFieldDetailId1, legalLandId, fieldId, cropYear1);
-//		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId1, 1);
-//
-//		createInventoryContract(policyNumber1, 4, false);
-//		createDopYieldContract(policyNumber1, 4, false);
-//				
-//		Integer pageNumber = 1;
-//		Integer pageRowCount = 20;
-//
-//		// Rollover and create VerifiedYieldContract.
-//		UwContractListRsrc searchResults = service.getUwContractList(
-//				topLevelEndpoints, 
-//				null, 
-//				null, 
-//				null,
-//				null,
-//				policyNumber1,
-//				null,
-//				null, 
-//				null, 
-//				null, 
-//				pageNumber, pageRowCount);
-//
-//		Assert.assertNotNull(searchResults);
-//		Assert.assertEquals(1, searchResults.getCollection().size());
-//
-//		UwContractRsrc referrer = searchResults.getCollection().get(0);
-//		Assert.assertNotNull(referrer.getInventoryContractGuid());
-//		Assert.assertNotNull(referrer.getDeclaredYieldContractGuid());
-//		Assert.assertNull(referrer.getVerifiedYieldContractGuid());
-//		
-//		// Check VerifiedYieldContract
-//		VerifiedYieldContractRsrc newContract = service.rolloverVerifiedYieldContract(referrer);
-//		Assert.assertNotNull(newContract);
-//
-//		Assert.assertEquals(contractId, newContract.getContractId());
-//		Assert.assertEquals(cropYear1, newContract.getCropYear());
-//		Assert.assertEquals(referrer.getDeclaredYieldContractGuid(), newContract.getDeclaredYieldContractGuid());
-//		Assert.assertEquals("TONNE", newContract.getDefaultYieldMeasUnitTypeCode());
-//		Assert.assertEquals(growerContractYearId1, newContract.getGrowerContractYearId());
-//		Assert.assertEquals(Integer.valueOf(4), newContract.getInsurancePlanId());
-//		Assert.assertNull(newContract.getVerifiedYieldContractGuid());
-//		Assert.assertNull(newContract.getVerifiedYieldUpdateUser());
-//		Assert.assertNull(newContract.getVerifiedYieldUpdateTimestamp());
-//
-//		// Check VerifiedYieldAmendments
-//		Assert.assertEquals(0, newContract.getVerifiedYieldAmendments().size());
-//		
-//		
-//		//Create verified contract ******************************************************************************
-//
-//		VerifiedYieldAmendment vya = createVerifiedYieldAmendment("Appraisal", 18, "CANOLA", false, null, null, 12.34, 56.78, "rationale 1");
-//		newContract.getVerifiedYieldAmendments().add(vya);
-//		
-//		vya = createVerifiedYieldAmendment("Assessment", 16, "BARLEY", true, fieldId, "LOT 3", 11.22, 33.44, "rationale 2");
-//		newContract.getVerifiedYieldAmendments().add(vya);
-//
-//		vya = createVerifiedYieldAmendment("Assessment", 18, "CANOLA", true, null, null, 22.11, 44.33, "rationale 3");
-//		newContract.getVerifiedYieldAmendments().add(vya);		
-//		
-//		VerifiedYieldContractRsrc createdContract = service.createVerifiedYieldContract(topLevelEndpoints, newContract);
-//		Assert.assertNotNull(createdContract);
-//
-//		Assert.assertEquals(newContract.getContractId(), createdContract.getContractId());
-//		Assert.assertEquals(newContract.getCropYear(), createdContract.getCropYear());
-//		Assert.assertEquals(newContract.getDeclaredYieldContractGuid(), createdContract.getDeclaredYieldContractGuid());
-//		Assert.assertEquals(newContract.getDefaultYieldMeasUnitTypeCode(), createdContract.getDefaultYieldMeasUnitTypeCode());
-//		Assert.assertEquals(newContract.getGrowerContractYearId(), createdContract.getGrowerContractYearId());
-//		Assert.assertEquals(newContract.getInsurancePlanId(), createdContract.getInsurancePlanId());
-//		Assert.assertNotNull(createdContract.getVerifiedYieldContractGuid());
-//		Assert.assertNotNull(createdContract.getVerifiedYieldUpdateUser());
-//		Assert.assertNotNull(createdContract.getVerifiedYieldUpdateTimestamp());
-//
-//		checkVerifiedYieldAmendments(newContract.getVerifiedYieldAmendments(), createdContract.getVerifiedYieldAmendments());
-//		
-//		
-//		//Update verified contract ******************************************************************************
-//		List<VerifiedYieldAmendment> expectedAmendments = new ArrayList<VerifiedYieldAmendment>();
-//		
-//		vya = createdContract.getVerifiedYieldAmendments().get(0);
-//		vya.setAcres(55.66);
-//		vya.setCropCommodityId(16);
-//		vya.setCropCommodityName("BARLEY");
-//		vya.setFieldId(fieldId);
-//		vya.setFieldLabel("LOT 3");
-//		vya.setIsPedigreeInd(true);
-//		vya.setRationale("rationale A");
-//		vya.setVerifiedYieldAmendmentCode("Assessment");
-//		vya.setYieldPerAcre(77.88);
-//
-//		expectedAmendments.add(vya);
-//		
-//		vya = createdContract.getVerifiedYieldAmendments().get(1);
-//		vya.setAcres(98.76);
-//		vya.setCropCommodityId(18);
-//		vya.setCropCommodityName("CANOLA");
-//		vya.setFieldId(null);
-//		vya.setFieldLabel(null);
-//		vya.setIsPedigreeInd(false);
-//		vya.setRationale("rationale B");
-//		vya.setVerifiedYieldAmendmentCode("Appraisal");
-//		vya.setYieldPerAcre(54.32);
-//		
-//		// The order in which amendments will be returned is reversed by these updates.
-//		expectedAmendments.add(0, vya);
-//
-//		vya = createdContract.getVerifiedYieldAmendments().get(2);
-//		vya.setDeletedByUserInd(true);
-//		
-//		VerifiedYieldContractRsrc updatedContract = service.updateVerifiedYieldContract(createdContract);
-//		Assert.assertNotNull(updatedContract);
-//		
-//		Assert.assertEquals(createdContract.getContractId(), updatedContract.getContractId());
-//		Assert.assertEquals(createdContract.getCropYear(), updatedContract.getCropYear());
-//		Assert.assertEquals(createdContract.getDeclaredYieldContractGuid(), updatedContract.getDeclaredYieldContractGuid());
-//		Assert.assertEquals(createdContract.getDefaultYieldMeasUnitTypeCode(), updatedContract.getDefaultYieldMeasUnitTypeCode());
-//		Assert.assertEquals(createdContract.getGrowerContractYearId(), updatedContract.getGrowerContractYearId());
-//		Assert.assertEquals(createdContract.getInsurancePlanId(), updatedContract.getInsurancePlanId());
-//		Assert.assertEquals(createdContract.getVerifiedYieldContractGuid(), updatedContract.getVerifiedYieldContractGuid());
-//		Assert.assertEquals(createdContract.getVerifiedYieldUpdateUser(), updatedContract.getVerifiedYieldUpdateUser());
-//		Assert.assertNotNull(updatedContract.getVerifiedYieldUpdateTimestamp());
-//
-//		checkVerifiedYieldAmendments(expectedAmendments, updatedContract.getVerifiedYieldAmendments());
-//
-//		//Delete verified contract ******************************************************************************
-//		service.deleteVerifiedYieldContract(updatedContract);
-//		
-//		searchResults = service.getUwContractList(
-//				topLevelEndpoints, 
-//				null, 
-//				null, 
-//				null,
-//				null,
-//				policyNumber1,
-//				null,
-//				null, 
-//				null, 
-//				null, 
-//				pageNumber, pageRowCount);
-//
-//		Assert.assertNotNull(searchResults);
-//		Assert.assertEquals(1, searchResults.getCollection().size());
-//
-//		referrer = searchResults.getCollection().get(0);
-//		Assert.assertNotNull(referrer.getInventoryContractGuid());
-//		Assert.assertNotNull(referrer.getDeclaredYieldContractGuid());
-//		Assert.assertNull(referrer.getVerifiedYieldContractGuid());
+		createContractAndInventory();
+
+		//Create DOP Contract Commodity Records
+		createDopYieldContract(policyNumber1, insurancePlanId, false);
+		
+		Integer pageNumber = 1;
+		Integer pageRowCount = 20;
+
+		// Rollover and create VerifiedYieldContract.
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber1,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+		Assert.assertNotNull(referrer.getInventoryContractGuid());
+		Assert.assertNotNull(referrer.getDeclaredYieldContractGuid());
+		Assert.assertNull(referrer.getVerifiedYieldContractGuid());
+		
+		// Check VerifiedYieldContract
+		VerifiedYieldContractRsrc newContract = service.rolloverVerifiedYieldContract(referrer);
+		Assert.assertNotNull(newContract);
+
+		Assert.assertEquals(contractId, newContract.getContractId());
+		Assert.assertEquals(cropYear1, newContract.getCropYear());
+		Assert.assertEquals(referrer.getDeclaredYieldContractGuid(), newContract.getDeclaredYieldContractGuid());
+		Assert.assertEquals("TON", newContract.getDefaultYieldMeasUnitTypeCode());
+		Assert.assertEquals(growerContractYearId, newContract.getGrowerContractYearId());
+		Assert.assertEquals(insurancePlanId, newContract.getInsurancePlanId());
+		Assert.assertNull(newContract.getVerifiedYieldContractGuid());
+		Assert.assertNull(newContract.getVerifiedYieldUpdateUser());
+		Assert.assertNull(newContract.getVerifiedYieldUpdateTimestamp());
+
+
+		// Check VerifiedYieldAmendments
+		Assert.assertEquals(0, newContract.getVerifiedYieldAmendments().size());
+		
+		
+		//Create verified contract ******************************************************************************
+
+		VerifiedYieldAmendment vya = createVerifiedYieldAmendment("Appraisal", cropIdForage, cropNameForage, varietyIdAlfalafaGrass, varietyNameAlfalafaGrass, fieldId, "LOT 3", 12.34, 56.78, "rationale 1");
+		newContract.getVerifiedYieldAmendments().add(vya);
+		
+		vya = createVerifiedYieldAmendment("Assessment", cropIdSilageCorn, cropNameSilageCorn, varietyIdSilageCorn, varietyNameSilageCorn, fieldId, "LOT 3", 11.22, 33.44, "rationale 2");
+		newContract.getVerifiedYieldAmendments().add(vya);
+
+		//Variety with no field
+		vya = createVerifiedYieldAmendment("Assessment", cropIdForage, cropNameForage, varietyIdRedClover, varietyNameRedClover, null, null, 22.11, 44.33, "rationale 3");
+		newContract.getVerifiedYieldAmendments().add(vya);		
+		
+		VerifiedYieldContractRsrc createdContract = service.createVerifiedYieldContract(topLevelEndpoints, newContract);
+		Assert.assertNotNull(createdContract);
+
+		Assert.assertEquals(newContract.getContractId(), createdContract.getContractId());
+		Assert.assertEquals(newContract.getCropYear(), createdContract.getCropYear());
+		Assert.assertEquals(newContract.getDeclaredYieldContractGuid(), createdContract.getDeclaredYieldContractGuid());
+		Assert.assertEquals(newContract.getDefaultYieldMeasUnitTypeCode(), createdContract.getDefaultYieldMeasUnitTypeCode());
+		Assert.assertEquals(newContract.getGrowerContractYearId(), createdContract.getGrowerContractYearId());
+		Assert.assertEquals(newContract.getInsurancePlanId(), createdContract.getInsurancePlanId());
+		Assert.assertNotNull(createdContract.getVerifiedYieldContractGuid());
+		Assert.assertNotNull(createdContract.getVerifiedYieldUpdateUser());
+		Assert.assertNotNull(createdContract.getVerifiedYieldUpdateTimestamp());
+
+		checkVerifiedYieldAmendments(newContract.getVerifiedYieldAmendments(), createdContract.getVerifiedYieldAmendments());
+		
+		//Update verified contract ******************************************************************************
+		List<VerifiedYieldAmendment> expectedAmendments = new ArrayList<VerifiedYieldAmendment>();
+		
+		vya = getVerifiedYieldAmendment(varietyIdAlfalafaGrass, createdContract.getVerifiedYieldAmendments());
+		vya.setAcres(55.66);
+		vya.setCropVarietyId(222);
+		vya.setCropVarietyName("FV GRASS");
+		vya.setRationale("rationale A");
+		vya.setVerifiedYieldAmendmentCode("Assessment");
+		vya.setYieldPerAcre(77.88);
+
+		expectedAmendments.add(vya);
+		
+		vya = getVerifiedYieldAmendment(varietyIdSilageCorn, createdContract.getVerifiedYieldAmendments());
+		vya.setAcres(98.76);
+		vya.setFieldId(null);
+		vya.setFieldLabel(null);
+		vya.setRationale("rationale B");
+		vya.setVerifiedYieldAmendmentCode("Appraisal");
+		vya.setYieldPerAcre(54.32);
+		
+		expectedAmendments.add(vya);
+
+		vya = getVerifiedYieldAmendment(varietyIdRedClover, createdContract.getVerifiedYieldAmendments());
+		vya.setDeletedByUserInd(true);
+		
+		VerifiedYieldContractRsrc updatedContract = service.updateVerifiedYieldContract(createdContract);
+		Assert.assertNotNull(updatedContract);
+		
+		Assert.assertEquals(createdContract.getContractId(), updatedContract.getContractId());
+		Assert.assertEquals(createdContract.getCropYear(), updatedContract.getCropYear());
+		Assert.assertEquals(createdContract.getDeclaredYieldContractGuid(), updatedContract.getDeclaredYieldContractGuid());
+		Assert.assertEquals(createdContract.getDefaultYieldMeasUnitTypeCode(), updatedContract.getDefaultYieldMeasUnitTypeCode());
+		Assert.assertEquals(createdContract.getGrowerContractYearId(), updatedContract.getGrowerContractYearId());
+		Assert.assertEquals(createdContract.getInsurancePlanId(), updatedContract.getInsurancePlanId());
+		Assert.assertEquals(createdContract.getVerifiedYieldContractGuid(), updatedContract.getVerifiedYieldContractGuid());
+		Assert.assertEquals(createdContract.getVerifiedYieldUpdateUser(), updatedContract.getVerifiedYieldUpdateUser());
+		Assert.assertNotNull(updatedContract.getVerifiedYieldUpdateTimestamp());
+
+		checkVerifiedYieldAmendments(expectedAmendments, updatedContract.getVerifiedYieldAmendments());
+
+		//Delete verified contract ******************************************************************************
+		service.deleteVerifiedYieldContract(updatedContract);
+		
+		searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber1,
+				null,
+				null, 
+				null, 
+				null, 
+				pageNumber, pageRowCount);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		referrer = searchResults.getCollection().get(0);
+		Assert.assertNotNull(referrer.getInventoryContractGuid());
+		Assert.assertNotNull(referrer.getDeclaredYieldContractGuid());
+		Assert.assertNull(referrer.getVerifiedYieldContractGuid());
 		
 		logger.debug(">testInsertUpdateDeleteForageVerifiedYieldAmendments");
 	}
@@ -1245,15 +1225,19 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 			Assert.fail();
 		} else if ( expected != null && actual != null ) {
 			Assert.assertEquals(expected.size(), actual.size());
+			
+			for(VerifiedYieldAmendment expectedVya : expected) {
+				
+				VerifiedYieldAmendment actualVya = getVerifiedYieldAmendment(expectedVya.getCropVarietyId(), actual);
 
-			for ( int i = 0; i < expected.size(); i++ ) {
-				checkVerifiedYieldAmendment(expected.get(i), actual.get(i));				
+				checkVerifiedYieldAmendment(expectedVya, actualVya);				
 			}
 		}
 		
 	}
 		
 	private void checkVerifiedYieldAmendment(VerifiedYieldAmendment expected, VerifiedYieldAmendment actual) {
+		
 		if ( expected.getVerifiedYieldAmendmentGuid() != null ) {
 			Assert.assertEquals(expected.getVerifiedYieldAmendmentGuid(), actual.getVerifiedYieldAmendmentGuid());			
 		} else {
@@ -1268,12 +1252,14 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		
 		Assert.assertEquals(expected.getVerifiedYieldAmendmentCode(), actual.getVerifiedYieldAmendmentCode());
 		Assert.assertEquals(expected.getCropCommodityId(), actual.getCropCommodityId());
-		Assert.assertEquals(expected.getIsPedigreeInd(), actual.getIsPedigreeInd());
+		Assert.assertEquals(expected.getCropCommodityName(), actual.getCropCommodityName());
+		Assert.assertEquals(expected.getCropVarietyId(), actual.getCropVarietyId());
+		Assert.assertEquals(expected.getCropVarietyName(), actual.getCropVarietyName());
+		Assert.assertFalse(actual.getIsPedigreeInd());
 		Assert.assertEquals(expected.getFieldId(), actual.getFieldId());
 		Assert.assertEquals(expected.getYieldPerAcre(), actual.getYieldPerAcre());
 		Assert.assertEquals(expected.getAcres(), actual.getAcres());
 		Assert.assertEquals(expected.getRationale(), actual.getRationale());
-		Assert.assertEquals(expected.getCropCommodityName(), actual.getCropCommodityName());
 		Assert.assertEquals(expected.getFieldLabel(), actual.getFieldLabel());
 		Assert.assertEquals(expected.getDeletedByUserInd(), actual.getDeletedByUserInd());
 	}
@@ -1343,11 +1329,11 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		return vycc;
 	}
 	
-	private VerifiedYieldAmendment getVerifiedYieldAmendment(Integer cropCommodityId, Boolean isPedigree, List<VerifiedYieldAmendment> vyaList) {
+	private VerifiedYieldAmendment getVerifiedYieldAmendment(Integer cropVarietyId, List<VerifiedYieldAmendment> vyaList) {
 		
 		VerifiedYieldAmendment vya = null;
 		
-		List<VerifiedYieldAmendment> vyaFiltered = getCommodityAmendments(cropCommodityId, isPedigree, vyaList);
+		List<VerifiedYieldAmendment> vyaFiltered = getVarietyAmendments(cropVarietyId, vyaList);
 		
 		if (vyaFiltered != null) {
 			vya = vyaFiltered.get(0);
@@ -1355,10 +1341,9 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		return vya;
 	}
 
-	private List<VerifiedYieldAmendment> getCommodityAmendments(Integer cropCommodityId, Boolean isPedigree,
-			List<VerifiedYieldAmendment> vyaList) {
+	private List<VerifiedYieldAmendment> getVarietyAmendments(Integer cropVarietyId, List<VerifiedYieldAmendment> vyaList) {
 		List<VerifiedYieldAmendment> vyaFiltered = vyaList.stream()
-				.filter(x -> x.getCropCommodityId().equals(cropCommodityId) && x.getIsPedigreeInd().equals(isPedigree) )
+				.filter(x -> x.getCropVarietyId().equals(cropVarietyId) )
 				.collect(Collectors.toList());
 		return vyaFiltered;
 	}
@@ -1623,12 +1608,17 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 	private static final String ctcSilageCorn = "Silage Corn";
 	private static final String ctcPasture = "Pasture";
 	private Integer cropIdForage = 65;
+	private String cropNameForage = "FORAGE";
 	private Integer cropIdSilageCorn = 71;
+	private String cropNameSilageCorn = "SILAGE CORN";
 	private Integer varietyIdAlfalafaGrass = 118;
 	private Integer varietyIdSilageCorn = 1010863;
 	private Integer varietyIdCrownNative = 1010986;
+	private Integer varietyIdRedClover = 225;
 	private String varietyNameAlfalafaGrass = "ALFALFA/GRASS";
+	private String varietyNameCrownNative = "CROWN NATIVE";
 	private String varietyNameSilageCorn = "SILAGE CORN - UNSPECIFIED";
+	private String varietyNameRedClover = "RED CLOVER";
 	private Integer alfalfaBales = 50;
 	private double alfalfaWeight = 2.0;
 	private double alfalfaQuantityHarvestedAcres = 320.0;
@@ -2047,9 +2037,10 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 
 	VerifiedYieldAmendment createVerifiedYieldAmendment(
 			String verifiedYieldAmendmentCode, 
-			Integer cropCommodityId, 
-			String cropCommodityName, 
-			Boolean isPedigreeInd, 
+			Integer cropCommodityId,
+			String cropCommodityName,
+			Integer cropVarietyId,
+			String cropVarietyName,
 			Integer fieldId, 
 			String fieldLabel, 
 			Double acres, 
@@ -2061,9 +2052,11 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		vya.setAcres(acres);
 		vya.setCropCommodityId(cropCommodityId);
 		vya.setCropCommodityName(cropCommodityName);
+		vya.setCropVarietyId(cropVarietyId);
+		vya.setCropVarietyName(cropVarietyName);
 		vya.setFieldId(fieldId);
 		vya.setFieldLabel(fieldLabel);
-		vya.setIsPedigreeInd(isPedigreeInd);
+		vya.setIsPedigreeInd(false);
 		vya.setRationale(rationale);
 		vya.setVerifiedYieldAmendmentCode(verifiedYieldAmendmentCode);
 		vya.setVerifiedYieldAmendmentGuid(null);
