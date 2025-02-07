@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } 
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { VerifiedYieldAmendment } from 'src/app/conversion/models-yield';
 import { AnnualField, CropCommodityList } from 'src/app/conversion/models';
-import { VERIFIED_YIELD_AMENDMENT_CODE } from 'src/app/utils/constants';
+import { INSURANCE_PLAN, VERIFIED_YIELD_AMENDMENT_CODE } from 'src/app/utils/constants';
 
 @Component({
   selector: 'verified-yield-amendment-list',
@@ -17,10 +17,12 @@ export class VerifiedYieldAmendmentListComponent implements OnInit{
   @Input() isUnsaved: boolean;
   @Input() cropCommodityList: CropCommodityList
   @Input() fields: Array<AnnualField>;
+  @Input() insurancePlanId: number;
 
   amendmentFormGroup: UntypedFormGroup;
   fieldOptions = [];
   cropCommodityOptions = [];
+  cropVarietyOptions = []
 
   constructor(private fb: UntypedFormBuilder,
     ){
@@ -53,6 +55,24 @@ export class VerifiedYieldAmendmentListComponent implements OnInit{
 
     })
   }
+
+  // TODO
+  // also add autocomplete for forage varieties and show them in case of forafe
+  // ensure they are added to the save process
+  // setCropVarietyOptions() {
+  //   var self = this
+
+  //   self.cropCommodityList.collection.forEach(cc => {
+
+  //     self.cropVarietyOptions.push({
+  //       cropCommodityId: cc.cropCommodityId,
+  //       cropVarietyId: this.cropVarietyOptions.cropViretyid.ID,
+  //       varietyName: CROP_COMMODITY_UNSPECIFIED.NAME
+  //     })
+
+  //   })
+  // }
+
 
   setFieldsOptions() {
     var self = this
@@ -110,4 +130,13 @@ export class VerifiedYieldAmendmentListComponent implements OnInit{
 
     this.amendmentsFormArray.push(this.amendmentFormGroup);
   }
+
+      isGrainPolicy() {
+        if (this.insurancePlanId == INSURANCE_PLAN.GRAIN ) {
+          return true
+        } else {
+          return false
+        }
+      }
+
 }

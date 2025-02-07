@@ -106,12 +106,13 @@
             <div style="margin-top: 32px;">
                 <!-- GRAIN amendments -->
                 <verified-yield-amendment-list
-                    *ngIf="verifiedYieldContract && cropCommodityList && isGrainPolicy() "
+                    *ngIf="verifiedYieldContract && cropCommodityList"
                     [verifiedYieldContractGuid]="verifiedYieldContractGuid"
                     [amendments]="verifiedYieldContract.verifiedYieldAmendments"
                     [amendmentsFormArray]="getViewModel().formGroup.controls.verifiedYieldAmendments"
                     [cropCommodityList]="cropCommodityList"
                     [fields]="verifiedYieldContract.fields"
+                    [insurancePlanId]="verifiedYieldContract.insurancePlanId"
                     [isUnsaved]="isUnsaved"
                     ></verified-yield-amendment-list>
             </div>

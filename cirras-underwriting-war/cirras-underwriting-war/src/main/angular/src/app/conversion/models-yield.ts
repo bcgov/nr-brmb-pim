@@ -239,6 +239,11 @@ export interface VerifiedYieldContract {
     isPedigreeInd?: boolean;
   }
 
+  export interface VerifiableVariety {
+    cropVarietyId?: number;
+    cropVarietyName?: string;
+  }
+
   export interface VerifiedYieldSummary {
     verifiedYieldSummaryGuid?: string;
     verifiedYieldContractGuid?: string;

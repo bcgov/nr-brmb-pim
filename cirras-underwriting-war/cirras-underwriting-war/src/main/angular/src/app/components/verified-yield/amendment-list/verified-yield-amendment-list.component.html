@@ -19,7 +19,7 @@
         Field
     </div>
     <div class="border-right header border-top border-bottom">
-        Commodity
+        {{ ( isGrainPolicy() ? "Commodity" : "Variety" ) }}
     </div>
     <div class="border-right header border-top border-bottom">
         Yield/ac
