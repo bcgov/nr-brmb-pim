@@ -20,6 +20,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContrac
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryFieldDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventorySeededForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventorySeededGrainDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.PolicyDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ProductDao;
@@ -34,6 +35,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContrac
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto;
@@ -81,6 +83,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	private PolicyDao policyDao;
 	private InventoryFieldDao inventoryFieldDao;
 	private InventorySeededGrainDao inventorySeededGrainDao;
+	private InventorySeededForageDao inventorySeededForageDao;
 	private ContractedFieldDetailDao contractedFieldDetailDao;
 	private DeclaredYieldContractDao declaredYieldContractDao;
 	private DeclaredYieldContractCommodityDao declaredYieldContractCommodityDao;
@@ -119,6 +122,10 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 	public void setInventorySeededGrainDao(InventorySeededGrainDao inventorySeededGrainDao) {
 		this.inventorySeededGrainDao = inventorySeededGrainDao;
+	}
+
+	public void setInventorySeededForageDao(InventorySeededForageDao inventorySeededForageDao) {
+		this.inventorySeededForageDao = inventorySeededForageDao;
 	}
 
 	public void setContractedFieldDetailDao(ContractedFieldDetailDao contractedFieldDetailDao) {
@@ -433,17 +440,21 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(cfdDto.getInsurancePlanId()) ) {
 				loadSeededGrains(ifDto);
 			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(cfdDto.getInsurancePlanId()) ) {			
-				
+				loadSeededForage(ifDto);
 			} else {
 				throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
 			}
 		}
 	}
 	
-	
 	private void loadSeededGrains(InventoryFieldDto ifDto) throws DaoException {
 		List<InventorySeededGrainDto> inventorySeededGrains = inventorySeededGrainDao.selectForVerifiedYield(ifDto.getInventoryFieldGuid());
 		ifDto.setInventorySeededGrains(inventorySeededGrains);
+	}
+	
+	private void loadSeededForage(InventoryFieldDto ifDto) throws DaoException {
+		List<InventorySeededForageDto> inventorySeededForages = inventorySeededForageDao.selectForVerifiedYield(ifDto.getInventoryFieldGuid());
+		ifDto.setInventorySeededForages(inventorySeededForages);
 	}
 	
 	@Override
@@ -564,19 +575,19 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 					}
 				}
 				
-				if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
-					
-					// Verified Yield Amendment
-					List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
-					if (verifiedAmendments != null && !verifiedAmendments.isEmpty()) {
-						for (VerifiedYieldAmendment verifiedAmendment : verifiedAmendments) {
-	
-							// Double check that it wasn't added then deleted.
-							if ( !Boolean.TRUE.equals(verifiedAmendment.getDeletedByUserInd()) ) {
-								updateVerifiedYieldAmendment(verifiedYieldContractGuid, verifiedAmendment, userId);
-							}
+				// Verified Yield Amendment
+				List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
+				if (verifiedAmendments != null && !verifiedAmendments.isEmpty()) {
+					for (VerifiedYieldAmendment verifiedAmendment : verifiedAmendments) {
+
+						// Double check that it wasn't added then deleted.
+						if ( !Boolean.TRUE.equals(verifiedAmendment.getDeletedByUserInd()) ) {
+							updateVerifiedYieldAmendment(verifiedYieldContractGuid, verifiedAmendment, userId);
 						}
 					}
+				}
+				
+				if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
 					
 					//Verified Yield Summary
 					calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, null, userId, authentication);
@@ -1335,20 +1346,20 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 						updateVerifiedYieldContractCommodity(verifiedYieldContractGuid, verifiedContractCommodity, productDtos, verifiedYieldContract.getUpdateProductValuesInd(), verifiedYieldContract.getInsurancePlanId(), userId);
 					}
 				}
-			
-				if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
-	
-					// Verified Yield Amendment
-					List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
-					if (verifiedAmendments != null && !verifiedAmendments.isEmpty()) {
-						for (VerifiedYieldAmendment verifiedAmendment : verifiedAmendments) {
-							if ( Boolean.TRUE.equals(verifiedAmendment.getDeletedByUserInd())) {
-								deleteVerifiedYieldAmendment(verifiedAmendment);
-							} else {
-								updateVerifiedYieldAmendment(verifiedYieldContractGuid, verifiedAmendment, userId);
-							}
+				
+				// Verified Yield Amendment
+				List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
+				if (verifiedAmendments != null && !verifiedAmendments.isEmpty()) {
+					for (VerifiedYieldAmendment verifiedAmendment : verifiedAmendments) {
+						if ( Boolean.TRUE.equals(verifiedAmendment.getDeletedByUserInd())) {
+							deleteVerifiedYieldAmendment(verifiedAmendment);
+						} else {
+							updateVerifiedYieldAmendment(verifiedYieldContractGuid, verifiedAmendment, userId);
 						}
 					}
+				}
+			
+				if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
 					
 					//Verified Yield Summary
 					calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, productDtos, userId, authentication);

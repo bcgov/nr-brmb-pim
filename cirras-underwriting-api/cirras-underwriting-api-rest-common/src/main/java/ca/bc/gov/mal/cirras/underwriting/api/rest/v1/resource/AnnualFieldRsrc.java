@@ -16,6 +16,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.PolicySimple;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiableCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiableVariety;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.ANNUAL_FIELD_NAME)
@@ -47,6 +48,8 @@ public class AnnualFieldRsrc extends BaseResource implements AnnualField {
 	private List<PolicySimple> policies = new ArrayList<PolicySimple>();
 
 	private List<VerifiableCommodity> verifiableCommodities = new ArrayList<VerifiableCommodity>();
+	
+	private List<VerifiableVariety> verifiableVarieties = new ArrayList<VerifiableVariety>();
 	
 	public Integer getContractedFieldDetailId() {
 		return contractedFieldDetailId;
@@ -169,4 +172,13 @@ public class AnnualFieldRsrc extends BaseResource implements AnnualField {
 	public void setVerifiableCommodities(List<VerifiableCommodity> verifiableCommodities) {
 		this.verifiableCommodities = verifiableCommodities;
 	}
+	
+	public List<VerifiableVariety> getVerifiableVarieties(){
+		return verifiableVarieties;
+	}
+	
+	public void setVerifiableVarieties(List<VerifiableVariety> verifiableVarieties) {
+		this.verifiableVarieties = verifiableVarieties;
+	}
+	
 }
