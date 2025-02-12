@@ -33,7 +33,7 @@
 
     </div>
     <div *ngIf="amendmentFormGroup.value.deletedByUserInd != true" class="inventory-fill border-right border-bottom center" style="background-color: inherit;">
-        <mat-form-field appearance="fill">
+        <mat-form-field *ngIf="isGrainPolicy()" appearance="fill">
             <input 
                 type="text" 
                 matInput 
@@ -49,6 +49,24 @@
             </mat-option>
             </mat-autocomplete>
         </mat-form-field>  
+
+        <mat-form-field *ngIf="!isGrainPolicy()" appearance="fill">
+            <input 
+                type="text" 
+                matInput 
+                formControlName="cropVarietyCtrl" 
+                [matAutocomplete]="autoCropVarietyId"
+                (focus)="varietiesFocus()"
+                (keyup)="searchVariety($event.target.value)">
+            <mat-autocomplete #autoCropVarietyId="matAutocomplete" hideSingleSelectionIndicator="true"
+                [displayWith]="displayVarietiesFn"
+                (optionSelected)="updateVariety()">
+            <mat-option *ngFor="let option of filteredCropVarietyOptions" [value]="option">
+                {{ option.cropVarietyName | titlecase }}
+            </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>  
+
         <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
     </div>
 

@@ -19,7 +19,7 @@
         Field
     </div>
     <div class="border-right header border-top border-bottom">
-        Commodity
+        {{ ( isGrainPolicy() ? "Commodity" : "Variety" ) }}
     </div>
     <div class="border-right header border-top border-bottom">
         Yield/ac
@@ -41,6 +41,8 @@
             [amendmentsFormArray]="amendmentsFormArray" 
             [fieldOptions]="fieldOptions"
             [cropCommodityOptions]="cropCommodityOptions"
+            [cropVarietyOptions]="cropVarietyOptions"
+            [insurancePlanId]="insurancePlanId"
             style="display: contents;"></verified-yield-amendment>
     </div>
 
