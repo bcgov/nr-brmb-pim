@@ -38,23 +38,14 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.VerifiedYieldContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.test.EndpointsTest;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodityForage;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForage;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForageCut;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldGrain;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededForage;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededGrain;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryUnseeded;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiableVariety;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.YieldMeasUnitConversionDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.CommodityCoverageCode;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandManagementEventTypes;
@@ -407,16 +398,14 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		//Silage Corn
 		checkVerifiedContractCommodity(expectedCommodities, createdContract.getVerifiedYieldContractCommodities(), cropIdSilageCorn, null, silageCornProductionGuarantee);
 		
-//		//TODO: Implemented when summary is implemented
-//		//Delete Forage Product - Expect warning
-//		//service.deleteProduct(topLevelEndpoints, productId1.toString());
-//		//Update Silage Corn Product - Expect warning
-		
+		//Delete Forage Product - Expect warning
+		service.deleteProduct(topLevelEndpoints, productId1.toString());
+		//Update Silage Corn Product - Expect warning
 		Double silageCornProductionGuaranteeNew = silageCornProductionGuarantee + 20;
 		Double silageCornPYNew = silageCornPY + 10;
 		Double silageCornIV100New = silageCornIV100 + 10;
 		createUpdateProduct(policyId1, productId3, cropIdSilageCorn, 50, silageCornPYNew, silageCornProductionGuaranteeNew, silageCornIV100New, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_FORAGE);
-
+		
 		//Get contract again to prevent precondition fails
 		createdContract = getVerifiedYieldContract(policyNumber1);
 		Assert.assertNotNull(createdContract);
@@ -462,9 +451,8 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		
 		checkCommoditiesSortOrder(commodities, updatedContract.getVerifiedYieldContractCommodities());
 
-		
-//		//4 warnings expected (2 Production Guarantee, 2 PY, 2 100% IV)
-//		Assert.assertEquals(6, updatedContract.getProductWarningMessages().size());
+		//4 warnings expected (2 Production Guarantee, 2 PY, 2 100% IV)
+		Assert.assertEquals(6, updatedContract.getProductWarningMessages().size());
 
 		// Check Contract Commodities
 		//Alfalfa
@@ -480,54 +468,33 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		//Silage Corn
 		checkVerifiedContractCommodity(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), cropIdSilageCorn, null, silageCornProductionGuarantee);
 		
-//		//UPDATE product values
-//		updatedContract.setUpdateProductValuesInd(true);
-//		
-//		updatedContract = service.updateVerifiedYieldContract(updatedContract);
-//		Assert.assertNotNull(updatedContract);
-//		
-//		//0 warnings expected
-//		Assert.assertEquals(0, updatedContract.getProductWarningMessages().size());
-//
-//		// Check Contract Commodities
-//		//Barley - NON Pedigree
-//		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 16, false, null, barleyNonPedigreeSeededAcres); 
-//		//Canola - Pedigree
-//		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 18, true, null, null); 
-//		//Barley - Pedigree
-//		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 16, true, barleyPedProdGuaranteeNew, null); 
-//
-//		//Update Barley Pedigree Product Guarantee and PY to NULL - Expect warning
-//		createUpdateProduct(policyId1, productId3, 17, 50, 20.5, null, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
-//		//Update Canola Pedigree to status final
-//		//createUpdateProduct(policyId1, productId2, 19, 10, canolaPedigreePY, canolaPedigreeProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
-//		createUpdateProduct(policyId1, productId2, 19, 10, canolaPedigreePY, canolaPedigreeProductionGuarantee, canolaPedigreeIV100, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
+		//UPDATE product values
+		updatedContract.setUpdateProductValuesInd(true);
 		
+		updatedContract = service.updateVerifiedYieldContract(updatedContract);
+		Assert.assertNotNull(updatedContract);
+		
+		//0 warnings expected
+		Assert.assertEquals(0, updatedContract.getProductWarningMessages().size());
+
+		//Update Silage Corn Product Guarantee, PY and 100%IV to NULL - Expect warning
+		createUpdateProduct(policyId1, productId3, cropIdSilageCorn, 50, null, null, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_FORAGE);
+
 		//Get contract
 		VerifiedYieldContractRsrc vyContract = getVerifiedYieldContract(policyNumber1);
 		Assert.assertNotNull(vyContract);
-
 		
-//		//4 warnings expected (2 Production Guarantee, 2 PY, 2 100% IV, 1 Grain Basket)
-//		Assert.assertEquals(7, vyContract.getProductWarningMessages().size());
-//
-//		//UPDATE product values
-//		vyContract.setUpdateProductValuesInd(true);
-//
-//		vyContract = service.updateVerifiedYieldContract(vyContract);
-//		Assert.assertNotNull(vyContract);
-//
-//		//0 warnings expected
-//		Assert.assertEquals(0, vyContract.getProductWarningMessages().size());
-//		
-//		// Check Contract Commodities
-//		//Barley - NON Pedigree
-//		checkVerifiedContractCommodityTotals(expectedCommodities, vyContract.getVerifiedYieldContractCommodities(), 16, false, null, barleyNonPedigreeSeededAcres); 
-//		//Canola - Pedigree
-//		checkVerifiedContractCommodityTotals(expectedCommodities, vyContract.getVerifiedYieldContractCommodities(), 18, true, canolaPedigreeProductionGuarantee, null); 
-//		//Barley - Pedigree
-//		checkVerifiedContractCommodityTotals(expectedCommodities, vyContract.getVerifiedYieldContractCommodities(), 16, true, null, null); 
-//
+		//3 warnings expected (1 Production Guarantee, 1 PY, 1 100% IV)
+		Assert.assertEquals(3, vyContract.getProductWarningMessages().size());
+
+		//UPDATE product values
+		vyContract.setUpdateProductValuesInd(true);
+
+		vyContract = service.updateVerifiedYieldContract(vyContract);
+		Assert.assertNotNull(vyContract);
+
+		//0 warnings expected
+		Assert.assertEquals(0, vyContract.getProductWarningMessages().size());
 
 		//Delete verified contract ******************************************************************************
 		service.deleteVerifiedYieldContract(vyContract);
@@ -1005,52 +972,6 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		
 		return expVys;
 	}
-
-//	private void checkVerifiedContractCommodityTotals(
-//			List<VerifiedYieldContractCommodity> expectedCommodities,
-//			List<VerifiedYieldContractCommodity> actualCommodities,
-//			Integer cropCommodityId,
-//			String commodityTypeCode,
-//			Double productionGuarantee,
-//			Double insuredAcres) {
-//		
-//		VerifiedYieldContractCommodity expectedCommodity = getVerifiedYieldContractCommodity(cropCommodityId, commodityTypeCode, expectedCommodities);
-//		VerifiedYieldContractCommodity actualCommodity = getVerifiedYieldContractCommodity(cropCommodityId, commodityTypeCode, actualCommodities);
-//
-//		//TOOD: not necessary for forage
-//		//Harvested Yield
-//		if(expectedCommodity.getSoldYieldDefaultUnit() == null && expectedCommodity.getStoredYieldDefaultUnit() == null) {
-//			Assert.assertNull(actualCommodity.getHarvestedYield());
-//		} else {
-//			Double harvestedYield = notNull(expectedCommodity.getSoldYieldDefaultUnit(), 0.0) + notNull(expectedCommodity.getStoredYieldDefaultUnit(), 0.0);
-//			Assert.assertEquals(harvestedYield, actualCommodity.getHarvestedYield());
-//		}
-//
-//		//Yield per acre: 0 if yield and acres are null
-//		Double yieldPerAcre = 0.0;
-//		Double effectiveAcres = notNull(expectedCommodity.getHarvestedAcresOverride(), expectedCommodity.getHarvestedAcres());
-//		Double effectiveYield = notNull(expectedCommodity.getHarvestedYieldOverride(), expectedCommodity.getHarvestedYield());
-//
-//		if ( effectiveAcres != null && effectiveYield != null ) {
-//			if ( effectiveAcres > 0.0 ) {
-//				yieldPerAcre = effectiveYield / effectiveAcres;
-//			}
-//		}
-//		//TODO: add commodity type code and is rolled up
-//		Assert.assertEquals(expectedCommodity.getCropCommodityId(), actualCommodity.getCropCommodityId());
-//		Assert.assertEquals(expectedCommodity.getCropCommodityName(), actualCommodity.getCropCommodityName());
-//		Assert.assertEquals(expectedCommodity.getHarvestedAcres(), actualCommodity.getHarvestedAcres());
-//		Assert.assertEquals(expectedCommodity.getHarvestedAcresOverride(), actualCommodity.getHarvestedAcresOverride());
-//		Assert.assertEquals(expectedCommodity.getHarvestedYieldOverride(), actualCommodity.getHarvestedYieldOverride());
-//		Assert.assertEquals(expectedCommodity.getIsPedigreeInd(), actualCommodity.getIsPedigreeInd());
-//		Assert.assertEquals(productionGuarantee, actualCommodity.getProductionGuarantee());
-//		Assert.assertEquals(expectedCommodity.getSoldYieldDefaultUnit(), actualCommodity.getSoldYieldDefaultUnit());
-//		Assert.assertEquals(expectedCommodity.getStoredYieldDefaultUnit(), actualCommodity.getStoredYieldDefaultUnit());
-//		Assert.assertEquals(insuredAcres, actualCommodity.getTotalInsuredAcres());
-//		Assert.assertNotNull(actualCommodity.getVerifiedYieldContractCommodityGuid());
-//		Assert.assertNotNull(actualCommodity.getVerifiedYieldContractGuid());
-//		Assert.assertEquals(yieldPerAcre, actualCommodity.getYieldPerAcre(), 0.00005);
-//	}	
 	
 	private void checkVerifiedContractCommodityRolloverRolledUpRows(
 			List<VerifiedYieldContractCommodity> verifiedCommodities,
@@ -1556,9 +1477,6 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 
 	}
 	
-	private Double barleyNonPedigreeSeededAcres = 23.45;
-	private Double barleyPedigreeSeededAcres = 15.00;
-	
 	private static final String ctcAlfalfa = "Alfalfa";
 	private static final String ctcSilageCorn = "Silage Corn";
 	private static final String ctcPasture = "Pasture";
@@ -1773,81 +1691,8 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		return model;
 	}	
 
-	private InventorySeededGrain createInventorySeededGrain(Integer cropCommodityId, String cropCommodityName, Boolean isPedigreeInd, Double seededAcres) {
-		Calendar cal = Calendar.getInstance();
-		cal.clear();
-		cal.set(2020, Calendar.JANUARY, 15);
-		Date seededDate = cal.getTime();
-		
-		InventorySeededGrain invSeededGrain = new InventorySeededGrain();
-
-		invSeededGrain.setCommodityTypeCode("Two Row");
-		invSeededGrain.setCommodityTypeDesc("Two Row Standard");
-		invSeededGrain.setCropCommodityId(cropCommodityId);
-		invSeededGrain.setCropCommodityName(cropCommodityName);
-		invSeededGrain.setCropVarietyId(1010430);
-		invSeededGrain.setCropVarietyName("CHAMPION");
-		invSeededGrain.setInventoryFieldGuid(null);
-		invSeededGrain.setInventorySeededGrainGuid(null);
-		invSeededGrain.setIsPedigreeInd(isPedigreeInd);
-		invSeededGrain.setIsSpotLossInsurableInd(true);
-		invSeededGrain.setIsQuantityInsurableInd(true);
-		invSeededGrain.setIsReplacedInd(false);
-		invSeededGrain.setSeededAcres(seededAcres);
-		invSeededGrain.setSeededDate(seededDate);
-		return invSeededGrain;
-	}
-	
-	private InventoryField createPlanting(AnnualFieldRsrc field, Integer plantingNumber, Integer cropYear, Boolean isHiddenOnPrintoutInd, Integer insurancePlanId) {
-		
-		InventoryUnseeded iu = new InventoryUnseeded();
-		iu.setAcresToBeSeeded(null);
-		iu.setCropCommodityId(null);
-		iu.setIsUnseededInsurableInd(false);
-		
-		InventoryField planting = new InventoryField();
-
-		planting.setCropYear(cropYear);
-		planting.setFieldId(field.getFieldId());
-		planting.setInsurancePlanId(insurancePlanId);
-		planting.setInventoryFieldGuid(null);
-		planting.setLastYearCropCommodityId(null);
-		planting.setLastYearCropCommodityName(null);
-		planting.setLastYearCropVarietyId(null);
-		planting.setLastYearCropVarietyName(null);
-		planting.setIsHiddenOnPrintoutInd(isHiddenOnPrintoutInd);
-		planting.setPlantingNumber(plantingNumber);
-		planting.setUnderseededAcres(null);
-		planting.setUnderseededCropVarietyId(null);
-		planting.setUnderseededCropVarietyName(null);
-		planting.setInventoryUnseeded(iu);
-		
-		field.getPlantings().add(planting);
-
-		return planting;
-	}
-
-	private InventoryContractCommodity createInventoryContractCommodity(Integer cropCommodityId, String cropCommodityName, Boolean isPedigreeInd, Double totalSeededAcres, Double totalSpotLossAcres, Double totalUnseededAcres) {
-
-		InventoryContractCommodity icc = new InventoryContractCommodity();
-		icc.setCropCommodityId(cropCommodityId);
-		icc.setCropCommodityName(cropCommodityName);
-		icc.setInventoryContractCommodityGuid(null);
-		icc.setInventoryContractGuid(null);
-		icc.setIsPedigreeInd(isPedigreeInd);
-		icc.setTotalSeededAcres(totalSeededAcres);
-		icc.setTotalSpotLossAcres(totalSpotLossAcres);
-		icc.setTotalUnseededAcres(totalUnseededAcres);
-		icc.setTotalUnseededAcresOverride(null);
-		
-		return icc;
-	}
 	
 	private List<DopYieldContractCommodityForage> dopYieldContractCommodityList;
-	private Double barleyNonPedigreeSoldYield = 66.77;
-	private Double barleyNonPedigreeStoredYield = 88.99;
-	private Double barleyPedigreeSoldYield = 67.8;
-	private Double barleyPedigreeStoredYield = 100.5;
 	private Double alfalfaHarvestedAcresOverride = 222.0;
 	private Double silageCornHarvestedYieldOverride = 120.0;
 	
@@ -1985,25 +1830,6 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		
 		return dyccfs.get(0);
 	}
-	
-//	DopYieldContractCommodity createDopYieldContractCommodity(Integer cropCommodityId, String cropCommodityName, Double harvestedAcres, Boolean isPedigreeInd, Double soldYield, Double storedYield) {
-//		
-//		DopYieldContractCommodity dycc = new DopYieldContractCommodity();
-//
-//		dycc.setCropCommodityId(cropCommodityId);
-//		dycc.setCropCommodityName(cropCommodityName);
-//		dycc.setDeclaredYieldContractCommodityGuid(null);
-//		dycc.setDeclaredYieldContractGuid(null);
-//		dycc.setGradeModifierTypeCode(null);
-//		dycc.setHarvestedAcres(harvestedAcres);
-//		dycc.setIsPedigreeInd(isPedigreeInd);
-//		dycc.setSoldYield(soldYield);
-//		dycc.setSoldYieldDefaultUnit(soldYield);
-//		dycc.setStoredYield(storedYield);
-//		dycc.setStoredYieldDefaultUnit(storedYield);
-//		
-//		return dycc;
-//	}
 
 	VerifiedYieldAmendment createVerifiedYieldAmendment(
 			String verifiedYieldAmendmentCode, 
