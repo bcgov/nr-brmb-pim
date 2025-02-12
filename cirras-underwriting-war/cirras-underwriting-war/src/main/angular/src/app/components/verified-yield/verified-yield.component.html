@@ -120,7 +120,7 @@
             <div style="margin-top: 32px;">
                 <!-- GRAIN yield summary -->
                 <verified-yield-summary-list
-                    *ngIf="growerContract && verifiedYieldContract && verifiedYieldContract.verifiedYieldSummaries && isGrainPolicy()"
+                    *ngIf="growerContract && verifiedYieldContract && verifiedYieldContract.verifiedYieldSummaries"
                     [summaries]="verifiedYieldContract.verifiedYieldSummaries"
                     [summariesFormArray]="getViewModel().formGroup.controls.verifiedYieldSummaries"
                     [isUnsaved]="isUnsaved"

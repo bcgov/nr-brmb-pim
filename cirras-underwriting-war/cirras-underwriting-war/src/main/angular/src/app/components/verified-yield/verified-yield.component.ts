@@ -180,11 +180,4 @@ export class VerifiedYieldComponent extends BaseComponent {
     this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true)); 
   }
 
-  isGrainPolicy() {
-    if (this.verifiedYieldContract.insurancePlanId == INSURANCE_PLAN.GRAIN ) {
-      return true
-    } else {
-      return false
-    }
-  }
 }
