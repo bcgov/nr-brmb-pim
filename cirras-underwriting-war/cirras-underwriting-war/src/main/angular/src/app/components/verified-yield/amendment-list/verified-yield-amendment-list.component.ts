@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { VerifiedYieldAmendment } from 'src/app/conversion/models-yield';
 import { AnnualField, CropCommodityList } from 'src/app/conversion/models';
@@ -10,7 +10,7 @@ import { INSURANCE_PLAN, VERIFIED_YIELD_AMENDMENT_CODE } from 'src/app/utils/con
   styleUrl: './verified-yield-amendment-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VerifiedYieldAmendmentListComponent implements OnInit{
+export class VerifiedYieldAmendmentListComponent implements OnChanges{
   @Input() verifiedYieldContractGuid: string;
   @Input() amendments: Array<VerifiedYieldAmendment>;
   @Input() amendmentsFormArray: UntypedFormArray;
@@ -28,14 +28,22 @@ export class VerifiedYieldAmendmentListComponent implements OnInit{
     ){
   }
 
-  ngOnInit() {
-    this.setCropCommodityOptions()
-    this.setFieldsOptions()
-  }
+  ngOnChanges(changes: SimpleChanges) {
+  
+      if ( changes.fields && this.fields ) {
+        this.setFieldsOptions()
+      }
 
+      if ( changes.cropCommodityList && this.cropCommodityList ) {
+        this.setCropCommodityOptions()
+      }
+  }
 
   setCropCommodityOptions() {
     var self = this
+
+    self.cropCommodityOptions = []
+    self.cropVarietyOptions = []
 
     self.cropCommodityList.collection.forEach(cc => {
       self.cropCommodityOptions.push({
@@ -53,41 +61,37 @@ export class VerifiedYieldAmendmentListComponent implements OnInit{
         })
       }
 
+      cc.cropVariety.forEach( cv => self.setCropVarietyOptions(cv) )
+
     })
   }
 
-  // TODO
-  // also add autocomplete for forage varieties and show them in case of forafe
-  // ensure they are added to the save process
-  // setCropVarietyOptions() {
-  //   var self = this
-
-  //   self.cropCommodityList.collection.forEach(cc => {
-
-  //     self.cropVarietyOptions.push({
-  //       cropCommodityId: cc.cropCommodityId,
-  //       cropVarietyId: this.cropVarietyOptions.cropViretyid.ID,
-  //       varietyName: CROP_COMMODITY_UNSPECIFIED.NAME
-  //     })
-
-  //   })
-  // }
-
-
+  setCropVarietyOptions(opt) {
+    this.cropVarietyOptions.push ({
+      cropCommodityId: opt.cropCommodityId,
+      cropVarietyId: opt.cropVarietyId,
+      cropVarietyName: opt.varietyName
+    })
+  }
+ 
   setFieldsOptions() {
     var self = this
     
+    self.fieldOptions = []
+
     self.fieldOptions.push({
       fieldId: null,
       fieldLabel: "",
-      verifiableCommodities: []
+      verifiableCommodities: [],
+      verifiableVarieties: []
     })
 
     self.fields.forEach(f => {
       self.fieldOptions.push({
         fieldId: f.fieldId,
         fieldLabel: f.fieldLabel + "(ID: " + f.fieldId + ")",
-        verifiableCommodities: f.verifiableCommodities
+        verifiableCommodities: f.verifiableCommodities,
+        verifiableVarieties: f.verifiableVarieties
       })
     })
   }
@@ -103,12 +107,14 @@ export class VerifiedYieldAmendmentListComponent implements OnInit{
       verifiedYieldAmendmentCode: VERIFIED_YIELD_AMENDMENT_CODE.APPRAISAL, // default
       verifiedYieldContractGuid: this.verifiedYieldContractGuid, 
       cropCommodityId: null,
+      cropVarietyId: null,
       isPedigreeInd: false, // default
       fieldId: null,
       yieldPerAcre: null,
       acres: null,
       rationale: null,
       cropCommodityName: null,
+      cropVarietyName: null,
       fieldLabel: null,
       deletedByUserInd: false // default
     })
@@ -118,12 +124,14 @@ export class VerifiedYieldAmendmentListComponent implements OnInit{
       verifiedYieldAmendmentCode: [VERIFIED_YIELD_AMENDMENT_CODE.APPRAISAL],
       verifiedYieldContractGuid: [this.verifiedYieldContractGuid],
       cropCommodityId: [''],
+      cropVarietyId: [''],
       isPedigreeInd: [false],
       fieldId: [''],
       yieldPerAcre: [''],
       acres: [''],
       rationale: [''],
       cropCommodityName: [''],
+      cropVarietyName: [''],
       fieldLabel: [''],
       deletedByUserInd: [false]
     });

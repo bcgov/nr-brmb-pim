@@ -74,10 +74,10 @@ export class VerifiedYieldComponent extends BaseComponent {
     this.store.dispatch(ClearCropCommodity())
 
     this.store.dispatch(LoadCropCommodityList(VERIFIED_YIELD_COMPONENT_ID,
-        INSURANCE_PLAN.GRAIN.toString(),
+        this.insurancePlanId,
         this.cropYear.toString(),
         CROP_COMMODITY_TYPE_CONST.INVENTORY,
-        "N")
+        "Y")
       )
   }
 
