@@ -587,10 +587,10 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 					}
 				}
 				
+				//Verified Yield Summary
+				calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, null, userId, authentication);
+				
 				if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
-					
-					//Verified Yield Summary
-					calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, null, userId, authentication);
 					
 					//Grain Basket
 					calculateAndSaveGrainBasket(verifiedYieldContractGuid, verifiedYieldContract, null, userId, authentication);
@@ -702,9 +702,17 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			String userId,
 			WebAdeAuthentication authentication) throws DaoException {
 		
-		List<VerifiedYieldContractCommodity> verifiedContractCommodities = verifiedYieldContract.getVerifiedYieldContractCommodities();
 		List<VerifiedYieldAmendment> verifiedAmendments = verifiedYieldContract.getVerifiedYieldAmendments();
 		List<VerifiedYieldSummary> verifiedYieldSummaries = new ArrayList<VerifiedYieldSummary>();
+
+		List<VerifiedYieldContractCommodity> verifiedContractCommodities = verifiedYieldContract.getVerifiedYieldContractCommodities();
+		
+		//Only Rolled up rows for FORAGE 
+		if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
+			verifiedContractCommodities = verifiedYieldContract.getVerifiedYieldContractCommodities().stream()
+					.filter(x -> Boolean.TRUE.equals(x.getIsRolledupInd()))
+					.collect(Collectors.toList());
+		}
 		
 		//Summary records are calculated from commodity totals and amendments
 		//Add a yield summary record for each commodity (pedigree/non-pedigree) which is either in commodity totals OR amendments 
@@ -1358,11 +1366,11 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 						}
 					}
 				}
+				
+				//Verified Yield Summary
+				calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, productDtos, userId, authentication);
 			
 				if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(verifiedYieldContract.getInsurancePlanId()) ) {
-					
-					//Verified Yield Summary
-					calculateAndSaveVerifiedYieldSummaries(verifiedYieldContractGuid, verifiedYieldContract, productDtos, userId, authentication);
 					
 					//Grain Basket
 					calculateAndSaveGrainBasket(verifiedYieldContractGuid, verifiedYieldContract, productDtos, userId, authentication);
