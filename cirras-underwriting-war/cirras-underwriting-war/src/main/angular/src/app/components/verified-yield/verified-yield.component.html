@@ -33,7 +33,7 @@
                     *ngIf="securityUtilService.canEditVerifiedYield()" 
                     mat-raised-button
                     class="primary button-large-text" 
-                    [disabled]="!isUnsaved" 
+                    [disabled]="disableSaveButton()" 
                     (click)="onSave()">
                         Save
                 </button>
