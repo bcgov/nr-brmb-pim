@@ -408,7 +408,7 @@ export class ForageDopComponent extends BaseComponent {
 
       // Percent Moisture: validate range 0 - 100
       if (moisturePercent < 0 || moisturePercent > 100) {
-        alert("Percent Moisture in in Commodity Totals table  should be between 0 and 100")
+        alert("Percent Moisture in Commodity Totals table should be between 0 and 100")
         return false
       }
 
