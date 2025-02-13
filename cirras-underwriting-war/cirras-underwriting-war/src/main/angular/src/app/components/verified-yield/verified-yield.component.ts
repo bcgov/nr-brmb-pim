@@ -33,6 +33,7 @@ export class VerifiedYieldComponent extends BaseComponent {
   cropYear: string;
   insurancePlanId: string;
   componentId = VERIFIED_YIELD_COMPONENT_ID; 
+  isNewVerifiedYield: boolean;
 
   initModels() {
     this.viewModel = new VerifiedYieldComponentModel(this.sanitizer, this.fb);
@@ -57,9 +58,11 @@ export class VerifiedYieldComponent extends BaseComponent {
           if (this.verifiedYieldContractGuid.length > 0) {
             // get the already existing verified yield contract
             this.store.dispatch(LoadVerifiedYieldContract(this.componentId, this.verifiedYieldContractGuid ))
+            this.isNewVerifiedYield = false;
           } else {
             // prepare the new verified yield contract
             this.store.dispatch(RolloverVerifiedYieldContract(this.componentId, this.policyId))
+            this.isNewVerifiedYield = true;
           }
 
           this.loadCropCommodities()
@@ -67,6 +70,15 @@ export class VerifiedYieldComponent extends BaseComponent {
     );
 
     this.store.dispatch(setFormStateUnsaved(this.componentId, false ));
+  }
+
+  disableSaveButton(){
+    //Enable save button if it's new verified yield (not saved yet)
+    if(this.isNewVerifiedYield){
+      return false;
+    } else {
+      return !this.isUnsaved;
+    }
   }
  
   loadCropCommodities() {
@@ -107,6 +119,7 @@ export class VerifiedYieldComponent extends BaseComponent {
             this.store.dispatch(DeleteVerifiedYieldContract(VERIFIED_YIELD_COMPONENT_ID, this.policyId, this.verifiedYieldContract))
     
           } 
+          this.isNewVerifiedYield = true;
         }
   }
 
@@ -128,6 +141,8 @@ export class VerifiedYieldComponent extends BaseComponent {
     }
 
     this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, false ));
+
+    this.isNewVerifiedYield = false;
   }
 
   isFormValid() {
