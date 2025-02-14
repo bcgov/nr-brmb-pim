@@ -412,7 +412,8 @@ export class ForageDopComponent extends BaseComponent {
         return false
       }
 
-      if (totalBalesLoads && weight && moisturePercent) {
+      //moisturePercent can be 0 and needs to be checked for null
+      if (totalBalesLoads && weight && moisturePercent != null) {
         farmLevelDataExists = true
       }
     }
