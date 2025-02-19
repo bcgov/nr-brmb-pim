@@ -98,7 +98,10 @@ export class RelatedPoliciesComponent implements OnInit, OnChanges {
         })
       }
     }
-
+    
+    if (this.relatedPoliciesForm && this.relatedPoliciesForm.controls && this.relatedPoliciesForm.controls['relatedPolicies']) {
+      this.relatedPoliciesForm.controls["relatedPolicies"].setValue("")
+    }
   }
   
   relatedPoliciesChange(event){
