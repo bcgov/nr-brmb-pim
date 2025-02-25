@@ -14,6 +14,7 @@ public class VerifiedYieldSummary implements Serializable {
 	private String verifiedYieldContractGuid;
 	private Integer cropCommodityId;
 	private Boolean isPedigreeInd;
+	private Double productionAcres;
 	private Double harvestedYield;
 	private Double harvestedYieldPerAcre;
 	private Double appraisedYield;
@@ -60,6 +61,14 @@ public class VerifiedYieldSummary implements Serializable {
 
 	public void setIsPedigreeInd(Boolean isPedigreeInd) {
 		this.isPedigreeInd = isPedigreeInd;
+	}
+	
+	public Double getProductionAcres() {
+		return productionAcres;
+	}
+	
+	public void setProductionAcres(Double productionAcres) {
+		this.productionAcres = productionAcres;
 	}
 
 	public Double getHarvestedYield() {

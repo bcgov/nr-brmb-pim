@@ -875,6 +875,8 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		expForageVys.setYieldToCount(yieldToCount);
 		Double yieldPercentPy = expForageVys.getYieldToCount()/ (expForageVys.getTotalInsuredAcres() * foragePY);
 		expForageVys.setYieldPercentPy(yieldPercentPy);
+		Double productionAcres = expForageVys.getProductionAcres() - forageAppraisalAcres2;
+		expForageVys.setProductionAcres(productionAcres);
 		
 		updatedContract = service.updateVerifiedYieldContract(updatedContract);
 		Assert.assertNotNull(updatedContract);
@@ -944,6 +946,9 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		vys.setProbableYield(foragePY);
 		vys.setInsurableValueHundredPercent(forageIV100);
 		vys.setTotalInsuredAcres(forageCommodity.getTotalInsuredAcres());
+		Double effectiveHarvestedAcres = notNull(notNull(forageCommodity.getHarvestedAcresOverride(), forageCommodity.getHarvestedAcres()), 0.0);
+		Double productionAcres = effectiveHarvestedAcres + forageAppraisalAcres1 + forageAppraisalAcres2;
+		vys.setProductionAcres(productionAcres);
 		
 		expVys.add(vys);
 
@@ -967,6 +972,7 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		vys.setProbableYield(silageCornPY );
 		vys.setInsurableValueHundredPercent(silageCornIV100 );
 		vys.setTotalInsuredAcres(null);
+		vys.setProductionAcres(silageCornAppraisalAcres1);
 		
 		expVys.add(vys);
 		
@@ -1259,6 +1265,7 @@ public class VerifiedYieldContractEndpointForageTest extends EndpointsTest {
 		Assert.assertEquals("CropCommodityId", expected.getCropCommodityId(), actual.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", expected.getCropCommodityName(), actual.getCropCommodityName());
 		Assert.assertEquals("IsPedigreeInd", expected.getIsPedigreeInd(), actual.getIsPedigreeInd());
+		Assert.assertEquals("ProductionAcres", expected.getProductionAcres(), actual.getProductionAcres());
 		Assert.assertEquals("HarvestedYield", expected.getHarvestedYield(), actual.getHarvestedYield());
 		Assert.assertEquals("HarvestedYieldPerAcre", expected.getHarvestedYieldPerAcre(), actual.getHarvestedYieldPerAcre());
 		Assert.assertEquals("AppraisedYield", expected.getAppraisedYield(), actual.getAppraisedYield());
