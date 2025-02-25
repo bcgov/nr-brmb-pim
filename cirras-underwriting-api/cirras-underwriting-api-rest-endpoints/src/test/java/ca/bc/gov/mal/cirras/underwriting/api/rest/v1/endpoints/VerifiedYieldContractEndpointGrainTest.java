@@ -752,7 +752,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		
 		//Date and Time without millisecond
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 because they are not set in the database
 		Date transactionDate = cal.getTime();
 		Date createTransactionDate = addSeconds(transactionDate, -1);
 
@@ -1479,7 +1479,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		Assert.assertEquals("CropCommodityId", expected.getCropCommodityId(), actual.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", expected.getCropCommodityName(), actual.getCropCommodityName());
 		Assert.assertEquals("IsPedigreeInd", expected.getIsPedigreeInd(), actual.getIsPedigreeInd());
-//		Assert.assertEquals("ProductionAcres", expected.getProductionAcres(), actual.getProductionAcres());
+		Assert.assertEquals("ProductionAcres", expected.getProductionAcres(), actual.getProductionAcres());
 		Assert.assertEquals("HarvestedYield", expected.getHarvestedYield(), actual.getHarvestedYield());
 		//Assert.assertEquals("HarvestedYieldPerAcre", expected.getHarvestedYieldPerAcre(), actual.getHarvestedYieldPerAcre());
 		Assert.assertEquals("AppraisedYield", expected.getAppraisedYield(), actual.getAppraisedYield());
