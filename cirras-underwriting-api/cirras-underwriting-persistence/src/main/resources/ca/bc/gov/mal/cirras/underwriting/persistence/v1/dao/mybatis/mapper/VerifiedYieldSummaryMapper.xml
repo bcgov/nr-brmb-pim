@@ -10,6 +10,7 @@
 		<result property="verifiedYieldContractGuid" column="verified_yield_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="cropCommodityId" column="crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="isPedigreeInd" column="is_pedigree_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="productionAcres" column="production_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="harvestedYield" column="harvested_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="harvestedYieldPerAcre" column="harvested_yield_per_acre" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="appraisedYield" column="appraised_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
@@ -36,6 +37,7 @@
 			   t.verified_yield_contract_guid, 
 			   t.crop_commodity_id, 
 			   t.is_pedigree_ind, 
+			   t.production_acres,
 			   t.harvested_yield, 
 			   t.harvested_yield_per_acre, 
 			   t.appraised_yield, 
@@ -76,6 +78,7 @@
 			verified_yield_contract_guid,
 			crop_commodity_id,
 			is_pedigree_ind,
+			production_acres,
 			harvested_yield,
 			harvested_yield_per_acre,
 			appraised_yield,
@@ -94,6 +97,7 @@
 			#{dto.verifiedYieldContractGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.isPedigreeInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			#{dto.productionAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.harvestedYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.harvestedYieldPerAcre, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.appraisedYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
@@ -114,6 +118,7 @@
 		update verified_yield_summary
 		set crop_commodity_id = #{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
 			is_pedigree_ind = #{dto.isPedigreeInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN}, 
+			production_acres = #{dto.productionAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			harvested_yield = #{dto.harvestedYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			harvested_yield_per_acre = #{dto.harvestedYieldPerAcre, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			appraised_yield = #{dto.appraisedYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 

@@ -739,7 +739,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 						setProductValues(verifiedYieldContract, productDtos, vys);	
 						
 						//Calculate appraised and assessed yield
-						calculateAndSetAmendments(verifiedAmendments, vys);
+						calculateAndSetAmendments(verifiedAmendments, vys, vycc);
 						
 						//Calculate yield to count: Harvested Yield + Appraised Yield
 						Double yieldToCount = notNull(vys.getHarvestedYield(), 0.0) + notNull(vys.getAppraisedYield(), 0.0); 
@@ -793,7 +793,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 							setProductValues(verifiedYieldContract, productDtos, vys);	
 		
 							//Calculate appraised and assessed yield
-							calculateAndSetAmendments(verifiedAmendments, vys);
+							calculateAndSetAmendments(verifiedAmendments, vys, null);
 							
 							vys.setYieldToCount(notNull(vys.getAppraisedYield(), 0.0));
 							
@@ -1080,10 +1080,11 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		vys.setInsurableValueHundredPercent(insurableValueHundredPercent);
 	}
 
-	private void calculateAndSetAmendments(List<VerifiedYieldAmendment> verifiedAmendments, VerifiedYieldSummary vys) {
+	private void calculateAndSetAmendments(List<VerifiedYieldAmendment> verifiedAmendments, VerifiedYieldSummary vys, VerifiedYieldContractCommodity vycc) {
 		
 		Double appraisedYield = null;
 		Double assessedYield = null;
+		Double appraisedAcres = 0.0;
 		
 		List<VerifiedYieldAmendment> filteredAmendments = getVerifiedYieldAmendments(vys.getCropCommodityId(), vys.getIsPedigreeInd(), verifiedAmendments);
 		if(filteredAmendments != null && !filteredAmendments.isEmpty()) {
@@ -1093,6 +1094,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				
 				if(vya.getVerifiedYieldAmendmentCode().equalsIgnoreCase(InventoryServiceEnums.AmendmentTypeCode.Appraisal.toString())) {
 					appraisedYield = notNull(appraisedYield, 0.0) + notNull(totalYield, 0.0);
+					appraisedAcres = notNull(appraisedAcres, 0.0) + notNull(vya.getAcres(), 0.0);
 				} else if(vya.getVerifiedYieldAmendmentCode().equalsIgnoreCase(InventoryServiceEnums.AmendmentTypeCode.Assessment.toString())) {
 					assessedYield = notNull(assessedYield, 0.0) + notNull(totalYield, 0.0);
 				} else {
@@ -1102,6 +1104,15 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		}
 		vys.setAppraisedYield(appraisedYield);
 		vys.setAssessedYield(assessedYield);
+		Double effectiveHarvestedAcres = 0.0;
+		if(vycc != null) {
+			effectiveHarvestedAcres = notNull(vycc.getHarvestedAcresOverride(), vycc.getHarvestedAcres());
+			//In case both are null
+			effectiveHarvestedAcres = notNull(effectiveHarvestedAcres, 0.0);
+		}
+		//Production Acres = Appraised Acres + Harvested Acres
+		vys.setProductionAcres(appraisedAcres + effectiveHarvestedAcres);
+		
 	}
 
 	private VerifiedYieldSummary getVerifiedYieldSummary(
@@ -1123,6 +1134,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			vys.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
 			vys.setCropCommodityId(vycc.getCropCommodityId());
 			vys.setIsPedigreeInd(vycc.getIsPedigreeInd());
+			vys.setProductionAcres(null);
 			vys.setHarvestedYield(null);
 			vys.setHarvestedYieldPerAcre(null);
 			vys.setAppraisedYield(null);

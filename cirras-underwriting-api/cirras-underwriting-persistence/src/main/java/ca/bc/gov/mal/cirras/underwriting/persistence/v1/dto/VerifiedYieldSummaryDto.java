@@ -20,6 +20,7 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 	private String verifiedYieldContractGuid;
 	private Integer cropCommodityId;
 	private Boolean isPedigreeInd;
+	private Double productionAcres;
 	private Double harvestedYield;
 	private Double harvestedYieldPerAcre;
 	private Double appraisedYield;
@@ -52,6 +53,7 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 		this.verifiedYieldContractGuid = dto.verifiedYieldContractGuid;
 		this.cropCommodityId = dto.cropCommodityId;
 		this.isPedigreeInd = dto.isPedigreeInd;
+		this.productionAcres = dto.productionAcres;
 		this.harvestedYield = dto.harvestedYield;
 		this.harvestedYieldPerAcre = dto.harvestedYieldPerAcre;
 		this.appraisedYield = dto.appraisedYield;
@@ -99,6 +101,7 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 			result = result&&dtoUtils.equals("verifiedYieldContractGuid", verifiedYieldContractGuid, other.verifiedYieldContractGuid);
 			result = result&&dtoUtils.equals("cropCommodityId", cropCommodityId, other.cropCommodityId);
 			result = result&&dtoUtils.equals("isPedigreeInd", isPedigreeInd, other.isPedigreeInd);
+			result = result&&dtoUtils.equals("productionAcres", productionAcres, other.productionAcres, decimalPrecision);
 			result = result&&dtoUtils.equals("harvestedYield", harvestedYield, other.harvestedYield, decimalPrecision);
 			result = result&&dtoUtils.equals("harvestedYieldPerAcre", harvestedYieldPerAcre, other.harvestedYieldPerAcre, decimalPrecision);
 			result = result&&dtoUtils.equals("appraisedYield", appraisedYield, other.appraisedYield, decimalPrecision);
@@ -153,6 +156,14 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 
 	public void setIsPedigreeInd(Boolean isPedigreeInd) {
 		this.isPedigreeInd = isPedigreeInd;
+	}
+	
+	public Double getProductionAcres() {
+		return productionAcres;
+	}
+	
+	public void setProductionAcres(Double productionAcres) {
+		this.productionAcres = productionAcres;
 	}
 
 	public Double getHarvestedYield() {
