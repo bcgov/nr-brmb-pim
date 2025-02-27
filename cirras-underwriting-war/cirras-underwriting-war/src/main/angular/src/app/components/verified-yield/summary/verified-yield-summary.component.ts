@@ -38,6 +38,7 @@ export class VerifiedYieldSummaryComponent {
         verifiedYieldContractGuid: [this.summary.verifiedYieldContractGuid],
         cropCommodityId: [this.summary.cropCommodityId],
         isPedigreeInd: [this.summary.isPedigreeInd],
+        productionAcres: [this.summary.productionAcres],
         harvestedYield: [this.summary.harvestedYield],
         harvestedYieldPerAcre: [this.summary.harvestedYieldPerAcre],
         appraisedYield: [this.summary.appraisedYield],
@@ -75,4 +76,11 @@ export class VerifiedYieldSummaryComponent {
       return false
     }
     
+    productionAcresMatchInsuredAcres():boolean {
+      if(this.summary.productionAcres && this.summary.totalInsuredAcres && this.summary.productionAcres !== this.summary.totalInsuredAcres ){
+        return false
+      } 
+      return true
+    }
+
 }
