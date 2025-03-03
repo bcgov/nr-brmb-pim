@@ -251,6 +251,7 @@ export interface VerifiedYieldContract {
     verifiedYieldContractGuid?: string;
     cropCommodityId?: number;
     isPedigreeInd?: boolean;
+    productionAcres?: number;
     harvestedYield?: number;
     harvestedYieldPerAcre?: number;
     appraisedYield?: number;
@@ -259,6 +260,7 @@ export interface VerifiedYieldContract {
     yieldPercentPy?: number;
     productionGuarantee?: number;
     probableYield?: number;
+    insurableValueHundredPercent?: number;
     cropCommodityName?: string;
     totalInsuredAcres?: number;
     uwComments?: Array<UnderwritingComment>;

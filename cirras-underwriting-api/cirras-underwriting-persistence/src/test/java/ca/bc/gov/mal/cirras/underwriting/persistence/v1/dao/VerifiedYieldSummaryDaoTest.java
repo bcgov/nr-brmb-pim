@@ -124,6 +124,7 @@ public class VerifiedYieldSummaryDaoTest {
 		newDto.setCropCommodityId(16);
 		newDto.setCropCommodityName("BARLEY");
 		newDto.setIsPedigreeInd(false);
+		newDto.setProductionAcres(250.0);
 		newDto.setHarvestedYield(100.0);
 		newDto.setHarvestedYieldPerAcre(10.0);
 		newDto.setAppraisedYield(1.5);
@@ -151,6 +152,7 @@ public class VerifiedYieldSummaryDaoTest {
 		Assert.assertEquals("CropCommodityId", newDto.getCropCommodityId(), fetchedDto.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", newDto.getCropCommodityName(), fetchedDto.getCropCommodityName());
 		Assert.assertEquals("IsPedigreeInd", newDto.getIsPedigreeInd(), fetchedDto.getIsPedigreeInd());
+		Assert.assertEquals("ProductionAcres", newDto.getProductionAcres(), fetchedDto.getProductionAcres());
 		Assert.assertEquals("HarvestedYield", newDto.getHarvestedYield(), fetchedDto.getHarvestedYield());
 		Assert.assertEquals("HarvestedYieldPerAcre", newDto.getHarvestedYieldPerAcre(), fetchedDto.getHarvestedYieldPerAcre());
 		Assert.assertEquals("AppraisedYield", newDto.getAppraisedYield(), fetchedDto.getAppraisedYield());
@@ -170,6 +172,7 @@ public class VerifiedYieldSummaryDaoTest {
 		Assert.assertEquals("CropCommodityId", newDto.getCropCommodityId(), fetchedDto.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", newDto.getCropCommodityName(), fetchedDto.getCropCommodityName());
 		Assert.assertEquals("IsPedigreeInd", newDto.getIsPedigreeInd(), fetchedDto.getIsPedigreeInd());
+		Assert.assertEquals("ProductionAcres", newDto.getProductionAcres(), fetchedDto.getProductionAcres());
 		Assert.assertEquals("HarvestedYield", newDto.getHarvestedYield(), fetchedDto.getHarvestedYield());
 		Assert.assertEquals("HarvestedYieldPerAcre", newDto.getHarvestedYieldPerAcre(), fetchedDto.getHarvestedYieldPerAcre());
 		Assert.assertEquals("AppraisedYield", newDto.getAppraisedYield(), fetchedDto.getAppraisedYield());
@@ -185,6 +188,7 @@ public class VerifiedYieldSummaryDaoTest {
 		fetchedDto.setCropCommodityId(18);
 		fetchedDto.setCropCommodityName("CANOLA");
 		fetchedDto.setIsPedigreeInd(true);
+		fetchedDto.setProductionAcres(150.0);
 		fetchedDto.setHarvestedYield(120.0);
 		fetchedDto.setHarvestedYieldPerAcre(15.0);
 		fetchedDto.setAppraisedYield(2.5);
@@ -206,6 +210,7 @@ public class VerifiedYieldSummaryDaoTest {
 		Assert.assertEquals("CropCommodityId", fetchedDto.getCropCommodityId(), updatedDto.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", fetchedDto.getCropCommodityName(), updatedDto.getCropCommodityName());
 		Assert.assertEquals("IsPedigreeInd", fetchedDto.getIsPedigreeInd(), updatedDto.getIsPedigreeInd());
+		Assert.assertEquals("ProductionAcres", fetchedDto.getProductionAcres(), updatedDto.getProductionAcres());
 		Assert.assertEquals("HarvestedYield", fetchedDto.getHarvestedYield(), updatedDto.getHarvestedYield());
 		Assert.assertEquals("HarvestedYieldPerAcre", fetchedDto.getHarvestedYieldPerAcre(), updatedDto.getHarvestedYieldPerAcre());
 		Assert.assertEquals("AppraisedYield", fetchedDto.getAppraisedYield(), updatedDto.getAppraisedYield());
@@ -224,6 +229,7 @@ public class VerifiedYieldSummaryDaoTest {
 		newDto2.setCropCommodityId(16);
 		newDto2.setCropCommodityName("BARLEY");
 		newDto2.setIsPedigreeInd(false);
+		newDto2.setProductionAcres(200.0);
 		newDto2.setHarvestedYield(100.0);
 		newDto2.setHarvestedYieldPerAcre(10.0);
 		newDto2.setAppraisedYield(1.5);

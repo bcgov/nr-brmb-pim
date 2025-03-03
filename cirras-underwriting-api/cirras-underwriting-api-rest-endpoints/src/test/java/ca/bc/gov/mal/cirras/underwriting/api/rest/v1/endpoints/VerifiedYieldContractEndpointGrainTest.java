@@ -752,7 +752,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		
 		//Date and Time without millisecond
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 because they are not set in the database
 		Date transactionDate = cal.getTime();
 		Date createTransactionDate = addSeconds(transactionDate, -1);
 
@@ -846,7 +846,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		vya = createVerifiedYieldAmendment(assessment, 16, "BARLEY", true, null, null, barleyPedigreeAssessmentAcres2, barleyPedigreeAssessmentYield2, "rationale 2");
 		newContract.getVerifiedYieldAmendments().add(vya);
 		
-		List<VerifiedYieldSummary> expectedVys = createExpectedVerifiedYieldSummaries();
+		List<VerifiedYieldSummary> expectedVys = createExpectedVerifiedYieldSummaries(newContract);
 
 		VerifiedYieldContractRsrc createdContract = service.createVerifiedYieldContract(topLevelEndpoints, newContract);
 		Assert.assertNotNull(createdContract);
@@ -933,6 +933,8 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		expBarleyVys.setYieldToCount(yieldToCount);
 		Double yieldPercentPy = expBarleyVys.getYieldToCount()/ (barleyNonPedigreeSeededAcres * barleyNonPedigreePY);
 		expBarleyVys.setYieldPercentPy(yieldPercentPy);
+		Double productionAcres = expBarleyVys.getProductionAcres() - barleyNonPedAppraisalAcres2;
+		expBarleyVys.setProductionAcres(productionAcres);
 		
 		updatedContract = service.updateVerifiedYieldContract(updatedContract);
 		Assert.assertNotNull(updatedContract);
@@ -1153,11 +1155,13 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		return harvestedValue;
 	}	
 	
-	private List<VerifiedYieldSummary> createExpectedVerifiedYieldSummaries() {
+	private List<VerifiedYieldSummary> createExpectedVerifiedYieldSummaries(VerifiedYieldContractRsrc vyContract) {
 		
 		List<VerifiedYieldSummary> expVys = new ArrayList<VerifiedYieldSummary>();
 		
 		VerifiedYieldSummary vys = new VerifiedYieldSummary();
+		
+		VerifiedYieldContractCommodity barleyCommodity = getVerifiedYieldContractCommodity(16, false, vyContract.getVerifiedYieldContractCommodities());
 		
 		//Barley Non Pedigree
 		vys.setCropCommodityId(16);
@@ -1176,10 +1180,15 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		vys.setProbableYield(barleyNonPedigreePY);
 		vys.setInsurableValueHundredPercent(barleyNonPedigreeIV100);
 		vys.setTotalInsuredAcres(barleyNonPedigreeSeededAcres);
-		
+		Double effectiveHarvestedAcres = notNull(notNull(barleyCommodity.getHarvestedAcresOverride(), barleyCommodity.getHarvestedAcres()), 0.0);
+		Double productionAcres = effectiveHarvestedAcres + barleyNonPedAppraisalAcres1 + barleyNonPedAppraisalAcres2;
+		vys.setProductionAcres(productionAcres);
+
 		expVys.add(vys);
 
 		//Barley Pedigree
+		barleyCommodity = getVerifiedYieldContractCommodity(16, true, vyContract.getVerifiedYieldContractCommodities());
+
 		vys = new VerifiedYieldSummary();
 		
 		vys.setCropCommodityId(16);
@@ -1198,6 +1207,9 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		vys.setProbableYield(barleyPedigreePY );
 		vys.setInsurableValueHundredPercent(barleyPedigreeIV100 );
 		vys.setTotalInsuredAcres(barleyPedigreeSeededAcres);
+		effectiveHarvestedAcres = notNull(notNull(barleyCommodity.getHarvestedAcresOverride(), barleyCommodity.getHarvestedAcres()), 0.0);
+		vys.setProductionAcres(effectiveHarvestedAcres);
+
 		
 		expVys.add(vys);
 
@@ -1219,6 +1231,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		vys.setProductionGuarantee(null);
 		vys.setProbableYield(null);
 		vys.setTotalInsuredAcres(null);
+		vys.setProductionAcres(oatAppraisalAcres1);
 		
 		expVys.add(vys);
 		
@@ -1466,6 +1479,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		Assert.assertEquals("CropCommodityId", expected.getCropCommodityId(), actual.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", expected.getCropCommodityName(), actual.getCropCommodityName());
 		Assert.assertEquals("IsPedigreeInd", expected.getIsPedigreeInd(), actual.getIsPedigreeInd());
+		Assert.assertEquals("ProductionAcres", expected.getProductionAcres(), actual.getProductionAcres());
 		Assert.assertEquals("HarvestedYield", expected.getHarvestedYield(), actual.getHarvestedYield());
 		//Assert.assertEquals("HarvestedYieldPerAcre", expected.getHarvestedYieldPerAcre(), actual.getHarvestedYieldPerAcre());
 		Assert.assertEquals("AppraisedYield", expected.getAppraisedYield(), actual.getAppraisedYield());

@@ -560,6 +560,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		model.setCropCommodityId(dto.getCropCommodityId());
 		model.setCropCommodityName(dto.getCropCommodityName());
 		model.setIsPedigreeInd(dto.getIsPedigreeInd());
+		model.setProductionAcres(dto.getProductionAcres());
 		model.setHarvestedYield(dto.getHarvestedYield());
 		model.setHarvestedYieldPerAcre(dto.getHarvestedYieldPerAcre());
 		model.setAppraisedYield(dto.getAppraisedYield());
@@ -799,6 +800,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		dto.setVerifiedYieldContractGuid(model.getVerifiedYieldContractGuid());
 		dto.setCropCommodityId(model.getCropCommodityId());
 		dto.setIsPedigreeInd(model.getIsPedigreeInd());
+		dto.setProductionAcres(model.getProductionAcres());
 		dto.setHarvestedYield(model.getHarvestedYield());
 		dto.setHarvestedYieldPerAcre(model.getHarvestedYieldPerAcre());
 		dto.setAppraisedYield(model.getAppraisedYield());
