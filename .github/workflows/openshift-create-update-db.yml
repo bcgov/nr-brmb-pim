@@ -34,7 +34,8 @@ jobs:
     steps:
       - name: Fill properties files (testing)
         env:
-          S3_ENVIRONMENT: 'dev'
+          S3_ENVIRONMENT: >
+            ${{ fromJson('{ dev: "dev", qa: "dev", dlvr: "test", test: "test", prod: "prod" }')[inputs.ENVIRONMENT_NAME] }}
         run: echo $S3_ENVIRONMENT
   build:
     runs-on: ubuntu-latest
