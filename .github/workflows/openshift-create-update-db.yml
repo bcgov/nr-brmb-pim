@@ -22,6 +22,16 @@ on:
           - a12541-test
           - a12541-prod
           - a12541-tools
+      TEST_ENVIRONMENT_NAME:
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - dlvr
+          - test
+          - prod
+          - tools
 
 jobs:
   test:
@@ -34,7 +44,7 @@ jobs:
     steps:
       - name: Fill properties files (testing)
         env:
-          S3_ENVIRONMENT: ${{ inputs.ENVIRONMENT_NAME == 'qa' && 'dev' || (inputs.ENVIRONMENT_NAME == 'dlvr' && 'test' || inputs.ENVIRONMENT_NAME) }}
+          S3_ENVIRONMENT: ${{ inputs.ENVIRONMENT_NAME == 'qa' && 'dev' || (inputs.ENVIRONMENT_NAME == 'tools' && 'dev' || (inputs.ENVIRONMENT_NAME == 'dlvr' && 'test' || inputs.ENVIRONMENT_NAME)) }}
         run: echo bar${S3_ENVIRONMENT}foo
   build:
     runs-on: ubuntu-latest
@@ -66,7 +76,7 @@ jobs:
           DB_REPLICAS: ${{ vars.DB_INSTANCE_HA_REPLICAS }}
           DB_BACKUP_VOLUME_SIZE: ${{ vars.DB_BACKUP_VOLUME_SIZE }}
           BOUNCER_REPLICAS: ${{ vars.DB_LOADBALANCER_HA_REPLICAS}}
-          S3_ENVIRONMENT: 'dev'
+          S3_ENVIRONMENT: ${{ inputs.ENVIRONMENT_NAME == 'qa' && 'dev' || (inputs.ENVIRONMENT_NAME == 'tools' && 'dev' || (inputs.ENVIRONMENT_NAME == 'dlvr' && 'test' || inputs.ENVIRONMENT_NAME)) }}
 
       # DEV was created before decision to have multiple environments in single namespace was made.
       # As such, the DB name is different from later environments - will need to eventually
