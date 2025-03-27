@@ -36,7 +36,7 @@ jobs:
         env:
           S3_ENVIRONMENT: >
             ${{ fromJson('{ dev: "dev", qa: "dev", dlvr: "test", test: "test", prod: "prod" }')[inputs.ENVIRONMENT_NAME] }}
-        run: echo $S3_ENVIRONMENT
+        run: echo bar${S3_ENVIRONMENT}foo
   build:
     runs-on: ubuntu-latest
     if: false
