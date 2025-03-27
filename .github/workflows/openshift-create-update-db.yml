@@ -26,6 +26,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: false
     environment:
       name: ${{ inputs.ENVIRONMENT_NAME }}
     permissions:
