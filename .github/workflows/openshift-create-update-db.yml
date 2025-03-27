@@ -22,33 +22,10 @@ on:
           - a12541-test
           - a12541-prod
           - a12541-tools
-      TEST_ENVIRONMENT_NAME:
-        required: true
-        type: choice
-        options:
-          - dev
-          - qa
-          - dlvr
-          - test
-          - prod
-          - tools
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    environment:
-      name: ${{ inputs.ENVIRONMENT_NAME }}
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Fill properties files (testing)
-        env:
-          S3_ENVIRONMENT: ${{ inputs.TEST_ENVIRONMENT_NAME == 'qa' && 'dev' || (inputs.TEST_ENVIRONMENT_NAME == 'tools' && 'dev' || (inputs.TEST_ENVIRONMENT_NAME == 'dlvr' && 'test' || inputs.TEST_ENVIRONMENT_NAME)) }}
-        run: echo bar${S3_ENVIRONMENT}foo
   build:
     runs-on: ubuntu-latest
-    if: false
     environment:
       name: ${{ inputs.ENVIRONMENT_NAME }}
     permissions:
