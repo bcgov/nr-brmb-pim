@@ -24,6 +24,18 @@ on:
           - a12541-tools
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.ENVIRONMENT_NAME }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Fill properties files (testing)
+        env:
+          S3_ENVIRONMENT: 'dev'
+        run: echo $S3_ENVIRONMENT
   build:
     runs-on: ubuntu-latest
     if: false
