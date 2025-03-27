@@ -44,7 +44,7 @@ jobs:
     steps:
       - name: Fill properties files (testing)
         env:
-          S3_ENVIRONMENT: ${{ inputs.ENVIRONMENT_NAME == 'qa' && 'dev' || (inputs.ENVIRONMENT_NAME == 'tools' && 'dev' || (inputs.ENVIRONMENT_NAME == 'dlvr' && 'test' || inputs.ENVIRONMENT_NAME)) }}
+          S3_ENVIRONMENT: ${{ inputs.TEST_ENVIRONMENT_NAME == 'qa' && 'dev' || (inputs.TEST_ENVIRONMENT_NAME == 'tools' && 'dev' || (inputs.TEST_ENVIRONMENT_NAME == 'dlvr' && 'test' || inputs.TEST_ENVIRONMENT_NAME)) }}
         run: echo bar${S3_ENVIRONMENT}foo
   build:
     runs-on: ubuntu-latest
