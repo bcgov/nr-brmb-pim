@@ -152,7 +152,7 @@ export class VerifiedYieldComponent extends BaseComponent {
       if (this.verifiedYieldContract.verifiedYieldAmendments[i].deletedByUserInd !== true ) {
         if (!this.verifiedYieldContract.verifiedYieldAmendments[i].verifiedYieldAmendmentCode ||
             !this.verifiedYieldContract.verifiedYieldAmendments[i].cropCommodityId ||
-            !this.verifiedYieldContract.verifiedYieldAmendments[i].yieldPerAcre ||
+            this.verifiedYieldContract.verifiedYieldAmendments[i].yieldPerAcre == null || // zeros are ok
             !this.verifiedYieldContract.verifiedYieldAmendments[i].acres ||
             !this.verifiedYieldContract.verifiedYieldAmendments[i].rationale) {
 
