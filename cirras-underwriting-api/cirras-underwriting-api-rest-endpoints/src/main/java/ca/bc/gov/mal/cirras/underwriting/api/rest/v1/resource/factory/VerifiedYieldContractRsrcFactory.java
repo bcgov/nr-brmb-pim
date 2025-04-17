@@ -379,12 +379,12 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 	}
 	
 	public static final String GRAIN_BASKET_DIFFERENCE_MSG = "The grain basket coverage/basket value in CIRRAS is different: %.2f";
+	public static final String GRAIN_BASKET_DIFF_QTY_COV_MSG = "The grain basket total quantity coverage value in CIRRAS is different: %.2f";
 	public static final String GRAIN_BASKET_NONE_MSG = "There is no grain basket coverage/basket value in CIRRAS.";
 	public static final String GRAIN_BASKET_NO_PRODUCT_MSG = "There is no grain basket product or no product in status FINAL in CIRRAS. The shown basket value is not valid anymore.";
 	public static final String GRAIN_BASKET_NO_GB_MSG = "There is no grain basket saved but there is one in CIRRAS.";
 
 
-	// TODO: Check totalQuantityCoverageValue?
 	private void getGrainBasketProductWarnings(
 			VerifiedYieldGrainBasket gbDto, 
 			List<ProductDto> productDtos, 
@@ -437,8 +437,33 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 					messageRsrcList.add(new MessageRsrc(msg));
 				}
 			}
+			
+			if ( gbDto != null ) {
+				//totalQuantityCoverageValue: Still needs to be checked even if there is no FINAL GRAIN BASKET product in CIRRAS.
+				double currTotalQuantityCoverageValue = calculateTotalQuantityCoverageValue(productDtos);
+				if (Double.compare(currTotalQuantityCoverageValue, notNull(gbDto.getTotalQuantityCoverageValue(), -1.0)) != 0) {
+					String msg = String.format(GRAIN_BASKET_DIFF_QTY_COV_MSG, currTotalQuantityCoverageValue);
+					messageRsrcList.add(new MessageRsrc(msg));
+				}
+			}
 		}
 		
+	}
+
+	// Calculates VerifiedYieldGrainBasket.totalQuantityCoverageValue.
+	private double calculateTotalQuantityCoverageValue(List<ProductDto> products) {
+		
+		double result = 0.0;
+		
+		if ( products != null && !products.isEmpty() ) {
+			for ( ProductDto prd : products ) {
+				if ( prd.getCommodityCoverageCode().equals(CommodityCoverageCode.QUANTITY_GRAIN) && prd.getProductStatusCode().equals(PRODUCT_STATUS_FINAL) && prd.getCoverageDollars() != null ) {
+					result += prd.getCoverageDollars();
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	@Override

@@ -636,10 +636,16 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				verifiedYieldContract.setVerifiedYieldGrainBasket(grainBasket);
 			}
 			
-			//Set basket value if it's a new record or the user want to update it
+			//Set product values if it's a new record or the user want to update it
 			if((verifiedYieldContract.getVerifiedYieldGrainBasket() != null && verifiedYieldContract.getVerifiedYieldGrainBasket().getVerifiedYieldGrainBasketGuid() == null)
 					|| Boolean.TRUE.equals(verifiedYieldContract.getUpdateProductValuesInd())) {
 				verifiedYieldContract.getVerifiedYieldGrainBasket().setBasketValue(productDto.getCoverageDollars());
+				verifiedYieldContract.getVerifiedYieldGrainBasket().setTotalQuantityCoverageValue(calculateTotalQuantityCoverageValue(productDtos));
+				
+				Double totalCoverageValue = notNull(verifiedYieldContract.getVerifiedYieldGrainBasket().getBasketValue(), 0.0) + 
+						verifiedYieldContract.getVerifiedYieldGrainBasket().getTotalQuantityCoverageValue();
+
+				verifiedYieldContract.getVerifiedYieldGrainBasket().setTotalCoverageValue(totalCoverageValue);
 			}
 		} else {
 			//No product exists but grain basket in verified yield exists
@@ -672,6 +678,22 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			//Save Grain Basket
 			updateVerifiedYieldGrainBasket(verifiedYieldContractGuid, verifiedYieldContract.getVerifiedYieldGrainBasket(), userId);
 		}
+	}
+
+	// Calculates VerifiedYieldGrainBasket.totalQuantityCoverageValue.
+	private double calculateTotalQuantityCoverageValue(List<ProductDto> products) {
+		
+		double result = 0.0;
+		
+		if ( products != null && !products.isEmpty() ) {
+			for ( ProductDto prd : products ) {
+				if ( prd.getCommodityCoverageCode().equals(CommodityCoverageCode.QUANTITY_GRAIN) && prd.getProductStatusCode().equals(PRODUCT_STATUS_FINAL) && prd.getCoverageDollars() != null ) {
+					result += prd.getCoverageDollars();
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	private ProductDto getProductDtoByCoverageCode(String coverageCode, List<ProductDto> productDtos) {
