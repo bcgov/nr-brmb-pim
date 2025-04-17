@@ -693,6 +693,8 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		expectedVygb.setVerifiedYieldGrainBasketGuid("unit_test_grain_basket1");
 		expectedVygb.setVerifiedYieldContractGuid("5abc58c8f5734374a7ac7e7be01d044f");
 		expectedVygb.setBasketValue(1.23);
+		expectedVygb.setTotalQuantityCoverageValue(11.22);
+		expectedVygb.setTotalCoverageValue(12.45);
 		expectedVygb.setHarvestedValue(4.56);
 		expectedVygb.setComment("grain basket comment 1");  // Set based on existing policy.
 
@@ -1209,6 +1211,8 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 			Assert.assertEquals(expected.getVerifiedYieldGrainBasketGuid(), actual.getVerifiedYieldGrainBasketGuid());
 			Assert.assertEquals(expected.getVerifiedYieldContractGuid(), actual.getVerifiedYieldContractGuid());
 			Assert.assertEquals(expected.getBasketValue(), actual.getBasketValue());
+			Assert.assertEquals(expected.getTotalQuantityCoverageValue(), actual.getTotalQuantityCoverageValue());
+			Assert.assertEquals(expected.getTotalCoverageValue(), actual.getTotalCoverageValue());
 			Assert.assertEquals(expected.getHarvestedValue(), actual.getHarvestedValue());
 			Assert.assertEquals(expected.getComment(), actual.getComment());
 		}
