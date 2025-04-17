@@ -383,7 +383,8 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 	public static final String GRAIN_BASKET_NO_PRODUCT_MSG = "There is no grain basket product or no product in status FINAL in CIRRAS. The shown basket value is not valid anymore.";
 	public static final String GRAIN_BASKET_NO_GB_MSG = "There is no grain basket saved but there is one in CIRRAS.";
 
-	
+
+	// TODO: Check totalQuantityCoverageValue?
 	private void getGrainBasketProductWarnings(
 			VerifiedYieldGrainBasket gbDto, 
 			List<ProductDto> productDtos, 
@@ -593,6 +594,8 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		model.setVerifiedYieldGrainBasketGuid(dto.getVerifiedYieldGrainBasketGuid());
 		model.setVerifiedYieldContractGuid(dto.getVerifiedYieldContractGuid());
 		model.setBasketValue(dto.getBasketValue());
+		model.setTotalQuantityCoverageValue(dto.getTotalQuantityCoverageValue());
+		model.setTotalCoverageValue(dto.getTotalCoverageValue());
 		model.setHarvestedValue(dto.getHarvestedValue());
 		model.setComment(dto.getComment());
 
@@ -817,6 +820,8 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		dto.setVerifiedYieldGrainBasketGuid(model.getVerifiedYieldGrainBasketGuid());
 		dto.setVerifiedYieldContractGuid(model.getVerifiedYieldContractGuid());
 		dto.setBasketValue(model.getBasketValue());
+		dto.setTotalQuantityCoverageValue(model.getTotalQuantityCoverageValue());
+		dto.setTotalCoverageValue(model.getTotalCoverageValue());
 		dto.setHarvestedValue(model.getHarvestedValue());
 		dto.setComment(model.getComment());
 	}
