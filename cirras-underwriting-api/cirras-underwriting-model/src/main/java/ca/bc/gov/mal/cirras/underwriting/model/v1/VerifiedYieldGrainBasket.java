@@ -11,6 +11,8 @@ public class VerifiedYieldGrainBasket implements Serializable {
 	private String verifiedYieldGrainBasketGuid;
 	private String verifiedYieldContractGuid;
 	private Double basketValue;
+	private Double totalQuantityCoverageValue;
+	private Double totalCoverageValue;
 	private Double harvestedValue;
 	private String comment;
 	
@@ -37,6 +39,22 @@ public class VerifiedYieldGrainBasket implements Serializable {
 
 	public void setBasketValue(Double basketValue) {
 		this.basketValue = basketValue;
+	}
+
+	public Double getTotalQuantityCoverageValue() {
+		return totalQuantityCoverageValue;
+	}
+
+	public void setTotalQuantityCoverageValue(Double totalQuantityCoverageValue) {
+		this.totalQuantityCoverageValue = totalQuantityCoverageValue;
+	}
+
+	public Double getTotalCoverageValue() {
+		return totalCoverageValue;
+	}
+
+	public void setTotalCoverageValue(Double totalCoverageValue) {
+		this.totalCoverageValue = totalCoverageValue;
 	}
 
 	public Double getHarvestedValue() {

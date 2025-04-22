@@ -235,7 +235,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 			}
 		}
 	}
-	
+
 	@Test
 	public void testInsertUpdateDeleteGrainVerifiedYield() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException, DaoException {
 		logger.debug("<testInsertUpdateDeleteGrainVerifiedYield");
@@ -265,9 +265,9 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		createDopYieldContract(policyNumber1, 4, false);
 		
 		//Barley - NON Pedigree - Product
-		createUpdateProduct(policyId1, productId1, 16, 20, barleyNonPedigreePY, barleyNonPediProductionGuarantee, barleyNonPedigreeIV100, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
+		createUpdateProduct(policyId1, productId1, 16, 20, barleyNonPedigreePY, barleyNonPediProductionGuarantee, barleyNonPedigreeIV100, barleyNonPedigreeCoverage, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
 		//Barley - Pedigree
-		createUpdateProduct(policyId1, productId3, 17, 50, barleyPedigreePY, barleyPedigreeProductionGuarantee, barleyPedigreeIV100, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
+		createUpdateProduct(policyId1, productId3, 17, 50, barleyPedigreePY, barleyPedigreeProductionGuarantee, barleyPedigreeIV100, barleyPedigreeCoverage, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
 		
 		Integer pageNumber = 1;
 		Integer pageRowCount = 20;
@@ -382,13 +382,13 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		Double barleyPedigreePYNew = barleyPedigreePY + 10;
 		Double barleyPedigreeIV100New = barleyPedigreeIV100 + 10;
 		
-		createUpdateProduct(policyId1, productId3, 17, 50, barleyPedigreePYNew, barleyPedProdGuaranteeNew, barleyPedigreeIV100New, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
+		createUpdateProduct(policyId1, productId3, 17, 50, barleyPedigreePYNew, barleyPedProdGuaranteeNew, barleyPedigreeIV100New, barleyPedigreeCoverage, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
 		
 		//Create product for Grain Basket - No warning expected
 		createUpdateProduct(policyId1, productId4, 1010076, 20, null, null, null, grainBasketCoverageDollar, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.GRAIN_BASKET);
 
 		//Create product for Canola - Pedigree
-		createUpdateProduct(policyId1, productId2, 19, 10, canolaPedigreePY, canolaPedigreeProductionGuarantee, canolaPedigreeIV100, null, "Open", CommodityCoverageCode.QUANTITY_GRAIN);
+		createUpdateProduct(policyId1, productId2, 19, 10, canolaPedigreePY, canolaPedigreeProductionGuarantee, canolaPedigreeIV100, canolaPedigreeCoverage, "Open", CommodityCoverageCode.QUANTITY_GRAIN);
 
 		
 		//Get contract again to prevent precondition fails
@@ -452,10 +452,10 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		checkVerifiedContractCommodityTotals(expectedCommodities, updatedContract.getVerifiedYieldContractCommodities(), 16, true, barleyPedProdGuaranteeNew, null); 
 
 		//Update Barley Pedigree Product Guarantee and PY to NULL - Expect warning
-		createUpdateProduct(policyId1, productId3, 17, 50, 20.5, null, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
+		createUpdateProduct(policyId1, productId3, 17, 50, 20.5, null, null, barleyPedigreeCoverage, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
 		//Update Canola Pedigree to status final
 		//createUpdateProduct(policyId1, productId2, 19, 10, canolaPedigreePY, canolaPedigreeProductionGuarantee, null, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
-		createUpdateProduct(policyId1, productId2, 19, 10, canolaPedigreePY, canolaPedigreeProductionGuarantee, canolaPedigreeIV100, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
+		createUpdateProduct(policyId1, productId2, 19, 10, canolaPedigreePY, canolaPedigreeProductionGuarantee, canolaPedigreeIV100, canolaPedigreeCoverage, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
 		//Update product for Grain Basket
 		Double grainBasketCoverageDollarNew = grainBasketCoverageDollar + 10;
 		createUpdateProduct(policyId1, productId4, 1010076, 20, null, null, null, grainBasketCoverageDollarNew, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.GRAIN_BASKET);
@@ -464,8 +464,8 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		VerifiedYieldContractRsrc vyContract = getVerifiedYieldContract(policyNumber1);
 		Assert.assertNotNull(vyContract);
 
-		//4 warnings expected (2 Production Guarantee, 2 PY, 2 100% IV, 1 Grain Basket)
-		Assert.assertEquals(7, vyContract.getProductWarningMessages().size());
+		//8 warnings expected (2 Production Guarantee, 2 PY, 2 100% IV, 2 Grain Basket)
+		Assert.assertEquals(8, vyContract.getProductWarningMessages().size());
 
 		//UPDATE product values
 		vyContract.setUpdateProductValuesInd(true);
@@ -486,9 +486,26 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 
 		
 		// Grain Basket additional warning tests *******************************************************************
-		//Delete grain basket product
-		service.deleteProduct(topLevelEndpoints, productId4.toString());
+		createUpdateProduct(policyId1, productId2, 19, 10, canolaPedigreePY, canolaPedigreeProductionGuarantee, canolaPedigreeIV100, canolaPedigreeCoverage + 10, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
 
+		//Get contract
+		vyContract = getVerifiedYieldContract(policyNumber1);
+		Assert.assertNotNull(vyContract);
+
+		//1 warnings expected (1 Grain Basket)
+		Assert.assertEquals(1, vyContract.getProductWarningMessages().size());
+		
+		createUpdateProduct(policyId1, productId2, 19, 10, canolaPedigreePY, canolaPedigreeProductionGuarantee, canolaPedigreeIV100, canolaPedigreeCoverage, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
+
+		vyContract = getVerifiedYieldContract(policyNumber1);
+		Assert.assertNotNull(vyContract);
+
+		//0 warnings expected
+		Assert.assertEquals(0, vyContract.getProductWarningMessages().size());
+		
+		//Delete grain basket product
+		service.deleteProduct(topLevelEndpoints, productId4.toString());		
+		
 		vyContract = getVerifiedYieldContract(policyNumber1);
 		
 		//DON'T update product values
@@ -976,7 +993,7 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		
 		logger.debug(">testGrainVerifiedYieldSummary");
 	}	
-	
+
 	@Test
 	public void testGrainBasket() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException, DaoException {
 		logger.debug("<testGrainBasket");
@@ -1006,9 +1023,9 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		createDopYieldContract(policyNumber1, 4, true);
 		
 		//Barley - NON Pedigree - Product
-		createUpdateProduct(policyId1, productId1, 16, 20, barleyNonPedigreePY, barleyNonPediProductionGuarantee, barleyNonPedigreeIV100, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
+		createUpdateProduct(policyId1, productId1, 16, 20, barleyNonPedigreePY, barleyNonPediProductionGuarantee, barleyNonPedigreeIV100, barleyNonPedigreeCoverage, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
 		//Barley - Pedigree
-		createUpdateProduct(policyId1, productId3, 17, 50, barleyPedigreePY, barleyPedigreeProductionGuarantee, barleyPedigreeIV100, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
+		createUpdateProduct(policyId1, productId3, 17, 50, barleyPedigreePY, barleyPedigreeProductionGuarantee, barleyPedigreeIV100, barleyPedigreeCoverage, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
 		
 		Integer pageNumber = 1;
 		Integer pageRowCount = 20;
@@ -1082,16 +1099,22 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		Double harvestedValue = calculateHarvestedValue(updatedContract);
 		
 		VerifiedYieldGrainBasket basket = updatedContract.getVerifiedYieldGrainBasket();
+
+		Double expectedTotalQuantityCoverageValue = barleyNonPedigreeCoverage + barleyPedigreeCoverage;
+		Double expectedTotalCoverageValue = grainBasketCoverageDollar + barleyNonPedigreeCoverage + barleyPedigreeCoverage;
 		
 		Assert.assertNotNull(basket.getVerifiedYieldGrainBasketGuid());
 		Assert.assertNotNull(basket.getVerifiedYieldContractGuid());
 		Assert.assertEquals(grainBasketCoverageDollar, basket.getBasketValue());
+		Assert.assertEquals(expectedTotalQuantityCoverageValue, basket.getTotalQuantityCoverageValue(), 0.00001);
+		Assert.assertEquals(expectedTotalCoverageValue, basket.getTotalCoverageValue(), 0.00001);
 		Assert.assertEquals(harvestedValue, basket.getHarvestedValue());
 		Assert.assertNull(basket.getComment());
 
 		//Update 100% IV which will change the harvested value
 		Double barleyPedigreeIV100New = barleyPedigreeIV100 + 10;
-		createUpdateProduct(policyId1, productId3, 17, 50, barleyPedigreePY, barleyPedigreeProductionGuarantee, barleyPedigreeIV100New, null, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
+		Double barleyPedigreeCoverageNew = barleyPedigreeCoverage + 20;
+		createUpdateProduct(policyId1, productId3, 17, 50, barleyPedigreePY, barleyPedigreeProductionGuarantee, barleyPedigreeIV100New, barleyPedigreeCoverageNew, VerifiedYieldContractRsrcFactory.PRODUCT_STATUS_FINAL, CommodityCoverageCode.QUANTITY_GRAIN);
 
 		//Update grain basket coverage dollar
 		Double grainBasketCoverageDollarNew = grainBasketCoverageDollar + 10;
@@ -1114,9 +1137,13 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		VerifiedYieldGrainBasket expectedBasket = updatedContract.getVerifiedYieldGrainBasket();
 		VerifiedYieldGrainBasket actualBasket = vyContract.getVerifiedYieldGrainBasket();
 		
+		expectedTotalQuantityCoverageValue = barleyNonPedigreeCoverage + barleyPedigreeCoverageNew;
+		expectedTotalCoverageValue = grainBasketCoverageDollarNew + barleyNonPedigreeCoverage + barleyPedigreeCoverageNew;
 		Assert.assertEquals(expectedBasket.getVerifiedYieldGrainBasketGuid(), actualBasket.getVerifiedYieldGrainBasketGuid());
 		Assert.assertEquals(expectedBasket.getVerifiedYieldContractGuid(), actualBasket.getVerifiedYieldContractGuid());
 		Assert.assertEquals(grainBasketCoverageDollarNew, actualBasket.getBasketValue());
+		Assert.assertEquals(expectedTotalQuantityCoverageValue, actualBasket.getTotalQuantityCoverageValue(), 0.00001);
+		Assert.assertEquals(expectedTotalCoverageValue, actualBasket.getTotalCoverageValue(), 0.00001);
 		Assert.assertEquals(harvestedValue, actualBasket.getHarvestedValue());
 		Assert.assertEquals(expectedBasket.getComment(), actualBasket.getComment());
 
@@ -1653,12 +1680,15 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 	private Double barleyNonPedigreePY = 50.5;
 	private Double barleyNonPediProductionGuarantee = 222.5;
 	private Double barleyNonPedigreeIV100 = 76.31;
+	private Double barleyNonPedigreeCoverage = 111.22;
 	private Double barleyPedigreePY = 20.1;
 	private Double barleyPedigreeProductionGuarantee = 15.1;
 	private Double barleyPedigreeIV100 = 56.21;
+	private Double barleyPedigreeCoverage = 333.44;
 	private Double canolaPedigreePY = 80.0;
 	private Double canolaPedigreeProductionGuarantee = 77.0;
 	private Double canolaPedigreeIV100 = 68.0;
+	private Double canolaPedigreeCoverage = 555.66;
 	private Double grainBasketCoverageDollar = 5000.0;
 	
 	private void createUpdateProduct(
