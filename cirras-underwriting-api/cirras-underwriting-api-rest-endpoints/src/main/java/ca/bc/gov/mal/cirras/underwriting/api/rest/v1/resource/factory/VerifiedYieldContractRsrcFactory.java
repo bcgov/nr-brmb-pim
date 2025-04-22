@@ -440,8 +440,13 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 			
 			if ( gbDto != null ) {
 				//totalQuantityCoverageValue: Still needs to be checked even if there is no FINAL GRAIN BASKET product in CIRRAS.
+				// Both values are rounded to 4 decimals for the comparison.
 				double currTotalQuantityCoverageValue = calculateTotalQuantityCoverageValue(productDtos);
-				if (Double.compare(currTotalQuantityCoverageValue, notNull(gbDto.getTotalQuantityCoverageValue(), -1.0)) != 0) {
+				currTotalQuantityCoverageValue = Math.round(currTotalQuantityCoverageValue * 10000) * 0.0001;
+
+				double savedTotalQuantityCoverageValue = Math.round(notNull(gbDto.getTotalQuantityCoverageValue(), -1.0) * 10000) * 0.0001;
+				
+				if (Double.compare(currTotalQuantityCoverageValue, savedTotalQuantityCoverageValue) != 0) {
 					String msg = String.format(GRAIN_BASKET_DIFF_QTY_COV_MSG, currTotalQuantityCoverageValue);
 					messageRsrcList.add(new MessageRsrc(msg));
 				}
