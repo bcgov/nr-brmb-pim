@@ -40,6 +40,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetai
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
@@ -196,7 +197,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 
 		return model;
 	}
-
+	
 	@Override
 	public VerifiedYieldContract<? extends AnnualField, ? extends Message> getVerifiedYieldContract(VerifiedYieldContractDto dto, List<ProductDto> productDtos,
 			FactoryContext context, WebAdeAuthentication authentication) throws FactoryException {

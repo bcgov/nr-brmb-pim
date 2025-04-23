@@ -19,6 +19,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ContractedFieldDetai
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventorySeededForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventorySeededGrainDao;
@@ -34,6 +35,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetai
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
@@ -88,6 +90,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	private DeclaredYieldContractDao declaredYieldContractDao;
 	private DeclaredYieldContractCommodityDao declaredYieldContractCommodityDao;
 	private DeclaredYieldContractCommodityForageDao declaredYieldContractCommodityForageDao;
+	private DeclaredYieldFieldRollupForageDao declaredYieldFieldRollupForageDao;
 	private VerifiedYieldContractDao verifiedYieldContractDao;
 	private VerifiedYieldContractCommodityDao verifiedYieldContractCommodityDao;
 	private VerifiedYieldAmendmentDao verifiedYieldAmendmentDao;
@@ -142,6 +145,10 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	
 	public void setDeclaredYieldContractCommodityForageDao(DeclaredYieldContractCommodityForageDao declaredYieldContractCommodityForageDao) {
 		this.declaredYieldContractCommodityForageDao = declaredYieldContractCommodityForageDao;
+	}
+	
+	public void setDeclaredYieldFieldRollupForageDao(DeclaredYieldFieldRollupForageDao declaredYieldFieldRollupForageDao) {
+		this.declaredYieldFieldRollupForageDao = declaredYieldFieldRollupForageDao;
 	}
 
 	public void setVerifiedYieldContractDao(VerifiedYieldContractDao verifiedYieldContractDao) {
@@ -200,10 +207,11 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	
 				List<ProductDto> productDtos = loadProducts(dycDto.getContractId(), dycDto.getCropYear());
 
-				loadDopYieldContractCommodities(dycDto);
+				loadDopYieldCommodities(dycDto);
 				loadFields(dycDto);
 
 				if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(policyDto.getInsurancePlanId()) ) {
+					mergeYieldRollupToCommodityTotals(dycDto);
 					rollupVerifiedYield(dycDto);
 				}
 				
@@ -222,6 +230,37 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 		logger.debug(">rolloverVerifiedYieldContract");
 		return result;
+	}
+	
+	private void mergeYieldRollupToCommodityTotals(DeclaredYieldContractDto dycDto) {
+
+		//For forage rollover the business rule is to take the rollup value if there is no manually entered
+		//commodity totals by commodity
+		if(dycDto.getDeclaredYieldFieldRollupForageList() != null && dycDto.getDeclaredYieldFieldRollupForageList().size() > 0) {
+			if(dycDto.getDeclaredYieldContractCommodityForageList() != null ) {
+				
+				//Check for each record if Harvested Acres, # Bales/Loads, weight and Moisture % are null in the DOP commodity totals table
+				for(DeclaredYieldContractCommodityForageDto dto: dycDto.getDeclaredYieldContractCommodityForageList()) {
+					if(dto.getHarvestedAcres() == null && 
+							dto.getTotalBalesLoads() == null && 
+							dto.getWeight() == null && 
+							dto.getMoisturePercent() == null) {
+
+						//Look for the yield rollup
+						List<DeclaredYieldFieldRollupForageDto> rollups = dycDto.getDeclaredYieldFieldRollupForageList().stream()
+								.filter(x -> x.getCommodityTypeCode().equalsIgnoreCase(dto.getCommodityTypeCode()))
+								.collect(Collectors.toList());
+						
+						if (rollups != null && rollups.size() > 0) {
+							DeclaredYieldFieldRollupForageDto rollupYield = rollups.get(0);
+							//Insured acres (fieldAcres) are already in the commodity totals table
+							dto.setHarvestedAcres(rollupYield.getHarvestedAcres());
+							dto.setQuantityHarvestedTons(rollupYield.getQuantityHarvestedTons());
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	private void rollupVerifiedYield(VerifiedYieldContract<? extends AnnualField, ? extends Message> vyc) {
@@ -363,7 +402,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		return newDto;
 	}
 
-	private void loadDopYieldContractCommodities(DeclaredYieldContractDto dto) throws DaoException {
+	private void loadDopYieldCommodities(DeclaredYieldContractDto dto) throws DaoException {
 
 		if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
 			List<DeclaredYieldContractCommodityDto> dopCommodities = declaredYieldContractCommodityDao.selectForDeclaredYieldContract(dto.getDeclaredYieldContractGuid());
@@ -371,6 +410,9 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
 			List<DeclaredYieldContractCommodityForageDto> dopCommodities = declaredYieldContractCommodityForageDao.selectForDeclaredYieldContract(dto.getDeclaredYieldContractGuid(), DeclaredYieldContractCommodityForageDao.sortOrder.CommodityNameCommodityType);
 			dto.setDeclaredYieldContractCommodityForageList(dopCommodities);
+			
+			List<DeclaredYieldFieldRollupForageDto> dopForageRollup = declaredYieldFieldRollupForageDao.selectForDeclaredYieldContract(dto.getDeclaredYieldContractGuid());
+			dto.setDeclaredYieldFieldRollupForageList(dopForageRollup);
 		} else{ 
 			throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
 		}
