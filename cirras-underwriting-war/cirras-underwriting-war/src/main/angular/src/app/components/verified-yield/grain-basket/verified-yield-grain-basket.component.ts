@@ -36,6 +36,8 @@ export class VerifiedYieldGrainBasketComponent {
         verifiedYieldGrainBasketGuid: [this.grainBasket.verifiedYieldGrainBasketGuid],
         verifiedYieldContractGuid: [this.grainBasket.verifiedYieldContractGuid],
         basketValue: [this.grainBasket.basketValue],
+        totalQuantityCoverageValue: [this.grainBasket.totalQuantityCoverageValue],
+        totalCoverageValue: [this.grainBasket.totalCoverageValue],
         harvestedValue: [this.grainBasket.harvestedValue],
         comment: [this.grainBasket.comment]         
       });
