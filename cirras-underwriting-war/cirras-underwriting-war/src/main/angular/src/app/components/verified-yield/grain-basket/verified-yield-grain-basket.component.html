@@ -47,7 +47,7 @@
 
             <div class="inventory-fill number border-right border-bottom" style="background-color: inherit;">
                 <!-- warnng sign -->
-                <mat-icon *ngIf="grainBasketFormGroup.value.harvestedValue && grainBasketFormGroup.value.basketValue && grainBasketFormGroup.value.harvestedValue < grainBasketFormGroup.value.basketValue"
+                <mat-icon *ngIf="grainBasketFormGroup.value.harvestedValue && grainBasketFormGroup.value.basketValue && grainBasketFormGroup.value.harvestedValue < grainBasketFormGroup.value.totalCoverageValue"
                 [ngStyle]="{'color':'orange', 'font-size':'x-large'}" 
                 matTooltip="Harvested Value < Basket Value"
                 >warning</mat-icon>
