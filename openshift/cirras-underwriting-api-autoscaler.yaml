@@ -18,6 +18,12 @@ spec:
         target:
           averageUtilization: 30
           type: Utilization
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          averageUtilization: 150
+          type: Utilization
   behaviour:
     #scale down only if consistently below value, but scale up if briefly above value
     scaleDown:
