@@ -4,6 +4,8 @@ CREATE TABLE cuws.verified_yield_grain_basket(
     verified_yield_grain_basket_guid    varchar(32)       NOT NULL,
     verified_yield_contract_guid        varchar(32)       NOT NULL,
     basket_value                        numeric(14, 4)    NOT NULL,
+    total_quantity_coverage_value       numeric(14, 4)    NOT NULL,
+    total_coverage_value                numeric(14, 4)    NOT NULL,
     harvested_value                     numeric(14, 4)    NOT NULL,
     comment                             varchar(200),
     create_user                         varchar(64)       NOT NULL,
@@ -18,6 +20,10 @@ COMMENT ON COLUMN cuws.verified_yield_grain_basket.verified_yield_grain_basket_g
 COMMENT ON COLUMN cuws.verified_yield_grain_basket.verified_yield_contract_guid IS 'Verified Yield Contract GUID  is the primary key used to identify the record'
 ;
 COMMENT ON COLUMN cuws.verified_yield_grain_basket.basket_value IS 'Basket Value is copied from CIRR_INSRNC_PRDCT_PRCHSES.gb_coverage_dollars '
+;
+COMMENT ON COLUMN cuws.verified_yield_grain_basket.total_quantity_coverage_value IS 'Total Quantity Coverage is the sum of product.coverage_dollars for all Quantity products.'
+;
+COMMENT ON COLUMN cuws.verified_yield_grain_basket.total_coverage_value IS 'Total Coverage Value is the sum of basket_value and total_quantity_coverage_value.'
 ;
 COMMENT ON COLUMN cuws.verified_yield_grain_basket.harvested_value IS 'Harvested Value is calculated as SUM(Commodity YTC* Commodity 100%IV)'
 ;

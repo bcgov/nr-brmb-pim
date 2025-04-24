@@ -270,6 +270,8 @@ export interface VerifiedYieldGrainBasket {
     verifiedYieldGrainBasketGuid?: string;
     verifiedYieldContractGuid?: string;
     basketValue?: number;
+    totalQuantityCoverageValue?: number;
+    totalCoverageValue?: number;
     harvestedValue?: number;
     comment?: string;
 }
