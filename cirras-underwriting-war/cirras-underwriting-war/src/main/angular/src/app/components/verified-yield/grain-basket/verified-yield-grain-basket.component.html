@@ -1,5 +1,5 @@
 <div class="plcy-inv-cmdty-totals-header"
-    style="grid-template-columns: 140px 140px 140px 140px 25px 500px; padding-left: 10px;">
+    style="grid-template-columns: 140px 140px 140px 140px 25px 500px; padding-left: 0px;">
 
     <div class="table-header border-top border-left border-right" style="text-align: left; padding-left: 6px; padding-top: 8px; grid-column-start: 1; grid-column-end: 7; background-color: #F5F5FF;">
         Basket Coverage
@@ -12,7 +12,7 @@
         QTY Commodities
     </div>
     <div class="header border-top border-bottom border-right">
-        Total
+        Total Coverage
     </div>
     <div class=" header border-top border-bottom">
         Harvested Value
@@ -49,7 +49,7 @@
                 <!-- warnng sign -->
                 <mat-icon *ngIf="grainBasketFormGroup.value.harvestedValue && grainBasketFormGroup.value.basketValue && grainBasketFormGroup.value.harvestedValue < grainBasketFormGroup.value.totalCoverageValue"
                 [ngStyle]="{'color':'orange', 'font-size':'x-large'}" 
-                matTooltip="Harvested Value < Basket Value"
+                matTooltip="Harvested Value < Total Coverage Value"
                 >warning</mat-icon>
             </div>
 
