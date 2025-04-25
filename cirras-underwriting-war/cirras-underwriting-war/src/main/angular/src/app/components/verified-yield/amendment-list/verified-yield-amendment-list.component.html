@@ -34,7 +34,7 @@
         Actions
     </div>
 
-    <div *ngIf="fieldOptions && cropCommodityOptions"
+    <div *ngIf="fieldOptions && cropCommodityOptions && amendments && amendments.length > 0"
         class="verified-yield-amendments-container"
         style="grid-template-columns: 123px 250px 180px 125px 115px 500px 60px; margin-left: 0px;">
         <verified-yield-amendment *ngFor="let amendment of amendments" [amendment]="amendment"
