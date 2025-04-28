@@ -16,7 +16,7 @@ spec:
       resource:
         name: cpu
         target:
-          averageUtilization: 30
+          averageUtilization: 60
           type: Utilization
   behaviour:
     #scale down only if consistently below value, but scale up if briefly above value
