@@ -53,7 +53,7 @@ jobs:
           DB_REPLICAS: ${{ vars.DB_INSTANCE_HA_REPLICAS }}
           DB_BACKUP_VOLUME_SIZE: ${{ vars.DB_BACKUP_VOLUME_SIZE }}
           BOUNCER_REPLICAS: ${{ vars.DB_LOADBALANCER_HA_REPLICAS}}
-          S3_ENVIRONMENT: ${{ inputs.ENVIRONMENT_NAME == 'qa' && 'dev' || (inputs.ENVIRONMENT_NAME == 'tools' && 'dev' || (inputs.ENVIRONMENT_NAME == 'dlvr' && 'test' || inputs.ENVIRONMENT_NAME)) }}
+          S3_ENVIRONMENT: ${{ inputs.ENVIRONMENT_NAME == 'qa' && 'dev' || (inputs.ENVIRONMENT_NAME == 'tools' && 'dev' || (inputs.ENVIRONMENT_NAME == 'dlvr' && 'tst' || (inputs.ENVIRONMENT_NAME == 'test' && 'tst' || (inputs.ENVIRONMENT_NAME == 'prod' && 'prd' || inputs.ENVIRONMENT_NAME)))) }}
 
       # DEV was created before decision to have multiple environments in single namespace was made.
       # As such, the DB name is different from later environments - will need to eventually
