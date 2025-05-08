@@ -1,5 +1,3 @@
-\qecho Create verified_yield_grain_basket table
-
 CREATE TABLE cuws.verified_yield_grain_basket(
     verified_yield_grain_basket_guid    varchar(32)       NOT NULL,
     verified_yield_contract_guid        varchar(32)       NOT NULL,
