@@ -1,7 +1,5 @@
 package ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -15,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryFieldDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventorySeededForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.AnnualFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
@@ -361,6 +357,112 @@ public class InventorySeededForageDaoTest {
 		invFieldDao.delete(invFieldDto.getInventoryFieldGuid());		
 	}
 	
+	@Test 
+	public void testSelectForVerifiedYield() throws Exception {
+
+		Integer cropYear = 2020;
+		Integer insurancePlanId = 5;
+		String inventoryFieldGuid;
+		
+		String userId = "UNITTEST";
+		
+		InventoryFieldDao invFieldDao = persistenceSpringConfig.inventoryFieldDao();
+		InventorySeededForageDao invSeededForageDao = persistenceSpringConfig.inventorySeededForageDao();
+
+		//INSERT Field
+		createField(userId);
+
+		// INSERT parent InventoryField
+		InventoryFieldDto invFieldDto = new InventoryFieldDto();
+
+		invFieldDto.setCropYear(cropYear);
+		invFieldDto.setFieldId(fieldId2);
+		invFieldDto.setInsurancePlanId(insurancePlanId);
+		invFieldDto.setLastYearCropCommodityId(null);
+		invFieldDto.setLastYearCropCommodityName(null);
+		invFieldDto.setLastYearCropVarietyId(null);
+		invFieldDto.setLastYearCropVarietyName(null);
+		invFieldDto.setIsHiddenOnPrintoutInd(false);
+		invFieldDto.setPlantingNumber(1);
+		invFieldDto.setUnderseededAcres(null);
+		invFieldDto.setUnderseededCropVarietyId(null);
+		invFieldDto.setUnderseededCropVarietyName(null);
+		invFieldDto.setUnderseededInventorySeededForageGuid(null);
+
+		
+		invFieldDao.insert(invFieldDto, userId);
+		inventoryFieldGuid = invFieldDto.getInventoryFieldGuid();
+
+		//INSERT NO VARIETY
+		InventorySeededForageDto isfDto1 = new InventorySeededForageDto();
+		
+		isfDto1.setInventoryFieldGuid(invFieldDto.getInventoryFieldGuid());
+		isfDto1.setCommodityTypeCode(null);
+		isfDto1.setCropCommodityId(null);
+		isfDto1.setCropVarietyId(null);
+		isfDto1.setCropVarietyName(null);
+		isfDto1.setFieldAcres(10.4);
+		isfDto1.setSeedingYear(2015);
+		isfDto1.setSeedingDate(null);
+		isfDto1.setIsIrrigatedInd(true);
+		isfDto1.setIsQuantityInsurableInd(false);
+		isfDto1.setPlantInsurabilityTypeCode(null);
+		isfDto1.setIsAwpEligibleInd(false);
+		
+		invSeededForageDao.insert(isfDto1, userId);
+		Assert.assertNotNull(isfDto1.getInventorySeededForageGuid());
+		
+		//INSERT
+		InventorySeededForageDto isfDto2 = new InventorySeededForageDto();
+		
+		isfDto2.setInventoryFieldGuid(invFieldDto.getInventoryFieldGuid());
+		isfDto2.setCommodityTypeCode("Alfalfa");
+		isfDto2.setCropCommodityId(65);
+		isfDto2.setCropVarietyId(118);
+		isfDto2.setCropVarietyName("ALFALFA/GRASS");
+		isfDto2.setFieldAcres(10.4);
+		isfDto2.setSeedingYear(2015);
+		isfDto2.setSeedingDate(null);
+		isfDto2.setIsIrrigatedInd(true);
+		isfDto2.setIsQuantityInsurableInd(true);
+		isfDto2.setPlantInsurabilityTypeCode("E1");
+		isfDto2.setIsAwpEligibleInd(true);
+		
+		invSeededForageDao.insert(isfDto2, userId);
+		Assert.assertNotNull(isfDto2.getInventorySeededForageGuid());
+
+		//SELECT FOR VERIFIED YIELD
+		// Only the second isf record is returned.
+		List<InventorySeededForageDto> dtos = invSeededForageDao.selectForVerifiedYield(inventoryFieldGuid);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(1, dtos.size());
+
+		InventorySeededForageDto fetchedDto = dtos.get(0);
+		
+		Assert.assertEquals("CropCommodityId", isfDto2.getCropCommodityId(), fetchedDto.getCropCommodityId());
+		Assert.assertEquals("CropVarietyId", isfDto2.getCropVarietyId(), fetchedDto.getCropVarietyId());
+		Assert.assertEquals("CropVarietyName", isfDto2.getCropVarietyName(), fetchedDto.getCropVarietyName());
+		Assert.assertEquals("CommodityTypeCode", isfDto2.getCommodityTypeCode(), fetchedDto.getCommodityTypeCode());
+		Assert.assertEquals("FieldAcres", isfDto2.getFieldAcres(), fetchedDto.getFieldAcres());
+		Assert.assertEquals("SeedingYear", isfDto2.getSeedingYear(), fetchedDto.getSeedingYear());
+		Assert.assertEquals("IsIrrigatedInd", isfDto2.getIsIrrigatedInd(), fetchedDto.getIsIrrigatedInd());
+		Assert.assertEquals("IsQuantityInsurableInd", isfDto2.getIsQuantityInsurableInd(), fetchedDto.getIsQuantityInsurableInd());
+		Assert.assertEquals("PlantInsurabilityTypeCode", isfDto2.getPlantInsurabilityTypeCode(), fetchedDto.getPlantInsurabilityTypeCode());
+		Assert.assertEquals("IsAwpEligibleInd", isfDto2.getIsAwpEligibleInd(), fetchedDto.getIsAwpEligibleInd());
+		
+		//DELETE
+		invSeededForageDao.delete(isfDto1.getInventorySeededForageGuid());
+		invSeededForageDao.delete(isfDto2.getInventorySeededForageGuid());
+		
+		//SELECT
+		dtos = invSeededForageDao.select(inventoryFieldGuid);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size());
+
+		//DELETE parent InventoryField
+		invFieldDao.delete(inventoryFieldGuid);		
+	}
+	
 	
 	@Test 
 	public void testDeleteForField() throws Exception {
@@ -449,8 +551,6 @@ public class InventorySeededForageDaoTest {
 	
 	@Test
 	public void testSelectForDopContractCommodityTotals() throws Exception {
-
-		FieldDao dao = persistenceSpringConfig.fieldDao();
 
 		String userId = "JUNIT_TEST";
 		String ctcAlfalfa = "Alfalfa";

@@ -56,7 +56,6 @@
 
   inventory-printout-grain {
     display: block !important;
-    // font-family: 'BCSans';
   }
 
   base-wrapper {
@@ -65,7 +64,7 @@
 
   #core-interface-container mat-sidenav-container mat-sidenav-content {
     top: 0px !important;
-    font-family: 'Noto Sans', 'BC Sans', 'Verdana', 'sans-serif';  /* font set for entire printout */ // 'BCSans', 'Noto Sans', 
+    font-family: 'Noto Sans', 'Verdana', 'sans-serif';  /* font set for entire printout */ 
   }
   .user-summary.ng-star-inserted {
     display: none !important;

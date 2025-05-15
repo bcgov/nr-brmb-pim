@@ -288,5 +288,26 @@ public class InventorySeededForageDaoImpl extends BaseDao implements InventorySe
 
 		logger.debug(">selectForDopContractCommodityTotals " + dtos);
 		return dtos;
-	}	
+	}
+
+	@Override
+	public List<InventorySeededForageDto> selectForVerifiedYield(String inventoryFieldGuid) throws DaoException {
+		logger.debug("<selectForVerifiedYield");
+	
+		List<InventorySeededForageDto> dtos = null;
+	
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			
+			parameters.put("inventoryFieldGuid", inventoryFieldGuid);
+						
+			dtos = this.mapper.selectForVerifiedYield(parameters);
+	
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+	
+		logger.debug(">selectForVerifiedYield " + dtos);
+		return dtos;
+	}
 }

@@ -145,8 +145,9 @@ public class DeclaredYieldContractCommodityForageDaoImpl extends BaseDao impleme
 		
 	}	
 	
+	
 	@Override
-	public List<DeclaredYieldContractCommodityForageDto> selectForDeclaredYieldContract(String declaredYieldContractGuid) throws DaoException {
+	public List<DeclaredYieldContractCommodityForageDto> selectForDeclaredYieldContract(String declaredYieldContractGuid, sortOrder order) throws DaoException {
 
 		logger.debug("<selectForDeclaredYieldContract");
 
@@ -154,8 +155,16 @@ public class DeclaredYieldContractCommodityForageDaoImpl extends BaseDao impleme
 
 		try {
 			Map<String, Object> parameters = new HashMap<String, Object>();
+
+			String orderBy = "ctc.description"; //default
+			if(order.equals(sortOrder.CommodityType)) {
+				orderBy = "ctc.description";
+			} else if(order.equals(sortOrder.CommodityNameCommodityType)) {
+				orderBy = "c.commodity_name, ctc.description";
+			}
 			
 			parameters.put("declaredYieldContractGuid", declaredYieldContractGuid);
+			parameters.put("orderBy", orderBy);
 						
 			dtos = this.mapper.selectForDeclaredYieldContract(parameters);
 

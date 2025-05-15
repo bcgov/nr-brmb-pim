@@ -1,5 +1,5 @@
 <div class="plcy-inv-cmdty-totals-header"
-    style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 125px 60px; padding-left: 10px;">
+    style="grid-template-columns: 180px 100px 115px 95px 20px 115px 115px 110px 20px 125px 60px;  padding-left: 0px;">
 
     <div *ngIf="isUnsaved" class="table-header border-top border-left border-right"
         style="grid-column-start: 1; grid-column-end: 10;">
@@ -12,10 +12,10 @@
         </span>
     </div>
 
-    <div class="table-header border-top border-left" style="grid-column-start: 1; grid-column-end: 7; padding-top: 8px;">
+    <div class="table-header border-top border-left" style="text-align: left; padding-left: 6px; padding-top: 8px; background-color: #F5F5FF; grid-column-start: 1; grid-column-end: 9;">
         Commodity Totals
     </div>
-    <div class="table-header border-top border-right" style="grid-column-start: 7; grid-column-end: 10; text-align: right; height:40px; padding-top:2px; padding-right: 1px;">
+    <div class="table-header border-top border-right" style="grid-column-start: 9; grid-column-end: 12; text-align: right; height:40px; padding-top:2px; padding-right: 1px; background-color: #F5F5FF;">
         <button 
             mat-raised-button class="secondary" 
             (click)="goToYieldCalculatorLink()">
@@ -23,42 +23,45 @@
         </button>
     </div>
 
-    <div class="header border-top border-bottom border-right  border-left">
-        Commodity
+    <div class="header border-top border-bottom border-right border-left">
+        {{ ( isGrainPolicy() ? "Commodity" : "Type" ) }}
     </div>
-    <div class="border-right header border-top border-bottom"
+    <div class="border-right header border-top border-bottom" style="text-align: center;"
         matTooltip="Acres are rounded to the nearest tenth after the decimal point.">
         Insured Acres
     </div>
-    <div class="border-right header border-top border-bottom"
+    <div class="border-right header border-top border-bottom" style="text-align: center;"
         matTooltip="Acres are rounded to the nearest tenth after the decimal point.">
         Harvested Acres
     </div>
-    <div class="border-right header border-top border-bottom"
+    <div class="header border-top border-bottom" style="text-align: center;"
         matTooltip="Acres are rounded to the nearest tenth after the decimal point.">
         Override Acres
     </div>
-    <div class="header border-top border-bottom border-right">
+    <div class="border-right border-top border-bottom border-right"><!-- editable icon --> </div>
+    <div class="header border-top border-bottom border-right" style="text-align: center;">
         Production Guarantee
     </div>
-    <div class="header border-top border-bottom border-right">
+    <div class="header border-top border-bottom border-right" style="text-align: center;">
         Harvested Yield
     </div>
-    <div class="header border-top border-bottom border-right">
+    <div class="header border-top border-bottom" style="text-align: center;">
         Override Yield
     </div>
-    <div class="header border-top border-bottom border-right">
+    <div class="border-right border-top border-bottom"><!-- editable icon --> </div>
+    <div class="header border-top border-bottom border-right" style="text-align: center;">
         Yield/ac
     </div>
 
-    <div class="header border-top border-bottom border-right">
+    <div class="header border-top border-bottom border-right" style="text-align: center;">
         Actions
     </div>
 
-    <div class="grain-unsdd-inv-tot-cmdty-container"
-        style="grid-template-columns: 140px 100px 115px 115px 115px 115px 130px 125px 60px; margin-left: 0px;">
-        <verified-yield-commodity *ngFor="let commodity of commodities" [commodity]="commodity"
-            [commoditiesFormArray]="commoditiesFormArray"
+    <div class="verified-yield-commodities-container"
+        style="grid-template-columns: 180px 100px 115px 95px 20px 115px 115px 110px 20px 125px 60px; margin-left: 0px;">
+        <verified-yield-commodity *ngFor="let commodity of commodities" 
+            [commodity]="commodity"
+            [commoditiesFormArray]="commoditiesFormArray"            
             style="display: contents;"></verified-yield-commodity>
 
     </div>

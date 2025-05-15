@@ -11,6 +11,7 @@ public class VerifiedYieldContractCommodity implements Serializable {
 	private String verifiedYieldContractCommodityGuid;
 	private String verifiedYieldContractGuid;
 	private Integer cropCommodityId;
+	private String commodityTypeCode;
 	private Boolean isPedigreeInd;
 	private Double harvestedAcres;
 	private Double harvestedAcresOverride;
@@ -23,6 +24,10 @@ public class VerifiedYieldContractCommodity implements Serializable {
 
 	private String cropCommodityName;
 	private Double totalInsuredAcres;
+	private String commodityTypeDescription;
+	private String displayName;
+	private Boolean isRolledupInd;
+
 	
 	public String getVerifiedYieldContractCommodityGuid() {
 		return verifiedYieldContractCommodityGuid;
@@ -122,4 +127,35 @@ public class VerifiedYieldContractCommodity implements Serializable {
 		this.totalInsuredAcres = totalInsuredAcres;
 	}
 		
+	public String getCommodityTypeCode() {
+		return commodityTypeCode;
+	}
+
+	public void setCommodityTypeCode(String commodityTypeCode) {
+		this.commodityTypeCode = commodityTypeCode;
+	}
+
+	public String getCommodityTypeDescription() {
+		return commodityTypeDescription;
+	}
+
+	public void setCommodityTypeDescription(String commodityTypeDescription) {
+		this.commodityTypeDescription = commodityTypeDescription;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public Boolean getIsRolledupInd() {
+		return isRolledupInd;
+	}
+
+	public void setIsRolledupInd(Boolean isRolledupInd) {
+		this.isRolledupInd = isRolledupInd;
+	}
 }

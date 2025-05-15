@@ -91,7 +91,7 @@ export class ForageDopCommodityComponent implements OnInit {
     updateMoisturePercent(): void {
         let moisturePercent = this.commodityFormGroup.value.moisturePercent;
         moisturePercent = this.decimalPipe.transform(moisturePercent, '1.0-0')?.replace(',', '');
-        this.commodity.moisturePercent = parseFloat(moisturePercent) || null;
+        this.commodity.moisturePercent = isNaN(moisturePercent) ? null : parseFloat(moisturePercent);
 
         this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
     }

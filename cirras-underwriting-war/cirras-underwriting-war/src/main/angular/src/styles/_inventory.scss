@@ -321,7 +321,11 @@
   }
 
   
-  .grain-unsdd-inv-tot-cmdty-container {
+  .grain-unsdd-inv-tot-cmdty-container, 
+  .verified-yield-amendments-container,
+  .verified-yield-commodities-container,
+  .verified-yield-summaries-container
+  {
     display: grid; 
     grid-auto-rows: minmax( 2em, auto );
     grid-template-columns: 136px 180px 160px;
@@ -329,8 +333,17 @@
   
     div {
         display: flex;
-        justify-content: flex-start;
+        //justify-content: flex-start;
         align-items: center;
+        // .justify-center {
+        //   justify-content: center;
+        // }
+        // .justify-left{
+        //   justify-content: flex-start;
+        // }
+        // .justify-right{
+        //   justify-content: flex-end;
+        // }
     }
   
     .header {

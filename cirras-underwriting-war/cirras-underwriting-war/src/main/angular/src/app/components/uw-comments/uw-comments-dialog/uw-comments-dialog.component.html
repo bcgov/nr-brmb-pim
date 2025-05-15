@@ -4,6 +4,27 @@
         <div class="row-group-left">
             <div class="comments-container comments-info">
 
+                <!-- Verified Yield Summary Comments headers -->
+                <div class="five-columns vys-comments-header" *ngIf="data.underwritingCommentTypeCode === 'VY'">
+                    <div class="justify-left padding-bottom">
+                        Commodity
+                        <span class="header">{{ data.commodityName }}</span>
+                    </div>
+                    <div class="justify-left padding-bottom">
+                        <!-- empty div -->
+                    </div>
+                    <div class="justify-left padding-bottom">
+                        <!-- empty div -->
+                    </div>
+                    <div class="justify-left padding-bottom"></div>
+                    <div class="justify-right padding-bottom">
+                        <button *ngIf="securityUtilService.canEditInventory()" mat-raised-button color="secondary"
+                            class="header-button" (click)="onAddNewComment()">
+                            <mat-icon>add</mat-icon> Add Comment
+                        </button>
+                    </div>
+                </div>
+
                 <!-- DOP Comments headers -->
                 <div class="five-columns dop-comments-header" *ngIf="data.underwritingCommentTypeCode === 'DOP'">
                     <div class="justify-left padding-bottom">

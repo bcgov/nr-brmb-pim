@@ -338,7 +338,8 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 			}
 			else if(resource.getVerifiedYieldContractGuid() == null 
 				&& resource.getPolicyId() != null 
-				&& resource.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.GRAIN.toString())
+				&& (resource.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.GRAIN.toString())
+					|| resource.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.FORAGE.toString())) 
 				&& authentication.hasAuthority(Scopes.CREATE_VERIFIED_YIELD_CONTRACT)) {
 				// Verified Yield does not exist, but could be rolled over.
 				String result = UriBuilder

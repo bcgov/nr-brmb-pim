@@ -26,6 +26,8 @@ export class UwCommentsDialogComponent {
                 return "Inventory Comments";
             case UW_COMMENT_TYPE_CODE.DOP_GENERAL:
                 return "DOP Comments";
+            case UW_COMMENT_TYPE_CODE.VERIFIED_YIELD_GENERAL:
+                return "Verified Yield Summary Comments"
             default:
                 return "Underwriting Comments";
         }
@@ -44,6 +46,7 @@ export class UwCommentsDialogComponent {
             underwritingComment: '',
             growerContractYearId: this.data.growerContractYearId,
             declaredYieldContractGuid: this.data.declaredYieldContractGuid,
+            verifiedYieldSummaryGuid: this.data.verifiedYieldSummaryGuid,
             createUser: '',
             createDate: '',
             updateUser: '',

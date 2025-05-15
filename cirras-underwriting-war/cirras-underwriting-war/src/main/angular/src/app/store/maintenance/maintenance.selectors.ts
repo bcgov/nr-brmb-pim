@@ -1,4 +1,4 @@
-import { CropVarietyInsurabilityList, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, UnderwritingYearList, YieldMeasUnitConversionList } from "src/app/conversion/models-maintenance";
+import { CropVarietyInsurabilityList, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, UnderwritingYearList, UserSetting, YieldMeasUnitConversionList } from "src/app/conversion/models-maintenance";
 import {RootState} from "../index";
 
 export const selectUnderwritingYears = () => (state: RootState): UnderwritingYearList => 
@@ -19,3 +19,6 @@ export const selectCropVarietyInsurabilityList = () => (state: RootState): CropV
 
 export const selectYieldMeasUnitConversionList = () => (state: RootState): YieldMeasUnitConversionList => 
 ((state.maintenance) ? state.maintenance.yieldMeasUnitConversionList : null );  
+
+export const selectUserSetting = () => (state: RootState): UserSetting => 
+    ((state.maintenance) ? state.maintenance.userSetting : null );  

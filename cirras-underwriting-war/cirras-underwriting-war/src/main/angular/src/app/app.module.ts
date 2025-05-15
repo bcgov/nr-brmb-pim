@@ -141,6 +141,11 @@ import { VerifiedYieldCommodityComponent } from './components/verified-yield/com
 import { VerifiedYieldAmendmentListComponent } from "./components/verified-yield/amendment-list/verified-yield-amendment-list.component";
 import { VerifiedYieldAmendmentComponent } from "./components/verified-yield/amendment/verified-yield-amendment.component";
 import { OtherYearPolicyComponent } from "./components/grower-contract-header/other-year-policy/other-year-policy.component";
+import { VerifiedYieldSummaryListComponent } from "./components/verified-yield/summary-list/verified-yield-summary-list.component";
+import { VerifiedYieldSummaryComponent } from "./components/verified-yield/summary/verified-yield-summary.component";
+import { VerifiedYieldGrainBasketComponent } from "./components/verified-yield/grain-basket/verified-yield-grain-basket.component";
+import { UserSettingsComponent } from "./components/maintain/user-settings/user-settings.component";
+import { UserSettingsContainer } from "./containers/maintenance/user-settings-container";
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -245,7 +250,12 @@ if (!environment.production || !environment.restrict_imports) {
         VerifiedYieldCommodityListComponent,
         VerifiedYieldCommodityComponent,
         VerifiedYieldAmendmentListComponent,
-        VerifiedYieldAmendmentComponent
+        VerifiedYieldAmendmentComponent,
+        VerifiedYieldSummaryListComponent,
+        VerifiedYieldSummaryComponent,
+        VerifiedYieldGrainBasketComponent,
+        UserSettingsComponent,
+        UserSettingsContainer
     ],
     bootstrap: [AppComponent], imports: [CirrasUnderwritingAPIServiceModule,
         DragDropModule,

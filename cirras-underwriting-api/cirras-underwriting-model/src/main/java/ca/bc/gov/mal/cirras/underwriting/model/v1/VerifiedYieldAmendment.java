@@ -12,6 +12,7 @@ public class VerifiedYieldAmendment implements Serializable {
 	private String verifiedYieldAmendmentCode;
 	private String verifiedYieldContractGuid;
 	private Integer cropCommodityId;
+	private Integer cropVarietyId;
 	private Boolean isPedigreeInd;
 	private Integer fieldId;
 	private Double yieldPerAcre;
@@ -20,6 +21,7 @@ public class VerifiedYieldAmendment implements Serializable {
 
 	// Extended columns
 	private String cropCommodityName;
+	private String cropVarietyName;
 	private String fieldLabel;
 	
 	private Boolean deletedByUserInd;
@@ -50,6 +52,14 @@ public class VerifiedYieldAmendment implements Serializable {
 	}
 	public void setCropCommodityId(Integer cropCommodityId) {
 		this.cropCommodityId = cropCommodityId;
+	}
+
+	public Integer getCropVarietyId() {
+		return cropVarietyId;
+	}
+
+	public void setCropVarietyId(Integer cropVarietyId) {
+		this.cropVarietyId = cropVarietyId;
 	}
 
 	public Boolean getIsPedigreeInd() {
@@ -94,6 +104,14 @@ public class VerifiedYieldAmendment implements Serializable {
 		this.cropCommodityName = cropCommodityName;
 	}
 
+	public String getCropVarietyName() {
+		return cropVarietyName;
+	}
+
+	public void setCropVarietyName(String cropVarietyName) {
+		this.cropVarietyName = cropVarietyName;
+	}
+	
 	public String getFieldLabel() {
 		return fieldLabel;
 	}

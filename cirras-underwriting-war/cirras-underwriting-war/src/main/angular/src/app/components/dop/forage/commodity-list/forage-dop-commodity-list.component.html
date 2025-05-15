@@ -1,8 +1,8 @@
 <div class="plcy-inv-cmdty-totals-header"
-    style="grid-template-columns: 140px 100px 115px 115px 115px 115px 115px 75px; padding-left: 10px;">
+    style="grid-template-columns: 140px 100px 95px 20px 115px 115px 115px 115px 75px; padding-left: 10px;">
 
     <div *ngIf="isUnsaved" class="table-header border-top border-left border-right"
-        style="grid-column-start: 1; grid-column-end: 9;">
+        style="grid-column-start: 1; grid-column-end: 10;">
         <span #el matTooltip="" style="margin-left:10px;">
             <mat-icon
                 [ngStyle]="{'color':'orangered', 'font-size':'large', 'padding-top': '4px'}">warning_amber</mat-icon>
@@ -12,7 +12,7 @@
         </span>
     </div>
 
-    <div class="table-header border-top border-left border-right" style="grid-column-start: 1; grid-column-end: 9;">
+    <div class="table-header border-top border-left border-right" style="grid-column-start: 1; grid-column-end: 10;">
         Commodity Totals
     </div>
 
@@ -23,10 +23,11 @@
         matTooltip="Acres are rounded to the nearest tenth after the decimal point.">
         Insured Acres
     </div>
-    <div class="border-right header border-top border-bottom"
+    <div class="header border-top border-bottom"
         matTooltip="Acres are rounded to the nearest tenth after the decimal point.">
         Harvested Acres
     </div>
+    <div class="border-right border-top border-bottom"><!-- div for editable icon --> </div>
     <div class="border-right header border-top border-bottom">
         # Bales/Loads
     </div>
@@ -44,7 +45,7 @@
     </div>
 
     <div class="grain-unsdd-inv-tot-cmdty-container"
-        style="grid-template-columns: 140px 100px 115px 115px 115px 115px 115px 75px; margin-left: 0px;">
+        style="grid-template-columns: 140px 100px 95px 20px 115px 115px 115px 115px 75px; margin-left: 0px;">
         <forage-dop-commodity *ngFor="let commodity of commodities" [commodity]="commodity"
             [commoditiesFormArray]="commoditiesFormArray" [decimalPrecision]="decimalPrecision"
             style="display: contents;"></forage-dop-commodity>
@@ -55,9 +56,10 @@
         <div class="header readonly border-right border-bottom center">
             {{ totalFieldAcresTotal | number: '1.0-1' }}
         </div>
-        <div class="header readonly border-right border-bottom center">
+        <div class="header readonly border-bottom center">
             {{ harvestedAcresTotal | number: '1.0-1' }}
         </div>
+        <div class="border-right border-bottom"></div>
         <div class="readonly border-right border-bottom center">
         </div>
         <div class="readonly border-right border-bottom center">

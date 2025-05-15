@@ -1,6 +1,7 @@
-import { CropVarietyInsurabilityList, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, UnderwritingYearList, YieldMeasUnitConversionList } from "src/app/conversion/models-maintenance";
+import { CropVarietyInsurabilityList, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, UnderwritingYearList, UserSetting, YieldMeasUnitConversionList } from "src/app/conversion/models-maintenance";
  
   export const MAINTENANCE_COMPONENT_ID = "maintenanceComponents";
+  export const USER_SETTINGS_COMPONENT_ID = "userSettingsComponent";
 
   export interface MaintenanceState {
     underwritingYears?: UnderwritingYearList;
@@ -9,6 +10,7 @@ import { CropVarietyInsurabilityList, GradeModifierList, GradeModifierTypeList, 
     gradeModifierList?: GradeModifierList;
     cropVarietyInsurabilityList? : CropVarietyInsurabilityList,
     yieldMeasUnitConversionList? : YieldMeasUnitConversionList,
+    userSetting?: UserSetting,
   }
   
   export function getDefaultMaintenanceState(): MaintenanceState {
@@ -19,5 +21,6 @@ import { CropVarietyInsurabilityList, GradeModifierList, GradeModifierTypeList, 
         gradeModifierList: null,
         cropVarietyInsurabilityList: null,
         yieldMeasUnitConversionList: null,
+        userSetting: null,
     };
   }

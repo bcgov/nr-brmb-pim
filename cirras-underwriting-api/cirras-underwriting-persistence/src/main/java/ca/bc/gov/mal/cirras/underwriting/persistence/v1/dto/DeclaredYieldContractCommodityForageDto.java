@@ -32,7 +32,9 @@ public class DeclaredYieldContractCommodityForageDto extends BaseDto<DeclaredYie
 	private String commodityTypeDescription;
 	private Double totalFieldAcres;
 	private Integer cropCommodityId;
+	private String cropCommodityName;
 	private String plantDurationTypeCode;
+	private Boolean isRolledupInd;
 
 	
 	public DeclaredYieldContractCommodityForageDto() {
@@ -58,7 +60,9 @@ public class DeclaredYieldContractCommodityForageDto extends BaseDto<DeclaredYie
 
 		this.commodityTypeDescription = dto.commodityTypeDescription;
 		this.cropCommodityId = dto.cropCommodityId;
+		this.cropCommodityName = dto.cropCommodityName;
 		this.plantDurationTypeCode = dto.plantDurationTypeCode;
+		this.isRolledupInd = dto.isRolledupInd;
 
 	}
 	
@@ -238,6 +242,14 @@ public class DeclaredYieldContractCommodityForageDto extends BaseDto<DeclaredYie
 	public void setCropCommodityId(Integer cropCommodityId) {
 		this.cropCommodityId = cropCommodityId;
 	}
+
+	public String getCropCommodityName() {
+		return cropCommodityName;
+	}
+
+	public void setCropCommodityName(String cropCommodityName) {
+		this.cropCommodityName = cropCommodityName;
+	}
 	
 	public String getPlantDurationTypeCode() {
 		return plantDurationTypeCode;
@@ -245,6 +257,14 @@ public class DeclaredYieldContractCommodityForageDto extends BaseDto<DeclaredYie
 
 	public void setPlantDurationTypeCode(String plantDurationTypeCode) {
 		this.plantDurationTypeCode = plantDurationTypeCode;
+	}
+	
+	public Boolean getIsRolledupInd() {
+		return isRolledupInd;
+	}
+
+	public void setIsRolledupInd(Boolean isRolledupInd) {
+		this.isRolledupInd = isRolledupInd;
 	}
 
 }

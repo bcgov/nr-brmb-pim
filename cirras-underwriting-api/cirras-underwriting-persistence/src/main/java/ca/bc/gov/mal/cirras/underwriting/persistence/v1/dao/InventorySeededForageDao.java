@@ -34,4 +34,6 @@ public interface InventorySeededForageDao extends Serializable {
 
     List<InventorySeededForageDto> selectForDopContractCommodityTotals(Integer contractId, Integer cropYear) throws DaoException;
 
+    List<InventorySeededForageDto> selectForVerifiedYield(String inventoryFieldGuid) throws DaoException;
+
 }

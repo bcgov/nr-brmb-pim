@@ -23,6 +23,7 @@
 		
 		<result property="commodityTypeDescription" column="commodity_type_description" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="cropCommodityId" column="crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="cropCommodityName" column="commodity_name" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="plantDurationTypeCode" column="plant_duration_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
 		
 	</resultMap>
@@ -125,12 +126,13 @@
 		<include refid="selectColumns"/>,
 			ctc.description as commodity_type_description,
 			ctc.crop_commodity_id,
-			c.plant_duration_type_code
+			c.plant_duration_type_code,
+			c.commodity_name
 		from declared_yield_contract_cmdty_forage t
 		join commodity_type_code ctc on ctc.commodity_type_code = t.commodity_type_code
 		join crop_commodity c ON c.crop_commodity_id = ctc.crop_commodity_id	
 		where t.declared_yield_contract_guid = #{declaredYieldContractGuid}
-		order by ctc.description
+		order by ${orderBy}
 	</select> 
 
 	<select id="selectToRecalculate" resultMap="DeclaredYieldContractCommodityForageDtoMap">

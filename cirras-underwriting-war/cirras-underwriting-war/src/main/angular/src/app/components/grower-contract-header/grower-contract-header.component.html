@@ -34,9 +34,9 @@
         [ngClass]="isLinkActive('seeded') ? 'active' : 'inactive'">
             Seeded Inventory
     </div>
-    <div class="filler"><!-- empty div --> </div>
+    <div *ngIf="userCanAccessDop();" class="filler"><!-- empty div --> </div>
     <div 
-        *ngIf="userCanAccessDop(); else noLink" 
+        *ngIf="userCanAccessDop();" 
         (click)="goToLink('dop')"
         [ngClass]="isLinkActive('dop') ? 'active' : 'inactive'">
             <mat-icon 
@@ -46,21 +46,17 @@
             </mat-icon>
     </div>
     <div 
-        *ngIf="userCanAccessDop(); else noLink" 
+        *ngIf="userCanAccessDop();" 
         (click)="goToLink('dop')"
         [ngClass]="isLinkActive('dop') ? 'active' : 'inactive'">
             Declaration of Production
     </div>
 
-    <ng-template #noLink>
-        <div class="filler"><!-- empty div to account for space when there is no dop link --> </div>
-    </ng-template>
-
-    <div class="filler"></div>
+    <div *ngIf="userCanAccessVerifiedYield();"  class="filler"></div>
     
     <!-- verified link -->
     <div 
-        *ngIf="userCanAccessVerifiedYield(); else noLink" 
+        *ngIf="userCanAccessVerifiedYield();" 
         (click)="goToLink('verifiedYield')"
         [ngClass]="isLinkActive('verifiedYield') ? 'active' : 'inactive'">
             <mat-icon 
@@ -70,13 +66,13 @@
             </mat-icon>
     </div>
     <div 
-        *ngIf="userCanAccessVerifiedYield(); else noLink" 
+        *ngIf="userCanAccessVerifiedYield();" 
         (click)="goToLink('verifiedYield')"
         [ngClass]="isLinkActive('verifiedYield') ? 'active' : 'inactive'">
             Verified Yield
     </div>
 
-    <div class="filler"></div>
+    <!-- <div class="filler"></div> -->
 
 </div>
 
