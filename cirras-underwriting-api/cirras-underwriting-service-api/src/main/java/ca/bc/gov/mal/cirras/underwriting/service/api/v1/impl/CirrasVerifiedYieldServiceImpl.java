@@ -13,6 +13,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractSimple;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ContractedFieldDetailDao;
@@ -575,6 +576,78 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		if (verifiedGrainBaskets.size() > 0) {
 			dto.setVerifiedYieldGrainBasket(verifiedGrainBaskets.get(0));
 		}
+	}
+	
+	@Override
+	public VerifiedYieldContractSimple getVerifiedYieldContractSimple(
+			Integer cropYear,
+			Integer contractId,
+			Integer cropCommodityId,
+			Boolean isPedigreeInd,
+			Boolean loadVerifiedYieldContractCommodities,
+			Boolean loadVerifiedYieldAmendments,
+			Boolean loadVerifiedYieldSummaries,
+			Boolean loadVerifiedYieldGrainBasket,
+			FactoryContext factoryContext, 
+			WebAdeAuthentication authentication
+			)
+			throws ServiceException, NotFoundException {
+
+		logger.debug("<getVerifiedYieldContractSimple");
+
+		VerifiedYieldContractSimple result = null;
+
+		try {
+			VerifiedYieldContractDto dto = verifiedYieldContractDao.getByContractAndYear(contractId, cropYear);
+
+			if (dto == null) {
+				throw new NotFoundException("Did not find the verified yield contract. contractId: " + contractId + "; cropYear: " + cropYear);
+			}
+
+			result = loadVerifiedYieldContractSimple(
+						dto, 
+						cropCommodityId,
+						isPedigreeInd,
+						loadVerifiedYieldContractCommodities,
+						loadVerifiedYieldAmendments,
+						loadVerifiedYieldSummaries,
+						loadVerifiedYieldGrainBasket,
+						factoryContext, 
+						authentication);
+
+		} catch (DaoException e) {
+			throw new ServiceException("DAO threw an exception", e);
+		}
+
+		logger.debug(">getVerifiedYieldContractSimple");
+		return result;
+	}	
+
+	private VerifiedYieldContractSimple loadVerifiedYieldContractSimple(
+			VerifiedYieldContractDto dto,
+			Integer cropCommodityId,
+			Boolean isPedigreeInd,
+			Boolean loadVerifiedYieldContractCommodities,
+			Boolean loadVerifiedYieldAmendments,
+			Boolean loadVerifiedYieldSummaries,
+			Boolean loadVerifiedYieldGrainBasket,
+			FactoryContext factoryContext, 
+			WebAdeAuthentication authentication) throws DaoException {
+
+		if(Boolean.TRUE.equals(loadVerifiedYieldContractCommodities)) {
+			loadVerifiedYieldContractCommodities(dto);
+		}
+		if(Boolean.TRUE.equals(loadVerifiedYieldAmendments)) {
+			loadVerifiedYieldAmendments(dto);
+		}
+		if(Boolean.TRUE.equals(loadVerifiedYieldSummaries)) {
+			loadVerifiedYieldSummaries(dto);
+		}
+		if(Boolean.TRUE.equals(loadVerifiedYieldGrainBasket)) {
+			loadVerifiedYieldGrainBasket(dto);
+		}
+
+		return verifiedYieldContractFactory.getVerifiedYieldContractSimple(dto, cropCommodityId, isPedigreeInd, factoryContext, authentication);
 	}
 	
 	@Override
