@@ -5,7 +5,10 @@ import java.util.List;
 
 public interface VerifiedYieldContractSimple extends Serializable {
 
- 	public Integer getContractId();
+ 	public String getVerifiedYieldContractGuid();
+	public void setVerifiedYieldContractGuid(String verifiedYieldContractGuid);
+
+	public Integer getContractId();
 	public void setContractId(Integer contractId);
  
  	public Integer getCropYear();

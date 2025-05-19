@@ -68,8 +68,8 @@ public interface CirrasVerifiedYieldService {
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	VerifiedYieldContractSimple getVerifiedYieldContractSimple(
-		Integer cropYear,
 		Integer contractId,
+		Integer cropYear,
 		Integer cropCommodityId,
 		Boolean isPedigreeInd,
 		Boolean loadVerifiedYieldContractCommodities,

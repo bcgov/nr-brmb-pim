@@ -580,8 +580,8 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	
 	@Override
 	public VerifiedYieldContractSimple getVerifiedYieldContractSimple(
-			Integer cropYear,
 			Integer contractId,
+			Integer cropYear,
 			Integer cropCommodityId,
 			Boolean isPedigreeInd,
 			Boolean loadVerifiedYieldContractCommodities,
@@ -596,6 +596,11 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		logger.debug("<getVerifiedYieldContractSimple");
 
 		VerifiedYieldContractSimple result = null;
+
+		//Is pedigree needs to be set if commodity is set
+		if(cropCommodityId != null && isPedigreeInd == null) {
+			throw new ServiceException("IsPedigreed needs to be set if commodity is set");
+		}
 
 		try {
 			VerifiedYieldContractDto dto = verifiedYieldContractDao.getByContractAndYear(contractId, cropYear);

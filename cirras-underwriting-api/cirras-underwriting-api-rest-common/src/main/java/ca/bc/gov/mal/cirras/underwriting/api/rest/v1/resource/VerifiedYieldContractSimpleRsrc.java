@@ -23,6 +23,7 @@ public class VerifiedYieldContractSimpleRsrc extends BaseResource implements Ver
 
 	private static final long serialVersionUID = 1L;
 
+	private String verifiedYieldContractGuid;
 	private Integer contractId;
 	private Integer cropYear;
 	
@@ -30,6 +31,13 @@ public class VerifiedYieldContractSimpleRsrc extends BaseResource implements Ver
 	private List<VerifiedYieldAmendment> verifiedYieldAmendments = new ArrayList<VerifiedYieldAmendment>();
 	private List<VerifiedYieldSummary> verifiedYieldSummaries = new ArrayList<VerifiedYieldSummary>();
 	private VerifiedYieldGrainBasket verifiedYieldGrainBasket;
+
+	public String getVerifiedYieldContractGuid() {
+		return verifiedYieldContractGuid;
+	}
+	public void setVerifiedYieldContractGuid(String verifiedYieldContractGuid) {
+		this.verifiedYieldContractGuid = verifiedYieldContractGuid;
+	}
 
 	public Integer getContractId() {
 		return contractId;

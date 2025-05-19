@@ -36,6 +36,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SeedingDeadlineLis
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractSimpleRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.YieldMeasUnitConversionListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.YieldMeasUnitTypeCodeListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SyncCodeRsrc;
@@ -45,7 +46,6 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SyncCommodityVarie
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UnderwritingYearListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UnderwritingYearRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UserSettingRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.client.v1.ValidationException;
 import ca.bc.gov.nrs.common.wfone.rest.resource.CodeTableListRsrc;
 import ca.bc.gov.nrs.common.wfone.rest.resource.CodeTableRsrc;
 import ca.bc.gov.nrs.common.wfone.rest.resource.HealthCheckResponseRsrc;
@@ -189,6 +189,20 @@ public interface CirrasUnderwritingService {
 	VerifiedYieldContractRsrc updateVerifiedYieldContract(VerifiedYieldContractRsrc resource) throws CirrasUnderwritingServiceException, ValidationException;
 
 	void deleteVerifiedYieldContract(VerifiedYieldContractRsrc resource) throws CirrasUnderwritingServiceException;
+
+	//////////////////////////////////////////////////////
+	// Verified Yield Contract Simple
+	//////////////////////////////////////////////////////
+	VerifiedYieldContractSimpleRsrc getVerifiedYieldContractSimple(
+			EndpointsRsrc parent,
+			String contractId, 
+			String cropYear, 
+			String commodityId,
+			String isPedigreeInd, 
+			String loadVerifiedYieldContractCommodities,
+			String loadVerifiedYieldAmendments, 
+			String loadVerifiedYieldSummaries, 
+			String loadVerifiedYieldGrainBasket) throws CirrasUnderwritingServiceException;
 	
 	//////////////////////////////////////////////////////
 	// Seeding Deadline

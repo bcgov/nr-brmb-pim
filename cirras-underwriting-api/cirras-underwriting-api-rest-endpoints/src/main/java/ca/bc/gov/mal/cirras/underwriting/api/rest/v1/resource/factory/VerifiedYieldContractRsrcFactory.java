@@ -4,6 +4,7 @@ import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
 import ca.bc.gov.nrs.common.wfone.rest.resource.RelLink;
 import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
+import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
@@ -21,8 +22,10 @@ import java.util.stream.Collectors;
 
 import javax.ws.rs.core.UriBuilder;
 
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.PolicyEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.VerifiedYieldContractEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.VerifiedYieldContractListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.VerifiedYieldContractSimpleEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
@@ -289,10 +292,17 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		
 		VerifiedYieldContractSimpleRsrc resource = new VerifiedYieldContractSimpleRsrc();
 
+		resource.setVerifiedYieldContractGuid(dto.getVerifiedYieldContractGuid());
 		resource.setContractId(dto.getContractId());
 		resource.setCropYear(dto.getCropYear());
 		
 		boolean returnAll = (cropCommodityId == null);
+		
+		if(cropCommodityId != null) {
+			if (isPedigreeInd == null) {
+				throw new ServiceException("IsPedigreed needs to be set if commodity is set");
+			}
+		}
 
 		// Verified Yield Contract Commodity
 		if (!dto.getVerifiedYieldContractCommodities().isEmpty()) {
@@ -302,8 +312,9 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 
 				//Only return records of the commodity if the parameter is not null
 				if(returnAll == true || 
-						(returnAll == false && cropCommodityId.equals(vyccDto.getCropCommodityId()) &&
-						isPedigreeInd != null && isPedigreeInd.equals(vyccDto.getIsPedigreeInd()))) {
+						(returnAll == false &&
+							cropCommodityId.equals(vyccDto.getCropCommodityId()) &&
+							isPedigreeInd.equals(vyccDto.getIsPedigreeInd()))) {
 					VerifiedYieldContractCommodity vyccModel = createVerifiedYieldContractCommodity(vyccDto, dto.getInsurancePlanId());
 					verifiedContractCommodities.add(vyccModel);
 				}					
@@ -321,8 +332,9 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 				
 				//Only return records of the commodity if the parameter is not null
 				if(returnAll == true || 
-						(returnAll == false && cropCommodityId.equals(vyaDto.getCropCommodityId()) &&
-						isPedigreeInd != null && isPedigreeInd.equals(vyaDto.getIsPedigreeInd()))) {
+						(returnAll == false &&
+							cropCommodityId.equals(vyaDto.getCropCommodityId()) &&
+							isPedigreeInd.equals(vyaDto.getIsPedigreeInd()))) {
 					VerifiedYieldAmendment vyaModel = createVerifiedYieldAmendment(vyaDto);
 					verifiedYieldAmendments.add(vyaModel);
 				}
@@ -340,8 +352,9 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 				
 				//Only return records of the commodity if the parameter is not null
 				if(returnAll == true || 
-						(returnAll == false && cropCommodityId.equals(vysDto.getCropCommodityId()) &&
-						isPedigreeInd != null && isPedigreeInd.equals(vysDto.getIsPedigreeInd()))) {
+						(returnAll == false && 
+							cropCommodityId.equals(vysDto.getCropCommodityId()) &&
+							isPedigreeInd.equals(vysDto.getIsPedigreeInd()))) {
 					VerifiedYieldSummary vysModel = createVerifiedYieldSummary(vysDto, authentication);
 					verifiedYieldSummaries.add(vysModel);
 				}				
@@ -835,6 +848,16 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		}
 		
 	}
+	
+
+	public static String getVerifiedYieldContractSimpleSelfUri(
+			URI baseUri) {
+
+		String result = UriBuilder.fromUri(baseUri).path(VerifiedYieldContractSimpleEndpoint.class).build().toString();
+
+		return result;
+	}
+
 
 	@Override
 	public void updateDto(VerifiedYieldContractDto dto, VerifiedYieldContract<? extends AnnualField, ? extends Message> model, String userId) {
