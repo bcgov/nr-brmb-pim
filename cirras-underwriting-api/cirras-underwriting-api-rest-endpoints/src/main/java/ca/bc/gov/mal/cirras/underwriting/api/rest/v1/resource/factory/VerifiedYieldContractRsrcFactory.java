@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 
 import javax.ws.rs.core.UriBuilder;
 
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.PolicyEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.VerifiedYieldContractEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.VerifiedYieldContractListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.VerifiedYieldContractSimpleEndpoint;
@@ -45,7 +44,6 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetai
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
