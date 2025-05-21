@@ -251,19 +251,38 @@
 		from contracted_field_detail cfd
 		<include refid="selectAdditionalJoins"/>
 		<include refid="selectWhereClause"/>
-		  and gcy.insurance_plan_id = 4 --Grain
-		  and exists 
-				  (
-				    select 1
-				    from inventory_field invf
-					join inventory_seeded_grain isg on isg.inventory_field_guid = invf.inventory_field_guid
-					join crop_commodity cc on cc.crop_commodity_id = isg.crop_commodity_id
-					where invf.field_id = afd.field_id
-					  and invf.crop_year = gcy.crop_year
-					  and invf.insurance_plan_id = gcy.insurance_plan_id
-					  and cc.insurance_plan_id = gcy.insurance_plan_id   -- Exclude Forage commodities on Seeded Grain
-					  and isg.seeded_acres <![CDATA[ > ]]> 0
+  		  and 
+		  	(
+			 	(
+					gcy.insurance_plan_id = 4 --Grain
+			 		and exists 
+					(
+						select 1
+						from inventory_field invf
+						join inventory_seeded_grain isg on isg.inventory_field_guid = invf.inventory_field_guid
+						join crop_commodity cc on cc.crop_commodity_id = isg.crop_commodity_id
+						where invf.field_id = afd.field_id
+						  and invf.crop_year = gcy.crop_year
+						  and invf.insurance_plan_id = gcy.insurance_plan_id
+						  and cc.insurance_plan_id = gcy.insurance_plan_id   -- Exclude Forage commodities on Seeded Grain
+						  and isg.seeded_acres > 0 -- <![CDATA[ > ]]> 0
 					)
+				)
+				or
+			 	(
+					gcy.insurance_plan_id = 5 --Forage
+			 		and exists 
+			 				(
+			 				  select 1
+							  from inventory_field invf
+							  join inventory_seeded_forage isf on isf.inventory_field_guid = invf.inventory_field_guid
+							  join crop_variety v on v.crop_variety_id = isf.crop_variety_id
+							  where invf.field_id = afd.field_id
+								and invf.crop_year = gcy.crop_year
+								and invf.insurance_plan_id = gcy.insurance_plan_id
+							)
+				)
+			)
 		<include refid="selectOrderBy"/>
 	</select>
 	

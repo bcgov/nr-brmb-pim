@@ -29,6 +29,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.LegalLandR
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.RiskAreaRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.SeedingDeadlineRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.UnderwritingYearRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.UserSettingRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.UwContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.VerifiedYieldContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory.YieldMeasUnitConversionRsrcFactory;
@@ -229,6 +230,16 @@ public class TopLevelEndpointsImpl extends BaseEndpointsImpl implements TopLevel
 			if (hasAuthority(Scopes.GET_LEGAL_LAND)) {
 				selfURI = LegalLandRsrcFactory.getLegalLandListSelfUri(null, null, null, null, null, null, null, null, null, null, baseUri);
 				result.getLinks().add(new RelLink(ResourceTypes.LEGAL_LAND_LIST, selfURI, HttpMethod.GET));
+			}
+
+			if (hasAuthority(Scopes.SEARCH_USER_SETTING)) {
+				selfURI = UserSettingRsrcFactory.getUserSettingListSelfUri(baseUri);
+				result.getLinks().add(new RelLink(ResourceTypes.SEARCH_USER_SETTING, selfURI, HttpMethod.GET));
+			}
+			
+			if (hasAuthority(Scopes.CREATE_USER_SETTING)) {
+				selfURI = UserSettingRsrcFactory.getUserSettingListSelfUri(baseUri);
+				result.getLinks().add(new RelLink(ResourceTypes.CREATE_USER_SETTING, selfURI, HttpMethod.POST));
 			}
 			
 			//**********************************************************

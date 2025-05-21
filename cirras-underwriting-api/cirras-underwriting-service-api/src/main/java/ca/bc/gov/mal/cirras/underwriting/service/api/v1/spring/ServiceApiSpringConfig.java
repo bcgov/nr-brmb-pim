@@ -48,6 +48,7 @@ import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.LegalLandR
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.RiskAreaFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.SeedingDeadlineFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UnderwritingYearFactory;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UserSettingFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UwContractFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.VerifiedYieldContractFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.YieldMeasUnitConversionFactory;
@@ -105,6 +106,7 @@ public class ServiceApiSpringConfig {
 	@Autowired CropVarietyInsurabilityFactory cropVarietyInsurabilityFactory;
 	@Autowired YieldMeasUnitConversionFactory yieldMeasUnitConversionFactory;
 	@Autowired VerifiedYieldContractFactory verifiedYieldContractFactory;
+	@Autowired UserSettingFactory userSettingFactory;
 	
 	// Imported Spring Config
 	@Autowired CodeTableSpringConfig codeTableSpringConfig;
@@ -148,9 +150,11 @@ public class ServiceApiSpringConfig {
 
 		result.setAnnualFieldFactory(annualFieldFactory);
 		result.setUwContractFactory(uwContractFactory);
+		result.setUserSettingFactory(userSettingFactory);
 
 		result.setFieldDao(persistenceSpringConfig.fieldDao());
 		result.setPolicyDao(persistenceSpringConfig.policyDao());
+		result.setUserSettingDao(persistenceSpringConfig.userSettingDao());
 		
 		result.setUnderwritingServiceHelper(underwritingServiceHelper());
 		
@@ -393,17 +397,22 @@ public class ServiceApiSpringConfig {
 		result.setApplicationProperties(applicationProperties);
 
 		result.setVerifiedYieldContractFactory(verifiedYieldContractFactory);
+		result.setInventoryContractFactory(inventoryContractFactory);
 
 		result.setPolicyDao(persistenceSpringConfig.policyDao());
 		result.setInventoryFieldDao(persistenceSpringConfig.inventoryFieldDao());
 		result.setInventorySeededGrainDao(persistenceSpringConfig.inventorySeededGrainDao());
+		result.setInventorySeededForageDao(persistenceSpringConfig.inventorySeededForageDao());
 		result.setContractedFieldDetailDao(persistenceSpringConfig.contractedFieldDetailDao());
 		result.setDeclaredYieldContractDao(persistenceSpringConfig.declaredYieldContractDao());
 		result.setDeclaredYieldContractCommodityDao(persistenceSpringConfig.declaredYieldContractCommodityDao());
+		result.setDeclaredYieldContractCommodityForageDao(persistenceSpringConfig.declaredYieldContractCommodityForageDao());
+		result.setDeclaredYieldFieldRollupForageDao(persistenceSpringConfig.declaredYieldFieldRollupForageDao());
 		result.setVerifiedYieldContractDao(persistenceSpringConfig.verifiedYieldContractDao());
 		result.setVerifiedYieldContractCommodityDao(persistenceSpringConfig.verifiedYieldContractCommodityDao());
 		result.setVerifiedYieldAmendmentDao(persistenceSpringConfig.verifiedYieldAmendmentDao());
 		result.setVerifiedYieldSummaryDao(persistenceSpringConfig.verifiedYieldSummaryDao());
+		result.setVerifiedYieldGrainBasketDao(persistenceSpringConfig.verifiedYieldGrainBasketDao());
 		result.setProductDao(persistenceSpringConfig.productDao());
 		result.setUnderwritingCommentDao(persistenceSpringConfig.underwritingCommentDao());
 		

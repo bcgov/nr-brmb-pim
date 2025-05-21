@@ -16,10 +16,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerContractYearDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingCommentDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldSummaryDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.spring.PersistenceSpringConfig;
@@ -76,6 +76,10 @@ public class VerifiedYieldSummaryDaoTest {
 			dycDao.delete(declaredYieldContractGuid);
 		}
 		
+		// Delete InventoryContractCommodities
+		InventoryContractCommodityDao iccDao = persistenceSpringConfig.inventoryContractCommodityDao();
+		iccDao.deleteForInventoryContract(inventoryContractGuid);
+		
 		// Delete InventoryContract
 		InventoryContractDao icDao = persistenceSpringConfig.inventoryContractDao();
 		InventoryContractDto icDto = icDao.fetch(inventoryContractGuid);
@@ -107,6 +111,7 @@ public class VerifiedYieldSummaryDaoTest {
 		createField("Test Field Label", userId);
 		createGrowerContractYear();
 		createInventoryContract(userId);
+		createInventoryContractCommodity(16, "BARLEY", false, 23.45, userId);
 		createDeclaredYieldContract(userId);
 		createVerifiedYieldContract(userId);
 		
@@ -119,6 +124,7 @@ public class VerifiedYieldSummaryDaoTest {
 		newDto.setCropCommodityId(16);
 		newDto.setCropCommodityName("BARLEY");
 		newDto.setIsPedigreeInd(false);
+		newDto.setProductionAcres(250.0);
 		newDto.setHarvestedYield(100.0);
 		newDto.setHarvestedYieldPerAcre(10.0);
 		newDto.setAppraisedYield(1.5);
@@ -127,6 +133,8 @@ public class VerifiedYieldSummaryDaoTest {
 		newDto.setYieldPercentPy(75.5);
 		newDto.setProductionGuarantee(20.5);
 		newDto.setProbableYield(17.5);
+		newDto.setInsurableValueHundredPercent(27.33);
+		newDto.setTotalInsuredAcres(23.45);
 
 		dao.insert(newDto, userId);
 		Assert.assertNotNull(newDto.getVerifiedYieldSummaryGuid());
@@ -144,6 +152,7 @@ public class VerifiedYieldSummaryDaoTest {
 		Assert.assertEquals("CropCommodityId", newDto.getCropCommodityId(), fetchedDto.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", newDto.getCropCommodityName(), fetchedDto.getCropCommodityName());
 		Assert.assertEquals("IsPedigreeInd", newDto.getIsPedigreeInd(), fetchedDto.getIsPedigreeInd());
+		Assert.assertEquals("ProductionAcres", newDto.getProductionAcres(), fetchedDto.getProductionAcres());
 		Assert.assertEquals("HarvestedYield", newDto.getHarvestedYield(), fetchedDto.getHarvestedYield());
 		Assert.assertEquals("HarvestedYieldPerAcre", newDto.getHarvestedYieldPerAcre(), fetchedDto.getHarvestedYieldPerAcre());
 		Assert.assertEquals("AppraisedYield", newDto.getAppraisedYield(), fetchedDto.getAppraisedYield());
@@ -152,7 +161,9 @@ public class VerifiedYieldSummaryDaoTest {
 		Assert.assertEquals("YieldPercentPy", newDto.getYieldPercentPy(), fetchedDto.getYieldPercentPy());
 		Assert.assertEquals("ProductionGuarantee", newDto.getProductionGuarantee(), fetchedDto.getProductionGuarantee());
 		Assert.assertEquals("ProbableYield", newDto.getProbableYield(), fetchedDto.getProbableYield());
-		
+		Assert.assertEquals("InsurableValueHundredPercent", newDto.getInsurableValueHundredPercent(), fetchedDto.getInsurableValueHundredPercent());
+		Assert.assertEquals("TotalInsuredAcres", newDto.getTotalInsuredAcres(), fetchedDto.getTotalInsuredAcres());
+
 		//FETCH
 		fetchedDto = dao.fetch(verifiedYieldSummaryGuid);
 		
@@ -161,6 +172,7 @@ public class VerifiedYieldSummaryDaoTest {
 		Assert.assertEquals("CropCommodityId", newDto.getCropCommodityId(), fetchedDto.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", newDto.getCropCommodityName(), fetchedDto.getCropCommodityName());
 		Assert.assertEquals("IsPedigreeInd", newDto.getIsPedigreeInd(), fetchedDto.getIsPedigreeInd());
+		Assert.assertEquals("ProductionAcres", newDto.getProductionAcres(), fetchedDto.getProductionAcres());
 		Assert.assertEquals("HarvestedYield", newDto.getHarvestedYield(), fetchedDto.getHarvestedYield());
 		Assert.assertEquals("HarvestedYieldPerAcre", newDto.getHarvestedYieldPerAcre(), fetchedDto.getHarvestedYieldPerAcre());
 		Assert.assertEquals("AppraisedYield", newDto.getAppraisedYield(), fetchedDto.getAppraisedYield());
@@ -169,11 +181,14 @@ public class VerifiedYieldSummaryDaoTest {
 		Assert.assertEquals("YieldPercentPy", newDto.getYieldPercentPy(), fetchedDto.getYieldPercentPy());
 		Assert.assertEquals("ProductionGuarantee", newDto.getProductionGuarantee(), fetchedDto.getProductionGuarantee());
 		Assert.assertEquals("ProbableYield", newDto.getProbableYield(), fetchedDto.getProbableYield());
-		
+		Assert.assertEquals("InsurableValueHundredPercent", newDto.getInsurableValueHundredPercent(), fetchedDto.getInsurableValueHundredPercent());
+		Assert.assertEquals("TotalInsuredAcres", newDto.getTotalInsuredAcres(), fetchedDto.getTotalInsuredAcres());
+
 		//UPDATE
 		fetchedDto.setCropCommodityId(18);
 		fetchedDto.setCropCommodityName("CANOLA");
 		fetchedDto.setIsPedigreeInd(true);
+		fetchedDto.setProductionAcres(150.0);
 		fetchedDto.setHarvestedYield(120.0);
 		fetchedDto.setHarvestedYieldPerAcre(15.0);
 		fetchedDto.setAppraisedYield(2.5);
@@ -182,6 +197,8 @@ public class VerifiedYieldSummaryDaoTest {
 		fetchedDto.setYieldPercentPy(85.5);
 		fetchedDto.setProductionGuarantee(11.5);
 		fetchedDto.setProbableYield(27.8);
+		fetchedDto.setInsurableValueHundredPercent(66.77);
+		fetchedDto.setTotalInsuredAcres(null);
 				
 		dao.update(fetchedDto, userId);
 
@@ -193,6 +210,7 @@ public class VerifiedYieldSummaryDaoTest {
 		Assert.assertEquals("CropCommodityId", fetchedDto.getCropCommodityId(), updatedDto.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", fetchedDto.getCropCommodityName(), updatedDto.getCropCommodityName());
 		Assert.assertEquals("IsPedigreeInd", fetchedDto.getIsPedigreeInd(), updatedDto.getIsPedigreeInd());
+		Assert.assertEquals("ProductionAcres", fetchedDto.getProductionAcres(), updatedDto.getProductionAcres());
 		Assert.assertEquals("HarvestedYield", fetchedDto.getHarvestedYield(), updatedDto.getHarvestedYield());
 		Assert.assertEquals("HarvestedYieldPerAcre", fetchedDto.getHarvestedYieldPerAcre(), updatedDto.getHarvestedYieldPerAcre());
 		Assert.assertEquals("AppraisedYield", fetchedDto.getAppraisedYield(), updatedDto.getAppraisedYield());
@@ -200,8 +218,10 @@ public class VerifiedYieldSummaryDaoTest {
 		Assert.assertEquals("YieldToCount", fetchedDto.getYieldToCount(), updatedDto.getYieldToCount());
 		Assert.assertEquals("YieldPercentPy", fetchedDto.getYieldPercentPy(), updatedDto.getYieldPercentPy());
 		Assert.assertEquals("ProductionGuarantee", fetchedDto.getProductionGuarantee(), updatedDto.getProductionGuarantee());
-		Assert.assertEquals("ProbableYield", fetchedDto.getProbableYield(), updatedDto.getProbableYield());		
-		
+		Assert.assertEquals("ProbableYield", fetchedDto.getProbableYield(), updatedDto.getProbableYield());	
+		Assert.assertEquals("InsurableValueHundredPercent", fetchedDto.getInsurableValueHundredPercent(), updatedDto.getInsurableValueHundredPercent());
+		Assert.assertEquals("TotalInsuredAcres", fetchedDto.getTotalInsuredAcres(), updatedDto.getTotalInsuredAcres());
+
 		//INSERT second record
 		VerifiedYieldSummaryDto newDto2 = new VerifiedYieldSummaryDto();
 
@@ -209,6 +229,7 @@ public class VerifiedYieldSummaryDaoTest {
 		newDto2.setCropCommodityId(16);
 		newDto2.setCropCommodityName("BARLEY");
 		newDto2.setIsPedigreeInd(false);
+		newDto2.setProductionAcres(200.0);
 		newDto2.setHarvestedYield(100.0);
 		newDto2.setHarvestedYieldPerAcre(10.0);
 		newDto2.setAppraisedYield(1.5);
@@ -217,6 +238,8 @@ public class VerifiedYieldSummaryDaoTest {
 		newDto2.setYieldPercentPy(75.5);
 		newDto2.setProductionGuarantee(20.5);
 		newDto2.setProbableYield(17.5);
+		newDto2.setInsurableValueHundredPercent(23.33);
+		newDto2.setTotalInsuredAcres(null);
 		
 		dao.insert(newDto2, userId);
 		
@@ -309,7 +332,26 @@ public class VerifiedYieldSummaryDaoTest {
 		invContractDao.insert(invContractDto, userId);
 		inventoryContractGuid = invContractDto.getInventoryContractGuid();
 	}
+
+	private void createInventoryContractCommodity(Integer cropCommodityId, String cropCommodityName, Boolean isPedigreeInd, Double totalSeededAcres, String userId) throws DaoException {
 		
+		InventoryContractCommodityDao invContractCommodityDao = persistenceSpringConfig.inventoryContractCommodityDao();
+
+		// INSERT
+		InventoryContractCommodityDto newDto = new InventoryContractCommodityDto();
+		newDto.setCropCommodityId(cropCommodityId);
+		newDto.setCropCommodityName(cropCommodityName);
+		newDto.setInventoryContractGuid(inventoryContractGuid);
+		newDto.setTotalSeededAcres(totalSeededAcres);
+		newDto.setTotalSpotLossAcres(87.65);
+		newDto.setTotalUnseededAcres(12.34);
+		newDto.setTotalUnseededAcresOverride(56.78);
+		newDto.setIsPedigreeInd(isPedigreeInd);
+		
+		invContractCommodityDao.insert(newDto, userId);
+
+	}
+	
 	private void createGrowerContractYear() throws DaoException {
 		GrowerContractYearDao dao = persistenceSpringConfig.growerContractYearDao();
 		GrowerContractYearDto newDto = new GrowerContractYearDto();

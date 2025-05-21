@@ -18,6 +18,7 @@ public class VerifiedYieldAmendmentDto extends BaseDto<VerifiedYieldAmendmentDto
 	private String verifiedYieldAmendmentCode;
 	private String verifiedYieldContractGuid;
 	private Integer cropCommodityId;
+	private Integer cropVarietyId;
 	private Boolean isPedigreeInd;
 	private Integer fieldId;
 	private Double yieldPerAcre;
@@ -31,6 +32,7 @@ public class VerifiedYieldAmendmentDto extends BaseDto<VerifiedYieldAmendmentDto
 
 	// Extended columns
 	private String cropCommodityName;
+	private String cropVarietyName;
 	private String fieldLabel;
 	
 	public VerifiedYieldAmendmentDto() {
@@ -43,6 +45,7 @@ public class VerifiedYieldAmendmentDto extends BaseDto<VerifiedYieldAmendmentDto
 		this.verifiedYieldAmendmentCode = dto.verifiedYieldAmendmentCode;
 		this.verifiedYieldContractGuid = dto.verifiedYieldContractGuid;
 		this.cropCommodityId = dto.cropCommodityId;
+		this.cropVarietyId = dto.cropVarietyId;
 		this.isPedigreeInd = dto.isPedigreeInd;
 		this.fieldId = dto.fieldId;
 		this.yieldPerAcre = dto.yieldPerAcre;
@@ -55,6 +58,7 @@ public class VerifiedYieldAmendmentDto extends BaseDto<VerifiedYieldAmendmentDto
 		this.updateDate = dto.updateDate;
 
 		this.cropCommodityName = dto.cropCommodityName;
+		this.cropVarietyName = dto.cropVarietyName;
 		this.fieldLabel = dto.fieldLabel;
 	}
 	
@@ -77,6 +81,7 @@ public class VerifiedYieldAmendmentDto extends BaseDto<VerifiedYieldAmendmentDto
 			result = result&&dtoUtils.equals("verifiedYieldAmendmentCode", verifiedYieldAmendmentCode, other.verifiedYieldAmendmentCode);
 			result = result&&dtoUtils.equals("verifiedYieldContractGuid", verifiedYieldContractGuid, other.verifiedYieldContractGuid);
 			result = result&&dtoUtils.equals("cropCommodityId", cropCommodityId, other.cropCommodityId);
+			result = result&&dtoUtils.equals("cropVarietyId", cropVarietyId, other.cropVarietyId);
 			result = result&&dtoUtils.equals("isPedigreeInd", isPedigreeInd, other.isPedigreeInd);
 			result = result&&dtoUtils.equals("fieldId", fieldId, other.fieldId);
 			result = result&&dtoUtils.equals("yieldPerAcre", yieldPerAcre, other.yieldPerAcre, decimalPrecision);
@@ -125,6 +130,14 @@ public class VerifiedYieldAmendmentDto extends BaseDto<VerifiedYieldAmendmentDto
 		this.cropCommodityId = cropCommodityId;
 	}
 
+	public Integer getCropVarietyId() {
+		return cropVarietyId;
+	}
+
+	public void setCropVarietyId(Integer cropVarietyId) {
+		this.cropVarietyId = cropVarietyId;
+	}
+	
 	public Boolean getIsPedigreeInd() {
 		return isPedigreeInd;
 	}
@@ -196,6 +209,14 @@ public class VerifiedYieldAmendmentDto extends BaseDto<VerifiedYieldAmendmentDto
 		this.cropCommodityName = cropCommodityName;
 	}
 
+	public String getCropVarietyName() {
+		return cropVarietyName;
+	}
+
+	public void setCropVarietyName(String cropVarietyName) {
+		this.cropVarietyName = cropVarietyName;
+	}
+	
 	public String getFieldLabel() {
 		return fieldLabel;
 	}

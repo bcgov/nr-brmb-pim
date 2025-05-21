@@ -494,6 +494,37 @@ public class ContractedFieldDetailDaoTest {
 
 	}
 	
+	@Test 
+	public void testSelectForVerifiedYield() throws Exception {
+		
+		/***********************************************************************************
+		  Policies need to exist and the number of fields expected may need to be update
+		***********************************************************************************/
+		
+		ContractedFieldDetailDao dao = persistenceSpringConfig.contractedFieldDetailDao();
+		
+		//FORAGE
+		Integer contractId = 3342; //100032-24
+		Integer cropYear = 2024;
+		Integer expectedFields = 11; //Needs to be checked beforehand
+		
+		List<ContractedFieldDetailDto> dtos = dao.selectForVerifiedYield(contractId, cropYear);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(expectedFields.intValue(), dtos.size());
+
+		//GRAIN
+		contractId = 2541; //140467-24
+		cropYear = 2024;
+		expectedFields = 14; //Needs to be checked beforehand
+		
+		dtos = dao.selectForVerifiedYield(contractId, cropYear);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(expectedFields.intValue(), dtos.size());
+
+		
+	}
+	
+	
 	
 	@Test 
 	public void testDeleteForField() throws Exception {

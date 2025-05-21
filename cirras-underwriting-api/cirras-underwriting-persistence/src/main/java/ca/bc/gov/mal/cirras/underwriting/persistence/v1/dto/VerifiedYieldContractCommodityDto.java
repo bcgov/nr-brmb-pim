@@ -17,6 +17,7 @@ public class VerifiedYieldContractCommodityDto extends BaseDto<VerifiedYieldCont
 	private String verifiedYieldContractCommodityGuid;
 	private String verifiedYieldContractGuid;
 	private Integer cropCommodityId;
+	private String commodityTypeCode;
 	private Boolean isPedigreeInd;
 	private Double harvestedAcres;
 	private Double harvestedAcresOverride;
@@ -35,6 +36,8 @@ public class VerifiedYieldContractCommodityDto extends BaseDto<VerifiedYieldCont
 	// Extended columns
 	private String cropCommodityName;
 	private Double totalInsuredAcres;
+	private String commodityTypeDescription;
+	private Boolean isRolledupInd;
 	
 	public VerifiedYieldContractCommodityDto() {
 	}
@@ -45,6 +48,7 @@ public class VerifiedYieldContractCommodityDto extends BaseDto<VerifiedYieldCont
 		this.verifiedYieldContractCommodityGuid = dto.verifiedYieldContractCommodityGuid;
 		this.verifiedYieldContractGuid = dto.verifiedYieldContractGuid;
 		this.cropCommodityId = dto.cropCommodityId;
+		this.commodityTypeCode = dto.commodityTypeCode;
 		this.isPedigreeInd = dto.isPedigreeInd;
 		this.harvestedAcres = dto.harvestedAcres;
 		this.harvestedAcresOverride = dto.harvestedAcresOverride;
@@ -62,6 +66,8 @@ public class VerifiedYieldContractCommodityDto extends BaseDto<VerifiedYieldCont
 
 		this.cropCommodityName = dto.cropCommodityName;
 		this.totalInsuredAcres = dto.totalInsuredAcres;
+		this.commodityTypeDescription = dto.commodityTypeDescription;
+		this.isRolledupInd = dto.isRolledupInd;
 
 	}
 	
@@ -83,6 +89,7 @@ public class VerifiedYieldContractCommodityDto extends BaseDto<VerifiedYieldCont
 			result = result&&dtoUtils.equals("verifiedYieldContractCommodityGuid", verifiedYieldContractCommodityGuid, other.verifiedYieldContractCommodityGuid);
 			result = result&&dtoUtils.equals("verifiedYieldContractGuid", verifiedYieldContractGuid, other.verifiedYieldContractGuid);
 			result = result&&dtoUtils.equals("cropCommodityId", cropCommodityId, other.cropCommodityId);
+			result = result&&dtoUtils.equals("commodityTypeCode", commodityTypeCode, other.commodityTypeCode);
 			result = result&&dtoUtils.equals("isPedigreeInd", isPedigreeInd, other.isPedigreeInd);
 			result = result&&dtoUtils.equals("harvestedAcres", harvestedAcres, other.harvestedAcres, decimalPrecision);			
 			result = result&&dtoUtils.equals("harvestedAcresOverride", harvestedAcresOverride, other.harvestedAcresOverride, decimalPrecision);
@@ -127,6 +134,14 @@ public class VerifiedYieldContractCommodityDto extends BaseDto<VerifiedYieldCont
 	}
 	public void setCropCommodityId(Integer cropCommodityId) {
 		this.cropCommodityId = cropCommodityId;
+	}
+
+	public String getCommodityTypeCode() {
+		return commodityTypeCode;
+	}
+
+	public void setCommodityTypeCode(String commodityTypeCode) {
+		this.commodityTypeCode = commodityTypeCode;
 	}
 
 	public Boolean getIsPedigreeInd() {
@@ -232,6 +247,22 @@ public class VerifiedYieldContractCommodityDto extends BaseDto<VerifiedYieldCont
 	}
 	public void setTotalInsuredAcres(Double totalInsuredAcres) {
 		this.totalInsuredAcres = totalInsuredAcres;
+	}
+
+	public String getCommodityTypeDescription() {
+		return commodityTypeDescription;
+	}
+
+	public void setCommodityTypeDescription(String commodityTypeDescription) {
+		this.commodityTypeDescription = commodityTypeDescription;
+	}
+	
+	public Boolean getIsRolledupInd() {
+		return isRolledupInd;
+	}
+
+	public void setIsRolledupInd(Boolean isRolledupInd) {
+		this.isRolledupInd = isRolledupInd;
 	}
 	
 }

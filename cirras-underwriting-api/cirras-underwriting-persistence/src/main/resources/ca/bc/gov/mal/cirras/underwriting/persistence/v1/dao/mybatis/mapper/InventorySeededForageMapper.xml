@@ -239,4 +239,12 @@
 		ORDER BY ctc.description
 	</select>
 	
+	<select id="selectForVerifiedYield" resultMap="InventorySeededForageDtoMap">
+		<include refid="selectColumns"/>
+		from inventory_seeded_forage isf
+		join crop_variety cv on cv.crop_variety_id = isf.crop_variety_id -- Not a left join, because we only want records with a seeded crop.
+		where isf.inventory_field_guid = #{inventoryFieldGuid}
+		order by cv.variety_name, isf.seeding_year, isf.seeding_date
+	</select>	
+	
 </mapper>

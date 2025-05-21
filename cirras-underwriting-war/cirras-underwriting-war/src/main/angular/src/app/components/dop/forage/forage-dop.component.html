@@ -9,10 +9,10 @@
                 {{ (growerContract && growerContract.policyNumber) ? growerContract.policyNumber : "" }}   
             </div>
             <!-- unsaved messages -->
-             <div *ngIf="isUnsaved; else noWarningDiv">
+             <div *ngIf="isUnsaved && !hasVerifiedYieldData; else noWarningDiv">
                 <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
             </div>
-            <div *ngIf="isUnsaved; else noWarningDiv" class="unsaved-changes">
+            <div *ngIf="isUnsaved && !hasVerifiedYieldData; else noWarningDiv" class="unsaved-changes">
                 Unsaved Changes 
             </div>
             <ng-template #noWarningDiv>
@@ -33,7 +33,7 @@
             </div>
             <div>
                 <button 
-                    *ngIf="securityUtilService.canEditDop()" 
+                    *ngIf="securityUtilService.canEditDop() && !hasVerifiedYieldData" 
                     mat-raised-button 
                     class="primary button-large-text" 
                     [disabled]="!isUnsaved" 
@@ -46,6 +46,16 @@
         <cirras-grower-contract-header
             [growerContract]="growerContract"
         ></cirras-grower-contract-header>  
+
+        <div *ngIf="hasVerifiedYieldData == true" class="message-container">
+            <!-- The policy has yield message -->
+            <div class="has-yield-warning">
+                <mat-icon>warning</mat-icon>            
+                <span class="warning-message">
+                    DOP edits are not permitted when a policy has Verified Yield data.  
+                    If you need to update the DOP, delete the Verified Yield data first.</span> 
+            </div>
+        </div>
 
         <form [formGroup]="getViewModel().formGroup">
 
@@ -114,7 +124,7 @@
                         (onDone)="onDopCommentsDone($event)"></uw-comments-button>
                 </div>
                 <div>
-                    <button
+                    <button *ngIf="!hasVerifiedYieldData"
                         mat-raised-button 
                         class="secondary" 
                         class="header-button"  
@@ -125,7 +135,7 @@
                 </div>
                 <div class="vertical-line"></div>
                 <div>
-                    <button *ngIf="securityUtilService.canDeleteDop() && 
+                    <button *ngIf="securityUtilService.canDeleteDop() && !hasVerifiedYieldData &&
                                     dopYieldContract && 
                                     dopYieldContract.declaredYieldContractGuid" 
                                     mat-raised-button 

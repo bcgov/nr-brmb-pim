@@ -44,6 +44,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SyncCommodityTypeV
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SyncCommodityVarietyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UnderwritingYearListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UnderwritingYearRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UserSettingRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.client.v1.ValidationException;
 import ca.bc.gov.nrs.common.wfone.rest.resource.CodeTableListRsrc;
 import ca.bc.gov.nrs.common.wfone.rest.resource.CodeTableRsrc;
@@ -281,6 +282,20 @@ public interface CirrasUnderwritingService {
 	UnderwritingYearRsrc getUnderwritingYear(UnderwritingYearRsrc resource) throws CirrasUnderwritingServiceException;
 	void deleteUnderwritingYear(UnderwritingYearRsrc resource) throws CirrasUnderwritingServiceException;
 	UnderwritingYearListRsrc getUnderwritingYearList(EndpointsRsrc parent) throws CirrasUnderwritingServiceException;
+
+	//////////////////////////////////////////////////////
+	// User Setting
+	//////////////////////////////////////////////////////
+	UserSettingRsrc searchUserSetting(EndpointsRsrc parent) throws CirrasUnderwritingServiceException;
+
+	UserSettingRsrc getUserSetting(UserSettingRsrc resource) throws CirrasUnderwritingServiceException;
+	
+	UserSettingRsrc createUserSetting(EndpointsRsrc parent, UserSettingRsrc resource) throws CirrasUnderwritingServiceException, ValidationException;
+	
+	UserSettingRsrc updateUserSetting(UserSettingRsrc resource) throws CirrasUnderwritingServiceException, ValidationException;
+
+	void deleteUserSetting(UserSettingRsrc resource) throws CirrasUnderwritingServiceException;
+
 	
 	//////////////////////////////////////////////////////
 	//DATA SYNC METHODS

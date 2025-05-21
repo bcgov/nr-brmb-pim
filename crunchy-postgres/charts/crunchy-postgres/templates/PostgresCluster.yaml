@@ -11,6 +11,7 @@ spec:
   {{ end }}
   imagePullPolicy: {{.Values.imagePullPolicy}}
   postgresVersion: {{ .Values.postgresVersion }}
+  openshift: {{ .Values.openshift | default true }}
   {{ if .Values.postGISVersion }}
   postGISVersion: {{ .Values.postGISVersion | quote }}
   {{ end }}

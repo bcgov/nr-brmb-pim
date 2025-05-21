@@ -1,46 +1,75 @@
-<div [formGroup]="commodityFormGroup" style="display: contents;">
-    <div class="readonly border-right border-bottom border-left" style="padding-left: 6px;">
-        {{ commodityFormGroup.value.cropCommodityName | titlecase }}
-        <span *ngIf="commodityFormGroup.value.isPedigreeInd == true" >&nbsp; Pedigreed</span>
+<div id="divCommodityContent" [formGroup]="commodityFormGroup" style="display: contents;">
+    <div class="readonly border-right border-bottom border-left" 
+        style="padding-left: 6px; background-color: inherit;"
+        [ngStyle]="{'font-weight': commodityFormGroup.value.isRolledupInd ? '600' : '400' }">
+            {{ ( commodityFormGroup.value.isRolledupInd ? "" : "&nbsp;&nbsp;&nbsp;&nbsp;") + commodityFormGroup.value.displayName | titlecase }} <!-- cropCommodityName -->
+            <span *ngIf="commodityFormGroup.value.isPedigreeInd == true" >&nbsp; Pedigreed</span>
     </div>
-    <div class="readonly border-right border-bottom center">
-        {{ commodityFormGroup.value.totalInsuredAcres | number: '1.0-1' }}
+    <div class="readonly border-right border-bottom center" 
+        style="background-color: inherit;"
+        [ngStyle]="{'font-weight': commodityFormGroup.value.isRolledupInd ? '600' : '400' }">
+            {{ commodityFormGroup.value.totalInsuredAcres | number: '1.0-1' }}
     </div>
-    <div class="readonly border-right border-bottom center">
-        {{ commodityFormGroup.value.harvestedAcres | number: '1.0-1' }}
-    </div>
-
-    <div class="inventory-fill number border-right border-bottom">
-        <mat-form-field appearance="fill">
-            <input matInput matInputCommified formControlName="harvestedAcresOverride" maxlength="10"
-                (keypress)="numberOnly($event)" (blur)="updateHarvestedAcresOverride()" />
-        </mat-form-field>
-        <mat-icon style="padding-right: 10px; font-size: 18px; margin-top: 6px;"
-            matTooltip="Harvested Acres Override is writeable">edit</mat-icon>
+    <div class="readonly border-right border-bottom center" 
+        style="background-color: inherit;"
+        [ngStyle]="{'font-weight': commodityFormGroup.value.isRolledupInd ? '600' : '400' }">
+            {{ commodityFormGroup.value.harvestedAcres | number: '1.0-1' }}
     </div>
 
-    <div class="readonly border-right border-bottom center">
-        {{ commodityFormGroup.value.productionGuarantee | number: '1.0-1' }}
+    <div class="inventory-fill number border-bottom center" 
+        style="background-color: inherit;"
+        [ngStyle]="{'font-weight': commodityFormGroup.value.isRolledupInd ? '600' : '400' }">
+            <!-- if it's not a rolled up value then show the textbox -->
+            <mat-form-field appearance="fill"
+                *ngIf="!commodityFormGroup.value.isRolledupInd">
+                <input matInput matInputCommified formControlName="harvestedAcresOverride" maxlength="10"
+                    (keypress)="numberOnly($event)" (blur)="updateHarvestedAcresOverride()" />
+            </mat-form-field>
+            <!-- if it's a rolled up value then print it -->
+            {{ ( !commodityFormGroup.value.isRolledupInd ? "" : commodityFormGroup.value.harvestedAcresOverride | number: '1.0-3' )}}
     </div>
-    <div class="readonly border-right border-bottom center">
-        {{ commodityFormGroup.value.harvestedYield | number: '1.0-3' }}
+    <div class="border-right border-bottom" style="background-color: inherit;">
+            <mat-icon 
+                *ngIf="!commodityFormGroup.value.isRolledupInd"
+                style="padding-right: 10px; font-size: 18px; margin-top: 6px;"
+                matTooltip="Harvested Acres Override is writeable">edit</mat-icon>
     </div>
 
-    <div class="inventory-fill number border-right border-bottom">
-        <mat-form-field appearance="fill">
-            <input matInput matInputCommified formControlName="harvestedYieldOverride" maxlength="10"
-                (keypress)="numberOnly($event)" (blur)="updateHarvestedYieldOverride()" />
-        </mat-form-field>
-        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;"
-            matTooltip="Harvested Yield Override is writeable">edit</mat-icon>
+    <div class="readonly border-right border-bottom center" 
+        style="background-color: inherit;"
+        [ngStyle]="{'font-weight': commodityFormGroup.value.isRolledupInd ? '600' : '400' }">
+            {{ commodityFormGroup.value.productionGuarantee | number: '1.0-1' }}
+    </div>
+    <div class="readonly border-right border-bottom center" 
+        style="background-color: inherit;"
+        [ngStyle]="{'font-weight': commodityFormGroup.value.isRolledupInd ? '600' : '400' }">
+            {{ commodityFormGroup.value.harvestedYield | number: '1.0-3' }}
+    </div>
+
+    <div class="inventory-fill number border-bottom center" 
+        style="background-color: inherit;"
+        [ngStyle]="{'font-weight': commodityFormGroup.value.isRolledupInd ? '600' : '400' }">
+            <mat-form-field appearance="fill" 
+                *ngIf="!commodityFormGroup.value.isRolledupInd">
+                <input matInput matInputCommified formControlName="harvestedYieldOverride" maxlength="10"
+                    (keypress)="numberOnly($event)" (blur)="updateHarvestedYieldOverride()" />
+            </mat-form-field>
+            {{ ( !commodityFormGroup.value.isRolledupInd ? "" : commodityFormGroup.value.harvestedYieldOverride | number: '1.0-3' )}}
+    </div>
+    <div class="border-right border-bottom" style="background-color: inherit;">
+            <mat-icon *ngIf="!commodityFormGroup.value.isRolledupInd"
+                style="padding-right:10px; font-size:18px; margin-top:6px;"
+                matTooltip="Harvested Yield Override is writeable">edit</mat-icon>
     </div> 
     
-    <div class="readonly border-right border-bottom center">
-        {{ commodityFormGroup.value.yieldPerAcre | number: '1.0-3' }}
+    <div class="readonly border-right border-bottom center" 
+        style="background-color: inherit;"
+        [ngStyle]="{'font-weight': commodityFormGroup.value.isRolledupInd ? '600' : '400' }">
+            {{ commodityFormGroup.value.yieldPerAcre | number: '1.0-3' }}
     </div>
 
-    <div class="readonly border-right border-bottom center">
-        <mat-icon *ngIf="securityUtilService.canEditVerifiedYield()"
+    <div class="readonly border-right border-bottom center" style="background-color: inherit;">
+        <mat-icon *ngIf="securityUtilService.canEditVerifiedYield() && !commodityFormGroup.value.isRolledupInd"
             matTooltip="Clear editable fields for commodity." 
             style="margin-left: 4px; margin-right: 4px;"
             (click)="onDeleteCommodity()"

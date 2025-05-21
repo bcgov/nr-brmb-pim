@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<export>
-	<module id="repositoryResources">
-		<folder>/NRSRS/CUWS</folder>
-	</module>
-	<property name="pathProcessorId" value="zip"/>
-	<property name="rootTenantId" value="organizations"/>
-	<property name="jsVersion" value="8.1.0 CE"/>
-</export>

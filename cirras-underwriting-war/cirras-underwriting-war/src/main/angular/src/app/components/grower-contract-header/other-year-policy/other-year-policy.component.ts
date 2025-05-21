@@ -107,8 +107,8 @@ export class OtherYearPolicyComponent implements OnInit, OnChanges  {
       return ResourcesRoutes.DOP_FORAGE
     }
 
-    if (routerUrl.lastIndexOf(ResourcesRoutes.VERIFIED_YIELD_GRAIN) > -1 ) {
-      return ResourcesRoutes.VERIFIED_YIELD_GRAIN
+    if (routerUrl.lastIndexOf(ResourcesRoutes.VERIFIED_YIELD) > -1 ) {
+      return ResourcesRoutes.VERIFIED_YIELD
     }
 
     return newRoute

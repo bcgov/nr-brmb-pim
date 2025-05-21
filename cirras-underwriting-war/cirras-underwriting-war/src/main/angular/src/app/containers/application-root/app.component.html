@@ -3,8 +3,10 @@
                 [(state)]="applicationState"
 >
     <wf-header
-            [config]="applicationConfig"
-            [(state)]="applicationState"
+        [config]="applicationConfig"
+        [(state)]="applicationState"
+        [useSupportLink]="true"
+        (supportLinkClick)="onSupportLinkClick()"
     ></wf-header>
 
     <wf-menu

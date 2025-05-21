@@ -16,6 +16,7 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { RemoveFieldPopupData } from '../remove-field/remove-field.component';
 import {ViewEncapsulation } from '@angular/core';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
+import { asapScheduler } from 'rxjs';
 
 @Component({
   selector: 'forage-inventory',
@@ -1250,9 +1251,12 @@ isFormValid() {
 
   isMyFormDirty() {
 
-    this.hasDataChanged = this.isMyFormReallyDirty()
-    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, this.hasDataChanged ));
+    if (!this.hasYieldData) {
 
+      this.hasDataChanged = this.isMyFormReallyDirty()
+      // this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, this.hasDataChanged )); // this generates a bug surprisingly
+      asapScheduler.schedule(() => this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, this.hasDataChanged ))); 
+    }
   }
 
   isMyFormReallyDirty() : boolean {

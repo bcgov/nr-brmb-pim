@@ -525,7 +525,7 @@ export function setHttpHeaders(authToken) {
 
       case 'verifiedYield': 
 
-        resourceRoute = ResourcesRoutes.VERIFIED_YIELD_GRAIN
+        resourceRoute = ResourcesRoutes.VERIFIED_YIELD
 
         // extract verifiedYieldContractGuid from the haetus link here
         let verifiedYieldContractGuid = ""

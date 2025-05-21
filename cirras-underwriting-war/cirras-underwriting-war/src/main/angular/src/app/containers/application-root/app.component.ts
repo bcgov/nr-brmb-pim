@@ -261,4 +261,10 @@ export class AppComponent implements OnInit {
         this.appMenu = items;
         return items;
     }
+
+    onSupportLinkClick() {
+        //window.open('https://intranet.gov.bc.ca/bcws/provincial-programs/strategic-initiatives-and-innovation/wildfire-one/wildfire-one-training', 'training-support')
+        window.open(ResourcesRoutes.USER_SETTINGS, 'settings')
+    }
+
 }

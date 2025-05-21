@@ -31,4 +31,6 @@ public interface InventorySeededForageMapper {
 
 	List<InventorySeededForageDto> selectForDopContractCommodityTotals(Map<String, Object> parameters);
 
+	List<InventorySeededForageDto> selectForVerifiedYield(Map<String, Object> parameters);
+
 }
