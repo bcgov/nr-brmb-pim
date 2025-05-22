@@ -44,6 +44,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SeedingDeadlineLis
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractSimpleRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.YieldMeasUnitConversionListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.YieldMeasUnitTypeCodeListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
@@ -771,6 +772,47 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 			throw new CirrasUnderwritingServiceException(rde);
 		}
 		
+	}
+	
+	//////////////////////////////////////////////////////
+	// Verified Yield Contract Simple
+	//////////////////////////////////////////////////////
+
+	
+			
+	@Override
+	public VerifiedYieldContractSimpleRsrc getVerifiedYieldContractSimple(
+			EndpointsRsrc parent,
+			String contractId, 
+			String cropYear, 
+			String commodityId,
+			String isPedigreeInd, 
+			String loadVerifiedYieldContractCommodities,
+			String loadVerifiedYieldAmendments, 
+			String loadVerifiedYieldSummaries, 
+			String loadVerifiedYieldGrainBasket)
+	throws CirrasUnderwritingServiceException {
+
+		GenericRestDAO<VerifiedYieldContractSimpleRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(VerifiedYieldContractSimpleRsrc.class);
+
+		try {
+			
+			Map<String, String> queryParams = new HashMap<String, String>();
+			
+			putQueryParam(queryParams, "contractId", contractId);
+			putQueryParam(queryParams, "cropYear", cropYear);
+			putQueryParam(queryParams, "commodityId", commodityId);
+			putQueryParam(queryParams, "isPedigreeInd", isPedigreeInd);
+			putQueryParam(queryParams, "loadVerifiedYieldContractCommodities", loadVerifiedYieldContractCommodities);
+			putQueryParam(queryParams, "loadVerifiedYieldAmendments", loadVerifiedYieldAmendments);
+			putQueryParam(queryParams, "loadVerifiedYieldSummaries", loadVerifiedYieldSummaries);
+			putQueryParam(queryParams, "loadVerifiedYieldGrainBasket", loadVerifiedYieldGrainBasket);
+			
+			Response<VerifiedYieldContractSimpleRsrc> response = dao.Process(ResourceTypes.VERIFIED_YIELD_CONTRACT_SIMPLE, this.getTransformer(), parent, queryParams, getWebClient());
+			return response.getResource();
+		} catch (RestDAOException rde) {
+			throw new CirrasUnderwritingServiceException(rde);
+		}
 	}
 	
 	//////////////////////////////////////////////////////

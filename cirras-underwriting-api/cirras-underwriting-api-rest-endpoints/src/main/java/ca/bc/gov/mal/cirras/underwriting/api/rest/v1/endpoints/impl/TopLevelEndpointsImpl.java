@@ -242,6 +242,13 @@ public class TopLevelEndpointsImpl extends BaseEndpointsImpl implements TopLevel
 				result.getLinks().add(new RelLink(ResourceTypes.CREATE_USER_SETTING, selfURI, HttpMethod.POST));
 			}
 			
+			
+			if (hasAuthority(Scopes.GET_VERIFIED_YIELD_CONTRACT_SIMPLE)) {
+				selfURI = VerifiedYieldContractRsrcFactory.getVerifiedYieldContractSimpleSelfUri(baseUri);
+				result.getLinks().add(new RelLink(ResourceTypes.VERIFIED_YIELD_CONTRACT_SIMPLE, selfURI, HttpMethod.GET));
+			}
+
+			
 			//**********************************************************
 			//Data Sync
 			//**********************************************************

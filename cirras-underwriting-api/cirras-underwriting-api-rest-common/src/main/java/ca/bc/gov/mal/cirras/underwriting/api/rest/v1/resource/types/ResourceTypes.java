@@ -225,6 +225,10 @@ public class ResourceTypes extends BaseResourceTypes {
 	public static final String UPDATE_VERIFIED_YIELD_CONTRACT = NAMESPACE + "updateVerifiedYieldContract";
 	public static final String DELETE_VERIFIED_YIELD_CONTRACT = NAMESPACE + "deleteVerifiedYieldContract";
 
+	//Verified Yield Contract Simple
+	public static final String VERIFIED_YIELD_CONTRACT_SIMPLE_NAME = "verifiedYieldContractSimple";
+	public static final String VERIFIED_YIELD_CONTRACT_SIMPLE = NAMESPACE + VERIFIED_YIELD_CONTRACT_SIMPLE_NAME;
+	
 	//Product
 	public static final String PRODUCT_NAME = "product";
 	public static final String PRODUCT = NAMESPACE + PRODUCT_NAME;

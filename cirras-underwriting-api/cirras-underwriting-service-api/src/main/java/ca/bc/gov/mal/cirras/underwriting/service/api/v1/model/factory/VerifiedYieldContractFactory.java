@@ -12,6 +12,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractSimple;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
@@ -65,5 +66,13 @@ public interface VerifiedYieldContractFactory {
 			VerifiedYieldGrainBasket verifiedYieldGrainBasket);
 
 	Set<String> getForageGrainCoverageCodes();
+
+	VerifiedYieldContractSimple getVerifiedYieldContractSimple(
+			VerifiedYieldContractDto dto, 
+			Integer cropCommodityId,
+			Boolean isPedigreeInd, 
+			FactoryContext factoryContext, 
+			WebAdeAuthentication authentication
+			) throws FactoryException;
 
 }
