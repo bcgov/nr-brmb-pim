@@ -1,13 +1,15 @@
 {
   "application": {
     "acronym": "cirras-underwriting",
-    "version": "3.6.0",
+    "version": "3.7.0",
     "baseUrl": "http://localhost:11200/",
     "environment": "LOCAL",
     "buildNumber": "0000"
   },
   "rest": {
-    "cirras_underwriting": "https://cirras-underwriting-api-route-dev-a12541-dev.apps.silver.devops.gov.bc.ca/cirras-underwriting-api/v1"
+    "cirras_underwriting": "https://cirras-underwriting-api-route-dev-a12541-dev.apps.silver.devops.gov.bc.ca/cirras-underwriting-api/v1",
+    "grain_verified_yield_calculator_url": "ms-excel:ofe|u|https://bcgov.sharepoint.com/sites/AF-BRMB-DATA/Shared%20Documents/Yield%20Calculators/PI%20Grain%20Yield%20&%20Claim%20Calculator.xlsm",
+    "forage_verified_yield_calculator_url": "https://bcgov.sharepoint.com/sites/AF-BRMB-DATA/Shared%20Documents/Yield%20Calculators/PI%20Forage%20Yield%20&%20Claim%20Calculator.xlsm?web=1"
   },
   "webade": {
     "oauth2Url": "https://d1auth.vividsolutions.com/pub/webade-oauth2/oauth/authorize",

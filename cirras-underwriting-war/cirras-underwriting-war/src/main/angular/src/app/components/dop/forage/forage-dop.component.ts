@@ -51,6 +51,8 @@ export class ForageDopComponent extends BaseComponent {
 
   gradeModifierList : GradeModifierOptionsType[] = [];
 
+  hasVerifiedYieldData = false
+
   initModels() {
     this.viewModel = new ForageDopComponentModel(this.sanitizer, this.fb);
   }
@@ -93,6 +95,20 @@ export class ForageDopComponent extends BaseComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     super.ngOnChanges(changes);
+
+    if ( changes.growerContract && this.growerContract ) {
+
+      this.hasVerifiedYieldData = false
+
+      // check for verified yield data
+      for (let i = 0; i< this.growerContract.links.length; i++ ) {
+
+        if ( this.growerContract.links[i].href.toLocaleLowerCase().indexOf("verifiedyieldcontracts") > -1  ) {
+          this.hasVerifiedYieldData = true
+          break
+        } 
+      }
+    }
 
     this.viewModel.formGroup.controls.yieldMeasUnitTypeCode.setValue(this.dopYieldContract?.enteredYieldMeasUnitTypeCode);
     if (this.dopYieldContract && this.dopYieldContract.declarationOfProductionDate) {
@@ -392,11 +408,12 @@ export class ForageDopComponent extends BaseComponent {
 
       // Percent Moisture: validate range 0 - 100
       if (moisturePercent < 0 || moisturePercent > 100) {
-        alert("Percent Moisture in in Commodity Totals table  should be between 0 and 100")
+        alert("Percent Moisture in Commodity Totals table should be between 0 and 100")
         return false
       }
 
-      if (totalBalesLoads && weight && moisturePercent) {
+      //moisturePercent can be 0 and needs to be checked for null
+      if (totalBalesLoads && weight && moisturePercent != null) {
         farmLevelDataExists = true
       }
     }

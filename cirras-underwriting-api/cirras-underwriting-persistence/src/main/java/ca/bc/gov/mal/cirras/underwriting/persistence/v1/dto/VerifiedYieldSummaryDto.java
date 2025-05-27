@@ -20,6 +20,7 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 	private String verifiedYieldContractGuid;
 	private Integer cropCommodityId;
 	private Boolean isPedigreeInd;
+	private Double productionAcres;
 	private Double harvestedYield;
 	private Double harvestedYieldPerAcre;
 	private Double appraisedYield;
@@ -28,7 +29,8 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 	private Double yieldPercentPy;
 	private Double productionGuarantee;
 	private Double probableYield;
-
+	private Double insurableValueHundredPercent;
+	
 	private String createUser;
 	private Date createDate;
 	private String updateUser;
@@ -36,6 +38,7 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 
 	// Extended columns
 	private String cropCommodityName;
+	private Double totalInsuredAcres;
 	
 	//comments
 	private List<UnderwritingCommentDto> uwComments = new ArrayList<UnderwritingCommentDto>();
@@ -50,6 +53,7 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 		this.verifiedYieldContractGuid = dto.verifiedYieldContractGuid;
 		this.cropCommodityId = dto.cropCommodityId;
 		this.isPedigreeInd = dto.isPedigreeInd;
+		this.productionAcres = dto.productionAcres;
 		this.harvestedYield = dto.harvestedYield;
 		this.harvestedYieldPerAcre = dto.harvestedYieldPerAcre;
 		this.appraisedYield = dto.appraisedYield;
@@ -58,6 +62,7 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 		this.yieldPercentPy = dto.yieldPercentPy;
 		this.productionGuarantee = dto.productionGuarantee;
 		this.probableYield = dto.probableYield;
+		this.insurableValueHundredPercent = dto.insurableValueHundredPercent;
 		
 		this.createUser = dto.createUser;
 		this.createDate = dto.createDate;
@@ -65,7 +70,8 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 		this.updateDate = dto.updateDate;
 
 		this.cropCommodityName = dto.cropCommodityName;
-		
+		this.totalInsuredAcres = dto.totalInsuredAcres;
+
 		if ( dto.uwComments != null ) {			
 			this.uwComments = new ArrayList<>();
 			
@@ -95,6 +101,7 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 			result = result&&dtoUtils.equals("verifiedYieldContractGuid", verifiedYieldContractGuid, other.verifiedYieldContractGuid);
 			result = result&&dtoUtils.equals("cropCommodityId", cropCommodityId, other.cropCommodityId);
 			result = result&&dtoUtils.equals("isPedigreeInd", isPedigreeInd, other.isPedigreeInd);
+			result = result&&dtoUtils.equals("productionAcres", productionAcres, other.productionAcres, decimalPrecision);
 			result = result&&dtoUtils.equals("harvestedYield", harvestedYield, other.harvestedYield, decimalPrecision);
 			result = result&&dtoUtils.equals("harvestedYieldPerAcre", harvestedYieldPerAcre, other.harvestedYieldPerAcre, decimalPrecision);
 			result = result&&dtoUtils.equals("appraisedYield", appraisedYield, other.appraisedYield, decimalPrecision);
@@ -103,6 +110,7 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 			result = result&&dtoUtils.equals("yieldPercentPy", yieldPercentPy, other.yieldPercentPy, decimalPrecision);
 			result = result&&dtoUtils.equals("productionGuarantee", productionGuarantee, other.productionGuarantee, decimalPrecision);
 			result = result&&dtoUtils.equals("probableYield", probableYield, other.probableYield, decimalPrecision);
+			result = result&&dtoUtils.equals("insurableValueHundredPercent", insurableValueHundredPercent, other.insurableValueHundredPercent, decimalPrecision);
 		}
 		
 		return result;
@@ -148,6 +156,14 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 
 	public void setIsPedigreeInd(Boolean isPedigreeInd) {
 		this.isPedigreeInd = isPedigreeInd;
+	}
+	
+	public Double getProductionAcres() {
+		return productionAcres;
+	}
+	
+	public void setProductionAcres(Double productionAcres) {
+		this.productionAcres = productionAcres;
 	}
 
 	public Double getHarvestedYield() {
@@ -213,7 +229,15 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 	public void setProbableYield(Double probableYield) {
 		this.probableYield = probableYield;
 	}
+	
+	public Double getInsurableValueHundredPercent() {
+		return insurableValueHundredPercent;
+	}
 
+	public void setInsurableValueHundredPercent(Double insurableValueHundredPercent) {
+		this.insurableValueHundredPercent = insurableValueHundredPercent;
+	}
+	
 	public String getCreateUser() {
 		return createUser;
 	}
@@ -252,6 +276,14 @@ public class VerifiedYieldSummaryDto extends BaseDto<VerifiedYieldSummaryDto> {
 
 	public void setCropCommodityName(String cropCommodityName) {
 		this.cropCommodityName = cropCommodityName;
+	}
+
+	public Double getTotalInsuredAcres() {
+		return totalInsuredAcres;
+	}
+
+	public void setTotalInsuredAcres(Double totalInsuredAcres) {
+		this.totalInsuredAcres = totalInsuredAcres;
 	}
 
 	public List<UnderwritingCommentDto> getUwComments() {

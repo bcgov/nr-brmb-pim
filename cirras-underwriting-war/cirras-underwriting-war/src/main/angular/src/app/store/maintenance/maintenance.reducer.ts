@@ -9,7 +9,10 @@ import { LOAD_VARIETY_INSURABILITY_SUCCESS, LOAD_GRADE_MODIFIERS_SUCCESS, LOAD_G
     LOAD_YIELD_CONVERSION_SUCCESS,
     LoadYieldConversionSuccessAction,
     CleaYieldConversionAction,
-    CLEAR_YIELD_CONVERSION} from "./maintenance.actions";
+    CLEAR_YIELD_CONVERSION,
+    LOAD_USER_SETTINGS_SUCCESS,
+    LoadUserSettingsSuccessAction,
+    UPDATE_USER_SETTINGS} from "./maintenance.actions";
 
 export function maintenanceReducer(state: MaintenanceState = getDefaultMaintenanceState(), action: Action): MaintenanceState {
 
@@ -56,6 +59,12 @@ export function maintenanceReducer(state: MaintenanceState = getDefaultMaintenan
     { 
       const typedAction = <CleaYieldConversionAction>action;
       return {...state, yieldMeasUnitConversionList: null};
+    }
+
+    case LOAD_USER_SETTINGS_SUCCESS:
+    {
+        const typedAction = <LoadUserSettingsSuccessAction>action;
+        return {...state, userSetting: typedAction.payload.value};
     }
 
     default: {

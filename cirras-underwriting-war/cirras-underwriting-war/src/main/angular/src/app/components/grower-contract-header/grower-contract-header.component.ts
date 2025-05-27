@@ -80,28 +80,11 @@ export class GrowerContractHeaderComponent {
     } 
 
     if ( linkType == 'verifiedYield' && 
-      routerUrl.indexOf(ResourcesRoutes.VERIFIED_YIELD_GRAIN) > -1 ) { 
+      routerUrl.indexOf(ResourcesRoutes.VERIFIED_YIELD) > -1 ) { 
       return true
     } 
 
     return false
-  }
-
-  isForageScreen(){
-
-    let routerUrl = this.router.url.toString()
-
-    if (routerUrl.indexOf(ResourcesRoutes.INVENTORY_FORAGE) > -1 ||
-        routerUrl.indexOf(ResourcesRoutes.DOP_FORAGE) > -1 ) {
-
-      return true
-
-    } else {
-
-      return false
-      
-    }
-    
   }
 
   setStyles(){
@@ -110,7 +93,7 @@ export class GrowerContractHeaderComponent {
       'grid-template-columns':  '26px 154px 35px 26px 134px 35px 26px 190px 35px 26px 110px auto'
     }
 
-    if (this.isForageScreen()) {
+    if (this.growerContract && this.growerContract.insurancePlanId == INSURANCE_PLAN.FORAGE ) {
       styles = {
         'grid-template-columns':  '26px 134px 35px 26px 200px 35px 26px 110px auto'
       }
@@ -158,11 +141,11 @@ export class GrowerContractHeaderComponent {
       }
     }
 
-    if (routerUrl.indexOf(ResourcesRoutes.VERIFIED_YIELD_GRAIN) > -1 ) {
+    if (routerUrl.indexOf(ResourcesRoutes.VERIFIED_YIELD) > -1 ) {
       styles = {  
-        'border': '1px solid #DEC7DE',
+        'border': '1px solid #C4C4FF',
         'border-radius': '5px',
-        'background': '#FFF5FF'
+        'background': '#F5F5FF'
       }
     }
 

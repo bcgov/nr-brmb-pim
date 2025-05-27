@@ -117,6 +117,8 @@ public class VerifiedYieldAmendmentDaoTest {
 		newDto.setAcres(12.34);
 		newDto.setCropCommodityId(16);
 		newDto.setCropCommodityName("BARLEY");
+		newDto.setCropVarietyId(1010423);
+		newDto.setCropVarietyName("AC ALBRIGHT");
 		newDto.setFieldId(fieldId);
 		newDto.setFieldLabel("Test Field Label");
 		newDto.setIsPedigreeInd(false);
@@ -139,6 +141,8 @@ public class VerifiedYieldAmendmentDaoTest {
 		Assert.assertEquals("Acres", newDto.getAcres(), fetchedDto.getAcres());
 		Assert.assertEquals("CropCommodityId", newDto.getCropCommodityId(), fetchedDto.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", newDto.getCropCommodityName(), fetchedDto.getCropCommodityName());
+		Assert.assertEquals("CropVarietyId", newDto.getCropVarietyId(), fetchedDto.getCropVarietyId());
+		Assert.assertEquals("CropVarietyName", newDto.getCropVarietyName(), fetchedDto.getCropVarietyName());
 		Assert.assertEquals("FieldId", newDto.getFieldId(), fetchedDto.getFieldId());
 		Assert.assertEquals("FieldLabel", newDto.getFieldLabel(), fetchedDto.getFieldLabel());
 		Assert.assertEquals("IsPedigreeInd", newDto.getIsPedigreeInd(), fetchedDto.getIsPedigreeInd());
@@ -154,6 +158,8 @@ public class VerifiedYieldAmendmentDaoTest {
 		Assert.assertEquals("Acres", newDto.getAcres(), fetchedDto.getAcres());
 		Assert.assertEquals("CropCommodityId", newDto.getCropCommodityId(), fetchedDto.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", newDto.getCropCommodityName(), fetchedDto.getCropCommodityName());
+		Assert.assertEquals("CropVarietyId", newDto.getCropVarietyId(), fetchedDto.getCropVarietyId());
+		Assert.assertEquals("CropVarietyName", newDto.getCropVarietyName(), fetchedDto.getCropVarietyName());
 		Assert.assertEquals("FieldId", newDto.getFieldId(), fetchedDto.getFieldId());
 		Assert.assertEquals("FieldLabel", newDto.getFieldLabel(), fetchedDto.getFieldLabel());
 		Assert.assertEquals("IsPedigreeInd", newDto.getIsPedigreeInd(), fetchedDto.getIsPedigreeInd());
@@ -167,6 +173,8 @@ public class VerifiedYieldAmendmentDaoTest {
 		fetchedDto.setAcres(11.22);
 		fetchedDto.setCropCommodityId(18);
 		fetchedDto.setCropCommodityName("CANOLA");
+		fetchedDto.setCropVarietyId(1010464);
+		fetchedDto.setCropVarietyName("45H31");
 		fetchedDto.setFieldId(null);
 		fetchedDto.setFieldLabel(null);
 		fetchedDto.setIsPedigreeInd(true);
@@ -182,6 +190,8 @@ public class VerifiedYieldAmendmentDaoTest {
 		Assert.assertEquals("Acres", fetchedDto.getAcres(), updatedDto.getAcres());
 		Assert.assertEquals("CropCommodityId", fetchedDto.getCropCommodityId(), updatedDto.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", fetchedDto.getCropCommodityName(), updatedDto.getCropCommodityName());
+		Assert.assertEquals("CropVarietyId", fetchedDto.getCropVarietyId(), updatedDto.getCropVarietyId());
+		Assert.assertEquals("CropVarietyName", fetchedDto.getCropVarietyName(), updatedDto.getCropVarietyName());
 		Assert.assertEquals("FieldId", fetchedDto.getFieldId(), updatedDto.getFieldId());
 		Assert.assertEquals("FieldLabel", fetchedDto.getFieldLabel(), updatedDto.getFieldLabel());
 		Assert.assertEquals("IsPedigreeInd", fetchedDto.getIsPedigreeInd(), updatedDto.getIsPedigreeInd());
@@ -197,6 +207,8 @@ public class VerifiedYieldAmendmentDaoTest {
 		newDto2.setAcres(12.34);
 		newDto2.setCropCommodityId(16);
 		newDto2.setCropCommodityName("BARLEY");
+		newDto.setCropVarietyId(null);
+		newDto.setCropVarietyName(null);
 		newDto2.setFieldId(fieldId);
 		newDto2.setFieldLabel("Test Field Label");
 		newDto2.setIsPedigreeInd(false);
@@ -206,6 +218,11 @@ public class VerifiedYieldAmendmentDaoTest {
 		newDto2.setYieldPerAcre(56.78);
 
 		dao.insert(newDto2, userId);
+
+		//FETCH - Check if variety is null
+		fetchedDto = dao.fetch(newDto2.getVerifiedYieldAmendmentGuid());
+		Assert.assertNull(fetchedDto.getCropVarietyId());
+		Assert.assertNull(fetchedDto.getCropVarietyName());
 		
 		//SELECT
 		dtos = dao.selectForVerifiedYieldContract(verifiedYieldContractGuid);
@@ -216,7 +233,7 @@ public class VerifiedYieldAmendmentDaoTest {
 		dao.delete(verifiedYieldAmendmentGuid);
 		VerifiedYieldAmendmentDto deletedDto = dao.fetch(verifiedYieldAmendmentGuid);
 		Assert.assertNull(deletedDto);
-
+		
 		dao.deleteForVerifiedYieldContract(verifiedYieldContractGuid);
 		deletedDto = dao.fetch(newDto2.getVerifiedYieldAmendmentGuid());
 		Assert.assertNull(deletedDto);
@@ -225,6 +242,8 @@ public class VerifiedYieldAmendmentDaoTest {
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(0, dtos.size());		
 	}
+	
+	
 
 	private void createVerifiedYieldContract(String userId) throws DaoException {
 

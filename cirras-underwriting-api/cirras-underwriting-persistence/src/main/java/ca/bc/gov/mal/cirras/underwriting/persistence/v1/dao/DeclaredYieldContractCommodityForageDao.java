@@ -20,7 +20,7 @@ public interface DeclaredYieldContractCommodityForageDao extends Serializable {
 
     void deleteForDeclaredYieldContract(String declaredYieldContractGuid) throws DaoException, NotFoundDaoException;
     
-    List<DeclaredYieldContractCommodityForageDto> selectForDeclaredYieldContract(String declaredYieldContractGuid) throws DaoException;
+    List<DeclaredYieldContractCommodityForageDto> selectForDeclaredYieldContract(String declaredYieldContractGuid, sortOrder order) throws DaoException;
 
     List<DeclaredYieldContractCommodityForageDto> selectToRecalculate(
     		Integer cropCommodityId,
@@ -28,4 +28,9 @@ public interface DeclaredYieldContractCommodityForageDao extends Serializable {
     		Integer effectiveCropYear,
     		Integer expiryCropYear
     		) throws DaoException;
+    
+	public enum sortOrder{
+		CommodityType,
+		CommodityNameCommodityType
+	}
 }

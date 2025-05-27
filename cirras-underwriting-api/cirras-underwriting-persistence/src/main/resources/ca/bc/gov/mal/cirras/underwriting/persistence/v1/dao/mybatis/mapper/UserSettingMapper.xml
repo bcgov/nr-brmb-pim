@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.UserSettingMapper">
+
+	<resultMap id="UserSettingDtoMap" type="ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UserSettingDto">
+		<id property="userSettingGuid" column="user_setting_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="loginUserGuid" column="login_user_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="loginUserId" column="login_user_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="loginUserType" column="login_user_type" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="givenName" column="given_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="familyName" column="family_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="policySearchCropYear" column="policy_search_crop_year" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="policySearchInsurancePlanId" column="policy_search_insurance_plan_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="policySearchOfficeId" column="policy_search_office_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+
+		<!-- Extended columns -->
+		<result property="policySearchInsurancePlanName" column="policy_search_insurance_plan_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="policySearchOfficeName" column="policy_search_office_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+
+	</resultMap>
+	
+	
+    <sql id="selectColumns">
+		select us.user_setting_guid, 
+			   us.login_user_guid, 
+			   us.login_user_id, 
+			   us.login_user_type, 
+			   us.given_name, 
+			   us.family_name, 
+			   us.policy_search_crop_year, 
+			   us.policy_search_insurance_plan_id, 
+			   us.policy_search_office_id, 
+			   us.create_user, 
+			   us.create_date, 
+			   us.update_user, 
+			   us.update_date,
+			   ip.insurance_plan_name as policy_search_insurance_plan_name,
+			   ofc.office_name as policy_search_office_name
+    </sql>
+    
+    
+	<select id="fetch" resultMap="UserSettingDtoMap">
+		<include refid="selectColumns"/>
+		from user_setting us
+		left join insurance_plan ip on ip.insurance_plan_id = us.policy_search_insurance_plan_id
+		left join office ofc on ofc.office_id = us.policy_search_office_id
+		where us.user_setting_guid = #{userSettingGuid}
+	</select>
+	
+	
+	<insert id="insert">
+		<selectKey keyProperty="userSettingGuid" resultType="java.lang.String" order="BEFORE"> 
+			select replace(cast(gen_random_uuid() as text), '-', '')
+		</selectKey>
+
+		insert into user_setting(
+			user_setting_guid, 
+			login_user_guid, 
+			login_user_id, 
+			login_user_type, 
+			given_name, 
+			family_name, 
+			policy_search_crop_year, 
+			policy_search_insurance_plan_id, 
+			policy_search_office_id, 
+			create_user, 
+			create_date, 
+			update_user, 
+			update_date
+		) values (
+			#{userSettingGuid}, 
+			#{dto.loginUserGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.loginUserId, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.loginUserType, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.givenName, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.familyName, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.policySearchCropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.policySearchInsurancePlanId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.policySearchOfficeId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+	</insert>
+
+	<update id="update">
+		update user_setting
+		set login_user_id = #{dto.loginUserId, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+		    login_user_type = #{dto.loginUserType, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			given_name = #{dto.givenName, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			family_name = #{dto.familyName, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			policy_search_crop_year = #{dto.policySearchCropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			policy_search_insurance_plan_id = #{dto.policySearchInsurancePlanId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			policy_search_office_id = #{dto.policySearchOfficeId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where user_setting_guid = #{dto.userSettingGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
+	</update> 
+
+	<delete id="delete">
+		delete from user_setting where user_setting_guid = #{userSettingGuid}
+	</delete>
+		
+	<select id="getByLoginUserGuid" resultMap="UserSettingDtoMap">
+		<include refid="selectColumns"/>
+		from user_setting us
+		left join insurance_plan ip on ip.insurance_plan_id = us.policy_search_insurance_plan_id
+		left join office ofc on ofc.office_id = us.policy_search_office_id
+		where us.login_user_guid = #{loginUserGuid}
+	</select> 
+		
+</mapper>

@@ -190,6 +190,8 @@ export interface VerifiedYieldContract {
     fields?: Array<AnnualField>;
     verifiedYieldContractCommodities?: Array<VerifiedYieldContractCommodity>;
     verifiedYieldAmendments?: Array<VerifiedYieldAmendment>;
+    verifiedYieldSummaries?: Array<VerifiedYieldSummary>;
+    verifiedYieldGrainBasket?: VerifiedYieldGrainBasket;
     productWarningMessages?: Array<MessageRsrc>;
     etag?: string;
     type: string;
@@ -197,19 +199,23 @@ export interface VerifiedYieldContract {
 
   export interface VerifiedYieldContractCommodity {
     verifiedYieldContractCommodityGuid?: string;
-	verifiedYieldContractGuid?: string;
-	cropCommodityId?: number;
-	isPedigreeInd?: boolean;
-	harvestedAcres?: number;
-	harvestedAcresOverride?: number;
-	storedYieldDefaultUnit?: number;
-	soldYieldDefaultUnit?: number;
-	productionGuarantee?: number;
-	harvestedYield?: number;
-	harvestedYieldOverride?: number;
-	yieldPerAcre?: number;
+    verifiedYieldContractGuid?: string;
+    cropCommodityId?: number;
+    commodityTypeCode?: string;
+    isPedigreeInd?: boolean;
+    harvestedAcres?: number;
+    harvestedAcresOverride?: number;
+    storedYieldDefaultUnit?: number;
+    soldYieldDefaultUnit?: number;
+    productionGuarantee?: number;
+    harvestedYield?: number;
+    harvestedYieldOverride?: number;
+    yieldPerAcre?: number;
     cropCommodityName?: string;
     totalInsuredAcres?: number;
+    commodityTypeDescription?: string;
+    displayName?: string;
+    isRolledupInd?: boolean;
   }
 
   export interface VerifiedYieldAmendment {
@@ -217,18 +223,55 @@ export interface VerifiedYieldContract {
     verifiedYieldAmendmentCode?: string;
     verifiedYieldContractGuid?: string;
     cropCommodityId?: number;
+    cropVarietyId?: number;
     isPedigreeInd?: boolean;
     fieldId?: number;
     yieldPerAcre?: number;
     acres?: number;
     rationale?: string;
     cropCommodityName?: string;
+    cropVarietyName?: string;
     fieldLabel?: string;
     deletedByUserInd?: boolean;
-  }
+}
 
   export interface VerifiableCommodity  {
     cropCommodityId?: number;
     cropCommodityName?: string;
     isPedigreeInd?: boolean;
   }
+
+  export interface VerifiableVariety {
+    cropVarietyId?: number;
+    cropVarietyName?: string;
+  }
+
+  export interface VerifiedYieldSummary {
+    verifiedYieldSummaryGuid?: string;
+    verifiedYieldContractGuid?: string;
+    cropCommodityId?: number;
+    isPedigreeInd?: boolean;
+    productionAcres?: number;
+    harvestedYield?: number;
+    harvestedYieldPerAcre?: number;
+    appraisedYield?: number;
+    assessedYield?: number;
+    yieldToCount?: number;
+    yieldPercentPy?: number;
+    productionGuarantee?: number;
+    probableYield?: number;
+    insurableValueHundredPercent?: number;
+    cropCommodityName?: string;
+    totalInsuredAcres?: number;
+    uwComments?: Array<UnderwritingComment>;
+}
+
+export interface VerifiedYieldGrainBasket {
+    verifiedYieldGrainBasketGuid?: string;
+    verifiedYieldContractGuid?: string;
+    basketValue?: number;
+    totalQuantityCoverageValue?: number;
+    totalCoverageValue?: number;
+    harvestedValue?: number;
+    comment?: string;
+}

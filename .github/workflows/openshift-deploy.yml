@@ -1,5 +1,6 @@
 name: openshift deploy
-run-name: Deploy ${{ inputs.MICROSERVICE_NAME }} to ${{ inputs.ENVIRONMENT_NAME}}
+run-name: Deploy ${{ inputs.MICROSERVICE_NAME }} to ${{ inputs.ENVIRONMENT_NAME}} tag ${{ inputs.TAG}}
+
 
 on:
   workflow_dispatch:
@@ -10,7 +11,6 @@ on:
         options: 
           - cirras-underwriting-api
           - cirras-underwriting-ui
-          - cirras-underwriting-jasper
       ENVIRONMENT_NAME:
         required: true
         type: choice
@@ -78,7 +78,6 @@ jobs:
 
       - name: Get digest of docker image
         id: getDigest
-        if: ${{ inputs.MICROSERVICE_NAME != 'cirras-underwriting-jasper'}}
         run: |
           export IMAGE='ghcr.io/${{github.repository_owner}}/${{ steps.updateImageName.outputs.IMAGE_NAME}}:${{ inputs.TAG }}'
           docker pull $IMAGE
@@ -137,6 +136,8 @@ jobs:
           MAX_UI_COUNT: ${{ vars.MAX_UI_COUNT }}
           BASE_URL: https://cirras-underwriting-ui-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/pub/cirras-underwriting/
           CIRRAS_UNDERWRITING_REST_URI: https://cirras-underwriting-api-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/cirras-underwriting-api/v1
+          GRAIN_VERIFIED_YIELD_CALCULATOR_URI: ${{ vars.GRAIN_VERIFIED_YIELD_CALCULATOR_URI }}
+          FORAGE_VERIFIED_YIELD_CALCULATOR_URI: ${{ vars.FORAGE_VERIFIED_YIELD_CALCULATOR_URI }}
 
           ACTIVE_PORT: ${{ vars.TOMCAT_PORT }}
           LOCAL_CHECKTOKEN_ENDPOINT: ${{ vars.LOCAL_CHECKTOKEN_ENDPOINT }}
@@ -147,20 +148,6 @@ jobs:
           WEBADE_OAUTH2_SCOPES: ${{ vars.WEBADE_OAUTH2_SCOPES }}
 
           WEB_PATH: ${{ vars.WEB_PATH }}
-
-
-          #Jasper variables
-          JASPER_URL: cirras-underwriting-jasper-${{ inputs.ENVIRONMENT_NAME }}-${{ inputs.NAMESPACE }}.apps.silver.devops.gov.bc.ca
-          JASPER_USERNAME: ${{ vars.JASPER_USERNAME }}
-          JASPER_CPU_REQUEST: ${{ vars.JASPER_CPU_REQUEST }}
-          JASPER_CPU_LIMIT: ${{ vars.JASPER_CPU_LIMIT }}
-          JASPER_MEMORY_REQUEST: ${{ vars.JASPER_MEMORY_REQUEST }}
-          JASPER_MEMORY_LIMIT: ${{ vars.JASPER_MEMORY_LIMIT }}
-          ALLOW_EMPTY_PASSWORD: true
-          JASPERREPORTS_DATABASE_NAME: jasper${{ inputs.ENVIRONMENT_NAME }}
-          JASPERREPORTS_UI_USER: ${{ vars.JASPER_USERNAME }}
-          JASPER_STORAGE_CAPACITY: 25Mi
-          MARIADB_MAX_LOG_BYTES: ${{ vars.MARIADB_MAX_LOG_BYTES }}
 
       #Explicit install of oc cli tool
       - name: Install oc

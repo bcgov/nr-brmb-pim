@@ -10,6 +10,7 @@
 		<result property="verifiedYieldContractGuid" column="verified_yield_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="cropCommodityId" column="crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="isPedigreeInd" column="is_pedigree_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="productionAcres" column="production_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="harvestedYield" column="harvested_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="harvestedYieldPerAcre" column="harvested_yield_per_acre" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="appraisedYield" column="appraised_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
@@ -18,6 +19,7 @@
 		<result property="yieldPercentPy" column="yield_percent_py" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="productionGuarantee" column="production_guarantee" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="probableYield" column="probable_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="insurableValueHundredPercent" column="insurable_value_hundred_percent" javaType="java.lang.Double" jdbcType="NUMERIC" />
 
 		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
@@ -25,6 +27,7 @@
 		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		
 		<result property="cropCommodityName" column="crop_commodity_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="totalInsuredAcres" column="total_insured_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
 
 	</resultMap>
 	
@@ -34,6 +37,7 @@
 			   t.verified_yield_contract_guid, 
 			   t.crop_commodity_id, 
 			   t.is_pedigree_ind, 
+			   t.production_acres,
 			   t.harvested_yield, 
 			   t.harvested_yield_per_acre, 
 			   t.appraised_yield, 
@@ -42,6 +46,7 @@
 			   t.yield_percent_py, 
 			   t.production_guarantee, 
 			   t.probable_yield, 
+			   t.insurable_value_hundred_percent,
 			   t.create_user, 
 			   t.create_date, 
 			   t.update_user, 
@@ -50,9 +55,16 @@
     
     <select id="fetch" resultMap="VerifiedYieldSummaryDtoMap">
 		<include refid="selectColumns"/>,
-		cc.commodity_name as crop_commodity_name
+		cc.commodity_name as crop_commodity_name,
+		icc.total_seeded_acres as total_insured_acres
 		from verified_yield_summary t
 		join crop_commodity cc ON cc.crop_commodity_id = t.crop_commodity_id
+		join verified_yield_contract vyc on vyc.verified_yield_contract_guid = t.verified_yield_contract_guid
+		left join inventory_contract ic on ic.contract_id = vyc.contract_id 
+									   and ic.crop_year = vyc.crop_year
+		left join inventory_contract_commodity icc on icc.inventory_contract_guid = ic.inventory_contract_guid 
+												   and icc.crop_commodity_id = t.crop_commodity_id
+												   and icc.is_pedigree_ind = t.is_pedigree_ind
 		where t.verified_yield_summary_guid = #{verifiedYieldSummaryGuid}
 	</select>
 
@@ -66,6 +78,7 @@
 			verified_yield_contract_guid,
 			crop_commodity_id,
 			is_pedigree_ind,
+			production_acres,
 			harvested_yield,
 			harvested_yield_per_acre,
 			appraised_yield,
@@ -74,6 +87,7 @@
 			yield_percent_py,
 			production_guarantee,
 			probable_yield,
+			insurable_value_hundred_percent,
 			create_user, 
 			create_date, 
 			update_user, 
@@ -83,6 +97,7 @@
 			#{dto.verifiedYieldContractGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.isPedigreeInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			#{dto.productionAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.harvestedYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.harvestedYieldPerAcre, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.appraisedYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
@@ -91,6 +106,7 @@
 			#{dto.yieldPercentPy, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.productionGuarantee, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.probableYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.insurableValueHundredPercent, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
 			now(),
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
@@ -102,6 +118,7 @@
 		update verified_yield_summary
 		set crop_commodity_id = #{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
 			is_pedigree_ind = #{dto.isPedigreeInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN}, 
+			production_acres = #{dto.productionAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			harvested_yield = #{dto.harvestedYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			harvested_yield_per_acre = #{dto.harvestedYieldPerAcre, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			appraised_yield = #{dto.appraisedYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
@@ -109,7 +126,8 @@
 			yield_to_count = #{dto.yieldToCount, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			yield_percent_py = #{dto.yieldPercentPy, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			production_guarantee = #{dto.productionGuarantee, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
-			probable_yield = #{dto.probableYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			probable_yield = #{dto.probableYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			insurable_value_hundred_percent = #{dto.insurableValueHundredPercent, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},  
 			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
 			update_date = now()
 		where verified_yield_summary_guid = #{dto.verifiedYieldSummaryGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
@@ -125,9 +143,39 @@
 			
 	<select id="selectForVerifiedYieldContract" resultMap="VerifiedYieldSummaryDtoMap">
 		<include refid="selectColumns"/>,
-		cc.commodity_name as crop_commodity_name
+		cc.commodity_name as crop_commodity_name,
+		--Insured Acres are loaded differently for grain and forage
+		CASE WHEN cc.insurance_plan_id = 4 THEN
+			--GRAIN
+			(
+				SELECT icc.total_seeded_acres
+				FROM inventory_contract_commodity icc
+				JOIN inventory_contract ic ON icc.inventory_contract_guid = ic.inventory_contract_guid 
+				WHERE ic.contract_id = vyc.contract_id 
+					AND ic.crop_year = vyc.crop_year
+					AND icc.crop_commodity_id = t.crop_commodity_id
+					AND icc.is_pedigree_ind = t.is_pedigree_ind
+			)
+		ELSE
+			CASE WHEN cc.insurance_plan_id = 5 THEN
+			--FORAGE - Commodity Level only
+				(
+					SELECT SUM(dyccf.total_field_acres)
+					FROM declared_yield_contract_cmdty_forage dyccf
+					JOIN commodity_type_code ctc ON ctc.commodity_type_code = dyccf.commodity_type_code
+					JOIN declared_yield_contract dyc ON dyc.declared_yield_contract_guid = dyccf.declared_yield_contract_guid
+					WHERE dyc.contract_id = vyc.contract_id 
+						AND dyc.crop_year = vyc.crop_year
+						AND ctc.crop_commodity_id = t.crop_commodity_id
+					GROUP BY ctc.crop_commodity_id
+				)
+			ELSE
+				NULL
+			END
+		END AS total_insured_acres
 		from verified_yield_summary t
 		join crop_commodity cc ON cc.crop_commodity_id = t.crop_commodity_id
+		join verified_yield_contract vyc on vyc.verified_yield_contract_guid = t.verified_yield_contract_guid
 		where t.verified_yield_contract_guid = #{verifiedYieldContractGuid}
 		order by cc.commodity_name, t.is_pedigree_ind
 	</select>

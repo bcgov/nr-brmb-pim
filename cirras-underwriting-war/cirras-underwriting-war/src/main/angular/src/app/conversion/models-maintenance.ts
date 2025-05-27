@@ -125,3 +125,20 @@ export interface YieldMeasUnitConversion {
     insurancePlanId?: number;
     commodityName?: string;
 }
+
+export interface UserSetting {
+    links?: Array<RelLink>;
+    userSettingGuid?: string;
+    loginUserGuid?: string;
+    loginUserId?: string;
+    loginUserType?: string;
+    givenName?: string;
+    familyName?: string;
+    policySearchCropYear?: number;
+    policySearchInsurancePlanId?: number;
+    policySearchInsurancePlanName?: string;
+    policySearchOfficeId?: number;
+    policySearchOfficeName?: string;
+    etag?: string;
+    type: string;
+}

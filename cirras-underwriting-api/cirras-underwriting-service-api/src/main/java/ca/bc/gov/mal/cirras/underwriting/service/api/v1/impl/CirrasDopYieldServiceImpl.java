@@ -324,7 +324,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 			if (dto.getDeclaredYieldContractGuid() == null) {
 				getInventoryContractCommodityTypes(dto);
 			} else {
-				List<DeclaredYieldContractCommodityForageDto> dopForageCommodities = declaredYieldContractCommodityForageDao.selectForDeclaredYieldContract(dto.getDeclaredYieldContractGuid());
+				List<DeclaredYieldContractCommodityForageDto> dopForageCommodities = declaredYieldContractCommodityForageDao.selectForDeclaredYieldContract(dto.getDeclaredYieldContractGuid(), DeclaredYieldContractCommodityForageDao.sortOrder.CommodityType);
 				dto.setDeclaredYieldContractCommodityForageList(dopForageCommodities);
 
 				List<DeclaredYieldFieldRollupForageDto> dopForageRollup = declaredYieldFieldRollupForageDao.selectForDeclaredYieldContract(dto.getDeclaredYieldContractGuid());

@@ -113,6 +113,8 @@ public class VerifiedYieldContractCommodityDaoTest {
 		
 		newDto.setCropCommodityId(16);
 		newDto.setCropCommodityName("BARLEY");
+		newDto.setCommodityTypeCode("Six Row");
+		newDto.setCommodityTypeDescription("Six Row Standard");
 		newDto.setHarvestedAcres(11.22);
 		newDto.setHarvestedAcresOverride(33.44);
 		newDto.setHarvestedYield(66.77);
@@ -139,6 +141,8 @@ public class VerifiedYieldContractCommodityDaoTest {
 
 		Assert.assertEquals("CropCommodityId", newDto.getCropCommodityId(), fetchedDto.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", newDto.getCropCommodityName(), fetchedDto.getCropCommodityName());
+		Assert.assertEquals("CommodityTypeCode", newDto.getCommodityTypeCode(), fetchedDto.getCommodityTypeCode());
+		Assert.assertEquals("CommodityTypeDescription", newDto.getCommodityTypeDescription(), fetchedDto.getCommodityTypeDescription());
 		Assert.assertEquals("HarvestedAcres", newDto.getHarvestedAcres(), fetchedDto.getHarvestedAcres());
 		Assert.assertEquals("HarvestedAcresOverride", newDto.getHarvestedAcresOverride(), fetchedDto.getHarvestedAcresOverride());
 		Assert.assertEquals("HarvestedYield", newDto.getHarvestedYield(), fetchedDto.getHarvestedYield());
@@ -157,6 +161,8 @@ public class VerifiedYieldContractCommodityDaoTest {
 		
 		Assert.assertEquals("CropCommodityId", newDto.getCropCommodityId(), fetchedDto.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", newDto.getCropCommodityName(), fetchedDto.getCropCommodityName());
+		Assert.assertEquals("CommodityTypeCode", newDto.getCommodityTypeCode(), fetchedDto.getCommodityTypeCode());
+		Assert.assertEquals("CommodityTypeDescription", newDto.getCommodityTypeDescription(), fetchedDto.getCommodityTypeDescription());
 		Assert.assertEquals("HarvestedAcres", newDto.getHarvestedAcres(), fetchedDto.getHarvestedAcres());
 		Assert.assertEquals("HarvestedAcresOverride", newDto.getHarvestedAcresOverride(), fetchedDto.getHarvestedAcresOverride());
 		Assert.assertEquals("HarvestedYield", newDto.getHarvestedYield(), fetchedDto.getHarvestedYield());
@@ -188,6 +194,8 @@ public class VerifiedYieldContractCommodityDaoTest {
 
 		Assert.assertEquals("CropCommodityId", fetchedDto.getCropCommodityId(), updatedDto.getCropCommodityId());
 		Assert.assertEquals("CropCommodityName", fetchedDto.getCropCommodityName(), updatedDto.getCropCommodityName());
+		Assert.assertEquals("CommodityTypeCode", fetchedDto.getCommodityTypeCode(), updatedDto.getCommodityTypeCode());
+		Assert.assertEquals("CommodityTypeDescription", fetchedDto.getCommodityTypeDescription(), updatedDto.getCommodityTypeDescription());
 		Assert.assertEquals("HarvestedAcres", fetchedDto.getHarvestedAcres(), updatedDto.getHarvestedAcres());
 		Assert.assertEquals("HarvestedAcresOverride", fetchedDto.getHarvestedAcresOverride(), updatedDto.getHarvestedAcresOverride());
 		Assert.assertEquals("HarvestedYield", fetchedDto.getHarvestedYield(), updatedDto.getHarvestedYield());

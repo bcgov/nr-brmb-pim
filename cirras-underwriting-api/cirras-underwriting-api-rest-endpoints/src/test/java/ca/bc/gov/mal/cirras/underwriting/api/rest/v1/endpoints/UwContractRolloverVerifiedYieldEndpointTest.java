@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -33,14 +34,15 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.test.EndpointsTest;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodityForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForageCut;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldGrain;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollupForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededGrain;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandManagementEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
@@ -125,9 +127,6 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 	}
 
 	private void deleteDopYieldContract(String policyNumber) throws NotFoundDaoException, DaoException, CirrasUnderwritingServiceException {
-
-		Integer pageNumber = new Integer(1);
-		Integer pageRowCount = new Integer(20);
 		
 		UwContractListRsrc searchResults = service.getUwContractList(
 				topLevelEndpoints, 
@@ -140,7 +139,7 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 				null, 
 				null, 
 				null, 
-				pageNumber, pageRowCount);
+				1, 20);
 		
 		if ( searchResults.getCollection() != null && searchResults.getCollection().size() == 1 ) {
 			UwContractRsrc referrer = searchResults.getCollection().get(0);
@@ -155,9 +154,6 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 	public void deleteInventoryContract(String policyNumber)
 			throws CirrasUnderwritingServiceException {
 		
-		Integer pageNumber = new Integer(1);
-		Integer pageRowCount = new Integer(20);
-		
 		UwContractListRsrc searchResults = service.getUwContractList(
 				topLevelEndpoints, 
 				null, 
@@ -169,8 +165,7 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 				null, 
 				null, 
 				null, 
-				pageNumber, 
-				pageRowCount);
+				1, 20);
 		
 		if ( searchResults.getCollection() != null && searchResults.getCollection().size() == 1 ) {
 			UwContractRsrc referrer = searchResults.getCollection().get(0);
@@ -207,11 +202,8 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 		createAnnualFieldDetail(annualFieldDetailId1, legalLandId, fieldId, cropYear1);
 		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId1, 1);
 
-		createInventoryContract(policyNumber1, 4);
-		createDopYieldContract(policyNumber1, 4);
-		
-		Integer pageNumber = new Integer(1);
-		Integer pageRowCount = new Integer(20);
+		createGrainInventoryContract(policyNumber1);
+		createGrainDopYieldContract(policyNumber1);
 
 		// Rollover and create VerifiedYieldContract.
 		UwContractListRsrc searchResults = service.getUwContractList(
@@ -225,7 +217,7 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 				null, 
 				null, 
 				null, 
-				pageNumber, pageRowCount);
+				1, 20);
 
 		Assert.assertNotNull(searchResults);
 		Assert.assertEquals(1, searchResults.getCollection().size());
@@ -462,13 +454,26 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 
 	}
 	
-	private void createInventoryContract(String policyNumber, Integer insurancePlanId) throws ValidationException, CirrasUnderwritingServiceException {
+	private static final String ctcAlfalfa = "Alfalfa";
+	private static final String ctcSilageCorn = "Silage Corn";
+	private Integer cropIdForage = 65;
+	private Integer cropIdSilageCorn = 71;
+	private Integer varietyIdAlfalafaGrass = 118;
+	private Integer varietyIdSilageCorn = 1010863;
+	private Integer alfalfaBales = 50;
+	private double alfalfaWeight = 2.0;
+	private double alfalfaQuantityHarvestedAcres = 320.0;
+	private double alfalfaInsuredAcres1 = 100.0;
+	private Integer silageCornBales = 35;
+	private double silageCornWeight = 2.5;
+	private double silageCornInsuredAcres1 = 250.0;
+	private double moisturePercent = 15.0;
+	
+	private List<DopYieldContractCommodityForage> dopYieldContractCommodityList;
+	private List<DopYieldFieldRollupForage> dopYieldFieldRollupList;
 
-		boolean addedSeededGrain = false;
-		boolean addedSeededForage = false;
-		
-		Integer pageNumber = new Integer(1);
-		Integer pageRowCount = new Integer(20);
+	
+	private void createForageInventoryContract(String policyNumber) throws ValidationException, CirrasUnderwritingServiceException {
 
 		UwContractListRsrc searchResults = service.getUwContractList(
 				topLevelEndpoints, 
@@ -481,7 +486,126 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 				null, 
 				null, 
 				null, 
-				pageNumber, pageRowCount);
+				1, 20);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+		Assert.assertNull(referrer.getInventoryContractGuid());
+
+		InventoryContractRsrc invContract = service.rolloverInventoryContract(referrer);
+		Assert.assertNotNull(invContract);
+		Assert.assertNotNull(invContract.getFields());
+		Assert.assertEquals(1, invContract.getFields().size());
+
+		//Field 1 ****		
+		AnnualFieldRsrc field1 = getField(fieldId, invContract.getFields());
+
+		// Remove default planting.
+		field1.getPlantings().remove(0);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(2024, Calendar.JUNE, 6);
+		Date seedingDate = cal.getTime();
+		
+		// Planting 1 - Forage - Alfalfa
+		InventoryField planting = createPlanting(field1, 1, cropYear1);
+		createInventorySeededForage(planting, cropIdForage, varietyIdAlfalafaGrass, ctcAlfalfa, alfalfaInsuredAcres1, seedingDate); //Alfalfa Grass
+
+		// Planting 2 - Silage Corn 1
+		planting = createPlanting(field1, 2, cropYear1);
+		createInventorySeededForage(planting, cropIdSilageCorn, varietyIdSilageCorn, ctcSilageCorn, silageCornInsuredAcres1, null);
+		
+		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
+		
+		Assert.assertNotNull(fetchedInvContract);
+		Assert.assertNotNull(fetchedInvContract.getFields());
+		Assert.assertEquals(1, fetchedInvContract.getFields().size());
+		
+		AnnualFieldRsrc fetchedField1 = getField(fieldId, fetchedInvContract.getFields());
+		
+		Assert.assertNotNull(fetchedField1.getPlantings());
+		Assert.assertEquals(2, fetchedField1.getPlantings().size());
+
+	}
+	
+	private AnnualFieldRsrc getField(Integer fieldId, List<AnnualFieldRsrc> contractFields) {
+		
+		List<AnnualFieldRsrc> fields = contractFields.stream().filter(x -> x.getFieldId().equals(fieldId)) 
+				.collect(Collectors.toList());
+		
+		Assert.assertEquals(1, fields.size());
+		
+		return fields.get(0);
+	}
+	
+	private InventoryField createPlanting(AnnualFieldRsrc field, Integer plantingNumber, Integer cropYear) {
+		InventoryField planting = new InventoryField();
+
+		planting.setCropYear(cropYear);
+		planting.setFieldId(field.getFieldId());
+		planting.setInsurancePlanId(5);
+		planting.setInventoryFieldGuid(null);
+		planting.setLastYearCropCommodityId(null);
+		planting.setLastYearCropCommodityName(null);
+		planting.setLastYearCropVarietyId(null);
+		planting.setLastYearCropVarietyName(null);
+		planting.setIsHiddenOnPrintoutInd(false);
+		planting.setPlantingNumber(plantingNumber);
+		planting.setUnderseededAcres(null);
+		planting.setUnderseededCropVarietyId(null);
+		planting.setUnderseededCropVarietyName(null);
+		
+		field.getPlantings().add(planting);
+
+		return planting;
+	}
+	
+	private InventorySeededForage createInventorySeededForage(
+			InventoryField planting, 
+            Integer cropCommodityId,
+            Integer cropVarietyId,
+            String commodityTypeCode,
+			Double fieldAcres,
+			Date seedingDate) {
+		
+		InventorySeededForage isf = new InventorySeededForage();
+
+
+		isf.setCommodityTypeCode(commodityTypeCode);
+		isf.setCropCommodityId(cropCommodityId);
+		isf.setCropVarietyId(cropVarietyId);
+		isf.setCropVarietyName(null);
+		isf.setFieldAcres(fieldAcres);
+		isf.setInventoryFieldGuid(planting.getInventoryFieldGuid());
+		isf.setIsAwpEligibleInd(false);
+		isf.setIsIrrigatedInd(false);
+		isf.setIsQuantityInsurableInd(true);
+		isf.setPlantInsurabilityTypeCode(null);
+		isf.setSeedingYear(planting.getCropYear() - 3);
+		isf.setSeedingDate(seedingDate);
+		
+		planting.getInventorySeededForages().add(isf);
+
+		return isf;
+	}
+	
+	private void createGrainInventoryContract(String policyNumber) throws ValidationException, CirrasUnderwritingServiceException {
+
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber,
+				null,
+				null, 
+				null, 
+				null, 
+				1, 20);
 
 		Assert.assertNotNull(searchResults);
 		Assert.assertEquals(1, searchResults.getCollection().size());
@@ -493,25 +617,7 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 		
 		for ( AnnualFieldRsrc field : resource.getFields() ) {
 			for ( InventoryField planting : field.getPlantings() ) {
-				if ( planting.getInventorySeededForages() != null && insurancePlanId.equals(InsurancePlans.FORAGE.getInsurancePlanId()) ) {
-					for ( InventorySeededForage isf : planting.getInventorySeededForages() ) {
-
-						// Fix Seeded Forage, which sets null defaults for a few mandatory columns.
-						isf.setIsIrrigatedInd(false);
-						isf.setIsQuantityInsurableInd(true);
-						isf.setCommodityTypeCode("CPSW");
-						isf.setCropCommodityId(26);
-						isf.setCropVarietyId(1010602);
-						isf.setCropVarietyName("AAC ENTICE");
-						isf.setFieldAcres(10.4);
-						isf.setSeedingYear(2018);
-						isf.setSeedingDate(null);
-						isf.setPlantInsurabilityTypeCode("E1");
-						isf.setIsAwpEligibleInd(true);
-							
-						addedSeededForage = true;
-					}
-				} else if ( planting.getInventorySeededGrains() != null && insurancePlanId.equals(InsurancePlans.GRAIN.getInsurancePlanId()) ) {
+				if ( planting.getInventorySeededGrains() != null ) {
 					
 					Calendar cal = Calendar.getInstance();
 					cal.clear();
@@ -539,24 +645,15 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 					seededGrains.add(invSeededGrain);
 
 					planting.setInventorySeededGrains(seededGrains);
-					
-					addedSeededGrain = true;
 				}
 			}
 		}
 
-		if (insurancePlanId.equals(InsurancePlans.GRAIN.getInsurancePlanId())) {
-			InventoryContractCommodity icc = createInventoryContractCommodity(16, "BARLEY", false, 23.45, 23.45, 0.0);
-			resource.getCommodities().add(icc);
-		}
+		InventoryContractCommodity icc = createInventoryContractCommodity(16, "BARLEY", false, 23.45, 23.45, 0.0);
+		resource.getCommodities().add(icc);
 
 		service.createInventoryContract(topLevelEndpoints, resource);
 
-		if ( insurancePlanId.equals(InsurancePlans.GRAIN.getInsurancePlanId()) ) {
-			Assert.assertTrue(addedSeededGrain);
-		} else if ( insurancePlanId.equals(InsurancePlans.FORAGE.getInsurancePlanId()) ) {
-			Assert.assertTrue(addedSeededForage);
-		}
 	}
 
 	private InventoryContractCommodity createInventoryContractCommodity(Integer cropCommodityId, String cropCommodityName, Boolean isPedigreeInd, Double totalSeededAcres, Double totalSpotLossAcres, Double totalUnseededAcres) {
@@ -575,20 +672,17 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 		return icc;
 	}
 	
-	private void createDopYieldContract(String policyNumber, Integer insurancePlanId) throws ValidationException, CirrasUnderwritingServiceException {
+	private void createForageDopYieldContract(
+			String policyNumber) throws ValidationException, CirrasUnderwritingServiceException {
 
-		boolean addedYieldGrain = false;
-		boolean addedYieldForage = false;
-		
-		
 		// Dop Date
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
 		cal.set(2020, Calendar.JANUARY, 15);
 		Date dopDate = cal.getTime();
 		
-		Integer pageNumber = new Integer(1);
-		Integer pageRowCount = new Integer(20);
+		Integer pageNumber = 1;
+		Integer pageRowCount = 20;
 
 		UwContractListRsrc searchResults = service.getUwContractList(
 				topLevelEndpoints, 
@@ -613,32 +707,154 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 		DopYieldContractRsrc resource = service.rolloverDopYieldContract(referrer);
 		
 		resource.setDeclarationOfProductionDate(dopDate);
+		resource.setDefaultYieldMeasUnitTypeCode("TON");
+		resource.setEnteredYieldMeasUnitTypeCode("TON");
+		resource.setGrainFromOtherSourceInd(false);
 		
-		if ( insurancePlanId.equals(InsurancePlans.GRAIN.getInsurancePlanId() ) ) { 		
-			resource.setDefaultYieldMeasUnitTypeCode("TONNE");
-			resource.setEnteredYieldMeasUnitTypeCode("TONNE");
-			resource.setGrainFromOtherSourceInd(true);
+		//Set dop contract commodity totals
+		enterDopCommodityTotals(resource, ctcAlfalfa, alfalfaQuantityHarvestedAcres, alfalfaBales, alfalfaWeight);
+		
+		//Add cuts
+		AnnualFieldRsrc field1 = getField(fieldId, resource.getFields());
 
-			resource.getDopYieldContractCommodities().clear();
+		List<DopYieldFieldForage> dopFields = field1.getDopYieldFieldForageList();
+		List<DopYieldFieldForageCut> cuts = new ArrayList<DopYieldFieldForageCut>();
+		
+		//Silage Corn QTY
+		DopYieldFieldForage dyff = getDopYieldFieldForage(ctcSilageCorn, dopFields);
+		cuts.add(createDopFieldForageCut(dyff.getInventoryFieldGuid(), 1, silageCornBales, (double)silageCornWeight, (double)0, false));
+		dyff.setDopYieldFieldForageCuts(cuts);
 
-			DopYieldContractCommodity dycc = createDopYieldContractCommodity(16, "BARLEY", 11.22, false, 66.77, 88.99);
-			resource.getDopYieldContractCommodities().add(dycc);
-			
-			dycc = createDopYieldContractCommodity(18, "CANOLA", 33.44, true, 55.66, 77.88);
-			resource.getDopYieldContractCommodities().add(dycc);
+		//Alfalfa QTY
+		dyff = getDopYieldFieldForage(ctcAlfalfa, dopFields);
+		cuts = new ArrayList<DopYieldFieldForageCut>();
+		cuts.add(createDopFieldForageCut(dyff.getInventoryFieldGuid(), 1, 115, (double)150, (double)78, false)); //75 ton
+		dyff.setDopYieldFieldForageCuts(cuts);
+		
+		DopYieldContractRsrc dopContract = service.createDopYieldContract(topLevelEndpoints, resource);
+		
+		dopYieldContractCommodityList = dopContract.getDopYieldContractCommodityForageList();
+		dopYieldFieldRollupList = dopContract.getDopYieldFieldRollupForageList();
 
-			dycc = createDopYieldContractCommodity(20, "FALL RYE", null, false, null, null);
-			resource.getDopYieldContractCommodities().add(dycc);
-			
-		} else if ( insurancePlanId.equals(InsurancePlans.FORAGE.getInsurancePlanId() ) ) {
-			resource.setDefaultYieldMeasUnitTypeCode("TON");
-			resource.setEnteredYieldMeasUnitTypeCode("TON");
-			resource.setGrainFromOtherSourceInd(false);
+	}
+	
+	private DopYieldFieldForageCut createDopFieldForageCut(
+			String inventoryFieldGuid,
+			Integer cutNumber,
+			Integer totalBalesLoads, 
+			Double weight,
+			Double moisturePercent, 
+			Boolean deletedByUserInd 
+		) {
+		
+		DopYieldFieldForageCut model = new DopYieldFieldForageCut();
+
+		model.setInventoryFieldGuid(inventoryFieldGuid);
+		model.setCutNumber(cutNumber);
+		model.setTotalBalesLoads(totalBalesLoads);
+		model.setWeight(weight);
+		model.setWeightDefaultUnit(null);
+		model.setMoisturePercent(moisturePercent);
+		model.setDeletedByUserInd(deletedByUserInd);
+
+		return model;
+	}
+
+	private DopYieldFieldForage getDopYieldFieldForage(String commodityTypeCode, List<DopYieldFieldForage> dyffList) {
+		
+		List<DopYieldFieldForage> dyffs = new ArrayList<DopYieldFieldForage>();
+		
+		if(commodityTypeCode == null) {
+			dyffs = dyffList.stream().filter(x -> x.getCommodityTypeCode() == null) 
+					.collect(Collectors.toList());
+		} else {
+			dyffs = dyffList.stream().filter(x -> x.getCommodityTypeCode() != null
+					&& x.getCommodityTypeCode().equalsIgnoreCase(commodityTypeCode)) 
+					.collect(Collectors.toList());
 		}
+		
+		Assert.assertEquals(1, dyffs.size());
+		
+		return dyffs.get(0);
+	}
+	
+	private void enterDopCommodityTotals(
+			DopYieldContractRsrc resource,
+			String coverageType,
+			Double quantityHarvestedAcres, 
+			Integer totalBales, 
+			Double weight) {
+		DopYieldContractCommodityForage dyccf = getDopYieldContractCommodityForage(coverageType, resource.getDopYieldContractCommodityForageList());
+		Assert.assertNotNull(dyccf);
+		dyccf.setTotalBalesLoads(totalBales);
+		dyccf.setWeight(weight);
+		dyccf.setWeightDefaultUnit(weight);
+		dyccf.setMoisturePercent(moisturePercent);
+		dyccf.setHarvestedAcres(quantityHarvestedAcres);
+	}
 
+	private DopYieldContractCommodityForage getDopYieldContractCommodityForage(String commodityTypeCode, List<DopYieldContractCommodityForage> dyccfList) {
+		
+		List<DopYieldContractCommodityForage> dyccfs = dyccfList.stream().filter(x -> x.getCommodityTypeCode().equalsIgnoreCase(commodityTypeCode)) 
+				.collect(Collectors.toList());
+		
+		Assert.assertEquals(1, dyccfs.size());
+		
+		return dyccfs.get(0);
+	}
+	
+	private void createGrainDopYieldContract(String policyNumber) throws ValidationException, CirrasUnderwritingServiceException {
+
+		boolean addedYieldGrain = false;
+		
+		// Dop Date
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(2020, Calendar.JANUARY, 15);
+		Date dopDate = cal.getTime();
+		
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber,
+				null,
+				null, 
+				null, 
+				null, 
+				1, 20);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+		Assert.assertNotNull(referrer.getInventoryContractGuid());
+		Assert.assertNull(referrer.getDeclaredYieldContractGuid());
+				
+		DopYieldContractRsrc resource = service.rolloverDopYieldContract(referrer);
+		
+		resource.setDeclarationOfProductionDate(dopDate);
+		
+		resource.setDefaultYieldMeasUnitTypeCode("TONNE");
+		resource.setEnteredYieldMeasUnitTypeCode("TONNE");
+		resource.setGrainFromOtherSourceInd(true);
+
+		resource.getDopYieldContractCommodities().clear();
+
+		DopYieldContractCommodity dycc = createDopYieldContractCommodity(16, "BARLEY", 11.22, false, 66.77, 88.99);
+		resource.getDopYieldContractCommodities().add(dycc);
+		
+		dycc = createDopYieldContractCommodity(18, "CANOLA", 33.44, true, 55.66, 77.88);
+		resource.getDopYieldContractCommodities().add(dycc);
+
+		dycc = createDopYieldContractCommodity(20, "FALL RYE", null, false, null, null);
+		resource.getDopYieldContractCommodities().add(dycc);
+			
 		// Create field-level data by copying from seeded grain data.
 		for ( AnnualFieldRsrc field : resource.getFields() ) {
-			if ( field.getDopYieldFieldGrainList() != null && insurancePlanId.equals(InsurancePlans.GRAIN.getInsurancePlanId())) {
+			if ( field.getDopYieldFieldGrainList() != null) {
 				for ( DopYieldFieldGrain yield : field.getDopYieldFieldGrainList() ) {
 					yield.setEstimatedYieldPerAcre(yield.getSeededAcres());
 					yield.setUnharvestedAcresInd(false);
@@ -647,35 +863,12 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 						addedYieldGrain = true;
 					}
 				}
-			} else if ( field.getDopYieldFieldForageList() != null && insurancePlanId.equals(InsurancePlans.FORAGE.getInsurancePlanId())) {
-				for ( DopYieldFieldForage yield : field.getDopYieldFieldForageList() ) {
-
-					List<DopYieldFieldForageCut> cutList = new ArrayList<DopYieldFieldForageCut>();
-					DopYieldFieldForageCut cut = new DopYieldFieldForageCut();
-					cut.setCutNumber(1);
-					cut.setDeclaredYieldFieldForageGuid(null);
-					cut.setInventoryFieldGuid(yield.getInventoryFieldGuid());
-					cut.setMoisturePercent(0.15);
-					cut.setTotalBalesLoads(10);
-					cut.setWeight(20.0);
-					cut.setDeletedByUserInd(false);
-					
-					cutList.add(cut);
-					yield.setDopYieldFieldForageCuts(cutList);
-					
-					addedYieldForage = true;
-
-				}
 			}
 		}
 
 		service.createDopYieldContract(topLevelEndpoints, resource);
 
-		if ( insurancePlanId.equals(InsurancePlans.GRAIN.getInsurancePlanId()) ) {
-			Assert.assertTrue(addedYieldGrain);
-		} else if ( insurancePlanId.equals(InsurancePlans.FORAGE.getInsurancePlanId()) ) {
-			Assert.assertTrue(addedYieldForage);
-		}
+		Assert.assertTrue(addedYieldGrain);
 	}
 
 	DopYieldContractCommodity createDopYieldContractCommodity(Integer cropCommodityId, String cropCommodityName, Double harvestedAcres, Boolean isPedigreeInd, Double soldYield, Double storedYield) {
@@ -701,6 +894,172 @@ public class UwContractRolloverVerifiedYieldEndpointTest extends EndpointsTest {
 		cal.setTime(date);
 		cal.add(Calendar.SECOND, seconds);
 		return cal.getTime();
+	}
+	
+	@Test
+	public void testRolloverForageVerifiedYieldContract() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException, DaoException {
+		logger.debug("<testRolloverForageVerifiedYieldContract");
+
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+		
+		//Date and Time without millisecond
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		Date transactionDate = cal.getTime();
+		Date createTransactionDate = addSeconds(transactionDate, -1);
+
+		createGrower(growerId, 999888, "grower name", createTransactionDate);
+		
+		createLegalLand("test legal 9999", null, legalLandId, "999-888-000", 1980, null);
+		createField(fieldId, "LOT 3", 1980, null);
+
+		createGrowerContractYear(growerContractYearId1, contractId, growerId, cropYear1, InsurancePlans.FORAGE.getInsurancePlanId(), createTransactionDate);
+		createPolicy(policyId1, growerId, InsurancePlans.FORAGE.getInsurancePlanId(), policyNumber1, contractNumber, contractId, cropYear1, createTransactionDate);
+		createAnnualFieldDetail(annualFieldDetailId1, legalLandId, fieldId, cropYear1);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId1, 1);
+
+		createForageInventoryContract(policyNumber1);
+		createForageDopYieldContract(policyNumber1);
+		
+		// Rollover and create VerifiedYieldContract.
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber1,
+				null,
+				null, 
+				null, 
+				null, 
+				1, 20);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+		Assert.assertNotNull(referrer.getInventoryContractGuid());
+		Assert.assertNotNull(referrer.getDeclaredYieldContractGuid());
+		Assert.assertNull(referrer.getVerifiedYieldContractGuid());
+		
+		// Check VerifiedYieldContract
+		VerifiedYieldContractRsrc vyContract = service.rolloverVerifiedYieldContract(referrer);
+		Assert.assertNotNull(vyContract);
+
+		Assert.assertEquals(contractId, vyContract.getContractId());
+		Assert.assertEquals(cropYear1, vyContract.getCropYear());
+		Assert.assertEquals(referrer.getDeclaredYieldContractGuid(), vyContract.getDeclaredYieldContractGuid());
+		Assert.assertEquals("TON", vyContract.getDefaultYieldMeasUnitTypeCode());
+		Assert.assertEquals(growerContractYearId1, vyContract.getGrowerContractYearId());
+		Assert.assertEquals(Integer.valueOf(5), vyContract.getInsurancePlanId());
+		Assert.assertNull(vyContract.getVerifiedYieldContractGuid());
+		Assert.assertNull(vyContract.getVerifiedYieldUpdateUser());
+		Assert.assertNull(vyContract.getVerifiedYieldUpdateTimestamp());
+
+		//Check VerifiedYieldContractCommodities
+		//Alfalfa
+		DopYieldContractCommodityForage dopCommodity = getDopYieldContractCommodityForage(cropIdForage, ctcAlfalfa, dopYieldContractCommodityList);
+		VerifiedYieldContractCommodity verifiedCommodity = getVerifiedYieldContractCommodity(cropIdForage, ctcAlfalfa, vyContract.getVerifiedYieldContractCommodities());
+
+		Assert.assertEquals(dopCommodity.getCropCommodityId(), verifiedCommodity.getCropCommodityId());
+		Assert.assertEquals(dopCommodity.getCommodityTypeCode(), verifiedCommodity.getCommodityTypeCode());
+		Assert.assertEquals(dopCommodity.getHarvestedAcres(), verifiedCommodity.getHarvestedAcres());
+		Assert.assertEquals(dopCommodity.getTotalFieldAcres(), verifiedCommodity.getTotalInsuredAcres());
+		Assert.assertEquals(dopCommodity.getQuantityHarvestedTons(), verifiedCommodity.getHarvestedYield(), 0.00005);
+		Assert.assertEquals(getYieldPerAcre(verifiedCommodity), verifiedCommodity.getYieldPerAcre(), 0.00005);
+		
+		//Silage Corn
+		DopYieldFieldRollupForage dopRollup = getDopYieldFieldRollupForage(ctcSilageCorn, dopYieldFieldRollupList);
+		verifiedCommodity = getVerifiedYieldContractCommodity(cropIdSilageCorn, ctcSilageCorn, vyContract.getVerifiedYieldContractCommodities());
+
+		Assert.assertEquals(cropIdSilageCorn, verifiedCommodity.getCropCommodityId());
+		Assert.assertEquals(dopRollup.getCommodityTypeCode(), verifiedCommodity.getCommodityTypeCode());
+		Assert.assertEquals(dopRollup.getHarvestedAcres(), verifiedCommodity.getHarvestedAcres());
+		Assert.assertEquals(dopRollup.getTotalFieldAcres(), verifiedCommodity.getTotalInsuredAcres());
+		Assert.assertEquals(dopRollup.getQuantityHarvestedTons(), verifiedCommodity.getHarvestedYield(), 0.00005);
+		Assert.assertEquals(getYieldPerAcre(verifiedCommodity), verifiedCommodity.getYieldPerAcre(), 0.00005);
+		
+		logger.debug(">testRolloverForageVerifiedYieldContract");
+	}
+	
+	private Double getYieldPerAcre(VerifiedYieldContractCommodity verifiedCommodity) {
+		
+		//Yield per acre: 0 if yield and acres are null
+		Double yieldPerAcre = null;
+		Double effectiveAcres = notNull(verifiedCommodity.getHarvestedAcresOverride(), verifiedCommodity.getHarvestedAcres());
+		Double effectiveYield = notNull(verifiedCommodity.getHarvestedYieldOverride(), verifiedCommodity.getHarvestedYield());
+
+		if ( effectiveAcres != null && effectiveYield != null ) {
+			if ( effectiveAcres == 0.0 ) {
+				yieldPerAcre = 0.0;
+			} else {
+				yieldPerAcre = effectiveYield / effectiveAcres;
+			}
+		}
+		
+		return yieldPerAcre;
+	}
+	
+	private DopYieldContractCommodityForage getDopYieldContractCommodityForage(
+			Integer cropCommodityId, 
+			String commodityTypeCode, 
+			List<DopYieldContractCommodityForage> dyccfList) {
+		
+		DopYieldContractCommodityForage dyccf = null;
+		
+		List<DopYieldContractCommodityForage> dyccfFiltered = dyccfList.stream()
+				.filter(x -> x.getCropCommodityId() == cropCommodityId
+						&& ((x.getCommodityTypeCode() != null && x.getCommodityTypeCode().equals(commodityTypeCode))
+								|| (commodityTypeCode == null && x.getCommodityTypeCode() == null)) )
+				
+				.collect(Collectors.toList());
+		
+		if (dyccfFiltered != null) {
+			dyccf = dyccfFiltered.get(0);
+		}
+		return dyccf;
+	}
+	
+	private DopYieldFieldRollupForage getDopYieldFieldRollupForage(
+			String commodityTypeCode, 
+			List<DopYieldFieldRollupForage> dyfrfList) {
+		
+		DopYieldFieldRollupForage dyfrf = null;
+		
+		List<DopYieldFieldRollupForage> dyfrfFiltered = dyfrfList.stream()
+				.filter(x -> (x.getCommodityTypeCode() != null && x.getCommodityTypeCode().equals(commodityTypeCode))
+								|| (commodityTypeCode == null && x.getCommodityTypeCode() == null) )
+				
+				.collect(Collectors.toList());
+		
+		if (dyfrfFiltered != null) {
+			dyfrf = dyfrfFiltered.get(0);
+		}
+		return dyfrf;
+	}	
+	
+	private VerifiedYieldContractCommodity getVerifiedYieldContractCommodity(Integer cropCommodityId, String commodityTypeCode, List<VerifiedYieldContractCommodity> vyccList) {
+		
+		VerifiedYieldContractCommodity vycc = null;
+		
+		List<VerifiedYieldContractCommodity> vyccFiltered = vyccList.stream()
+				.filter(x -> x.getCropCommodityId().equals(cropCommodityId) 
+						&& ((x.getCommodityTypeCode() != null && x.getCommodityTypeCode().equals(commodityTypeCode))
+								|| (commodityTypeCode == null && x.getCommodityTypeCode() == null)) )
+				.collect(Collectors.toList());
+		
+		if (vyccFiltered != null) {
+			vycc = vyccFiltered.get(0);
+		}
+		return vycc;
+	}
+	
+	private Double notNull(Double value, Double defaultValue) {
+		return (value == null) ? defaultValue : value;
 	}
 
 }

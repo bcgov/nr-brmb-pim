@@ -5,6 +5,8 @@ crunchyImage: # it's not necessary to specify an image as the images specified i
 postgresVersion: 15
 #postGISVersion: '3.3' # use this version of POSTGIS. both crunchyImage and this property needs to have valid values for POSTGIS to be enabled.
 imagePullPolicy: IfNotPresent
+#Set this to true for OpenShift deployments to avoid incompatible securityContext values
+openshift: true
 
 instances:
   name: ha # high availability
@@ -48,22 +50,24 @@ pgBackRest:
   s3UriStyle: path
 
   repos:
+    # Times are intrepreted as GMT timezone, which is 7 or 8 hours ahead depending on daylight savings time.
+    # So, for example, to get a backup to run at 12am, we specify 8am here.
     schedules:
-      full: 0 0 * * 0
-      differential: 0 0 * * 1-6
-      incremental: 0 4,8,12,16,20 * * *
+      full: 0 8 * * 0
+      differential: 0 8 * * 1-6
+      incremental: 0 0,4,12,16,20 * * *
     schedulesOffset:
-      full: 0 2 * * 0
-      differential: 0 2 * * 1-6
-      incremental: 0 6,10,14,18,22 * * *
+      full: 0 10 * * 0
+      differential: 0 10 * * 1-6
+      incremental: 0 2,6,14,18,22 * * *
     volume:
       accessModes: "ReadWriteOnce"
       storageClassName: netapp-file-backup
       storage: #{DB_BACKUP_VOLUME_SIZE}#
     configuration:
-      secretName: "#{ENV}#-postgres-s3-secret"
+      secretName: "#{S3_ENVIRONMENT}#-postgres-s3-secret"
     s3:
-      bucket: "pit#{ENV}#"
+      bucket: "pit#{S3_ENVIRONMENT}#"
       endpoint: "nrs.objectstore.gov.bc.ca"
       region: "ca-central-1"
       directoryName: pituw#{ENV}#

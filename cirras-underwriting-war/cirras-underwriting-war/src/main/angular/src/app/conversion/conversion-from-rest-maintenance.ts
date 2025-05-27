@@ -1,5 +1,5 @@
-import { CropVarietyInsurabilityListRsrc, GradeModifierListRsrc, GradeModifierRsrc, GradeModifierTypeListRsrc, SeedingDeadlineListRsrc, UnderwritingYearListRsrc, YieldMeasUnitConversionListRsrc } from "@cirras/cirras-underwriting-api";
-import { CropVarietyInsurabilityList, GradeModifier, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, UnderwritingYear, UnderwritingYearList, YieldMeasUnitConversionList } from "./models-maintenance";
+import { CropVarietyInsurabilityListRsrc, GradeModifierListRsrc, GradeModifierRsrc, GradeModifierTypeListRsrc, SeedingDeadlineListRsrc, UnderwritingYearListRsrc, UserSettingRsrc, YieldMeasUnitConversionListRsrc } from "@cirras/cirras-underwriting-api";
+import { CropVarietyInsurabilityList, GradeModifier, GradeModifierList, GradeModifierTypeList, SeedingDeadlineList, UnderwritingYear, UnderwritingYearList, UserSetting, YieldMeasUnitConversionList } from "./models-maintenance";
 
 export function convertToUnderwritingYearList(uwYearListRes: UnderwritingYearListRsrc): UnderwritingYearList {
     if (!uwYearListRes) {
@@ -130,4 +130,28 @@ export function convertToUnderwritingYear(uwYear: any, etag?: string): Underwrit
         etag: etag,
         type: ycListRes['@type']
     };
+  }
+
+
+  export function convertToUserSettings(userSettings: UserSettingRsrc, etag: string): UserSetting {
+
+    let ret: UserSetting = {
+  
+      links: userSettings.links ? userSettings.links : null,
+      userSettingGuid: userSettings.userSettingGuid,
+      loginUserGuid: userSettings.loginUserGuid,
+      loginUserId: userSettings.loginUserId,
+      loginUserType: userSettings.loginUserType,
+      givenName: userSettings.givenName,
+      familyName: userSettings.familyName,
+      policySearchCropYear: userSettings.policySearchCropYear,
+      policySearchInsurancePlanId: userSettings.policySearchInsurancePlanId,
+      policySearchInsurancePlanName: userSettings.policySearchInsurancePlanName,
+      policySearchOfficeId: userSettings.policySearchOfficeId,
+      policySearchOfficeName: userSettings.policySearchOfficeName,
+      etag: etag, // userSettings.etag,
+      type: userSettings['@type']
+    };  
+
+    return ret;
   }
