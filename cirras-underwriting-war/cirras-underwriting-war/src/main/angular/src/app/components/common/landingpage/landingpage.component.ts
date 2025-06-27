@@ -23,7 +23,8 @@ export class LandingPageComponent implements OnInit {
   
   targetScreens = {
     INVENTORY: "inventory",  
-    YIELD: "yield"  
+    YIELD: "yield",
+    VERIFIED_YIELD: "verified_yield" 
   }
 
   constructor(protected router: Router,
@@ -46,7 +47,10 @@ export class LandingPageComponent implements OnInit {
       }
     );
 
-    if(this.targetScreen && (this.targetScreen == this.targetScreens.INVENTORY || this.targetScreen == this.targetScreens.YIELD)) {
+    if(this.targetScreen && 
+            (this.targetScreen == this.targetScreens.INVENTORY 
+              || this.targetScreen == this.targetScreens.YIELD 
+              || this.targetScreen == this.targetScreens.VERIFIED_YIELD)) {
       if(this.policyNumber){
         //Get uw contract
         this.redirectInventoryYield();
@@ -76,6 +80,8 @@ export class LandingPageComponent implements OnInit {
           this.redirectToInventory(data.collection[0]);
         } else if(this.targetScreen && this.targetScreen == this.targetScreens.YIELD) {
           this.redirectToYield(data.collection[0]);
+        } else if(this.targetScreen && this.targetScreen == this.targetScreens.VERIFIED_YIELD) {
+          this.redirectToVerifiedYield(data.collection[0]);
         }
 
       } else {
@@ -93,6 +99,24 @@ export class LandingPageComponent implements OnInit {
       this.cdr.detectChanges();
 
     })
+  }
+
+  redirectToVerifiedYield(uwContract: UwContract) {
+
+    if (userCanAccessDop(this.securityUtilService, uwContract.links)) {
+
+      let vyLink = "/" + ResourcesRoutes.VERIFIED_YIELD + 
+      "/" + uwContract.insurancePlanId + 
+      "/" + uwContract.cropYear +
+      "/" + uwContract.policyId + 
+      "/" + (uwContract.verifiedYieldContractGuid ? uwContract.verifiedYieldContractGuid : " ");
+
+      this.router.navigate([vyLink]) 
+  
+    } else {
+      this.hasErrors = true;
+      this.errorMessage = "There is no yield data for policy " + this.policyNumber;
+    }
   }
 
   redirectToYield(uwContract: UwContract) {
