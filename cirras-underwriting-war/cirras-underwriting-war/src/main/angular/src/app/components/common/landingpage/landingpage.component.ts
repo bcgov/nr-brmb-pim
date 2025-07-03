@@ -5,7 +5,7 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
 import {AppConfigService, TokenService} from "@wf1/wfcc-core-lib";
 import {Overlay} from "@angular/cdk/overlay";
 import { HttpClient } from '@angular/common/http';
-import { setHttpHeaders, userCanAccessDop, userCanAccessInventory } from 'src/app/utils';
+import { setHttpHeaders, userCanAccessDop, userCanAccessInventory, userCanAccessVerifiedYield } from 'src/app/utils';
 import { UwContract, UwContractsList } from 'src/app/conversion/models';
 import { INSURANCE_PLAN, ResourcesRoutes } from 'src/app/utils/constants';
 
@@ -103,7 +103,7 @@ export class LandingPageComponent implements OnInit {
 
   redirectToVerifiedYield(uwContract: UwContract) {
 
-    if (userCanAccessDop(this.securityUtilService, uwContract.links)) {
+    if (userCanAccessVerifiedYield(this.securityUtilService, uwContract.links)) {
 
       let vyLink = "/" + ResourcesRoutes.VERIFIED_YIELD + 
       "/" + uwContract.insurancePlanId + 
