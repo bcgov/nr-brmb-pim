@@ -14,6 +14,9 @@ instances:
   dataVolumeClaimSpec:
     storage: #{DB_STORAGE}#
     storageClassName: netapp-block-standard
+  walVolumeClaimSpec:
+    storage: #{DB_WAL_VOLUME_SIZE}#
+    storageClassName: netapp-block-standard
   # Note: using New York time zone to match existing deployment - otherwise, would use either local time or PST
   env:
     - name: PGTZ

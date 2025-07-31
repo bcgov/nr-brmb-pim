@@ -4,6 +4,7 @@ import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
 import ca.bc.gov.nrs.common.wfone.rest.resource.RelLink;
 import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
+import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
@@ -23,9 +24,11 @@ import javax.ws.rs.core.UriBuilder;
 
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.VerifiedYieldContractEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.VerifiedYieldContractListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.VerifiedYieldContractSimpleEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.VerifiedYieldContractSimpleRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
@@ -36,11 +39,11 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractSimple;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
@@ -273,6 +276,97 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		setSelfLink(dto.getVerifiedYieldContractGuid(), resource, baseUri);
  		setLinks(dto.getVerifiedYieldContractGuid(), resource, baseUri, authentication);
 
+		return resource;		
+	}
+	
+	@Override
+	public VerifiedYieldContractSimple getVerifiedYieldContractSimple(
+			VerifiedYieldContractDto dto,
+			Integer cropCommodityId, 
+			Boolean isPedigreeInd, 
+			FactoryContext factoryContext,
+			WebAdeAuthentication authentication
+			) throws FactoryException {
+		
+		VerifiedYieldContractSimpleRsrc resource = new VerifiedYieldContractSimpleRsrc();
+
+		resource.setVerifiedYieldContractGuid(dto.getVerifiedYieldContractGuid());
+		resource.setContractId(dto.getContractId());
+		resource.setCropYear(dto.getCropYear());
+		
+		boolean returnAll = (cropCommodityId == null);
+		
+		if(cropCommodityId != null) {
+			if (isPedigreeInd == null) {
+				throw new ServiceException("IsPedigreed needs to be set if commodity is set");
+			}
+		}
+
+		// Verified Yield Contract Commodity
+		if (!dto.getVerifiedYieldContractCommodities().isEmpty()) {
+			List<VerifiedYieldContractCommodity> verifiedContractCommodities = new ArrayList<VerifiedYieldContractCommodity>();
+
+			for (VerifiedYieldContractCommodityDto vyccDto : dto.getVerifiedYieldContractCommodities()) {
+
+				//Only return records of the commodity if the parameter is not null
+				if(returnAll == true || 
+						(returnAll == false &&
+							cropCommodityId.equals(vyccDto.getCropCommodityId()) &&
+							isPedigreeInd.equals(vyccDto.getIsPedigreeInd()))) {
+					VerifiedYieldContractCommodity vyccModel = createVerifiedYieldContractCommodity(vyccDto, dto.getInsurancePlanId());
+					verifiedContractCommodities.add(vyccModel);
+				}					
+			}
+
+			resource.setVerifiedYieldContractCommodities(verifiedContractCommodities);
+		}
+
+		// Verified Yield Amendment
+		if (!dto.getVerifiedYieldAmendments().isEmpty()) {
+
+			List<VerifiedYieldAmendment> verifiedYieldAmendments = new ArrayList<VerifiedYieldAmendment>();
+			
+			for (VerifiedYieldAmendmentDto vyaDto : dto.getVerifiedYieldAmendments()) {
+				
+				//Only return records of the commodity if the parameter is not null
+				if(returnAll == true || 
+						(returnAll == false &&
+							cropCommodityId.equals(vyaDto.getCropCommodityId()) &&
+							isPedigreeInd.equals(vyaDto.getIsPedigreeInd()))) {
+					VerifiedYieldAmendment vyaModel = createVerifiedYieldAmendment(vyaDto);
+					verifiedYieldAmendments.add(vyaModel);
+				}
+				
+			}
+
+			resource.setVerifiedYieldAmendments(verifiedYieldAmendments);
+		}
+
+		// Verified Yield Summary
+		if (!dto.getVerifiedYieldSummaries().isEmpty()) {
+			List<VerifiedYieldSummary> verifiedYieldSummaries = new ArrayList<VerifiedYieldSummary>();
+
+			for (VerifiedYieldSummaryDto vysDto : dto.getVerifiedYieldSummaries()) {
+				
+				//Only return records of the commodity if the parameter is not null
+				if(returnAll == true || 
+						(returnAll == false && 
+							cropCommodityId.equals(vysDto.getCropCommodityId()) &&
+							isPedigreeInd.equals(vysDto.getIsPedigreeInd()))) {
+					VerifiedYieldSummary vysModel = createVerifiedYieldSummary(vysDto, authentication);
+					verifiedYieldSummaries.add(vysModel);
+				}				
+				
+			}
+
+			resource.setVerifiedYieldSummaries(verifiedYieldSummaries);
+		}
+		
+		//Grain Basket
+		if(dto.getVerifiedYieldGrainBasket() != null) {
+			resource.setVerifiedYieldGrainBasket(createVerifiedYieldGrainBasket(dto.getVerifiedYieldGrainBasket()));
+		}
+		
 		return resource;		
 	}
 
@@ -752,6 +846,16 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 		}
 		
 	}
+	
+
+	public static String getVerifiedYieldContractSimpleSelfUri(
+			URI baseUri) {
+
+		String result = UriBuilder.fromUri(baseUri).path(VerifiedYieldContractSimpleEndpoint.class).build().toString();
+
+		return result;
+	}
+
 
 	@Override
 	public void updateDto(VerifiedYieldContractDto dto, VerifiedYieldContract<? extends AnnualField, ? extends Message> model, String userId) {
@@ -860,4 +964,6 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory implem
 	private Double notNull(Double value, Double defaultValue) {
 		return (value == null) ? defaultValue : value;
 	}
+
+
 }

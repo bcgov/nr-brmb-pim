@@ -62,6 +62,13 @@ spec:
           requests:
             storage: {{ .Values.instances.dataVolumeClaimSpec.storage }}
         storageClassName: {{ .Values.instances.dataVolumeClaimSpec.storageClassName }}
+      walVolumeClaimSpec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: {{ .Values.instances.walVolumeClaimSpec.storage }}
+        storageClassName: {{ .Values.instances.walVolumeClaimSpec.storageClassName }}
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
