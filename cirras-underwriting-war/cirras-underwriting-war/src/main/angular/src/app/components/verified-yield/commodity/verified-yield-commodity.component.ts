@@ -63,8 +63,15 @@ export class VerifiedYieldCommodityComponent implements OnChanges {
   }
 
   updateHarvestedAcresOverride(): void {
+
     let harvestedAcresOverride = roundUpDecimalAcres(this.commodityFormGroup.value.harvestedAcresOverride)
-    this.commodity.harvestedAcresOverride = parseFloat(harvestedAcresOverride.toString()) || null
+
+    if (!isNaN(parseFloat(harvestedAcresOverride.toString()))) {
+      this.commodity.harvestedAcresOverride = parseFloat(harvestedAcresOverride.toString())
+    } else {
+      this.commodity.harvestedAcresOverride = null
+    }
+    
     this.commodityFormGroup.controls['harvestedAcresOverride'].setValue(harvestedAcresOverride)
 
     this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true))
@@ -72,7 +79,13 @@ export class VerifiedYieldCommodityComponent implements OnChanges {
 
   updateHarvestedYieldOverride(): void {
     let harvestedYieldOverride = roundUpDecimalYield(this.commodityFormGroup.value.harvestedYieldOverride, 3)
-    this.commodity.harvestedYieldOverride = parseFloat(harvestedYieldOverride.toString()) || null
+
+    if (!isNaN(parseFloat(harvestedYieldOverride.toString()))) {
+      this.commodity.harvestedYieldOverride = parseFloat(harvestedYieldOverride.toString())
+    } else {
+      this.commodity.harvestedYieldOverride = null
+    }
+
     this.commodityFormGroup.controls['harvestedYieldOverride'].setValue(harvestedYieldOverride)
 
     this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true));
