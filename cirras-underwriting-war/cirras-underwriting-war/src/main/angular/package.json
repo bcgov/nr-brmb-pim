@@ -34,7 +34,7 @@
     "@angular/router": "^18.2.12",
     "@angular/service-worker": "^18.2.12",
     "@busacca/ng-pick-datetime": "^15.0.0",
-    "@cirras/cirras-underwriting-api": "3.8.0-SNAPSHOT",
+    "@cirras/cirras-underwriting-api": "3.9.0-SNAPSHOT",
     "@ngrx/effects": "^18.1.1",
     "@ngrx/store": "^18.1.1",
     "@ngrx/store-devtools": "^18.1.1",
