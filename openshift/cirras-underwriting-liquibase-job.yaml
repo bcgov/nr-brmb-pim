@@ -43,7 +43,7 @@ spec:
         command:
           ['sh', '-c']
         args:
-          ['. /vault/secrets/env && liquibase update --changelog-file=#{CHANGELOG_FILE}#']
+          ['. /vault/secrets/env && liquibase update --changelog-file=#{CHANGELOG_FILE}# --context=#{ENV}#']
         imagePullPolicy: Always
         resources:
             requests:
