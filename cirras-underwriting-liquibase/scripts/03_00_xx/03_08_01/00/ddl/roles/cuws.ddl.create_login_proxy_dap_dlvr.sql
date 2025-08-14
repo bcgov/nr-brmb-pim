@@ -14,4 +14,4 @@ ALTER ROLE "PROXY_DAP_PIUW_DEV" SET search_path TO cuws;
 
 COMMENT ON ROLE "PROXY_DAP_PIUW_DEV" IS 'Proxy account for DAP read only access to Cirras Underwriting System in DVLR';
 
---GRANT "app_cuws_readonly" TO "PROXY_DAP_PIUW_DEV";
+--GRANT "app_cuws_readonly" TO "PROXY_DAP_PIUW_DEV"; --Grant has to be applied in the terminal in the master POD
