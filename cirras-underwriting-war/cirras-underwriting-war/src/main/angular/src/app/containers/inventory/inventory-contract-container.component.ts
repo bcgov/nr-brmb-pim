@@ -26,8 +26,9 @@ import { selectGrowerContract } from "src/app/store/grower-contract/grower-contr
             [underSeededCropCommodityList]="underSeededCropCommodityList$ | async"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
-        ></cirras-underwriting-inventory-selector>`, 
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+        ></cirras-underwriting-inventory-selector>`,
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 
 export class InventoryContractContainer extends BaseContainer {

@@ -11,8 +11,9 @@ import { selectYieldMeasUnit } from "src/app/store/dop/dop.selectors";
     template: `
         <yield-conversion-units
             [yieldMeasUnitList]="yieldMeasUnitList$ | async"
-        ></yield-conversion-units>`, 
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+        ></yield-conversion-units>`,
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 
 export class YieldConversionUnitsContainer extends BaseContainer {

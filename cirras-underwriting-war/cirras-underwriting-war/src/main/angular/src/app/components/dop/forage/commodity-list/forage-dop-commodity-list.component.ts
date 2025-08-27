@@ -6,7 +6,8 @@ import { DopYieldContractCommodityForage } from "src/app/conversion/models-yield
     selector: 'forage-dop-commodity-list',
     templateUrl: './forage-dop-commodity-list.component.html',
     styleUrls: ['./forage-dop-commodity-list.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ForageDopCommodityListComponent {
     @Input() commodities: Array<DopYieldContractCommodityForage>;

@@ -10,10 +10,11 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { roundUpDecimalYield, roundUpDecimalAcres } from "../../inventory/inventory-common";
 
 @Component({
-  selector: 'verified-yield-commodity',
-  templateUrl: './verified-yield-commodity.component.html',
-  styleUrls: ['./verified-yield-commodity.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'verified-yield-commodity',
+    templateUrl: './verified-yield-commodity.component.html',
+    styleUrls: ['./verified-yield-commodity.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class VerifiedYieldCommodityComponent implements OnChanges {
 

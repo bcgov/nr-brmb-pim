@@ -5,9 +5,10 @@ import { YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
 
 @Component({
-  selector: 'yield-conversion-units',
-  templateUrl: './yield-conversion-units.component.html',
-  styleUrls: ['./yield-conversion-units.component.scss']
+    selector: 'yield-conversion-units',
+    templateUrl: './yield-conversion-units.component.html',
+    styleUrls: ['./yield-conversion-units.component.scss'],
+    standalone: false
 })
 export class YieldConversionUnitsComponent {
 

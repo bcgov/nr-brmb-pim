@@ -15,7 +15,8 @@ import {arrayEquals} from "../utils";
 declare var $: any;
 
 @Directive({
-    selector: '[appWFSingleSelect]'
+    selector: '[appWFSingleSelect]',
+    standalone: false
 })
 export class SingleSelectDirective implements AfterViewInit, OnChanges {
     @Input() appWFPlaceholder?: string;

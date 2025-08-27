@@ -13,7 +13,8 @@ import { PLANT_DURATION } from "src/app/utils/constants";
     selector: 'forage-dop-commodity',
     templateUrl: './forage-dop-commodity.component.html',
     styleUrls: ['./forage-dop-commodity.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ForageDopCommodityComponent implements OnInit {
     @Input() commodity: DopYieldContractCommodityForage;

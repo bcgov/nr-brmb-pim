@@ -23,8 +23,9 @@ import { selectCropVarietyInsurabilityList } from "src/app/store/maintenance/mai
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async" 
             [isUnsaved]="isUnsaved$ | async"          
-        ></forage-variety-insurability>`, 
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+        ></forage-variety-insurability>`,
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 export class ForageVarietyInsurabilityContainer extends BaseContainer {
 

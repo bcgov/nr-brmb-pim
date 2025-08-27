@@ -27,11 +27,12 @@ import { roundUpDecimalYield } from '../../inventory/inventory-common';
 import { SCREEN_TYPE } from 'src/app/utils/constants';
 
 @Component({
-  selector: 'grain-dop',
-  templateUrl: './grain-dop.component.html',
-  styleUrls: ['./grain-dop.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+    selector: 'grain-dop',
+    templateUrl: './grain-dop.component.html',
+    styleUrls: ['./grain-dop.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 
 export class GrainDopComponent extends BaseComponent{

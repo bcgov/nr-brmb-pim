@@ -6,7 +6,8 @@ import { DopYieldFieldForage, DopYieldFieldForageCut } from "src/app/conversion/
     selector: 'forage-dop-yield-field-cut-list',
     templateUrl: './forage-dop-yield-field-cut-list.component.html',
     styleUrls: ['./forage-dop-yield-field-cut-list.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ForageDopYieldFieldCutListComponent {
     @Input() yieldField: DopYieldFieldForage;

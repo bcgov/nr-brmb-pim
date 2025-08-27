@@ -31,9 +31,10 @@ export interface AddLandPopupData {
 }
 
 @Component({
-  selector: 'cirras-add-land',
-  templateUrl: './add-land.component.html',
-  styleUrls: ['./add-land.component.scss']
+    selector: 'cirras-add-land',
+    templateUrl: './add-land.component.html',
+    styleUrls: ['./add-land.component.scss'],
+    standalone: false
 })
 export class AddLandComponent implements OnInit {
 

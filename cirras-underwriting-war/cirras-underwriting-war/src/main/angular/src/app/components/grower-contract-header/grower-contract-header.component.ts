@@ -6,10 +6,11 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'cirras-grower-contract-header',
-  templateUrl: './grower-contract-header.component.html',
-  styleUrls: ['./grower-contract-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'cirras-grower-contract-header',
+    templateUrl: './grower-contract-header.component.html',
+    styleUrls: ['./grower-contract-header.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class GrowerContractHeaderComponent {
   @Input() growerContract: UwContract;  
