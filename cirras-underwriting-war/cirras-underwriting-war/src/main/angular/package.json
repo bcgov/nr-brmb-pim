@@ -52,7 +52,7 @@
     "moment-timezone": "^0.5.43",
     "multiple-select": "^1.5.2",
     "ngx-connection-service": "^18.0.0",
-    "ngx-mask": "^18.0.4",
+    "ngx-mask": "^19.0.7",
     "ngx-moment": "^6.0.2",
     "ngx-pagination": "^6.0.3",
     "puppeteer": "^23.7.1",
