@@ -1,4 +1,4 @@
-@import '../../../../styles/variables';
+@use '../../../../styles/variables' as var;
 
 .other-year-policy{
 
@@ -22,7 +22,7 @@
  }
 
  .mat-mdc-select{
-  font-family:  $font-family-main;
+  font-family:  var.$font-family-main;
  }
 
  .mdc-text-field--outlined .mat-mdc-form-field-infix { 

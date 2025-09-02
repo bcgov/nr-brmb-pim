@@ -1,9 +1,9 @@
-@import '../variables';
+@use '../variables' as var;
 
 .mat-mdc-snack-bar-container {
-    color: $colour-white;
-    font-family: $font-family-main;
-    font-size: $font-size;
+    color: var.$colour-white;
+    font-family: var.$font-family-main;
+    font-size: var.$font-size;
     word-break: break-word;
 
     .snack-bar-content{
@@ -13,7 +13,7 @@
         .icon-panel{
             padding: var(--cirras-underwriting-gutter-space);
             display: flex;
-            background-color: $colour-lighter-grey;
+            background-color: var.$colour-lighter-grey;
             height: 100%;
             align-items: center;
         }
@@ -25,12 +25,12 @@
 
         button{
             padding: calc(#{var(--cirras-underwriting-gutter-space)}/2);
-            border: 1px $colour-white solid;
-            border-radius: $wf1-border-radius;
-            color: $colour-white;
+            border: 1px var.$colour-white solid;
+            border-radius: var.$wf1-border-radius;
+            color: var.$colour-white;
             margin-right: var(--cirras-underwriting-gutter-space);
             cursor: pointer;
-            font-family: $font-family-main;
+            font-family: var.$font-family-main;
         }
 
     }
@@ -40,46 +40,46 @@
     }
 
     &.snackbar-success {
-        --mdc-snackbar-container-color: #{ $colour-success };
+        --mdc-snackbar-container-color: #{ var.$colour-success };
         mat-icon{
-            color: $colour-success;
+            color: var.$colour-success;
         }
         button{
-            background-color: $colour-success;
+            background-color: var.$colour-success;
         }
     }
 
     &.snackbar-error {
-        --mdc-snackbar-container-color: #{ $colour-errors };
+        --mdc-snackbar-container-color: #{ var.$colour-errors };
         mat-icon{
-            color: $colour-errors;
+            color: var.$colour-errors;
         }
         button{
-            background-color: $colour-errors;
+            background-color: var.$colour-errors;
         }
     }
 
     &.snackbar-info {
-        --mdc-snackbar-container-color: #{ $colour-blue-grey };
+        --mdc-snackbar-container-color: #{ var.$colour-blue-grey };
         mat-icon{
-            color: $colour-blue-grey;
+            color: var.$colour-blue-grey;
         }
         button{
-            background-color: $colour-blue-grey;
+            background-color: var.$colour-blue-grey;
         }
     }
 
     &.snackbar-update {
-        --mdc-snackbar-container-color: #{ $colour-blue-grey };
+        --mdc-snackbar-container-color: #{ var.$colour-blue-grey };
 
         button {
-            color: $colour-blue-grey;
+            color: var.$colour-blue-grey;
         }
         mat-icon{
-            color: $colour-blue-grey;
+            color: var.$colour-blue-grey;
         }
         button{
-            background-color: $colour-blue-grey;
+            background-color: var.$colour-blue-grey;
         }
     }
 }
