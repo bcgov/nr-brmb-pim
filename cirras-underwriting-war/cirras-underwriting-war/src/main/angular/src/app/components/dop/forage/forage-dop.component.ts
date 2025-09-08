@@ -27,11 +27,12 @@ import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { SCREEN_TYPE } from 'src/app/utils/constants';
 
 @Component({
-  selector: 'forage-dop',
-  templateUrl: './forage-dop.component.html',
-  styleUrls: ['./forage-dop.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+    selector: 'forage-dop',
+    templateUrl: './forage-dop.component.html',
+    styleUrls: ['./forage-dop.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ForageDopComponent extends BaseComponent {
   @Input() growerContract: UwContract;

@@ -13,7 +13,8 @@ import { PLANT_DURATION } from "src/app/utils/constants";
     selector: 'forage-dop-yield-field-cut',
     templateUrl: './forage-dop-yield-field-cut.component.html',
     styleUrls: ['./forage-dop-yield-field-cut.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ForageDopYieldFieldCutComponent implements OnInit {
     @Input() yieldField: DopYieldFieldForage;

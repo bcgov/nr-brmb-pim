@@ -1,10 +1,10 @@
-@import 'src/styles/variables';
+@use 'src/styles/variables' as var;
 
 .table-wrapper {
   width: calc(100% - 2 * var(--cirras-underwriting-gutter-space));
   margin: 0 var(--cirras-underwriting-gutter-space);
-  border-top: 1px solid $colour-light-grey;
-  border-bottom: 1px solid $colour-light-grey;
+  border-top: 1px solid var.$colour-light-grey;
+  border-bottom: 1px solid var.$colour-light-grey;
   overflow: auto;
 
   .mat-mdc-table {
@@ -21,12 +21,12 @@
 
       &.search-header-row {
         align-items: center;
-        background-color: $colour-table-background-odd;
+        background-color: var.$colour-table-background-odd;
       }
     }
 
     td, th {
-      font-family: $font-family-main;
+      font-family: var.$font-family-main;
       vertical-align: middle;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -35,7 +35,7 @@
     }
 
     th {
-      font-family: $font-family-emphasis;
+      font-family: var.$font-family-emphasis;
     }
     td{
       white-space: nowrap;
@@ -43,7 +43,7 @@
 
     td.border-left,
     th.border-left {
-      border-left: solid 1px $colour-light-grey;
+      border-left: solid 1px var.$colour-light-grey;
     }
 
     td.checkbox-cell,
@@ -54,7 +54,7 @@
     th.checkbox-cell,
     th.icon-cell {
       text-align: center;
-      font-size: $font-size-small;
+      font-size: var.$font-size-small;
       white-space: unset;
       width: 45px;
 
@@ -66,8 +66,8 @@
   }
 
   input {
-    border-radius: $wf1-border-radius;
-    border: 1px solid $colour-light-grey;
+    border-radius: var.$wf1-border-radius;
+    border: 1px solid var.$colour-light-grey;
   }
 
 }
@@ -96,18 +96,18 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: flex-end;
-    font-family: $font-family-main;
+    font-family: var.$font-family-main;
     line-height: 35px;
 
     ::ng-deep .ms-search{
       width: calc(100% - 7px);
-      border-radius: $wf1-border-radius;
-      font-family: $font-family-main;
-      font-size: $font-size;
+      border-radius: var.$wf1-border-radius;
+      font-family: var.$font-family-main;
+      font-size: var.$font-size;
       >input{
         width: inherit;
-        font-family: $font-family-main;
-        font-size: $font-size;
+        font-family: var.$font-family-main;
+        font-size: var.$font-size;
         &:focus {
           outline: none;
           box-shadow: 0 0 4px #3E7FFF;
@@ -122,11 +122,11 @@
       height: 37.5px;
       line-height: 37.5px;
       width: 80px;
-      border: 1px solid $colour-light-grey;
+      border: 1px solid var.$colour-light-grey;
       padding: 0 5px;
-      border-radius: $wf1-border-radius;
-      font-family: $font-family-main;
-      font-size: $font-size;
+      border-radius: var.$wf1-border-radius;
+      font-family: var.$font-family-main;
+      font-size: var.$font-size;
       color: inherit;
 
       span.placeholder{
@@ -145,15 +145,15 @@
 
 
     select.mat-mdc-input-element {
-      background-color: $colour-white;
+      background-color: var.$colour-white;
       width: 60px;
-      border: 1px solid $colour-light-grey;
+      border: 1px solid var.$colour-light-grey;
       padding: 0 5px;
-      border-radius: $wf1-border-radius;
+      border-radius: var.$wf1-border-radius;
       height: 35px;
       line-height: 35px;
-      font-family: $font-family-main;
-      font-size: $font-size;
+      font-family: var.$font-family-main;
+      font-size: var.$font-size;
 
       &:focus {
         outline: none;
@@ -178,9 +178,9 @@
 }
 
 .table-search-header {
-  border-top: 1px solid $colour-light-grey;
+  border-top: 1px solid var.$colour-light-grey;
   margin: 0 var(--cirras-underwriting-gutter-space);
-  background-color: $colour-table-background-odd;
+  background-color: var.$colour-table-background-odd;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -230,8 +230,8 @@
       min-width: 0;
 
       .label{
-        font-family: $font-family-emphasis;
-        font-weight: $font-weight-emphasis;
+        font-family: var.$font-family-emphasis;
+        font-weight: var.$font-weight-emphasis;
         padding: 5px 1.5px;
       }
 
@@ -262,12 +262,12 @@
   }
 
   input {
-    font-size: $font-size;
-    font-family: $font-family-main;
+    font-size: var.$font-size;
+    font-family: var.$font-family-main;
   }
 
   select.mat-mdc-input-element {
-    background-color: $colour-white;
+    background-color: var.$colour-white;
     height: 37.5px;
     top: 0;
     position: relative;
@@ -281,13 +281,13 @@
   }
   ::ng-deep .ms-search{
     width: 200px ;// calc(100% - 7px);
-    border-radius: $wf1-border-radius;
-    font-family: $font-family-main;
-    font-size: $font-size;
+    border-radius: var.$wf1-border-radius;
+    font-family: var.$font-family-main;
+    font-size: var.$font-size;
     >input{
       width: inherit;
-      font-family: $font-family-main;
-      font-size: $font-size;
+      font-family: var.$font-family-main;
+      font-size: var.$font-size;
       &:focus {
         outline: none;
         box-shadow: 0 0 4px #3E7FFF;
@@ -302,11 +302,11 @@
     line-height: 36px;
     width: 150px;
 
-    border: 1px solid $colour-light-grey;
+    border: 1px solid var.$colour-light-grey;
     padding: 0 5px;
-    border-radius: $wf1-border-radius;
-    font-family: $font-family-main;
-    font-size: $font-size;
+    border-radius: var.$wf1-border-radius;
+    font-family: var.$font-family-main;
+    font-size: var.$font-size;
     color: inherit;
 
     span.placeholder{
@@ -328,13 +328,13 @@
   input,
   mat-checkbox.mat-mdc-checkbox,
   select {
-    border: 1px solid $colour-light-grey;
+    border: 1px solid var.$colour-light-grey;
     padding: 0 5px;
-    border-radius: $wf1-border-radius;
+    border-radius: var.$wf1-border-radius;
     height: 36px;
     line-height: 36px;
-    font-family: $font-family-main;
-    font-size: $font-size;
+    font-family: var.$font-family-main;
+    font-size: var.$font-size;
 
     &:focus {
       outline: none;
@@ -346,30 +346,30 @@
   select[readonly="true"],
   input:disabled,
   select:disabled{
-    background-color: $opacity-light-grey !important;
+    background-color: var.$opacity-light-grey !important;
   }
 
   ::ng-deep mat-checkbox .mat-mdc-checkbox-frame {
-    background-color: $colour-white;
-    border: 1px solid $colour-light-grey;
-    border-radius: $wf1-border-radius;
+    background-color: var.$colour-white;
+    border: 1px solid var.$colour-light-grey;
+    border-radius: var.$wf1-border-radius;
   }
 }
 
 .mat-mdc-table {
 
   .mat-mdc-header-cell {
-    color: $colour-black;
-    font-weight: $font-weight-emphasis;
-    font-size: $font-size;
+    color: var.$colour-black;
+    font-weight: var.$font-weight-emphasis;
+    font-size: var.$font-size;
     padding: 5px 5px;
 
   }
 
   .mat-mdc-cell {
-    color: $colour-black;
-    font-weight: $font-weight;
-    font-size: $font-size;
+    color: var.$colour-black;
+    font-weight: var.$font-weight;
+    font-size: var.$font-size;
     padding: 5px 5px;
 
 
@@ -390,16 +390,16 @@
   }
 
   .mat-mdc-row:nth-child(even) {
-    background-color: $colour-table-background-even;
+    background-color: var.$colour-table-background-even;
   }
 
   .mat-mdc-row:nth-child(odd) {
-    background-color: $colour-table-background-odd;
+    background-color: var.$colour-table-background-odd;
   }
 
   .mat-mdc-row{
     &:hover{
-      background-color: $colour-table-background-hover;
+      background-color: var.$colour-table-background-hover;
     }
 
     &.hover-pointer:hover{

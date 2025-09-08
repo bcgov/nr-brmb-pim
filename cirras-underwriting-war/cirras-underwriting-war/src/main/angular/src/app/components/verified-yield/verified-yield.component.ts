@@ -15,11 +15,12 @@ import { ClearCropCommodity, LoadCropCommodityList } from 'src/app/store/crop-co
 import { CROP_COMMODITY_TYPE_CONST, INSURANCE_PLAN, SCREEN_TYPE } from 'src/app/utils/constants';
 
 @Component({
-  selector: 'verified-yield',
-  templateUrl: './verified-yield.component.html',
-  styleUrls: ['./verified-yield.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+    selector: 'verified-yield',
+    templateUrl: './verified-yield.component.html',
+    styleUrls: ['./verified-yield.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class VerifiedYieldComponent extends BaseComponent {
 

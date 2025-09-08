@@ -10,9 +10,10 @@ import { UwContract, UwContractsList } from 'src/app/conversion/models';
 import { INSURANCE_PLAN, ResourcesRoutes } from 'src/app/utils/constants';
 
 @Component({
-  selector: 'cirras-landingpage',
-  templateUrl: './landingpage.component.html',
-  styleUrls: ['./landingpage.component.scss']
+    selector: 'cirras-landingpage',
+    templateUrl: './landingpage.component.html',
+    styleUrls: ['./landingpage.component.scss'],
+    standalone: false
 })
 export class LandingPageComponent implements OnInit {
 
