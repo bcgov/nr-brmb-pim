@@ -34,6 +34,7 @@ spec:
             export POSTGRES_PROXY_USER_PASSWORD="{{ .Data.data.POSTGRES_PASSWORD }}"
             export POSTGRES_READONLY_PASSWORD="{{ .Data.data.POSTGRES_READ_ONLY_PASSWORD }}"
             export POSTGRES_READ_ONLY_PASSWORD="{{ .Data.data.POSTGRES_READ_ONLY_PASSWORD }}"
+            export POSTGRES_PROXY_DAP_PASSWORD="{{ .Data.data.POSTGRES_PROXY_DAP_PASSWORD }}"
           {{- end }}          
     spec:
       serviceAccountName: #{LICENSE_PLATE}#-vault
@@ -43,7 +44,7 @@ spec:
         command:
           ['sh', '-c']
         args:
-          ['. /vault/secrets/env && liquibase update --changelog-file=#{CHANGELOG_FILE}#']
+          ['. /vault/secrets/env && liquibase update --context-filter="#{ENV}#" --changelog-file=#{CHANGELOG_FILE}#']
         imagePullPolicy: Always
         resources:
             requests:
