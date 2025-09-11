@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.pit.claim.spring;
+package ca.bc.gov.mal.cirras.underwriting.spring;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -16,7 +16,7 @@ import org.springframework.web.util.pattern.PathPatternParser;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("ca.bc.gov.mal.pit.claim.web.controller")
+@ComponentScan("ca.bc.gov.mal.cirras.underwriting.web.controller")
 public class DispatcherConfig implements WebMvcConfigurer {
   @Override
   public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
