@@ -37,36 +37,6 @@
 				<version>4.0.2</version>
 			</dependency>
 
-			<dependency>
-				<groupId>jakarta.activation</groupId>
-				<artifactId>jakarta.activation-api</artifactId>
-				<version>2.1.3</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.glassfish.jaxb</groupId>
-				<artifactId>jaxb-runtime</artifactId>
-				<version>4.0.2</version>
-			</dependency>
-
-			<dependency>
-				<groupId>jakarta.ws.rs</groupId>
-				<artifactId>jakarta.ws.rs-api</artifactId>
-				<version>3.1.0</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.glassfish.jersey.core</groupId>
-				<artifactId>jersey-server</artifactId>
-				<version>3.1.3</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.glassfish.jersey.core</groupId>
-				<artifactId>jersey-common</artifactId>
-				<version>3.1.3</version>
-			</dependency>
-
 			<!-- WebADE Rest -->
 
 			<dependency>
@@ -121,11 +91,6 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-core</artifactId>
-				<version>6.2.1</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-expression</artifactId>
 				<version>6.2.1</version>
 			</dependency>
 			<dependency>
@@ -207,20 +172,6 @@
 				<version>2.15.3</version>
 			</dependency>
 
-			<!-- JWT-->
-			<dependency>
-				<groupId>com.nimbusds</groupId>
-				<artifactId>nimbus-jose-jwt</artifactId>
-				<version>9.37.2</version>
-			</dependency>
-
-			<!-- encryption, required for JWE -->
-			<dependency>
-				<groupId>org.bouncycastle</groupId>
-				<artifactId>bcprov-jdk15on</artifactId>
-				<version>1.56</version>
-			</dependency>
-
 			<!-- Logging -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -248,60 +199,7 @@
 				<artifactId>log4j-api</artifactId>
 				<version>2.24.2</version>
 			</dependency>
-
-
-			<!-- apache commons for webade pref compress/decompress -->
-			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>2.14.0</version>
-			</dependency>
-
-			<!-- ORACLE database driver -->
-			<dependency>
-				<groupId>com.oracle.weblogic</groupId>
-				<artifactId>ojdbc7</artifactId>
-				<version>12.1.3-0-0</version>
-			</dependency>
-
-			<!-- JUNIT -->
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.13.1</version>
-			</dependency>
-
-			<!-- Jetty -->
-			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-server</artifactId>
-				<version>11.0.15</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-annotations</artifactId>
-				<version>11.0.15</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-webapp</artifactId>
-				<version>11.0.15</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-jndi</artifactId>
-				<version>11.0.15</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-plus</artifactId>
-				<version>11.0.15</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-jsp</artifactId>
-				<version>11.0.15</version>
-			</dependency>
+			
 		</dependencies>
 	</dependencyManagement>
 </project>

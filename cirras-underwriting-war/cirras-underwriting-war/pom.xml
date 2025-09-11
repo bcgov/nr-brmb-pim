@@ -15,8 +15,8 @@
 		<build.number>${env.BUILD_NUMBER}</build.number>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<dollar>$</dollar>
-		<node.version>v20.18.0</node.version>
-        <npm.version>10.9.0</npm.version>
+		<node.version>v22.18.0</node.version>
+		<npm.version>10.9.3</npm.version>
 		<node.path>${user.home}/.node</node.path>
 		<typescript.path>src/main/angular</typescript.path>
 		<npm.url>https://bwa.nrs.gov.bc.ca/int/artifactory/api/npm/nrs-virtual-npm/</npm.url>
@@ -206,11 +206,6 @@
 
 	<dependencies>
 
-		<dependency>
-			<groupId>org.glassfish.jersey.core</groupId>
-			<artifactId>jersey-common</artifactId>
-		</dependency>
-
 		<!-- WebADE  -->
 		<dependency>
 			<groupId>ca.bc.gov.webade</groupId>
@@ -251,10 +246,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-expression</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -327,41 +318,6 @@
 	      <groupId>org.apache.logging.log4j</groupId>
 	      <artifactId>log4j-core</artifactId>
 	    </dependency>
-
-		<!-- ORACLE database driver -->
-		<dependency>
-			<groupId>com.oracle.weblogic</groupId>
-			<artifactId>ojdbc7</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- Jetty -->
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-jndi</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-plus</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
 
 	</dependencies>
 	<build>
