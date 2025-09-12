@@ -110,10 +110,10 @@ public class SecuritySpringConfig {
 	      .authorizeHttpRequests(authorize -> authorize
 	              .requestMatchers(HttpMethod.OPTIONS, "/openapi.*", "/checkHealth").permitAll()
 	              .requestMatchers(HttpMethod.GET, "/openapi.*", "/checkHealth").permitAll()
-	              .requestMatchers("/**").hasAuthority("CIRRAS_CLAIMS.GET_TOP_LEVEL")
+	              .requestMatchers("/**").hasAuthority("CIRRAS_UNDERWRITING.GET_TOP_LEVEL")
 	              .anyRequest().denyAll()
 	      ).exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint()) );		
 		return http.build();
-	  }		
+	  }	
 
 }
