@@ -1,6 +1,6 @@
 package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.spring;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,17 +13,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import ca.bc.gov.nrs.wfone.common.webade.oauth2.authentication.WebadeOauth2AuthenticationProvider;
 import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.TokenService;
@@ -33,7 +32,7 @@ import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.TokenService;
 @Import({
 	TokenServiceSpringConfig.class
 })
-public class SecuritySpringConfig extends WebSecurityConfigurerAdapter  {
+public class SecuritySpringConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecuritySpringConfig.class);
 	
@@ -46,7 +45,7 @@ public class SecuritySpringConfig extends WebSecurityConfigurerAdapter  {
 	TokenService tokenService;
 	
 	public SecuritySpringConfig() {
-		super(true);
+		super();
 		logger.info("<SecuritySpringConfig");
 		
 		logger.info(">SecuritySpringConfig");
@@ -71,18 +70,6 @@ public class SecuritySpringConfig extends WebSecurityConfigurerAdapter  {
 		return result;
 	}
 
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		
-		web
-		.ignoring()
-		.antMatchers(HttpMethod.OPTIONS, "/openapi.*")
-		.antMatchers(HttpMethod.GET, "/openapi.*")
-		.antMatchers(HttpMethod.OPTIONS, "/checkHealth")
-		.antMatchers(HttpMethod.GET, "/checkHealth")
-		;
-	}
-	
 	@Bean
 	public AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver() {
 		AuthenticationManagerResolver<HttpServletRequest> result;
@@ -104,22 +91,29 @@ public class SecuritySpringConfig extends WebSecurityConfigurerAdapter  {
 		return result;
 	}
 	
-	
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {		
-		http.csrf().disable();
-		http.cors().disable();
-		
-		http.oauth2ResourceServer(oauth2 -> oauth2
-			.authenticationManagerResolver(authenticationManagerResolver())
-		)
-		.httpBasic().and()
-		.authorizeRequests(authorize -> authorize
-				.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-				//.antMatchers("/**").hasAuthority("CIRRAS_UNDERWRITING.GET_TOP_LEVEL")
-				//.anyRequest().denyAll()
-			)
-		.exceptionHandling()
-		.authenticationEntryPoint(authenticationEntryPoint());
-	}
+	@Bean
+	  public WebSecurityCustomizer webSecurityCustomizer() {
+		return (web)-> web.ignoring().requestMatchers(
+	        new AntPathRequestMatcher("/openapi.*", HttpMethod.OPTIONS.name()),
+	        new AntPathRequestMatcher("/openapi.*", HttpMethod.GET.name()),
+	        new AntPathRequestMatcher("/checkHealth", HttpMethod.OPTIONS.name()),
+	        new AntPathRequestMatcher("/checkHealth", HttpMethod.GET.name())
+	    );		
+	  }
+
+	  @Bean
+	  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.csrf(csrf -> csrf.disable())
+		  .cors(cors -> cors.disable())
+	      .oauth2ResourceServer(oauth2 -> oauth2.authenticationManagerResolver(authenticationManagerResolver()) )
+	      .httpBasic(Customizer.withDefaults())
+	      .authorizeHttpRequests(authorize -> authorize
+	              .requestMatchers(HttpMethod.OPTIONS, "/openapi.*", "/checkHealth").permitAll()
+	              .requestMatchers(HttpMethod.GET, "/openapi.*", "/checkHealth").permitAll()
+	              .requestMatchers("/**").hasAuthority("CIRRAS_CLAIMS.GET_TOP_LEVEL")
+	              .anyRequest().denyAll()
+	      ).exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint()) );		
+		return http.build();
+	  }		
+
 }

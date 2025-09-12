@@ -2,13 +2,15 @@ package ca.bc.gov.test.jetty;
 
 import java.security.Principal;
 
-import javax.security.auth.Subject;
-import javax.servlet.ServletRequest;
+import jakarta.security.auth.Subject;
+import java.util.function.Function;
 
 import org.eclipse.jetty.security.DefaultIdentityService;
 import org.eclipse.jetty.security.IdentityService;
 import org.eclipse.jetty.security.LoginService;
-import org.eclipse.jetty.server.UserIdentity;
+import org.eclipse.jetty.security.UserIdentity;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Session;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
 
 public class TestLoginService extends AbstractLifeCycle implements LoginService {
@@ -26,7 +28,8 @@ public class TestLoginService extends AbstractLifeCycle implements LoginService 
 	}
 
 	@Override
-	public UserIdentity login(String username, Object credentials, ServletRequest request) {
+	public UserIdentity login(String username, Object credentials, Request request,
+			Function<Boolean, Session> getOrCreateSession) {
 		Principal userPrincipal = new Principal() {
 
 			@Override
