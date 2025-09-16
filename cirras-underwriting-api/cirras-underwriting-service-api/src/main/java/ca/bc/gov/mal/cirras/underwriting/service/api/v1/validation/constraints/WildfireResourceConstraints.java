@@ -1,6 +1,6 @@
 package ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.constraints;
 
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.Errors;
 
