@@ -1,9 +1,10 @@
 CREATE TABLE cuws.inventory_berries(
     inventory_berries_guid       varchar(32)       NOT NULL,
     inventory_field_guid         varchar(32)       NOT NULL,
-    crop_variety_id              numeric(9, 0)     NOT NULL,
-    planted_year                 numeric(4, 0)     NOT NULL,
-    planted_acres                numeric(10, 4)    NOT NULL,
+    crop_commodity_id            numeric(9, 0)     NOT NULL,
+    crop_variety_id              numeric(9, 0),
+    planted_year                 numeric(4, 0),
+    planted_acres                numeric(10, 4),
     row_spacing                  numeric(10, 4),
     plant_spacing                numeric(10, 4),
     total_plants                 numeric(10, 0),
@@ -21,6 +22,8 @@ CREATE TABLE cuws.inventory_berries(
 COMMENT ON COLUMN cuws.inventory_berries.inventory_berries_guid IS 'Inventory Berries Guid is the primary key used to identify the record'
 ;
 COMMENT ON COLUMN cuws.inventory_berries.inventory_field_guid IS 'Inventory Field GUID is the primary key used to identify a table record. '
+;
+COMMENT ON COLUMN cuws.inventory_berries.crop_commodity_id IS 'Crop Commodity Id is a unique Id of a commodity from cirr_crop_types.crpt_id'
 ;
 COMMENT ON COLUMN cuws.inventory_berries.crop_variety_id IS 'Crop Variety Id is a unique Id of a variety from cirr_crop_types.crpt_id'
 ;
@@ -55,6 +58,9 @@ CREATE INDEX ix_ib_if ON cuws.inventory_berries(inventory_field_guid)
 CREATE INDEX ix_ib_cva ON cuws.inventory_berries(crop_variety_id)
  TABLESPACE pg_default
 ;
+CREATE INDEX ix_ib_cco ON cuws.inventory_berries(crop_commodity_id)
+ TABLESPACE pg_default
+;
 ALTER TABLE cuws.inventory_berries ADD 
     CONSTRAINT pk_ib PRIMARY KEY (inventory_berries_guid)
 ;
@@ -67,6 +73,11 @@ ALTER TABLE cuws.inventory_berries ADD CONSTRAINT fk_ib_if
 ALTER TABLE cuws.inventory_berries ADD CONSTRAINT fk_ib_cva 
     FOREIGN KEY (crop_variety_id)
     REFERENCES cuws.crop_variety(crop_variety_id)
+;
+
+ALTER TABLE cuws.inventory_berries ADD CONSTRAINT fk_ib_cco 
+    FOREIGN KEY (crop_commodity_id)
+    REFERENCES cuws.crop_commodity(crop_commodity_id)
 ;
 
 
