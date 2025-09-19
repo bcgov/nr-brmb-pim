@@ -65,6 +65,10 @@ ALTER TABLE cuws.inventory_berries ADD
     CONSTRAINT pk_ib PRIMARY KEY (inventory_berries_guid)
 ;
 
+ALTER TABLE cuws.inventory_berries ADD 
+    CONSTRAINT uk_ib UNIQUE (inventory_field_guid) USING INDEX TABLESPACE pg_default 
+;
+
 ALTER TABLE cuws.inventory_berries ADD CONSTRAINT fk_ib_if 
     FOREIGN KEY (inventory_field_guid)
     REFERENCES cuws.inventory_field(inventory_field_guid)
