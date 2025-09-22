@@ -5,7 +5,7 @@ CREATE TABLE cuws.inventory_berries(
     crop_variety_id              numeric(9, 0),
     planted_year                 numeric(4, 0),
     planted_acres                numeric(10, 4),
-    row_spacing                  numeric(10, 4),
+    row_spacing                  numeric(4, 0),
     plant_spacing                numeric(10, 4),
     total_plants                 numeric(10, 0),
     is_quantity_insurable_ind    varchar(1)        NOT NULL,

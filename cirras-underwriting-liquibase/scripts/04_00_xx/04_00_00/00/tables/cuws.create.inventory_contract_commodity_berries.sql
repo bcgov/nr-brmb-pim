@@ -48,6 +48,10 @@ ALTER TABLE cuws.inventory_contract_commodity_berries ADD
     CONSTRAINT pk_iccb PRIMARY KEY (inventory_contract_commodity_berries_guid)
 ;
 
+ALTER TABLE cuws.inventory_contract_commodity_berries ADD 
+    CONSTRAINT uk_iccb UNIQUE (inventory_contract_guid, crop_commodity_id) USING INDEX TABLESPACE pg_default 
+;
+
 ALTER TABLE cuws.inventory_contract_commodity_berries ADD CONSTRAINT fk_iccb_ico 
     FOREIGN KEY (inventory_contract_guid)
     REFERENCES cuws.inventory_contract(inventory_contract_guid)
