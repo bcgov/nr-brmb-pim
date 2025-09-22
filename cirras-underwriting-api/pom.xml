@@ -43,7 +43,7 @@
 		    <dependency>
 				<groupId>ca.bc.gov.mal.cirras.policies</groupId>
 				<artifactId>cirras-policies-api-rest-client</artifactId>
-				<version>1.11.0</version>
+				<version>1.13.0-SNAPSHOT</version>
 			</dependency>
 
 			<!-- Wildfire OrgUnit -->
