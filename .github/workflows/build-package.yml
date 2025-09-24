@@ -49,7 +49,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ inputs.JAVA_VERSION }}
-          distribution: 'adopt'
+          distribution: 'temurin'
 
       - name: Set up nodejs
         uses: actions/setup-node@v4

@@ -1,5 +1,6 @@
 name: openshift deploy
-run-name: Deploy ${{ inputs.MICROSERVICE_NAME }} to ${{ inputs.ENVIRONMENT_NAME}}
+run-name: Deploy ${{ inputs.MICROSERVICE_NAME }} to ${{ inputs.ENVIRONMENT_NAME}} tag ${{ inputs.TAG}}
+
 
 on:
   workflow_dispatch:

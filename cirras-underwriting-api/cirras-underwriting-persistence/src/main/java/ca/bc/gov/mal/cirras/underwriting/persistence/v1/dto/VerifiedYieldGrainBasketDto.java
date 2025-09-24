@@ -17,6 +17,8 @@ public class VerifiedYieldGrainBasketDto extends BaseDto<VerifiedYieldGrainBaske
 	private String verifiedYieldGrainBasketGuid;
 	private String verifiedYieldContractGuid;
 	private Double basketValue;
+	private Double totalQuantityCoverageValue;
+	private Double totalCoverageValue;
 	private Double harvestedValue;
 	private String comment;
 	private String createUser;
@@ -32,6 +34,8 @@ public class VerifiedYieldGrainBasketDto extends BaseDto<VerifiedYieldGrainBaske
 		this.verifiedYieldGrainBasketGuid = dto.verifiedYieldGrainBasketGuid;
 		this.verifiedYieldContractGuid = dto.verifiedYieldContractGuid;
 		this.basketValue = dto.basketValue;
+		this.totalQuantityCoverageValue = dto.totalQuantityCoverageValue;
+		this.totalCoverageValue = dto.totalCoverageValue;
 		this.harvestedValue = dto.harvestedValue;
 		this.comment = dto.comment;
 
@@ -61,6 +65,8 @@ public class VerifiedYieldGrainBasketDto extends BaseDto<VerifiedYieldGrainBaske
 			result = result && dtoUtils.equals("verifiedYieldContractGuid", verifiedYieldContractGuid,
 					other.verifiedYieldContractGuid);
 			result = result && dtoUtils.equals("basketValue", basketValue, other.basketValue, decimalPrecision);
+			result = result && dtoUtils.equals("totalQuantityCoverageValue", totalQuantityCoverageValue, other.totalQuantityCoverageValue, decimalPrecision);
+			result = result && dtoUtils.equals("totalCoverageValue", totalCoverageValue, other.totalCoverageValue, decimalPrecision);
 			result = result
 					&& dtoUtils.equals("harvestedValue", harvestedValue, other.harvestedValue, decimalPrecision);
 			result = result && dtoUtils.equals("comment", comment, other.comment);
@@ -101,6 +107,22 @@ public class VerifiedYieldGrainBasketDto extends BaseDto<VerifiedYieldGrainBaske
 
 	public void setBasketValue(Double basketValue) {
 		this.basketValue = basketValue;
+	}
+
+	public Double getTotalQuantityCoverageValue() {
+		return totalQuantityCoverageValue;
+	}
+
+	public void setTotalQuantityCoverageValue(Double totalQuantityCoverageValue) {
+		this.totalQuantityCoverageValue = totalQuantityCoverageValue;
+	}
+
+	public Double getTotalCoverageValue() {
+		return totalCoverageValue;
+	}
+
+	public void setTotalCoverageValue(Double totalCoverageValue) {
+		this.totalCoverageValue = totalCoverageValue;
 	}
 
 	public Double getHarvestedValue() {

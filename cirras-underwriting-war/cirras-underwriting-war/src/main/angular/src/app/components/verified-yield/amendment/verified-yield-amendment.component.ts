@@ -86,8 +86,16 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
   }
 
   updateYieldPerAcre() {
-    let yieldPerAcre = roundUpDecimalYield(this.amendmentFormGroup.value.yieldPerAcre, 3)
-    this.amendment.yieldPerAcre = parseFloat(yieldPerAcre.toString()) || null
+
+    let yieldPerAcre
+
+    if (this.amendmentFormGroup.value.yieldPerAcre == "") {
+      yieldPerAcre = null
+    } else {
+      yieldPerAcre = roundUpDecimalYield(this.amendmentFormGroup.value.yieldPerAcre, 3)
+    }
+
+    this.amendment.yieldPerAcre = yieldPerAcre
     this.amendmentFormGroup.controls['yieldPerAcre'].setValue(yieldPerAcre)
     
     this.store.dispatch(setFormStateUnsaved(VERIFIED_YIELD_COMPONENT_ID, true))

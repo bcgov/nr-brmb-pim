@@ -128,6 +128,8 @@ public class VerifiedYieldGrainBasketDaoTest {
 
 		newDto.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
 		newDto.setBasketValue(200.45);
+		newDto.setTotalQuantityCoverageValue(567.89);
+		newDto.setTotalCoverageValue(768.34);
 		newDto.setHarvestedValue(140.23);
 		newDto.setComment("Basket Value Comment");
 
@@ -145,6 +147,8 @@ public class VerifiedYieldGrainBasketDaoTest {
 		Assert.assertEquals("VerifiedYieldGrainBasketGuid", newDto.getVerifiedYieldGrainBasketGuid(), fetchedDto.getVerifiedYieldGrainBasketGuid());
 		Assert.assertEquals("VerifiedYieldContractGuid", newDto.getVerifiedYieldContractGuid(), fetchedDto.getVerifiedYieldContractGuid());
 		Assert.assertEquals("BasketValue", newDto.getBasketValue(), fetchedDto.getBasketValue());
+		Assert.assertEquals("TotalQuantityCoverageValue", newDto.getTotalQuantityCoverageValue(), fetchedDto.getTotalQuantityCoverageValue());
+		Assert.assertEquals("TotalCoverageValue", newDto.getTotalCoverageValue(), fetchedDto.getTotalCoverageValue());
 		Assert.assertEquals("HarvestedValue", newDto.getHarvestedValue(), fetchedDto.getHarvestedValue());
 		Assert.assertEquals("Comment", newDto.getComment(), fetchedDto.getComment());
 		
@@ -154,11 +158,15 @@ public class VerifiedYieldGrainBasketDaoTest {
 		Assert.assertEquals("VerifiedYieldGrainBasketGuid", newDto.getVerifiedYieldGrainBasketGuid(), fetchedDto.getVerifiedYieldGrainBasketGuid());
 		Assert.assertEquals("VerifiedYieldContractGuid", newDto.getVerifiedYieldContractGuid(), fetchedDto.getVerifiedYieldContractGuid());
 		Assert.assertEquals("BasketValue", newDto.getBasketValue(), fetchedDto.getBasketValue());
+		Assert.assertEquals("TotalQuantityCoverageValue", newDto.getTotalQuantityCoverageValue(), fetchedDto.getTotalQuantityCoverageValue());
+		Assert.assertEquals("TotalCoverageValue", newDto.getTotalCoverageValue(), fetchedDto.getTotalCoverageValue());
 		Assert.assertEquals("HarvestedValue", newDto.getHarvestedValue(), fetchedDto.getHarvestedValue());
 		Assert.assertEquals("Comment", newDto.getComment(), fetchedDto.getComment());
 
 		//UPDATE
 		fetchedDto.setBasketValue(300.98);
+		fetchedDto.setTotalQuantityCoverageValue(987.65);
+		fetchedDto.setTotalCoverageValue(1288.63);
 		fetchedDto.setHarvestedValue(321.78);
 		fetchedDto.setComment("Basket Value Comment 2");
 				
@@ -170,6 +178,8 @@ public class VerifiedYieldGrainBasketDaoTest {
 		Assert.assertEquals("VerifiedYieldGrainBasketGuid", fetchedDto.getVerifiedYieldGrainBasketGuid(), updatedDto.getVerifiedYieldGrainBasketGuid());
 		Assert.assertEquals("VerifiedYieldContractGuid", fetchedDto.getVerifiedYieldContractGuid(), updatedDto.getVerifiedYieldContractGuid());
 		Assert.assertEquals("BasketValue", fetchedDto.getBasketValue(), updatedDto.getBasketValue());
+		Assert.assertEquals("TotalQuantityCoverageValue", fetchedDto.getTotalQuantityCoverageValue(), updatedDto.getTotalQuantityCoverageValue());
+		Assert.assertEquals("TotalCoverageValue", fetchedDto.getTotalCoverageValue(), updatedDto.getTotalCoverageValue());
 		Assert.assertEquals("HarvestedValue", fetchedDto.getHarvestedValue(), updatedDto.getHarvestedValue());
 		Assert.assertEquals("Comment", fetchedDto.getComment(), updatedDto.getComment());
 
@@ -189,6 +199,8 @@ public class VerifiedYieldGrainBasketDaoTest {
 
 		newDto2.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
 		newDto2.setBasketValue(123.45);
+		newDto2.setTotalQuantityCoverageValue(11.22);
+		newDto2.setTotalCoverageValue(134.67);
 		newDto2.setHarvestedValue(133.66);
 		newDto2.setComment("Basket Value Comment 3");
 		

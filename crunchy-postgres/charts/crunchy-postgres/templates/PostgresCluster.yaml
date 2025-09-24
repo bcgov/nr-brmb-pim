@@ -11,6 +11,7 @@ spec:
   {{ end }}
   imagePullPolicy: {{.Values.imagePullPolicy}}
   postgresVersion: {{ .Values.postgresVersion }}
+  openshift: {{ .Values.openshift | default true }}
   {{ if .Values.postGISVersion }}
   postGISVersion: {{ .Values.postGISVersion | quote }}
   {{ end }}
@@ -61,6 +62,13 @@ spec:
           requests:
             storage: {{ .Values.instances.dataVolumeClaimSpec.storage }}
         storageClassName: {{ .Values.instances.dataVolumeClaimSpec.storageClassName }}
+      walVolumeClaimSpec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: {{ .Values.instances.walVolumeClaimSpec.storage }}
+        storageClassName: {{ .Values.instances.walVolumeClaimSpec.storageClassName }}
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:

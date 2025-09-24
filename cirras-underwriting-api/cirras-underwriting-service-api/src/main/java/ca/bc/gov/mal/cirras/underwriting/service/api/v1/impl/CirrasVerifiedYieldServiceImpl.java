@@ -13,12 +13,14 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldContractSimple;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.VerifiedYieldSummary;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ContractedFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventorySeededForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventorySeededGrainDao;
@@ -34,6 +36,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetai
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededForageDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
@@ -88,6 +91,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	private DeclaredYieldContractDao declaredYieldContractDao;
 	private DeclaredYieldContractCommodityDao declaredYieldContractCommodityDao;
 	private DeclaredYieldContractCommodityForageDao declaredYieldContractCommodityForageDao;
+	private DeclaredYieldFieldRollupForageDao declaredYieldFieldRollupForageDao;
 	private VerifiedYieldContractDao verifiedYieldContractDao;
 	private VerifiedYieldContractCommodityDao verifiedYieldContractCommodityDao;
 	private VerifiedYieldAmendmentDao verifiedYieldAmendmentDao;
@@ -142,6 +146,10 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	
 	public void setDeclaredYieldContractCommodityForageDao(DeclaredYieldContractCommodityForageDao declaredYieldContractCommodityForageDao) {
 		this.declaredYieldContractCommodityForageDao = declaredYieldContractCommodityForageDao;
+	}
+	
+	public void setDeclaredYieldFieldRollupForageDao(DeclaredYieldFieldRollupForageDao declaredYieldFieldRollupForageDao) {
+		this.declaredYieldFieldRollupForageDao = declaredYieldFieldRollupForageDao;
 	}
 
 	public void setVerifiedYieldContractDao(VerifiedYieldContractDao verifiedYieldContractDao) {
@@ -200,10 +208,11 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	
 				List<ProductDto> productDtos = loadProducts(dycDto.getContractId(), dycDto.getCropYear());
 
-				loadDopYieldContractCommodities(dycDto);
+				loadDopYieldCommodities(dycDto);
 				loadFields(dycDto);
 
 				if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(policyDto.getInsurancePlanId()) ) {
+					mergeYieldRollupToCommodityTotals(dycDto);
 					rollupVerifiedYield(dycDto);
 				}
 				
@@ -222,6 +231,37 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 		logger.debug(">rolloverVerifiedYieldContract");
 		return result;
+	}
+	
+	private void mergeYieldRollupToCommodityTotals(DeclaredYieldContractDto dycDto) {
+
+		//For forage rollover the business rule is to take the rollup value if there is no manually entered
+		//commodity totals by commodity
+		if(dycDto.getDeclaredYieldFieldRollupForageList() != null && dycDto.getDeclaredYieldFieldRollupForageList().size() > 0) {
+			if(dycDto.getDeclaredYieldContractCommodityForageList() != null ) {
+				
+				//Check for each record if Harvested Acres, # Bales/Loads, weight and Moisture % are null in the DOP commodity totals table
+				for(DeclaredYieldContractCommodityForageDto dto: dycDto.getDeclaredYieldContractCommodityForageList()) {
+					if(dto.getHarvestedAcres() == null && 
+							dto.getTotalBalesLoads() == null && 
+							dto.getWeight() == null && 
+							dto.getMoisturePercent() == null) {
+
+						//Look for the yield rollup
+						List<DeclaredYieldFieldRollupForageDto> rollups = dycDto.getDeclaredYieldFieldRollupForageList().stream()
+								.filter(x -> x.getCommodityTypeCode().equalsIgnoreCase(dto.getCommodityTypeCode()))
+								.collect(Collectors.toList());
+						
+						if (rollups != null && rollups.size() > 0) {
+							DeclaredYieldFieldRollupForageDto rollupYield = rollups.get(0);
+							//Insured acres (fieldAcres) are already in the commodity totals table
+							dto.setHarvestedAcres(rollupYield.getHarvestedAcres());
+							dto.setQuantityHarvestedTons(rollupYield.getQuantityHarvestedTons());
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	private void rollupVerifiedYield(VerifiedYieldContract<? extends AnnualField, ? extends Message> vyc) {
@@ -363,7 +403,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		return newDto;
 	}
 
-	private void loadDopYieldContractCommodities(DeclaredYieldContractDto dto) throws DaoException {
+	private void loadDopYieldCommodities(DeclaredYieldContractDto dto) throws DaoException {
 
 		if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
 			List<DeclaredYieldContractCommodityDto> dopCommodities = declaredYieldContractCommodityDao.selectForDeclaredYieldContract(dto.getDeclaredYieldContractGuid());
@@ -371,6 +411,9 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
 			List<DeclaredYieldContractCommodityForageDto> dopCommodities = declaredYieldContractCommodityForageDao.selectForDeclaredYieldContract(dto.getDeclaredYieldContractGuid(), DeclaredYieldContractCommodityForageDao.sortOrder.CommodityNameCommodityType);
 			dto.setDeclaredYieldContractCommodityForageList(dopCommodities);
+			
+			List<DeclaredYieldFieldRollupForageDto> dopForageRollup = declaredYieldFieldRollupForageDao.selectForDeclaredYieldContract(dto.getDeclaredYieldContractGuid());
+			dto.setDeclaredYieldFieldRollupForageList(dopForageRollup);
 		} else{ 
 			throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
 		}
@@ -536,6 +579,83 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	}
 	
 	@Override
+	public VerifiedYieldContractSimple getVerifiedYieldContractSimple(
+			Integer contractId,
+			Integer cropYear,
+			Integer cropCommodityId,
+			Boolean isPedigreeInd,
+			Boolean loadVerifiedYieldContractCommodities,
+			Boolean loadVerifiedYieldAmendments,
+			Boolean loadVerifiedYieldSummaries,
+			Boolean loadVerifiedYieldGrainBasket,
+			FactoryContext factoryContext, 
+			WebAdeAuthentication authentication
+			)
+			throws ServiceException, NotFoundException {
+
+		logger.debug("<getVerifiedYieldContractSimple");
+
+		VerifiedYieldContractSimple result = null;
+
+		//Is pedigree needs to be set if commodity is set
+		if(cropCommodityId != null && isPedigreeInd == null) {
+			throw new ServiceException("IsPedigreed needs to be set if commodity is set");
+		}
+
+		try {
+			VerifiedYieldContractDto dto = verifiedYieldContractDao.getByContractAndYear(contractId, cropYear);
+
+			if (dto == null) {
+				throw new NotFoundException("Did not find the verified yield contract. contractId: " + contractId + "; cropYear: " + cropYear);
+			}
+
+			result = loadVerifiedYieldContractSimple(
+						dto, 
+						cropCommodityId,
+						isPedigreeInd,
+						loadVerifiedYieldContractCommodities,
+						loadVerifiedYieldAmendments,
+						loadVerifiedYieldSummaries,
+						loadVerifiedYieldGrainBasket,
+						factoryContext, 
+						authentication);
+
+		} catch (DaoException e) {
+			throw new ServiceException("DAO threw an exception", e);
+		}
+
+		logger.debug(">getVerifiedYieldContractSimple");
+		return result;
+	}	
+
+	private VerifiedYieldContractSimple loadVerifiedYieldContractSimple(
+			VerifiedYieldContractDto dto,
+			Integer cropCommodityId,
+			Boolean isPedigreeInd,
+			Boolean loadVerifiedYieldContractCommodities,
+			Boolean loadVerifiedYieldAmendments,
+			Boolean loadVerifiedYieldSummaries,
+			Boolean loadVerifiedYieldGrainBasket,
+			FactoryContext factoryContext, 
+			WebAdeAuthentication authentication) throws DaoException {
+
+		if(Boolean.TRUE.equals(loadVerifiedYieldContractCommodities)) {
+			loadVerifiedYieldContractCommodities(dto);
+		}
+		if(Boolean.TRUE.equals(loadVerifiedYieldAmendments)) {
+			loadVerifiedYieldAmendments(dto);
+		}
+		if(Boolean.TRUE.equals(loadVerifiedYieldSummaries)) {
+			loadVerifiedYieldSummaries(dto);
+		}
+		if(Boolean.TRUE.equals(loadVerifiedYieldGrainBasket)) {
+			loadVerifiedYieldGrainBasket(dto);
+		}
+
+		return verifiedYieldContractFactory.getVerifiedYieldContractSimple(dto, cropCommodityId, isPedigreeInd, factoryContext, authentication);
+	}
+	
+	@Override
 	public VerifiedYieldContract<? extends AnnualField, ? extends Message> createVerifiedYieldContract(
 			VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract, FactoryContext factoryContext,
 			WebAdeAuthentication authentication)
@@ -636,10 +756,16 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				verifiedYieldContract.setVerifiedYieldGrainBasket(grainBasket);
 			}
 			
-			//Set basket value if it's a new record or the user want to update it
+			//Set product values if it's a new record or the user want to update it
 			if((verifiedYieldContract.getVerifiedYieldGrainBasket() != null && verifiedYieldContract.getVerifiedYieldGrainBasket().getVerifiedYieldGrainBasketGuid() == null)
 					|| Boolean.TRUE.equals(verifiedYieldContract.getUpdateProductValuesInd())) {
 				verifiedYieldContract.getVerifiedYieldGrainBasket().setBasketValue(productDto.getCoverageDollars());
+				verifiedYieldContract.getVerifiedYieldGrainBasket().setTotalQuantityCoverageValue(calculateTotalQuantityCoverageValue(productDtos));
+				
+				Double totalCoverageValue = notNull(verifiedYieldContract.getVerifiedYieldGrainBasket().getBasketValue(), 0.0) + 
+						verifiedYieldContract.getVerifiedYieldGrainBasket().getTotalQuantityCoverageValue();
+
+				verifiedYieldContract.getVerifiedYieldGrainBasket().setTotalCoverageValue(totalCoverageValue);
 			}
 		} else {
 			//No product exists but grain basket in verified yield exists
@@ -672,6 +798,22 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			//Save Grain Basket
 			updateVerifiedYieldGrainBasket(verifiedYieldContractGuid, verifiedYieldContract.getVerifiedYieldGrainBasket(), userId);
 		}
+	}
+
+	// Calculates VerifiedYieldGrainBasket.totalQuantityCoverageValue.
+	private double calculateTotalQuantityCoverageValue(List<ProductDto> products) {
+		
+		double result = 0.0;
+		
+		if ( products != null && !products.isEmpty() ) {
+			for ( ProductDto prd : products ) {
+				if ( prd.getCommodityCoverageCode().equals(CommodityCoverageCode.QUANTITY_GRAIN) && prd.getProductStatusCode().equals(PRODUCT_STATUS_FINAL) && prd.getCoverageDollars() != null ) {
+					result += prd.getCoverageDollars();
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	private ProductDto getProductDtoByCoverageCode(String coverageCode, List<ProductDto> productDtos) {
