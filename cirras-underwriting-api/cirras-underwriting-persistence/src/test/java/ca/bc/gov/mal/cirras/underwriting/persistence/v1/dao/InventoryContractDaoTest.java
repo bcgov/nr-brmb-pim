@@ -17,6 +17,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryContractDao
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.AnnualFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryCoverageTotalForageDto;
@@ -313,6 +314,7 @@ public class InventoryContractDaoTest {
 	private InventorySeededGrainDao inventorySeededGrainDao;
 	private InventoryUnseededDao inventoryUnseededDao;
 	private InventorySeededForageDao inventorySeededForageDao;
+	private InventoryBerriesDao inventoryBerriesDao;
 	private FieldDao fieldDao;
 	private String inventoryContractCommodityGuid;
 	private String inventoryCoverageTotalForageGuid;
@@ -342,6 +344,7 @@ public class InventoryContractDaoTest {
 		inventorySeededGrainDao = persistenceSpringConfig.inventorySeededGrainDao();
 		inventoryUnseededDao = persistenceSpringConfig.inventoryUnseededDao();
 		inventorySeededForageDao = persistenceSpringConfig.inventorySeededForageDao();
+		inventoryBerriesDao = persistenceSpringConfig.inventoryBerriesDao();
 		
 		//Create inventory contract
 		createInventoryContract(userId);
@@ -371,6 +374,9 @@ public class InventoryContractDaoTest {
 		createSeededGrain("Forage Oat", 24, 1010570, inventoryFieldGuid1, false, 30.0, userId);
 		createSeededGrain("CPSW", 26, 1010602, inventoryFieldGuid1, true, 0.0, userId);
 		
+		//Create Berries
+		createBerries(10, "BLUEBERRY", userId);
+		
 		//FETCH
 		InventoryContractDto fetchedDto = inventoryContractDao.fetch(inventoryContractGuid);
 		Assert.assertNotNull(fetchedDto);
@@ -382,6 +388,7 @@ public class InventoryContractDaoTest {
 		inventorySeededForageDao.deleteForInventoryContract(inventoryContractGuid);
 		inventoryUnseededDao.deleteForInventoryContract(inventoryContractGuid);
 		inventorySeededGrainDao.deleteForInventoryContract(inventoryContractGuid);
+		inventoryBerriesDao.deleteForInventoryContract(inventoryContractGuid);
 		inventoryFieldDao.deleteForInventoryContract(inventoryContractGuid);
 		contractedFieldDetailDao.delete(contractedFieldDetailId);
 		annualFieldDetailDao.delete(annualFieldDetailId);
@@ -557,6 +564,7 @@ public class InventoryContractDaoTest {
 		newContractedFieldDetailDto.setContractedFieldDetailId(contractedFieldDetailId);
 		newContractedFieldDetailDto.setAnnualFieldDetailId(annualFieldDetailId);
 		newContractedFieldDetailDto.setDisplayOrder(1);
+		newContractedFieldDetailDto.setIsLeasedInd(false);
 		newContractedFieldDetailDto.setGrowerContractYearId(growerContractYearId);
 
 		contractedFieldDetailDao.insertDataSync(newContractedFieldDetailDto, userId);
@@ -665,5 +673,22 @@ public class InventoryContractDaoTest {
 		
 		inventorySeededForageGuid = newDto2.getInventorySeededForageGuid();
 		
+	}
+	
+	private void createBerries(
+			Integer cropCommodityId,
+			String cropName,
+			String userId) throws DaoException {
+		
+		//Insert unseeded
+		InventoryBerriesDto newDto = new InventoryBerriesDto();
+
+		newDto.setInventoryFieldGuid(inventoryFieldGuid1);
+		newDto.setIsQuantityInsurableInd(true);
+		newDto.setIsPlantInsurableInd(false);
+		newDto.setCropCommodityId(cropCommodityId);
+		newDto.setCropCommodityName(cropName);
+		
+		inventoryBerriesDao.insert(newDto, userId);
 	}
 }

@@ -93,6 +93,7 @@ public class FieldDaoTest {
 		
 		
 		String fieldLabel = "Test Field Label";
+		String location = "location a";
 		Integer activeFromCropYear = 2011;
 		Integer activeToCropYear = 2022;
 
@@ -101,6 +102,7 @@ public class FieldDaoTest {
 		//INSERT
 		newDto.setFieldId(null);
 		newDto.setFieldLabel(fieldLabel);
+		newDto.setLocation(location);
 		newDto.setActiveFromCropYear(activeFromCropYear);
 		newDto.setActiveToCropYear(activeToCropYear);
 
@@ -111,11 +113,13 @@ public class FieldDaoTest {
 
 		Assert.assertEquals("FieldId", newDto.getFieldId(), fetchedDto.getFieldId());
 		Assert.assertEquals("FieldLabel", newDto.getFieldLabel(), fetchedDto.getFieldLabel());
+		Assert.assertEquals("Location", newDto.getLocation(), fetchedDto.getLocation());
 		Assert.assertEquals("ActiveFromCropYear", newDto.getActiveFromCropYear(), fetchedDto.getActiveFromCropYear());
 		Assert.assertEquals("ActiveToCropYear", newDto.getActiveToCropYear(), fetchedDto.getActiveToCropYear());
 		
 		//UPDATE
 		fieldLabel = "Test Field Label 2";
+		location = "location b";
 		activeFromCropYear = 2000;
 		activeToCropYear = 2012;
 		
@@ -129,6 +133,7 @@ public class FieldDaoTest {
 		FieldDto updatedDto = dao.fetch(fetchedDto.getFieldId());
 
 		Assert.assertEquals("FieldLabel", fetchedDto.getFieldLabel(), updatedDto.getFieldLabel());
+		Assert.assertEquals("Location", newDto.getLocation(), fetchedDto.getLocation());
 		Assert.assertEquals("ActiveFromCropYear", fetchedDto.getActiveFromCropYear(), updatedDto.getActiveFromCropYear());
 		Assert.assertEquals("ActiveToCropYear", fetchedDto.getActiveToCropYear(), updatedDto.getActiveToCropYear());
 		
@@ -595,6 +600,7 @@ public class FieldDaoTest {
 		cfdDto.setAnnualFieldDetailId(annualFieldDetailId);
 		cfdDto.setContractedFieldDetailId(contractedFieldDetailId);
 		cfdDto.setDisplayOrder(1);
+		cfdDto.setIsLeasedInd(false);
 		cfdDto.setGrowerContractYearId(growerContractYearId);
 
 		cfdDao.insertDataSync(cfdDto, userId);

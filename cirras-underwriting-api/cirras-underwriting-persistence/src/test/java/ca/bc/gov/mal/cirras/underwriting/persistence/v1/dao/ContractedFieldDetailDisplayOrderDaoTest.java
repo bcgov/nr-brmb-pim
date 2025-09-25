@@ -226,6 +226,7 @@ public class ContractedFieldDetailDisplayOrderDaoTest {
 		cfdDto.setAnnualFieldDetailId(annualFieldDetailId);
 		cfdDto.setContractedFieldDetailId(contractedFieldDetailId);
 		cfdDto.setDisplayOrder(displayOrder);
+		cfdDto.setIsLeasedInd(false);
 		cfdDto.setGrowerContractYearId(growerContractYearId);
 
 		cfdDao.insertDataSync(cfdDto, userId);
