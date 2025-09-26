@@ -13,9 +13,10 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { YieldConversionUnitsContainer } from 'src/app/containers/maintenance/yield-conversion-units-container.component';
 
 @Component({
-  selector: 'yield-conversion',
-  templateUrl: './yield-conversion.component.html',
-  styleUrls: ['./yield-conversion.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss']
+    selector: 'yield-conversion',
+    templateUrl: './yield-conversion.component.html',
+    styleUrls: ['./yield-conversion.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss'],
+    standalone: false
 })
 export class YieldConversionComponent extends BaseComponent implements OnChanges  {
 

@@ -5,7 +5,8 @@ import {UntypedFormControl} from "@angular/forms";
 import {Subscription} from "rxjs";
 
 @Directive({
-  selector: '[appWFDateRangeMask]'
+    selector: '[appWFDateRangeMask]',
+    standalone: false
 })
 export class DateRangeMaskDirective implements OnDestroy {
   @Input() public formControl: UntypedFormControl;

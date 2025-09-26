@@ -23,8 +23,9 @@ import { selectUserSetting } from "src/app/store/maintenance/maintenance.selecto
             [isUnsaved]="isUnsaved$ | async"   
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"        
-        ></user-settings>`, 
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+        ></user-settings>`,
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 export class UserSettingsContainer extends BaseContainer {
 

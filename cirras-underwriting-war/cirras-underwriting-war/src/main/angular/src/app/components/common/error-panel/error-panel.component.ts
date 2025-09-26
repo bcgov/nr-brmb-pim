@@ -18,7 +18,8 @@ import scrollIntoView from "scroll-into-view-if-needed";
     selector: "cirras-underwriting-base-error-panel",
     templateUrl: "./error-panel.component.html",
     styleUrls: ["../base/base.component.scss", "./error-panel.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ErrorPanelComponent implements OnChanges {
     @ViewChild("errorContainer") errorContainer: ElementRef;

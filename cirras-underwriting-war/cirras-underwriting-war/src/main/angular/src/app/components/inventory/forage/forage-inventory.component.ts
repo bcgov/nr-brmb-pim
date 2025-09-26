@@ -19,11 +19,12 @@ import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { asapScheduler } from 'rxjs';
 
 @Component({
-  selector: 'forage-inventory',
-  templateUrl: './forage-inventory.component.html',
-  styleUrls: ['./forage-inventory.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+    selector: 'forage-inventory',
+    templateUrl: './forage-inventory.component.html',
+    styleUrls: ['./forage-inventory.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 
 export class ForageInventoryComponent extends BaseComponent implements OnChanges {

@@ -22,8 +22,9 @@ import { selectUnderwritingYears, selectseedingDeadlineList } from "src/app/stor
             [seedingDeadlineList]="seedingDeadlineList$ | async"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
-        ></seeding-deadlines>`, 
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+        ></seeding-deadlines>`,
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 
 export class SeedingDeadlinesContainer extends BaseContainer {

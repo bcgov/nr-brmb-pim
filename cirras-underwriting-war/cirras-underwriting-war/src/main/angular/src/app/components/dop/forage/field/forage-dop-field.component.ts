@@ -12,7 +12,8 @@ import { DOP_COMPONENT_ID } from "src/app/store/dop/dop.state";
     selector: 'forage-dop-field',
     templateUrl: './forage-dop-field.component.html',
     styleUrls: ['./forage-dop-field.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ForageDopFieldComponent implements OnInit {
     @Input() field: AnnualField;

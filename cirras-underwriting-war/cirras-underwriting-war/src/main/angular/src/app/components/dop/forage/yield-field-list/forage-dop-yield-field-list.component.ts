@@ -6,7 +6,8 @@ import { DopYieldFieldForage } from "src/app/conversion/models-yield";
     selector: 'forage-dop-yield-field-list',
     templateUrl: './forage-dop-yield-field-list.component.html',
     styleUrls: ['./forage-dop-yield-field-list.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ForageDopYieldFieldListComponent {
     @Input() yieldFields: Array<DopYieldFieldForage>;

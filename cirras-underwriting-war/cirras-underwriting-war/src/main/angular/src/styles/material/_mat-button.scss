@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as var;
 
 button {
     &.mat-mdc-fab,
@@ -10,13 +10,13 @@ button {
     &.mat-mdc-unelevated-button,
     &.mat-mdc-fab,
     &.mat-mdc-mini-fab .mat-mdc-menu-item {
-        font-family: $font-family-main;
-        font-size: $font-size;
+        font-family: var.$font-family-main;
+        font-size: var.$font-size;
         white-space: nowrap;
         font-weight: 500;
         
         &[disabled] {
-            border: 1px solid $colour-medium-grey !important;
+            border: 1px solid var.$colour-medium-grey !important;
         }        
     }
 }
@@ -32,15 +32,15 @@ button.primary {
     &.mat-mdc-fab,
     &.mat-mdc-mini-fab .mat-mdc-menu-item {
         &:not([disabled]) {
-            background-color: $colour-button-primary;
-            color: $colour-white;
+            background-color: var.$colour-button-primary;
+            color: var.$colour-white;
 
             &.intermediate-action {
-                background-color: $colour-intermediate-action;
+                background-color: var.$colour-intermediate-action;
             }            
             
             &:hover {
-                background-color: $colour-button-primary-hover;
+                background-color: var.$colour-button-primary-hover;
             }
         }
     }
@@ -48,12 +48,12 @@ button.primary {
 
 button.mat-mdc-fab,
 button.mat-mdc-raised-button {
-    background-color: $colour-button;
-    color: $colour-white;
-    font-family: $font-family-main;
-    font-size: $font-size;
+    background-color: var.$colour-button;
+    color: var.$colour-white;
+    font-family: var.$font-family-main;
+    font-size: var.$font-size;
     box-shadow: none !important;
-    border: 1px solid $colour-blue;
+    border: 1px solid var.$colour-blue;
 }
 
 button.mdc-button.right-side-icon {

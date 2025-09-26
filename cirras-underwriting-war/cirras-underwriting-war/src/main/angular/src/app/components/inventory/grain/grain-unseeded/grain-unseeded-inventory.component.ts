@@ -7,11 +7,12 @@ import { CropCommodityVarietyOptionsType, roundUpDecimalAcres } from '../../inve
 import {ViewEncapsulation } from '@angular/core';
 
 @Component({
-  selector: 'grain-unseeded-inventory',
-  templateUrl: './grain-unseeded-inventory.component.html',
-  styleUrls: ['./grain-unseeded-inventory.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+    selector: 'grain-unseeded-inventory',
+    templateUrl: './grain-unseeded-inventory.component.html',
+    styleUrls: ['./grain-unseeded-inventory.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 
 export class GrainUnseededInventoryComponent extends GrainInventoryComponent { 

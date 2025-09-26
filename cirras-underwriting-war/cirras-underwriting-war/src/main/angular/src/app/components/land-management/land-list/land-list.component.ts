@@ -7,12 +7,13 @@ import { LandListComponentModel } from "./land-list.component.model";
 import { ResourcesRoutes } from "src/app/utils/constants";
 
 @Component({
-  selector: "cirras-land-list",
-  templateUrl: "./land-list.component.html",
-  styleUrls: ["../../common/base/base.component.scss",
-  "../../common/base-collection/collection.component.desktop.scss",
-      "./land-list.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: "cirras-land-list",
+    templateUrl: "./land-list.component.html",
+    styleUrls: ["../../common/base/base.component.scss",
+        "../../common/base-collection/collection.component.desktop.scss",
+        "./land-list.component.scss"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 
 export class LandListComponent extends CollectionComponent implements OnChanges, AfterViewInit {

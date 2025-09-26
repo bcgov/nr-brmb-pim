@@ -5,9 +5,10 @@ import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
 
 @Component({
-  selector: 'cirras-plant-insurability',
-  templateUrl: './plant-insurability.component.html',
-  styleUrls: ['./plant-insurability.component.scss']
+    selector: 'cirras-plant-insurability',
+    templateUrl: './plant-insurability.component.html',
+    styleUrls: ['./plant-insurability.component.scss'],
+    standalone: false
 })
 export class PlantInsurabilityComponent implements OnInit {
   dialogType = DIALOG_TYPE.INFO;

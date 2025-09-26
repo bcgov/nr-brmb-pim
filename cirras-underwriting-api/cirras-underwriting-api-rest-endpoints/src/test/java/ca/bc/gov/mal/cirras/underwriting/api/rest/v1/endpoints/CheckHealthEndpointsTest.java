@@ -2,7 +2,7 @@ package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints;
 
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.junit.Assert;
 import org.junit.Test;

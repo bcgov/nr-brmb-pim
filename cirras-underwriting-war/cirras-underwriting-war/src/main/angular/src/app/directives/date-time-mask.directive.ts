@@ -3,7 +3,8 @@ import * as textMask from "vanilla-text-mask/dist/vanillaTextMask.js";
 import {CONSTANTS} from "../utils";
 
 @Directive({
-  selector: '[appWFDateTimeMask]'
+    selector: '[appWFDateTimeMask]',
+    standalone: false
 })
 export class DateTimeMaskDirective implements OnDestroy {
 

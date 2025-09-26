@@ -13,9 +13,10 @@ import { CropCommodityList } from 'src/app/conversion/models';
 import { ClearCropCommodity, LoadCropCommodityList } from 'src/app/store/crop-commodity/crop-commodity.actions';
 
 @Component({
-  selector: 'grade-modifiers',
-  templateUrl: './grade-modifiers.component.html',
-  styleUrls: ['./grade-modifiers.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss']
+    selector: 'grade-modifiers',
+    templateUrl: './grade-modifiers.component.html',
+    styleUrls: ['./grade-modifiers.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss'],
+    standalone: false
 })
 export class GradeModifiersComponent extends BaseComponent implements OnChanges  {
 

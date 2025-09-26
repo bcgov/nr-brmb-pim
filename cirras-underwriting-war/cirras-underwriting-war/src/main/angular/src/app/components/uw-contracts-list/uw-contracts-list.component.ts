@@ -12,12 +12,13 @@ import { LoadUserSettings } from "src/app/store/maintenance/maintenance.actions"
 import { UserSetting } from "src/app/conversion/models-maintenance";
 
 @Component({
-  selector: "cirras-uw-contracts-list",
-  templateUrl: "./uw-contracts-list.component.html",
-  styleUrls: ["../common/base/base.component.scss",
-  "../common/base-collection/collection.component.desktop.scss",
-      "./uw-contracts-list.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: "cirras-uw-contracts-list",
+    templateUrl: "./uw-contracts-list.component.html",
+    styleUrls: ["../common/base/base.component.scss",
+        "../common/base-collection/collection.component.desktop.scss",
+        "./uw-contracts-list.component.scss"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 
 export class UwContractsListComponent extends CollectionComponent implements OnChanges, AfterViewInit {

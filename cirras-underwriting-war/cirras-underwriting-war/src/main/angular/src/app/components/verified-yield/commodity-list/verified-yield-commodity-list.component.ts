@@ -5,10 +5,11 @@ import { DopYieldContractCommodityForage } from "src/app/conversion/models-yield
 import { INSURANCE_PLAN } from "src/app/utils/constants";
 
 @Component({
-  selector: 'verified-yield-commodity-list',
-  templateUrl: './verified-yield-commodity-list.component.html',
-  styleUrls: ['./verified-yield-commodity-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'verified-yield-commodity-list',
+    templateUrl: './verified-yield-commodity-list.component.html',
+    styleUrls: ['./verified-yield-commodity-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class VerifiedYieldCommodityListComponent  {
 

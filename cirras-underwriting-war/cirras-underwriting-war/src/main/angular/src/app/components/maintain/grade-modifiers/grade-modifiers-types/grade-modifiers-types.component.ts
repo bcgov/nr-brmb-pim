@@ -12,9 +12,10 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
 
 @Component({
-  selector: 'grade-modifiers-types',
-  templateUrl: './grade-modifiers-types.component.html',
-  styleUrls: ['./grade-modifiers-types.component.scss']
+    selector: 'grade-modifiers-types',
+    templateUrl: './grade-modifiers-types.component.html',
+    styleUrls: ['./grade-modifiers-types.component.scss'],
+    standalone: false
 })
 export class GradeModifiersTypesComponent implements OnInit, OnChanges {
 

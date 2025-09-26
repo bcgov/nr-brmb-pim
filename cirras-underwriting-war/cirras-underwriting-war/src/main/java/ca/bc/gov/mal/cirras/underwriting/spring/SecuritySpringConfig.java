@@ -1,41 +1,44 @@
 package ca.bc.gov.mal.cirras.underwriting.spring;
 
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.authentication.WebadeOauth2AuthenticationProvider;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.TokenService;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
+import ca.bc.gov.nrs.wfone.common.webade.oauth2.authentication.WebadeOauth2AuthenticationProvider;
+import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.TokenService;
 
 @Configuration
 @EnableWebSecurity(debug = false)
 @Import({
 	TokenServiceSpringConfig.class
 })
-public class SecuritySpringConfig extends WebSecurityConfigurerAdapter  {
+public class SecuritySpringConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecuritySpringConfig.class);
 
@@ -50,7 +53,6 @@ public class SecuritySpringConfig extends WebSecurityConfigurerAdapter  {
 
 
 	public SecuritySpringConfig() {
-		super(true);
 		logger.info("<SecuritySpringConfig");
 
 		logger.info(">SecuritySpringConfig");
@@ -96,31 +98,35 @@ public class SecuritySpringConfig extends WebSecurityConfigurerAdapter  {
 		return result;
 	}
 
-	private static final Set<String> STATIC_METHODS = Arrays.asList(HttpMethod.OPTIONS, HttpMethod.GET).stream()
-			.map(HttpMethod::name)
-			.collect(Collectors.toSet());  
-	
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		
-		web.ignoring().requestMatchers(request->{
-			String method = request.getMethod();
-			return STATIC_METHODS.contains(method);
-		});
+	@Bean
+	@Order(0)
+	SecurityFilterChain resources(HttpSecurity http) throws Exception {
+		RequestMatcher optionsMatcher = new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.name());
+		RequestMatcher getMatcher = new AntPathRequestMatcher("/**", HttpMethod.GET.name());
+
+		http
+			.securityMatchers(matchers -> matchers.requestMatchers(optionsMatcher, getMatcher))
+			.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
+			.requestCache(cache -> cache.disable())
+			.securityContext(context -> context.disable())
+			.sessionManagement(session -> session.disable());
+
+		return http.build();
 	}
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-
-		http.csrf().disable();
-
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            
 		http.oauth2ResourceServer(oauth2 -> oauth2
 						.authenticationManagerResolver(authenticationManagerResolver())
 				)
-				.authorizeRequests(authorize -> authorize
+				.authorizeHttpRequests(authorize -> authorize
 						.anyRequest().permitAll()
 				)
-				.exceptionHandling()
-				.authenticationEntryPoint(authenticationEntryPoint());
+				.exceptionHandling(exception -> exception
+				    .authenticationEntryPoint(authenticationEntryPoint()));
+
+		return http.build();
 	}
+
 }

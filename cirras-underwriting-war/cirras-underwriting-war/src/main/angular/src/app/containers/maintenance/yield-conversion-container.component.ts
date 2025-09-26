@@ -24,8 +24,9 @@ import { selectYieldMeasUnitConversionList } from "src/app/store/maintenance/mai
             [yieldMeasUnitConversionList]="yieldMeasUnitConversionList$ | async"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
-        ></yield-conversion>`, 
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+        ></yield-conversion>`,
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 
 export class YieldConversionContainer extends BaseContainer {

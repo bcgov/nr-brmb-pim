@@ -1,4 +1,5 @@
-@import 'variables';
+@use "sass:map";
+@use 'variables' as var;
 
 
 #core-interface-container {
@@ -6,7 +7,7 @@
 }
 
 //-------------------------------base-wrapper-----------------------
-@media screen and (max-width: calc(map_get($grid-breakpoints, md) - 1px)) {
+@media screen and (max-width: calc(map.get(var.$grid-breakpoints, md) - 1px)) {
   .user-summary {
     top: 5px !important;
   }
@@ -16,7 +17,7 @@
 
 }
 
-@media screen and (max-width: map_get($grid-breakpoints, md)) {
+@media screen and (max-width: map.get(var.$grid-breakpoints, md)) {
 
   .toolbar-panel {
     margin: 8px 0 !important;
@@ -38,7 +39,7 @@
   }
 }
 
-@media screen and (max-width: map_get($grid-breakpoints, xs)) {
+@media screen and (max-width: map.get(var.$grid-breakpoints, xs)) {
   span.back-route-label {
     font-size: small !important;
   }
@@ -53,14 +54,14 @@
 }
 
 //-------------------------------initializing app-----------------------
-@media screen and (max-width: map_get($grid-breakpoints, sm)) {
+@media screen and (max-width: map.get(var.$grid-breakpoints, sm)) {
   .cdk-overlay-container {
     position: fixed !important;
   }
 }
 
 //-------------------------------header-----------------------
-@media screen and (max-width: map_get($grid-breakpoints, md)) {
+@media screen and (max-width: map.get(var.$grid-breakpoints, md)) {
   mat-toolbar.mat-primary.wf1-public-application-header,
   mat-toolbar.mat-primary.cirras-underwriting-application-header {
     padding-left: var(--cirras-underwriting-gutter-space);
@@ -72,7 +73,7 @@
     }
 
     #header-title {
-      font-size: $font-size;
+      font-size: var.$font-size;
       margin-left: 6px;
       margin-bottom: 3px;
     }
@@ -94,7 +95,7 @@
   }
 
   #map {
-    min-height: $wf1-app-map-mobile-height;
+    min-height: var.$wf1-app-map-mobile-height;
   }
 
   .svg-inline--fa {
@@ -102,7 +103,7 @@
   }
 }
 
-@media screen and (max-width: map_get($grid-breakpoints, md)) {
+@media screen and (max-width: map.get(var.$grid-breakpoints, md)) {
   #core-interface-container{
     .bottom-summary{
       flex-direction: column;
@@ -120,7 +121,7 @@
 
 }
 //-----------forms-------------
-@media screen and (max-width: map_get($grid-breakpoints, md)) {
+@media screen and (max-width: map.get(var.$grid-breakpoints, md)) {
   .cdk-overlay-container .mobile,
   cirras-underwriting-root {
     .form-flex-wrapper .form-flex {
@@ -136,7 +137,7 @@
   }
 }
 
-@media screen and (max-width: map_get($grid-breakpoints, sm)) {
+@media screen and (max-width: map.get(var.$grid-breakpoints, sm)) {
   .mat-action-row{
     align-items: flex-start;
   }
@@ -153,9 +154,9 @@
 
   .mat-mdc-tab-group .mat-mdc-tab-body{
     .mat-mdc-card:not(.error-panel){
-      border: 1px solid $colour-light-grey;
+      border: 1px solid var.$colour-light-grey;
       margin: var(--cirras-underwriting-gutter-space);
-      border-radius: $wf1-border-radius;
+      border-radius: var.$wf1-border-radius;
       overflow: hidden;
     }
   }
@@ -194,12 +195,12 @@
   }
 }
 
-@media screen and (max-width: map_get($grid-breakpoints, xs)) {
+@media screen and (max-width: map.get(var.$grid-breakpoints, xs)) {
   .mat-action-row {
-    font-size: $font-size-small;
+    font-size: var.$font-size-small;
 
     button{
-      font-size: $font-size-small;
+      font-size: var.$font-size-small;
       padding: 0 5px;
       min-width: 50px;  }
   }

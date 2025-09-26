@@ -12,7 +12,8 @@ import {MatExpansionPanel} from "@angular/material/expansion";
     selector: "cirras-underwriting-base-expansion-panel",
     templateUrl: "./base-expansion-panel.component.html",
     styleUrls: ["../base/base.component.scss", "./base-expansion-panel.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class BaseExpansionPanelComponent {
     mobile: boolean;

@@ -2,7 +2,7 @@ package ca.bc.gov.nrs.common.rest.resource;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

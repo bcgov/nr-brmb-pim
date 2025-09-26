@@ -1,4 +1,4 @@
-@import '../../../../../styles/variables';
+@use '../../../../../styles/variables' as var;
 
   .cuw-row-group {
     //padding: 30px 10px 10px 10px;
@@ -69,7 +69,7 @@
     width: calc(100% - 2 * var(--cirras-underwriting-gutter-space));
     width: 590px;
     margin: 0;
-    border-top: 1px solid $colour-light-grey;
-    border-bottom: 1px solid $colour-light-grey;
+    border-top: 1px solid var.$colour-light-grey;
+    border-bottom: 1px solid var.$colour-light-grey;
     overflow-y: auto;
   }

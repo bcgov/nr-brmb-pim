@@ -8,10 +8,11 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { USER_SETTINGS_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
 
 @Component({
-  selector: 'user-settings',
-  templateUrl: './user-settings.component.html',
-  styleUrls: ['./user-settings.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'user-settings',
+    templateUrl: './user-settings.component.html',
+    styleUrls: ['./user-settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UserSettingsComponent extends BaseComponent implements OnChanges {
 

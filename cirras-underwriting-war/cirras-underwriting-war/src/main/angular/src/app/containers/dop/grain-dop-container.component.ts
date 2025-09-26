@@ -25,8 +25,9 @@ import { DOP_COMPONENT_ID } from "src/app/store/dop/dop.state";
             [yieldMeasUnitList]="yieldMeasUnitList$ | async"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
-        ></grain-dop>`, 
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+        ></grain-dop>`,
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 
 export class GrainDopContainer extends BaseContainer {

@@ -19,8 +19,9 @@ import { selectGradeModifierTypeList } from "src/app/store/maintenance/maintenan
     template: `
         <grade-modifiers-types
             [gradeModifierTypesList]="gradeModifierTypesList$ | async"
-        ></grade-modifiers-types>`, 
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+        ></grade-modifiers-types>`,
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 
 export class GradeModifierTypesContainer extends BaseContainer {

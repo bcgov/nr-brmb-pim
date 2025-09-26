@@ -25,9 +25,10 @@ import { HttpClient } from '@angular/common/http';
 import { DecimalPipe } from '@angular/common';
 
 @Component({
-  selector: 'manage-land',
-  templateUrl: './manage-land.component.html',
-  styleUrls: ['./manage-land.component.scss']
+    selector: 'manage-land',
+    templateUrl: './manage-land.component.html',
+    styleUrls: ['./manage-land.component.scss'],
+    standalone: false
 })
 export class ManageLandComponent extends BaseComponent implements OnChanges {
 

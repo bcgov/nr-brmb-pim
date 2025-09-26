@@ -5,7 +5,8 @@ import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 @Component({
     selector: 'uw-comment',
     templateUrl: './uw-comment.component.html',
-    styleUrls: ['./uw-comment.component.scss']
+    styleUrls: ['./uw-comment.component.scss'],
+    standalone: false
 })
 export class UwCommentComponent implements OnInit {
     @Input() uwComment: UnderwritingComment;

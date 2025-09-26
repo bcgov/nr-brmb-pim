@@ -11,11 +11,12 @@ import { LoadInventoryContract } from 'src/app/store/inventory/inventory.actions
 import {ViewEncapsulation } from '@angular/core';
 
 @Component({
-  selector: 'grain-seeded-inventory',
-  templateUrl: './grain-seeded-inventory.component.html',
-  styleUrls: ['./grain-seeded-inventory.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+    selector: 'grain-seeded-inventory',
+    templateUrl: './grain-seeded-inventory.component.html',
+    styleUrls: ['./grain-seeded-inventory.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 
 export class GrainSeededInventoryComponent extends GrainInventoryComponent { 

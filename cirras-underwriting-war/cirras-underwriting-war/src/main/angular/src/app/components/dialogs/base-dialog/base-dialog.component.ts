@@ -35,7 +35,8 @@ export enum DIALOG_TYPE {
     selector: "cuws-base-dialog",
     templateUrl: "./base-dialog.component.html",
     styleUrls: ["../../common/base/base.component.scss", "./base-dialog.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class BaseDialogComponent implements AfterViewInit, OnChanges, OnDestroy {
     @Input() disableDrag?: boolean = false;

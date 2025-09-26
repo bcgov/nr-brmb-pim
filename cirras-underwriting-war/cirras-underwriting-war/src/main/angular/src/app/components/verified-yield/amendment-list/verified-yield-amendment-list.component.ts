@@ -5,10 +5,11 @@ import { AnnualField, CropCommodityList } from 'src/app/conversion/models';
 import { INSURANCE_PLAN, VERIFIED_YIELD_AMENDMENT_CODE } from 'src/app/utils/constants';
 
 @Component({
-  selector: 'verified-yield-amendment-list',
-  templateUrl: './verified-yield-amendment-list.component.html',
-  styleUrl: './verified-yield-amendment-list.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'verified-yield-amendment-list',
+    templateUrl: './verified-yield-amendment-list.component.html',
+    styleUrl: './verified-yield-amendment-list.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class VerifiedYieldAmendmentListComponent implements OnChanges{
   @Input() verifiedYieldContractGuid: string;

@@ -4,10 +4,11 @@ import {NG_VALUE_ACCESSOR, NgControl} from '@angular/forms';
 import { numberWithCommas } from '../utils';
 
 @Directive({
-  selector: 'input[matInputCommified]',
-  providers: [
-    {provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: MatInputCommifiedDirective},
-  ]
+    selector: 'input[matInputCommified]',
+    providers: [
+        { provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: MatInputCommifiedDirective },
+    ],
+    standalone: false
 })
 export class MatInputCommifiedDirective {
   // tslint:disable-next-line:variable-name

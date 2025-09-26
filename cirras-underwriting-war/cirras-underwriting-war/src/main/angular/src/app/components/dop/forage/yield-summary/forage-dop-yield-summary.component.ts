@@ -6,11 +6,12 @@ import { RootState } from 'src/app/store';
 import { makeNumberOnly } from 'src/app/utils';
 
 @Component({
-  selector: 'forage-dop-yield-summary',
-  templateUrl: './forage-dop-yield-summary.component.html',
-  styleUrls: ['./forage-dop-yield-summary.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+    selector: 'forage-dop-yield-summary',
+    templateUrl: './forage-dop-yield-summary.component.html',
+    styleUrls: ['./forage-dop-yield-summary.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ForageDopYieldSummaryComponent{
 

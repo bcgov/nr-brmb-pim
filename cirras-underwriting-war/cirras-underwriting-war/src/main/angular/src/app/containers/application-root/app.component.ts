@@ -21,7 +21,8 @@ const DEVICE: WfDevice = 'desktop';
     selector: "cirras-underwriting-root",
     templateUrl: "./app.component.html",
     styleUrls: ["./app.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AppComponent implements OnInit {
 

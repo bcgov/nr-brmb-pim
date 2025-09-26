@@ -38,9 +38,10 @@ export interface AddPlantingPopupData {
 
 
 @Component({
-  selector: 'cirras-link-planting',
-  templateUrl: './link-planting.component.html',
-  styleUrls: ['./link-planting.component.scss']
+    selector: 'cirras-link-planting',
+    templateUrl: './link-planting.component.html',
+    styleUrls: ['./link-planting.component.scss'],
+    standalone: false
 })
 export class LinkPlantingComponent implements OnInit {
 

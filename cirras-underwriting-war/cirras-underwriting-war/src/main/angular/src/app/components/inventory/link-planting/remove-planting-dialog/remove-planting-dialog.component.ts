@@ -3,9 +3,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
 
 @Component({
-  selector: 'cirras-remove-planting-dialog',
-  templateUrl: './remove-planting-dialog.component.html',
-  styleUrls: ['./remove-planting-dialog.component.scss']
+    selector: 'cirras-remove-planting-dialog',
+    templateUrl: './remove-planting-dialog.component.html',
+    styleUrls: ['./remove-planting-dialog.component.scss'],
+    standalone: false
 })
 export class RemovePlantingDialogComponent implements OnInit {
 
