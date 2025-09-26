@@ -19,7 +19,7 @@ jobs:
       TAG: ${{ inputs.tag }}
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-api
-      JAVA_VERSION: 17
+      JAVA_VERSION: 21
 
   build-and-upload-npm-modules:
     uses: ./.github/workflows/build-npm.yml

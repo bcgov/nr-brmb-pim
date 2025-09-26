@@ -9,10 +9,11 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
 
 @Component({
-  selector: 'verified-yield-summary',
-  templateUrl: './verified-yield-summary.component.html',
-  styleUrl: './verified-yield-summary.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'verified-yield-summary',
+    templateUrl: './verified-yield-summary.component.html',
+    styleUrl: './verified-yield-summary.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class VerifiedYieldSummaryComponent {
   @Input() summary: VerifiedYieldSummary;

@@ -12,9 +12,10 @@ import { AddLandPopupData } from '../add-land/add-land.component';
 import { DIALOG_TYPE } from '../../dialogs/base-dialog/base-dialog.component';
 
 @Component({
-  selector: 'cirras-edit-land',
-  templateUrl: './edit-land.component.html',
-  styleUrls: ['./edit-land.component.scss']
+    selector: 'cirras-edit-land',
+    templateUrl: './edit-land.component.html',
+    styleUrls: ['./edit-land.component.scss'],
+    standalone: false
 })
 
 

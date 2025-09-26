@@ -1,5 +1,4 @@
-//@import '../../node_modules/@angular/material/theming';
-@import 'variables';
+@use 'variables' as var;
 
 body {
   margin: 0;
@@ -10,25 +9,25 @@ body {
 }
 
 .mat-dialog-container.mat-mdc-dialog-container {
-  font-family: $font-family-main;
-  font-size: $font-size;
+  font-family: var.$font-family-main;
+  font-size: var.$font-size;
 }
 
 // fonts for the popups
 .mat-mdc-dialog-content{
-  font-family: $font-family-main !important;
-  font-size: $font-size;
+  font-family: var.$font-family-main !important;
+  font-size: var.$font-size;
 }
 
 .mat-mdc-table {
   thead {
-    font-family: $font-family-emphasis;
+    font-family: var.$font-family-emphasis;
   }
 }
 
 .mat-mdc-menu-item {
-  font-family: $font-family-main;
-  font-size: $font-size;
+  font-family: var.$font-family-main;
+  font-size: var.$font-size;
 }
 
 #core-interface-container {
@@ -45,8 +44,8 @@ body {
   .mat-mdc-menu-item,
   .mat-mdc-table,
   .mat-mdc-list-item {
-    font-family: $font-family-main;
-    font-size: $font-size;
+    font-family: var.$font-family-main;
+    font-size: var.$font-size;
   }
 
   .justify-space-between{
@@ -86,7 +85,7 @@ cirras-underwriting-list-container cirras-underwriting-spinner {
 }
 
 .mat-mdc-tooltip {
-  font-size: $font-size;
+  font-size: var.$font-size;
 }
 
 .cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
@@ -115,13 +114,13 @@ pdf-viewer-overlay {
 }
 
 h1 {
-  font-size: $font-size-h1;
+  font-size: var.$font-size-h1;
   padding-left: var(--cirras-underwriting-gutter-space);
   display: inline-block;
 }
 
 h2 {
-  font-size: $font-size-h2;
+  font-size: var.$font-size-h2;
   font-weight: 200;
   margin-block-end: 0;
   margin-block-start: 0;
@@ -129,48 +128,48 @@ h2 {
 }
 
 h3 {
-  font-size: $font-size-h3;
-  font-weight: $font-weight-emphasis;
+  font-size: var.$font-size-h3;
+  font-weight: var.$font-weight-emphasis;
 }
 
 h1,
 h2{
-  font-weight: $font-weight;
+  font-weight: var.$font-weight;
 }
 
 a {
   color: #027DB4;
 
   &.icon-button{
-    color: $colour-black;
+    color: var.$colour-black;
     text-decoration:none;
     &:hover{
-      color: $colour-black;
+      color: var.$colour-black;
     }
   }
 }
 
 a:hover {
-  color: $colour-orange
+  color: var.$colour-orange
 }
 
 #core-interface-container mat-sidenav .mat-nav-list.mat-mdc-list-base {
 
   a.mat-mdc-list-item:hover {
-    color: $colour-orange
+    color: var.$colour-orange
   }
 
   a.mat-mdc-list-item.nav-item-active {
-    font-family: $font-family-emphasis;
+    font-family: var.$font-family-emphasis;
     font-weight: 600;
-    color: $colour-blue;
+    color: var.$colour-blue;
   }
 }
 
 #core-interface-container .ngx-pagination {
   text-align: center;
   padding-inline-start: 0;
-  border-radius: $wf1-border-radius;
+  border-radius: var.$wf1-border-radius;
   margin: 0;
 
   li:first-child {
@@ -185,9 +184,9 @@ a:hover {
   }
 
   li {
-    border-left: $colour-light-grey solid 1px;
-    border-top: $colour-light-grey solid 1px;
-    border-bottom: $colour-light-grey solid 1px;
+    border-left: var.$colour-light-grey solid 1px;
+    border-top: var.$colour-light-grey solid 1px;
+    border-bottom: var.$colour-light-grey solid 1px;
     border-right: none;
     vertical-align: middle;
     margin: 0;
@@ -211,7 +210,7 @@ a:hover {
     color: #003366;
     font-weight: bold;
     background: white;
-    border: 2px solid $colour-blue;
+    border: 2px solid var.$colour-blue;
     border-radius: 2px;
   }
 
@@ -222,7 +221,7 @@ a:hover {
   a:hover,
   button:hover {
     color: #131313;
-    background-color: $colour-light-orange;
+    background-color: var.$colour-light-orange;
   }
 
   .pagination-next a::after,
@@ -272,13 +271,13 @@ a:hover {
 }
 
 .emphasis {
-  font-family: $font-family-emphasis !important;
-  font-weight: $font-weight-emphasis !important;
+  font-family: var.$font-family-emphasis !important;
+  font-weight: var.$font-weight-emphasis !important;
 }
 
 .emphasis-more{
-  font-family: $font-family-emphasis !important;
-  font-weight: $font-weight-emphasis-more !important;
+  font-family: var.$font-family-emphasis !important;
+  font-weight: var.$font-weight-emphasis-more !important;
 }
 
 .loading-spinner {
@@ -319,18 +318,18 @@ a:hover {
 
 .field-label {
   text-align: right;
-  font-weight: $font-weight;
+  font-weight: var.$font-weight;
 
 }
 
 .field-note {
   font-weight: normal;
-  font-size: $font-size-small !important;
+  font-size: var.$font-size-small !important;
 }
 
 .field-value {
   text-align: left;
-  font-weight: $font-weight-emphasis-more;
+  font-weight: var.$font-weight-emphasis-more;
 
   display: inline;
   text-overflow: ellipsis;
@@ -349,7 +348,7 @@ a:hover {
 }
 
 .mat-mdc-footer-row th {
-  font-weight: $font-weight;
+  font-weight: var.$font-weight;
 }
 
 .mat-mdc-snack-bar-container {
@@ -357,12 +356,12 @@ a:hover {
 }
 
 .mat-icon[disabled]{
-  color: $colour-disabled-text;
+  color: var.$colour-disabled-text;
 }
 
 .mat-mdc-cell[disabled]{
   mat-icon{
-    color: $opacity-grey;
+    color: var.$opacity-grey;
   }
 }
 
@@ -387,11 +386,11 @@ a:hover {
 }
 
 #core-interface-container {
-  font-family: $font-family-main;
+  font-family: var.$font-family-main;
 
   .mat-mdc-paginator-container {
     justify-content: center;
-    font-size: $font-size;
+    font-size: var.$font-size;
   }
 
   .table-wrapper{
@@ -417,30 +416,30 @@ a:hover {
         }
 
         &.border-right{
-          border-right: 1px solid $colour-light-grey;
+          border-right: 1px solid var.$colour-light-grey;
           &.border-right-strong{
-            border-right: 2px solid $colour-light-grey;
+            border-right: 2px solid var.$colour-light-grey;
           }
         }
 
         &.border-top{
-          border-top: 1px solid $colour-light-grey;
+          border-top: 1px solid var.$colour-light-grey;
           &.border-top-strong{
-            border-top: 2px solid $colour-light-grey;
+            border-top: 2px solid var.$colour-light-grey;
           }
         }
 
         &.border-bottom{
-          border-bottom: 1px solid $colour-light-grey;
+          border-bottom: 1px solid var.$colour-light-grey;
           &.border-bottom-strong{
-            border-bottom: 2px solid $colour-light-grey;
+            border-bottom: 2px solid var.$colour-light-grey;
           }
         }
 
         &.border-left{
-          border-left: 1px solid $colour-light-grey;
+          border-left: 1px solid var.$colour-light-grey;
           &.border-left-strong{
-            border-left: 2px solid $colour-light-grey;
+            border-left: 2px solid var.$colour-light-grey;
           }
         }
 
@@ -451,7 +450,7 @@ a:hover {
 }
 
 .owl-dt-popup-container {
-  font-family: $font-family-main;
+  font-family: var.$font-family-main;
 }
 
 
@@ -479,8 +478,8 @@ cirras-underwriting-root {
   .mat-mdc-menu-item,
   .mat-mdc-table,
   .mat-mdc-list-item {
-    font-family: $font-family-main;
-    font-size: $font-size;
+    font-family: var.$font-family-main;
+    font-size: var.$font-size;
   }
 
   button.mat-mdc-menu-item {
@@ -556,14 +555,14 @@ cirras-underwriting-root {
 
 
 .owl-dt-popup-container{
-  font-family: $font-family-main
+  font-family: var.$font-family-main
 }
 
 .mat-expansion-panel-content,
 button,
 .mat-mdc-card{
-  font-family: $font-family-main;
-  font-size: $font-size;
+  font-family: var.$font-family-main;
+  font-size: var.$font-size;
 }
 
 
@@ -584,7 +583,7 @@ button,
   align-items: center;
   margin-right: 10px;
   .mat-icon{
-    color: $colour-warnings;
+    color: var.$colour-warnings;
     margin-right: 10px;
   }
 }
@@ -612,7 +611,7 @@ input{
 }
 
 .background-lighter-grey{
-  background-color: $colour-lighter-grey;
+  background-color: var.$colour-lighter-grey;
 }
 
 textarea.mat-mdc-input-element.cdk-textarea-autosize{
@@ -626,7 +625,7 @@ textarea.mat-mdc-input-element.cdk-textarea-autosize{
 }
 
 mat-error.mat-mdc-form-field-error {
-  color: $colour-errors;
+  color: var.$colour-errors;
 }
 
 .align-flex-start{
@@ -655,11 +654,11 @@ mat-error.mat-mdc-form-field-error {
 }
 
 .intermediate-action{
-  color: $colour-intermediate-action;
+  color: var.$colour-intermediate-action;
 
   &.mat-mdc-fab.mat-primary span,
   &.mat-mdc-raised-button.mat-primary span{
-    color: $colour-white;
+    color: var.$colour-white;
   }
 }
 
@@ -696,8 +695,8 @@ mat-error.mat-mdc-form-field-error {
       flex-direction: column;
       justify-content: space-between;
       box-shadow: none;
-      border: solid 1px $colour-light-grey;
-      border-radius: $wf1-border-radius;
+      border: solid 1px var.$colour-light-grey;
+      border-radius: var.$wf1-border-radius;
     }
   }
 }
@@ -709,23 +708,23 @@ mat-error.mat-mdc-form-field-error {
 
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  font-family: $font-family-main;
-  font-size: $font-size;
+  font-family: var.$font-family-main;
+  font-size: var.$font-size;
   color: #6a6a6a;
   opacity: 1; /* Firefox */
   padding-left: 2px;
 }
 
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-  font-family: $font-family-main;
-  font-size: $font-size;
+  font-family: var.$font-family-main;
+  font-size: var.$font-size;
   color: #6a6a6a;
   padding-left: 2px;
 }
 
 ::-ms-input-placeholder { /* Microsoft Edge */
-  font-family: $font-family-main;
-  font-size: $font-size;
+  font-family: var.$font-family-main;
+  font-size: var.$font-size;
   color: #6a6a6a;
   padding-left: 2px;
 }

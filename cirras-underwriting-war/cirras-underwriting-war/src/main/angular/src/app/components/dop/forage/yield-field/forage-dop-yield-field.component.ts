@@ -12,7 +12,8 @@ import { getCodeOptions } from "src/app/utils/code-table-utils";
     selector: 'forage-dop-yield-field',
     templateUrl: './forage-dop-yield-field.component.html',
     styleUrls: ['./forage-dop-yield-field.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ForageDopYieldFieldComponent implements OnInit {
     @Input() yieldField: DopYieldFieldForage;

@@ -1,4 +1,4 @@
-@import "../variables";
+@use "../variables" as var;
 
 .unauthorized-page {
   //height: $wf1-app-main-panel-container-height;
@@ -6,7 +6,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: $font-family-main;
+  font-family: var.$font-family-main;
 
   padding: 50px 50px;
   padding-left: var(--cirras-underwriting-gutter-space);

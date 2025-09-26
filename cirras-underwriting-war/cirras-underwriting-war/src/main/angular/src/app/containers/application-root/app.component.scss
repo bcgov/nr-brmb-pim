@@ -1,11 +1,11 @@
-@import 'src/styles/variables';
+@use 'src/styles/variables' as var;
 
 ::ng-deep  wf-application.cirras-application {
 
   &.device-desktop{
     .body .menu{
       min-height: calc(100vh - var(--wf-header-height) - 2px);
-      font-family: $font-family-main;
+      font-family: var.$font-family-main;
     }
   }
 

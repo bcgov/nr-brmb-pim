@@ -1,28 +1,28 @@
-@import 'src/styles/variables';
+@use 'src/styles/variables' as var;
 
 ::ng-deep .mat-mdc-dialog-container {
-    font-size: $font-size;
+    font-size: var.$font-size;
     padding: 0;
-    font-family: $font-family-main;
+    font-family: var.$font-family-main;
     min-width: 450px;
 
     h1:not(.not-dialog-title-bar) {
-        background-color: $colour-header-background;
-        color: $colour-white;
+        background-color: var.$colour-header-background;
+        color: var.$colour-white;
         padding: var(--cirras-underwriting-gutter-space);
         cursor: pointer;
         margin: 0;
         font-weight: normal;
         display: flex;
-        font-family: $font-family-main;
+        font-family: var.$font-family-main;
 
         .spinner-header {
             margin-left: var(--cirras-underwriting-gutter-space);
-            color: $colour-white;
+            color: var.$colour-white;
 
             .mat-mdc-progress-spinner circle,
             .mat-mdc-progress-spinner circle {
-                stroke: $colour-white;
+                stroke: var.$colour-white;
             }
         }
     }
@@ -30,7 +30,7 @@
     ::ng-deep .mat-mdc-dialog-actions {
         margin: 0;
         background-color: #F2F2F2;
-        border-top: solid 1px $colour-light-grey;
+        border-top: solid 1px var.$colour-light-grey;
         padding: var(--cirras-underwriting-gutter-space);
     }
 

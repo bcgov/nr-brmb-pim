@@ -1,7 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 

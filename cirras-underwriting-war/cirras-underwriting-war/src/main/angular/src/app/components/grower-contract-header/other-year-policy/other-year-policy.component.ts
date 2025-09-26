@@ -6,11 +6,12 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { ResourcesRoutes } from 'src/app/utils/constants';
 
 @Component({
-  selector: 'other-year-policy',
-  templateUrl: './other-year-policy.component.html',
-  styleUrl: './other-year-policy.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+    selector: 'other-year-policy',
+    templateUrl: './other-year-policy.component.html',
+    styleUrl: './other-year-policy.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class OtherYearPolicyComponent implements OnInit, OnChanges  {
 

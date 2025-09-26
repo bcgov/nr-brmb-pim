@@ -37,10 +37,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK 8
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '8'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Set up nodejs
