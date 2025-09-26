@@ -26,7 +26,8 @@ export interface DialogData {
 @Component({
     selector: 'uw-comments-button',
     templateUrl: './uw-comments-button.component.html',
-    styleUrls: ['./uw-comments-button.component.scss']
+    styleUrls: ['./uw-comments-button.component.scss'],
+    standalone: false
 })
 export class UwCommentsButtonComponent {
     @Input() underwritingCommentTypeCode: string;

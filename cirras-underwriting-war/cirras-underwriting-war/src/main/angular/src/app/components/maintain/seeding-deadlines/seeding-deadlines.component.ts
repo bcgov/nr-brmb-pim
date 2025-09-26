@@ -11,9 +11,10 @@ import { INSURANCE_PLAN } from 'src/app/utils/constants';
 import { CommodityTypeCodeListRsrc } from '@cirras/cirras-underwriting-api';
 
 @Component({
-  selector: 'seeding-deadlines',
-  templateUrl: './seeding-deadlines.component.html',
-  styleUrls: ['./seeding-deadlines.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss']
+    selector: 'seeding-deadlines',
+    templateUrl: './seeding-deadlines.component.html',
+    styleUrls: ['./seeding-deadlines.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss'],
+    standalone: false
 })
 export class SeedingDeadlinesComponent extends BaseComponent implements OnChanges  {
 

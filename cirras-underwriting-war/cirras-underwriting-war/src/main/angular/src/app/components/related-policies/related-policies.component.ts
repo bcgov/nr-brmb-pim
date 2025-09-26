@@ -7,11 +7,12 @@ import { Router } from '@angular/router';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'related-policies',
-  templateUrl: './related-policies.component.html',
-  styleUrls: ['./related-policies.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+    selector: 'related-policies',
+    templateUrl: './related-policies.component.html',
+    styleUrls: ['./related-policies.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 
 export class RelatedPoliciesComponent implements OnInit, OnChanges {

@@ -1,4 +1,4 @@
-@import 'src/styles/variables';
+@use 'src/styles/variables' as var;
 
 .page-width-container {
   display: block;
@@ -6,8 +6,7 @@
 }
 
 .cirras-underwriting-base-container {
-  justify-items: center;
-  font-size: $font-size;
+  font-size: var.$font-size;
   overflow: visible;
 
   .flex-y {

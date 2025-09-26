@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
 		<artifactId>cirras-underwriting-war-parent</artifactId>
-		<version>3.8.0</version>
+		<version>3.9.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>cirras-underwriting-war</artifactId>
 	<packaging>war</packaging>
@@ -15,8 +15,8 @@
 		<build.number>${env.BUILD_NUMBER}</build.number>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<dollar>$</dollar>
-		<node.version>v20.18.0</node.version>
-        <npm.version>10.9.0</npm.version>
+		<node.version>v22.18.0</node.version>
+		<npm.version>10.9.3</npm.version>
 		<node.path>${user.home}/.node</node.path>
 		<typescript.path>src/main/angular</typescript.path>
 		<npm.url>https://bwa.nrs.gov.bc.ca/int/artifactory/api/npm/nrs-virtual-npm/</npm.url>
@@ -32,7 +32,7 @@
 					<plugin>
 						<groupId>com.github.eirslett</groupId>
 						<artifactId>frontend-maven-plugin</artifactId>
-						<version>1.6</version>
+						<version>1.11.3</version>
 						<configuration>
 							<nodeVersion>${node.version}</nodeVersion>
 							<npmVersion>${npm.version}</npmVersion>
@@ -81,7 +81,7 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-war-plugin</artifactId>
-						<version>2.3</version>
+						<version>3.3.1</version>
 						<configuration>
 							<failOnMissingWebXml>false</failOnMissingWebXml>
 							<packagingExcludes>WEB-INF/web.xml</packagingExcludes>
@@ -104,7 +104,10 @@
 							<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.9.1</version>
+						<version>3.4.1</version>
+						<configuration>
+							<source>${java-target-version}</source>
+						</configuration>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -156,7 +159,7 @@
 					<plugin>
 						<groupId>com.github.eirslett</groupId>
 						<artifactId>frontend-maven-plugin</artifactId>
-						<version>1.6</version>
+						<version>1.11.3</version>
 						<configuration>
 							<nodeVersion>${node.version}</nodeVersion>
 							<npmVersion>${npm.version}</npmVersion>
@@ -167,16 +170,6 @@
 							</systemPropertyVariables>
 						</configuration>
 						<executions>
-							<!-- <execution>
-								<id>disable puppeteer download</id>
-								<phase>initialize</phase>
-								<goals>
-									<goal>npm</goal>
-								</goals>
-								<configuration>
-									<arguments>config set puppeteer_skip_chromium_download true -g</arguments>
-								</configuration>
-							</execution> -->
 							<execution>
 								<id>install node and npm</id>
 								<phase>initialize</phase>
@@ -212,16 +205,6 @@
 	</profiles>
 
 	<dependencies>
-
-		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>javax.ws.rs-api</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.glassfish.jersey.core</groupId>
-			<artifactId>jersey-common</artifactId>
-		</dependency>
 
 		<!-- WebADE  -->
 		<dependency>
@@ -266,10 +249,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-expression</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
 		</dependency>
 		<dependency>
@@ -279,10 +258,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -307,31 +282,19 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.tuckey</groupId>
 			<artifactId>urlrewritefilter</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
 			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-		</dependency>
-
-		<!-- JWT-->
-		<dependency>
-			<groupId>com.nimbusds</groupId>
-			<artifactId>nimbus-jose-jwt</artifactId>
-		</dependency>
-
-		<!-- encryption, required for JWE -->
-		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk15on</artifactId>
 		</dependency>
 
 		<!-- Logging -->
@@ -355,41 +318,6 @@
 	      <groupId>org.apache.logging.log4j</groupId>
 	      <artifactId>log4j-core</artifactId>
 	    </dependency>
-
-		<!-- ORACLE database driver -->
-		<dependency>
-			<groupId>com.oracle.weblogic</groupId>
-			<artifactId>ojdbc7</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- Jetty -->
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-jndi</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-plus</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
 
 	</dependencies>
 	<build>

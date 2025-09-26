@@ -5,13 +5,16 @@
 	<groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
 	<artifactId>cirras-underwriting-api-parent</artifactId>
 	<name>cirras-underwriting-api-parent</name>
-	<version>3.8.0</version>
+	<version>3.9.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java-source-version>17</java-source-version>
-		<java-target-version>17</java-target-version>
+		<java-source-version>21</java-source-version>
+		<java-target-version>21</java-target-version>
 		<dollar>$</dollar>
+		<spring.version>6.2.1</spring.version>
+		<wfone.common.version>1.5.0</wfone.common.version>
+		<jetty.version>12.1.0</jetty.version>
 	</properties>
 	<modules>
 		<module>cirras-underwriting-model</module>
@@ -40,7 +43,7 @@
 		    <dependency>
 				<groupId>ca.bc.gov.mal.cirras.policies</groupId>
 				<artifactId>cirras-policies-api-rest-client</artifactId>
-				<version>1.11.0</version>
+				<version>1.13.0-SNAPSHOT</version>
 			</dependency>
 
 			<!-- Wildfire OrgUnit -->
@@ -57,9 +60,33 @@
 			</dependency>
 			
 			<dependency>
-			   <groupId>com.fasterxml.jackson.dataformat</groupId>
-			   <artifactId>jackson-dataformat-yaml</artifactId>
-			   <version>2.19.0</version>
+			    <groupId>com.fasterxml.jackson.dataformat</groupId>
+			    <artifactId>jackson-dataformat-yaml</artifactId>
+			    <version>2.15.3</version>
+			</dependency>
+
+			<dependency>
+			    <groupId>com.fasterxml.jackson.core</groupId>
+			    <artifactId>jackson-databind</artifactId>
+			    <version>2.15.3</version>
+			</dependency>
+			
+			<dependency>
+			    <groupId>com.fasterxml.jackson.core</groupId>
+			    <artifactId>jackson-core</artifactId>
+			    <version>2.15.3</version>
+			</dependency>
+
+			<dependency>
+			    <groupId>com.fasterxml.jackson.dataformat</groupId>
+			    <artifactId>jackson-dataformat-xml</artifactId>
+			    <version>2.15.3</version>
+			</dependency>
+
+			<dependency>
+			    <groupId>com.fasterxml.jackson.core</groupId>
+			    <artifactId>jackson-annotations</artifactId>
+			    <version>2.15.3</version>
 			</dependency>
 
 			<dependency>
@@ -76,29 +103,70 @@
 
 			<dependency>
 				<groupId>org.springframework</groupId>
+				<artifactId>spring-aop</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
 				<artifactId>spring-context</artifactId>
-				<version>5.3.26</version>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-expression</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jcl</artifactId>
+				<version>${spring.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-jdbc</artifactId>
-				<version>5.3.26</version>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-tx</artifactId>
+				<version>${spring.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
-				<version>5.3.26</version>
+				<version>${spring.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-webmvc</artifactId>
-				<version>5.3.26</version>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webflux</artifactId>
+				<version>${spring.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-config</artifactId>
-				<version>5.3.2.RELEASE</version>
+				<version>${spring.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+
 
 			<dependency>
 				<groupId>com.oracle.weblogic</groupId>
@@ -112,70 +180,106 @@
 			</dependency>
 
 			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>javax.servlet-api</artifactId>
-				<version>3.1.0</version>
+			  <groupId>jakarta.servlet</groupId>
+			  <artifactId>jakarta.servlet-api</artifactId>
+			  <version>6.0.0</version>
+			</dependency>
+
+			<dependency>
+			    <groupId>jakarta.xml.bind</groupId>
+			    <artifactId>jakarta.xml.bind-api</artifactId>
+			    <version>4.0.2</version> 
+			</dependency>
+
+			<dependency>
+		      <groupId>org.glassfish.jaxb</groupId>
+		      <artifactId>jaxb-runtime</artifactId>
+		      <version>4.0.2</version>
+			</dependency>
+
+			<dependency>
+			    <groupId>jakarta.el</groupId>
+			    <artifactId>jakarta.el-api</artifactId>
+			    <version>5.0.1</version>
+			</dependency>
+			
+			<dependency>
+			    <groupId>org.glassfish</groupId>
+			    <artifactId>jakarta.el</artifactId>
+			    <version>5.0.0-M1</version>
+			</dependency>	
+
+			<dependency>
+			    <groupId>io.swagger.core.v3</groupId>
+			    <artifactId>swagger-jaxrs2-jakarta</artifactId>
+			    <version>2.2.20</version>
+			</dependency>
+
+			<dependency>
+			    <groupId>jakarta.ws.rs</groupId>
+			    <artifactId>jakarta.ws.rs-api</artifactId>
+			    <version>3.1.0</version>
 			</dependency>
 
 			<dependency>
 				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
 				<artifactId>wfone-common-model</artifactId>
-				<version>1.4.1-SNAPSHOT</version>
+				<version>${wfone.common.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
 				<artifactId>wfone-common-rest-common</artifactId>
-				<version>1.4.1-SNAPSHOT</version>
+				<version>${wfone.common.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
 				<artifactId>wfone-common-rest-client</artifactId>
-				<version>1.4.1-SNAPSHOT</version>
+				<version>${wfone.common.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
 				<artifactId>wfone-common-persistence</artifactId>
-				<version>1.4.1-SNAPSHOT</version>
+				<version>${wfone.common.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
 				<artifactId>wfone-common-utils</artifactId>
-				<version>1.4.1-SNAPSHOT</version>
+				<version>${wfone.common.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
 				<artifactId>wfone-common-service-api</artifactId>
-				<version>1.4.1-SNAPSHOT</version>
+				<version>${wfone.common.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
 				<artifactId>wfone-common-code-persistence</artifactId>
-				<version>1.4.1-SNAPSHOT</version>
+				<version>${wfone.common.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
 				<artifactId>wfone-common-webade</artifactId>
-				<version>1.4.1-SNAPSHOT</version>
+				<version>${wfone.common.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
 				<artifactId>wfone-common-webade-oauth2-test</artifactId>
-				<version>1.4.1-SNAPSHOT</version>
+				<version>${wfone.common.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
 				<artifactId>wfone-common-rest-endpoints</artifactId>
-				<version>1.4.1-SNAPSHOT</version>
+				<version>${wfone.common.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
 				<artifactId>wfone-common-code-endpoints</artifactId>
-				<version>1.4.1-SNAPSHOT</version>
+				<version>${wfone.common.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
 				<artifactId>wfone-common-checkhealth</artifactId>
-				<version>1.4.1-SNAPSHOT</version>
+				<version>${wfone.common.version}</version>
 			</dependency>
 
 			<!-- Logging -->
@@ -187,50 +291,63 @@
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-slf4j-impl</artifactId>
-				<version>2.17.2</version>
+				<version>2.24.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-api</artifactId>
-				<version>2.17.2</version>
+				<version>2.24.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-core</artifactId>
-				<version>2.17.2</version>
+				<version>2.24.2</version>
 			</dependency>
 
 			<!-- Jetty -->
 			<dependency>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-server</artifactId>
-				<version>9.4.28.v20200408</version>
+				<version>${jetty.version}</version>
+			</dependency>
+
+			<dependency>
+			    <groupId>org.eclipse.jetty.ee10</groupId>
+			    <artifactId>jetty-ee10-annotations</artifactId>
+			    <version>${jetty.version}</version>
+			</dependency>
+
+			<dependency>
+			    <groupId>org.eclipse.jetty.ee10</groupId>
+			    <artifactId>jetty-ee10-webapp</artifactId>
+			    <version>${jetty.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-annotations</artifactId>
-				<version>9.4.28.v20200408</version>
+			    <groupId>org.eclipse.jetty.ee10</groupId>
+			    <artifactId>jetty-ee10-jndi</artifactId>
+			    <version>${jetty.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-webapp</artifactId>
-				<version>9.4.28.v20200408</version>
+			    <groupId>org.eclipse.jetty.ee10</groupId>
+			    <artifactId>jetty-ee10-plus</artifactId>
+			    <version>${jetty.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-jndi</artifactId>
-				<version>9.4.28.v20200408</version>
+			    <groupId>org.eclipse.jetty.ee10</groupId>
+			    <artifactId>jetty-ee10-apache-jsp</artifactId>
+			    <version>${jetty.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-plus</artifactId>
-				<version>9.4.28.v20200408</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-jsp</artifactId>
-				<version>9.3.0.M1</version>
-			</dependency>
+
+		  <dependency>
+		      <groupId>org.glassfish.jersey.ext</groupId>
+		      <artifactId>jersey-spring6</artifactId>
+		      <version>4.0.0-M2</version>
+		  </dependency>
+		  <dependency>
+		      <groupId>org.glassfish.jersey.core</groupId>
+		      <artifactId>jersey-server</artifactId>
+		      <version>4.0.0-M2</version>
+		  </dependency>
 
 			<dependency>
 				<groupId>junit</groupId>

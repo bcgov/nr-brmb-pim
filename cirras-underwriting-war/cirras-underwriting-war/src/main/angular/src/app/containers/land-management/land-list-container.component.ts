@@ -24,7 +24,8 @@ import { LAND_SEARCH_COMPONENT_ID } from "src/app/store/land-management/land-man
                 [loadState]="loadState$ | async"
                 [errorState]="errorState$ | async"
         ></cirras-land-list>`,
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 
 export class LandListContainer extends BaseContainer {

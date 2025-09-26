@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as var;
 
 .mat-checkbox {
     height: 30px;
@@ -6,8 +6,8 @@
 // mat-checkbox.mat-mdc-checkbox.mat-accent
 mat-checkbox.mat-mdc-checkbox.mat-accent, 
 mat-selection-list .mat-mdc-list-option {
-    font-family: $font-family-main;
-    font-size: $font-size;
+    font-family: var.$font-family-main;
+    font-size: var.$font-size;
 
     .mdc-checkbox {
         padding-left: 0;
@@ -29,8 +29,8 @@ mat-selection-list .mat-mdc-list-option {
             &:not(:checked) {
                 &~.mdc-checkbox__background {
                     left: 0;
-                    background-color: $colour-white;
-                    border: 1px solid $colour-light-grey;
+                    background-color: var.$colour-white;
+                    border: 1px solid var.$colour-light-grey;
                 } 
             }
         }   

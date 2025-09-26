@@ -18,7 +18,8 @@ import { MANAGE_LEGAL_LAND_COMPONENT_ID } from "src/app/store/land-management/la
                 [loadState]="loadState$ | async"
                 [errorState]="errorState$ | async"
         ></manage-land>`,
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 
 export class ManageLandComponentContainer extends BaseContainer {
