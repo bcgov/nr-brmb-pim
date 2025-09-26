@@ -8,6 +8,7 @@
 		<id property="fieldId" column="field_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 
 		<result property="fieldLabel" column="field_label" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="location" column="location" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="activeFromCropYear" column="active_from_crop_year" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="activeToCropYear" column="active_to_crop_year" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -25,6 +26,7 @@
     <sql id="selectColumns">
 		SELECT  field_id,
 				field_label,
+				location,
 				active_from_crop_year,
 				active_to_crop_year,
 				create_user, 
@@ -140,6 +142,7 @@
 		INSERT INTO field (
 			field_id,
 			field_label,
+			location,
 			active_from_crop_year,
 			active_to_crop_year,
 			create_user,
@@ -150,6 +153,7 @@
 		VALUES (
 			#{fieldId},
 			#{dto.fieldLabel, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.location, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{dto.activeFromCropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.activeToCropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
@@ -164,6 +168,7 @@
 		INSERT INTO field (
 			field_id,
 			field_label,
+			location,
 			active_from_crop_year,
 			active_to_crop_year,
 			create_user,
@@ -174,6 +179,7 @@
 		VALUES (
 			#{dto.fieldId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.fieldLabel, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.location, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{dto.activeFromCropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.activeToCropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
@@ -185,7 +191,8 @@
 
 	<update id="update">
 		UPDATE field SET
-			field_label = #{dto.fieldLabel, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			field_label = #{dto.fieldLabel, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			location = #{dto.location, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
 			active_from_crop_year = #{dto.activeFromCropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
 			active_to_crop_year = #{dto.activeToCropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
 			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},

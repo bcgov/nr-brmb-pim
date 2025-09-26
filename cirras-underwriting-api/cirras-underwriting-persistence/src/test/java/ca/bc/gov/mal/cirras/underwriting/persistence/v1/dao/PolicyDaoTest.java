@@ -452,6 +452,7 @@ public class PolicyDaoTest {
 		cfdDto.setAnnualFieldDetailId(annualFieldDetailId);
 		cfdDto.setContractedFieldDetailId(contractedFieldDetailId);
 		cfdDto.setDisplayOrder(1);
+		cfdDto.setIsLeasedInd(false);
 		cfdDto.setGrowerContractYearId(growerContractYearId);
 		
 		cfdDao.insertDataSync(cfdDto, userId);

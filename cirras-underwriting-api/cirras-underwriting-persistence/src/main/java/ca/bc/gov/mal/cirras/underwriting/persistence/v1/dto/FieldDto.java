@@ -18,6 +18,7 @@ public class FieldDto extends BaseDto<FieldDto> {
 
 	private Integer fieldId;
 	private String fieldLabel;
+	private String location;
 	private Integer activeFromCropYear;
 	private Integer activeToCropYear;
 	private String createUser;
@@ -41,6 +42,7 @@ public class FieldDto extends BaseDto<FieldDto> {
 
 		this.fieldId = dto.fieldId;
 		this.fieldLabel = dto.fieldLabel;
+		this.location = dto.location;
 		this.activeFromCropYear = dto.activeFromCropYear;
 		this.activeToCropYear = dto.activeToCropYear;
 		this.createUser = dto.createUser;
@@ -78,6 +80,7 @@ public class FieldDto extends BaseDto<FieldDto> {
 			DtoUtils dtoUtils = new DtoUtils(getLogger());
 			result = result&&dtoUtils.equals("fieldId", fieldId, other.fieldId);
 			result = result&&dtoUtils.equals("fieldLabel", fieldLabel, other.fieldLabel);
+			result = result&&dtoUtils.equals("location", location, other.location);
 			result = result&&dtoUtils.equals("activeFromCropYear", activeFromCropYear, other.activeFromCropYear);
 			result = result&&dtoUtils.equals("activeToCropYear", activeToCropYear, other.activeToCropYear);
 		}
@@ -109,6 +112,14 @@ public class FieldDto extends BaseDto<FieldDto> {
 
 	public void setFieldLabel(String fieldLabel) {
 		this.fieldLabel = fieldLabel;
+	}
+	
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
  	public Integer getActiveFromCropYear() {

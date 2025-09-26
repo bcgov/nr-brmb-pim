@@ -29,6 +29,7 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 	private String fieldLabel;
 	private String otherLegalDescription;
 	private Integer displayOrder;
+	private Boolean isLeasedInd;
 	private Integer cropYear;
 	private Integer insurancePlanId;
 	
@@ -61,6 +62,7 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 		this.fieldLabel = dto.fieldLabel;
 		this.otherLegalDescription = dto.otherLegalDescription;
 		this.displayOrder = dto.displayOrder;
+		this.isLeasedInd = dto.isLeasedInd;
 		this.cropYear = dto.cropYear;
 		this.insurancePlanId = dto.insurancePlanId;
 		this.insurancePlanName = dto.insurancePlanName;
@@ -112,7 +114,7 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 			result = result&&dtoUtils.equals("annualFieldDetailId", annualFieldDetailId, other.annualFieldDetailId);
 			result = result&&dtoUtils.equals("growerContractYearId", growerContractYearId, other.growerContractYearId);
 			result = result&&dtoUtils.equals("displayOrder", displayOrder, other.displayOrder);
-			
+			result = result&&dtoUtils.equals("isLeasedInd", isLeasedInd, other.isLeasedInd);
 		}
 		
 		return result;
@@ -189,6 +191,14 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 	}
 	public void setDisplayOrder(Integer displayOrder) {
 		this.displayOrder = displayOrder;
+	}
+
+	public Boolean getIsLeasedInd() {
+		return isLeasedInd;
+	}
+
+	public void setIsLeasedInd(Boolean isLeasedInd) {
+		this.isLeasedInd = isLeasedInd;
 	}
 
 	public Integer getCropYear() {

@@ -56,6 +56,8 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.LegalLandFieldXrefDa
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.LegalLandRiskAreaXrefDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.OfficeDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InsurancePlanDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryBerriesDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryContractCommodityBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.PolicyDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.PolicyStatusCodeDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ProductDao;
@@ -108,6 +110,8 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.LegalLandFie
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.LegalLandRiskAreaXrefDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.OfficeDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.InsurancePlanDaoImpl;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.InventoryBerriesDaoImpl;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.InventoryContractCommodityBerriesDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.PolicyDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.PolicyStatusCodeDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.ProductDaoImpl;
@@ -201,6 +205,11 @@ public class PersistenceSpringConfig {
 	public InventorySeededForageDao inventorySeededForageDao() { 
 		return new InventorySeededForageDaoImpl(); 
 	}
+	
+	@Bean
+	public InventoryBerriesDao inventoryBerriesDao() { 
+		return new InventoryBerriesDaoImpl(); 
+	}
 
 	@Bean
 	public InventoryFieldDao inventoryFieldDao() { 
@@ -217,6 +226,11 @@ public class PersistenceSpringConfig {
 		return new InventoryContractCommodityDaoImpl(); 
 	}
 
+	@Bean
+	public InventoryContractCommodityBerriesDao inventoryContractCommodityBerriesDao() { 
+		return new InventoryContractCommodityBerriesDaoImpl(); 
+	}
+	
 	@Bean
 	public InventoryContractDao inventoryContractDao() { 
 		return new InventoryContractDaoImpl(); 
