@@ -1,4 +1,4 @@
-@import '../../../../styles/variables';
+@use '../../../../styles/variables' as var;
 
   .button-mat-icon {
     margin-right: 4px;
@@ -39,7 +39,7 @@
   }
 
   ::ng-deep .mat-mdc-radio-button .mat-internal-form-field {
-    color: $colour-dark-grey !important;
+    color: var.$colour-dark-grey !important;
   }
 }
 

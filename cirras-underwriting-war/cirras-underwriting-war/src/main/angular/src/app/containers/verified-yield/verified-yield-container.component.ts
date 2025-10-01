@@ -27,8 +27,9 @@ import { selectCropCommodityList, selectVerifiedYieldContract } from "src/app/st
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
             [isUnsaved]="isUnsaved$ | async"
-        ></verified-yield>`, 
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+        ></verified-yield>`,
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 export class VerifiedYieldContainer extends BaseContainer implements OnInit {
 

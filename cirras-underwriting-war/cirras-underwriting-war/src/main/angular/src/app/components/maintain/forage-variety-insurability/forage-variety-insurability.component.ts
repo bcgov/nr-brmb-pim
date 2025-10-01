@@ -11,9 +11,10 @@ import { PlantInsurabilityComponent } from './plant-insurability/plant-insurabil
 import { areNotEqual } from 'src/app/utils';
 
 @Component({
-  selector: 'forage-variety-insurability',
-  templateUrl: './forage-variety-insurability.component.html',
-  styleUrls: ['./forage-variety-insurability.component.scss']
+    selector: 'forage-variety-insurability',
+    templateUrl: './forage-variety-insurability.component.html',
+    styleUrls: ['./forage-variety-insurability.component.scss'],
+    standalone: false
 })
 export class ForageVarietyInsurabilityComponent  extends BaseComponent implements OnChanges  {
 

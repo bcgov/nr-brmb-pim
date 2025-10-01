@@ -1,6 +1,6 @@
 package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.parameters.validation.constraints;
 
-import javax.validation.constraints.Pattern;
+import jakarta.validation.constraints.Pattern;
 
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.parameters.validation.Errors;
 

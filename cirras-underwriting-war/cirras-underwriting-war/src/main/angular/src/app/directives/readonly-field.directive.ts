@@ -2,7 +2,8 @@ import {ChangeDetectorRef, Directive, ElementRef, Input, OnChanges, Renderer2, S
 import {makeFormFieldReadonly} from "../utils";
 
 @Directive({
-  selector: '[appWFReadonlyField]'
+    selector: '[appWFReadonlyField]',
+    standalone: false
 })
 export class ReadonlyFieldDirective implements OnChanges {
   @Input() appWFReadonlyField: string;

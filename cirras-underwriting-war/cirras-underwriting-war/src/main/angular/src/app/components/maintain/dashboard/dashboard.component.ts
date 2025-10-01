@@ -6,9 +6,10 @@ import { addUwYear, loadUwYears} from 'src/app/store/maintenance/maintenance.act
 import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
 
 @Component({
-  selector: 'cirras-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+    selector: 'cirras-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.scss'],
+    standalone: false
 })
 export class DashboardComponent  extends BaseComponent implements OnChanges   {
 

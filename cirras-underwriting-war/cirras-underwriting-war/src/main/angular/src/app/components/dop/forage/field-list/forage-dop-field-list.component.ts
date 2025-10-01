@@ -6,7 +6,8 @@ import { AnnualField } from "src/app/conversion/models";
     selector: 'forage-dop-field-list',
     templateUrl: './forage-dop-field-list.component.html',
     styleUrls: ['./forage-dop-field-list.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ForageDopFieldListComponent {
     @Input() fields: Array<AnnualField>;

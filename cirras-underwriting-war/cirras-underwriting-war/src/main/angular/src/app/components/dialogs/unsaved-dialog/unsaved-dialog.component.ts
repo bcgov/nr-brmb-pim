@@ -6,7 +6,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
     selector: 'base-unsaved-dialog',
     templateUrl: './unsaved-dialog.component.html',
     styleUrls: ['../../common/base/base.component.scss', './unsaved-dialog.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UnsavedDialogComponent {
     titleLabel = "Unsaved Changes";

@@ -23,7 +23,8 @@ import { DecimalPipe } from "@angular/common";
 @Component({
     selector: "cirras-underwriting-unauthorized-page",
     templateUrl: "./unauthorized-page.component.html",
-    styleUrls: ["./unauthorized-page.component.scss"]
+    styleUrls: ["./unauthorized-page.component.scss"],
+    standalone: false
 }) 
 export class UnauthorizedPageComponent extends BaseComponent {
   constructor(protected router: Router,

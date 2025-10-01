@@ -7,7 +7,8 @@ import {Subscription} from "rxjs";
 import moment, { Moment } from "moment";
 
 @Directive({
-  selector: '[appWFDateMask]'
+    selector: '[appWFDateMask]',
+    standalone: false
 })
 export class DateMaskDirective implements OnDestroy {
   @Input() public formControl: UntypedFormControl;

@@ -13,10 +13,11 @@ import { ErrorState, LoadState } from "src/app/store/application/application.sta
 
 
 @Component({
-  selector: 'cirras-underwriting-inventory-selector',
-  templateUrl: './inventory-selector.component.html',
-  styleUrls: ['./inventory-selector.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'cirras-underwriting-inventory-selector',
+    templateUrl: './inventory-selector.component.html',
+    styleUrls: ['./inventory-selector.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class InventorySelectorComponent implements OnInit{ 
 

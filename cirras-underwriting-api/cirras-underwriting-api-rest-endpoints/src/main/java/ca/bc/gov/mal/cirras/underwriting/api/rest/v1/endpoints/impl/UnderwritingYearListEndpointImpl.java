@@ -2,9 +2,9 @@ package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl;
 
 import java.net.URI;
 
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.GenericEntity;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

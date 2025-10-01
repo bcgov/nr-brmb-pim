@@ -14,7 +14,8 @@ import {arrayEquals} from "../utils";
 declare var $: any;
 
 @Directive({
-    selector: '[appWFMultiSelect]'
+    selector: '[appWFMultiSelect]',
+    standalone: false
 })
 export class MultiSelectDirective implements AfterViewInit, OnChanges {
     @Input() appWFPlaceholder?: string;

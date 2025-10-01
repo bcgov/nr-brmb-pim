@@ -3,11 +3,12 @@ import { UntypedFormArray } from '@angular/forms';
 import { DopYieldFieldRollupForage } from 'src/app/conversion/models-yield';
 
 @Component({
-  selector: 'forage-dop-yield-summary-list',
-  templateUrl: './forage-dop-yield-summary-list.component.html',
-  styleUrls: ['./forage-dop-yield-summary-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+    selector: 'forage-dop-yield-summary-list',
+    templateUrl: './forage-dop-yield-summary-list.component.html',
+    styleUrls: ['./forage-dop-yield-summary-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 
 

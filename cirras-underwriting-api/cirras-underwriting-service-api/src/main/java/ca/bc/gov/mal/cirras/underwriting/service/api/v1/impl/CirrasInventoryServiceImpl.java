@@ -2532,7 +2532,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 						}
 						
 						ca.bc.gov.mal.cirras.policies.api.rest.v1.resource.EndpointsRsrc endpoints = cirrasPolicyService.getTopLevelEndpoints();
-						ProductListRsrc productList = cirrasPolicyService.getProducts(endpoints, transferFromPolicyId.toString());
+						ProductListRsrc productList = cirrasPolicyService.getProducts(endpoints, transferFromPolicyId.toString(), "false", null, null);
 	
 						if (productList.getCollection().size() > 0) {
 							errors.add(AddFieldValidation.TRANSFER_POLICY_HAS_PRODUCTS_MSG);
@@ -2583,7 +2583,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 			// Remove from Policy: Warning: Has Products.
 			ca.bc.gov.mal.cirras.policies.api.rest.v1.resource.EndpointsRsrc endpoints = cirrasPolicyService.getTopLevelEndpoints();
-			ProductListRsrc productList = cirrasPolicyService.getProducts(endpoints, policyId.toString());
+			ProductListRsrc productList = cirrasPolicyService.getProducts(endpoints, policyId.toString(), "false", null, null);
 
 			if (productList.getCollection().size() > 0) {
 				removeFromPolicyWarnings.add(RemoveFieldValidation.POLICY_HAS_PRODUCTS_MSG);

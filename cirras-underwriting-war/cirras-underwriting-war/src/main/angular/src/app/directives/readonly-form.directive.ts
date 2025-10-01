@@ -2,7 +2,8 @@ import {AfterViewInit, Directive, ElementRef, Input, Renderer2} from "@angular/c
 import {makeFormFieldReadonly} from "../utils";
 
 @Directive({
-  selector: '[appWFReadonlyForm]'
+    selector: '[appWFReadonlyForm]',
+    standalone: false
 })
 export class ReadonlyFormDirective implements AfterViewInit {
   @Input() appWFReadonlyForm: string;

@@ -10,7 +10,8 @@ import { UW_COMMENT_TYPE_CODE } from "src/app/utils/constants";
 @Component({
     selector: 'uw-comments-dialog',
     templateUrl: './uw-comments-dialog.component.html',
-    styleUrls: ['./uw-comments-dialog.component.scss']
+    styleUrls: ['./uw-comments-dialog.component.scss'],
+    standalone: false
 })
 export class UwCommentsDialogComponent {
     dialogType = DIALOG_TYPE.INFO;

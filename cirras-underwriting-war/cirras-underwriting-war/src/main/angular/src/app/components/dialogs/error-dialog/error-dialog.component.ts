@@ -7,7 +7,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
     selector: 'base-error-dialog',
     templateUrl: './error-dialog.component.html',
     styleUrls: ['../../common/base/base.component.scss', './error-dialog.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ErrorDialogComponent {
     titleLabel = "Error";

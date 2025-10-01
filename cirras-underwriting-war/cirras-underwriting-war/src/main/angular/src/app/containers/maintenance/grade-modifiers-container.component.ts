@@ -28,8 +28,9 @@ import { selectCropCommodityList } from "src/app/store/crop-commodity/crop-commo
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
             [isUnsaved]="isUnsaved$ | async"
-        ></grade-modifiers>`, 
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+        ></grade-modifiers>`,
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 export class GradeModifiersContainer extends BaseContainer {
 
