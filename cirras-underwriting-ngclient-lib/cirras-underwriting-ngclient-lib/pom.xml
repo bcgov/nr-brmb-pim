@@ -89,7 +89,7 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>npm install</id>
+                        <id>npm install --force</id>
                         <phase>initialize</phase>
                         <goals>
                             <goal>npm</goal>
