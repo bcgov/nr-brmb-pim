@@ -15,6 +15,7 @@
   },
   "private": true,
   "devDependencies": {
+    "@angular-devkit/build-angular": "19.2.15",
     "@angular/build": "19.2.15",
     "@angular/cli": "19.2.15",
     "@angular/common": "19.2.14",
