@@ -491,6 +491,10 @@ export function setHttpHeaders(authToken) {
 
           resourceRoute = ResourcesRoutes.INVENTORY_FORAGE
           
+        } else if (item.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+
+          resourceRoute = ResourcesRoutes.INVENTORY_BERRIES
+          
         }
         
         router.navigate([resourceRoute, 

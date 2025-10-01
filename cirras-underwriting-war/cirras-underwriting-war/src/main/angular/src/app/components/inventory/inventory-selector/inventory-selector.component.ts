@@ -104,6 +104,10 @@ export class InventorySelectorComponent implements OnInit{
       return("forage" )
     }
 
+    if (currentUrlPath.indexOf ( ResourcesRoutes.INVENTORY_BERRIES) > -1 ) {
+      return("berries" )
+    }
+
   }
 
 }
