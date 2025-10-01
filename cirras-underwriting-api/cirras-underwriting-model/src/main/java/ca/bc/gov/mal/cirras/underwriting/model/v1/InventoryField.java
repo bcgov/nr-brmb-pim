@@ -28,6 +28,7 @@ public class InventoryField implements Serializable {
 
 
 	private InventoryUnseeded inventoryUnseeded;
+	private InventoryBerries inventoryBerries;
 
 	private LinkedPlanting linkedPlanting;
 
@@ -164,6 +165,13 @@ public class InventoryField implements Serializable {
 	}
 	public void setUnderseededInventorySeededForageGuid(String underseededInventorySeededForageGuid) {
 		this.underseededInventorySeededForageGuid = underseededInventorySeededForageGuid;
+	}
+	
+	public InventoryBerries getInventoryBerries() {
+		return inventoryBerries;
+	}
+	public void setInventoryBerries(InventoryBerries inventoryBerries) {
+		this.inventoryBerries = inventoryBerries;
 	}
 
 }
