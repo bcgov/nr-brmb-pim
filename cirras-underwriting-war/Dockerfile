@@ -1,4 +1,4 @@
-FROM tomcat:10.1.44-jre21
+FROM tomcat:10.1.45-jre21
 
 COPY ./cirras-underwriting-war/target/cirras-underwriting-war-3.9.0-SNAPSHOT.war .
 COPY ./deploy-tools/log4j2.xml .
