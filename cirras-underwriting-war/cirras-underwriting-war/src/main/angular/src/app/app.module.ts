@@ -146,6 +146,7 @@ import { VerifiedYieldSummaryComponent } from "./components/verified-yield/summa
 import { VerifiedYieldGrainBasketComponent } from "./components/verified-yield/grain-basket/verified-yield-grain-basket.component";
 import { UserSettingsComponent } from "./components/maintain/user-settings/user-settings.component";
 import { UserSettingsContainer } from "./containers/maintenance/user-settings-container";
+import { BerriesInventoryComponent } from "./components/inventory/berries/berries-inventory.component";
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -207,6 +208,7 @@ if (!environment.production || !environment.restrict_imports) {
         GrainDopComponent,
         GrainDopContainer,
         ForageInventoryComponent,
+        BerriesInventoryComponent,
         LandListComponent,
         LandListContainer,
         ManageLandComponent,

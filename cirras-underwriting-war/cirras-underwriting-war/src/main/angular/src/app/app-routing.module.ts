@@ -50,6 +50,16 @@ const routesDesktop: Routes = [
         },
         ] 
       },
+    
+      { path: R.INVENTORY_BERRIES, 
+        children: [
+        { 
+          path: ':insurancePlanId/:cropYear/:policyId/:inventoryContractGuid', component: InventoryContractContainer, data: {scopes: [ROUTE_SCOPES.INVENTORY]},
+          canActivate: [ResourcesAuthGuard],
+          canDeactivate: [DeactivateGuard]
+        },
+        ] 
+      },
 
     { path: R.DOP_GRAIN, 
       children: [
