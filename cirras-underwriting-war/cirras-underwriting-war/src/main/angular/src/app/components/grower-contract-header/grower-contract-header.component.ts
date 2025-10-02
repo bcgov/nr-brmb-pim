@@ -69,7 +69,8 @@ export class GrowerContractHeaderComponent {
 
     if ( linkType == 'seeded' && 
         ( routerUrl.indexOf(ResourcesRoutes.INVENTORY_GRAIN_SEEDED) > -1 || 
-          routerUrl.indexOf(ResourcesRoutes.INVENTORY_FORAGE) > -1  
+          routerUrl.indexOf(ResourcesRoutes.INVENTORY_FORAGE) > -1  ||
+          routerUrl.indexOf(ResourcesRoutes.INVENTORY_BERRIES) > -1 
         )) {
         return true
     } 
@@ -88,15 +89,22 @@ export class GrowerContractHeaderComponent {
     return false
   }
 
+  setSeededInventoryText(){
+    if (this.growerContract && this.growerContract.insurancePlanId == INSURANCE_PLAN.GRAIN ){
+      return "Seeded Inventory"
+    } else {
+      return "Inventory"
+    }
+  }
   setStyles(){
 
     let styles = { // default - for Grain
       'grid-template-columns':  '26px 154px 35px 26px 134px 35px 26px 190px 35px 26px 110px auto'
     }
 
-    if (this.growerContract && this.growerContract.insurancePlanId == INSURANCE_PLAN.FORAGE ) {
+    if (this.growerContract && this.growerContract.insurancePlanId !== INSURANCE_PLAN.GRAIN ) {
       styles = {
-        'grid-template-columns':  '26px 134px 35px 26px 200px 35px 26px 110px auto'
+        'grid-template-columns':  '26px 80px 35px 26px 200px 35px 26px 110px auto'
       }
     }
 
@@ -124,7 +132,8 @@ export class GrowerContractHeaderComponent {
 
     // seeded inventory for Grain and Forage background colors
     if (routerUrl.indexOf(ResourcesRoutes.INVENTORY_GRAIN_SEEDED) > -1 ||
-        routerUrl.indexOf(ResourcesRoutes.INVENTORY_FORAGE) > -1) {
+        routerUrl.indexOf(ResourcesRoutes.INVENTORY_FORAGE) > -1 || 
+      routerUrl.indexOf(ResourcesRoutes.INVENTORY_BERRIES) > -1) {
 
       styles = {  
         'border': '1px solid #B8CFB8',
