@@ -10,7 +10,10 @@ public interface Field extends Serializable {
  	public String getFieldLabel();
 	public void setFieldLabel(String fieldLabel);
  
- 	public Integer getActiveFromCropYear();
+	public String getFieldLocation();
+	public void setFieldLocation(String fieldLocation);
+
+	public Integer getActiveFromCropYear();
 	public void setActiveFromCropYear(Integer activeFromCropYear);
  
  	public Integer getActiveToCropYear();

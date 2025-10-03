@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryCoverageTotalForage;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 
@@ -46,6 +47,7 @@ public class InventoryContractRsrc extends BaseResource implements InventoryCont
 
 	private List<InventoryContractCommodity> commodities = new ArrayList<InventoryContractCommodity>();
 	private List<InventoryCoverageTotalForage> inventoryCoverageTotalForages = new ArrayList<InventoryCoverageTotalForage>();
+	private List<InventoryContractCommodityBerries> inventoryContractCommodityBerries = new ArrayList<InventoryContractCommodityBerries>();
 	private List<AnnualFieldRsrc> fields = new ArrayList<AnnualFieldRsrc>();
 
 	public String getInventoryContractGuid() {
@@ -178,6 +180,13 @@ public class InventoryContractRsrc extends BaseResource implements InventoryCont
 	public void setInventoryCoverageTotalForages(List<InventoryCoverageTotalForage> inventoryCoverageTotalForages) {
 		this.inventoryCoverageTotalForages = inventoryCoverageTotalForages;
 	}
+
+	public List<InventoryContractCommodityBerries> getContractCommodityBerries() {
+		return inventoryContractCommodityBerries;
+	}
+	public void setContractCommodityBerries(List<InventoryContractCommodityBerries> inventoryContractCommodityBerries) {
+		this.inventoryContractCommodityBerries = inventoryContractCommodityBerries;
+	}	
 
 	public List<AnnualFieldRsrc> getFields() {
 		return fields;
