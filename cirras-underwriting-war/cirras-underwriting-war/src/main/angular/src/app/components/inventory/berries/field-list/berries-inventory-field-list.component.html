@@ -1,0 +1,24 @@
+<div class="plcy-inv-field-box">
+    <div class="inventory-header border-left" style="width:164px;">Field Address</div>
+    <div class="inventory-header" style="width:156px">Legal Description</div>
+    <div class="inventory-header" style="width:140px">Owned or Leased</div>
+    <div class="inventory-header" style="width:180px">Planted Year</div>
+    <div class="inventory-header" style="width:80px">Acres</div>
+    <div class="inventory-header" style="width:140px">Quantity Insurable</div>
+    <div class="inventory-header" style="width:100px">Variety</div>
+    <div class="inventory-header" style="width:80px">Row <br/>Spacing</div>  
+    <div class="inventory-header" style="width:140px">Plant <br/> Spacing</div>
+    <div class="inventory-header" style="width:140px">Total Plants</div>
+    <div class="inventory-header" style="width:140px">Plant Insurable</div>
+
+    <div class="inventory-header" style="width:80px;">Hide on Printout</div>
+    <div class="inventory-header" style="width:80px;">Manage Planting</div>
+    <div class="inventory-header" style="width:75px;">Manage Field</div>
+</div>
+
+<div class="plcy-inv-fld-tbl-inner-wrapper flex-y-grow">
+    <div class="plcy-inv-field-container-yellow">
+        <berries-inventory-field *ngFor="let field of fields" [field]="field"
+            [fieldsFormArray]="fieldsFormArray"></berries-inventory-field>
+    </div>
+</div>

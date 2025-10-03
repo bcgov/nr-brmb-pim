@@ -1,6 +1,6 @@
 import { ChangeDetectorRef } from "@angular/core"
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl } from "@angular/forms"
-import { InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
+import { InventoryField, InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
 import { AnnualField, CropVarietyCommodityType } from "src/app/conversion/models"
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from "src/app/utils/constants"
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
@@ -743,4 +743,34 @@ export function linkedPlantingTooltipCommon(fieldId, inventoryFieldGuid, invento
     }
   }
   return tooltip
+}
+
+export function addSimplePlantingObject(pltg: InventoryField, deletedByUserInd,
+                                        inventoryUnseeded: UntypedFormArray,
+                                        inventoryBerries: UntypedFormArray, 
+                                        inventorySeededForages: UntypedFormArray,
+                                        inventorySeededGrains: UntypedFormArray) {
+
+  return {
+    inventoryFieldGuid:                     [ pltg.inventoryFieldGuid ],
+    insurancePlanId:                        [ pltg.insurancePlanId ],
+    fieldId:                                [ pltg.fieldId ],
+    lastYearCropCommodityId:                [ pltg.lastYearCropCommodityId ],
+    lastYearCropCommodityName:              [ pltg.lastYearCropCommodityName ],
+    lastYearCropVarietyId:                  [ pltg.lastYearCropVarietyId ],
+    lastYearCropVarietyName:                [ pltg.lastYearCropVarietyName ],
+    cropYear:                               [ pltg.cropYear ],
+    plantingNumber:                         [ pltg.plantingNumber ],
+    isHiddenOnPrintoutInd:                  [ pltg.isHiddenOnPrintoutInd ],
+    underseededCropVarietyId:               [ pltg.underseededCropVarietyId ],
+    underseededCropVarietyName:             [ pltg.underseededCropVarietyName ],
+    underseededAcres:                       [ pltg.underseededAcres ],
+    underseededInventorySeededForageGuid:   [ pltg.underseededInventorySeededForageGuid ],
+    inventoryUnseeded:                      [ inventoryUnseeded ],
+    inventoryBerries:                       [ inventoryBerries ],
+    inventorySeededForages:                 [ inventorySeededForages ],
+    inventorySeededGrains:                  [ inventorySeededGrains ],
+    linkedPlanting:                         [ pltg.linkedPlanting ],
+    deletedByUserInd:                       [ deletedByUserInd ]
+  }
 }
