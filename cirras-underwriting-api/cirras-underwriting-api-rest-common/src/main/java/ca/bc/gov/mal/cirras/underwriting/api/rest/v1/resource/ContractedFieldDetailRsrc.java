@@ -20,8 +20,8 @@ public class ContractedFieldDetailRsrc extends BaseResource implements Contracte
 	private Integer annualFieldDetailId;
 	private Integer growerContractYearId;
 	private Integer displayOrder;
+	private Boolean isLeasedInd;
 	private String transactionType;
-
 	
 	public Integer getContractedFieldDetailId() {
 		return contractedFieldDetailId;
@@ -55,6 +55,14 @@ public class ContractedFieldDetailRsrc extends BaseResource implements Contracte
 		this.displayOrder = displayOrder;
 	}
 
+	public Boolean getIsLeasedInd() {
+		return isLeasedInd;
+	}
+
+	public void setIsLeasedInd(Boolean isLeasedInd) {
+		this.isLeasedInd = isLeasedInd;
+	}
+	
 	@Override
 	public String getTransactionType() {
 		return transactionType;
