@@ -36,6 +36,7 @@ public class InventoryContractDto extends BaseDto<InventoryContractDto> {
 
 	private List<InventoryContractCommodityDto> commodities = new ArrayList<InventoryContractCommodityDto>();
 	private List<InventoryCoverageTotalForageDto> inventoryCoverageTotalForages = new ArrayList<InventoryCoverageTotalForageDto>();
+	private List<InventoryContractCommodityBerriesDto> inventoryContractCommodityBerries = new ArrayList<InventoryContractCommodityBerriesDto>();
 	private List<ContractedFieldDetailDto> fields = new ArrayList<ContractedFieldDetailDto>();
 	
 	private String createUser;
@@ -87,6 +88,15 @@ public class InventoryContractDto extends BaseDto<InventoryContractDto> {
 				this.inventoryCoverageTotalForages.add(ictfDto.copy());
 			}
 		}
+
+		if ( dto.inventoryContractCommodityBerries != null ) {
+			this.inventoryContractCommodityBerries = new ArrayList<>();
+			
+			for ( InventoryContractCommodityBerriesDto iccbDto : dto.inventoryContractCommodityBerries ) {
+				this.inventoryContractCommodityBerries.add(iccbDto.copy());
+			}
+		}
+
 		
 		if ( dto.fields != null ) {			
 			this.fields = new ArrayList<>();
@@ -257,6 +267,13 @@ public class InventoryContractDto extends BaseDto<InventoryContractDto> {
 	}
 	public void setInventoryCoverageTotalForages(List<InventoryCoverageTotalForageDto> inventoryCoverageTotalForages) {
 		this.inventoryCoverageTotalForages = inventoryCoverageTotalForages;
+	}
+
+	public List<InventoryContractCommodityBerriesDto> getInventoryContractCommodityBerries() {
+		return inventoryContractCommodityBerries;
+	}
+	public void setInventoryContractCommodityBerries(List<InventoryContractCommodityBerriesDto> inventoryContractCommodityBerries) {
+		this.inventoryContractCommodityBerries = inventoryContractCommodityBerries;
 	}
 
 	public List<ContractedFieldDetailDto> getFields() {

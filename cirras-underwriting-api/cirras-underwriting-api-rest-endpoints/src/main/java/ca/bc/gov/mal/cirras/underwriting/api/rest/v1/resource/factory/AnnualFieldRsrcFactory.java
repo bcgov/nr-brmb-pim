@@ -130,8 +130,8 @@ public class AnnualFieldRsrcFactory extends BaseResourceFactory implements Annua
 		resource.setLegalLandId(dto.getLegalLandId());
 		resource.setOtherLegalDescription(dto.getOtherLegalDescription());
 		resource.setIsLeasedInd(dto.getIsLeasedInd());
-		resource.setFieldLocation(null); //TODO: PIM-2189
-		resource.setPrimaryPropertyIdentifier(null); //TODO: PIM-2189 
+		resource.setFieldLocation(dto.getFieldLocation());
+		resource.setPrimaryPropertyIdentifier(dto.getPrimaryPropertyIdentifier()); 
 	}
 
 	// Only supports updates to members that are editable on the Inventory screen.

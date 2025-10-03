@@ -34,6 +34,8 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 	private Integer insurancePlanId;
 	
 	private String insurancePlanName;
+	private String primaryPropertyIdentifier;
+	private String fieldLocation;
 	
 	private List<InventoryFieldDto> plantings = new ArrayList<InventoryFieldDto>();
 
@@ -66,6 +68,8 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 		this.cropYear = dto.cropYear;
 		this.insurancePlanId = dto.insurancePlanId;
 		this.insurancePlanName = dto.insurancePlanName;
+		this.fieldLocation = dto.fieldLocation;
+		this.primaryPropertyIdentifier = dto.primaryPropertyIdentifier;
 
 		if ( dto.plantings != null ) {			
 			this.plantings = new ArrayList<>();
@@ -221,6 +225,22 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 
 	public void setInsurancePlanName(String insurancePlanName) {
 		this.insurancePlanName = insurancePlanName;
+	}
+	
+	public String getFieldLocation() {
+		return fieldLocation;
+	}
+
+	public void setFieldLocation(String fieldLocation) {
+		this.fieldLocation = fieldLocation;
+	}
+	
+	public String getPrimaryPropertyIdentifier() {
+		return primaryPropertyIdentifier;
+	}
+
+	public void setPrimaryPropertyIdentifier(String primaryPropertyIdentifier) {
+		this.primaryPropertyIdentifier = primaryPropertyIdentifier;
 	}
 
 	public List<InventoryFieldDto> getPlantings() {

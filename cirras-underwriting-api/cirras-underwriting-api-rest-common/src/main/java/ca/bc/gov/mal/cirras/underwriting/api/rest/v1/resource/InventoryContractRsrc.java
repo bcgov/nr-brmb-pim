@@ -181,10 +181,10 @@ public class InventoryContractRsrc extends BaseResource implements InventoryCont
 		this.inventoryCoverageTotalForages = inventoryCoverageTotalForages;
 	}
 
-	public List<InventoryContractCommodityBerries> getContractCommodityBerries() {
+	public List<InventoryContractCommodityBerries> getInventoryContractCommodityBerries() {
 		return inventoryContractCommodityBerries;
 	}
-	public void setContractCommodityBerries(List<InventoryContractCommodityBerries> inventoryContractCommodityBerries) {
+	public void setInventoryContractCommodityBerries(List<InventoryContractCommodityBerries> inventoryContractCommodityBerries) {
 		this.inventoryContractCommodityBerries = inventoryContractCommodityBerries;
 	}	
 
