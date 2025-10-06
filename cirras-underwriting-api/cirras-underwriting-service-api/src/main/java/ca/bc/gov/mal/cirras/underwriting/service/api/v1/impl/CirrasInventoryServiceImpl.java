@@ -2394,7 +2394,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			//Inventory Berries
 			if (cfdDto.getInsurancePlanId().equals(InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId())) {
 				List<InventoryBerriesDto> inventoryBerries = inventoryBerriesDao.select(ifDto.getInventoryFieldGuid());
-				if (inventoryUnseededs.size() > 0) {
+				if (inventoryBerries.size() > 0) {
 					ifDto.setInventoryBerries(inventoryBerries.get(0));
 				}
 			}
