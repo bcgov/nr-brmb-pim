@@ -38,6 +38,7 @@ public class InventoryFieldDto extends BaseDto<InventoryFieldDto> {
 	private Boolean isGrainUnseededDefaultInd;
 
 	private InventoryUnseededDto inventoryUnseeded;
+	private InventoryBerriesDto inventoryBerries;
 
 	// All but one InventorySeededGrainDto should have isReplacedInd=true, so that only one is current.
 	private List<InventorySeededGrainDto> inventorySeededGrains = new ArrayList<InventorySeededGrainDto>();
@@ -99,6 +100,10 @@ public class InventoryFieldDto extends BaseDto<InventoryFieldDto> {
 			for ( InventorySeededForageDto isfDto : dto.inventorySeededForages ) {
 				this.inventorySeededForages.add(isfDto.copy());
 			}
+		}
+		
+		if ( dto.inventoryBerries != null) {
+			this.inventoryBerries = dto.inventoryBerries.copy();
 		}
 
 		if ( dto.declaredYieldField != null) {
@@ -254,6 +259,13 @@ public class InventoryFieldDto extends BaseDto<InventoryFieldDto> {
 	}
 	public void setInventorySeededForages(List<InventorySeededForageDto> inventorySeededForages) {
 		this.inventorySeededForages = inventorySeededForages;
+	}
+
+	public InventoryBerriesDto getInventoryBerries() {
+		return inventoryBerries;
+	}
+	public void setInventoryBerries(InventoryBerriesDto inventoryBerries) {
+		this.inventoryBerries = inventoryBerries;
 	}
 
 	public DeclaredYieldFieldDto getDeclaredYieldField() {

@@ -60,8 +60,8 @@ public interface InventoryContract<A extends AnnualField> extends Serializable {
 	public List<InventoryCoverageTotalForage> getInventoryCoverageTotalForages();
 	public void setInventoryCoverageTotalForages(List<InventoryCoverageTotalForage> inventoryCoverageTotalForages);
 	
-	public List<InventoryContractCommodityBerries> getContractCommodityBerries();
-	public void setContractCommodityBerries(List<InventoryContractCommodityBerries> inventoryContractCommodityBerries);
+	public List<InventoryContractCommodityBerries> getInventoryContractCommodityBerries();
+	public void setInventoryContractCommodityBerries(List<InventoryContractCommodityBerries> inventoryContractCommodityBerries);
 
 	public List<A> getFields();
 	public void setFields(List<A> fields);

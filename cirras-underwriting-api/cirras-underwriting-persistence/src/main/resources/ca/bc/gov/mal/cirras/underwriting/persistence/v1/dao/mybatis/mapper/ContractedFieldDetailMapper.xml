@@ -22,6 +22,8 @@
 		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		
 		<result property="insurancePlanName" column="insurance_plan_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="fieldLocation" column="field_location" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="primaryPropertyIdentifier" column="primary_property_identifier" javaType="java.lang.String" jdbcType="VARCHAR" />
 		
 	</resultMap>
 	
@@ -197,6 +199,8 @@
 	<select id="select" resultMap="ContractedFieldDetailDtoMap">
 		<include refid="selectColumns"/>
 		, ip.insurance_plan_name
+		, fld.location as field_location
+		, ll.primary_property_identifier
 		from contracted_field_detail cfd
 		<include refid="selectAdditionalJoins"/>
 		<include refid="selectWhereClause"/>
