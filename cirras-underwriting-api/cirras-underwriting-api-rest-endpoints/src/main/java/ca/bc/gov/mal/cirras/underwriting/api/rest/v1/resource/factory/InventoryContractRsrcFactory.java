@@ -18,8 +18,10 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.InventoryContractL
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.InventoryContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractList;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryCoverageTotalForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
@@ -30,6 +32,8 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.LinkedPlanting;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.PolicySimple;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryCoverageTotalForageDto;
@@ -81,6 +85,18 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			}
 
 			resource.setInventoryCoverageTotalForages(inventoryCoverageTotalForages);
+		}
+		
+		// Berries Commodities
+		if (!dto.getInventoryContractCommodityBerries().isEmpty()) {
+			List<InventoryContractCommodityBerries> invContractCommodityBerries = new ArrayList<InventoryContractCommodityBerries>();
+
+			for (InventoryContractCommodityBerriesDto iccbDto : dto.getInventoryContractCommodityBerries()) {
+				InventoryContractCommodityBerries iccbModel = createInventoryContractCommodityBerries(iccbDto);
+				invContractCommodityBerries.add(iccbModel);
+			}
+
+			resource.setInventoryContractCommodityBerries(invContractCommodityBerries);
 		}
 		
 		// Fields
@@ -205,6 +221,22 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		return model;
 	}
 
+	private InventoryContractCommodityBerries createInventoryContractCommodityBerries(InventoryContractCommodityBerriesDto dto) {
+		
+		InventoryContractCommodityBerries model = new InventoryContractCommodityBerries();
+		
+		model.setInventoryContractCommodityBerriesGuid(dto.getInventoryContractCommodityBerriesGuid());
+		model.setInventoryContractGuid(dto.getInventoryContractGuid());
+		model.setCropCommodityId(dto.getCropCommodityId());
+		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setTotalInsuredPlants(dto.getTotalInsuredPlants());
+		model.setTotalUninsuredPlants(dto.getTotalUninsuredPlants());
+		model.setTotalInsuredAcres(dto.getTotalInsuredAcres());
+		model.setTotalUninsuredAcres(dto.getTotalUninsuredAcres());
+
+		return model;
+	}
+
 	private InventoryCoverageTotalForage createInventoryCoverageTotalForage(InventoryCoverageTotalForageDto dto) {
 		
 		InventoryCoverageTotalForage model = new InventoryCoverageTotalForage();
@@ -322,7 +354,12 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			}
 
 			model.setInventorySeededForages(inventorySeededForages);
-		}	
+		}
+		
+		// Inventory Berries
+		if (dto.getInventoryBerries() != null) {
+			model.setInventoryBerries(createInventoryBerries(dto.getInventoryBerries()));
+		}
 		
 		if(dto.getUnderseededInventorySeededForageGuid() != null) {
 			LinkedPlanting linkedPlanting = new LinkedPlanting();
@@ -402,6 +439,26 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			linkedPlanting.setAcres(dto.getLinkedUnderseededAcres());
 			model.setLinkedPlanting(linkedPlanting);
 		}
+
+		return model;
+	}
+	
+	private InventoryBerries createInventoryBerries(InventoryBerriesDto dto) {
+		InventoryBerries model = new InventoryBerries();
+
+		model.setInventoryBerriesGuid(dto.getInventoryBerriesGuid());
+		model.setInventoryFieldGuid(dto.getInventoryFieldGuid());
+		model.setCropCommodityId(dto.getCropCommodityId());
+		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setCropVarietyId(dto.getCropVarietyId());
+		model.setCropVarietyName(dto.getCropVarietyName());
+		model.setPlantedYear(dto.getPlantedYear());
+		model.setPlantedAcres(dto.getPlantedAcres());
+		model.setRowSpacing(dto.getRowSpacing());
+		model.setPlantSpacing(dto.getPlantSpacing());
+		model.setTotalPlants(dto.getTotalPlants());
+		model.setIsQuantityInsurableInd(dto.getIsQuantityInsurableInd());
+		model.setIsPlantInsurableInd(dto.getIsPlantInsurableInd());
 
 		return model;
 	}
@@ -646,6 +703,11 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			model.setInventorySeededForages(inventorySeededForageList);
 		}
 		
+		// InventoryBerries
+		if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId())) {
+			model.setInventoryBerries(createDefaultInventoryBerries());
+		}
+		
 		return model;
 	}
 
@@ -736,6 +798,24 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		} else {
 			model.setIsUnseededInsurableInd(isGrainUnseededDefault);
 		}
+
+		return model;
+	}
+	
+	private InventoryBerries createDefaultInventoryBerries() {
+		InventoryBerries model = new InventoryBerries();
+
+		model.setInventoryBerriesGuid(null);
+		model.setInventoryFieldGuid(null);
+		model.setCropCommodityId(null);
+		model.setCropVarietyId(null);
+		model.setPlantedYear(null);
+		model.setPlantedAcres(null);
+		model.setRowSpacing(null);
+		model.setPlantSpacing(null);
+		model.setTotalPlants(null);
+		model.setIsQuantityInsurableInd(null);
+		model.setIsPlantInsurableInd(null);
 
 		return model;
 	}
