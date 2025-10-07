@@ -203,10 +203,7 @@
   
     .inventory-fill {
       justify-content: center;  
-  
-      & > * {
-        flex-grow: 1;
-      }
+      align-items: stretch; 
     }
   
     .planting-container {

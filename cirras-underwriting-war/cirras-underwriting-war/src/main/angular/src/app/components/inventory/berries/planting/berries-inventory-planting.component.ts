@@ -1,6 +1,7 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { InventoryField } from '@cirras/cirras-underwriting-api';
+import { addSimplePlantingObject } from '../../inventory-common';
 
 @Component({
   selector: 'berries-inventory-planting',
@@ -9,56 +10,33 @@ import { InventoryField } from '@cirras/cirras-underwriting-api';
   styleUrl: './berries-inventory-planting.component.scss',
   standalone: false
 })
-export class BerriesInventoryPlantingComponent {
+export class BerriesInventoryPlantingComponent implements OnChanges { 
 
   @Input() planting: InventoryField;
   @Input() plantingFormArray: UntypedFormArray;
-  @Input() fieldHiddenOnPrintoutInd: boolean;
-
+  @Input() cropVarietyOptions;
+  
   plantingFormGroup: UntypedFormGroup;
 
   constructor(private fb: UntypedFormBuilder) {}
 
-  ngOnInit(): void {
-    this.refreshForm()
-  }
-
   ngOnChanges(changes: SimpleChanges) {
-
     if (changes.planting && changes.planting.currentValue) {
+      if (this.planting) {
         this.refreshForm()
+      }
     }
   }
 
   refreshForm() {
-     this.plantingFormGroup = this.fb.group({
-          inventoryFieldGuid: [this.planting.inventoryFieldGuid],
-          // commodityTypeCode: [this.yieldField.commodityTypeCode],
-          // commodityTypeDescription: [this.yieldField.commodityTypeDescription],
-          // cropVarietyName: [this.yieldField.cropVarietyName],
-          // cropVarietyId: [this.yieldField.cropVarietyId],
-          // plantDurationTypeCode: [this.yieldField.plantDurationTypeCode],
-          // isQuantityInsurableInd: {
-          //     value: this.yieldField.isQuantityInsurableInd,
-          //     disabled: true
-          // },
-          // fieldAcres: [this.yieldField.fieldAcres],
-          // insurancePlanId: [this.yieldField.insurancePlanId],
-          // fieldId: [this.yieldField.fieldId],
-          // cropYear: [this.yieldField.cropYear],
-          // isHiddenOnPrintoutInd: {
-          //     value: this.yieldField.isHiddenOnPrintoutInd,
-          //     disabled: true
-          // },
-          // plantInsurabilityTypeCode: this.yieldField.plantInsurabilityTypeCode,
-          // seedingYear: this.yieldField.seedingYear,
-          // seedingDate: this.yieldField.seedingDate,
-          // dopYieldFieldForageCuts: this.fb.array([]),
-      });
 
-      this.plantingFormArray.push(this.plantingFormGroup);
+    // add planting subform
+    this.plantingFormGroup = this.fb.group( 
+      addSimplePlantingObject( this.planting, false, 
+        this.fb.array([]), this.fb.array([]), this.fb.array([]) , this.fb.array([])) 
+    )
+
+    this.plantingFormArray.push(this.plantingFormGroup);
   }
-
-
 
 }

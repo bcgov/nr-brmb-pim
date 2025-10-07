@@ -1,33 +1,37 @@
-<div class="plcy-inv-field-box" [formGroup]="fieldFormGroup">
-    <div class="inventory-cell border-left" style="width: 45px;"
-        [ngClass]="fieldHiddenOnPrintoutInd ? 'inventory-border-exclude-printout border-left-exclude-printout' : 'inventory-border'">
-        {{ fieldFormGroup.value.fieldLocation }}
-        Location
+<div class="plcy-inv-field-box" [formGroup]="fieldFormGroup" style="width:1255px;">
+    
+    <div class="inventory-cell inventory-border border-left" style="width: 115px;">
+        {{ fieldFormGroup.value.fieldId }}
     </div>
-    <div class="inventory-cell" style="width: 156px;"
-        [ngClass]="fieldHiddenOnPrintoutInd ? 'inventory-border-exclude-printout' : 'inventory-border'">
-        {{ fieldFormGroup.value.primaryPropertyIdentifier }}
-        PID
+    
+    <div class="inventory-fill inventory-border" style="width: 180px;">
+         <mat-form-field appearance="fill">
+            <input matInput type="text"
+                    formControlName="fieldLocation"
+                    maxlength="128">
+        </mat-form-field>  
+        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Field address is writeable">edit</mat-icon>
     </div>
 
-    <div class="inventory-cell" style="width: 156px;"
-        [ngClass]="fieldHiddenOnPrintoutInd ? 'inventory-border-exclude-printout' : 'inventory-border'">
-        {{ fieldFormGroup.value.isLeasedInd }}
-        Leased
+    <div class="inventory-cell inventory-border" style="width: 140px;">
+        {{ fieldFormGroup.value.primaryPropertyIdentifier }}
+    </div>
+
+    <div class="inventory-fill inventory-border" style="width: 80px;">
+        <mat-checkbox formControlName="isLeasedInd"></mat-checkbox>
     </div>
 
     <!-- plantings -->
-
-    <div class="planting-container" [ngStyle]="setPlantingStyles()"
-        [ngClass]="fieldHiddenOnPrintoutInd ? 'inventory-border-exclude-printout' : 'inventory-border'">
+    <div class="planting-container" [ngStyle]="setPlantingStyles()">
         <berries-inventory-planting 
             *ngFor="let planting of field.plantings"
             [planting]="planting"
             [plantingFormArray]="fieldFormGroup.value.plantings" 
-            [fieldHiddenOnPrintoutInd]="fieldHiddenOnPrintoutInd"
+            [cropVarietyOptions]="cropVarietyOptions"
             style="display: contents;"></berries-inventory-planting>
     </div>
 
+    <!-- TODO -->
     <!-- <div class="inventory-cell" style="width: 75px;"
         [ngClass]="fieldHiddenOnPrintoutInd ? 'inventory-border-exclude-printout border-right-exclude-printout' : 'inventory-border'">
         <uw-comments-button

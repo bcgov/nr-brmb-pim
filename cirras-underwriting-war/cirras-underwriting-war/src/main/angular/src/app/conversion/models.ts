@@ -67,8 +67,11 @@ export interface AnnualField {
   legalLandId?: number;
   fieldLabel?: string;
   otherLegalDescription?: string;
+  primaryPropertyIdentifier?: string;
+  fieldLocation?: string;
   displayOrder?: number;
   cropYear?: number;
+  isLeasedInd?: boolean;
   landUpdateType?: string;
   transferFromGrowerContractYearId?: number;
   plantings?: Array<InventoryField>;
