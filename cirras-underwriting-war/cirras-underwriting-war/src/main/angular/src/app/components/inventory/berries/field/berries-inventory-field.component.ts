@@ -20,6 +20,10 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   
   constructor(private fb: UntypedFormBuilder) {}
 
+  ngOnInit() {
+    this.refreshForm()
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes.field && changes.field.currentValue) {
       if (this.field) {

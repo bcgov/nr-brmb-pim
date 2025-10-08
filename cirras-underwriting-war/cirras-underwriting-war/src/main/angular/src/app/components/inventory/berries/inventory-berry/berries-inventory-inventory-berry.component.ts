@@ -37,7 +37,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
 
   refreshForm() {
     this.inventoryBerriesFormGroup = this.fb.group(
-      addBerriesObject(this.inventoryBerry.inventoryFieldGuid, false, this.inventoryBerry ) 
+      addBerriesObject(( this.inventoryBerry && this.inventoryBerry.inventoryFieldGuid ? this.inventoryBerry.inventoryFieldGuid : null), false, this.inventoryBerry ) 
     )
   }
 

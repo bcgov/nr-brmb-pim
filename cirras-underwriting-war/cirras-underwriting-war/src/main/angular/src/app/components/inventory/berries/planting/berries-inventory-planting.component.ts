@@ -20,6 +20,10 @@ export class BerriesInventoryPlantingComponent implements OnChanges {
 
   constructor(private fb: UntypedFormBuilder) {}
 
+  ngOnInit() {
+    this.refreshForm()
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes.planting && changes.planting.currentValue) {
       if (this.planting) {

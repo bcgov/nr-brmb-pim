@@ -1,11 +1,11 @@
-<div class="plcy-inv-field-box" [formGroup]="fieldFormGroup" style="width:1255px;">
+<div class="plcy-inv-field-box" [formGroup]="fieldFormGroup" style="width:1355px;">
     
     <div class="inventory-cell inventory-border border-left" style="width: 115px;">
         {{ fieldFormGroup.value.fieldId }}
     </div>
     
-    <div class="inventory-fill inventory-border" style="width: 180px;">
-         <mat-form-field appearance="fill">
+    <div class="inventory-fill inventory-border" style="width: 280px;">
+         <mat-form-field appearance="fill" style="width: 260px;">
             <input matInput type="text"
                     formControlName="fieldLocation"
                     maxlength="128">
