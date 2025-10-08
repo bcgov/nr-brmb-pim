@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } f
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { InventoryBerries } from '@cirras/cirras-underwriting-api';
 import { makeNumberOnly, makeTitleCase } from 'src/app/utils';
-import { addBerriesObject, CropVarietyOptionsType } from '../../inventory-common';
+import { addBerriesObject, CropVarietyOptionsType, roundUpDecimalYield } from '../../inventory-common';
 
 @Component({
   selector: 'berries-inventory-inventory-berry',
@@ -77,6 +77,11 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     return vrty && vrty.varietyName ? makeTitleCase( vrty.varietyName)  : '';
   }
 
+  roundUpAcres() {
+    const plantedAcres = this.inventoryBerriesFormGroup.value.plantedAcres
+    const roundUpAcres = roundUpDecimalYield(plantedAcres, 2)
+    this.inventoryBerriesFormGroup.controls['plantedAcres'].setValue(roundUpAcres) 
+  }
 
 
 }

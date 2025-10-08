@@ -168,6 +168,7 @@ export function convertToUwContract(uwContract: any): UwContract {
 
       commodities: invContract.commodities,
       inventoryCoverageTotalForages: invContract.inventoryCoverageTotalForages,
+      inventoryContractCommodityBerries: invContract.inventoryContractCommodityBerries,
       fields: invContract.fields,
 
       etag: etag, //invContract.etag,
