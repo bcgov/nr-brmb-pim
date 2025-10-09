@@ -113,6 +113,23 @@
             </berries-inventory-field-list>
 
         </div>
+
+        <!-- totals -->
+        <div *ngIf="inventoryContract && inventoryContract.inventoryContractCommodityBerries && inventoryContract.inventoryContractCommodityBerries.length > 0"
+        class="plcy-inv-cntrct" style="grid-template-columns: 400px 400px;"> 
+            <div>
+                <berries-inventory-commodity-totals
+                    [type_total]="'acres'"
+                    [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" >
+                </berries-inventory-commodity-totals>
+            </div>
+            <div>
+                <berries-inventory-commodity-totals
+                    [type_total]="'plants'"
+                    [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" >
+                </berries-inventory-commodity-totals>
+            </div>
+        </div>
     </form>
 </div>
 </div>

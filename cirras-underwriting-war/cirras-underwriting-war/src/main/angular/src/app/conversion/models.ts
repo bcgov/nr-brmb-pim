@@ -1,4 +1,4 @@
-import {  InventoryContractCommodity, InventoryCoverageTotalForage, InventoryField, PolicySimple, UnderwritingComment } from "@cirras/cirras-underwriting-api";
+import {  InventoryContractCommodity, InventoryContractCommodityBerries, InventoryCoverageTotalForage, InventoryField, PolicySimple, UnderwritingComment } from "@cirras/cirras-underwriting-api";
 import {  DopYieldFieldForage, DopYieldFieldGrain, VerifiableCommodity, VerifiableVariety } from "./models-yield";
 
 
@@ -113,6 +113,7 @@ export interface InventoryContract {
   growerName?: string;
   commodities?: Array<InventoryContractCommodity>;
   inventoryCoverageTotalForages?: Array<InventoryCoverageTotalForage>;
+  inventoryContractCommodityBerries?: Array<InventoryContractCommodityBerries>
   fields?: Array<AnnualField>;
   etag?: string;
   type: string;
