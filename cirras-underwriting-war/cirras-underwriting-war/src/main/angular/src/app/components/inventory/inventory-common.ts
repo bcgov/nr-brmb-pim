@@ -164,26 +164,9 @@ export function getInventorySeededForagesObjForSave(inventorySeededForageGuid, i
   }
 }
 
-export function roundUpDecimalAcres(acres) {
-  
-  if (isNaN(parseFloat(acres))) {
-    //alert ("Acres must be a valid number" )
-    return ""
-  } else {
-
-    if (parseFloat(acres) % 1 == 0 ) {
-      // return integer if it's an integer, no zeros after the decimal point
-      return parseInt(acres)
-    }
-    
-    return parseFloat(acres).toFixed(1)
-  }
-}
-
-export function roundUpDecimalYield(numberToRound, precision) {
+export function roundUpDecimal(numberToRound, precision) {
 
   if (isNaN(parseFloat(numberToRound))) {
-    // alert ("Yield must be a valid number" )
     return ""
   } else {
 

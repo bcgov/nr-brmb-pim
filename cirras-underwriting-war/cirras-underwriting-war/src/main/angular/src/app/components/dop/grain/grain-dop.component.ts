@@ -23,7 +23,7 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import {ViewEncapsulation } from '@angular/core';
 import { GradeModifierOptionsType } from '../dop-common';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
-import { roundUpDecimalYield } from '../../inventory/inventory-common';
+import { roundUpDecimal } from '../../inventory/inventory-common';
 import { SCREEN_TYPE } from 'src/app/utils/constants';
 
 @Component({
@@ -348,7 +348,7 @@ export class GrainDopComponent extends BaseComponent{
           let formDopYieldField = formField.value.dopYieldFieldGrainList.controls[dopYieldFieldIndex].controls
           if(formDopYieldField) {
             let acres = formDopYieldField.estimatedYieldPerAcre.value
-            formDopYieldField.estimatedYieldPerAcre.setValue(roundUpDecimalYield(acres,this.decimalPrecision))
+            formDopYieldField.estimatedYieldPerAcre.setValue(roundUpDecimal(acres,this.decimalPrecision))
           }
         }
     }
@@ -366,7 +366,7 @@ export class GrainDopComponent extends BaseComponent{
             let formDopYieldField = formField.value.dopYieldFieldGrainList.controls[i].controls
             if(formDopYieldField) {
               let estYield = formDopYieldField.estimatedYieldPerAcre.value
-              formDopYieldField.estimatedYieldPerAcre.setValue(roundUpDecimalYield(estYield, this.decimalPrecision))
+              formDopYieldField.estimatedYieldPerAcre.setValue(roundUpDecimal(estYield, this.decimalPrecision))
             }
           }
         }
@@ -389,7 +389,7 @@ export class GrainDopComponent extends BaseComponent{
   updateCommodityTotalField(formCommodity, fieldName){
     if(formCommodity) {
       let fieldValue = formCommodity['controls'][fieldName].value
-      formCommodity['controls'][fieldName].setValue(roundUpDecimalYield(fieldValue, this.decimalPrecision))
+      formCommodity['controls'][fieldName].setValue(roundUpDecimal(fieldValue, this.decimalPrecision))
     }
   }
 
