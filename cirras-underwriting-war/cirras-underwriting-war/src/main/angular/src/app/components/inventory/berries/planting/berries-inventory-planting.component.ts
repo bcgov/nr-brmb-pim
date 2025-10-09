@@ -5,7 +5,6 @@ import { addSimplePlantingObject } from '../../inventory-common';
 
 @Component({
   selector: 'berries-inventory-planting',
-  imports: [],
   templateUrl: './berries-inventory-planting.component.html',
   styleUrl: './berries-inventory-planting.component.scss',
   standalone: false
