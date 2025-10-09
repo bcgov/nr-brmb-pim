@@ -8,7 +8,7 @@ import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN, PLANT_DURATION, PLANT_INSURABILITY_TYPE_CODE } from 'src/app/utils/constants';
 import { CropVarietyCommodityType, InventorySeededForage, InventoryUnseeded, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { addUwCommentsObject, areDatesNotEqual, areNotEqual, makeNumberOnly, makeTitleCase, replaceNonAlphanumericCharacters } from 'src/app/utils';
-import { AddNewFormField, CropVarietyOptionsType, addAnnualFieldObject, addPlantingObject, addSeededForagesObject, deleteFormField, deleteNewFormField, dragField, fieldHasInventory, getInventorySeededForagesObjForSave, isLinkedFieldCommon, isLinkedPlantingCommon, isThereAnyCommentForField, linkedFieldTooltipCommon, linkedPlantingTooltipCommon, navigateUpDownTextbox, openAddEditLandPopup, roundUpDecimalAcres, updateComments } from '../inventory-common';
+import { AddNewFormField, CropVarietyOptionsType, addAnnualFieldObject, addPlantingObject, addSeededForagesObject, deleteFormField, deleteNewFormField, dragField, fieldHasInventory, getInventorySeededForagesObjForSave, isLinkedFieldCommon, isLinkedPlantingCommon, isThereAnyCommentForField, linkedFieldTooltipCommon, linkedPlantingTooltipCommon, navigateUpDownTextbox, openAddEditLandPopup, roundUpDecimal, updateComments } from '../inventory-common';
 import { AddNewInventoryContract, DeleteInventoryContract, GetInventoryReport, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { AddLandPopupData } from '../add-land/add-land.component';
@@ -725,7 +725,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
     let acres = invSeeded.controls['fieldAcres'].value
 
-    invSeeded.controls['fieldAcres'].setValue(roundUpDecimalAcres(acres))
+    invSeeded.controls['fieldAcres'].setValue(roundUpDecimal(acres,1))
 
     this.isMyFormDirty()
   }
@@ -737,7 +737,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
     let acres = invSeeded.controls['acresToBeSeeded'].value
 
-    invSeeded.controls['acresToBeSeeded'].setValue(roundUpDecimalAcres(acres))
+    invSeeded.controls['acresToBeSeeded'].setValue(roundUpDecimal(acres,1))
 
     this.isMyFormDirty()
   }

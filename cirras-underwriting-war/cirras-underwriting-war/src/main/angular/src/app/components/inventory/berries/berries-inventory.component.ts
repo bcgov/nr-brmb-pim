@@ -50,11 +50,11 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
     // populate commodity and variety lists
     if (changes.cropCommodityList && this.cropCommodityList && this.cropCommodityList.collection && this.cropCommodityList.collection.length ) {
-      this.populateCropVarieryOptions()
+      this.populateCropVarietyOptions()
     }
   }
 
-  populateCropVarieryOptions() {
+  populateCropVarietyOptions() {
     // clear the crop options
     this.cropVarietyOptions = [] 
 
@@ -62,8 +62,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     this.cropVarietyOptions.push ({
       cropCommodityId: CROP_COMMODITY_UNSPECIFIED.ID,
       cropVarietyId: CROP_COMMODITY_UNSPECIFIED.ID,
-      varietyName: CROP_COMMODITY_UNSPECIFIED.NAME,
-      cropVarietyCommodityTypes: <CropVarietyCommodityType>[]
+      varietyName: CROP_COMMODITY_UNSPECIFIED.NAME
     })
 
     var self = this

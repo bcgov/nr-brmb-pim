@@ -5,7 +5,7 @@ import { GrainInventoryComponent } from "../grain-inventory.component";
 import { makeTitleCase } from 'src/app/utils'; 
 import { CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
 import { CropVarietyCommodityType } from 'src/app/conversion/models';
-import { CropVarietyOptionsType, roundUpDecimalAcres } from '../../inventory-common';
+import { CropVarietyOptionsType, roundUpDecimal } from '../../inventory-common';
 import { AddPlantingPopupData, LinkPlantingComponent } from '../../link-planting/link-planting.component';
 import { LoadInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import {ViewEncapsulation } from '@angular/core';
@@ -899,7 +899,7 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
 
     let acres = invSeeded.controls['seededAcres'].value
 
-    invSeeded.controls['seededAcres'].setValue(roundUpDecimalAcres(acres))
+    invSeeded.controls['seededAcres'].setValue(roundUpDecimal(acres,1))
 
     this.isMyFormDirty()
   }
@@ -911,7 +911,7 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
 
     let acres = invSeeded.controls['underSeededAcres'].value
 
-    invSeeded.controls['underSeededAcres'].setValue(roundUpDecimalAcres(acres))
+    invSeeded.controls['underSeededAcres'].setValue(roundUpDecimal(acres,1))
 
     this.isMyFormDirty()
   }
