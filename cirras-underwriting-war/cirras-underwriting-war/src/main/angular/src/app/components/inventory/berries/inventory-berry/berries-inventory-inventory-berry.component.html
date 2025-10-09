@@ -7,24 +7,25 @@
             <mat-form-field appearance="fill">
                 <input matInput formControlName="plantedYear"                                                             
                     (keypress)="numberOnly($event)" 
+                    (blur)="updatePlantedYear()"
                     maxlength="4">
             </mat-form-field>
             <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Planted Year is writeable">edit</mat-icon>
         
         </div>
 
-        <div class="inventory-fill inventory-border" style="width: 80px;">
+        <div class="inventory-fill inventory-border" style="width: 100px;">
             <mat-form-field appearance="fill">
                 <input matInput formControlName="plantedAcres"                                                             
                     (keypress)="numberOnly($event)" 
-                    (blur)="roundUpAcres();"
+                    (blur)="updatePlantedAcres()"
                     maxlength="10">
             </mat-form-field>
             <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Planted Acres is writeable">edit</mat-icon>
         </div>
 
         <div class="inventory-fill inventory-border" style="width: 80px;">
-            <mat-checkbox formControlName="isQuantityInsurableInd"></mat-checkbox>
+            <mat-checkbox formControlName="isQuantityInsurableInd" (change)="updateIsQuantityInsurableInd()"></mat-checkbox>
         </div>
 
         <!-- variety -->
@@ -37,7 +38,8 @@
                     formControlName="cropVarietyCtrl" 
                     [matAutocomplete]="autoVrty"
                     (focus)="varietyFocus()"
-                    (keyup)="searchVariety($event.target.value)">
+                    (keyup)="searchVariety($event.target.value)"
+                    (blur)="updateCropVariety()">
                 <mat-autocomplete #autoVrty="matAutocomplete"  hideSingleSelectionIndicator="true"
                     [displayWith]="displayVarietyFn">
                 <mat-option *ngFor="let option of filteredVarietyOptions" [value]="option">
@@ -52,7 +54,8 @@
             <mat-form-field appearance="fill">
                 <input matInput formControlName="rowSpacing"                                                             
                     (keypress)="numberOnly($event)" 
-                    maxlength="10">
+                    (blur)="updateRowSpacing()"
+                    maxlength="4">
             </mat-form-field>
             <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Row Spacing is writeable">edit</mat-icon>
         </div>
@@ -61,7 +64,8 @@
             <mat-form-field appearance="fill">
                 <input matInput formControlName="plantSpacing"                                                             
                     (keypress)="numberOnly($event)" 
-                    maxlength="10">
+                    (blur)="updatePlantSpacing()"
+                    maxlength="6">
             </mat-form-field>
             <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Plant Spacing is writeable">edit</mat-icon>
         </div>
@@ -71,7 +75,7 @@
         </div>
 
         <div class="inventory-fill inventory-border" style="width: 80px;">
-            <mat-checkbox formControlName="isPlantInsurableInd"></mat-checkbox>
+            <mat-checkbox formControlName="isPlantInsurableInd" (change)="updateIsPlantInsurableInd()"></mat-checkbox>
         </div>
 
         

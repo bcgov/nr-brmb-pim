@@ -54,10 +54,14 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     };
   }
 
-  updateFieldLocationInfo() {
-    this.field.fieldLocation = this.fieldFormGroup.value.fieldLocation;
-    
-    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
+  updateFieldLocation() {
+    this.field.fieldLocation = this.fieldFormGroup.value.fieldLocation
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+  }
+
+  updateIsLeasedInd() {
+    this.field.isLeasedInd = this.fieldFormGroup.value.isLeasedInd
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }
 
 }

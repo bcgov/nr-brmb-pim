@@ -9,7 +9,7 @@
             <input matInput type="text"
                     formControlName="fieldLocation"
                     maxlength="128"
-                    (blur)="updateFieldLocationInfo()">
+                    (blur)="updateFieldLocation()">
         </mat-form-field>  
         <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Field address is writeable">edit</mat-icon>
     </div>
@@ -19,7 +19,7 @@
     </div>
 
     <div class="inventory-fill inventory-border" style="width: 80px;">
-        <mat-checkbox formControlName="isLeasedInd"></mat-checkbox>
+        <mat-checkbox formControlName="isLeasedInd" (change)="updateIsLeasedInd()"></mat-checkbox>
     </div>
 
     <!-- plantings -->

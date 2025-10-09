@@ -26,8 +26,8 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   policyId
   cropVarietyOptions = [];
 
-  hasDataChanged = false;
-
+  hasYieldData = false; // TODO
+  
   initModels() {
     this.viewModel = new BerriesInventoryComponentModel(this.sanitizer, this.fb, this.inventoryContract);
   }
@@ -92,7 +92,8 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
         // prepare the new inventory contract
         this.store.dispatch(RolloverInventoryContract(this.componentId, this.policyId))
       }
-      this.hasDataChanged = false
+
+      this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, false ));
       displaySuccessSnackbar(this.snackbarService, "Unsaved changes have been cleared successfully.")
     }
   }
