@@ -1,0 +1,47 @@
+<div class="plcy-inv-field-box" [formGroup]="fieldFormGroup" style="width:1355px;">
+    
+    <div class="inventory-cell inventory-border border-left" style="width: 115px;">
+        {{ fieldFormGroup.value.fieldId }}
+    </div>
+    
+    <div class="inventory-fill inventory-border" style="width: 280px;">
+         <mat-form-field appearance="fill" style="width: 260px;">
+            <input matInput type="text"
+                    formControlName="fieldLocation"
+                    maxlength="128">
+        </mat-form-field>  
+        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Field address is writeable">edit</mat-icon>
+    </div>
+
+    <div class="inventory-cell inventory-border" style="width: 140px;">
+        {{ fieldFormGroup.value.primaryPropertyIdentifier }}
+    </div>
+
+    <div class="inventory-fill inventory-border" style="width: 80px;">
+        <mat-checkbox formControlName="isLeasedInd"></mat-checkbox>
+    </div>
+
+    <!-- plantings -->
+    <div class="planting-container" [ngStyle]="setPlantingStyles()">
+        <berries-inventory-planting 
+            *ngFor="let planting of field.plantings"
+            [planting]="planting"
+            [plantingFormArray]="fieldFormGroup.value.plantings" 
+            [cropVarietyOptions]="cropVarietyOptions"
+            style="display: contents;"></berries-inventory-planting>
+    </div>
+
+    <!-- TODO -->
+    <!-- <div class="inventory-cell" style="width: 75px;"
+        [ngClass]="fieldHiddenOnPrintoutInd ? 'inventory-border-exclude-printout border-right-exclude-printout' : 'inventory-border'">
+        <uw-comments-button
+            [underwritingCommentTypeCode]="'INV'"
+            [annualFieldDetailId]="fieldFormGroup.value.annualFieldDetailId"
+            [fieldId]="fieldFormGroup.value.fieldId"
+            [fieldName]="fieldFormGroup.value.fieldLabel"
+            [legalLocation]="fieldFormGroup.value.otherLegalDescription"
+            [uwComments]="fieldFormGroup.value.uwComments"
+            (onDone)="onInventoryCommentsDone($event)"></uw-comments-button>
+        <mat-icon matTooltip="View History" style="margin-left: 4px; margin-right: 4px;">history</mat-icon>
+    </div> -->
+</div>

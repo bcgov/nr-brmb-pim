@@ -1,0 +1,78 @@
+
+<div [formGroup]="inventoryBerriesFormGroup">
+
+    <div style="display: contents;">
+
+        <div class="inventory-fill inventory-border" style="width: 80px;">
+            <mat-form-field appearance="fill">
+                <input matInput formControlName="plantedYear"                                                             
+                    (keypress)="numberOnly($event)" 
+                    maxlength="4">
+            </mat-form-field>
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Planted Year is writeable">edit</mat-icon>
+        
+        </div>
+
+        <div class="inventory-fill inventory-border" style="width: 80px;">
+            <mat-form-field appearance="fill">
+                <input matInput formControlName="plantedAcres"                                                             
+                    (keypress)="numberOnly($event)" 
+                    maxlength="10">
+            </mat-form-field>
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Planted Acres is writeable">edit</mat-icon>
+        </div>
+
+        <div class="inventory-fill inventory-border" style="width: 80px;">
+            <mat-checkbox formControlName="isQuantityInsurableInd"></mat-checkbox>
+        </div>
+
+        <!-- variety -->
+        <div class="inventory-fill inventory-border" style="width:180px;">
+
+            <mat-form-field appearance="fill">
+                <input 
+                    type="text" 
+                    matInput 
+                    formControlName="cropVarietyCtrl" 
+                    [matAutocomplete]="autoVrty"
+                    (focus)="varietyFocus()"
+                    (keyup)="searchVariety($event.target.value)">
+                <mat-autocomplete #autoVrty="matAutocomplete"  hideSingleSelectionIndicator="true"
+                    [displayWith]="displayVarietyFn">
+                <mat-option *ngFor="let option of filteredVarietyOptions" [value]="option">
+                    {{ option.varietyName | titlecase }}
+                </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>  
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Variety is writeable">edit</mat-icon>
+        </div>
+
+        <div class="inventory-fill inventory-border" style="width: 80px;">
+            <mat-form-field appearance="fill">
+                <input matInput formControlName="rowSpacing"                                                             
+                    (keypress)="numberOnly($event)" 
+                    maxlength="10">
+            </mat-form-field>
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Row Spacing is writeable">edit</mat-icon>
+        </div>
+
+        <div class="inventory-fill inventory-border" style="width: 80px;">
+            <mat-form-field appearance="fill">
+                <input matInput formControlName="plantSpacing"                                                             
+                    (keypress)="numberOnly($event)" 
+                    maxlength="10">
+            </mat-form-field>
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Plant Spacing is writeable">edit</mat-icon>
+        </div>
+
+        <div class="inventory-cell inventory-border" style="width: 80px;">
+            {{( inventoryBerry && inventoryBerry.totalPlants) ? inventoryBerry.totalPlants : "" }}
+        </div>
+
+        <div class="inventory-fill inventory-border" style="width: 80px;">
+            <mat-checkbox formControlName="isPlantInsurableInd"></mat-checkbox>
+        </div>
+
+        
+    </div>
+</div>

@@ -103,9 +103,14 @@
         </div>
 
 
-        <div class=" plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
+        <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
 
-            <!-- TODO: inventory table  -->
+            <berries-inventory-field-list
+                *ngIf="inventoryContract && inventoryContract.fields"
+                [fields]="inventoryContract.fields"
+                [fieldsFormArray]="getViewModel().formGroup.controls.fields"
+                [cropVarietyOptions]="cropVarietyOptions">
+            </berries-inventory-field-list>
 
         </div>
     </form>

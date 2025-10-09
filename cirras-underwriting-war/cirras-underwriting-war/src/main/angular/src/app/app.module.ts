@@ -147,6 +147,10 @@ import { VerifiedYieldGrainBasketComponent } from "./components/verified-yield/g
 import { UserSettingsComponent } from "./components/maintain/user-settings/user-settings.component";
 import { UserSettingsContainer } from "./containers/maintenance/user-settings-container";
 import { BerriesInventoryComponent } from "./components/inventory/berries/berries-inventory.component";
+import { BerriesInventoryFieldListComponent } from "./components/inventory/berries/field-list/berries-inventory-field-list.component";
+import { BerriesInventoryFieldComponent } from "./components/inventory/berries/field/berries-inventory-field.component";
+import { BerriesInventoryPlantingComponent } from "./components/inventory/berries/planting/berries-inventory-planting.component";
+import { BerriesInventoryInventoryBerryComponent } from "./components/inventory/berries/inventory-berry/berries-inventory-inventory-berry.component";
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -209,6 +213,10 @@ if (!environment.production || !environment.restrict_imports) {
         GrainDopContainer,
         ForageInventoryComponent,
         BerriesInventoryComponent,
+        BerriesInventoryFieldListComponent,
+        BerriesInventoryFieldComponent,
+        BerriesInventoryPlantingComponent,
+        BerriesInventoryInventoryBerryComponent,
         LandListComponent,
         LandListContainer,
         ManageLandComponent,
