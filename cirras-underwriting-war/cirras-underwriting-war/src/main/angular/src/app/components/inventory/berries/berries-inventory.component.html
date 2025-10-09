@@ -8,10 +8,10 @@
                 {{ (growerContract && growerContract.policyNumber) ? growerContract.policyNumber : "" }}   
             </div>
             <!-- unsaved messages -->
-            <div *ngIf="hasDataChanged == true; else noWarningDiv">
+            <div *ngIf="isUnsaved; else noWarningDiv">
                 <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
             </div>
-            <div *ngIf="hasDataChanged == true; else noWarningDiv" class="unsaved-changes">
+            <div *ngIf="isUnsaved; else noWarningDiv" class="unsaved-changes">
                 Unsaved Changes 
             </div>
             <ng-template #noWarningDiv>
@@ -31,25 +31,16 @@
                 </button> -->
             </div>
             <div>
-                <!-- <button 
+                <button 
                     *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
                     mat-raised-button 
                     [ngClass]="isHiddenFieldInTotals ? 'secondary header-button-red' : 'primary button-large-text'"
                     [disabled]="!hasDataChanged && inventoryContract?.inventoryContractGuid" 
                     (click)="onSave()">
                         Save
-                </button> -->
+                </button>
             </div>
         </div>
-
-        <!-- <div id="hidden-totals-warning">
-            <div *ngIf="isHiddenFieldInTotals">
-                <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
-            </div>
-            <div *ngIf="isHiddenFieldInTotals">
-                Hidden fields are included in acre totals
-            </div>
-        </div> -->
         
     <cirras-grower-contract-header
     [growerContract]="growerContract"
@@ -81,13 +72,13 @@
                 </button> -->
             </div>
             <div>
-                <!-- <button *ngIf="!hasYieldData" 
+                <button *ngIf="!hasYieldData" 
                     mat-raised-button 
                     class="secondary header-button"  
                     matTooltip="Clear unsaved changes"
                     (click)="onCancel()">
                     Clear Changes
-                </button> -->
+                </button>
             </div>
             <div class="vertical-line"></div>
             <div>

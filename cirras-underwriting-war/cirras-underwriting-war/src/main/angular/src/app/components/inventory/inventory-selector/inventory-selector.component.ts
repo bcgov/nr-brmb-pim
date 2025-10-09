@@ -27,6 +27,7 @@ export class InventorySelectorComponent implements OnInit{
   @Input() underSeededCropCommodityList: CropCommodityList;
   @Input() loadState: LoadState;
   @Input() errorState: ErrorState[];
+  @Input() isUnsaved: boolean;
 
   policyId: string;
   inventoryContractGuid: string;

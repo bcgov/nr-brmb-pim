@@ -8,7 +8,8 @@
          <mat-form-field appearance="fill" style="width: 260px;">
             <input matInput type="text"
                     formControlName="fieldLocation"
-                    maxlength="128">
+                    maxlength="128"
+                    (blur)="updateFieldLocationInfo()">
         </mat-form-field>  
         <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Field address is writeable">edit</mat-icon>
     </div>
