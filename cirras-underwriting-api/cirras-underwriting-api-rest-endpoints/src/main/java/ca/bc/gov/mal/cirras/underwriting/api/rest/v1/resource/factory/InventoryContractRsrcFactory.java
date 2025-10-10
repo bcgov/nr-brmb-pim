@@ -848,6 +848,16 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 	}
 
 	@Override
+	public void updateDto(InventoryContractCommodityBerriesDto dto, InventoryContractCommodityBerries model) {
+		dto.setInventoryContractGuid(model.getInventoryContractGuid());
+		dto.setCropCommodityId(model.getCropCommodityId());
+		dto.setTotalInsuredPlants(model.getTotalInsuredPlants());
+		dto.setTotalUninsuredPlants(model.getTotalUninsuredPlants());
+		dto.setTotalInsuredAcres(model.getTotalInsuredAcres());
+		dto.setTotalUninsuredAcres(model.getTotalUninsuredAcres());
+	}
+
+	@Override
 	public void updateDto(InventoryCoverageTotalForageDto dto, InventoryCoverageTotalForage model) {
 		dto.setCropCommodityId(model.getCropCommodityId());
 		dto.setCropCommodityName(model.getCropCommodityName());
@@ -968,6 +978,40 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		}
 	}
 
+	@Override
+	public void updateDto(InventoryBerriesDto dto, InventoryBerries model) {
+
+		if (Boolean.TRUE.equals(model.getDeletedByUserInd())) {
+
+			// Flagged for deletion, but record could not be deleted, so clear the user-entered data.
+			//The commodity stays on the record to be able to show it in the correct table in the ui
+			dto.setCropCommodityId(model.getCropCommodityId());
+			dto.setCropCommodityName(model.getCropCommodityName());
+			dto.setCropVarietyId(null);
+			dto.setCropVarietyName(null);
+			dto.setPlantedYear(null);
+			dto.setPlantedAcres(null);
+			dto.setRowSpacing(null);
+			dto.setPlantSpacing(null);
+			dto.setTotalPlants(null);
+			dto.setIsQuantityInsurableInd(false);
+			dto.setIsPlantInsurableInd(false);
+
+		} else {		
+			dto.setCropCommodityId(model.getCropCommodityId());
+			dto.setCropCommodityName(model.getCropCommodityName());
+			dto.setCropVarietyId(model.getCropVarietyId());
+			dto.setCropVarietyName(model.getCropVarietyName());
+			dto.setPlantedYear(model.getPlantedYear());
+			dto.setPlantedAcres(model.getPlantedAcres());
+			dto.setRowSpacing(model.getRowSpacing());
+			dto.setPlantSpacing(model.getPlantSpacing());
+			dto.setTotalPlants(model.getTotalPlants());
+			dto.setIsQuantityInsurableInd(model.getIsQuantityInsurableInd());
+			dto.setIsPlantInsurableInd(model.getIsPlantInsurableInd());
+		}	
+	}
+	
 	@Override
 	public void updateDto(UnderwritingCommentDto dto, UnderwritingComment model) {
 		dto.setUnderwritingComment(model.getUnderwritingComment());

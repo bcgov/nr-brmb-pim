@@ -22,7 +22,9 @@ public class InventoryBerries implements Serializable {
 
 	private String cropCommodityName;
 	private String cropVarietyName;
-	
+
+	private Boolean deletedByUserInd;
+
 	public String getInventoryBerriesGuid() {
 		return inventoryBerriesGuid;
 	}
@@ -126,6 +128,13 @@ public class InventoryBerries implements Serializable {
 
 	public void setCropVarietyName(String cropVarietyName) {
 		this.cropVarietyName = cropVarietyName;
+	}
+	
+	public Boolean getDeletedByUserInd() {
+		return deletedByUserInd;
+	}
+	public void setDeletedByUserInd(Boolean deletedByUserInd) {
+		this.deletedByUserInd = deletedByUserInd;
 	}
 		
 }

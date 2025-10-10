@@ -138,6 +138,7 @@ public class AnnualFieldRsrcFactory extends BaseResourceFactory implements Annua
 	@Override
 	public void updateDto(ContractedFieldDetailDto dto, AnnualField model) {
 		dto.setDisplayOrder(model.getDisplayOrder());
+		dto.setIsLeasedInd(model.getIsLeasedInd());
 	}
 	
 	public static String getAnnualFieldListSelfUri(
