@@ -72,10 +72,10 @@
     "@types/node": "12.20.55",
     "@typescript-eslint/eslint-plugin": "8.45.0",
     "@typescript-eslint/parser": "8.45.0",
-    "eslint": "9.36.0",
+    "eslint": "9.37.0",
     "eslint-plugin-import": "2.32.0",
     "replace-in-file": "8.3.0",
     "ts-node": "8.10.2",
-    "typescript": "5.8.3"
+    "typescript": "5.9.3"
   }
 }
