@@ -1,4 +1,4 @@
-<div class="plcy-inv-field-box" [formGroup]="fieldFormGroup" style="width:1355px;">
+<div class="plcy-inv-field-box" [formGroup]="fieldFormGroup" style="width:1375px;">
     
     <div class="inventory-cell inventory-border border-left" style="width: 115px;">
         {{ fieldFormGroup.value.fieldId }}
@@ -8,7 +8,8 @@
          <mat-form-field appearance="fill" style="width: 260px;">
             <input matInput type="text"
                     formControlName="fieldLocation"
-                    maxlength="128">
+                    maxlength="128"
+                    (blur)="updateFieldLocation()">
         </mat-form-field>  
         <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Field address is writeable">edit</mat-icon>
     </div>
@@ -18,7 +19,7 @@
     </div>
 
     <div class="inventory-fill inventory-border" style="width: 80px;">
-        <mat-checkbox formControlName="isLeasedInd"></mat-checkbox>
+        <mat-checkbox formControlName="isLeasedInd" (change)="updateIsLeasedInd()"></mat-checkbox>
     </div>
 
     <!-- plantings -->
