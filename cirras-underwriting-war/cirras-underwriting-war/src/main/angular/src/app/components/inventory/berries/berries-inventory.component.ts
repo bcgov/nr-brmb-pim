@@ -4,10 +4,11 @@ import { BaseComponent } from '../../common/base/base.component';
 import { CropCommodityList, CropVarietyCommodityType, InventoryContract, UwContract } from 'src/app/conversion/models';
 import { BerriesInventoryComponentModel } from './berries-inventory.component.model';
 import { CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
-import { AddNewInventoryContract, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
+import { AddNewInventoryContract, DeleteInventoryContract, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
+import { isInt } from 'src/app/utils';
 
 @Component({
   selector: 'berries-inventory',
@@ -27,7 +28,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   cropVarietyOptions = [];
 
   hasYieldData = false; // TODO
-  
+
   initModels() {
     this.viewModel = new BerriesInventoryComponentModel(this.sanitizer, this.fb, this.inventoryContract);
   }
@@ -115,10 +116,67 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   }
 
   isFormValid() {
-    //TODO
-    return true
+
+    for (let field of  this.inventoryContract.fields) {
+      for (let planting of field.plantings) {
+        let plantedYear = planting.inventoryBerries.plantedYear
+        let plantedAcres = planting.inventoryBerries.plantedAcres
+        let varieity = planting.inventoryBerries.cropVarietyId
+
+        let rowSpacing = planting.inventoryBerries.rowSpacing
+        let plantSpacing = planting.inventoryBerries.plantSpacing
+        let isQuantityInsurableInd = planting.inventoryBerries.isQuantityInsurableInd
+        let isPlantInsurableInd = planting.inventoryBerries.isPlantInsurableInd
+
+        // All user entered fields are mandatory: if at least one field has a value or one of the checkboxes is checked then all should have a value
+        let message = "Partial data entry is not accepted. Please fill in all values for field ID " + field.fieldId + " or none of them."
+        if (plantedYear && (!plantedAcres || !varieity || !rowSpacing || !plantSpacing ) ) {
+          alert(message)
+          return false
+        }
+
+        if (!plantedYear && (plantedAcres || varieity || rowSpacing || plantSpacing ) ) {
+          alert(message)
+          return false
+        }
+
+        if ( (isQuantityInsurableInd || isPlantInsurableInd) && (!plantedAcres || !plantedYear || !varieity || !rowSpacing || !plantSpacing ) ) {
+          alert(message)
+          return false
+        }
+
+        // Planted Year: 4-digit positive integers are allowed
+        if ( plantedYear && (!isInt(plantedYear) || plantedYear < 1000 || plantedYear > 9999 ) ) {
+          alert("Planted Year for Field Id " + field.fieldId + " should be a 4-digit positive integer.")
+          return false
+        }
+
+        // Row Spacing: only 0 and positive integer values up to 4 digits are accepted.
+        if ( rowSpacing && (!isInt(rowSpacing) || rowSpacing < 0 || rowSpacing > 9999 )) {
+          alert("Row Spacing for Field Id " + field.fieldId + " should be a positive integer.")
+          return false
+        }
+      }
+    }
+    
+    return true // all checks have passed successfully
   }
 
-  // TODO add onblur functions for each form control
+  onDeleteInventory() {
+    //Ask for confirmation before deleting all Inventory data
+    if ( confirm("You are about to delete all inventory data for the policy. Do you want to continue?") ) {
+
+      if (this.inventoryContract && this.policyId) {
+        
+        this.store.dispatch(DeleteInventoryContract(INVENTORY_COMPONENT_ID, 
+                                this.inventoryContract.inventoryContractGuid, 
+                                this.policyId, 
+                                this.inventoryContract.etag))
+      }
+      
+    }
+  }
+
+  
 
 }

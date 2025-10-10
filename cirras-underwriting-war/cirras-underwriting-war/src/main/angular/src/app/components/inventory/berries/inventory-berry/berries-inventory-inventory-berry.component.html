@@ -71,7 +71,7 @@
         </div>
 
         <div class="inventory-cell inventory-border" style="width: 80px;">
-            {{( inventoryBerry && inventoryBerry.totalPlants) ? inventoryBerry.totalPlants : "" }}
+            {{ (( inventoryBerry && inventoryBerry.totalPlants) ? inventoryBerry.totalPlants : "" ) | number: '1.0-2'}}
         </div>
 
         <div class="inventory-fill inventory-border" style="width: 80px;">

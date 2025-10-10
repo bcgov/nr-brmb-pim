@@ -44,6 +44,17 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     this.inventoryBerriesFormGroup = this.fb.group(
       addBerriesObject(( this.inventoryBerry && this.inventoryBerry.inventoryFieldGuid ? this.inventoryBerry.inventoryFieldGuid : null), false, this.inventoryBerry ) 
     )
+    // TODO: inventoryFieldGuid should be passed as Input value for the new plantings
+
+    // make IsQuantityInsurableInd and IsPlantInsurableCheckbox checked by default, as it's in the form
+    this.inventoryBerry.isQuantityInsurableInd = this.inventoryBerriesFormGroup.value.isQuantityInsurableInd
+    this.inventoryBerry.isPlantInsurableInd = this.inventoryBerriesFormGroup.value.isPlantInsurableInd
+
+    // set crop commodity id to Blueberries by default // TODO: this will have to change after we introduce Rasberries and Strawberries
+    if (!this.inventoryBerry.cropCommodityId) {
+      this.inventoryBerry.cropCommodityId = this.defaultCommodity
+    }
+
   }
 
   numberOnly(event): boolean {
@@ -92,7 +103,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     const roundUpAcres = roundUpDecimal(plantedAcres, 2)
 
     this.inventoryBerriesFormGroup.controls['plantedAcres'].setValue(roundUpAcres) 
-    this.inventoryBerry.plantedAcres = this.inventoryBerriesFormGroup.value.plantedYear
+    this.inventoryBerry.plantedAcres = this.inventoryBerriesFormGroup.value.plantedAcres
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }
 
@@ -112,6 +123,10 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
   }
 
   updatePlantSpacing() {
+    const plantSpacing = this.inventoryBerriesFormGroup.value.plantSpacing
+    const roundUpPlantSpacing = roundUpDecimal(plantSpacing, 1)
+
+    this.inventoryBerriesFormGroup.controls['plantSpacing'].setValue(roundUpPlantSpacing) 
     this.inventoryBerry.plantSpacing = this.inventoryBerriesFormGroup.value.plantSpacing
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }

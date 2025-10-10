@@ -778,9 +778,8 @@ export function addBerriesObject(inventoryFieldGuid, isHiddenOnPrintoutInd, inve
     rowSpacing:               [ (inventoryBerries && inventoryBerries.rowSpacing) ? inventoryBerries.rowSpacing : null],
     plantSpacing:             [ (inventoryBerries && inventoryBerries.plantSpacing) ? inventoryBerries.plantSpacing : null],
     totalPlants:              [ (inventoryBerries && inventoryBerries.totalPlants) ? inventoryBerries.totalPlants : null],
-    isQuantityInsurableInd:   [ (!inventoryBerries || !inventoryBerries.isQuantityInsurableInd ) ? false : inventoryBerries.isQuantityInsurableInd ],
-    isPlantInsurableInd:      [ (!inventoryBerries || !inventoryBerries.isPlantInsurableInd ) ? false : inventoryBerries.isPlantInsurableInd ],
-    isHiddenOnPrintoutInd:    [ isHiddenOnPrintoutInd ],
+    isQuantityInsurableInd:   [ (!inventoryBerries || inventoryBerries.isQuantityInsurableInd == undefined) ? true : inventoryBerries.isQuantityInsurableInd ],  // defaults to true
+    isPlantInsurableInd:      [ (!inventoryBerries || inventoryBerries.isPlantInsurableInd == undefined) ? true : inventoryBerries.isPlantInsurableInd ],  // defaults to true
     deletedByUserInd:         [false]
   }
 }
