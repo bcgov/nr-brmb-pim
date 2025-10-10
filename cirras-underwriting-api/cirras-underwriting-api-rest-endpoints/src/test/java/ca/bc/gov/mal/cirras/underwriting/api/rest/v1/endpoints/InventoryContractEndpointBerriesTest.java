@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -12,7 +13,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InventoryReportType;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandManagementEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PoliciesSyncEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.client.v1.CirrasUnderwritingService;
@@ -33,12 +33,8 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractListRsrc
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodityBerries;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryCoverageTotalForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededForage;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryUnseeded;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.test.EndpointsTest;
-import ca.bc.gov.nrs.common.wfone.rest.resource.RelLink;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
@@ -180,10 +176,10 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNull("TotalPlants", newBerries.getTotalPlants());
 		Assert.assertNull("IsQuantityInsurableInd", newBerries.getIsQuantityInsurableInd());
 		Assert.assertNull("IsPlantInsurableInd", newBerries.getIsPlantInsurableInd());
-		//TODO Check new field data
+		//Check field data
 		AnnualFieldRsrc field = invContract.getFields().get(0);
-		//Assert.assertEquals("FieldLocation", fieldLocation, field.getFieldLocation());
-		//Assert.assertEquals("IsLeased", false, field.getIsLeasedInd());
+		Assert.assertEquals("FieldLocation", fieldLocation, field.getFieldLocation());
+		Assert.assertEquals("IsLeased", false, field.getIsLeasedInd());
 
 		newBerries.setCropCommodityId(10);
 		newBerries.setCropCommodityName("BLUEBERRY");
@@ -193,7 +189,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		newBerries.setPlantedAcres((double)100);
 		newBerries.setRowSpacing(10);
 		newBerries.setPlantSpacing(5.3);
-		newBerries.setTotalPlants(5000);
+		newBerries.setTotalPlants(calculateTotalPlants(newBerries));
 		newBerries.setIsQuantityInsurableInd(true);
 		newBerries.setIsPlantInsurableInd(false);
 
@@ -204,84 +200,71 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		inventoryFieldGuid1 = field.getPlantings().get(0).getInventoryFieldGuid();
 		newBerries.setInventoryFieldGuid(inventoryFieldGuid1);
 		
-		//PIM-2189: Temporary Insert inventoryBerries record using inventoryFieldGuid1 as InventoryFieldGuid. Replace &&&
-		/*
-		    SELECT * FROM inventory_field WHERE field_id = 90000016 AND crop_year = 2021;
-		    INSERT INTO cuws.inventory_berries(
-			inventory_berries_guid, inventory_field_guid, crop_commodity_id, crop_variety_id, planted_year, planted_acres, row_spacing, plant_spacing, total_plants, is_quantity_insurable_ind, is_plant_insurable_ind, create_user, create_date, update_user, update_date)
-			VALUES ('testInvBerries1234', '&&&', 10, 1010689, 2020, 100, 10, 5.3, 5000, 'Y', 'N', 'admin', now(), 'admin', now());
-		 */
-//		UwContractRsrc uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
-//		Assert.assertNotNull(uwContract.getInventoryContractGuid());
-//		fetchedInvContract = service.getInventoryContract(uwContract);
-
 		InventoryBerries fetchedBerries = fetchedInvContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
 
-		//checkInventoryBerries(newBerries, fetchedBerries);
-//
-//		//Update
-//		cal.clear();
-//		cal.set(2021, Calendar.MARCH, 10);
-//		seedingDate = cal.getTime();
-//		
-//		fetchedForage.setCommodityTypeCode("Six Row");
-//		fetchedForage.setCropCommodityId(16);
-//		fetchedForage.setCropVarietyId(1010640);
-//		fetchedForage.setCropVarietyName("CDC TITANIUM");
-//		fetchedForage.setFieldAcres(22.5);
-//		fetchedForage.setSeedingYear(2021);
-//		fetchedForage.setSeedingDate(seedingDate);
-//		fetchedForage.setIsIrrigatedInd(false);
-//		fetchedForage.setIsQuantityInsurableInd(true);
-//		fetchedForage.setPlantInsurabilityTypeCode("W1");
-//		fetchedForage.setIsAwpEligibleInd(false);
-//		
-//		InventoryContractRsrc updatedInvContract = service.updateInventoryContract(fetchedInvContract.getInventoryContractGuid(), fetchedInvContract);
-//
-//		InventorySeededForage updatedForage = updatedInvContract.getFields().get(0).getPlantings().get(0).getInventorySeededForages().get(0);
-//		
-//		checkInventorySeededForage(fetchedForage, updatedForage);
-//
-//		//Check DOP link
-//		searchResults = service.getUwContractList(
-//				topLevelEndpoints, 
-//				null, 
-//				null, 
-//				null,
-//				null,
-//				policyNumber1,
-//				null,
-//				null, 
-//				null, 
-//				null, 
-//				pageNumber, pageRowCount);
-//
-//		Assert.assertNotNull(searchResults);
-//		Assert.assertEquals(1, searchResults.getCollection().size());
-//
-//		UwContractRsrc uwContractRsrc = searchResults.getCollection().get(0);
-//		
-//		Assert.assertNotNull(uwContractRsrc);
-//		Assert.assertNotNull(uwContractRsrc.getLinks());
-//		boolean dopLinkPresent = false;
-//		//Check if the rollover dop yield link is in the list
-//		for (RelLink link : uwContractRsrc.getLinks()) {
-//			if(link.getHref().contains("rolloverDopYieldContract")) {
-//				dopLinkPresent = true;
-//				break;
-//			}
-//		}
-//		Assert.assertTrue(dopLinkPresent);
+		checkInventoryBerries(newBerries, fetchedBerries);
 		
+		//Check field data
+		field = fetchedInvContract.getFields().get(0);
+		Assert.assertEquals("FieldLocation", fieldLocation, field.getFieldLocation());
+		Assert.assertEquals("IsLeased", false, field.getIsLeasedInd());
+
+		//Update
+		fetchedBerries.setCropCommodityId(12);
+		fetchedBerries.setCropCommodityName("RASPBERRY");
+		fetchedBerries.setCropVarietyId(1010694);
+		fetchedBerries.setCropVarietyName("MALAHAT");
+		fetchedBerries.setPlantedYear(2021);
+		fetchedBerries.setPlantedAcres((double)200);
+		fetchedBerries.setRowSpacing(5);
+		fetchedBerries.setPlantSpacing(4.9);
+		fetchedBerries.setTotalPlants(calculateTotalPlants(fetchedBerries));
+		fetchedBerries.setIsQuantityInsurableInd(false);
+		fetchedBerries.setIsPlantInsurableInd(true);
+
+		InventoryContractRsrc updatedInvContract = service.updateInventoryContract(fetchedInvContract.getInventoryContractGuid(), fetchedInvContract);
+
+		InventoryBerries updatedBerries = updatedInvContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
+
+		checkInventoryBerries(fetchedBerries, updatedBerries);
+
+		//Update Field location
+		fieldLocation = fieldLocation + " Update";
+		FieldRsrc fetchedField = service.getField(topLevelEndpoints, fieldId1.toString());
+		fetchedField.setFieldLocation(fieldLocation);
+		fetchedField.setTransactionType(LandManagementEventTypes.FieldUpdated);
+		service.synchronizeField(fetchedField);
 		
-		//PIM-2189: Temporary Delete inventoryBerries record
-		//DELETE FROM inventory_berries WHERE inventory_berries_guid = 'testInvBerries1234';
-		//SELECT * FROM inventory_berries WHERE inventory_berries_guid = 'testInvBerries1234';
+		//Update is Leased
+		ContractedFieldDetailRsrc fetchedCfd = service.getContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString()); 
+		fetchedCfd.setIsLeasedInd(true);
+		fetchedCfd.setTransactionType(LandManagementEventTypes.ContractedFieldDetailUpdated);
+		service.synchronizeContractedFieldDetail(fetchedCfd);
+		
+		//Check field data
+		field = updatedInvContract.getFields().get(0);
+		Assert.assertEquals("FieldLocation", fieldLocation, field.getFieldLocation());
+		Assert.assertEquals("IsLeased", true, field.getIsLeasedInd());
+
+		UwContractRsrc uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContract.getInventoryContractGuid());
+		invContract = service.getInventoryContract(uwContract);
+		
 		delete();
 		
 		logger.debug(">testInsertUpdateDeleteInventoryBerries");
+	}
 	
-
+	private Integer calculateTotalPlants(InventoryBerries inventoryBerries) {
+		if(inventoryBerries.getPlantedAcres() != null && inventoryBerries.getRowSpacing() != null && inventoryBerries.getPlantSpacing() != null) {
+			double spacing = inventoryBerries.getRowSpacing() * inventoryBerries.getPlantSpacing();
+			if(spacing > 0) {
+				double totalPlants = (inventoryBerries.getPlantedAcres() * 43560) / spacing; 
+				return Math.toIntExact(Math.round(totalPlants));
+			}
+		}
+		
+		return 0;
 	}
 	
 	@Test
@@ -315,112 +298,61 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNotNull(invContract.getInventoryContractCommodityBerries());
 		Assert.assertEquals(0, invContract.getInventoryContractCommodityBerries().size());
 
-//		AnnualFieldRsrc field = invContract.getFields().get(0);
-//
-//		// Remove default planting.
-//		field.getPlantings().remove(0);
-//		
-//		// Planting 1
-//		InventoryField planting = createPlanting(field, 1, cropYear1);
-//		createInventorySeededForage(planting, 65, "E2", true, 12.3456); //FORAGE Establishment 2
-//
-//		// Planting 2
-//		planting = createPlanting(field, 2, cropYear1);
-//		createInventorySeededForage(planting, 65, "W3", true, 11.2233); //FORAGE Winter Survival 3
-//				
-//		// Planting 3
-//		planting = createPlanting(field, 3, cropYear1);
-//		createInventorySeededForage(planting, 65, "E2", true, 33.4455); //FORAGE Establishment 2
-//
-//		// Planting 4
-//		planting = createPlanting(field, 4, cropYear1);
-//		createInventorySeededForage(planting, 65, null, false, 66.7788); //FORAGE Not insured		
-//		
-//		// Planting 5
-//		planting = createPlanting(field, 5, cropYear1);
-//		createInventoryUnseeded(planting, 71, true, 98.0);
-//		createInventorySeededForage(planting, 71, null, true, 98.7654); //SILAGE CORN
-//		createInventorySeededForage(planting, 71, null, true, 99.8877); //SILAGE CORN
-//		createInventorySeededForage(planting, 71, null, true, null); //SILAGE CORN - Null field acres
-//		createInventorySeededForage(planting, 71, null, true, 0.0); //SILAGE CORN - 0 field acres
-//		
-//		// Planting 6 - SILAGE CORN + IsUnseedeUnsurable = true
-//		planting = createPlanting(field, 6, cropYear1);  
-//		createInventoryUnseeded(planting, 71, true, 102.0);
-//		createInventorySeededForage(planting, 71, null, true, 101.00); //SILAGE CORN
-//		createInventorySeededForage(planting, 71, null, true, 102.00); //SILAGE CORN
-//
-//		// Planting 7 - SILAGE CORN + IsUnseedeUnsurable = false
-//		planting = createPlanting(field, 7, cropYear1);  
-//		createInventoryUnseeded(planting, 71, false, 999.0);
-//
-		//Berries Totals
-		List<InventoryContractCommodityBerries> expectedTotals = new ArrayList<InventoryContractCommodityBerries>();
-		//Blueberries
-		InventoryContractCommodityBerries iccb = createInventoryContractCommodityBerries(invContract.getInventoryContractGuid(), 10, "BLUEBERRY", 5000, 200, (double)1000, (double)100);
-		expectedTotals.add(iccb);
+		AnnualFieldRsrc field = invContract.getFields().get(0);
+
+		// Remove default planting.
+		field.getPlantings().remove(0);
 		
-		//Raspberries
-		iccb = createInventoryContractCommodityBerries(invContract.getInventoryContractGuid(), 12, "RASPBERRY", 5001, 201, (double)1001, (double)101);
-		expectedTotals.add(iccb);
+		// Planting 1
+		InventoryField planting = createPlanting(field, 1, cropYear1);
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010689, "BLUEJAY", (double)10, 10, 5.3, true, true); //Blueberry insured for both
+
+		// Planting 2
+		planting = createPlanting(field, 2, cropYear1);
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010691, "ELLIOTT", (double)20, 5, 4.9, true, false); //Blueberry Quantity insured
+				
+		// Planting 3
+		planting = createPlanting(field, 3, cropYear1);
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010690, "LEGACY", (double)12, 12, 5.0, false, true); //Blueberry Plant insured
+
+		// Planting 4
+		planting = createPlanting(field, 4, cropYear1);
+		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)13, 10, 7.0, true, true); //Raspberry insured for both
+		
+		// Planting 5
+		planting = createPlanting(field, 5, cropYear1);
+		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)15, 9, 6.0, true, true); //Raspberry insured for both
+
+		//Berries Totals
+		List<InventoryContractCommodityBerries> expectedTotals = createExpectedInventoryContractCommodityBerries(field);
 
 		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
 
-		//PIM-2189: Temporary Insert inventoryContractCommodityBerries record using invContract.getInventoryContractGuid() as InventoryFieldGuid. Replace &&&
-		/*
-		    SELECT * FROM inventory_contract WHERE contract_id = 90000014 and crop_year = 2021;
-		    
-			INSERT INTO cuws.inventory_contract_commodity_berries(
-				inventory_contract_commodity_berries_guid, inventory_contract_guid, crop_commodity_id, total_insured_plants, total_uninsured_plants, total_insured_acres, total_uninsured_acres, create_user, create_date, update_user, update_date)
-				VALUES ('testCcBerries1234', '&&&', 10, 5000, 200, 1000, 100, 'admin', now(), 'admin', now());		 
-			
-			INSERT INTO cuws.inventory_contract_commodity_berries(
-				inventory_contract_commodity_berries_guid, inventory_contract_guid, crop_commodity_id, total_insured_plants, total_uninsured_plants, total_insured_acres, total_uninsured_acres, create_user, create_date, update_user, update_date)
-				VALUES ('testCcBerries12345', '&&&', 12, 5001, 201, 1001, 101, 'admin', now(), 'admin', now());
-		 */
-		uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
-		Assert.assertNotNull(uwContract.getInventoryContractGuid());
-		fetchedInvContract = service.getInventoryContract(uwContract);
-
 		Assert.assertEquals(expectedTotals.size(), fetchedInvContract.getInventoryContractCommodityBerries().size());
 
-		for (int i = 0; i < expectedTotals.size(); i++) {
-			checkInventoryContractCommodityBerries(expectedTotals.get(i), fetchedInvContract.getInventoryContractCommodityBerries().get(i), fetchedInvContract.getInventoryContractGuid());
+		for (InventoryContractCommodityBerries expectedIccb : expectedTotals) {
+			InventoryContractCommodityBerries actualIccb = getInventoryContractCommodityBerries(expectedIccb.getCropCommodityId(), fetchedInvContract.getInventoryContractCommodityBerries());
+			Assert.assertNotNull(actualIccb);
+			checkInventoryContractCommodityBerries(expectedIccb, actualIccb, fetchedInvContract.getInventoryContractGuid());
 		}
 
-//		// Update FORAGE and Establishment 2.
-//		fetchedInvContract.getFields().get(0).getPlantings().get(0).getInventorySeededForages().get(0).setFieldAcres(13.579);
-//		
-//		// Remove W3, Add W1
-//		fetchedInvContract.getFields().get(0).getPlantings().get(1).getInventorySeededForages().get(0).setDeletedByUserInd(true);
-//		createInventorySeededForage(fetchedInvContract.getFields().get(0).getPlantings().get(1), 65, "W1", true, 97.531);
-//
-//		// Update expected totals.
-//		// FORAGE
-//		expectedTotals.get(0).setTotalFieldAcres(144.5555);
-//
-//		// Establishment 2
-//		expectedTotals.get(3).setTotalFieldAcres(47.0245);
-//
-//		// Winter Survival 1 (replaces Winter Survival 3)
-//		ictf = createInventoryCovarageTotalForage(fetchedInvContract.getInventoryContractGuid(), null, null, "W1", "Winter Survival 1", 97.531, false);
-//		expectedTotals.set(4, ictf);
-//		
-//		InventoryContractRsrc updatedInvContract = service.updateInventoryContract(fetchedInvContract.getInventoryContractGuid(), fetchedInvContract);
-//		
-//		Assert.assertEquals(expectedTotals.size(), updatedInvContract.getInventoryCoverageTotalForages().size());
-//
-//		for (int i = 0; i < expectedTotals.size(); i++) {
-//			checkInventoryCoverageTotalForage(expectedTotals.get(i), updatedInvContract.getInventoryCoverageTotalForages().get(i));
-//		}
-		
-		//PIM-2189: Temporary Delete inventoryBerries record
-		//SELECT * FROM inventory_contract_commodity_berries WHERE inventory_contract_commodity_berries_guid in ('testCcBerries1234','testCcBerries12345')
-		//DELETE FROM inventory_contract_commodity_berries WHERE inventory_contract_commodity_berries_guid in ('testCcBerries1234','testCcBerries12345');
 		delete();
 
-
 		logger.debug(">testInventoryContractCommodityBerries");
+	}
+	
+	private InventoryContractCommodityBerries getInventoryContractCommodityBerries(Integer cropCommodityId, List<InventoryContractCommodityBerries> iccbList) {
+		
+		InventoryContractCommodityBerries iccb = null;
+		
+		List<InventoryContractCommodityBerries> iccbFiltered = iccbList.stream()
+				.filter(x -> x.getCropCommodityId().equals(cropCommodityId))
+				.collect(Collectors.toList());
+		
+		if (iccbFiltered != null && iccbFiltered.size() > 0) {
+			iccb = iccbFiltered.get(0);
+		}
+		return iccb;
 	}
 
 //	@Test
@@ -562,90 +494,107 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		return planting;
 	}
 
-	private InventorySeededForage createInventorySeededForage(
+	private InventoryBerries createInventoryBerries(
 			InventoryField planting, 
-            Integer cropCommodityId, 
-			String plantInsurabilityTypeCode,
+            Integer cropCommodityId,
+			String cropCommodityName,
+            Integer cropVarietyId,
+			String cropVarietyName,
+			Double plantedAcres,
+			Integer rowSpacing,
+			Double plantSpacing,
 			Boolean isQuantityInsurableInd,
-			Double fieldAcres) {
+			Boolean isPlantInsurableInd
+			) {
 		
-		InventorySeededForage isf = new InventorySeededForage();
+		InventoryBerries ib = new InventoryBerries();
 
+		ib.setCropCommodityId(cropCommodityId);
+		ib.setCropCommodityName(cropCommodityName);
+		ib.setCropVarietyId(cropVarietyId);
+		ib.setCropVarietyName(cropVarietyName);
+		ib.setPlantedYear(2020);
+		ib.setPlantedAcres(plantedAcres);
+		ib.setRowSpacing(rowSpacing);
+		ib.setPlantSpacing(plantSpacing);
+		ib.setTotalPlants(calculateTotalPlants(ib));
+		ib.setIsQuantityInsurableInd(isQuantityInsurableInd);
+		ib.setIsPlantInsurableInd(isPlantInsurableInd);
 
-		isf.setCommodityTypeCode(null);
-		isf.setCropCommodityId(cropCommodityId);
-		isf.setCropVarietyId(null);
-		isf.setCropVarietyName(null);
-		isf.setFieldAcres(fieldAcres);
-		isf.setInventoryFieldGuid(planting.getInventoryFieldGuid());
-		isf.setIsAwpEligibleInd(false);
-		isf.setIsIrrigatedInd(false);
-		isf.setIsQuantityInsurableInd(isQuantityInsurableInd);
-		isf.setPlantInsurabilityTypeCode(plantInsurabilityTypeCode);
-		isf.setSeedingYear(planting.getCropYear() - 3);
-		
-		planting.getInventorySeededForages().add(isf);
+		planting.setInventoryBerries(ib);
 
-		return isf;
+		return ib;
 	}	
+
+	private List<InventoryContractCommodityBerries> createExpectedInventoryContractCommodityBerries(AnnualFieldRsrc field) {
+
+		List<InventoryContractCommodityBerries> expectedTotals = new ArrayList<InventoryContractCommodityBerries>();
+		
+		for ( InventoryField planting : field.getPlantings() ) {
+			if(planting.getInventoryBerries() != null) {
+				InventoryBerries ib = planting.getInventoryBerries();
+				if(!Boolean.TRUE.equals(ib.getDeletedByUserInd()) && ib.getCropCommodityId() != null){
+					List<InventoryContractCommodityBerries> iccbFiltered = null;
+
+					if (expectedTotals != null && expectedTotals.size() > 0) {
+						iccbFiltered = expectedTotals.stream()
+								.filter(x -> x.getCropCommodityId().equals(ib.getCropCommodityId()))
+								.collect(Collectors.toList());
+					}
+					
+					Double insuredAcres = 0.0;
+					Double uninsuredAcres = 0.0;
+					Integer insuredPlants = 0;
+					Integer uninsuredPlants = 0;
+					
+					if(Boolean.TRUE.equals(ib.getIsQuantityInsurableInd())) {
+						//Quantity insurable
+						insuredAcres = notNull(ib.getPlantedAcres(), (double) 0);
+					} else {
+						//Not Quantity insurable
+						uninsuredAcres = notNull(ib.getPlantedAcres(), (double) 0);
+					}
+					
+					if(Boolean.TRUE.equals(ib.getIsPlantInsurableInd())) {
+						//Plant insurable
+						insuredPlants = notNull(ib.getTotalPlants(), 0);
+					} else {
+						//Not Plant insurable
+						uninsuredPlants = notNull(ib.getTotalPlants(), 0);
+					}
+
+					if (iccbFiltered == null || iccbFiltered.size() == 0) {
+						// commodity is not in the list yet - Add it
+						InventoryContractCommodityBerries iccb = new InventoryContractCommodityBerries();
+						iccb.setCropCommodityId(ib.getCropCommodityId());
+						iccb.setCropCommodityName(ib.getCropCommodityName());
+						iccb.setTotalInsuredAcres(insuredAcres);
+						iccb.setTotalUninsuredAcres(uninsuredAcres);
+						iccb.setTotalInsuredPlants(insuredPlants);
+						iccb.setTotalUninsuredPlants(uninsuredPlants);
+						expectedTotals.add(iccb);
+
+					} else {
+						// commodity already exists in the list. Add the new values
+						InventoryContractCommodityBerries iccb = iccbFiltered.get(0);
+						iccb.setTotalInsuredAcres(insuredAcres + iccb.getTotalInsuredAcres());
+						iccb.setTotalUninsuredAcres(uninsuredAcres + iccb.getTotalUninsuredAcres());
+						iccb.setTotalInsuredPlants(insuredPlants + iccb.getTotalInsuredPlants());
+						iccb.setTotalUninsuredPlants(uninsuredPlants + iccb.getTotalUninsuredPlants());
+					}
+				}
+			}
+		}
+
+		return expectedTotals;
+	}
 	
-	private void updateInventorySeededForage(
-            Integer cropCommodityId, 
-			String plantInsurabilityTypeCode,
-			Boolean isQuantityInsurableInd,
-			Double fieldAcres,
-			InventorySeededForage isf) {
-		
-		isf.setCommodityTypeCode(null);
-		isf.setCropCommodityId(cropCommodityId);
-		isf.setCropVarietyId(null);
-		isf.setCropVarietyName(null);
-		isf.setFieldAcres(fieldAcres);
-		//isf.setInventoryFieldGuid(planting.getInventoryFieldGuid());
-		isf.setIsAwpEligibleInd(false);
-		isf.setIsIrrigatedInd(false);
-		isf.setIsQuantityInsurableInd(isQuantityInsurableInd);
-		isf.setPlantInsurabilityTypeCode(plantInsurabilityTypeCode);
-		//isf.setSeedingYear(planting.getCropYear() - 3);
-		
-	}	
-	private void createInventoryUnseeded(
-			InventoryField planting, 
-            Integer cropCommodityId, 
-            Boolean isUnseededInsurableInd,
-            Double acresToBeSeeded) {
-		
-		InventoryUnseeded inventoryUnseeded = new InventoryUnseeded();
-		inventoryUnseeded.setCropCommodityId(cropCommodityId);
-		inventoryUnseeded.setIsUnseededInsurableInd(isUnseededInsurableInd);
-		inventoryUnseeded.setAcresToBeSeeded(acresToBeSeeded);
-		inventoryUnseeded.setInventoryFieldGuid(planting.getInventoryFieldGuid());
-		planting.setInventoryUnseeded(inventoryUnseeded);
-
+	private Integer notNull(Integer value, Integer defaultValue) {
+		return (value == null) ? defaultValue : value;
 	}
 
-	private InventoryContractCommodityBerries createInventoryContractCommodityBerries(
-			String invContractGuid,
-            Integer cropCommodityId, 
-            String cropCommodityName, 
-            Integer totalInsuredPlants, 
-            Integer totalUninsuredPlants, 
-            Double totalInsuredAcres, 
-            Double totalUninsuredAcres
-			) {
-	
-		InventoryContractCommodityBerries model = new InventoryContractCommodityBerries();
-		
-		model.setInventoryContractGuid(invContractGuid);
-		model.setCropCommodityId(cropCommodityId);
-		model.setCropCommodityName(cropCommodityName);
-		model.setTotalInsuredPlants(totalInsuredPlants);
-		model.setTotalUninsuredPlants(totalUninsuredPlants);
-		model.setTotalInsuredAcres(totalInsuredAcres);
-		model.setTotalUninsuredAcres(totalUninsuredAcres);
-
-
-		return model;
+	private Double notNull(Double value, Double defaultValue) {
+		return (value == null) ? defaultValue : value;
 	}
 	
 	private void createGrower() throws ValidationException, CirrasUnderwritingServiceException {
