@@ -22,6 +22,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AddFieldValidation;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.Field;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractList;
@@ -101,6 +102,7 @@ import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UwContract
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.reports.JasperReportService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.reports.JasperReportServiceException;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.UnderwritingServiceHelper;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.BerriesService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InventoryCalculationType;
@@ -163,6 +165,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	// utils
 	// @Autowired
 	private UnderwritingServiceHelper underwritingServiceHelper;
+	private BerriesService berriesService;
 
 	public static final String MaximumResultsProperty = "maximum.results";
 
@@ -172,6 +175,10 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		this.underwritingServiceHelper = underwritingServiceHelper;
 	}
 
+	public void setBerriesService(BerriesService berriesService) {
+		this.berriesService = berriesService;
+	}
+	
 	public void setApplicationProperties(Properties applicationProperties) {
 		this.applicationProperties = applicationProperties;
 	}
@@ -379,6 +386,10 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 										updateInventorySeededForage(inventorySeededForage, inventoryFieldGuid, userId);
 									}
 								}
+								
+								if (planting.getInventoryBerries() != null) {
+									berriesService.updateInventoryBerries(planting.getInventoryBerries(), inventoryFieldGuid, userId);
+								}
 
 							}
 
@@ -401,6 +412,8 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			}
 
 			updateInventoryCoverageTotalForages(inventoryContract, inventoryContractGuid, userId);
+			
+			updateInventoryContractCommodityBerries(inventoryContract, inventoryContractGuid, userId);
 			
 			result = getInventoryContract(inventoryContractGuid, factoryContext, authentication);
 		} catch (DaoException e) {
@@ -635,6 +648,12 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		}
 	}
 	
+	private void updateInventoryContractCommodityBerries(InventoryContract<? extends AnnualField> invContract, String inventoryContractGuid, String userId) throws DaoException {
+		if ( invContract.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.BERRIES.toString())) {
+			berriesService.updateInventoryContractCommodityBerries(invContract, inventoryContractGuid, userId);
+		}
+	}
+	
 	private String insertInventoryField(InventoryField inventoryField, String userId) throws DaoException {
 
 		InventoryFieldDto dto = new InventoryFieldDto();
@@ -688,7 +707,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		
 		return dto.getInventorySeededForageGuid();
 	}
-
+	
 	private String insertUnderwritingComment(UnderwritingComment underwritingComment, Integer annualFieldDetailId,
 			String userId) throws DaoException {
 
@@ -748,7 +767,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 		if (bUpdateContractedFieldDetails || updateFieldData) {
 
-			renameField(annualField, userId);
+			updateField(annualField, userId);
 
 			if (bUpdateContractedFieldDetails) {
 				// Update contracted field details
@@ -815,7 +834,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		
 	}
 
-	private void renameField(AnnualField annualField, String userId)
+	private void updateField(AnnualField annualField, String userId)
 			throws DaoException, NotFoundException {
 		
 		FieldDto dto = fieldDao.fetch(annualField.getFieldId());
@@ -823,13 +842,25 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		if (dto == null) {
 			throw new NotFoundException("Did not find the field: " + annualField.getFieldId());
 		}
+		
+		Boolean update = false;
 
-		// Updates field label in cuws database and CIRRAS if it's different.
+		// Updates field label if it's different.
 		if (!notNull(dto.getFieldLabel(), "").equals(notNull(annualField.getFieldLabel(), ""))) {
 
 			dto.setFieldLabel(annualField.getFieldLabel());
-			fieldDao.update(dto, userId);
+			update = true;
+		}
+		
+		// Updates field location if it's different.
+		if (!notNull(dto.getLocation(), "").equals(notNull(annualField.getFieldLocation(), ""))) {
 
+			dto.setLocation(annualField.getFieldLocation());
+			update = true;
+		}
+
+		if(update) {
+			fieldDao.update(dto, userId);
 		}
 	}
 
@@ -939,7 +970,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			// deleted or updated
 			fromCfdDto = contractedFieldDetailDao.selectByGcyAndField(annualField.getTransferFromGrowerContractYearId(), annualField.getFieldId());
 
-			// Transfer happend in the same year
+			// Transfer happened in the same year
 			if (fromCfdDto != null) {
 				// If there is a contracted field record in the same year and plan it needs to be updated
 				annualField.setContractedFieldDetailId(fromCfdDto.getContractedFieldDetailId());
@@ -1547,6 +1578,10 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 										}
 									}
 									
+									if (planting.getInventoryBerries() != null) {
+										berriesService.updateInventoryBerries(planting.getInventoryBerries(), inventoryFieldGuid, userId);
+									}
+									
 								}
 							}
 						}
@@ -1562,6 +1597,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			// verify the totals.
 			updateInventoryContractCommodities(inventoryContract, inventoryContractGuid, userId);
 			updateInventoryCoverageTotalForages(inventoryContract, inventoryContractGuid, userId);
+			updateInventoryContractCommodityBerries(inventoryContract, inventoryContractGuid, userId);
 
 			result = getInventoryContract(inventoryContractGuid, factoryContext, authentication);
 
@@ -1593,6 +1629,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 					if (sourceContract != null) {
 						updateInventoryContractCommodities(sourceContract, sourceContract.getInventoryContractGuid(), userId);
 						updateInventoryCoverageTotalForages(sourceContract, sourceContract.getInventoryContractGuid(), userId);
+						updateInventoryContractCommodityBerries(sourceContract, sourceContract.getInventoryContractGuid(), userId);
 					}
 					
 				}
@@ -2223,6 +2260,8 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		inventorySeededForageDao.deleteForInventoryContract(inventoryContractGuid);
 		inventorySeededGrainDao.deleteForInventoryContract(inventoryContractGuid);
 		inventoryUnseededDao.deleteForInventoryContract(inventoryContractGuid);
+		inventoryBerriesDao.deleteForInventoryContract(inventoryContractGuid);
+		inventoryContractCommodityBerriesDao.deleteForInventoryContract(inventoryContractGuid);
 		inventoryFieldDao.deleteForInventoryContract(inventoryContractGuid);
 		inventoryCoverageTotalForageDao.deleteForInventoryContract(inventoryContractGuid);
 		inventoryContractCommodityDao.deleteForInventoryContract(inventoryContractGuid);
