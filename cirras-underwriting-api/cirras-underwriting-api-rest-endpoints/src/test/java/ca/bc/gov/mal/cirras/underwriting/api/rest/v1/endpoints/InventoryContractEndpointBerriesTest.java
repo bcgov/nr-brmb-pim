@@ -242,13 +242,13 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		service.synchronizeContractedFieldDetail(fetchedCfd);
 		
 		//Check field data
-		field = updatedInvContract.getFields().get(0);
-		Assert.assertEquals("FieldLocation", fieldLocation, field.getFieldLocation());
-		Assert.assertEquals("IsLeased", true, field.getIsLeasedInd());
-
 		UwContractRsrc uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
 		Assert.assertNotNull(uwContract.getInventoryContractGuid());
 		invContract = service.getInventoryContract(uwContract);
+
+		field = invContract.getFields().get(0);
+		Assert.assertEquals("FieldLocation", fieldLocation, field.getFieldLocation());
+		Assert.assertEquals("IsLeased", true, field.getIsLeasedInd());
 		
 		delete();
 		

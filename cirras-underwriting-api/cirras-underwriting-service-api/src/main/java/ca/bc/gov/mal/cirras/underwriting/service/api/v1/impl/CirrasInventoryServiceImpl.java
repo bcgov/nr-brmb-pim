@@ -388,7 +388,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 								}
 								
 								if (planting.getInventoryBerries() != null) {
-									updateInventoryBerries(planting.getInventoryBerries(), inventoryFieldGuid, userId);
+									berriesService.updateInventoryBerries(planting.getInventoryBerries(), inventoryFieldGuid, userId);
 								}
 
 							}
@@ -706,20 +706,6 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		inventorySeededForageDao.insert(dto, userId);
 		
 		return dto.getInventorySeededForageGuid();
-	}
-
-	private String insertInventoryBerries(InventoryBerries inventoryBerries, String inventoryFieldGuid,
-			String userId) throws DaoException {
-
-		InventoryBerriesDto dto = new InventoryBerriesDto();
-		inventoryContractFactory.updateDto(dto, inventoryBerries);
-
-		dto.setInventoryBerriesGuid(null);
-		dto.setInventoryFieldGuid(inventoryFieldGuid);
-
-		inventoryBerriesDao.insert(dto, userId);
-
-		return dto.getInventoryBerriesGuid();
 	}
 	
 	private String insertUnderwritingComment(UnderwritingComment underwritingComment, Integer annualFieldDetailId,
@@ -1593,7 +1579,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 									}
 									
 									if (planting.getInventoryBerries() != null) {
-										updateInventoryBerries(planting.getInventoryBerries(), inventoryFieldGuid, userId);
+										berriesService.updateInventoryBerries(planting.getInventoryBerries(), inventoryFieldGuid, userId);
 									}
 									
 								}
@@ -2152,29 +2138,6 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		linkUnlinkPlantings(inventorySeededForage, userId);
 
 	}
-
-	private void updateInventoryBerries(InventoryBerries inventoryBerries, String inventoryFieldGuid, String userId)
-			throws DaoException {
-
-		// inventoryUnseeded.getInventoryUnseededGuid() might be null if it's a new crop
-		InventoryBerriesDto dto = null;
-		if (inventoryBerries.getInventoryBerriesGuid() != null) {
-			dto = inventoryBerriesDao.fetch(inventoryBerries.getInventoryBerriesGuid());
-		}
-		
-		//Calculates and sets total plants
-		berriesService.calculateTotalPlants(inventoryBerries);
-
-		if (dto == null) {
-			// Insert if it doesn't exist
-			insertInventoryBerries(inventoryBerries, inventoryFieldGuid, userId);
-		} else {
-
-			inventoryContractFactory.updateDto(dto, inventoryBerries);
-
-			inventoryBerriesDao.update(dto, userId);
-		}
-	}	
 	
 	private void linkUnlinkPlantings(InventorySeededForage inventorySeededForage, String userId) throws DaoException, ServiceException {
 	

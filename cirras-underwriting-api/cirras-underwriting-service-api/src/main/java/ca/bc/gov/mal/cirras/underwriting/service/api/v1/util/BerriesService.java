@@ -1,47 +1,80 @@
 package ca.bc.gov.mal.cirras.underwriting.service.api.v1.util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollup;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededForage;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryUnseeded;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryContractCommodityBerriesDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryCoverageTotalForageDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityBerriesDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryCoverageTotalForageDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryUnseededDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.InventoryContractFactory;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InventoryCalculationType;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 
 public class BerriesService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BerriesService.class);
 
 	private InventoryContractCommodityBerriesDao inventoryContractCommodityBerriesDao;
+	private InventoryBerriesDao inventoryBerriesDao;
+
 	private InventoryContractFactory inventoryContractFactory;
 	
 	public void setInventoryContractCommodityBerriesDao(InventoryContractCommodityBerriesDao inventoryContractCommodityBerriesDao) {
 		this.inventoryContractCommodityBerriesDao = inventoryContractCommodityBerriesDao;
 	}
 
+	public void setInventoryBerriesDao(InventoryBerriesDao inventoryBerriesDao) {
+		this.inventoryBerriesDao = inventoryBerriesDao;
+	}
+
 	public void setInventoryContractFactory(InventoryContractFactory inventoryContractFactory) {
 		this.inventoryContractFactory = inventoryContractFactory;
+	}
+	
+	public void updateInventoryBerries(InventoryBerries inventoryBerries, String inventoryFieldGuid, String userId)
+			throws DaoException {
+
+		// inventoryUnseeded.getInventoryUnseededGuid() might be null if it's a new crop
+		InventoryBerriesDto dto = null;
+		if (inventoryBerries.getInventoryBerriesGuid() != null) {
+			dto = inventoryBerriesDao.fetch(inventoryBerries.getInventoryBerriesGuid());
+		}
+		
+		//Calculates and sets total plants
+		calculateTotalPlants(inventoryBerries);
+
+		if (dto == null) {
+			// Insert if it doesn't exist
+			insertInventoryBerries(inventoryBerries, inventoryFieldGuid, userId);
+		} else {
+
+			inventoryContractFactory.updateDto(dto, inventoryBerries);
+
+			inventoryBerriesDao.update(dto, userId);
+		}
+	}
+	
+	public String insertInventoryBerries(InventoryBerries inventoryBerries, String inventoryFieldGuid,
+			String userId) throws DaoException {
+
+		InventoryBerriesDto dto = new InventoryBerriesDto();
+		inventoryContractFactory.updateDto(dto, inventoryBerries);
+
+		dto.setInventoryBerriesGuid(null);
+		dto.setInventoryFieldGuid(inventoryFieldGuid);
+
+		inventoryBerriesDao.insert(dto, userId);
+
+		return dto.getInventoryBerriesGuid();
 	}
 	
 	public void calculateTotalPlants(InventoryBerries inventoryBerries) {

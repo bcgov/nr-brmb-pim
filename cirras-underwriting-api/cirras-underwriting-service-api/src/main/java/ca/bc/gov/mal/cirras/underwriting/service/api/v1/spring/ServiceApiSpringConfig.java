@@ -140,6 +140,8 @@ public class ServiceApiSpringConfig {
 		BerriesService result = new BerriesService();
 		
 		result.setInventoryContractCommodityBerriesDao(persistenceSpringConfig.inventoryContractCommodityBerriesDao());
+		result.setInventoryBerriesDao(persistenceSpringConfig.inventoryBerriesDao());
+		
 		result.setInventoryContractFactory(inventoryContractFactory);
 
 		return result;
