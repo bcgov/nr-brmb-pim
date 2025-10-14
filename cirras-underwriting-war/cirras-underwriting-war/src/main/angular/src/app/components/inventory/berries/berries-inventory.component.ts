@@ -24,6 +24,9 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   @Input() growerContract: UwContract;
   @Input() isUnsaved: boolean;
 
+  // TODO: defaultCommodity should be based on the commodity tab that the user chooses
+  defaultCommodity = 10 // Blueberry is the default commodity for now
+
   policyId
   cropVarietyOptions = [];
 

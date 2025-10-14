@@ -97,7 +97,8 @@
                 *ngIf="inventoryContract && inventoryContract.fields"
                 [fields]="inventoryContract.fields"
                 [fieldsFormArray]="getViewModel().formGroup.controls.fields"
-                [cropVarietyOptions]="cropVarietyOptions">
+                [cropVarietyOptions]="cropVarietyOptions"
+                [defaultCommodity]="defaultCommodity">
             </berries-inventory-field-list>
 
         </div>

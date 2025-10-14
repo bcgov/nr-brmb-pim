@@ -6,6 +6,9 @@ import { AnnualField } from 'src/app/conversion/models';
 import { addAnnualFieldObject } from '../../inventory-common';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
+import { InventoryBerries, InventoryField, UnderwritingComment } from '@cirras/cirras-underwriting-api';
+import { SecurityUtilService } from 'src/app/services/security-util.service';
+import { INSURANCE_PLAN } from 'src/app/utils/constants';
 
 @Component({
   selector: 'berries-inventory-field',
@@ -19,11 +22,13 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   @Input() field: AnnualField;
   @Input() fieldsFormArray: UntypedFormArray;
   @Input() cropVarietyOptions;
+  @Input() defaultCommodity;
 
   fieldFormGroup: UntypedFormGroup;
-  
+
   constructor(private fb: UntypedFormBuilder,
-              private store: Store<RootState> ) {}
+              private store: Store<RootState>,
+              protected securityUtilService: SecurityUtilService) {}
 
   ngOnInit() {
     this.refreshForm()
@@ -48,9 +53,9 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   setPlantingStyles() {
     return {
         'display': 'grid',
-        'grid-template-columns': '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr', 
+       // 'grid-template-columns': '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr', 
         'align-items': 'stretch',
-        'width': `740px`
+        'width': `830px`
     };
   }
 
@@ -62,6 +67,75 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   updateIsLeasedInd() {
     this.field.isLeasedInd = this.fieldFormGroup.value.isLeasedInd
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+  }
+
+  onInventoryCommentsDone(uwComments: UnderwritingComment[]) {
+      this.field.uwComments = uwComments;
+      this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
+  }
+
+  isAddPlantingVisible() {
+
+    // if there is more than one non-deleted and non-empty planting then show add planting button
+    for (let i = 0; i < this.field.plantings.length; i++) {
+      let pltg = this.field.plantings[i]
+
+      if ( !pltg.inventoryBerries.plantedYear && !pltg.inventoryBerries.plantedAcres && !pltg.inventoryBerries.cropVarietyId &&
+          !pltg.inventoryBerries.rowSpacing && !pltg.inventoryBerries.plantSpacing) {
+
+            return false
+          }
+    }
+    return true 
+  }
+
+  onAddPlanting() {
+
+    if (this.securityUtilService.canEditInventory() && this.isAddPlantingVisible()) {
+
+      let inventoryBerries: InventoryBerries = {
+        inventoryBerriesGuid: null,
+        inventoryFieldGuid: null,
+        cropCommodityId: this.defaultCommodity,
+        cropVarietyId: null,
+        plantedYear: null,
+        plantedAcres: null,
+        rowSpacing: null,
+        plantSpacing: null,
+        totalPlants: null,
+        isQuantityInsurableInd: false,
+        isPlantInsurableInd: false,
+        cropCommodityName: null,
+        cropVarietyName: null,
+        deletedByUserInd: false
+      }
+
+      let pltg: InventoryField = {
+        inventoryFieldGuid: null,
+        insurancePlanId: INSURANCE_PLAN.BERRIES,
+        fieldId: this.field.fieldId,
+        lastYearCropCommodityId: null,
+        lastYearCropCommodityName: null,
+        lastYearCropVarietyId: null,
+        lastYearCropVarietyName: null,
+        cropYear: this.field.cropYear,
+        plantingNumber: this.field.plantings.length + 1, 
+        isHiddenOnPrintoutInd: false,  // default
+        underseededCropVarietyId: null, 
+        underseededCropVarietyName: null, 
+        underseededAcres: null,
+        underseededInventorySeededForageGuid: null,
+        inventoryUnseeded: {},
+        inventoryBerries: inventoryBerries,
+        linkedPlanting: null,
+        inventorySeededGrains: [],
+        inventorySeededForages: []
+      }
+
+      this.field.plantings.push(pltg)
+      this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
+
+    }
   }
 
 }

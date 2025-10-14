@@ -19,14 +19,14 @@ import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state'
 export class BerriesInventoryInventoryBerryComponent implements OnChanges{
   @Input() inventoryBerry: InventoryBerries;
   @Input() cropVarietyOptions;
+  @Input() defaultCommodity;
 
-  defaultCommodity = 10 // Blueberry is the default commodity for now
   inventoryBerriesFormGroup: UntypedFormGroup;
 
   filteredVarietyOptions: CropVarietyOptionsType[];  
 
   constructor(private fb: UntypedFormBuilder,
-                private store: Store<RootState> ) {}
+                private store: Store<RootState>) {}
 
   ngOnInit() {
     this.refreshForm()
@@ -44,7 +44,6 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     this.inventoryBerriesFormGroup = this.fb.group(
       addBerriesObject(( this.inventoryBerry && this.inventoryBerry.inventoryFieldGuid ? this.inventoryBerry.inventoryFieldGuid : null), false, this.inventoryBerry ) 
     )
-    // TODO: inventoryFieldGuid should be passed as Input value for the new plantings
 
     // make IsQuantityInsurableInd and IsPlantInsurableCheckbox checked by default, as it's in the form
     this.inventoryBerry.isQuantityInsurableInd = this.inventoryBerriesFormGroup.value.isQuantityInsurableInd

@@ -14,4 +14,5 @@ export class BerriesInventoryFieldListComponent {
   @Input() fields: Array<AnnualField>;
   @Input() fieldsFormArray: UntypedFormArray;
   @Input() cropVarietyOptions;
+  @Input() defaultCommodity;
 }

@@ -1,9 +1,22 @@
 
-<div [formGroup]="plantingFormGroup" style="display: contents;">        
-                    
-    <berries-inventory-inventory-berry
-        [inventoryBerry]="planting.inventoryBerries" 
-        [cropVarietyOptions]="cropVarietyOptions"
-        style="display: contents;"></berries-inventory-inventory-berry>  
+<div [formGroup]="plantingFormGroup">        
+
+    <div style="display: contents;">
+
+        <berries-inventory-inventory-berry
+            [inventoryBerry]="planting.inventoryBerries" 
+            [cropVarietyOptions]="cropVarietyOptions"
+            [defaultCommodity]="defaultCommodity"
+            ></berries-inventory-inventory-berry>  
     
+        <div class="inventory-border action-icons border-bottom border-right border-left" style="width:70px;"> 
+
+            <mat-icon *ngIf="securityUtilService.canEditInventory()"
+                matTooltip="Delete Planting" 
+                style="margin-left: 4px; margin-right: 4px;"
+                (click)="onDeletePlanting()"
+                svgIcon="cancel"></mat-icon>
+        </div>
+
+    </div>
 </div>
