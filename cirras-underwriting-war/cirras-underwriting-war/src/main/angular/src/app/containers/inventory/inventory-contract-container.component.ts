@@ -6,6 +6,7 @@ import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common"
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
 import {
+    selectFormStateUnsaved,
     selectInventoryContractErrorState,
     selectInventoryContractLoadState,
 } from "../../store/application/application.selectors";
@@ -20,12 +21,13 @@ import { selectGrowerContract } from "src/app/store/grower-contract/grower-contr
     selector: "cirras-underwriting-inventory-contract-container",
     template: `
         <cirras-underwriting-inventory-selector 
-            [inventoryContract]="inventoryContract$ | async"
+            [inventoryContract]="inventoryContract"
             [growerContract]="growerContract$ | async"
             [cropCommodityList]="cropCommodityList$ | async"
             [underSeededCropCommodityList]="underSeededCropCommodityList$ | async"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
+            [isUnsaved]="isUnsaved$ | async"
         ></cirras-underwriting-inventory-selector>`,
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
     standalone: false
@@ -40,6 +42,9 @@ export class InventoryContractContainer extends BaseContainer {
 
     loadState$: Observable<LoadState> = this.store.pipe(select(selectInventoryContractLoadState()));
     errorState$: Observable<ErrorState[]> = this.store.pipe(select(selectInventoryContractErrorState()));
+    isUnsaved$: Observable<boolean> = this.store.pipe(select(selectFormStateUnsaved(INVENTORY_COMPONENT_ID)));
+    
+    inventoryContract: InventoryContract;
 
     getAssociatedComponentIds(): string[] {
         return [
@@ -47,4 +52,11 @@ export class InventoryContractContainer extends BaseContainer {
         ];
     }
 
+    ngOnInit(): void {
+        this.inventoryContract$.subscribe((inventoryContract) => {
+            // deep copy of inventoryContract so that it's mutable
+            this.inventoryContract = JSON.parse(JSON.stringify(inventoryContract));
+            this.cdr.detectChanges();
+        });
+    }
 }

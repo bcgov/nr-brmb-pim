@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Store } from "@ngrx/store";
+import { RootState } from "src/app/store";
 import { AnnualField } from 'src/app/conversion/models';
 import { addAnnualFieldObject } from '../../inventory-common';
+import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
+import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 
 @Component({
   selector: 'berries-inventory-field',
@@ -18,7 +22,8 @@ export class BerriesInventoryFieldComponent implements OnChanges{
 
   fieldFormGroup: UntypedFormGroup;
   
-  constructor(private fb: UntypedFormBuilder) {}
+  constructor(private fb: UntypedFormBuilder,
+              private store: Store<RootState> ) {}
 
   ngOnInit() {
     this.refreshForm()
@@ -47,6 +52,16 @@ export class BerriesInventoryFieldComponent implements OnChanges{
         'align-items': 'stretch',
         'width': `740px`
     };
+  }
+
+  updateFieldLocation() {
+    this.field.fieldLocation = this.fieldFormGroup.value.fieldLocation
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+  }
+
+  updateIsLeasedInd() {
+    this.field.isLeasedInd = this.fieldFormGroup.value.isLeasedInd
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }
 
 }

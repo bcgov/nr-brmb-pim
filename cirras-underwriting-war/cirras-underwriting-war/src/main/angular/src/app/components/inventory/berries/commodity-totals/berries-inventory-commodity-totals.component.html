@@ -18,6 +18,6 @@
         Total {{ type_total | titlecase }}
     </div>
     <div class="number border-right border-top border-bottom" style="justify-content: right; padding-right: 2px;">
-        {{ calcTotals() }}
+        {{ calcTotals() | number: '1.0-2'}}
     </div>
 </div>  
