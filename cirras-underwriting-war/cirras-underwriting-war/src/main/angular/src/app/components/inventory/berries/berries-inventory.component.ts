@@ -121,7 +121,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       for (let planting of field.plantings) {
         let plantedYear = planting.inventoryBerries.plantedYear
         let plantedAcres = planting.inventoryBerries.plantedAcres
-        let varieity = planting.inventoryBerries.cropVarietyId
+        let variety = planting.inventoryBerries.cropVarietyId
 
         let rowSpacing = planting.inventoryBerries.rowSpacing
         let plantSpacing = planting.inventoryBerries.plantSpacing
@@ -130,17 +130,17 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
         // All user entered fields are mandatory: if at least one field has a value or one of the checkboxes is checked then all should have a value
         let message = "Partial data entry is not accepted. Please fill in all values for field ID " + field.fieldId + " or none of them."
-        if (plantedYear && (!plantedAcres || !varieity || !rowSpacing || !plantSpacing ) ) {
+        if (plantedYear && (!plantedAcres || !variety || !rowSpacing || !plantSpacing ) ) {
           alert(message)
           return false
         }
 
-        if (!plantedYear && (plantedAcres || varieity || rowSpacing || plantSpacing ) ) {
+        if (!plantedYear && (plantedAcres || variety || rowSpacing || plantSpacing ) ) {
           alert(message)
           return false
         }
 
-        if ( (isQuantityInsurableInd || isPlantInsurableInd) && (!plantedAcres || !plantedYear || !varieity || !rowSpacing || !plantSpacing ) ) {
+        if ( (isQuantityInsurableInd || isPlantInsurableInd) && (!plantedAcres || !plantedYear || !variety || !rowSpacing || !plantSpacing ) ) {
           alert(message)
           return false
         }
