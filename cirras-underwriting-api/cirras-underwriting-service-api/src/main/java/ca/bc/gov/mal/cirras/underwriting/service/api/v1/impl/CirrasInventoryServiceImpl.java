@@ -1895,6 +1895,10 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				if (handleDeletedInventorySeededForage(planting)) {
 					plantingDeleted = true;
 				}
+				
+				if (berriesService.handleDeletedInventoryBerries(planting)) {
+					plantingDeleted = true;
+				}
 
 				if (plantingDeleted) {
 					if (planting.getInventoryFieldGuid() == null) {
