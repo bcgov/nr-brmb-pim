@@ -103,6 +103,8 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   }
   
   onSave() {
+    
+    this.setPlantingsForDeletion()
   
     if ( !this.isFormValid() ){
       return
@@ -118,6 +120,21 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, false ));
   }
 
+  setPlantingsForDeletion() {
+
+    for (let field of this.inventoryContract.fields) {
+      for (let i = 0; i < field.plantings.length; i++ ) {
+
+        if (field.plantings[i].inventoryBerries.deletedByUserInd && !field.plantings[i].inventoryFieldGuid) {
+          // delete the planting from the inventory contract object and don't send it to the database
+
+          field.plantings.splice(i,1)
+          i--
+        }
+      }
+    }
+  }
+
   isFormValid() {
 
     for (let field of  this.inventoryContract.fields) {
@@ -130,6 +147,16 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
         let plantSpacing = planting.inventoryBerries.plantSpacing
         let isQuantityInsurableInd = planting.inventoryBerries.isQuantityInsurableInd
         let isPlantInsurableInd = planting.inventoryBerries.isPlantInsurableInd
+
+        // saving max 1 empty planting is allowed
+        debugger
+        let totalPlantingsToSave = (field.plantings.filter(x => x.inventoryBerries.deletedByUserInd !== true )) //.length 
+        if ( totalPlantingsToSave.length > 1 && planting.inventoryBerries.deletedByUserInd !== true && 
+              !plantedYear && !plantedAcres && !variety && !rowSpacing && !plantSpacing ) {
+
+                alert("There is an empty planting for field ID: " + field.fieldId + ". Please delete it.")
+                return false
+              }
 
         // All user entered fields are mandatory: if at least one field has a value or one of the checkboxes is checked then all should have a value
         let message = "Partial data entry is not accepted. Please fill in all values for field ID " + field.fieldId + " or none of them."
@@ -179,7 +206,5 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       
     }
   }
-
-  
 
 }

@@ -3,7 +3,7 @@ import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular
 import { Store } from "@ngrx/store";
 import { RootState } from "src/app/store";
 import { AnnualField } from 'src/app/conversion/models';
-import { addAnnualFieldObject } from '../../inventory-common';
+import { addAnnualFieldObject, getDefaultInventoryBerries } from '../../inventory-common';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { InventoryBerries, InventoryField, UnderwritingComment } from '@cirras/cirras-underwriting-api';
@@ -25,6 +25,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   @Input() defaultCommodity;
 
   fieldFormGroup: UntypedFormGroup;
+  numPlantingsToSave = 1 // default
 
   constructor(private fb: UntypedFormBuilder,
               private store: Store<RootState>,
@@ -38,6 +39,11 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     if (changes.field && changes.field.currentValue) {
       if (this.field) {
         this.refreshForm()
+
+        if (this.field.plantings) {
+          this.numPlantingsToSave = this.field.plantings.filter(x => x.inventoryBerries.deletedByUserInd !== true ).length
+        }
+        
       }
     }
   }
@@ -93,22 +99,25 @@ export class BerriesInventoryFieldComponent implements OnChanges{
 
     if (this.securityUtilService.canEditInventory() && this.isAddPlantingVisible()) {
 
-      let inventoryBerries: InventoryBerries = {
-        inventoryBerriesGuid: null,
-        inventoryFieldGuid: null,
-        cropCommodityId: this.defaultCommodity,
-        cropVarietyId: null,
-        plantedYear: null,
-        plantedAcres: null,
-        rowSpacing: null,
-        plantSpacing: null,
-        totalPlants: null,
-        isQuantityInsurableInd: false,
-        isPlantInsurableInd: false,
-        cropCommodityName: null,
-        cropVarietyName: null,
-        deletedByUserInd: false
-      }
+      //  
+      // let inventoryBerries: InventoryBerries = {
+      //   inventoryBerriesGuid: null,
+      //   inventoryFieldGuid: null,
+      //   cropCommodityId: this.defaultCommodity,
+      //   cropVarietyId: null,
+      //   plantedYear: null,
+      //   plantedAcres: null,
+      //   rowSpacing: null,
+      //   plantSpacing: null,
+      //   totalPlants: null,
+      //   isQuantityInsurableInd: false,
+      //   isPlantInsurableInd: false,
+      //   cropCommodityName: null,
+      //   cropVarietyName: null,
+      //   deletedByUserInd: false
+      // }
+      
+      let inventoryBerries: InventoryBerries = getDefaultInventoryBerries(null, null, this.defaultCommodity)
 
       let pltg: InventoryField = {
         inventoryFieldGuid: null,
@@ -119,8 +128,8 @@ export class BerriesInventoryFieldComponent implements OnChanges{
         lastYearCropVarietyId: null,
         lastYearCropVarietyName: null,
         cropYear: this.field.cropYear,
-        plantingNumber: this.field.plantings.length + 1, 
-        isHiddenOnPrintoutInd: false,  // default
+        plantingNumber: this.getMaxPlantingNumber() + 1, 
+        isHiddenOnPrintoutInd: false, 
         underseededCropVarietyId: null, 
         underseededCropVarietyName: null, 
         underseededAcres: null,
@@ -136,6 +145,18 @@ export class BerriesInventoryFieldComponent implements OnChanges{
       this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
 
     }
+  }
+
+  getMaxPlantingNumber(){
+    let maxNum = 1
+
+    this.field.plantings.forEach((pltg: InventoryField) => {
+      if (pltg.plantingNumber > maxNum ) {
+        maxNum = pltg.plantingNumber
+      }
+    })
+
+    return maxNum
   }
 
 }
