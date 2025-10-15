@@ -32,7 +32,6 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PolicyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodityForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
