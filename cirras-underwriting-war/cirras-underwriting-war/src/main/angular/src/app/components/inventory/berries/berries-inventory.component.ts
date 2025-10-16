@@ -149,7 +149,6 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
         let isPlantInsurableInd = planting.inventoryBerries.isPlantInsurableInd
 
         // saving max 1 empty planting is allowed
-        debugger
         let totalPlantingsToSave = (field.plantings.filter(x => x.inventoryBerries.deletedByUserInd !== true )) //.length 
         if ( totalPlantingsToSave.length > 1 && planting.inventoryBerries.deletedByUserInd !== true && 
               !plantedYear && !plantedAcres && !variety && !rowSpacing && !plantSpacing ) {

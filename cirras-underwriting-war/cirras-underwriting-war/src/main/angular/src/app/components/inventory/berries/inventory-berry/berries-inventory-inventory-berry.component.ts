@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormGroup, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from "@ngrx/store";
 import { RootState } from "src/app/store";
@@ -23,6 +23,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
   @Input() cropVarietyOptions;
   @Input() defaultCommodity;
   @Input() numPlantingsToSave;
+  @Output() recalcNumPlantings = new EventEmitter();
 
   inventoryBerriesFormGroup: UntypedFormGroup;
 
@@ -139,10 +140,10 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }
 
-    onDeletePlanting() {
+  onDeletePlanting() {
 
     if (this.numPlantingsToSave < 2 )  {
-
+      // clear the values
       this.inventoryBerry.plantedYear = null
       this.inventoryBerry.plantedAcres = null
       this.inventoryBerry.isQuantityInsurableInd = false
@@ -150,6 +151,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
       this.inventoryBerry.rowSpacing = null
       this.inventoryBerry.plantSpacing = null
       this.inventoryBerry.isPlantInsurableInd = false
+      this.inventoryBerry.totalPlants = null
       
       this.inventoryBerriesFormGroup.controls['plantedYear'].setValue(null)
       this.inventoryBerriesFormGroup.controls['plantedAcres'].setValue(null)
@@ -166,13 +168,9 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     } else {
       // mark for deletion
       this.inventoryBerry.deletedByUserInd = true
-
-      if (this.inventoryBerry.inventoryFieldGuid) {
-        // remove the whole planting // TODO in the backend
-      }
-      
     }
     
+    this.recalcNumPlantings.emit() // emit an event to make the parent component recalc the numPlantingsToSave
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }
 

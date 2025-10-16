@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, input, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, input, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { InventoryField } from '@cirras/cirras-underwriting-api';
 import { addSimplePlantingObject, getDefaultInventoryBerries } from '../../inventory-common';
@@ -22,7 +22,8 @@ export class BerriesInventoryPlantingComponent implements OnChanges {
   @Input() cropVarietyOptions;
   @Input() defaultCommodity;
   @Input() numPlantingsToSave;
-  
+  @Output() recalcNumPlantings = new EventEmitter();
+
   plantingFormGroup: UntypedFormGroup;
 
   constructor(private fb: UntypedFormBuilder ) {}
@@ -48,6 +49,11 @@ export class BerriesInventoryPlantingComponent implements OnChanges {
     )
 
     this.plantingFormArray.push(this.plantingFormGroup);
+  }
+
+  onNumPlantingsChanged() {
+    // emit an event to make the parent component recalc the numPlantingsToSave
+    this.recalcNumPlantings.emit(); 
   }
 
 }

@@ -39,11 +39,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     if (changes.field && changes.field.currentValue) {
       if (this.field) {
         this.refreshForm()
-
-        if (this.field.plantings) {
-          this.numPlantingsToSave = this.field.plantings.filter(x => x.inventoryBerries.deletedByUserInd !== true ).length
-        }
-        
+        this.updateNumPlantings()  
       }
     }
   }
@@ -55,6 +51,11 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     this.fieldsFormArray.push(this.fieldFormGroup);
   }
 
+  updateNumPlantings() {
+    if (this.field.plantings) {
+      this.numPlantingsToSave = this.field.plantings.filter(x => x.inventoryBerries.deletedByUserInd !== true ).length
+    }
+  }
 
   setPlantingStyles() {
     return {
@@ -98,25 +99,6 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   onAddPlanting() {
 
     if (this.securityUtilService.canEditInventory() && this.isAddPlantingVisible()) {
-
-      //  
-      // let inventoryBerries: InventoryBerries = {
-      //   inventoryBerriesGuid: null,
-      //   inventoryFieldGuid: null,
-      //   cropCommodityId: this.defaultCommodity,
-      //   cropVarietyId: null,
-      //   plantedYear: null,
-      //   plantedAcres: null,
-      //   rowSpacing: null,
-      //   plantSpacing: null,
-      //   totalPlants: null,
-      //   isQuantityInsurableInd: false,
-      //   isPlantInsurableInd: false,
-      //   cropCommodityName: null,
-      //   cropVarietyName: null,
-      //   deletedByUserInd: false
-      // }
-      
       let inventoryBerries: InventoryBerries = getDefaultInventoryBerries(null, null, this.defaultCommodity)
 
       let pltg: InventoryField = {
@@ -142,8 +124,9 @@ export class BerriesInventoryFieldComponent implements OnChanges{
       }
 
       this.field.plantings.push(pltg)
-      this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
+      this.updateNumPlantings()
 
+      this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
     }
   }
 
@@ -157,6 +140,10 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     })
 
     return maxNum
+  }
+
+  onRecalcNumPlantings() {
+    this.updateNumPlantings() 
   }
 
 }
