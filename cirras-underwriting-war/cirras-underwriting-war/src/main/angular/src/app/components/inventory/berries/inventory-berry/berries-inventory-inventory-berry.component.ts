@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { FormGroup, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from "@ngrx/store";
 import { RootState } from "src/app/store";
 import { InventoryBerries } from '@cirras/cirras-underwriting-api';
 import { makeNumberOnly, makeTitleCase } from 'src/app/utils';
-import { addBerriesObject, CropVarietyOptionsType, getDefaultInventoryBerries, roundUpDecimal } from '../../inventory-common';
+import { addBerriesObject, CropVarietyOptionsType, roundUpDecimal } from '../../inventory-common';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { SecurityUtilService } from 'src/app/services/security-util.service';

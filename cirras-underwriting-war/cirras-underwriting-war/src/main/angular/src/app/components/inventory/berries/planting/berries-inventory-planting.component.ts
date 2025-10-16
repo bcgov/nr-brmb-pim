@@ -1,10 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, input, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { InventoryField } from '@cirras/cirras-underwriting-api';
-import { addSimplePlantingObject, getDefaultInventoryBerries } from '../../inventory-common';
-import { SecurityUtilService } from 'src/app/services/security-util.service';
-import { Store } from '@ngrx/store';
-import { RootState } from 'src/app/store';
+import { addSimplePlantingObject } from '../../inventory-common';
 
 
 @Component({
