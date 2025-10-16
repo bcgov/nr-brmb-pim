@@ -1679,6 +1679,11 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			}
 			inventorySeededForageDao.deleteForInventoryField(planting.getInventoryFieldGuid());
 		}
+		
+		// Delete berries
+		if (planting.getInventoryBerries() != null) {
+			inventoryBerriesDao.deleteForInventoryField(planting.getInventoryFieldGuid());
+		}
 
 		// Delete inventory field
 		inventoryFieldDao.delete(planting.getInventoryFieldGuid());
@@ -1893,6 +1898,10 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				}
 				
 				if (handleDeletedInventorySeededForage(planting)) {
+					plantingDeleted = true;
+				}
+				
+				if (berriesService.handleDeletedInventoryBerries(planting)) {
 					plantingDeleted = true;
 				}
 

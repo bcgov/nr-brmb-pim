@@ -2,6 +2,7 @@ package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -255,6 +256,100 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		logger.debug(">testInsertUpdateDeleteInventoryBerries");
 	}
 	
+	@Test
+	public void testDeleteInventoryBerriesPlanting() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
+		logger.debug("<testDeleteInventoryBerriesPlanting");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+
+		createGrower();
+		createPolicy();
+		createGrowerContractYear();
+
+		createLegalLand();
+		createField();
+		createAnnualFieldDetail();
+		createContractedFieldDetail(false);
+		
+		
+		CirrasUnderwritingService service = getService(SCOPES);
+
+		EndpointsRsrc topLevelEndpoints = service.getTopLevelEndpoints();
+
+		UwContractRsrc uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNull(uwContract.getInventoryContractGuid());
+		
+		InventoryContractRsrc invContract = service.rolloverInventoryContract(uwContract);
+		
+		AnnualFieldRsrc field = invContract.getFields().get(0);
+
+		// Remove default planting.
+		field.getPlantings().remove(0);
+		
+		// Planting 1
+		InventoryField planting = createPlanting(field, 1, cropYear1);
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010689, "BLUEJAY", (double)10, 10, 5.3, true, true); //Blueberry insured for both
+
+		// Planting 2
+		planting = createPlanting(field, 2, cropYear1);
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010691, "ELLIOTT", (double)20, 5, 4.9, true, false); //Blueberry Quantity insured
+				
+		// Planting 3
+		planting = createPlanting(field, 3, cropYear1);
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010690, "LEGACY", (double)12, 12, 5.0, false, true); //Blueberry Plant insured
+
+		// Planting 4
+		planting = createPlanting(field, 4, cropYear1);
+		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)13, 10, 7.0, true, true); //Raspberry insured for both
+		
+		// Planting 5
+		planting = createPlanting(field, 5, cropYear1);
+		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)15, 9, 6.0, true, true); //Raspberry insured for both
+
+		invContract = service.createInventoryContract(topLevelEndpoints, invContract);
+
+		//Mark some plantings to delete
+		field = invContract.getFields().get(0);
+
+		List<InventoryField> plantings = invContract.getFields().get(0).getPlantings();
+		Assert.assertEquals(5, plantings.size());
+		
+		//Remove planting number 2 and 4
+		planting = getPlantingByNumber(2, plantings);
+		planting.getInventoryBerries().setDeletedByUserInd(true);
+		planting = getPlantingByNumber(5, plantings);
+		planting.getInventoryBerries().setDeletedByUserInd(true);
+		
+		//Update inventory contract
+		invContract = service.updateInventoryContract(invContract.getInventoryContractGuid(), invContract);
+		
+		//Check if plantings were deleted
+		plantings = invContract.getFields().get(0).getPlantings();
+		Assert.assertEquals(3, plantings.size());
+		
+		//Check if planting numbers of the remaining plantings are in order without gaps.
+		Integer counter = 1;
+		Comparator<Integer> nullsLast = Comparator.nullsLast(Comparator.naturalOrder());
+		List<InventoryField> sortedInventoryFields = plantings.stream()
+				.sorted(Comparator.comparing(InventoryField::getPlantingNumber, nullsLast))
+				.collect(Collectors.toList());
+		for (InventoryField inventoryField : sortedInventoryFields) {
+
+			logger.debug(inventoryField.getInventoryFieldGuid() + " has planting number: " + inventoryField.getPlantingNumber());
+
+			//Test if the planting number of the remaining is in sequence
+			Assert.assertEquals("Wrong planting number for: " + inventoryField.getInventoryFieldGuid(), counter, inventoryField.getPlantingNumber());
+			counter += 1;
+		}		
+
+		delete();
+
+		logger.debug(">testDeleteInventoryBerriesPlanting");
+	}
+	
 	private Integer calculateTotalPlants(InventoryBerries inventoryBerries) {
 		if(inventoryBerries.getPlantedAcres() != null && inventoryBerries.getRowSpacing() != null && inventoryBerries.getPlantSpacing() != null) {
 			double spacing = inventoryBerries.getRowSpacing() * inventoryBerries.getPlantSpacing();
@@ -443,7 +538,17 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		return uwContract;
 	}
 	
-	public void checkInventoryContractCommodityBerries(InventoryContractCommodityBerries expected, InventoryContractCommodityBerries actual, String inventoryContractGuid) {
+	private InventoryField getPlantingByNumber(Integer plantingNumber, List<InventoryField> inventoryFields) {
+		
+		List<InventoryField> filteredList = inventoryFields.stream().filter(x -> x.getPlantingNumber().equals(plantingNumber)) 
+				.collect(Collectors.toList());
+		
+		Assert.assertEquals(1, filteredList.size());
+		
+		return filteredList.get(0);
+	}
+	
+	private void checkInventoryContractCommodityBerries(InventoryContractCommodityBerries expected, InventoryContractCommodityBerries actual, String inventoryContractGuid) {
 		Assert.assertNotNull("InventoryContractCommodityBerriesGuid", actual.getInventoryContractCommodityBerriesGuid());
 		Assert.assertEquals("InventoryContractGuid", inventoryContractGuid, actual.getInventoryContractGuid());
 		Assert.assertEquals("CropCommodityId", expected.getCropCommodityId(), actual.getCropCommodityId());
@@ -454,7 +559,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertEquals("TotalUninsuredAcres", expected.getTotalUninsuredAcres(), actual.getTotalUninsuredAcres());
 	}
 	
-	public void checkInventoryBerries(InventoryBerries expected, InventoryBerries actual) {
+	private void checkInventoryBerries(InventoryBerries expected, InventoryBerries actual) {
 		
 		Assert.assertNotNull("InventoryBerriesGuid", actual.getInventoryBerriesGuid());
 		Assert.assertEquals("InventoryFieldGuid", expected.getInventoryFieldGuid(), actual.getInventoryFieldGuid());

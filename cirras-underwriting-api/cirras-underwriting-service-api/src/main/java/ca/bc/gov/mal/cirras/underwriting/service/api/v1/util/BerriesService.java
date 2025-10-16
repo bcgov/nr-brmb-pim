@@ -77,7 +77,7 @@ public class BerriesService {
 		return dto.getInventoryBerriesGuid();
 	}
 	
-	public void calculateTotalPlants(InventoryBerries inventoryBerries) {
+	private void calculateTotalPlants(InventoryBerries inventoryBerries) {
 		//Default
 		inventoryBerries.setTotalPlants(0);
 		if(inventoryBerries.getPlantedAcres() != null && inventoryBerries.getRowSpacing() != null && inventoryBerries.getPlantSpacing() != null) {
@@ -88,6 +88,25 @@ public class BerriesService {
 				inventoryBerries.setTotalPlants(notNull(Math.toIntExact(Math.round(totalPlants)), 0));
 			}
 		}
+	}
+	
+	public boolean handleDeletedInventoryBerries(InventoryField inventoryField) {
+
+		logger.debug("<handleDeletedInventoryBerries");
+		
+		boolean doDeleteInventoryField = false;
+		InventoryBerries inventory = inventoryField.getInventoryBerries();
+		
+		if (inventory != null && Boolean.TRUE.equals(inventory.getDeletedByUserInd()) ) {
+
+			// No checks necessary at the moment but might be necessary once yield is implemented
+			doDeleteInventoryField = true;
+
+		} 
+		
+		logger.debug(">handleDeletedInventoryBerries");
+
+		return doDeleteInventoryField;
 	}
 	
 
