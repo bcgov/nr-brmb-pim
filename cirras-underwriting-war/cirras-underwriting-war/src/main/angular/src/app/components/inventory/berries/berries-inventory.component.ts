@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { ParamMap } from '@angular/router';
 import { BaseComponent } from '../../common/base/base.component';
-import { CropCommodityList, CropVarietyCommodityType, InventoryContract, UwContract } from 'src/app/conversion/models';
+import { CropCommodityList, InventoryContract, UwContract } from 'src/app/conversion/models';
 import { BerriesInventoryComponentModel } from './berries-inventory.component.model';
 import { CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
 import { AddNewInventoryContract, DeleteInventoryContract, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
@@ -23,6 +23,9 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   @Input() cropCommodityList: CropCommodityList;
   @Input() growerContract: UwContract;
   @Input() isUnsaved: boolean;
+
+  // TODO: defaultCommodity should be based on the commodity tab that the user chooses
+  defaultCommodity = 10 // Blueberry is the default commodity for now
 
   policyId
   cropVarietyOptions = [];
@@ -100,6 +103,8 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   }
   
   onSave() {
+    
+    this.setPlantingsForDeletion()
   
     if ( !this.isFormValid() ){
       return
@@ -113,6 +118,21 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     }
   
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, false ));
+  }
+
+  setPlantingsForDeletion() {
+
+    for (let field of this.inventoryContract.fields) {
+      for (let i = 0; i < field.plantings.length; i++ ) {
+
+        if (field.plantings[i].inventoryBerries.deletedByUserInd && !field.plantings[i].inventoryFieldGuid) {
+          // delete the planting from the inventory contract object and don't send it to the database
+
+          field.plantings.splice(i,1)
+          i--
+        }
+      }
+    }
   }
 
   isFormValid() {
@@ -176,7 +196,5 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       
     }
   }
-
-  
 
 }

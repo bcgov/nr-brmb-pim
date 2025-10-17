@@ -1,4 +1,4 @@
-<div class="plcy-inv-field-box" [formGroup]="fieldFormGroup" style="width:1375px;">
+<div class="plcy-inv-field-box" [formGroup]="fieldFormGroup" style="width:1520px;">
     
     <div class="inventory-cell inventory-border border-left" style="width: 115px;">
         {{ fieldFormGroup.value.fieldId }}
@@ -29,20 +29,28 @@
             [planting]="planting"
             [plantingFormArray]="fieldFormGroup.value.plantings" 
             [cropVarietyOptions]="cropVarietyOptions"
+            [defaultCommodity]="defaultCommodity"
+            [numPlantingsToSave]="numPlantingsToSave"
+            (recalcNumPlantings)="onRecalcNumPlantings()"
             style="display: contents;"></berries-inventory-planting>
     </div>
 
-    <!-- TODO -->
-    <!-- <div class="inventory-cell" style="width: 75px;"
-        [ngClass]="fieldHiddenOnPrintoutInd ? 'inventory-border-exclude-printout border-right-exclude-printout' : 'inventory-border'">
+    <div class="inventory-cell inventory-border" style="width: 75px;">
+        <mat-icon 
+            [ngStyle]="{'color': ( (securityUtilService.canEditInventory()) ? '#666666' : '#C2C2C2') }" 
+            matTooltip="Add New Planting" 
+            (click)="onAddPlanting()">
+            add
+        </mat-icon>
+
         <uw-comments-button
             [underwritingCommentTypeCode]="'INV'"
-            [annualFieldDetailId]="fieldFormGroup.value.annualFieldDetailId"
-            [fieldId]="fieldFormGroup.value.fieldId"
-            [fieldName]="fieldFormGroup.value.fieldLabel"
-            [legalLocation]="fieldFormGroup.value.otherLegalDescription"
-            [uwComments]="fieldFormGroup.value.uwComments"
+            [annualFieldDetailId]="field.annualFieldDetailId"
+            [fieldId]="field.fieldId"
+            [fieldName]="field.fieldLabel"
+            [legalLocation]="field.otherLegalDescription"
+            [uwComments]="field.uwComments"
             (onDone)="onInventoryCommentsDone($event)"></uw-comments-button>
-        <mat-icon matTooltip="View History" style="margin-left: 4px; margin-right: 4px;">history</mat-icon>
-    </div> -->
+        <!-- TODO: Remove Field button -->
+    </div>
 </div>

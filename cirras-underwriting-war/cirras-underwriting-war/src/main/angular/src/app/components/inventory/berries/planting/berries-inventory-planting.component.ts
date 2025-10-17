@@ -1,23 +1,28 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { InventoryField } from '@cirras/cirras-underwriting-api';
 import { addSimplePlantingObject } from '../../inventory-common';
+
 
 @Component({
   selector: 'berries-inventory-planting',
   templateUrl: './berries-inventory-planting.component.html',
   styleUrl: './berries-inventory-planting.component.scss',
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BerriesInventoryPlantingComponent implements OnChanges { 
 
   @Input() planting: InventoryField;
   @Input() plantingFormArray: UntypedFormArray;
   @Input() cropVarietyOptions;
-  
+  @Input() defaultCommodity;
+  @Input() numPlantingsToSave;
+  @Output() recalcNumPlantings = new EventEmitter();
+
   plantingFormGroup: UntypedFormGroup;
 
-  constructor(private fb: UntypedFormBuilder) {}
+  constructor(private fb: UntypedFormBuilder ) {}
 
   ngOnInit() {
     this.refreshForm()
@@ -40,6 +45,11 @@ export class BerriesInventoryPlantingComponent implements OnChanges {
     )
 
     this.plantingFormArray.push(this.plantingFormGroup);
+  }
+
+  onNumPlantingsChanged() {
+    // emit an event to make the parent component recalc the numPlantingsToSave
+    this.recalcNumPlantings.emit(); 
   }
 
 }

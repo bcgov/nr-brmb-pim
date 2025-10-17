@@ -1,9 +1,10 @@
 
-<div [formGroup]="plantingFormGroup" style="display: contents;">        
-                    
-    <berries-inventory-inventory-berry
+<div [formGroup]="plantingFormGroup">  
+    <berries-inventory-inventory-berry *ngIf="planting.inventoryBerries.deletedByUserInd !== true"
         [inventoryBerry]="planting.inventoryBerries" 
         [cropVarietyOptions]="cropVarietyOptions"
-        style="display: contents;"></berries-inventory-inventory-berry>  
-    
+        [defaultCommodity]="defaultCommodity"
+        [numPlantingsToSave]="numPlantingsToSave"
+        (recalcNumPlantings)="onNumPlantingsChanged()"
+        ></berries-inventory-inventory-berry>  
 </div>

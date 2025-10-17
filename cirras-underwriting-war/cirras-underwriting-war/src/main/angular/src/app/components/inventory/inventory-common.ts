@@ -784,3 +784,22 @@ export function addBerriesObject(inventoryFieldGuid, isHiddenOnPrintoutInd, inve
   }
 }
 
+export function getDefaultInventoryBerries(inventoryBerriesGuid, inventoryFieldGuid, defaultCommodity) {
+  return {
+        inventoryBerriesGuid: inventoryBerriesGuid,
+        inventoryFieldGuid: inventoryFieldGuid,
+        cropCommodityId: defaultCommodity,
+        cropVarietyId: null,
+        plantedYear: null,
+        plantedAcres: null,
+        rowSpacing: null,
+        plantSpacing: null,
+        totalPlants: null,
+        isQuantityInsurableInd: false,
+        isPlantInsurableInd: false,
+        cropCommodityName: null,
+        cropVarietyName: null,
+        deletedByUserInd: false
+      }
+}
+

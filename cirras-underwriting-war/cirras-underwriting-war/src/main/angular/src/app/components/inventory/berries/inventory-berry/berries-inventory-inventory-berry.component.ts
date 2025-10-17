@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from "@ngrx/store";
 import { RootState } from "src/app/store";
@@ -7,6 +7,8 @@ import { makeNumberOnly, makeTitleCase } from 'src/app/utils';
 import { addBerriesObject, CropVarietyOptionsType, roundUpDecimal } from '../../inventory-common';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
+import { SecurityUtilService } from 'src/app/services/security-util.service';
+import { CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
 
 @Component({
   selector: 'berries-inventory-inventory-berry',
@@ -19,14 +21,17 @@ import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state'
 export class BerriesInventoryInventoryBerryComponent implements OnChanges{
   @Input() inventoryBerry: InventoryBerries;
   @Input() cropVarietyOptions;
+  @Input() defaultCommodity;
+  @Input() numPlantingsToSave;
+  @Output() recalcNumPlantings = new EventEmitter();
 
-  defaultCommodity = 10 // Blueberry is the default commodity for now
   inventoryBerriesFormGroup: UntypedFormGroup;
 
   filteredVarietyOptions: CropVarietyOptionsType[];  
 
   constructor(private fb: UntypedFormBuilder,
-                private store: Store<RootState> ) {}
+              private store: Store<RootState>,
+              protected securityUtilService: SecurityUtilService) {}
 
   ngOnInit() {
     this.refreshForm()
@@ -44,7 +49,6 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     this.inventoryBerriesFormGroup = this.fb.group(
       addBerriesObject(( this.inventoryBerry && this.inventoryBerry.inventoryFieldGuid ? this.inventoryBerry.inventoryFieldGuid : null), false, this.inventoryBerry ) 
     )
-    // TODO: inventoryFieldGuid should be passed as Input value for the new plantings
 
     // make IsQuantityInsurableInd and IsPlantInsurableCheckbox checked by default, as it's in the form
     this.inventoryBerry.isQuantityInsurableInd = this.inventoryBerriesFormGroup.value.isQuantityInsurableInd
@@ -135,4 +139,39 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     this.inventoryBerry.isPlantInsurableInd = this.inventoryBerriesFormGroup.value.isPlantInsurableInd
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }
+
+  onDeletePlanting() {
+
+    if (this.numPlantingsToSave < 2 )  {
+      // clear the values
+      this.inventoryBerry.plantedYear = null
+      this.inventoryBerry.plantedAcres = null
+      this.inventoryBerry.isQuantityInsurableInd = false
+      this.inventoryBerry.cropVarietyId = null
+      this.inventoryBerry.rowSpacing = null
+      this.inventoryBerry.plantSpacing = null
+      this.inventoryBerry.isPlantInsurableInd = false
+      this.inventoryBerry.totalPlants = null
+      
+      this.inventoryBerriesFormGroup.controls['plantedYear'].setValue(null)
+      this.inventoryBerriesFormGroup.controls['plantedAcres'].setValue(null)
+      this.inventoryBerriesFormGroup.controls['isQuantityInsurableInd'].setValue(false)
+      this.inventoryBerriesFormGroup.controls['cropVarietyCtrl'].setValue({      
+              cropCommodityId: CROP_COMMODITY_UNSPECIFIED.ID,
+              cropVarietyId: CROP_COMMODITY_UNSPECIFIED.ID,
+              varietyName: CROP_COMMODITY_UNSPECIFIED.NAME   
+            })
+      this.inventoryBerriesFormGroup.controls['rowSpacing'].setValue(null)
+      this.inventoryBerriesFormGroup.controls['plantSpacing'].setValue(null)
+      this.inventoryBerriesFormGroup.controls['isPlantInsurableInd'].setValue(false)
+
+    } else {
+      // mark for deletion
+      this.inventoryBerry.deletedByUserInd = true
+    }
+    
+    this.recalcNumPlantings.emit() // emit an event to make the parent component recalc the numPlantingsToSave
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+  }
+
 }
