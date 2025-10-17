@@ -28,6 +28,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   defaultCommodity = 10 // Blueberry is the default commodity for now
 
   policyId
+  cropCommodityOptions = [];
   cropVarietyOptions = [];
 
   hasYieldData = false; // TODO
@@ -54,12 +55,14 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
     // populate commodity and variety lists
     if (changes.cropCommodityList && this.cropCommodityList && this.cropCommodityList.collection && this.cropCommodityList.collection.length ) {
-      this.populateCropVarietyOptions()
+      this.populateCropAndVarietyOptions()
+      this.getViewModel().formGroup.controls.defaultCommodity.setValue(10) // Blueberries
     }
   }
 
-  populateCropVarietyOptions() {
+  populateCropAndVarietyOptions() {
     // clear the crop options
+    this.cropCommodityOptions = []
     this.cropVarietyOptions = [] 
 
     // add empty variety
@@ -70,19 +73,29 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     })
 
     var self = this
-    this.cropCommodityList.collection.forEach( ccm => 
-                                                ccm.cropVariety.forEach(cv => self.cropVarietyOptions.push ({
-                                                          cropCommodityId: cv.cropCommodityId,
-                                                          cropVarietyId: cv.cropVarietyId,
-                                                          varietyName: cv.varietyName ,
-                                                          cropVarietyCommodityTypes: cv.cropVarietyCommodityTypes, 
-                                                        })) )
+    this.cropCommodityList.collection.forEach( ccm => {
+
+        // populate cropCommodityOptions
+        self.cropCommodityOptions.push({
+          cropCommodityId: ccm.cropCommodityId,
+          commodityName: ccm.commodityName
+        })
+        
+        // populate cropVarietyOptions 
+        ccm.cropVariety.forEach(cv => self.cropVarietyOptions.push ({
+                                                            cropCommodityId: cv.cropCommodityId,
+                                                            cropVarietyId: cv.cropVarietyId,
+                                                            varietyName: cv.varietyName ,
+                                                            cropVarietyCommodityTypes: cv.cropVarietyCommodityTypes, 
+                                                          }))
+
+      })
     }
 
 
   setFormSeededStyles(){
     return {
-      'grid-template-columns':  'auto 140px 150px 12px 190px'
+      'grid-template-columns':  '250px 200px auto  140px 150px 12px 190px'
     }
   }
 
@@ -206,4 +219,9 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     }
   }
 
+
+  commoditySelectionChanged(){
+    this.defaultCommodity = this.getViewModel().formGroup.controls.defaultCommodity.value
+    console.log( "defaultCommodity: " + this.defaultCommodity)
+  }
 }

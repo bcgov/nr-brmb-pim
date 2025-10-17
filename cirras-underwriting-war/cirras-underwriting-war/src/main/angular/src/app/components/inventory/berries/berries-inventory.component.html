@@ -62,7 +62,17 @@
                 <h2>Berries Inventory</h2>
                 <p>Last Updated: {{ ((inventoryContract && inventoryContract.invUpdateTimestamp) ? inventoryContract.invUpdateTimestamp : "" ) | date }}</p>
             </div>
-            
+            <div class="plcy-frm-hdr-dropdown" matTooltip="Commodity">
+                <!-- Commodities: -->
+                <mat-form-field appearance="outline" style="width: 150px;">
+                    <mat-select formControlName="defaultCommodity" hideSingleSelectionIndicator="true" 
+                        (selectionChange)="commoditySelectionChanged()">
+                        <mat-option *ngFor="let option of cropCommodityOptions" [value]="option.cropCommodityId"
+                        >{{ option.commodityName | titlecase }}</mat-option>
+                    </mat-select>
+                    </mat-form-field>
+            </div>
+            <div><!-- empty div --></div>
             <div>
                 <!-- <button *ngIf="securityUtilService.canEditInventory() && !hasYieldData" mat-raised-button class="secondary header-button"  (click)="onAddNewField()">
                     <mat-icon class="button-mat-icon">add</mat-icon>Add Field

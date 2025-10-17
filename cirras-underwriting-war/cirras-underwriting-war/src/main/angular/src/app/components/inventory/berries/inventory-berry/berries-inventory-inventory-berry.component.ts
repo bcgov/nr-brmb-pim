@@ -53,12 +53,6 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     // make IsQuantityInsurableInd and IsPlantInsurableCheckbox checked by default, as it's in the form
     this.inventoryBerry.isQuantityInsurableInd = this.inventoryBerriesFormGroup.value.isQuantityInsurableInd
     this.inventoryBerry.isPlantInsurableInd = this.inventoryBerriesFormGroup.value.isPlantInsurableInd
-
-    // set crop commodity id to Blueberries by default // TODO: this will have to change after we introduce Rasberries and Strawberries
-    if (!this.inventoryBerry.cropCommodityId) {
-      this.inventoryBerry.cropCommodityId = this.defaultCommodity
-    }
-
   }
 
   numberOnly(event): boolean {
