@@ -81,24 +81,9 @@ export class BerriesInventoryFieldComponent implements OnChanges{
       this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
   }
 
-  isAddPlantingVisible() {
-
-    // if there is more than one non-deleted and non-empty planting then show add planting button
-    for (let i = 0; i < this.field.plantings.length; i++) {
-      let pltg = this.field.plantings[i]
-
-      if ( !pltg.inventoryBerries.plantedYear && !pltg.inventoryBerries.plantedAcres && !pltg.inventoryBerries.cropVarietyId &&
-          !pltg.inventoryBerries.rowSpacing && !pltg.inventoryBerries.plantSpacing) {
-
-            return false
-          }
-    }
-    return true 
-  }
-
   onAddPlanting() {
 
-    if (this.securityUtilService.canEditInventory() && this.isAddPlantingVisible()) {
+    if (this.securityUtilService.canEditInventory()) {
       let inventoryBerries: InventoryBerries = getDefaultInventoryBerries(null, null, this.defaultCommodity)
 
       let pltg: InventoryField = {

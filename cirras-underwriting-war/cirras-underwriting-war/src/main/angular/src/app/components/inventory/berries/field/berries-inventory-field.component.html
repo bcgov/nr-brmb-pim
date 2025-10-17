@@ -37,7 +37,7 @@
 
     <div class="inventory-cell inventory-border" style="width: 75px;">
         <mat-icon 
-            [ngStyle]="{'color': ( (securityUtilService.canEditInventory() && isAddPlantingVisible()) ? '#666666' : '#C2C2C2') }" 
+            [ngStyle]="{'color': ( (securityUtilService.canEditInventory()) ? '#666666' : '#C2C2C2') }" 
             matTooltip="Add New Planting" 
             (click)="onAddPlanting()">
             add
