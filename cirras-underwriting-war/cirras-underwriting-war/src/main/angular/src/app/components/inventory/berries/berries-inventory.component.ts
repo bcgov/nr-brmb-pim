@@ -148,15 +148,6 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
         let isQuantityInsurableInd = planting.inventoryBerries.isQuantityInsurableInd
         let isPlantInsurableInd = planting.inventoryBerries.isPlantInsurableInd
 
-        // saving max 1 empty planting is allowed
-        let totalPlantingsToSave = (field.plantings.filter(x => x.inventoryBerries.deletedByUserInd !== true )) //.length 
-        if ( totalPlantingsToSave.length > 1 && planting.inventoryBerries.deletedByUserInd !== true && 
-              !plantedYear && !plantedAcres && !variety && !rowSpacing && !plantSpacing ) {
-
-                alert("There is an empty planting for field ID: " + field.fieldId + ". Please delete it.")
-                return false
-              }
-
         // All user entered fields are mandatory: if at least one field has a value or one of the checkboxes is checked then all should have a value
         let message = "Partial data entry is not accepted. Please fill in all values for field ID " + field.fieldId + " or none of them."
         if (plantedYear && (!plantedAcres || !variety || !rowSpacing || !plantSpacing ) ) {
