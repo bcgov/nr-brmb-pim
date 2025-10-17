@@ -16,4 +16,5 @@ from (select t.contract_number,
                t.crop_year,
                t.field_bog_name
       having count(*) > 1
-      ) v;
+      ) v
+order by v.contract_number, v.crop_year, v.field_bog_name;
