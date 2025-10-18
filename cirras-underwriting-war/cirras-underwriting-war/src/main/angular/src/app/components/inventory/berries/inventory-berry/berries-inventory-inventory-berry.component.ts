@@ -8,7 +8,8 @@ import { addBerriesObject, CropVarietyOptionsType, roundUpDecimal } from '../../
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
-import { CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
+import { BERRY_COMMODITY, CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
+import { showIsPlantInsuredForBerries, showPlantSpacingForBerries, showRowSpacingForBerries, showTotalPlantsForBerries } from '../field-list/berries-inventory-field-list.component';
 
 @Component({
   selector: 'berries-inventory-inventory-berry',
@@ -47,12 +48,19 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
 
   refreshForm() {
     this.inventoryBerriesFormGroup = this.fb.group(
-      addBerriesObject(( this.inventoryBerry && this.inventoryBerry.inventoryFieldGuid ? this.inventoryBerry.inventoryFieldGuid : null), false, this.inventoryBerry ) 
+      addBerriesObject(
+        ( this.inventoryBerry && this.inventoryBerry.inventoryFieldGuid ? this.inventoryBerry.inventoryFieldGuid : null), 
+        this.defaultCommodity, this.inventoryBerry ) 
     )
 
     // make IsQuantityInsurableInd and IsPlantInsurableCheckbox checked by default, as it's in the form
     this.inventoryBerry.isQuantityInsurableInd = this.inventoryBerriesFormGroup.value.isQuantityInsurableInd
     this.inventoryBerry.isPlantInsurableInd = this.inventoryBerriesFormGroup.value.isPlantInsurableInd
+
+    if (this.defaultCommodity == BERRY_COMMODITY.Blueberry) {
+      this.inventoryBerry.isPlantInsurableInd = false
+      this.inventoryBerriesFormGroup.controls.isPlantInsurableInd.setValue(false)
+    }
   }
 
   numberOnly(event): boolean {
@@ -111,6 +119,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
   }
 
   updateCropVariety() {
+    this.inventoryBerry.cropCommodityId = this.inventoryBerriesFormGroup.controls['cropVarietyCtrl'].value.cropCommodityId
     this.inventoryBerry.cropVarietyId = this.inventoryBerriesFormGroup.controls['cropVarietyCtrl'].value.cropVarietyId
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }
@@ -166,6 +175,23 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     
     this.recalcNumPlantings.emit() // emit an event to make the parent component recalc the numPlantingsToSave
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+  }
+
+
+  showRowSpacing() {
+    return showRowSpacingForBerries(this.defaultCommodity)
+  }
+
+  showPlantSpacing() {
+    return showPlantSpacingForBerries(this.defaultCommodity)
+  }
+
+  showTotalPlants() {
+    return showTotalPlantsForBerries(this.defaultCommodity)
+  }
+
+  showIsPlantInsured() {
+    return showIsPlantInsuredForBerries(this.defaultCommodity)
   }
 
 }
