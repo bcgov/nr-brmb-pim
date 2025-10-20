@@ -1,3 +1,5 @@
+-- PIDs within a Contract with different Field Locations.
+
 select *
 from (select t.contract_number,
              t.crop_year,

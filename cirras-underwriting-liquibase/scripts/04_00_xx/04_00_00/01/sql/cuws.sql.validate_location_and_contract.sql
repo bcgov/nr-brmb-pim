@@ -1,3 +1,5 @@
+-- Field Locations on more than one Contract.
+
 select *
 from (select t.field_location
       from (select bs.field_location,

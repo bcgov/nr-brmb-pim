@@ -1,3 +1,5 @@
+-- Plantings where Acres is empty.
+
 select *
 from berries_2026_staging bs
 where btrim(bs.acres) = '' 

@@ -1,3 +1,5 @@
+-- Plantings whose Contract Number does not exist in DEV
+
 select * 
 from berries_2026_staging bs
 left join policy p on p.contract_number = bs.contract_number::varchar

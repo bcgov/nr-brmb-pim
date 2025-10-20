@@ -1,3 +1,5 @@
+-- Field Names within a Contract with different Locations.
+
 select *
 from (select t.contract_number,
              t.crop_year,

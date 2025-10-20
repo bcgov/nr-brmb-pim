@@ -1,3 +1,5 @@
+-- Plantings with no variety, or whose variety does not exist in DEV.
+
 select *
 from berries_2026_staging bs
 left join crop_variety cv on upper(trim(from cv.variety_name)) = upper(trim(from bs.variety_name))

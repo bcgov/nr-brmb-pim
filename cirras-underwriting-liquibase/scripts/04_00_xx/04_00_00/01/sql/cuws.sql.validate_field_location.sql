@@ -1,3 +1,5 @@
+-- Plantings whose Field Location is more than 128 chars.
+
 select *
 from berries_2026_staging bs
 where char_length(bs.field_location) > 128

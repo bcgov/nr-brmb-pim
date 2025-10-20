@@ -1,3 +1,5 @@
+-- PIDs on more than one Contract.
+
 select *
 from (select t.property_identifier
       from (select bs.property_identifier,
