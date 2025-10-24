@@ -196,4 +196,27 @@ public class InventoryBerriesDaoImpl extends BaseDao implements InventoryBerries
 		logger.debug(">select " + dtos);
 		return dtos;
 	}
+
+	@Override
+	public InventoryBerriesDto selectForRollover(Integer fieldId, Integer cropYear, Integer insurancePlanId, Integer plantingNumber) throws DaoException {
+		logger.debug("<selectForRollover");
+
+		InventoryBerriesDto result = null;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("fieldId", fieldId);
+			parameters.put("cropYear", cropYear);
+			parameters.put("insurancePlanId", insurancePlanId);
+			parameters.put("plantingNumber", plantingNumber);
+						
+			result = this.mapper.selectForRollover(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectForRollover " + result);
+		return result;	
+	}
 }

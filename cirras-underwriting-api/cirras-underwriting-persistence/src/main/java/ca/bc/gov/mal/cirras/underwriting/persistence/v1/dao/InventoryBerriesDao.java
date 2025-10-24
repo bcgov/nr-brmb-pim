@@ -25,4 +25,6 @@ public interface InventoryBerriesDao extends Serializable {
     void deleteForInventoryContract(String inventoryContractGuid) throws DaoException, NotFoundDaoException;
 
     List<InventoryBerriesDto> select(String inventoryFieldGuid) throws DaoException;
+    
+    InventoryBerriesDto selectForRollover(Integer fieldId, Integer cropYear, Integer insurancePlanId, Integer plantingNumber) throws DaoException;
 }

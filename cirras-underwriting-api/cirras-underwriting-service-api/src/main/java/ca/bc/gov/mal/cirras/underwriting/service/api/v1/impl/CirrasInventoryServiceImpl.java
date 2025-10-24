@@ -2370,6 +2370,15 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 					}
 				}
 
+				if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId())) {
+					// Load InventoryBerries from previous year.
+					for ( InventoryFieldDto prevYearPlanting : prevYearPlantings ) {
+						InventoryBerriesDto prevYearInventoryBerriesDto = inventoryBerriesDao.selectForRollover(cfdDto.getFieldId(),
+								cfdDto.getCropYear() - 1, cfdDto.getInsurancePlanId(), prevYearPlanting.getPlantingNumber());
+						prevYearPlanting.setInventoryBerries(prevYearInventoryBerriesDto);
+					}
+				}
+
 				annualField = inventoryContractFactory.addRolloverAnnualField(insurancePlanId, cfdDto, authentication);
 			} else {
 				// Create default planting for the field

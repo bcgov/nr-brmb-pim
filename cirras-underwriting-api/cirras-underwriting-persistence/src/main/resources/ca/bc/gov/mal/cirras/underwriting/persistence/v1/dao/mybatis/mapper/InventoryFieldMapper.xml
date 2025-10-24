@@ -270,7 +270,7 @@
 				<include refid="selectForRolloverGrain"/>
 			</when>
 			<otherwise>
-				<include refid="selectForRolloverForage"/>
+				<include refid="selectForRolloverDefault"/>
 			</otherwise>
 		</choose>
 	</select> 
@@ -383,7 +383,7 @@
 		ORDER BY planting_number
 	</sql>
 
-    <sql id="selectForRolloverForage">
+    <sql id="selectForRolloverDefault">
 		SELECT  inv.field_id, 
 				inv.planting_number,
 				null AS last_year_crop_commodity_id, 

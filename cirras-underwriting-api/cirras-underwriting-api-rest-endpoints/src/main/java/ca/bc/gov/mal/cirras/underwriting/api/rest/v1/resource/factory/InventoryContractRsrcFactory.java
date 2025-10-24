@@ -669,9 +669,38 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			
 			model.setInventorySeededForages(inventorySeededForageList);
 		}
-		
+
+		// Inventory Berries
+		if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId())) {
+			if ( ifDto.getInventoryBerries() != null) {
+				model.setInventoryBerries(createRolloverInventoryBerries(ifDto.getInventoryBerries()));
+			} else {
+				model.setInventoryBerries(createDefaultInventoryBerries());
+			}
+		}
+
 		return model;
 	}
+
+	private InventoryBerries createRolloverInventoryBerries(InventoryBerriesDto dto) {
+		
+		InventoryBerries model = new InventoryBerries();
+
+		model.setCropCommodityId(dto.getCropCommodityId());
+		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setCropVarietyId(dto.getCropVarietyId());
+		model.setCropVarietyName(dto.getCropVarietyName());
+		model.setPlantedYear(dto.getPlantedYear());
+		model.setPlantedAcres(dto.getPlantedAcres());
+		model.setRowSpacing(dto.getRowSpacing());
+		model.setPlantSpacing(dto.getPlantSpacing());
+		model.setTotalPlants(dto.getTotalPlants());
+		model.setIsQuantityInsurableInd(dto.getIsQuantityInsurableInd());
+		model.setIsPlantInsurableInd(dto.getIsPlantInsurableInd());
+
+		return model;
+	}
+
 
 	private InventoryField createDefaultInventoryField(Integer insurancePlanId, ContractedFieldDetailDto dto) {
 		InventoryField model = new InventoryField();

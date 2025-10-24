@@ -148,4 +148,15 @@
 		order by t.inventory_berries_guid
 	</select> 
 	
+	<select id="selectForRollover" resultMap="InventoryBerriesDtoMap">
+		<include refid="selectColumns"/>
+		from inventory_berries t
+		join inventory_field ifd on ifd.inventory_field_guid = t.inventory_field_guid
+		left join crop_commodity cc on cc.crop_commodity_id = t.crop_commodity_id
+		left join crop_variety cv on cv.crop_variety_id = t.crop_variety_id		
+		where ifd.field_id = #{fieldId}
+		  and ifd.crop_year = #{cropYear}
+		  and ifd.insurance_plan_id = #{insurancePlanId}
+		  and ifd.planting_number = #{plantingNumber}
+	</select>
 </mapper>
