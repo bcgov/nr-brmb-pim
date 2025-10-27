@@ -762,7 +762,7 @@ export function addSimplePlantingObject(pltg: InventoryField, deletedByUserInd,
 }
 
 
-export function addBerriesObject(inventoryFieldGuid, isHiddenOnPrintoutInd, inventoryBerries: InventoryBerries) {
+export function addBerriesObject(inventoryFieldGuid, inventoryBerries: InventoryBerries) {
   return {
     inventoryBerriesGuid: [ (inventoryBerries && inventoryBerries.inventoryBerriesGuid ) ? 
                                   inventoryBerries.inventoryBerriesGuid : 
@@ -778,8 +778,8 @@ export function addBerriesObject(inventoryFieldGuid, isHiddenOnPrintoutInd, inve
     rowSpacing:               [ (inventoryBerries && inventoryBerries.rowSpacing) ? inventoryBerries.rowSpacing : null],
     plantSpacing:             [ (inventoryBerries && inventoryBerries.plantSpacing) ? inventoryBerries.plantSpacing : null],
     totalPlants:              [ (inventoryBerries && inventoryBerries.totalPlants) ? inventoryBerries.totalPlants : null],
-    isQuantityInsurableInd:   [ (!inventoryBerries || inventoryBerries.isQuantityInsurableInd == undefined) ? true : inventoryBerries.isQuantityInsurableInd ],  // defaults to true
-    isPlantInsurableInd:      [ (!inventoryBerries || inventoryBerries.isPlantInsurableInd == undefined) ? true : inventoryBerries.isPlantInsurableInd ],  // defaults to true
+    isQuantityInsurableInd:   [ (!inventoryBerries || inventoryBerries.isQuantityInsurableInd == null) ? false : inventoryBerries.isQuantityInsurableInd ],  // defaults to false
+    isPlantInsurableInd:      [ (!inventoryBerries || inventoryBerries.isPlantInsurableInd == null) ? false : inventoryBerries.isPlantInsurableInd ],  // defaults to false
     deletedByUserInd:         [false]
   }
 }

@@ -1,4 +1,4 @@
-<div class="plcy-inv-field-box" [formGroup]="fieldFormGroup"  [ngStyle]="setTableHeaderStyle()">
+<div *ngIf="fieldHasCommodity()" class="plcy-inv-field-box" [formGroup]="fieldFormGroup"  [ngStyle]="setTableHeaderStyle()">
     
     <div class="inventory-cell inventory-border border-left" style="width: 115px;">
         {{ fieldFormGroup.value.fieldId }}
@@ -25,7 +25,7 @@
     <!-- plantings -->
     <div class="planting-container" [ngStyle]="setPlantingStyles()">
         <berries-inventory-planting 
-            *ngFor="let planting of filteredPlantings"
+            *ngFor="let planting of field.plantings"
             [planting]="planting"
             [plantingFormArray]="fieldFormGroup.value.plantings" 
             [cropVarietyOptions]="cropVarietyOptions"

@@ -44,22 +44,41 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
         this.refreshForm()
       }
     }
+
+    if (changes.defaultCommodity && changes.defaultCommodity.currentValue && this.inventoryBerry) {
+      this.setDefaultValuesForCommodity()
+    }
   }
 
   refreshForm() {
     this.inventoryBerriesFormGroup = this.fb.group(
       addBerriesObject(
         ( this.inventoryBerry && this.inventoryBerry.inventoryFieldGuid ? this.inventoryBerry.inventoryFieldGuid : null), 
-        this.defaultCommodity, this.inventoryBerry ) 
+        this.inventoryBerry ) 
     )
+  }
 
-    // make IsQuantityInsurableInd and IsPlantInsurableCheckbox checked by default, as it's in the form
-    this.inventoryBerry.isQuantityInsurableInd = this.inventoryBerriesFormGroup.value.isQuantityInsurableInd
-    this.inventoryBerry.isPlantInsurableInd = this.inventoryBerriesFormGroup.value.isPlantInsurableInd
+  setDefaultValuesForCommodity() {
+    // set commodity specific default values
+    if (this.defaultCommodity == BERRY_COMMODITY.Blueberry || this.defaultCommodity == BERRY_COMMODITY.Raspberry) {
+      // make IsQuantityInsurableInd checked by default
+      if (this.inventoryBerry.isQuantityInsurableInd == null) {
+        this.inventoryBerry.isQuantityInsurableInd = true
+        this.inventoryBerriesFormGroup.controls['isQuantityInsurableInd'].setValue(true)
+      }
+    }
 
     if (this.defaultCommodity == BERRY_COMMODITY.Blueberry) {
-      this.inventoryBerry.isPlantInsurableInd = false
-      this.inventoryBerriesFormGroup.controls.isPlantInsurableInd.setValue(false)
+      // make IsPlantInsurableCheckbox checked by default
+      if (this.inventoryBerry.isPlantInsurableInd == null) {
+        this.inventoryBerry.isPlantInsurableInd = true
+        this.inventoryBerriesFormGroup.controls['isPlantInsurableInd'].setValue(true)
+      }
+    } else { 
+      if (this.inventoryBerry.isPlantInsurableInd == null) {
+        this.inventoryBerry.isPlantInsurableInd = false
+        this.inventoryBerriesFormGroup.controls['isPlantInsurableInd'].setValue(false)
+      }
     }
   }
 

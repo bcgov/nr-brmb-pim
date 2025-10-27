@@ -25,8 +25,6 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   @Input() cropVarietyOptions;
   @Input() defaultCommodity;
 
-  filteredPlantings: Array<InventoryField>;
-
   fieldFormGroup: UntypedFormGroup;
   numPlantingsToSave = 1 // default
 
@@ -46,10 +44,6 @@ export class BerriesInventoryFieldComponent implements OnChanges{
       }
     }
 
-    // get the plantings which have the same commodity as the default commodity
-    if (changes.defaultCommodity ) {
-      this.getFilteredPlantings()
-    }
   }
 
   refreshForm(){
@@ -59,6 +53,26 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     this.fieldsFormArray.push(this.fieldFormGroup);
   }
 
+  fieldHasCommodity() {
+    // display field if the field has plantings with the desired commodity
+    // or the field has no commodity 
+    if (this.field && this.field.plantings && this.defaultCommodity) {
+
+      let plantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == this.defaultCommodity)
+      if (plantings && plantings.length > 0) {
+        return true
+      }
+
+      // TODO: remove the check for no commodity after add field is complete
+      plantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == null)
+      if (plantings && plantings.length > 0) {
+        return true
+      }
+    }
+
+    return false
+  }
+
   updateNumPlantings() {
     if (this.field.plantings) {
       this.numPlantingsToSave = this.field.plantings.filter(
@@ -66,13 +80,6 @@ export class BerriesInventoryFieldComponent implements OnChanges{
               x.inventoryBerries.cropCommodityId == this.defaultCommodity )).length
     }
   }
-
-  getFilteredPlantings(){
-    this.filteredPlantings = []
-
-    this.filteredPlantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == this.defaultCommodity)
-  }
-
 
   setPlantingStyles() {
     

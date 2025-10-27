@@ -18,7 +18,7 @@
 
 <div class="plcy-inv-fld-tbl-inner-wrapper" [ngStyle]="setInnerWrapperStyle()">
     <div class="plcy-inv-field-container-green" [ngStyle]="setTableHeaderStyle()">  
-        <berries-inventory-field *ngFor="let field of filteredFields" 
+        <berries-inventory-field *ngFor="let field of fields" 
             [field]="field"
             [fieldsFormArray]="fieldsFormArray"
             [cropVarietyOptions]="cropVarietyOptions"

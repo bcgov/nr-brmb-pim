@@ -53,34 +53,12 @@ export function setTableHeaderStyleForBerries(cmdty) {
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false
 })
-export class BerriesInventoryFieldListComponent implements OnChanges {
+export class BerriesInventoryFieldListComponent  {
 
   @Input() fields: Array<AnnualField>;
   @Input() fieldsFormArray: UntypedFormArray;
   @Input() cropVarietyOptions;
   @Input() defaultCommodity;
-
-  filteredFields: Array<AnnualField>;
-
-  ngOnChanges(changes: SimpleChanges) {
-
-    // get the fields which have plants with the same commodities
-    if (changes.defaultCommodity ) {
-      this.getFilteredFields()
-    }
-  }
-
-  getFilteredFields(){
-    this.filteredFields = []
-
-    for (let field of this.fields) {
-      
-      let plantings = field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == this.defaultCommodity)
-      if (plantings && plantings.length > 0) {
-        this.filteredFields.push( field )
-      }
-    }
-  }
 
   setTableHeaderStyle() {
     return setTableHeaderStyleForBerries(this.defaultCommodity)
@@ -116,6 +94,4 @@ export class BerriesInventoryFieldListComponent implements OnChanges {
     return showIsPlantInsuredForBerries(this.defaultCommodity)
   }
 
-
-  
 }

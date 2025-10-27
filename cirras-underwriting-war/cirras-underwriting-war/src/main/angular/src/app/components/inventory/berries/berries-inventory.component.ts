@@ -157,6 +157,8 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       return
     }
 
+    this.setDefaultCommodityForEmptyPlantings()
+
     if (this.inventoryContract.inventoryContractGuid) {
       this.store.dispatch(UpdateInventoryContract(INVENTORY_COMPONENT_ID, this.policyId, this.inventoryContract))
     } else {
@@ -259,6 +261,18 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     }
 
     return false
+  }
+
+  setDefaultCommodityForEmptyPlantings() {
+    // it allows us to save empty plantings
+    // TODO: remove this check after add field is ready
+    for (let field of  this.inventoryContract.fields) {
+      for (let planting of field.plantings) {
+        if ( planting.inventoryBerries.cropCommodityId == null ) {
+          planting.inventoryBerries.cropCommodityId = this.defaultCommodity
+        }
+      }
+    }
   }
 
   onDeleteInventory() {
