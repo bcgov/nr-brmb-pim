@@ -63,22 +63,33 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		Scopes.CREATE_DOP_YIELD_CONTRACT
 	};
 	
-	private Integer growerId1 = 90000011;
+	private Integer growerId = 90000011;
+	private String contractNumber = "998891";
+	private Integer contractId = 90000014;
+
 	private Integer policyId1 = 90000012;
 	private Integer gcyId1 = 90000013;
-	private Integer contractId1 = 90000014;
 	private String policyNumber1 = "998891-21";
-	private String contractNumber1 = "998891";
 	private Integer cropYear1 = 2021;
 
-	private Integer legalLandId1 = 90000015;
-	private Integer fieldId1 = 90000016;
+	private Integer policyId2 = 92000012;
+	private Integer gcyId2 = 92000013;
+	private String policyNumber2 = "998891-22";
+	private Integer cropYear2 = 2022;
+
+	private Integer legalLandId = 90000015;
+	private Integer fieldId = 90000016;
+	
 	private Integer annualFieldDetailId1 = 90000017;
 	private Integer contractedFieldDetailId1 = 90000018;
+	
+	private Integer annualFieldDetailId2 = 92000017;
+	private Integer contractedFieldDetailId2 = 92000018;
 	
 	private String fieldLocation = "Field Location";
 		
 	private String inventoryFieldGuid1 = null;
+	private String inventoryFieldGuid2 = null;
 	
 	private Integer insurancePlanId = 3; //Berries
 	
@@ -102,39 +113,35 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 	
 	private void delete() throws CirrasUnderwritingServiceException {
 
-		Integer pageNumber = 1;
-		Integer pageRowCount = 20;
-		
-		UwContractListRsrc searchResults = service.getUwContractList(
-				topLevelEndpoints, 
-				null, 
-				null, 
-				null,
-				null,
-				policyNumber1,
-				null,
-				null, 
-				null, 
-				null, 
-				pageNumber, pageRowCount);
-		
-		if ( searchResults.getCollection() != null && searchResults.getCollection().size() == 1 ) {
-			UwContractRsrc referrer = searchResults.getCollection().get(0);
-			
-			if ( referrer.getInventoryContractGuid() != null ) { 
-				InventoryContractRsrc invContract = service.getInventoryContract(referrer);
-				service.deleteInventoryContract(invContract);
-			}
-		}
+		deleteInventoryContract(policyNumber1);
+		deleteInventoryContract(policyNumber2);
 
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
 		service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId1.toString());
-		service.deleteField(topLevelEndpoints, fieldId1.toString());
-		service.deleteLegalLandSync(topLevelEndpoints, legalLandId1.toString());
+		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId2.toString());
+		service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId2.toString());
+
+		service.deleteField(topLevelEndpoints, fieldId.toString());
+		service.deleteLegalLandSync(topLevelEndpoints, legalLandId.toString());
 		
 		service.deleteGrowerContractYear(topLevelEndpoints, gcyId1.toString());
 		service.deletePolicy(topLevelEndpoints, policyId1.toString());
-		service.deleteGrower(topLevelEndpoints, growerId1.toString());
+		service.deleteGrowerContractYear(topLevelEndpoints, gcyId2.toString());
+		service.deletePolicy(topLevelEndpoints, policyId2.toString());
+		service.deleteGrower(topLevelEndpoints, growerId.toString());
+	}
+
+	private void deleteInventoryContract(String policyNumber) throws CirrasUnderwritingServiceException {
+		
+		UwContractRsrc uwContract = getUwContract(policyNumber, service, topLevelEndpoints);
+		
+		if ( uwContract != null ) {
+			
+			if ( uwContract.getInventoryContractGuid() != null ) { 
+				InventoryContractRsrc invContract = service.getInventoryContract(uwContract);
+				service.deleteInventoryContract(invContract);
+			}
+		}
 	}
 
 	
@@ -148,15 +155,16 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		}
 
 		createGrower();
-		createPolicy();
-		createGrowerContractYear();
+		createPolicy(policyId1, policyNumber1, cropYear1);
+		createGrowerContractYear(gcyId1, cropYear1);
 
 		createLegalLand();
 		createField();
-		createAnnualFieldDetail();
-		createContractedFieldDetail(false);
+		createAnnualFieldDetail(annualFieldDetailId1, cropYear1);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, gcyId1, false);
 		
 		UwContractRsrc referrer = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(referrer);
 		Assert.assertNull(referrer.getInventoryContractGuid());
 		
 		InventoryContractRsrc invContract = service.rolloverInventoryContract(referrer);
@@ -203,7 +211,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		
 		InventoryBerries fetchedBerries = fetchedInvContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
 
-		checkInventoryBerries(newBerries, fetchedBerries);
+		checkInventoryBerries(newBerries, fetchedBerries, false);
 		
 		//Check field data
 		field = fetchedInvContract.getFields().get(0);
@@ -227,11 +235,11 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 
 		InventoryBerries updatedBerries = updatedInvContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
 
-		checkInventoryBerries(fetchedBerries, updatedBerries);
+		checkInventoryBerries(fetchedBerries, updatedBerries, false);
 
 		//Update Field location
 		fieldLocation = fieldLocation + " Update";
-		FieldRsrc fetchedField = service.getField(topLevelEndpoints, fieldId1.toString());
+		FieldRsrc fetchedField = service.getField(topLevelEndpoints, fieldId.toString());
 		fetchedField.setFieldLocation(fieldLocation);
 		fetchedField.setTransactionType(LandManagementEventTypes.FieldUpdated);
 		service.synchronizeField(fetchedField);
@@ -244,6 +252,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		
 		//Check field data
 		UwContractRsrc uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContract);
 		Assert.assertNotNull(uwContract.getInventoryContractGuid());
 		invContract = service.getInventoryContract(uwContract);
 
@@ -257,6 +266,109 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 	}
 	
 	@Test
+	public void testRolloverInventoryBerries() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
+		logger.debug("<testRolloverInventoryBerries");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+
+		createGrower();
+		createPolicy(policyId1, policyNumber1, cropYear1);
+		createGrowerContractYear(gcyId1, cropYear1);
+
+		createLegalLand();
+		createField();
+		createAnnualFieldDetail(annualFieldDetailId1, cropYear1);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, gcyId1, false);
+		
+		UwContractRsrc uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContract);
+		Assert.assertNull(uwContract.getInventoryContractGuid());
+		
+		InventoryContractRsrc invContract = service.rolloverInventoryContract(uwContract);
+		Assert.assertNotNull(invContract);
+		Assert.assertNotNull(invContract.getFields());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries());
+		
+		InventoryBerries newBerries = invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
+		Assert.assertNull("InventoryBerriesGuid", newBerries.getInventoryBerriesGuid());
+		Assert.assertNull("InventoryFieldGuid", newBerries.getInventoryFieldGuid());
+		Assert.assertNull("CropCommodityId", newBerries.getCropCommodityId());
+		Assert.assertNull("CropVarietyId", newBerries.getCropVarietyId());
+		Assert.assertNull("PlantedYear", newBerries.getPlantedYear());
+		Assert.assertNull("PlantedAcres", newBerries.getPlantedAcres());
+		Assert.assertNull("RowSpacing", newBerries.getRowSpacing());
+		Assert.assertNull("PlantSpacing", newBerries.getPlantSpacing());
+		Assert.assertNull("TotalPlants", newBerries.getTotalPlants());
+		Assert.assertNull("IsQuantityInsurableInd", newBerries.getIsQuantityInsurableInd());
+		Assert.assertNull("IsPlantInsurableInd", newBerries.getIsPlantInsurableInd());
+		//Check field data
+		AnnualFieldRsrc field = invContract.getFields().get(0);
+		Assert.assertEquals("FieldLocation", fieldLocation, field.getFieldLocation());
+		Assert.assertEquals("IsLeased", false, field.getIsLeasedInd());
+
+		newBerries.setCropCommodityId(10);
+		newBerries.setCropCommodityName("BLUEBERRY");
+		newBerries.setCropVarietyId(1010689);
+		newBerries.setCropVarietyName("BLUEJAY");
+		newBerries.setPlantedYear(2020);
+		newBerries.setPlantedAcres((double)100);
+		newBerries.setRowSpacing(10);
+		newBerries.setPlantSpacing(5.3);
+		newBerries.setTotalPlants(calculateTotalPlants(newBerries));
+		newBerries.setIsQuantityInsurableInd(true);
+		newBerries.setIsPlantInsurableInd(false);
+
+		//Create inventory contract
+		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
+		
+		field = fetchedInvContract.getFields().get(0);
+		inventoryFieldGuid1 = field.getPlantings().get(0).getInventoryFieldGuid();
+		newBerries.setInventoryFieldGuid(inventoryFieldGuid1);
+		
+		InventoryBerries fetchedBerries = fetchedInvContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
+
+		checkInventoryBerries(newBerries, fetchedBerries, false);
+		
+		//Check field data
+		field = fetchedInvContract.getFields().get(0);
+		Assert.assertEquals("FieldLocation", fieldLocation, field.getFieldLocation());
+		Assert.assertEquals("IsLeased", false, field.getIsLeasedInd());
+
+		//********** Rollover Contract ****************************************
+		createPolicy(policyId2, policyNumber2, cropYear2);
+		createGrowerContractYear(gcyId2, cropYear2);
+
+		createAnnualFieldDetail(annualFieldDetailId2, cropYear2);
+		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId2, gcyId2, false);
+		
+		uwContract = getUwContract(policyNumber2, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContract);
+		Assert.assertNull(uwContract.getInventoryContractGuid());
+		
+		invContract = service.rolloverInventoryContract(uwContract);
+		Assert.assertNotNull(invContract);
+		Assert.assertNotNull(invContract.getFields());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries());
+
+		field = invContract.getFields().get(0);
+		inventoryFieldGuid2 = field.getPlantings().get(0).getInventoryFieldGuid();
+		newBerries.setInventoryFieldGuid(inventoryFieldGuid2);
+		
+		InventoryBerries rolledOverBerries = invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
+
+		checkInventoryBerries(fetchedBerries, rolledOverBerries, true);
+		
+		delete();
+		
+		logger.debug(">testRolloverInventoryBerries");
+	}
+	
+	@Test
 	public void testDeleteInventoryBerriesPlanting() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
 		logger.debug("<testDeleteInventoryBerriesPlanting");
 		
@@ -266,13 +378,13 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		}
 
 		createGrower();
-		createPolicy();
-		createGrowerContractYear();
+		createPolicy(policyId1, policyNumber1, cropYear1);
+		createGrowerContractYear(gcyId1, cropYear1);
 
 		createLegalLand();
 		createField();
-		createAnnualFieldDetail();
-		createContractedFieldDetail(false);
+		createAnnualFieldDetail(annualFieldDetailId1, cropYear1);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, gcyId1, false);
 		
 		
 		CirrasUnderwritingService service = getService(SCOPES);
@@ -280,6 +392,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		EndpointsRsrc topLevelEndpoints = service.getTopLevelEndpoints();
 
 		UwContractRsrc uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContract);
 		Assert.assertNull(uwContract.getInventoryContractGuid());
 		
 		InventoryContractRsrc invContract = service.rolloverInventoryContract(uwContract);
@@ -372,20 +485,20 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		}
 
 		createGrower();
-		createPolicy();
-		createGrowerContractYear();
+		createPolicy(policyId1, policyNumber1, cropYear1);
+		createGrowerContractYear(gcyId1, cropYear1);
 
 		createLegalLand();
 		createField();
-		createAnnualFieldDetail();
-		createContractedFieldDetail(false);
-		
+		createAnnualFieldDetail(annualFieldDetailId1, cropYear1);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, gcyId1, false);
 		
 		CirrasUnderwritingService service = getService(SCOPES);
 
 		EndpointsRsrc topLevelEndpoints = service.getTopLevelEndpoints();
 
 		UwContractRsrc uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContract);
 		Assert.assertNull(uwContract.getInventoryContractGuid());
 		
 		InventoryContractRsrc invContract = service.rolloverInventoryContract(uwContract);
@@ -530,12 +643,15 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		null, 
 		1, 
 		20);
-		
+
 		Assert.assertNotNull(searchResults);
-		Assert.assertTrue(searchResults.getCollection().size() == 1);
-		
-		UwContractRsrc uwContract = searchResults.getCollection().get(0);
-		return uwContract;
+
+		if ( searchResults.getCollection() != null && searchResults.getCollection().size() == 1 ) {
+			UwContractRsrc uwContract = searchResults.getCollection().get(0);
+			return uwContract;
+		}
+
+		return null;
 	}
 	
 	private InventoryField getPlantingByNumber(Integer plantingNumber, List<InventoryField> inventoryFields) {
@@ -559,10 +675,15 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertEquals("TotalUninsuredAcres", expected.getTotalUninsuredAcres(), actual.getTotalUninsuredAcres());
 	}
 	
-	private void checkInventoryBerries(InventoryBerries expected, InventoryBerries actual) {
+	private void checkInventoryBerries(InventoryBerries expected, InventoryBerries actual, Boolean isRolledOver) {
 		
-		Assert.assertNotNull("InventoryBerriesGuid", actual.getInventoryBerriesGuid());
-		Assert.assertEquals("InventoryFieldGuid", expected.getInventoryFieldGuid(), actual.getInventoryFieldGuid());
+		if(isRolledOver) {
+			Assert.assertNull("InventoryBerriesGuid", actual.getInventoryBerriesGuid());
+			Assert.assertNull("InventoryFieldGuid", actual.getInventoryFieldGuid());
+		} else {
+			Assert.assertNotNull("InventoryBerriesGuid", actual.getInventoryBerriesGuid());
+			Assert.assertEquals("InventoryFieldGuid", expected.getInventoryFieldGuid(), actual.getInventoryFieldGuid());
+		}
 		Assert.assertEquals("CropCommodityId", expected.getCropCommodityId(), actual.getCropCommodityId());
 		Assert.assertEquals("CropVarietyId", expected.getCropVarietyId(), actual.getCropVarietyId());
 		Assert.assertEquals("PlantedYear", expected.getPlantedYear(), actual.getPlantedYear());
@@ -711,7 +832,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 
 		GrowerRsrc resource = new GrowerRsrc();
 		
-		resource.setGrowerId(growerId1);
+		resource.setGrowerId(growerId);
 		resource.setGrowerNumber(999888);
 		resource.setGrowerName("grower test name");
 		resource.setGrowerAddressLine1("address line 1");
@@ -727,7 +848,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		
 	}
 	
-	private void createPolicy() throws ValidationException, CirrasUnderwritingServiceException {
+	private void createPolicy(Integer policyId, String policyNumber, Integer cropYear) throws ValidationException, CirrasUnderwritingServiceException {
 
 		//Date and Time without millisecond
 		Calendar cal = Calendar.getInstance();
@@ -738,15 +859,15 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 
 		PolicyRsrc resource = new PolicyRsrc();
 		
-		resource.setPolicyId(policyId1);
-		resource.setGrowerId(growerId1);
+		resource.setPolicyId(policyId);
+		resource.setGrowerId(growerId);
 		resource.setInsurancePlanId(insurancePlanId);
 		resource.setPolicyStatusCode("ACTIVE");
 		resource.setOfficeId(1);
-		resource.setPolicyNumber(policyNumber1);
-		resource.setContractNumber(contractNumber1);
-		resource.setContractId(contractId1);
-		resource.setCropYear(cropYear1);
+		resource.setPolicyNumber(policyNumber);
+		resource.setContractNumber(contractNumber);
+		resource.setContractId(contractId);
+		resource.setCropYear(cropYear);
 		
 		resource.setDataSyncTransDate(createTransactionDate);
 		resource.setTransactionType(PoliciesSyncEventTypes.PolicyCreated);
@@ -754,22 +875,22 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		service.synchronizePolicy(resource);
 	}
 	
-	private void createGrowerContractYear() throws ValidationException, CirrasUnderwritingServiceException {
+	private void createGrowerContractYear(Integer gcyId, Integer cropYear) throws ValidationException, CirrasUnderwritingServiceException {
 
 		//Date and Time without millisecond
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 because they are not set in the database
 		Date transactionDate = cal.getTime();
 
 		Date createTransactionDate = addSeconds(transactionDate, -1);
 		
 		GrowerContractYearSyncRsrc resource = new GrowerContractYearSyncRsrc();
 		
-		resource.setGrowerContractYearId(gcyId1);
-		resource.setContractId(contractId1);
-		resource.setGrowerId(growerId1);
+		resource.setGrowerContractYearId(gcyId);
+		resource.setContractId(contractId);
+		resource.setGrowerId(growerId);
 		resource.setInsurancePlanId(insurancePlanId);
-		resource.setCropYear(cropYear1);
+		resource.setCropYear(cropYear);
 		resource.setDataSyncTransDate(createTransactionDate);
 		resource.setTransactionType(PoliciesSyncEventTypes.GrowerContractYearCreated);
 
@@ -782,7 +903,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		//CREATE LegalLand
 		LegalLandRsrc resource = new LegalLandRsrc();
 		
-		resource.setLegalLandId(legalLandId1);
+		resource.setLegalLandId(legalLandId);
 		resource.setPrimaryPropertyIdentifier("GF0099999");
 		resource.setPrimaryReferenceTypeCode("OTHER");
 		resource.setLegalDescription(null);
@@ -800,7 +921,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 
 		FieldRsrc resource = new FieldRsrc();
 		
-		resource.setFieldId(fieldId1);
+		resource.setFieldId(fieldId);
 		resource.setFieldLabel("Field Label");
 		resource.setFieldLocation(fieldLocation );
 		resource.setActiveFromCropYear(2011);
@@ -810,26 +931,26 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		service.synchronizeField(resource);
 	}
 	
-	private void createAnnualFieldDetail() throws CirrasUnderwritingServiceException, ValidationException {
+	private void createAnnualFieldDetail(Integer annualFieldDetailId, Integer cropYear) throws CirrasUnderwritingServiceException, ValidationException {
 
 		AnnualFieldDetailRsrc resource = new AnnualFieldDetailRsrc();
 		
-		resource.setAnnualFieldDetailId(annualFieldDetailId1);
-		resource.setLegalLandId(legalLandId1);
-		resource.setFieldId(fieldId1);
-		resource.setCropYear(cropYear1);
+		resource.setAnnualFieldDetailId(annualFieldDetailId);
+		resource.setLegalLandId(legalLandId);
+		resource.setFieldId(fieldId);
+		resource.setCropYear(cropYear);
 		resource.setTransactionType(LandManagementEventTypes.AnnualFieldDetailCreated);
 		
 		service.synchronizeAnnualFieldDetail(resource);
 	}
 
-	private void createContractedFieldDetail(Boolean isLeased) throws CirrasUnderwritingServiceException, ValidationException {
+	private void createContractedFieldDetail(Integer contractedFieldDetailId, Integer annualFieldDetailId, Integer gcyId, Boolean isLeased) throws CirrasUnderwritingServiceException, ValidationException {
 		
 		ContractedFieldDetailRsrc resource = new ContractedFieldDetailRsrc();
 		
-		resource.setContractedFieldDetailId(contractedFieldDetailId1);
-		resource.setAnnualFieldDetailId(annualFieldDetailId1);
-		resource.setGrowerContractYearId(gcyId1);
+		resource.setContractedFieldDetailId(contractedFieldDetailId);
+		resource.setAnnualFieldDetailId(annualFieldDetailId);
+		resource.setGrowerContractYearId(gcyId);
 		resource.setDisplayOrder(1);
 		resource.setIsLeasedInd(isLeased);
 		resource.setTransactionType(LandManagementEventTypes.ContractedFieldDetailCreated);
