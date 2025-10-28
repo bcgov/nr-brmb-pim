@@ -3,7 +3,7 @@ import { ParamMap } from '@angular/router';
 import { BaseComponent } from '../../common/base/base.component';
 import { CropCommodityList, InventoryContract, UwContract } from 'src/app/conversion/models';
 import { BerriesInventoryComponentModel } from './berries-inventory.component.model';
-import { CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
+import { BERRY_COMMODITY, CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
 import { AddNewInventoryContract, DeleteInventoryContract, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
@@ -24,13 +24,17 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   @Input() growerContract: UwContract;
   @Input() isUnsaved: boolean;
 
-  // TODO: defaultCommodity should be based on the commodity tab that the user chooses
-  defaultCommodity = 10 // Blueberry is the default commodity for now
+  BERRY_COMMODITY = BERRY_COMMODITY
+
+  selectedCommodity = BERRY_COMMODITY.Blueberry // Blueberry is the default commodity for now 
 
   policyId
+  cropCommodityOptions = [];
   cropVarietyOptions = [];
 
   hasYieldData = false; // TODO
+
+
 
   initModels() {
     this.viewModel = new BerriesInventoryComponentModel(this.sanitizer, this.fb, this.inventoryContract);
@@ -54,12 +58,45 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
     // populate commodity and variety lists
     if (changes.cropCommodityList && this.cropCommodityList && this.cropCommodityList.collection && this.cropCommodityList.collection.length ) {
-      this.populateCropVarietyOptions()
+      this.populateCropAndVarietyOptions()
+
+      // find out what commodities are on the policy and assign the default commodity to one them
+      // if no commodities are on the policy then set to Blueberies - default
+      this.selectedCommodity = BERRY_COMMODITY.Blueberry
+      this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)  
+    }
+
+    if (changes.inventoryContract) {
+      this.inventoryContract = changes.inventoryContract.currentValue;
+
+      if (this.inventoryContract && this.inventoryContract.fields && this.inventoryContract.fields.length > 0) { 
+        for (let i = 0; i < this.inventoryContract.fields.length; i++){
+
+          if (this.inventoryContract.fields[i].plantings && this.inventoryContract.fields[i].plantings.length > 0) {
+            
+            for (let j = 0; j < this.inventoryContract.fields[i].plantings.length; j++){
+              
+              let pltg = this.inventoryContract.fields[i].plantings[j]
+
+              if( pltg.inventoryBerries && pltg.inventoryBerries.cropCommodityId ) {
+
+                this.selectedCommodity = pltg.inventoryBerries.cropCommodityId
+                this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)
+
+                return
+              }
+
+            }
+          }
+        }
+      }
+      
     }
   }
 
-  populateCropVarietyOptions() {
+  populateCropAndVarietyOptions() {
     // clear the crop options
+    this.cropCommodityOptions = []
     this.cropVarietyOptions = [] 
 
     // add empty variety
@@ -70,19 +107,29 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     })
 
     var self = this
-    this.cropCommodityList.collection.forEach( ccm => 
-                                                ccm.cropVariety.forEach(cv => self.cropVarietyOptions.push ({
-                                                          cropCommodityId: cv.cropCommodityId,
-                                                          cropVarietyId: cv.cropVarietyId,
-                                                          varietyName: cv.varietyName ,
-                                                          cropVarietyCommodityTypes: cv.cropVarietyCommodityTypes, 
-                                                        })) )
+    this.cropCommodityList.collection.forEach( ccm => {
+
+        // populate cropCommodityOptions
+        self.cropCommodityOptions.push({
+          cropCommodityId: ccm.cropCommodityId,
+          commodityName: ccm.commodityName
+        })
+        
+        // populate cropVarietyOptions 
+        ccm.cropVariety.forEach(cv => self.cropVarietyOptions.push ({
+                                                            cropCommodityId: cv.cropCommodityId,
+                                                            cropVarietyId: cv.cropVarietyId,
+                                                            varietyName: cv.varietyName ,
+                                                            cropVarietyCommodityTypes: cv.cropVarietyCommodityTypes, 
+                                                          }))
+
+      })
     }
 
 
   setFormSeededStyles(){
     return {
-      'grid-template-columns':  'auto 140px 150px 12px 190px'
+      'grid-template-columns':  '250px 200px auto  140px 150px 12px 190px'
     }
   }
 
@@ -109,6 +156,8 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     if ( !this.isFormValid() ){
       return
     }
+
+    this.setselectedCommodityForEmptyPlantings()
 
     if (this.inventoryContract.inventoryContractGuid) {
       this.store.dispatch(UpdateInventoryContract(INVENTORY_COMPONENT_ID, this.policyId, this.inventoryContract))
@@ -140,28 +189,9 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     for (let field of  this.inventoryContract.fields) {
       for (let planting of field.plantings) {
         let plantedYear = planting.inventoryBerries.plantedYear
-        let plantedAcres = planting.inventoryBerries.plantedAcres
-        let variety = planting.inventoryBerries.cropVarietyId
-
         let rowSpacing = planting.inventoryBerries.rowSpacing
-        let plantSpacing = planting.inventoryBerries.plantSpacing
-        let isQuantityInsurableInd = planting.inventoryBerries.isQuantityInsurableInd
-        let isPlantInsurableInd = planting.inventoryBerries.isPlantInsurableInd
-
-        // All user entered fields are mandatory: if at least one field has a value or one of the checkboxes is checked then all should have a value
-        let message = "Partial data entry is not accepted. Please fill in all values for field ID " + field.fieldId + " or none of them."
-        if (plantedYear && (!plantedAcres || !variety || !rowSpacing || !plantSpacing ) ) {
-          alert(message)
-          return false
-        }
-
-        if (!plantedYear && (plantedAcres || variety || rowSpacing || plantSpacing ) ) {
-          alert(message)
-          return false
-        }
-
-        if ( (isQuantityInsurableInd || isPlantInsurableInd) && (!plantedAcres || !plantedYear || !variety || !rowSpacing || !plantSpacing ) ) {
-          alert(message)
+        
+        if (this.hasPartialData(field.fieldId, planting)) {
           return false
         }
 
@@ -182,6 +212,69 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     return true // all checks have passed successfully
   }
 
+  hasPartialData(fieldId, planting) {
+    let plantedYear = planting.inventoryBerries.plantedYear
+    let plantedAcres = planting.inventoryBerries.plantedAcres
+    let variety = planting.inventoryBerries.cropVarietyId
+    let rowSpacing = planting.inventoryBerries.rowSpacing
+    let plantSpacing = planting.inventoryBerries.plantSpacing
+    let isQuantityInsurableInd = planting.inventoryBerries.isQuantityInsurableInd
+    let isPlantInsurableInd = planting.inventoryBerries.isPlantInsurableInd
+
+    // All user entered fields are mandatory: if at least one field has a value or one of the checkboxes is checked then all should have a value
+    let message = "Partial data entry is not accepted. Please fill in all values for field ID " + fieldId + " or none of them."
+    
+    // Blueberry
+    if (this.selectedCommodity == BERRY_COMMODITY.Blueberry) {
+      if (plantedYear && (!plantedAcres || !variety || !rowSpacing || !plantSpacing ) ) {
+        alert(message)
+        return true
+      }
+
+      if (!plantedYear && (plantedAcres || variety || rowSpacing || plantSpacing ) ) {
+        alert(message)
+        return true
+      }
+
+      if ( (isQuantityInsurableInd || isPlantInsurableInd) && (!plantedAcres || !plantedYear || !variety || !rowSpacing || !plantSpacing ) ) {
+        alert(message)
+        return true
+      }
+    }
+
+    // Raspberry
+    if (this.selectedCommodity == BERRY_COMMODITY.Raspberry) {
+      if (plantedYear && (!plantedAcres || !variety) ) {
+        alert(message)
+        return true
+      }
+
+      if (!plantedYear && (plantedAcres || variety ) ) {
+        alert(message)
+        return true
+      }
+
+      if ( isQuantityInsurableInd && (!plantedAcres || !plantedYear || !variety ) ) {
+        alert(message)
+        return true
+      }
+    }
+
+    return false
+  }
+
+  setselectedCommodityForEmptyPlantings() {
+    // it allows us to save empty plantings
+    // TODO: remove this check after add field is ready
+    for (let field of  this.inventoryContract.fields) {
+      for (let planting of field.plantings) {
+        if ( planting.inventoryBerries.cropCommodityId == null ) {
+          planting.inventoryBerries.cropCommodityId = this.selectedCommodity
+        }
+      }
+    }
+  }
+
   onDeleteInventory() {
     //Ask for confirmation before deleting all Inventory data
     if ( confirm("You are about to delete all inventory data for the policy. Do you want to continue?") ) {
@@ -197,4 +290,8 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     }
   }
 
+
+  commoditySelectionChanged(){
+    this.selectedCommodity = this.getViewModel().formGroup.controls.selectedCommodity.value
+  }
 }

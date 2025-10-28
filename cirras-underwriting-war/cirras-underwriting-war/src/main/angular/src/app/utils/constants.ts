@@ -47,6 +47,13 @@ export const INSURANCE_NAME = {
     "FLOWERS"       : "FLOWERS"
 }
 
+export const BERRY_COMMODITY = {
+    "Blueberry"     : 10,  
+    "Cranberry"     : 11,  
+    "Raspberry"     : 12,   
+    "Strawberry"    : 13
+  }
+
 export const CROP_COMMODITY_TYPE_CONST = {
     ALL: "",  
     INVENTORY: "INV",  

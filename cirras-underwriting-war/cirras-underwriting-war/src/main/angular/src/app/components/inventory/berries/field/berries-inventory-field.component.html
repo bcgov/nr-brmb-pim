@@ -1,4 +1,4 @@
-<div class="plcy-inv-field-box" [formGroup]="fieldFormGroup" style="width:1520px;">
+<div *ngIf="fieldHasCommodity()" class="plcy-inv-field-box" [formGroup]="fieldFormGroup"  [ngStyle]="setTableHeaderStyle()">
     
     <div class="inventory-cell inventory-border border-left" style="width: 115px;">
         {{ fieldFormGroup.value.fieldId }}
@@ -29,7 +29,7 @@
             [planting]="planting"
             [plantingFormArray]="fieldFormGroup.value.plantings" 
             [cropVarietyOptions]="cropVarietyOptions"
-            [defaultCommodity]="defaultCommodity"
+            [selectedCommodity]="selectedCommodity"
             [numPlantingsToSave]="numPlantingsToSave"
             (recalcNumPlantings)="onRecalcNumPlantings()"
             style="display: contents;"></berries-inventory-planting>

@@ -8,7 +8,8 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { InventoryBerries, InventoryField, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
-import { INSURANCE_PLAN } from 'src/app/utils/constants';
+import { BERRY_COMMODITY, INSURANCE_PLAN } from 'src/app/utils/constants';
+import { setTableHeaderStyleForBerries } from '../field-list/berries-inventory-field-list.component';
 
 @Component({
   selector: 'berries-inventory-field',
@@ -22,7 +23,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   @Input() field: AnnualField;
   @Input() fieldsFormArray: UntypedFormArray;
   @Input() cropVarietyOptions;
-  @Input() defaultCommodity;
+  @Input() selectedCommodity;
 
   fieldFormGroup: UntypedFormGroup;
   numPlantingsToSave = 1 // default
@@ -42,6 +43,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
         this.updateNumPlantings()  
       }
     }
+
   }
 
   refreshForm(){
@@ -51,19 +53,52 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     this.fieldsFormArray.push(this.fieldFormGroup);
   }
 
+  fieldHasCommodity() {
+    // display field if the field has plantings with the desired commodity
+    // or the field has no commodity 
+    if (this.field && this.field.plantings && this.selectedCommodity) {
+
+      let plantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == this.selectedCommodity)
+      if (plantings && plantings.length > 0) {
+        return true
+      }
+
+      // TODO: remove the check for no commodity after add field is complete
+      plantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == null)
+      if (plantings && plantings.length > 0) {
+        return true
+      }
+    }
+
+    return false
+  }
+
   updateNumPlantings() {
     if (this.field.plantings) {
-      this.numPlantingsToSave = this.field.plantings.filter(x => x.inventoryBerries.deletedByUserInd !== true ).length
+      this.numPlantingsToSave = this.field.plantings.filter(
+        x => (x.inventoryBerries.deletedByUserInd !== true  && 
+              x.inventoryBerries.cropCommodityId == this.selectedCommodity )).length
     }
   }
 
   setPlantingStyles() {
-    return {
-        'display': 'grid',
-       // 'grid-template-columns': '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr', 
-        'align-items': 'stretch',
-        'width': `830px`
-    };
+    
+    if (this.selectedCommodity == BERRY_COMMODITY.Blueberry ) {
+      return {
+          'display': 'grid',
+          'align-items': 'stretch',
+          'width': `830px`
+      };
+    }
+
+    if (this.selectedCommodity == BERRY_COMMODITY.Raspberry ) {
+      return {
+          'display': 'grid',
+          'align-items': 'stretch',
+          'width': `510px`
+      };
+    }
+
   }
 
   updateFieldLocation() {
@@ -84,7 +119,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   onAddPlanting() {
 
     if (this.securityUtilService.canEditInventory()) {
-      let inventoryBerries: InventoryBerries = getDefaultInventoryBerries(null, null, this.defaultCommodity)
+      let inventoryBerries: InventoryBerries = getDefaultInventoryBerries(null, null, this.selectedCommodity)
 
       let pltg: InventoryField = {
         inventoryFieldGuid: null,
@@ -129,6 +164,11 @@ export class BerriesInventoryFieldComponent implements OnChanges{
 
   onRecalcNumPlantings() {
     this.updateNumPlantings() 
+  }
+
+
+  setTableHeaderStyle() {
+    return setTableHeaderStyleForBerries(this.selectedCommodity)
   }
 
 }
