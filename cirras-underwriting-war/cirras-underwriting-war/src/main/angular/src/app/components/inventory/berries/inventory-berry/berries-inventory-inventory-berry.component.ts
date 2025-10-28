@@ -22,7 +22,7 @@ import { showIsPlantInsuredForBerries, showPlantSpacingForBerries, showRowSpacin
 export class BerriesInventoryInventoryBerryComponent implements OnChanges{
   @Input() inventoryBerry: InventoryBerries;
   @Input() cropVarietyOptions;
-  @Input() defaultCommodity;
+  @Input() selectedCommodity;
   @Input() numPlantingsToSave;
   @Output() recalcNumPlantings = new EventEmitter();
 
@@ -45,7 +45,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
       }
     }
 
-    if (changes.defaultCommodity && changes.defaultCommodity.currentValue && this.inventoryBerry) {
+    if (changes.selectedCommodity && changes.selectedCommodity.currentValue && this.inventoryBerry) {
       this.setDefaultValuesForCommodity()
     }
   }
@@ -60,7 +60,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
 
   setDefaultValuesForCommodity() {
     // set commodity specific default values
-    if (this.defaultCommodity == BERRY_COMMODITY.Blueberry || this.defaultCommodity == BERRY_COMMODITY.Raspberry) {
+    if (this.selectedCommodity == BERRY_COMMODITY.Blueberry || this.selectedCommodity == BERRY_COMMODITY.Raspberry) {
       // make IsQuantityInsurableInd checked by default
       if (this.inventoryBerry.isQuantityInsurableInd == null) {
         this.inventoryBerry.isQuantityInsurableInd = true
@@ -68,7 +68,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
       }
     }
 
-    if (this.defaultCommodity == BERRY_COMMODITY.Blueberry) {
+    if (this.selectedCommodity == BERRY_COMMODITY.Blueberry) {
       // make IsPlantInsurableCheckbox checked by default
       if (this.inventoryBerry.isPlantInsurableInd == null) {
         this.inventoryBerry.isPlantInsurableInd = true
@@ -87,7 +87,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
   }
 
   getBerryCommodity() {
-    return (this.inventoryBerry && this.inventoryBerry.cropCommodityId) ? this.inventoryBerry.cropCommodityId : this.defaultCommodity
+    return (this.inventoryBerry && this.inventoryBerry.cropCommodityId) ? this.inventoryBerry.cropCommodityId : this.selectedCommodity
   }
 
   varietyFocus() {
@@ -198,19 +198,19 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
 
 
   showRowSpacing() {
-    return showRowSpacingForBerries(this.defaultCommodity)
+    return showRowSpacingForBerries(this.selectedCommodity)
   }
 
   showPlantSpacing() {
-    return showPlantSpacingForBerries(this.defaultCommodity)
+    return showPlantSpacingForBerries(this.selectedCommodity)
   }
 
   showTotalPlants() {
-    return showTotalPlantsForBerries(this.defaultCommodity)
+    return showTotalPlantsForBerries(this.selectedCommodity)
   }
 
   showIsPlantInsured() {
-    return showIsPlantInsuredForBerries(this.defaultCommodity)
+    return showIsPlantInsuredForBerries(this.selectedCommodity)
   }
 
 }

@@ -23,7 +23,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   @Input() field: AnnualField;
   @Input() fieldsFormArray: UntypedFormArray;
   @Input() cropVarietyOptions;
-  @Input() defaultCommodity;
+  @Input() selectedCommodity;
 
   fieldFormGroup: UntypedFormGroup;
   numPlantingsToSave = 1 // default
@@ -56,9 +56,9 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   fieldHasCommodity() {
     // display field if the field has plantings with the desired commodity
     // or the field has no commodity 
-    if (this.field && this.field.plantings && this.defaultCommodity) {
+    if (this.field && this.field.plantings && this.selectedCommodity) {
 
-      let plantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == this.defaultCommodity)
+      let plantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == this.selectedCommodity)
       if (plantings && plantings.length > 0) {
         return true
       }
@@ -77,13 +77,13 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     if (this.field.plantings) {
       this.numPlantingsToSave = this.field.plantings.filter(
         x => (x.inventoryBerries.deletedByUserInd !== true  && 
-              x.inventoryBerries.cropCommodityId == this.defaultCommodity )).length
+              x.inventoryBerries.cropCommodityId == this.selectedCommodity )).length
     }
   }
 
   setPlantingStyles() {
     
-    if (this.defaultCommodity == BERRY_COMMODITY.Blueberry ) {
+    if (this.selectedCommodity == BERRY_COMMODITY.Blueberry ) {
       return {
           'display': 'grid',
           'align-items': 'stretch',
@@ -91,7 +91,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
       };
     }
 
-    if (this.defaultCommodity == BERRY_COMMODITY.Raspberry ) {
+    if (this.selectedCommodity == BERRY_COMMODITY.Raspberry ) {
       return {
           'display': 'grid',
           'align-items': 'stretch',
@@ -119,7 +119,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   onAddPlanting() {
 
     if (this.securityUtilService.canEditInventory()) {
-      let inventoryBerries: InventoryBerries = getDefaultInventoryBerries(null, null, this.defaultCommodity)
+      let inventoryBerries: InventoryBerries = getDefaultInventoryBerries(null, null, this.selectedCommodity)
 
       let pltg: InventoryField = {
         inventoryFieldGuid: null,
@@ -168,7 +168,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
 
 
   setTableHeaderStyle() {
-    return setTableHeaderStyleForBerries(this.defaultCommodity)
+    return setTableHeaderStyleForBerries(this.selectedCommodity)
   }
 
 }

@@ -58,20 +58,20 @@ export class BerriesInventoryFieldListComponent  {
   @Input() fields: Array<AnnualField>;
   @Input() fieldsFormArray: UntypedFormArray;
   @Input() cropVarietyOptions;
-  @Input() defaultCommodity;
+  @Input() selectedCommodity;
 
   setTableHeaderStyle() {
-    return setTableHeaderStyleForBerries(this.defaultCommodity)
+    return setTableHeaderStyleForBerries(this.selectedCommodity)
   }
 
   setInnerWrapperStyle() {
-    if (this.defaultCommodity == BERRY_COMMODITY.Blueberry ) {
+    if (this.selectedCommodity == BERRY_COMMODITY.Blueberry ) {
       return {
           'width': `1535px`
       };
     }
 
-    if (this.defaultCommodity == BERRY_COMMODITY.Raspberry ) {
+    if (this.selectedCommodity == BERRY_COMMODITY.Raspberry ) {
       return {
           'width': `1215px` 
       };
@@ -79,19 +79,19 @@ export class BerriesInventoryFieldListComponent  {
   }
 
   showRowSpacing() {
-    return showRowSpacingForBerries(this.defaultCommodity)
+    return showRowSpacingForBerries(this.selectedCommodity)
   }
 
   showPlantSpacing() {
-    return showPlantSpacingForBerries(this.defaultCommodity)
+    return showPlantSpacingForBerries(this.selectedCommodity)
   }
 
   showTotalPlants() {
-    return showTotalPlantsForBerries(this.defaultCommodity)
+    return showTotalPlantsForBerries(this.selectedCommodity)
   }
 
   showIsPlantInsured() {
-    return showIsPlantInsuredForBerries(this.defaultCommodity)
+    return showIsPlantInsuredForBerries(this.selectedCommodity)
   }
 
 }

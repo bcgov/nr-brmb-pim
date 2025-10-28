@@ -784,11 +784,11 @@ export function addBerriesObject(inventoryFieldGuid, inventoryBerries: Inventory
   }
 }
 
-export function getDefaultInventoryBerries(inventoryBerriesGuid, inventoryFieldGuid, defaultCommodity) {
+export function getDefaultInventoryBerries(inventoryBerriesGuid, inventoryFieldGuid, selectedCommodity) {
   return {
         inventoryBerriesGuid: inventoryBerriesGuid,
         inventoryFieldGuid: inventoryFieldGuid,
-        cropCommodityId: defaultCommodity,
+        cropCommodityId: selectedCommodity,
         cropVarietyId: null,
         plantedYear: null,
         plantedAcres: null,

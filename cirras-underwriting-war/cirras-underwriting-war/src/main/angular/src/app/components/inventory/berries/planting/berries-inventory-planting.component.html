@@ -3,7 +3,7 @@
     <berries-inventory-inventory-berry *ngIf="plantingHasCommodity() && planting.inventoryBerries.deletedByUserInd !== true"
         [inventoryBerry]="planting.inventoryBerries" 
         [cropVarietyOptions]="cropVarietyOptions"
-        [defaultCommodity]="defaultCommodity"
+        [selectedCommodity]="selectedCommodity"
         [numPlantingsToSave]="numPlantingsToSave"
         (recalcNumPlantings)="onNumPlantingsChanged()"
         ></berries-inventory-inventory-berry>  

@@ -26,7 +26,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
   BERRY_COMMODITY = BERRY_COMMODITY
 
-  defaultCommodity = BERRY_COMMODITY.Blueberry // Blueberry is the default commodity for now 
+  selectedCommodity = BERRY_COMMODITY.Blueberry // Blueberry is the default commodity for now 
 
   policyId
   cropCommodityOptions = [];
@@ -62,8 +62,8 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
       // find out what commodities are on the policy and assign the default commodity to one them
       // if no commodities are on the policy then set to Blueberies - default
-      this.defaultCommodity = BERRY_COMMODITY.Blueberry
-      this.getViewModel().formGroup.controls.defaultCommodity.setValue(this.defaultCommodity)  
+      this.selectedCommodity = BERRY_COMMODITY.Blueberry
+      this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)  
     }
 
     if (changes.inventoryContract) {
@@ -80,8 +80,8 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
               if( pltg.inventoryBerries && pltg.inventoryBerries.cropCommodityId ) {
 
-                this.defaultCommodity = pltg.inventoryBerries.cropCommodityId
-                this.getViewModel().formGroup.controls.defaultCommodity.setValue(this.defaultCommodity)
+                this.selectedCommodity = pltg.inventoryBerries.cropCommodityId
+                this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)
 
                 return
               }
@@ -157,7 +157,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       return
     }
 
-    this.setDefaultCommodityForEmptyPlantings()
+    this.setselectedCommodityForEmptyPlantings()
 
     if (this.inventoryContract.inventoryContractGuid) {
       this.store.dispatch(UpdateInventoryContract(INVENTORY_COMPONENT_ID, this.policyId, this.inventoryContract))
@@ -225,7 +225,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     let message = "Partial data entry is not accepted. Please fill in all values for field ID " + fieldId + " or none of them."
     
     // Blueberry
-    if (this.defaultCommodity == BERRY_COMMODITY.Blueberry) {
+    if (this.selectedCommodity == BERRY_COMMODITY.Blueberry) {
       if (plantedYear && (!plantedAcres || !variety || !rowSpacing || !plantSpacing ) ) {
         alert(message)
         return true
@@ -243,7 +243,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     }
 
     // Raspberry
-    if (this.defaultCommodity == BERRY_COMMODITY.Raspberry) {
+    if (this.selectedCommodity == BERRY_COMMODITY.Raspberry) {
       if (plantedYear && (!plantedAcres || !variety) ) {
         alert(message)
         return true
@@ -263,13 +263,13 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     return false
   }
 
-  setDefaultCommodityForEmptyPlantings() {
+  setselectedCommodityForEmptyPlantings() {
     // it allows us to save empty plantings
     // TODO: remove this check after add field is ready
     for (let field of  this.inventoryContract.fields) {
       for (let planting of field.plantings) {
         if ( planting.inventoryBerries.cropCommodityId == null ) {
-          planting.inventoryBerries.cropCommodityId = this.defaultCommodity
+          planting.inventoryBerries.cropCommodityId = this.selectedCommodity
         }
       }
     }
@@ -292,6 +292,6 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
 
   commoditySelectionChanged(){
-    this.defaultCommodity = this.getViewModel().formGroup.controls.defaultCommodity.value
+    this.selectedCommodity = this.getViewModel().formGroup.controls.selectedCommodity.value
   }
 }
