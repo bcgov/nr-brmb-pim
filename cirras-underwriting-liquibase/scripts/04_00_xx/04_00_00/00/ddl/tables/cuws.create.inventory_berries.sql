@@ -3,6 +3,7 @@ CREATE TABLE cuws.inventory_berries(
     inventory_field_guid         varchar(32)       NOT NULL,
     crop_commodity_id            numeric(9, 0)     NOT NULL,
     crop_variety_id              numeric(9, 0),
+    plant_insurability_type_code    varchar(10),
     planted_year                 numeric(4, 0),
     planted_acres                numeric(10, 4),
     row_spacing                  numeric(4, 0),
@@ -26,6 +27,8 @@ COMMENT ON COLUMN cuws.inventory_berries.inventory_field_guid IS 'Inventory Fiel
 COMMENT ON COLUMN cuws.inventory_berries.crop_commodity_id IS 'Crop Commodity Id is a unique Id of a commodity from cirr_crop_types.crpt_id'
 ;
 COMMENT ON COLUMN cuws.inventory_berries.crop_variety_id IS 'Crop Variety Id is a unique Id of a variety from cirr_crop_types.crpt_id'
+;
+COMMENT ON COLUMN cuws.inventory_berries.plant_insurability_type_code IS 'Plant Insurability Type Code is a unique record identifier for plant insurability type records.'
 ;
 COMMENT ON COLUMN cuws.inventory_berries.planted_year IS 'Planted Year was the year when the variety was planted'
 ;
@@ -61,6 +64,9 @@ CREATE INDEX ix_ib_cva ON cuws.inventory_berries(crop_variety_id)
 CREATE INDEX ix_ib_cco ON cuws.inventory_berries(crop_commodity_id)
  TABLESPACE pg_default
 ;
+CREATE INDEX ix_ib_pitc ON cuws.inventory_berries(plant_insurability_type_code)
+ TABLESPACE pg_default
+;
 ALTER TABLE cuws.inventory_berries ADD 
     CONSTRAINT pk_ib PRIMARY KEY (inventory_berries_guid)
 ;
@@ -84,4 +90,7 @@ ALTER TABLE cuws.inventory_berries ADD CONSTRAINT fk_ib_cco
     REFERENCES cuws.crop_commodity(crop_commodity_id)
 ;
 
-
+ALTER TABLE cuws.inventory_berries ADD CONSTRAINT fk_ib_pitc 
+    FOREIGN KEY (plant_insurability_type_code)
+    REFERENCES cuws.plant_insurability_type_code(plant_insurability_type_code)
+;
