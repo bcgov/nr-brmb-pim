@@ -14,7 +14,7 @@ export class BerriesInventoryComponentModel extends BaseComponentModel {
         this.inventoryContract = inventoryContractData;
 
         this.formGroup = this.fb.group({
-
+            selectedCommodity: [],
             fields: new UntypedFormArray([]),
             commodities: new UntypedFormArray([]),
         });

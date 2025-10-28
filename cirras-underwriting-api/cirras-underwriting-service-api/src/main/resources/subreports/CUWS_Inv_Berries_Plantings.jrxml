@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.4.3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_Inv_Berries_Plantings" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="dae8acde-d8f2-47e4-9e95-8f4ccdfb0fc5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="p_crop_year" class="java.lang.Integer"/>
+	<parameter name="p_contract_id" class="java.lang.Integer"/>
+	<parameter name="p_commodity_name" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select gcy.contract_id
+    , gcy.crop_year
+    , ic.inventory_contract_guid
+    , f.field_label
+    , f.location
+    , ll.primary_property_identifier
+    , cfd.display_order
+    , cfd.contracted_field_detail_id
+    , cfd.is_leased_ind
+    , ifd.planting_number
+    , ifd.inventory_field_guid
+    , initcap(cc.commodity_name) as commodity_disp_name
+    , substring(cc.commodity_name for 4) as commodity_disp_short_name
+    , initcap(cv.variety_name) as variety_disp_name
+    , ib.planted_year
+    , ib.planted_acres
+    , ib.row_spacing
+    , ib.plant_spacing
+    , ib.total_plants
+    , ib.is_quantity_insurable_ind
+    , ib.is_plant_insurable_ind
+from grower_contract_year gcy
+join inventory_contract ic on ic.contract_id = gcy.contract_id
+                          and ic.crop_year = gcy.crop_year
+join contracted_field_detail cfd on cfd.grower_contract_year_id = gcy.grower_contract_year_id
+join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+join field f on afd.field_id = f.field_id
+left join legal_land ll on ll.legal_land_id = afd.legal_land_id
+join inventory_field ifd on ifd.field_id = f.field_id
+						and ifd.insurance_plan_id = gcy.insurance_plan_id
+						and ifd.crop_year = afd.crop_year
+join inventory_berries ib on ib.inventory_field_guid = ifd.inventory_field_guid
+join crop_commodity cc on cc.crop_commodity_id = ib.crop_commodity_id
+left join crop_variety cv on cv.crop_variety_id = ib.crop_variety_id
+where ifd.is_hidden_on_printout_ind = 'N'
+  and gcy.contract_id = $P{p_contract_id}
+  and gcy.crop_year = $P{p_crop_year}
+  and cc.commodity_name = $P{p_commodity_name}
+order by 
+  f.location, 
+  f.field_label,
+  cfd.display_order,
+  cfd.contracted_field_detail_id, 
+  ifd.planting_number, 
+  ifd.inventory_field_guid]]>
+	</queryString>
+	<field name="contract_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="contract_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="contract_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower_contract_year"/>
+		<fieldDescription><![CDATA[Contract Id is a unique key of a contract from cirr_contract_numbers.cn_id (also in POLICY.CONTRACT_ID)]]></fieldDescription>
+	</field>
+	<field name="crop_year" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="crop_year"/>
+		<property name="com.jaspersoft.studio.field.label" value="crop_year"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grower_contract_year"/>
+		<fieldDescription><![CDATA[Crop Year is the year the grower is bound by the specified contract from cirr_grower_contract_years.crop_year]]></fieldDescription>
+	</field>
+	<field name="inventory_contract_guid" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inventory_contract_guid"/>
+		<property name="com.jaspersoft.studio.field.label" value="inventory_contract_guid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_contract"/>
+	</field>
+	<field name="field_label" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="field_label"/>
+		<property name="com.jaspersoft.studio.field.label" value="field_label"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="field"/>
+		<fieldDescription><![CDATA[Field Label is a uniquely identifying label for a field from cirr_lots.lot_label]]></fieldDescription>
+	</field>
+	<field name="location" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="location"/>
+		<property name="com.jaspersoft.studio.field.label" value="location"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="field"/>
+		<fieldDescription><![CDATA[Location is the description of the location of the field.]]></fieldDescription>
+	</field>
+	<field name="primary_property_identifier" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="primary_property_identifier"/>
+		<property name="com.jaspersoft.studio.field.label" value="primary_property_identifier"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="legal_land"/>
+		<fieldDescription><![CDATA[PRIMARY PROPERTY IDENTIFIER is a unique identifier assigned to a property that makes up part or all of a lot. The PROPERTY IDENTIFIER is a unique alpha-numeric assigned to a property outside of the CIRRAS system.]]></fieldDescription>
+	</field>
+	<field name="display_order" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="display_order"/>
+		<property name="com.jaspersoft.studio.field.label" value="display_order"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contracted_field_detail"/>
+		<fieldDescription><![CDATA[Display Order is the order of the lot records presented on inventory screens. Entered by the user.]]></fieldDescription>
+	</field>
+	<field name="contracted_field_detail_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="contracted_field_detail_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="contracted_field_detail_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contracted_field_detail"/>
+		<fieldDescription><![CDATA[Contracted Field Detail Id is a unique key of a lot from cirr_contracted_lot_detail.contracted_lot_detail_id]]></fieldDescription>
+	</field>
+	<field name="is_leased_ind" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="is_leased_ind"/>
+		<property name="com.jaspersoft.studio.field.label" value="is_leased_ind"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contracted_field_detail"/>
+		<fieldDescription><![CDATA[Is Leased Ind denotes whether the field is Leased (Y) or owned (N)]]></fieldDescription>
+	</field>
+	<field name="planting_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="planting_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="planting_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_field"/>
+		<fieldDescription><![CDATA[Planting Number is the order in which the plantings were added to the field.]]></fieldDescription>
+	</field>
+	<field name="inventory_field_guid" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inventory_field_guid"/>
+		<property name="com.jaspersoft.studio.field.label" value="inventory_field_guid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_field"/>
+		<fieldDescription><![CDATA[Inventory Field GUID is the primary key used to identify a table record.]]></fieldDescription>
+	</field>
+	<field name="commodity_disp_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="commodity_disp_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="commodity_disp_name"/>
+	</field>
+	<field name="commodity_disp_short_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="commodity_disp_short_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="commodity_disp_short_name"/>
+	</field>
+	<field name="variety_disp_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="variety_disp_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="variety_disp_name"/>
+	</field>
+	<field name="planted_year" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="planted_year"/>
+		<property name="com.jaspersoft.studio.field.label" value="planted_year"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_berries"/>
+		<fieldDescription><![CDATA[Planted Year was the year when the variety was planted]]></fieldDescription>
+	</field>
+	<field name="planted_acres" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="planted_acres"/>
+		<property name="com.jaspersoft.studio.field.label" value="planted_acres"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_berries"/>
+		<fieldDescription><![CDATA[Planted Acres is the number of acres utilized by the planted crop]]></fieldDescription>
+	</field>
+	<field name="row_spacing" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="row_spacing"/>
+		<property name="com.jaspersoft.studio.field.label" value="row_spacing"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_berries"/>
+		<fieldDescription><![CDATA[Row spacing is a measure of distance between rows.]]></fieldDescription>
+	</field>
+	<field name="plant_spacing" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="plant_spacing"/>
+		<property name="com.jaspersoft.studio.field.label" value="plant_spacing"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_berries"/>
+		<fieldDescription><![CDATA[Plant spacing is a measure of distance between rows.]]></fieldDescription>
+	</field>
+	<field name="total_plants" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="total_plants"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_plants"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_berries"/>
+		<fieldDescription><![CDATA[Total plants is a count of the plants of the specified variety planted on the field.]]></fieldDescription>
+	</field>
+	<field name="is_quantity_insurable_ind" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="is_quantity_insurable_ind"/>
+		<property name="com.jaspersoft.studio.field.label" value="is_quantity_insurable_ind"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_berries"/>
+		<fieldDescription><![CDATA[Is Quantity Insured flag determines if the specified crop is quantity insurable (Y) or not (N).]]></fieldDescription>
+	</field>
+	<field name="is_plant_insurable_ind" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="is_plant_insurable_ind"/>
+		<property name="com.jaspersoft.studio.field.label" value="is_plant_insurable_ind"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_berries"/>
+		<fieldDescription><![CDATA[Is Plant Insured flag determines if the specified crop is plant insurable (Y) or not (N).]]></fieldDescription>
+	</field>
+	<group name="Group2">
+		<groupExpression><![CDATA[$F{contract_id} + $F{crop_year} + $F{inventory_contract_guid} + $F{field_label} + $F{location} + $F{primary_property_identifier} + $F{display_order} + $F{contracted_field_detail_id} + $F{is_leased_ind}]]></groupExpression>
+		<groupHeader>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="15">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="70" height="15" uuid="13fa88a3-df85-4252-afc4-deba472ebd83">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupHeight" x="70" y="0" width="30" height="15" uuid="ea83a811-237c-44dd-9bb4-fbbeca9520e1">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupHeight" x="100" y="0" width="110" height="15" uuid="8dcdbb4e-17c4-4413-a403-55f53e06f515">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupHeight" x="210" y="0" width="40" height="15" uuid="85a46b97-69c3-4d46-aec5-0d7cbd0f6041">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupHeight" x="250" y="0" width="40" height="15" uuid="483a2f01-0e89-4264-bc4c-14d9e7d2f42b">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupHeight" x="290" y="0" width="20" height="15" uuid="345148bd-3983-4bbb-9d7c-96a0dfd3d07b">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupHeight" x="310" y="0" width="40" height="15" uuid="9a1fc61d-fdc0-4da3-a5b3-a73bbec77c81">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupHeight" x="350" y="0" width="55" height="15" uuid="d4cc7fdd-2c7a-4dab-93d7-52029175fb32">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupHeight" x="405" y="0" width="40" height="15" uuid="d939e70e-bdcd-41eb-9426-2050885d59d1">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupHeight" x="445" y="0" width="40" height="15" uuid="c1e857c7-44d9-4e16-8467-a1ee0a840cb7">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupHeight" x="485" y="0" width="40" height="15" uuid="c67089d5-fbca-4379-bf88-25e2c07da2cc">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupHeight" x="525" y="0" width="30" height="15" uuid="3e95e21f-023b-43ef-8c8c-d20b93ab946c">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<detail>
+		<band height="15" splitType="Prevent">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="70" height="15" uuid="ae3d58a5-a070-43ba-b975-a8c0ea02ef87">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="1">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{primary_property_identifier}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="70" y="0" width="30" height="15" uuid="0b2a956b-3f38-4b36-aa49-d283c48c7ed4">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="1">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{commodity_disp_short_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="100" y="0" width="110" height="15" uuid="50df0157-848c-47c8-ba24-df806ae2ea6a">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="210" y="0" width="40" height="15" uuid="6fb0c695-0d5e-4abe-90cf-23b8dab48cd3">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{planted_year}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="250" y="0" width="40" height="15" uuid="0cb1f41c-38ed-422a-a025-84d334183e88">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(double)$F{planted_acres}.intValue() == $F{planted_acres}.doubleValue() ? 
+	(new java.text.DecimalFormat("#,##0").format($F{planted_acres}.doubleValue()))
+	:
+	(new java.text.DecimalFormat("#,##0.0").format($F{planted_acres}.doubleValue()))
+]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="290" y="0" width="20" height="15" uuid="f284778c-e7de-4f2d-ad90-fb1ad2dda3f0">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{is_quantity_insurable_ind}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="310" y="0" width="40" height="15" uuid="7008e798-9964-4d38-808e-9b1c038cb054">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{is_leased_ind}.equals("Y") ? "LEASED" : "OWNED"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="350" y="0" width="55" height="15" uuid="810d9c2e-93b0-442f-bf69-b711cb5e5eff">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{variety_disp_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="405" y="0" width="40" height="15" uuid="0448c4dc-c1c3-4e29-81d5-f2b8b8914264">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{row_spacing}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="445" y="0" width="40" height="15" uuid="028c7f57-6be4-4f68-9a86-3bdf5139b633">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(double)$F{plant_spacing}.intValue() == $F{plant_spacing}.doubleValue() ? 
+	(new java.text.DecimalFormat("#,##0").format($F{plant_spacing}.doubleValue()))
+	:
+	(new java.text.DecimalFormat("#,##0.0").format($F{plant_spacing}.doubleValue()))
+]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="485" y="0" width="40" height="15" uuid="267e7a21-16c6-450c-a9d9-8d4c077e908d">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_plants}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="525" y="0" width="30" height="15" uuid="bc99b29d-747a-4c63-bdb5-3cc5e93bd0e7">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{is_plant_insurable_ind}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

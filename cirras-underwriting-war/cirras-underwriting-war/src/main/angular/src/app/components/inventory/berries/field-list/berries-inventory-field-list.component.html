@@ -1,4 +1,4 @@
-<div class="plcy-inv-field-box" style="width:1520px;">
+<div class="plcy-inv-field-box" [ngStyle]="setTableHeaderStyle()">
     <div class="inventory-header border-left" style="width:115px">Field ID</div>
     <div class="inventory-header" style="width:280px;">Field Address</div>
     <div class="inventory-header" style="width:140px">Legal Description</div>
@@ -7,21 +7,21 @@
     <div class="inventory-header" style="width:100px">Acres</div>
     <div class="inventory-header" style="width:80px">Quantity <br />Insurable</div>
     <div class="inventory-header" style="width:180px">Variety</div>
-    <div class="inventory-header" style="width:80px">Row <br/>Spacing</div>  
-    <div class="inventory-header" style="width:80px">Plant <br/> Spacing</div>
-    <div class="inventory-header" style="width:80px">Total Plants</div>
-    <div class="inventory-header" style="width:80px">Plant Insurable</div>
+    <div *ngIf="showRowSpacing()" class="inventory-header" style="width:80px">Row <br/>Spacing</div>  
+    <div *ngIf="showPlantSpacing()" class="inventory-header" style="width:80px">Plant <br/> Spacing</div>
+    <div *ngIf="showTotalPlants()" class="inventory-header" style="width:80px">Total Plants</div>
+    <div *ngIf="showIsPlantInsured()" class="inventory-header" style="width:80px">Plant Insurable</div>
 
     <div class="inventory-header" style="width:70px;">Manage Planting</div>
     <div class="inventory-header" style="width:75px;">Manage Field</div>
 </div>
 
-<div class="plcy-inv-fld-tbl-inner-wrapper" style="width:1535px;">
-    <div class="plcy-inv-field-container-green" style="width:1520px;">  
+<div class="plcy-inv-fld-tbl-inner-wrapper" [ngStyle]="setInnerWrapperStyle()">
+    <div class="plcy-inv-field-container-green" [ngStyle]="setTableHeaderStyle()">  
         <berries-inventory-field *ngFor="let field of fields" 
             [field]="field"
             [fieldsFormArray]="fieldsFormArray"
             [cropVarietyOptions]="cropVarietyOptions"
-            [defaultCommodity]="defaultCommodity"></berries-inventory-field>
+            [selectedCommodity]="selectedCommodity"></berries-inventory-field>
     </div>
 </div>
