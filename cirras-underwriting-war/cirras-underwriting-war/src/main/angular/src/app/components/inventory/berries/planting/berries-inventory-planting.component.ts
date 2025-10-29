@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Store } from "@ngrx/store";
+import { RootState } from "src/app/store";
 import { InventoryField } from '@cirras/cirras-underwriting-api';
 import { addSimplePlantingObject } from '../../inventory-common';
+import { BERRY_COMMODITY } from 'src/app/utils/constants';
+import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
+import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 
 
 @Component({
@@ -19,11 +24,14 @@ export class BerriesInventoryPlantingComponent implements OnChanges {
   @Input() cropVarietyOptions;
   @Input() selectedCommodity;
   @Input() numPlantingsToSave;
+  @Input() isFieldHiddenOnPrintout;
   @Output() recalcNumPlantings = new EventEmitter();
+  @Output() hidePlantingOnPrintout = new EventEmitter();
 
   plantingFormGroup: UntypedFormGroup;
 
-  constructor(private fb: UntypedFormBuilder ) {}
+  constructor(private fb: UntypedFormBuilder,
+              private store: Store<RootState>) {}
 
   ngOnInit() {
     this.refreshForm()
@@ -53,6 +61,22 @@ export class BerriesInventoryPlantingComponent implements OnChanges {
     this.recalcNumPlantings.emit(); 
   }
 
+  setWidth() {
+    
+    if (this.selectedCommodity == BERRY_COMMODITY.Blueberry ) {
+      return {
+          'width': `790px`
+      };
+    }
+
+    if (this.selectedCommodity == BERRY_COMMODITY.Raspberry ) {
+      return {
+          'width': `470px`
+      };
+    }
+
+  }
+
   plantingHasCommodity() {
     // TODO - remove the check for empty commodity after add field is done
     if (this.planting && 
@@ -63,4 +87,11 @@ export class BerriesInventoryPlantingComponent implements OnChanges {
     }
   }
 
+  toggleHiddenOnPrintout() {
+    this.planting.isHiddenOnPrintoutInd = !this.planting.isHiddenOnPrintoutInd
+
+    // emit an event to make the parent component check if all plantings are hidden on printout
+    this.hidePlantingOnPrintout.emit(); 
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+  }
 }

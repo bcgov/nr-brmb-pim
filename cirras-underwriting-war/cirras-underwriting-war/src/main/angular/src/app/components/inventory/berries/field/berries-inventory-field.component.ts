@@ -28,6 +28,8 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   fieldFormGroup: UntypedFormGroup;
   numPlantingsToSave = 1 // default
 
+  isFieldHiddenOnPrintout = false
+
   constructor(private fb: UntypedFormBuilder,
               private store: Store<RootState>,
               protected securityUtilService: SecurityUtilService) {}
@@ -51,6 +53,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
       addAnnualFieldObject(this.field, this.fb.array([]), this.field.uwComments)
     );
     this.fieldsFormArray.push(this.fieldFormGroup);
+    this.setIsFieldHiddenOnPrintout()
   }
 
   fieldHasCommodity() {
@@ -145,6 +148,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
 
       this.field.plantings.push(pltg)
       this.updateNumPlantings()
+      this.setIsFieldHiddenOnPrintout()
 
       this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
     }
@@ -169,6 +173,17 @@ export class BerriesInventoryFieldComponent implements OnChanges{
 
   setTableHeaderStyle() {
     return setTableHeaderStyleForBerries(this.selectedCommodity)
+  }
+
+  setIsFieldHiddenOnPrintout() {
+    
+    let elem = this.field.plantings.filter(x => x.isHiddenOnPrintoutInd !== true)
+
+    if (elem.length == 0) {
+      this.isFieldHiddenOnPrintout = true // all plantings are hidden
+    } else {
+      this.isFieldHiddenOnPrintout = false // at least one planting is not hidden
+    } 
   }
 
 }

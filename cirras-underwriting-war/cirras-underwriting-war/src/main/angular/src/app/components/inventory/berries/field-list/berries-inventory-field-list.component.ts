@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { UntypedFormArray } from '@angular/forms';
 import { AnnualField } from 'src/app/conversion/models';
 import { BERRY_COMMODITY } from 'src/app/utils/constants';

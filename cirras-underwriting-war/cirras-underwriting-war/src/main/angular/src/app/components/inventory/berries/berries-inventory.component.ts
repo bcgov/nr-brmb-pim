@@ -32,6 +32,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   cropCommodityOptions = [];
   cropVarietyOptions = [];
 
+  isHiddenPlantingInTotals = false; 
   hasYieldData = false; // TODO
 
 
@@ -69,7 +70,9 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     if (changes.inventoryContract) {
       this.inventoryContract = changes.inventoryContract.currentValue;
 
-      if (this.inventoryContract && this.inventoryContract.fields && this.inventoryContract.fields.length > 0) { 
+      if (this.inventoryContract && this.inventoryContract.fields && this.inventoryContract.fields.length > 0) {
+        this.onCheckForHiddenPlantingsInTotals() // check for values that don't show in the report but are included in the totals
+
         for (let i = 0; i < this.inventoryContract.fields.length; i++){
 
           if (this.inventoryContract.fields[i].plantings && this.inventoryContract.fields[i].plantings.length > 0) {
@@ -89,8 +92,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
             }
           }
         }
-      }
-      
+      }      
     }
   }
 
@@ -293,5 +295,18 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
   commoditySelectionChanged(){
     this.selectedCommodity = this.getViewModel().formGroup.controls.selectedCommodity.value
+  }
+
+  onCheckForHiddenPlantingsInTotals() {
+
+    this.isHiddenPlantingInTotals = false
+
+    for (let field of  this.inventoryContract.fields) {
+      for (let planting of field.plantings) {
+        if (planting.isHiddenOnPrintoutInd && planting.inventoryBerries.plantedAcres > 0 ) {
+          this.isHiddenPlantingInTotals = true
+        }
+      }
+    }
   }
 }
