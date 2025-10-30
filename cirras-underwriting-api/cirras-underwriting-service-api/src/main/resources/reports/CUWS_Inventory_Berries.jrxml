@@ -342,7 +342,7 @@ order by sort_column,
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
-					<textElement textAlignment="Center">
+					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="16" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Summary of Berry Field Inventory]]></text>
@@ -370,8 +370,7 @@ order by sort_column,
 	($F{grower_address_line2} != null ? " " + $F{grower_address_line2} : "") + 
 	($F{grower_city} != null ? " " + $F{grower_city}  : "") + 
 	($F{grower_province} != null ? " " + $F{grower_province}  : "") + 
-	($F{grower_postal_code} != null ? " " + $F{grower_postal_code} : "")
-]]></textFieldExpression>
+	($F{grower_postal_code} != null ? " " + $F{grower_postal_code} : "")]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="0" y="125" width="378" height="20" uuid="6ed93671-4957-4dc6-8ac8-d3f17cb8c070">
@@ -445,7 +444,7 @@ order by sort_column,
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
-					<textElement>
+					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 					<text><![CDATA[The following information is submitted in support of the Continuous Production Insurance contract and is effective for the crop year commencing:]]></text>
@@ -710,7 +709,7 @@ order by sort_column,
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
-					<textElement markup="none">
+					<textElement verticalAlignment="Middle" markup="none">
 						<font size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Declaration]]></text>
@@ -722,7 +721,7 @@ order by sort_column,
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
-					<textElement markup="none">
+					<textElement verticalAlignment="Middle" markup="none">
 						<font size="8" isBold="false" isItalic="true"/>
 					</textElement>
 					<text><![CDATA[(you must offer for insurance all of each crop you wish to insure)]]></text>
