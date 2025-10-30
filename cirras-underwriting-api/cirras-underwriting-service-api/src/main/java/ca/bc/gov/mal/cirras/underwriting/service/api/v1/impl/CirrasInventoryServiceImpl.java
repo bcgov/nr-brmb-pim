@@ -1345,8 +1345,11 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(insurancePlanId) ) {
 				result = jasperReportService.generateInvForageReport(queryParams);
 			
+			} else if ( InsurancePlans.BERRIES.getInsurancePlanId().equals(insurancePlanId) ) {
+				result = jasperReportService.generateInvBerriesReport(queryParams);
+
 			} else {
-				throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
+				throw new ServiceException("Insurance Plan must be GRAIN, FORAGE or BERRIES");
 			}
 			
 			if ( result == null ) { 

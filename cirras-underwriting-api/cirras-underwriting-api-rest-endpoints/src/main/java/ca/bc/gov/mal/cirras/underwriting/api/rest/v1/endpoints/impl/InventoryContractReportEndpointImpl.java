@@ -57,8 +57,10 @@ public class InventoryContractReportEndpointImpl extends BaseEndpointsImpl imple
 				outputFileName = "inventory_grain.pdf";
 			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().toString().equals(toString(insurancePlanId)) ) {
 				outputFileName = "inventory_forage.pdf";				
+			} else if ( InsurancePlans.BERRIES.getInsurancePlanId().toString().equals(toString(insurancePlanId)) ) {
+				outputFileName = "inventory_berries.pdf";				
 			} else {
-				throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
+				throw new ServiceException("Insurance Plan must be GRAIN, FORAGE or BERRIES");
 			}
 			
 			byte[] result = cirrasInventoryService.generateInvReport(
