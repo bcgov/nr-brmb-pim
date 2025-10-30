@@ -45,7 +45,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
       }
     }
 
-    if (changes.selectedCommodity && changes.selectedCommodity.currentValue && this.inventoryBerry) {
+    if (changes.selectedCommodity && changes.selectedCommodity.currentValue && this.inventoryBerry && this.inventoryBerriesFormGroup && this.inventoryBerriesFormGroup.controls) {
       this.setDefaultValuesForCommodity()
     }
   }
@@ -56,6 +56,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
         ( this.inventoryBerry && this.inventoryBerry.inventoryFieldGuid ? this.inventoryBerry.inventoryFieldGuid : null), 
         this.inventoryBerry ) 
     )
+    this.setDefaultValuesForCommodity()
   }
 
   setDefaultValuesForCommodity() {
