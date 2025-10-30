@@ -38,6 +38,15 @@
                 </button>
             </div>
         </div>
+
+        <div id="hidden-totals-warning">
+            <div *ngIf="isHiddenPlantingInTotals">
+                <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
+            </div>
+            <div *ngIf="isHiddenPlantingInTotals">
+                Hidden fields are included in the totals
+            </div>
+        </div>
         
     <cirras-grower-contract-header
     [growerContract]="growerContract"

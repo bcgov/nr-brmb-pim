@@ -3,7 +3,7 @@
 
     <div style="display: contents;">
 
-        <div class="inventory-fill inventory-border" style="width: 80px;">
+        <div class="inventory-fill inventory-border-right" style="width: 80px;">
             <mat-form-field appearance="fill">
                 <input matInput formControlName="plantedYear"                                                             
                     (keypress)="numberOnly($event)" 
@@ -14,7 +14,7 @@
         
         </div>
 
-        <div class="inventory-fill inventory-border" style="width: 100px;">
+        <div class="inventory-fill inventory-border-right" style="width: 100px;">
             <mat-form-field appearance="fill">
                 <input matInput formControlName="plantedAcres"                                                             
                     (keypress)="numberOnly($event)" 
@@ -24,12 +24,12 @@
             <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Planted Acres is writeable">edit</mat-icon>
         </div>
 
-        <div class="inventory-fill inventory-border" style="width: 80px;">
+        <div class="inventory-fill inventory-border-right" style="width: 80px;">
             <mat-checkbox formControlName="isQuantityInsurableInd" (change)="updateIsQuantityInsurableInd()"></mat-checkbox>
         </div>
 
         <!-- variety -->
-        <div class="inventory-fill inventory-border" style="width:180px;">
+        <div class="inventory-fill inventory-border-right" style="width:180px;">
 
             <mat-form-field appearance="fill">
                 <input 
@@ -50,7 +50,7 @@
             <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Variety is writeable">edit</mat-icon>
         </div>
 
-        <div *ngIf="showRowSpacing()" class="inventory-fill inventory-border" style="width: 80px;">
+        <div *ngIf="showRowSpacing()" class="inventory-fill inventory-border-right" style="width: 80px;">
             <mat-form-field appearance="fill">
                 <input matInput formControlName="rowSpacing"                                                             
                     (keypress)="numberOnly($event)" 
@@ -60,7 +60,7 @@
             <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Row Spacing is writeable">edit</mat-icon>
         </div>
 
-        <div *ngIf="showPlantSpacing()" class="inventory-fill inventory-border" style="width: 80px;">
+        <div *ngIf="showPlantSpacing()" class="inventory-fill inventory-border-right" style="width: 80px;">
             <mat-form-field appearance="fill">
                 <input matInput formControlName="plantSpacing"                                                             
                     (keypress)="numberOnly($event)" 
@@ -70,15 +70,15 @@
             <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Plant Spacing is writeable">edit</mat-icon>
         </div>
 
-        <div *ngIf="showTotalPlants()" class="inventory-cell inventory-border" style="width: 80px;">
+        <div *ngIf="showTotalPlants()" class="inventory-cell inventory-border-right" style="width: 80px;">
             {{ (( inventoryBerry && inventoryBerry.totalPlants) ? inventoryBerry.totalPlants : "" ) | number: '1.0-2'}}
         </div>
 
-        <div *ngIf="showIsPlantInsured()" class="inventory-fill inventory-border" style="width: 80px;">
+        <div *ngIf="showIsPlantInsured()" class="inventory-fill inventory-border-right" style="width: 80px;">
             <mat-checkbox formControlName="isPlantInsurableInd" (change)="updateIsPlantInsurableInd()"></mat-checkbox>
         </div>
 
-        <div class="inventory-border action-icons border-bottom border-right border-left" style="width:70px;"> 
+        <div class="action-icons" style="width:30px;"> 
             <mat-icon *ngIf="securityUtilService.canEditInventory()"
                 matTooltip="Delete Planting" 
                 style="margin-left: 4px; margin-right: 4px;"

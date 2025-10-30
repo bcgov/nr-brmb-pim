@@ -1,11 +1,13 @@
 <div *ngIf="fieldHasCommodity()" class="plcy-inv-field-box" [formGroup]="fieldFormGroup"  [ngStyle]="setTableHeaderStyle()">
     
-    <div class="inventory-cell inventory-border border-left" style="width: 115px;">
+    <div class="inventory-cell border-left" style="width: 115px;"
+        [ngClass]=" isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout border-left-exclude-printout' : 'inventory-border'">
         {{ fieldFormGroup.value.fieldId }}
     </div>
     
-    <div class="inventory-fill inventory-border" style="width: 280px;">
-         <mat-form-field appearance="fill" style="width: 260px;">
+    <div class="inventory-fill" style="width: 280px;"
+        [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout' : 'inventory-border'">
+        <mat-form-field appearance="fill" style="width: 260px;">
             <input matInput type="text"
                     formControlName="fieldLocation"
                     maxlength="128"
@@ -14,16 +16,19 @@
         <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Field address is writeable">edit</mat-icon>
     </div>
 
-    <div class="inventory-cell inventory-border" style="width: 140px;">
+    <div class="inventory-cell" style="width: 140px;"
+        [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout' : 'inventory-border'">
         {{ fieldFormGroup.value.primaryPropertyIdentifier }}
     </div>
 
-    <div class="inventory-fill inventory-border" style="width: 80px;">
+    <div class="inventory-fill" style="width: 80px;"
+        [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout' : 'inventory-border'">
         <mat-checkbox formControlName="isLeasedInd" (change)="updateIsLeasedInd()"></mat-checkbox>
     </div>
 
     <!-- plantings -->
-    <div class="planting-container" [ngStyle]="setPlantingStyles()">
+    <div class="planting-container" [ngStyle]="setPlantingStyles()"
+        [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout' : 'inventory-border'">
         <berries-inventory-planting 
             *ngFor="let planting of field.plantings"
             [planting]="planting"
@@ -31,11 +36,14 @@
             [cropVarietyOptions]="cropVarietyOptions"
             [selectedCommodity]="selectedCommodity"
             [numPlantingsToSave]="numPlantingsToSave"
+            [isFieldHiddenOnPrintout]="isFieldHiddenOnPrintout"
             (recalcNumPlantings)="onRecalcNumPlantings()"
+            (hidePlantingOnPrintout)="setIsFieldHiddenOnPrintout()"
             style="display: contents;"></berries-inventory-planting>
     </div>
 
-    <div class="inventory-cell inventory-border" style="width: 75px;">
+    <div class="inventory-cell" style="width: 75px;"
+        [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout  border-right-exclude-printout' : 'inventory-border'" >
         <mat-icon 
             [ngStyle]="{'color': ( (securityUtilService.canEditInventory()) ? '#666666' : '#C2C2C2') }" 
             matTooltip="Add New Planting" 
