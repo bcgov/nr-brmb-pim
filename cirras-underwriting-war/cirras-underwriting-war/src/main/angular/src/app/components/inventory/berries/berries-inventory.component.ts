@@ -3,12 +3,12 @@ import { ParamMap } from '@angular/router';
 import { BaseComponent } from '../../common/base/base.component';
 import { CropCommodityList, InventoryContract, UwContract } from 'src/app/conversion/models';
 import { BerriesInventoryComponentModel } from './berries-inventory.component.model';
-import { BERRY_COMMODITY, CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
-import { AddNewInventoryContract, DeleteInventoryContract, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
+import { BERRY_COMMODITY, CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
+import { AddNewInventoryContract, DeleteInventoryContract, GetInventoryReport, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
-import { isInt } from 'src/app/utils';
+import { isInt, replaceNonAlphanumericCharacters } from 'src/app/utils';
 
 @Component({
   selector: 'berries-inventory',
@@ -309,4 +309,12 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       }
     }
   }
+
+  onPrint() {
+
+    let reportName = replaceNonAlphanumericCharacters(this.growerContract.growerName) + "-Inventory" 
+    this.store.dispatch(GetInventoryReport(reportName, this.policyId, "", INSURANCE_PLAN.BERRIES.toString(), "", "", "", "", "", ""))
+
+  }
+  
 }
