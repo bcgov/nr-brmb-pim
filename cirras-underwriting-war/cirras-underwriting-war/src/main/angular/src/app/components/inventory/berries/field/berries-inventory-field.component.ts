@@ -78,9 +78,14 @@ export class BerriesInventoryFieldComponent implements OnChanges{
 
   updateNumPlantings() {
     if (this.field.plantings) {
+      // TODO when ADD Field is ready -> filter by commodity is as well
+      // this.numPlantingsToSave = this.field.plantings.filter(
+      //   x => (x.inventoryBerries.deletedByUserInd !== true  && 
+      //         x.inventoryBerries.cropCommodityId == this.selectedCommodity )).length
+
+      // but for now, all fields have the same commodity
       this.numPlantingsToSave = this.field.plantings.filter(
-        x => (x.inventoryBerries.deletedByUserInd !== true  && 
-              x.inventoryBerries.cropCommodityId == this.selectedCommodity )).length
+        x => (x.inventoryBerries.deletedByUserInd !== true )).length
     }
   }
 
@@ -139,7 +144,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
         underseededCropVarietyName: null, 
         underseededAcres: null,
         underseededInventorySeededForageGuid: null,
-        inventoryUnseeded: {},
+        inventoryUnseeded: null,
         inventoryBerries: inventoryBerries,
         linkedPlanting: null,
         inventorySeededGrains: [],

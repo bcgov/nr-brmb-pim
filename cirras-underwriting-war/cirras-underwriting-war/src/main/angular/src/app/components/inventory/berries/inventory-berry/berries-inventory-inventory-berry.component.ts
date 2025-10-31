@@ -45,7 +45,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
       }
     }
 
-    if (changes.selectedCommodity && changes.selectedCommodity.currentValue && this.inventoryBerry) {
+    if (changes.selectedCommodity && changes.selectedCommodity.currentValue && this.inventoryBerry && this.inventoryBerriesFormGroup && this.inventoryBerriesFormGroup.controls) {
       this.setDefaultValuesForCommodity()
     }
   }
@@ -56,9 +56,20 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
         ( this.inventoryBerry && this.inventoryBerry.inventoryFieldGuid ? this.inventoryBerry.inventoryFieldGuid : null), 
         this.inventoryBerry ) 
     )
+    this.setDefaultValuesForCommodity()
   }
 
   setDefaultValuesForCommodity() {
+    // TODO when Add Field is ready
+    // if (this.inventoryBerry.cropCommodityId == null) {
+    //     this.inventoryBerry.cropCommodityId = this.selectedCommodity  
+    // }
+
+    // it would be nice if isQuantityInsurableInd, isPlantInsurableInd and deletedByUserInd come as false instead of null from the backend but they don't
+    if (this.inventoryBerry.deletedByUserInd == null) {
+        this.inventoryBerry.deletedByUserInd = false  
+    }
+
     // set commodity specific default values
     if (this.selectedCommodity == BERRY_COMMODITY.Blueberry || this.selectedCommodity == BERRY_COMMODITY.Raspberry) {
       // make IsQuantityInsurableInd checked by default
