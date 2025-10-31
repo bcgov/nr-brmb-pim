@@ -27,7 +27,17 @@ export class ReportsDownloadButtonComponent {
         protected store: Store<RootState>) { }
 
     isPrintDisabled(): boolean {
-        return Number(this.insurancePlanId) !== INSURANCE_PLAN.GRAIN && Number(this.insurancePlanId) !== INSURANCE_PLAN.FORAGE;
+        
+        if (Number(this.insurancePlanId) == INSURANCE_PLAN.GRAIN || Number(this.insurancePlanId) == INSURANCE_PLAN.FORAGE) {
+            return false
+        }
+
+        if (Number(this.insurancePlanId) == INSURANCE_PLAN.BERRIES && this.reportChoice == REPORT_CHOICES.INVENTORY) {
+            // only the inventory report for berries is ready; the DOP report is not ready yet
+            return false
+        }
+
+        return true // default
     }
 
     onReportPrint() {

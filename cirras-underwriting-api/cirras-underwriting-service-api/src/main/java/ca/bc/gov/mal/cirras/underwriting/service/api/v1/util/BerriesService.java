@@ -156,25 +156,29 @@ public class BerriesService {
 									.collect(Collectors.toList());
 						}
 						
-						Double insuredAcres = 0.0;
-						Double uninsuredAcres = 0.0;
+						Double quantityInsuredAcres = 0.0;
+						Double quantityUninsuredAcres = 0.0;
+						Double plantInsuredAcres = 0.0;
+						Double plantUninsuredAcres = 0.0;
 						Integer insuredPlants = 0;
 						Integer uninsuredPlants = 0;
 						
 						if(Boolean.TRUE.equals(ib.getIsQuantityInsurableInd())) {
 							//Quantity insurable
-							insuredAcres = notNull(ib.getPlantedAcres(), (double) 0);
+							quantityInsuredAcres = notNull(ib.getPlantedAcres(), (double) 0);
 						} else {
 							//Not Quantity insurable
-							uninsuredAcres = notNull(ib.getPlantedAcres(), (double) 0);
+							quantityUninsuredAcres = notNull(ib.getPlantedAcres(), (double) 0);
 						}
 						
 						if(Boolean.TRUE.equals(ib.getIsPlantInsurableInd())) {
 							//Plant insurable
 							insuredPlants = notNull(ib.getTotalPlants(), 0);
+							plantInsuredAcres = notNull(ib.getPlantedAcres(), (double) 0);
 						} else {
 							//Not Plant insurable
 							uninsuredPlants = notNull(ib.getTotalPlants(), 0);
+							plantUninsuredAcres = notNull(ib.getPlantedAcres(), (double) 0);
 						}
 
 						if (iccbFiltered == null || iccbFiltered.size() == 0) {
@@ -182,8 +186,10 @@ public class BerriesService {
 							InventoryContractCommodityBerries iccb = new InventoryContractCommodityBerries();
 							iccb.setInventoryContractGuid(inventoryContractGuid);
 							iccb.setCropCommodityId(ib.getCropCommodityId());
-							iccb.setTotalInsuredAcres(insuredAcres);
-							iccb.setTotalUninsuredAcres(uninsuredAcres);
+							iccb.setTotalQuantityInsuredAcres(quantityInsuredAcres);
+							iccb.setTotalQuantityUninsuredAcres(quantityUninsuredAcres);
+							iccb.setTotalPlantInsuredAcres(plantInsuredAcres);
+							iccb.setTotalPlantUninsuredAcres(plantUninsuredAcres);
 							iccb.setTotalInsuredPlants(insuredPlants);
 							iccb.setTotalUninsuredPlants(uninsuredPlants);
 							iccbList.add(iccb);
@@ -191,8 +197,10 @@ public class BerriesService {
 						} else {
 							// commodity already exists in the list. Add the new values
 							InventoryContractCommodityBerries iccb = iccbFiltered.get(0);
-							iccb.setTotalInsuredAcres(insuredAcres + iccb.getTotalInsuredAcres());
-							iccb.setTotalUninsuredAcres(uninsuredAcres + iccb.getTotalUninsuredAcres());
+							iccb.setTotalQuantityInsuredAcres(quantityInsuredAcres + iccb.getTotalQuantityInsuredAcres());
+							iccb.setTotalQuantityUninsuredAcres(quantityUninsuredAcres + iccb.getTotalQuantityUninsuredAcres());
+							iccb.setTotalPlantInsuredAcres(plantInsuredAcres + iccb.getTotalPlantInsuredAcres());
+							iccb.setTotalPlantUninsuredAcres(plantUninsuredAcres + iccb.getTotalPlantUninsuredAcres());
 							iccb.setTotalInsuredPlants(insuredPlants + iccb.getTotalInsuredPlants());
 							iccb.setTotalUninsuredPlants(uninsuredPlants + iccb.getTotalUninsuredPlants());
 

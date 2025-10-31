@@ -178,6 +178,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNull("InventoryFieldGuid", newBerries.getInventoryFieldGuid());
 		Assert.assertNull("CropCommodityId", newBerries.getCropCommodityId());
 		Assert.assertNull("CropVarietyId", newBerries.getCropVarietyId());
+		Assert.assertNull("PlantInsurabilityTypeCode", newBerries.getPlantInsurabilityTypeCode());
 		Assert.assertNull("PlantedYear", newBerries.getPlantedYear());
 		Assert.assertNull("PlantedAcres", newBerries.getPlantedAcres());
 		Assert.assertNull("RowSpacing", newBerries.getRowSpacing());
@@ -194,6 +195,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		newBerries.setCropCommodityName("BLUEBERRY");
 		newBerries.setCropVarietyId(1010689);
 		newBerries.setCropVarietyName("BLUEJAY");
+		newBerries.setPlantInsurabilityTypeCode("ST1");
 		newBerries.setPlantedYear(2020);
 		newBerries.setPlantedAcres((double)100);
 		newBerries.setRowSpacing(10);
@@ -223,6 +225,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		fetchedBerries.setCropCommodityName("RASPBERRY");
 		fetchedBerries.setCropVarietyId(1010694);
 		fetchedBerries.setCropVarietyName("MALAHAT");
+		newBerries.setPlantInsurabilityTypeCode("ST2");
 		fetchedBerries.setPlantedYear(2021);
 		fetchedBerries.setPlantedAcres((double)200);
 		fetchedBerries.setRowSpacing(5);
@@ -298,6 +301,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNull("InventoryFieldGuid", newBerries.getInventoryFieldGuid());
 		Assert.assertNull("CropCommodityId", newBerries.getCropCommodityId());
 		Assert.assertNull("CropVarietyId", newBerries.getCropVarietyId());
+		Assert.assertNull("PlantedYear", newBerries.getPlantedYear());
 		Assert.assertNull("PlantedYear", newBerries.getPlantedYear());
 		Assert.assertNull("PlantedAcres", newBerries.getPlantedAcres());
 		Assert.assertNull("RowSpacing", newBerries.getRowSpacing());
@@ -404,23 +408,23 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		
 		// Planting 1
 		InventoryField planting = createPlanting(field, 1, cropYear1);
-		createInventoryBerries(planting, 10, "BLUEBERRY", 1010689, "BLUEJAY", (double)10, 10, 5.3, true, true); //Blueberry insured for both
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010689, "BLUEJAY", (double)10, 10, 5.3, true, true, null); //Blueberry insured for both
 
 		// Planting 2
 		planting = createPlanting(field, 2, cropYear1);
-		createInventoryBerries(planting, 10, "BLUEBERRY", 1010691, "ELLIOTT", (double)20, 5, 4.9, true, false); //Blueberry Quantity insured
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010691, "ELLIOTT", (double)20, 5, 4.9, true, false, null); //Blueberry Quantity insured
 				
 		// Planting 3
 		planting = createPlanting(field, 3, cropYear1);
-		createInventoryBerries(planting, 10, "BLUEBERRY", 1010690, "LEGACY", (double)12, 12, 5.0, false, true); //Blueberry Plant insured
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010690, "LEGACY", (double)12, 12, 5.0, false, true, null); //Blueberry Plant insured
 
 		// Planting 4
 		planting = createPlanting(field, 4, cropYear1);
-		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)13, 10, 7.0, true, true); //Raspberry insured for both
+		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)13, 10, 7.0, true, true, null); //Raspberry insured for both
 		
 		// Planting 5
 		planting = createPlanting(field, 5, cropYear1);
-		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)15, 9, 6.0, true, true); //Raspberry insured for both
+		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)15, 9, 6.0, true, true, null); //Raspberry insured for both
 
 		invContract = service.createInventoryContract(topLevelEndpoints, invContract);
 
@@ -513,23 +517,35 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		
 		// Planting 1
 		InventoryField planting = createPlanting(field, 1, cropYear1);
-		createInventoryBerries(planting, 10, "BLUEBERRY", 1010689, "BLUEJAY", (double)10, 10, 5.3, true, true); //Blueberry insured for both
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010689, "BLUEJAY", (double)10, 10, 5.3, true, true, null); //Blueberry insured for both
 
 		// Planting 2
 		planting = createPlanting(field, 2, cropYear1);
-		createInventoryBerries(planting, 10, "BLUEBERRY", 1010691, "ELLIOTT", (double)20, 5, 4.9, true, false); //Blueberry Quantity insured
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010691, "ELLIOTT", (double)20, 5, 4.9, true, false, null); //Blueberry Quantity insured
 				
 		// Planting 3
 		planting = createPlanting(field, 3, cropYear1);
-		createInventoryBerries(planting, 10, "BLUEBERRY", 1010690, "LEGACY", (double)12, 12, 5.0, false, true); //Blueberry Plant insured
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010690, "LEGACY", (double)12, 12, 5.0, false, true, null); //Blueberry Plant insured
 
 		// Planting 4
 		planting = createPlanting(field, 4, cropYear1);
-		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)13, 10, 7.0, true, true); //Raspberry insured for both
+		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)13, 10, 7.0, true, true, null); //Raspberry insured for both
 		
 		// Planting 5
 		planting = createPlanting(field, 5, cropYear1);
-		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)15, 9, 6.0, true, true); //Raspberry insured for both
+		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)15, 9, 6.0, true, true, null); //Raspberry insured for both
+
+		// Planting 6
+		planting = createPlanting(field, 6, cropYear1);
+		createInventoryBerries(planting, 13, "STRAWBERRY", 1010702, "HOOD", (double)13, 10, 7.0, true, true, "ST1"); //Strawberry insured for both
+		
+		// Planting 7
+		planting = createPlanting(field, 7, cropYear1);
+		createInventoryBerries(planting, 13, "STRAWBERRY", 1010703, "HONEOYE", (double)15, 9, 6.0, true, false, null); //Strawberry Quantity insured
+		
+		// Planting 8
+		planting = createPlanting(field, 8, cropYear1);
+		createInventoryBerries(planting, 13, "STRAWBERRY", 1010705, "VALLEY RED", (double)15, 9, 6.0, false, true, "ST2"); //Strawberry Plant insured
 
 		//Berries Totals
 		List<InventoryContractCommodityBerries> expectedTotals = createExpectedInventoryContractCommodityBerries(field);
@@ -671,8 +687,10 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertEquals("CropCommodityName", expected.getCropCommodityName(), actual.getCropCommodityName());
 		Assert.assertEquals("TotalInsuredPlants", expected.getTotalInsuredPlants(), actual.getTotalInsuredPlants());
 		Assert.assertEquals("TotalUninsuredPlants", expected.getTotalUninsuredPlants(), actual.getTotalUninsuredPlants());
-		Assert.assertEquals("TotalInsuredAcres", expected.getTotalInsuredAcres(), actual.getTotalInsuredAcres());
-		Assert.assertEquals("TotalUninsuredAcres", expected.getTotalUninsuredAcres(), actual.getTotalUninsuredAcres());
+		Assert.assertEquals("TotalQuantityInsuredAcres", expected.getTotalQuantityInsuredAcres(), actual.getTotalQuantityInsuredAcres());
+		Assert.assertEquals("TotalQuantityUninsuredAcres", expected.getTotalQuantityUninsuredAcres(), actual.getTotalQuantityUninsuredAcres());
+		Assert.assertEquals("TotalPlantInsuredAcres", expected.getTotalPlantInsuredAcres(), actual.getTotalPlantInsuredAcres());
+		Assert.assertEquals("TotalPlantUninsuredAcres", expected.getTotalPlantUninsuredAcres(), actual.getTotalPlantUninsuredAcres());
 	}
 	
 	private void checkInventoryBerries(InventoryBerries expected, InventoryBerries actual, Boolean isRolledOver) {
@@ -680,9 +698,21 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		if(isRolledOver) {
 			Assert.assertNull("InventoryBerriesGuid", actual.getInventoryBerriesGuid());
 			Assert.assertNull("InventoryFieldGuid", actual.getInventoryFieldGuid());
+			//TODO Plant PlantInsurabilityTypeCode for strawberry
+//			if(expected.getCropCommodityId() == 13) {
+//				Assert.assertEquals("PlantInsurabilityTypeCode", expected.getPlantInsurabilityTypeCode(), actual.getPlantInsurabilityTypeCode());
+//			} else {
+//				Assert.assertNull("PlantInsurabilityTypeCode Null", actual.getPlantInsurabilityTypeCode());
+//			}
 		} else {
 			Assert.assertNotNull("InventoryBerriesGuid", actual.getInventoryBerriesGuid());
 			Assert.assertEquals("InventoryFieldGuid", expected.getInventoryFieldGuid(), actual.getInventoryFieldGuid());
+
+			if(expected.getPlantInsurabilityTypeCode() == null) {
+				Assert.assertNull("PlantInsurabilityTypeCode Null", actual.getPlantInsurabilityTypeCode());
+			} else {
+				Assert.assertEquals("PlantInsurabilityTypeCode", expected.getPlantInsurabilityTypeCode(), actual.getPlantInsurabilityTypeCode());
+			}
 		}
 		Assert.assertEquals("CropCommodityId", expected.getCropCommodityId(), actual.getCropCommodityId());
 		Assert.assertEquals("CropVarietyId", expected.getCropVarietyId(), actual.getCropVarietyId());
@@ -730,7 +760,8 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 			Integer rowSpacing,
 			Double plantSpacing,
 			Boolean isQuantityInsurableInd,
-			Boolean isPlantInsurableInd
+			Boolean isPlantInsurableInd, 
+			String plantInsurabilityTypeCode
 			) {
 		
 		InventoryBerries ib = new InventoryBerries();
@@ -739,6 +770,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		ib.setCropCommodityName(cropCommodityName);
 		ib.setCropVarietyId(cropVarietyId);
 		ib.setCropVarietyName(cropVarietyName);
+		ib.setPlantInsurabilityTypeCode(plantInsurabilityTypeCode);
 		ib.setPlantedYear(2020);
 		ib.setPlantedAcres(plantedAcres);
 		ib.setRowSpacing(rowSpacing);
@@ -768,25 +800,29 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 								.collect(Collectors.toList());
 					}
 					
-					Double insuredAcres = 0.0;
-					Double uninsuredAcres = 0.0;
+					Double quantityInsuredAcres = 0.0;
+					Double quantityUninsuredAcres = 0.0;
+					Double plantInsuredAcres = 0.0;
+					Double plantUninsuredAcres = 0.0;
 					Integer insuredPlants = 0;
 					Integer uninsuredPlants = 0;
 					
 					if(Boolean.TRUE.equals(ib.getIsQuantityInsurableInd())) {
 						//Quantity insurable
-						insuredAcres = notNull(ib.getPlantedAcres(), (double) 0);
+						quantityInsuredAcres = notNull(ib.getPlantedAcres(), (double) 0);
 					} else {
 						//Not Quantity insurable
-						uninsuredAcres = notNull(ib.getPlantedAcres(), (double) 0);
+						quantityUninsuredAcres = notNull(ib.getPlantedAcres(), (double) 0);
 					}
 					
 					if(Boolean.TRUE.equals(ib.getIsPlantInsurableInd())) {
 						//Plant insurable
 						insuredPlants = notNull(ib.getTotalPlants(), 0);
+						plantInsuredAcres = notNull(ib.getPlantedAcres(), (double) 0);
 					} else {
 						//Not Plant insurable
 						uninsuredPlants = notNull(ib.getTotalPlants(), 0);
+						plantUninsuredAcres = notNull(ib.getPlantedAcres(), (double) 0);
 					}
 
 					if (iccbFiltered == null || iccbFiltered.size() == 0) {
@@ -794,8 +830,10 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 						InventoryContractCommodityBerries iccb = new InventoryContractCommodityBerries();
 						iccb.setCropCommodityId(ib.getCropCommodityId());
 						iccb.setCropCommodityName(ib.getCropCommodityName());
-						iccb.setTotalInsuredAcres(insuredAcres);
-						iccb.setTotalUninsuredAcres(uninsuredAcres);
+						iccb.setTotalQuantityInsuredAcres(quantityInsuredAcres);
+						iccb.setTotalQuantityUninsuredAcres(quantityUninsuredAcres);
+						iccb.setTotalPlantInsuredAcres(plantInsuredAcres);
+						iccb.setTotalPlantUninsuredAcres(plantUninsuredAcres);
 						iccb.setTotalInsuredPlants(insuredPlants);
 						iccb.setTotalUninsuredPlants(uninsuredPlants);
 						expectedTotals.add(iccb);
@@ -803,8 +841,10 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 					} else {
 						// commodity already exists in the list. Add the new values
 						InventoryContractCommodityBerries iccb = iccbFiltered.get(0);
-						iccb.setTotalInsuredAcres(insuredAcres + iccb.getTotalInsuredAcres());
-						iccb.setTotalUninsuredAcres(uninsuredAcres + iccb.getTotalUninsuredAcres());
+						iccb.setTotalQuantityInsuredAcres(quantityInsuredAcres + iccb.getTotalQuantityInsuredAcres());
+						iccb.setTotalQuantityUninsuredAcres(quantityUninsuredAcres + iccb.getTotalQuantityUninsuredAcres());
+						iccb.setTotalPlantInsuredAcres(plantInsuredAcres + iccb.getTotalPlantInsuredAcres());
+						iccb.setTotalPlantUninsuredAcres(plantUninsuredAcres + iccb.getTotalPlantUninsuredAcres());
 						iccb.setTotalInsuredPlants(insuredPlants + iccb.getTotalInsuredPlants());
 						iccb.setTotalUninsuredPlants(uninsuredPlants + iccb.getTotalUninsuredPlants());
 					}
