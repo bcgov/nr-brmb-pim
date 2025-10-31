@@ -15,7 +15,7 @@ export class BerriesInventoryCommodityListComponent {
 
   calcTotals() {
     if ( this.inventoryContractCommodityBerries && this.type_total == 'acres') {
-      return (this.inventoryContractCommodityBerries.totalInsuredAcres + this.inventoryContractCommodityBerries.totalUninsuredAcres).toFixed(2)
+      return (this.inventoryContractCommodityBerries.totalQuantityInsuredAcres + this.inventoryContractCommodityBerries.totalQuantityUninsuredAcres).toFixed(2)
     }
 
     if ( this.inventoryContractCommodityBerries && this.type_total == 'plants') {

@@ -2,7 +2,7 @@
 <div class="berries-tot-cmdty-container"> 
     <div class="border-right header border-top border-bottom border-left">Total Insured {{ type_total | titlecase }}</div>
     <div class="number border-right border-top border-bottom" style="justify-content: right; padding-right: 2px;">
-        {{ (( inventoryContractCommodityBerries && type_total== 'acres') ? inventoryContractCommodityBerries.totalInsuredAcres : "") | number: '1.2-2'}}
+        {{ (( inventoryContractCommodityBerries && type_total== 'acres') ? inventoryContractCommodityBerries.totalQuantityInsuredAcres : "") | number: '1.2-2'}}
         {{ (( inventoryContractCommodityBerries && type_total== 'plants') ? inventoryContractCommodityBerries.totalInsuredPlants : "") | number: '1.0-0' }}
     </div>
 
@@ -10,7 +10,7 @@
         Total Uninsured {{ type_total | titlecase }}
     </div>
     <div class="number border-right border-top border-bottom" style="justify-content: right; padding-right: 2px;">
-        {{ (( inventoryContractCommodityBerries && type_total== 'acres') ? inventoryContractCommodityBerries.totalUninsuredAcres : "") | number: '1.2-2' }}
+        {{ (( inventoryContractCommodityBerries && type_total== 'acres') ? inventoryContractCommodityBerries.totalQuantityUninsuredAcres : "") | number: '1.2-2' }}
         {{ (( inventoryContractCommodityBerries && type_total== 'plants') ? inventoryContractCommodityBerries.totalUninsuredPlants : "") | number: '1.0-0' }}
     </div>
 
