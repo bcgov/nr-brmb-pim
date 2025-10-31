@@ -5,28 +5,28 @@ import { BERRY_COMMODITY } from 'src/app/utils/constants';
 
 
 export function showRowSpacingForBerries(cmdty) {
-  if (cmdty == BERRY_COMMODITY.Raspberry ) {
+  if (cmdty == BERRY_COMMODITY.Raspberry || cmdty == BERRY_COMMODITY.Strawberry) {
     return false
   }
   return true
 }
 
 export function showPlantSpacingForBerries(cmdty) {
-  if (cmdty == BERRY_COMMODITY.Raspberry ) {
+  if (cmdty == BERRY_COMMODITY.Raspberry || cmdty == BERRY_COMMODITY.Strawberry) {
     return false
   }
   return true
 }
 
 export function showTotalPlantsForBerries(cmdty) {
-  if (cmdty == BERRY_COMMODITY.Raspberry ) {
+  if (cmdty == BERRY_COMMODITY.Raspberry || cmdty == BERRY_COMMODITY.Strawberry) {
     return false
   }
   return true
 }
 
 export function showIsPlantInsuredForBerries(cmdty) {
-  if (cmdty == BERRY_COMMODITY.Raspberry ) {
+  if (cmdty == BERRY_COMMODITY.Raspberry || cmdty == BERRY_COMMODITY.Strawberry) {
     return false
   }
   return true
@@ -39,7 +39,7 @@ export function setTableHeaderStyleForBerries(cmdty) {
     };
   }
   
-  if (cmdty == BERRY_COMMODITY.Raspberry ) {
+  if (cmdty == BERRY_COMMODITY.Raspberry || cmdty == BERRY_COMMODITY.Strawberry) {
     return {
       'width': `1200px`
     };
@@ -71,7 +71,7 @@ export class BerriesInventoryFieldListComponent  {
       };
     }
 
-    if (this.selectedCommodity == BERRY_COMMODITY.Raspberry ) {
+    if (this.selectedCommodity == BERRY_COMMODITY.Raspberry || this.selectedCommodity == BERRY_COMMODITY.Strawberry) {
       return {
           'width': `1215px` 
       };

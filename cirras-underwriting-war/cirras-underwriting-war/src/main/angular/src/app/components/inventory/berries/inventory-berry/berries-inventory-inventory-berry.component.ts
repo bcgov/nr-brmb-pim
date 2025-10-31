@@ -10,6 +10,7 @@ import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state'
 import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { BERRY_COMMODITY, CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
 import { showIsPlantInsuredForBerries, showPlantSpacingForBerries, showRowSpacingForBerries, showTotalPlantsForBerries } from '../field-list/berries-inventory-field-list.component';
+import { getCodeOptions } from 'src/app/utils/code-table-utils';
 
 @Component({
   selector: 'berries-inventory-inventory-berry',
@@ -29,6 +30,9 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
   inventoryBerriesFormGroup: UntypedFormGroup;
 
   filteredVarietyOptions: CropVarietyOptionsType[];  
+  plantInsurabilityOptions = getCodeOptions("plant_insurability_type_code");
+
+  BERRY_COMMODITY = BERRY_COMMODITY
 
   constructor(private fb: UntypedFormBuilder,
               private store: Store<RootState>,
@@ -223,5 +227,6 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
   showIsPlantInsured() {
     return showIsPlantInsuredForBerries(this.selectedCommodity)
   }
+
 
 }

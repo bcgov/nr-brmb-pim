@@ -113,14 +113,14 @@
         <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
 
             <berries-inventory-field-list
-                *ngIf="(selectedCommodity == BERRY_COMMODITY.Blueberry || selectedCommodity == BERRY_COMMODITY.Raspberry) && inventoryContract && inventoryContract.fields"
+                *ngIf="(selectedCommodity == BERRY_COMMODITY.Blueberry || selectedCommodity == BERRY_COMMODITY.Raspberry || selectedCommodity == BERRY_COMMODITY.Strawberry) && inventoryContract && inventoryContract.fields"
                 [fields]="inventoryContract.fields"
                 [fieldsFormArray]="getViewModel().formGroup.controls.fields"
                 [cropVarietyOptions]="cropVarietyOptions"
                 [selectedCommodity]="selectedCommodity">
             </berries-inventory-field-list>
 
-            <p *ngIf="selectedCommodity == BERRY_COMMODITY.Cranberry || selectedCommodity == BERRY_COMMODITY.Strawberry" >Not implemented yet!</p>
+            <p *ngIf="selectedCommodity == BERRY_COMMODITY.Cranberry">Not implemented yet!</p>
 
         </div>
 
