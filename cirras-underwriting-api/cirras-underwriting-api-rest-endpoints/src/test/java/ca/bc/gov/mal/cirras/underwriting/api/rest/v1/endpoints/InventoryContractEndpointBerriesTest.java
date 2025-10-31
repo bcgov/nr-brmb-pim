@@ -420,11 +420,11 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 
 		// Planting 4
 		planting = createPlanting(field, 4, cropYear1);
-		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)13, 10, 7.0, true, true, null); //Raspberry insured for both
+		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)13, null, null, true, true, null); //Raspberry insured for both
 		
 		// Planting 5
 		planting = createPlanting(field, 5, cropYear1);
-		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)15, 9, 6.0, true, true, null); //Raspberry insured for both
+		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)15, null, null, true, true, null); //Raspberry insured for both
 
 		invContract = service.createInventoryContract(topLevelEndpoints, invContract);
 
@@ -525,27 +525,27 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 				
 		// Planting 3
 		planting = createPlanting(field, 3, cropYear1);
-		createInventoryBerries(planting, 10, "BLUEBERRY", 1010690, "LEGACY", (double)12, 12, 5.0, false, true, null); //Blueberry Plant insured
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010690, "LEGACY", (double)12, null, null, false, true, null); //Blueberry Plant insured
 
 		// Planting 4
 		planting = createPlanting(field, 4, cropYear1);
-		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)13, 10, 7.0, true, true, null); //Raspberry insured for both
+		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)13, null, null, true, true, null); //Raspberry insured for both
 		
 		// Planting 5
 		planting = createPlanting(field, 5, cropYear1);
-		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)15, 9, 6.0, true, true, null); //Raspberry insured for both
+		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)15, null, null, true, true, null); //Raspberry insured for both
 
 		// Planting 6
 		planting = createPlanting(field, 6, cropYear1);
-		createInventoryBerries(planting, 13, "STRAWBERRY", 1010702, "HOOD", (double)13, 10, 7.0, true, true, "ST1"); //Strawberry insured for both
+		createInventoryBerries(planting, 13, "STRAWBERRY", 1010702, "HOOD", (double)13, null, null, true, true, "ST1"); //Strawberry insured for both
 		
 		// Planting 7
 		planting = createPlanting(field, 7, cropYear1);
-		createInventoryBerries(planting, 13, "STRAWBERRY", 1010703, "HONEOYE", (double)15, 9, 6.0, true, false, null); //Strawberry Quantity insured
+		createInventoryBerries(planting, 13, "STRAWBERRY", 1010703, "HONEOYE", (double)15, null, null, true, false, null); //Strawberry Quantity insured
 		
 		// Planting 8
 		planting = createPlanting(field, 8, cropYear1);
-		createInventoryBerries(planting, 13, "STRAWBERRY", 1010705, "VALLEY RED", (double)15, 9, 6.0, false, true, "ST2"); //Strawberry Plant insured
+		createInventoryBerries(planting, 13, "STRAWBERRY", 1010705, "VALLEY RED", (double)15, null, null, false, true, "ST2"); //Strawberry Plant insured
 
 		//Berries Totals
 		List<InventoryContractCommodityBerries> expectedTotals = createExpectedInventoryContractCommodityBerries(field);
