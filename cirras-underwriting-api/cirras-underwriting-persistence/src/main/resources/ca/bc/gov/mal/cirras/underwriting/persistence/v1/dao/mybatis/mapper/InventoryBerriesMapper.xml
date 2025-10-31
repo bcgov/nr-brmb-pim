@@ -9,6 +9,7 @@
 		<result property="inventoryFieldGuid" column="inventory_field_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="cropCommodityId" column="crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="cropVarietyId" column="crop_variety_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="plantInsurabilityTypeCode" column="plant_insurability_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="plantedYear" column="planted_year" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="plantedAcres" column="planted_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="rowSpacing" column="row_spacing" javaType="java.lang.Integer" jdbcType="NUMERIC" />
@@ -32,6 +33,7 @@
 		t.inventory_field_guid, 
 		t.crop_commodity_id, 
 		t.crop_variety_id, 
+		t.plant_insurability_type_code,
 		t.planted_year, 
 		t.planted_acres, 
 		t.row_spacing, 
@@ -66,6 +68,7 @@
 			inventory_field_guid,
 			crop_commodity_id,
 			crop_variety_id,
+			plant_insurability_type_code,
 			planted_year ,
 			planted_acres,
 			row_spacing,
@@ -82,6 +85,7 @@
 			#{dto.inventoryFieldGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.cropVarietyId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.plantInsurabilityTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{dto.plantedYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.plantedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.rowSpacing, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
@@ -100,6 +104,7 @@
 		update inventory_berries
 		set crop_commodity_id = #{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
 			crop_variety_id = #{dto.cropVarietyId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
+			plant_insurability_type_code = #{dto.plantInsurabilityTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
 			planted_year  = #{dto.plantedYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
 			planted_acres = #{dto.plantedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			row_spacing = #{dto.rowSpacing, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 

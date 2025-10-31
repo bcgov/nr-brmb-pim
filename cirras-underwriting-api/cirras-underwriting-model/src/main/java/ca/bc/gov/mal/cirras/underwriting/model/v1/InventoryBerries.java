@@ -12,6 +12,7 @@ public class InventoryBerries implements Serializable {
 	private String inventoryFieldGuid;
 	private Integer cropCommodityId;
 	private Integer cropVarietyId;
+	private String plantInsurabilityTypeCode;
 	private Integer plantedYear;
 	private Double plantedAcres;
 	private Integer rowSpacing;
@@ -55,6 +56,14 @@ public class InventoryBerries implements Serializable {
 
 	public void setCropVarietyId(Integer cropVarietyId) {
 		this.cropVarietyId = cropVarietyId;
+	}
+
+	public String getPlantInsurabilityTypeCode() {
+		return plantInsurabilityTypeCode;
+	}
+
+	public void setPlantInsurabilityTypeCode(String plantInsurabilityTypeCode) {
+		this.plantInsurabilityTypeCode = plantInsurabilityTypeCode;
 	}
 
 	public Integer getPlantedYear() {

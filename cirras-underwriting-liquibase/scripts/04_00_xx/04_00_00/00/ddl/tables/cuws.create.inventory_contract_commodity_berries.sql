@@ -4,8 +4,10 @@ CREATE TABLE cuws.inventory_contract_commodity_berries(
     crop_commodity_id                            numeric(9, 0)     NOT NULL,
     total_insured_plants                         numeric(10, 0),
     total_uninsured_plants                       numeric(10, 0),
-    total_insured_acres                          numeric(10, 4)    NOT NULL,
-    total_uninsured_acres                        numeric(10, 4)    NOT NULL,
+    total_quantity_insured_acres                 numeric(10, 4)    NOT NULL,
+    total_quantity_uninsured_acres               numeric(10, 4)    NOT NULL,
+    total_plant_insured_acres                    numeric(10, 4),
+    total_plant_uninsured_acres                  numeric(10, 4),
     create_user                                  varchar(64)       NOT NULL,
     create_date                                  timestamp(0)      NOT NULL,
     update_user                                  varchar(64)       NOT NULL,
@@ -23,9 +25,13 @@ COMMENT ON COLUMN cuws.inventory_contract_commodity_berries.total_insured_plants
 ;
 COMMENT ON COLUMN cuws.inventory_contract_commodity_berries.total_uninsured_plants IS 'Total Uninsured Plants is the total number of plants which are not plant insurable'
 ;
-COMMENT ON COLUMN cuws.inventory_contract_commodity_berries.total_insured_acres IS 'Total Insured Acres is the number of total quantity insured acres for the specific crop.'
+COMMENT ON COLUMN cuws.inventory_contract_commodity_berries.total_quantity_insured_acres IS 'Total Quantity Insured Acres is the number of total quantity insured acres for the specific crop.'
 ;
-COMMENT ON COLUMN cuws.inventory_contract_commodity_berries.total_uninsured_acres IS 'Total Uninsured Acres is the total number of acres not eligible for quantity insurance'
+COMMENT ON COLUMN cuws.inventory_contract_commodity_berries.total_quantity_uninsured_acres IS 'Total Quantity Uninsured Acres is the total number of acres not eligible for quantity insurance'
+;
+COMMENT ON COLUMN cuws.inventory_contract_commodity_berries.total_plant_insured_acres IS 'Total Plant Insured Acres is the number of total plant insured acres for the specific crop.'
+;
+COMMENT ON COLUMN cuws.inventory_contract_commodity_berries.total_plant_uninsured_acres IS 'Total Plant Uninsured Acres is the total number of acres not eligible for plant insurance'
 ;
 COMMENT ON COLUMN cuws.inventory_contract_commodity_berries.create_user IS 'Create User is the user id of the user that created the record'
 ;

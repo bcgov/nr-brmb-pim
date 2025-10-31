@@ -14,8 +14,10 @@ public class InventoryContractCommodityBerries implements Serializable {
 	private String cropCommodityName;
 	private Integer totalInsuredPlants;
 	private Integer totalUninsuredPlants;
-	private Double totalInsuredAcres;
-	private Double totalUninsuredAcres;
+	private Double totalQuantityInsuredAcres;
+	private Double totalQuantityUninsuredAcres;
+	private Double totalPlantInsuredAcres;
+	private Double totalPlantUninsuredAcres;
 
 	public String getInventoryContractCommodityBerriesGuid() {
 		return inventoryContractCommodityBerriesGuid;
@@ -57,20 +59,36 @@ public class InventoryContractCommodityBerries implements Serializable {
 		this.totalUninsuredPlants = totalUninsuredPlants;
 	}
 
-	public Double getTotalInsuredAcres() {
-		return totalInsuredAcres;
+	public Double getTotalQuantityInsuredAcres() {
+		return totalQuantityInsuredAcres;
 	}
 
-	public void setTotalInsuredAcres(Double totalInsuredAcres) {
-		this.totalInsuredAcres = totalInsuredAcres;
+	public void setTotalQuantityInsuredAcres(Double totalQuantityInsuredAcres) {
+		this.totalQuantityInsuredAcres = totalQuantityInsuredAcres;
 	}
 
-	public Double getTotalUninsuredAcres() {
-		return totalUninsuredAcres;
+	public Double getTotalQuantityUninsuredAcres() {
+		return totalQuantityUninsuredAcres;
 	}
 
-	public void setTotalUninsuredAcres(Double totalUninsuredAcres) {
-		this.totalUninsuredAcres = totalUninsuredAcres;
+	public void setTotalQuantityUninsuredAcres(Double totalQuantityUninsuredAcres) {
+		this.totalQuantityUninsuredAcres = totalQuantityUninsuredAcres;
+	}
+
+	public Double getTotalPlantInsuredAcres() {
+		return totalPlantInsuredAcres;
+	}
+
+	public void setTotalPlantInsuredAcres(Double totalPlantInsuredAcres) {
+		this.totalPlantInsuredAcres = totalPlantInsuredAcres;
+	}
+
+	public Double getTotalPlantUninsuredAcres() {
+		return totalPlantUninsuredAcres;
+	}
+
+	public void setTotalPlantUninsuredAcres(Double totalPlantUninsuredAcres) {
+		this.totalPlantUninsuredAcres = totalPlantUninsuredAcres;
 	}
 
 	public String getCropCommodityName() {
