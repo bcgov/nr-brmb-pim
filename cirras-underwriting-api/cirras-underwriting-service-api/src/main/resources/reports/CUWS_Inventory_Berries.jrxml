@@ -337,7 +337,7 @@ order by sort_column,
 					<imageExpression><![CDATA["images/SCAP_BCID_Can_Lockup.png"]]></imageExpression>
 				</image>
 				<staticText>
-					<reportElement x="130" y="54" width="288" height="25" uuid="ae39bc47-93f8-4815-9fcb-03001d82ec4e">
+					<reportElement x="99" y="54" width="350" height="25" uuid="ae39bc47-93f8-4815-9fcb-03001d82ec4e">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -444,6 +444,12 @@ order by sort_column,
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
@@ -703,7 +709,7 @@ order by sort_column,
 					</reportElement>
 				</rectangle>
 				<staticText>
-					<reportElement x="2" y="2" width="50" height="15" uuid="4b1fc641-fd35-46b6-9cb3-8e862d14a7c4">
+					<reportElement x="2" y="2" width="55" height="15" uuid="4b1fc641-fd35-46b6-9cb3-8e862d14a7c4">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -715,7 +721,7 @@ order by sort_column,
 					<text><![CDATA[Declaration]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="52" y="2" width="503" height="15" uuid="be046b39-6f2a-4afa-96b1-5aefeb5d596b">
+					<reportElement x="57" y="2" width="498" height="15" uuid="be046b39-6f2a-4afa-96b1-5aefeb5d596b">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
