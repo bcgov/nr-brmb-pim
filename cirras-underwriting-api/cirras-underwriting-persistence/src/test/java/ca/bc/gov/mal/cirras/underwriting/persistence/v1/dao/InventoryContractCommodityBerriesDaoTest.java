@@ -84,8 +84,10 @@ public class InventoryContractCommodityBerriesDaoTest {
 		newDto.setCropCommodityName("BLUEBERRY");
 		newDto.setTotalInsuredPlants(5000);
 		newDto.setTotalUninsuredPlants(200);
-		newDto.setTotalInsuredAcres((double)1000);
-		newDto.setTotalUninsuredAcres((double)100);
+		newDto.setTotalQuantityInsuredAcres((double)1000);
+		newDto.setTotalQuantityUninsuredAcres((double)100);
+		newDto.setTotalPlantInsuredAcres((double)2000);
+		newDto.setTotalPlantUninsuredAcres((double)200);
 
 		invContractCommodityBerriesDao.insert(newDto, userId);
 		Assert.assertNotNull(newDto.getInventoryContractCommodityBerriesGuid());
@@ -104,14 +106,18 @@ public class InventoryContractCommodityBerriesDaoTest {
 		Assert.assertEquals("CropCommodityId", newDto.getCropCommodityId(), fetchedDto.getCropCommodityId());
 		Assert.assertEquals("TotalInsuredPlants", newDto.getTotalInsuredPlants(), fetchedDto.getTotalInsuredPlants());
 		Assert.assertEquals("TotalUninsuredPlants", newDto.getTotalUninsuredPlants(), fetchedDto.getTotalUninsuredPlants());
-		Assert.assertEquals("TotalInsuredAcres", newDto.getTotalInsuredAcres(), fetchedDto.getTotalInsuredAcres());
-		Assert.assertEquals("TotalUninsuredAcres", newDto.getTotalUninsuredAcres(), fetchedDto.getTotalUninsuredAcres());
+		Assert.assertEquals("TotalQuantityInsuredAcres", newDto.getTotalQuantityInsuredAcres(), fetchedDto.getTotalQuantityInsuredAcres());
+		Assert.assertEquals("TotalQuantityUninsuredAcres", newDto.getTotalQuantityUninsuredAcres(), fetchedDto.getTotalQuantityUninsuredAcres());
+		Assert.assertEquals("TotalPlantInsuredAcres", newDto.getTotalPlantInsuredAcres(), fetchedDto.getTotalPlantInsuredAcres());
+		Assert.assertEquals("TotalPlantUninsuredAcres", newDto.getTotalPlantUninsuredAcres(), fetchedDto.getTotalPlantUninsuredAcres());
 
 		//UPDATE
 		fetchedDto.setTotalInsuredPlants(5001);
 		fetchedDto.setTotalUninsuredPlants(201);
-		fetchedDto.setTotalInsuredAcres((double)1001);
-		fetchedDto.setTotalUninsuredAcres((double)101);
+		fetchedDto.setTotalQuantityInsuredAcres((double)1001);
+		fetchedDto.setTotalQuantityUninsuredAcres((double)101);
+		fetchedDto.setTotalPlantInsuredAcres((double)2001);
+		fetchedDto.setTotalPlantUninsuredAcres((double)201);
 		
 		invContractCommodityBerriesDao.update(fetchedDto, userId);
 
@@ -123,16 +129,20 @@ public class InventoryContractCommodityBerriesDaoTest {
 		Assert.assertEquals("CropCommodityId", fetchedDto.getCropCommodityId(), updatedDto.getCropCommodityId());
 		Assert.assertEquals("TotalInsuredPlants", fetchedDto.getTotalInsuredPlants(), updatedDto.getTotalInsuredPlants());
 		Assert.assertEquals("TotalUninsuredPlants", fetchedDto.getTotalUninsuredPlants(), updatedDto.getTotalUninsuredPlants());
-		Assert.assertEquals("TotalInsuredAcres", fetchedDto.getTotalInsuredAcres(), updatedDto.getTotalInsuredAcres());
-		Assert.assertEquals("TotalUninsuredAcres", fetchedDto.getTotalUninsuredAcres(), updatedDto.getTotalUninsuredAcres());
+		Assert.assertEquals("TotalQuantityInsuredAcres", fetchedDto.getTotalQuantityInsuredAcres(), updatedDto.getTotalQuantityInsuredAcres());
+		Assert.assertEquals("TotalQuantityUninsuredAcres", fetchedDto.getTotalQuantityUninsuredAcres(), updatedDto.getTotalQuantityUninsuredAcres());
+		Assert.assertEquals("TotalPlantInsuredAcres", fetchedDto.getTotalPlantInsuredAcres(), updatedDto.getTotalPlantInsuredAcres());
+		Assert.assertEquals("TotalPlantUninsuredAcres", fetchedDto.getTotalPlantUninsuredAcres(), updatedDto.getTotalPlantUninsuredAcres());
 
 		//INSERT second commodity
 		InventoryContractCommodityBerriesDto newDto2 = new InventoryContractCommodityBerriesDto();
 		newDto2.setInventoryContractGuid(inventoryContractGuid);
 		newDto2.setCropCommodityId(13);
 		newDto2.setCropCommodityName("STRAWBERRY");
-		newDto2.setTotalInsuredAcres((double)2020);
-		newDto2.setTotalUninsuredAcres((double)202);
+		newDto.setTotalQuantityInsuredAcres((double)1010);
+		newDto.setTotalQuantityUninsuredAcres((double)110);
+		newDto.setTotalPlantInsuredAcres((double)2010);
+		newDto.setTotalPlantUninsuredAcres((double)210);
 
 		invContractCommodityBerriesDao.insert(newDto2, userId);
 

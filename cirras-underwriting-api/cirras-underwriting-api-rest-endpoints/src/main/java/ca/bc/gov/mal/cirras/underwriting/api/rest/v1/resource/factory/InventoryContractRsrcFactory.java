@@ -231,8 +231,10 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setCropCommodityName(dto.getCropCommodityName());
 		model.setTotalInsuredPlants(dto.getTotalInsuredPlants());
 		model.setTotalUninsuredPlants(dto.getTotalUninsuredPlants());
-		model.setTotalInsuredAcres(dto.getTotalInsuredAcres());
-		model.setTotalUninsuredAcres(dto.getTotalUninsuredAcres());
+		model.setTotalQuantityInsuredAcres(dto.getTotalQuantityInsuredAcres());
+		model.setTotalQuantityUninsuredAcres(dto.getTotalQuantityUninsuredAcres());
+		model.setTotalPlantInsuredAcres(dto.getTotalPlantInsuredAcres());
+		model.setTotalPlantUninsuredAcres(dto.getTotalPlantUninsuredAcres());
 
 		return model;
 	}
@@ -452,6 +454,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setCropCommodityName(dto.getCropCommodityName());
 		model.setCropVarietyId(dto.getCropVarietyId());
 		model.setCropVarietyName(dto.getCropVarietyName());
+		model.setPlantInsurabilityTypeCode(dto.getPlantInsurabilityTypeCode());
 		model.setPlantedYear(dto.getPlantedYear());
 		model.setPlantedAcres(dto.getPlantedAcres());
 		model.setRowSpacing(dto.getRowSpacing());
@@ -690,6 +693,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setCropCommodityName(dto.getCropCommodityName());
 		model.setCropVarietyId(dto.getCropVarietyId());
 		model.setCropVarietyName(dto.getCropVarietyName());
+		model.setPlantInsurabilityTypeCode(dto.getPlantInsurabilityTypeCode());
 		model.setPlantedYear(dto.getPlantedYear());
 		model.setPlantedAcres(dto.getPlantedAcres());
 		model.setRowSpacing(dto.getRowSpacing());
@@ -838,6 +842,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setInventoryFieldGuid(null);
 		model.setCropCommodityId(null);
 		model.setCropVarietyId(null);
+		model.setPlantInsurabilityTypeCode(null);
 		model.setPlantedYear(null);
 		model.setPlantedAcres(null);
 		model.setRowSpacing(null);
@@ -882,8 +887,10 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		dto.setCropCommodityId(model.getCropCommodityId());
 		dto.setTotalInsuredPlants(model.getTotalInsuredPlants());
 		dto.setTotalUninsuredPlants(model.getTotalUninsuredPlants());
-		dto.setTotalInsuredAcres(model.getTotalInsuredAcres());
-		dto.setTotalUninsuredAcres(model.getTotalUninsuredAcres());
+		dto.setTotalQuantityInsuredAcres(model.getTotalQuantityInsuredAcres());
+		dto.setTotalQuantityUninsuredAcres(model.getTotalQuantityUninsuredAcres());
+		dto.setTotalPlantInsuredAcres(model.getTotalPlantInsuredAcres());
+		dto.setTotalPlantUninsuredAcres(model.getTotalPlantUninsuredAcres());
 	}
 
 	@Override
@@ -1018,6 +1025,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			dto.setCropCommodityName(model.getCropCommodityName());
 			dto.setCropVarietyId(null);
 			dto.setCropVarietyName(null);
+			dto.setPlantInsurabilityTypeCode(null);
 			dto.setPlantedYear(null);
 			dto.setPlantedAcres(null);
 			dto.setRowSpacing(null);
@@ -1031,6 +1039,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			dto.setCropCommodityName(model.getCropCommodityName());
 			dto.setCropVarietyId(model.getCropVarietyId());
 			dto.setCropVarietyName(model.getCropVarietyName());
+			dto.setPlantInsurabilityTypeCode(model.getPlantInsurabilityTypeCode());
 			dto.setPlantedYear(model.getPlantedYear());
 			dto.setPlantedAcres(model.getPlantedAcres());
 			dto.setRowSpacing(model.getRowSpacing());
