@@ -144,7 +144,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
         underseededCropVarietyName: null, 
         underseededAcres: null,
         underseededInventorySeededForageGuid: null,
-        inventoryUnseeded: {},
+        inventoryUnseeded: null,
         inventoryBerries: inventoryBerries,
         linkedPlanting: null,
         inventorySeededGrains: [],
