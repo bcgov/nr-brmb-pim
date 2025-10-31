@@ -19,6 +19,7 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 	private String inventoryFieldGuid;
 	private Integer cropCommodityId;
 	private Integer cropVarietyId;
+	private String plantInsurabilityTypeCode;
 	private Integer plantedYear;
 	private Double plantedAcres;
 	private Integer rowSpacing;
@@ -45,6 +46,7 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 		this.cropCommodityId = dto.cropCommodityId;
 		this.cropVarietyId = dto.cropVarietyId;
 		this.plantedYear = dto.plantedYear;
+		this.plantInsurabilityTypeCode = dto.plantInsurabilityTypeCode;
 		this.plantedAcres = dto.plantedAcres;
 		this.rowSpacing = dto.rowSpacing;
 		this.plantSpacing = dto.plantSpacing;
@@ -80,6 +82,7 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 			result = result&&dtoUtils.equals("cropCommodityId", cropCommodityId, other.cropCommodityId);
 			result = result&&dtoUtils.equals("cropVarietyId", cropVarietyId, other.cropVarietyId);
 			result = result&&dtoUtils.equals("plantedYear", plantedYear, other.plantedYear);
+			result = result&&dtoUtils.equals("plantInsurabilityTypeCode", plantInsurabilityTypeCode, other.plantInsurabilityTypeCode);
 			result = result&&dtoUtils.equals("plantedAcres", plantedAcres, other.plantedAcres, 4);
 			result = result&&dtoUtils.equals("rowSpacing", rowSpacing, other.rowSpacing);
 			result = result&&dtoUtils.equals("plantSpacing", plantSpacing, other.plantSpacing, 4);
@@ -131,6 +134,14 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 
 	public void setCropVarietyId(Integer cropVarietyId) {
 		this.cropVarietyId = cropVarietyId;
+	}
+
+	public String getPlantInsurabilityTypeCode() {
+		return plantInsurabilityTypeCode;
+	}
+
+	public void setPlantInsurabilityTypeCode(String plantInsurabilityTypeCode) {
+		this.plantInsurabilityTypeCode = plantInsurabilityTypeCode;
 	}
 
 	public Integer getPlantedYear() {

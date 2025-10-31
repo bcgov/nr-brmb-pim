@@ -55,6 +55,8 @@ public class CodeTableSpringConfig {
 //		result.add(claimCalcUpdateUserCodeTableConfig());
 		result.add(policyStatusCodeTableConfig());
 		result.add(plantInsurabilityTypeCodeTableConfig());
+		result.add(foragePlantInsurabilityTypeCodeTableConfig());
+		result.add(berriesPlantInsurabilityTypeCodeTableConfig());
 		result.add(landIdentifierTypeCodeTableConfig());
 		result.add(primaryReferenceTypeCodeTableConfig());
 		result.add(verifiedYieldAmendmentCodeTableConfig());
@@ -97,6 +99,20 @@ public class CodeTableSpringConfig {
 	@Bean
 	public CodeTableConfig plantInsurabilityTypeCodeTableConfig() {
 		return createCodeTableConfig("plant_insurability_type_code", "DESCRIPTION");
+	}
+	
+	@Bean
+	public CodeTableConfig foragePlantInsurabilityTypeCodeTableConfig() {
+		String fetchSql = "SELECT plant_insurability_type_code AS CODE, DESCRIPTION FROM plant_insurability_type_code WHERE insurance_plan_id = 5";
+
+		return createVirtualCodeTableConfig("forage_plant_insurability_type_code", fetchSql, sortOrderAscending);
+	}
+	
+	@Bean
+	public CodeTableConfig berriesPlantInsurabilityTypeCodeTableConfig() {
+		String fetchSql = "SELECT plant_insurability_type_code AS CODE, DESCRIPTION FROM plant_insurability_type_code WHERE insurance_plan_id = 3";
+
+		return createVirtualCodeTableConfig("berries_plant_insurability_type_code", fetchSql, sortOrderAscending);
 	}
 	
 	@Bean

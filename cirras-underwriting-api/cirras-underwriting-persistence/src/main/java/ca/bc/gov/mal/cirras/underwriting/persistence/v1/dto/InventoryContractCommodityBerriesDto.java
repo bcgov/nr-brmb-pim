@@ -21,8 +21,10 @@ public class InventoryContractCommodityBerriesDto extends BaseDto<InventoryContr
 	private Integer cropCommodityId;
 	private Integer totalInsuredPlants;
 	private Integer totalUninsuredPlants;
-	private Double totalInsuredAcres;
-	private Double totalUninsuredAcres;
+	private Double totalQuantityInsuredAcres;
+	private Double totalQuantityUninsuredAcres;
+	private Double totalPlantInsuredAcres;
+	private Double totalPlantUninsuredAcres;
 	private String createUser;
 	private Date createDate;
 	private String updateUser;
@@ -42,8 +44,10 @@ public class InventoryContractCommodityBerriesDto extends BaseDto<InventoryContr
 		this.cropCommodityId = dto.cropCommodityId;
 		this.totalInsuredPlants = dto.totalInsuredPlants;
 		this.totalUninsuredPlants = dto.totalUninsuredPlants;
-		this.totalInsuredAcres = dto.totalInsuredAcres;
-		this.totalUninsuredAcres = dto.totalUninsuredAcres;
+		this.totalQuantityInsuredAcres = dto.totalQuantityInsuredAcres;
+		this.totalQuantityUninsuredAcres = dto.totalQuantityUninsuredAcres;
+		this.totalPlantInsuredAcres = dto.totalPlantInsuredAcres;
+		this.totalPlantUninsuredAcres = dto.totalPlantUninsuredAcres;
 		this.createUser = dto.createUser;
 		this.createDate = dto.createDate;
 		this.updateUser = dto.updateUser;
@@ -70,8 +74,10 @@ public class InventoryContractCommodityBerriesDto extends BaseDto<InventoryContr
 			result = result&&dtoUtils.equals("cropCommodityId", cropCommodityId, other.cropCommodityId);
 			result = result&&dtoUtils.equals("totalInsuredPlants", totalInsuredPlants, other.totalInsuredPlants);
 			result = result&&dtoUtils.equals("totalUninsuredPlants", totalUninsuredPlants, other.totalUninsuredPlants);
-			result = result&&dtoUtils.equals("totalInsuredAcres", totalInsuredAcres, other.totalInsuredAcres, 4);
-			result = result&&dtoUtils.equals("totalUninsuredAcres", totalUninsuredAcres, other.totalUninsuredAcres, 4);
+			result = result&&dtoUtils.equals("totalQuantityInsuredAcres", totalQuantityInsuredAcres, other.totalQuantityInsuredAcres, 4);
+			result = result&&dtoUtils.equals("totalQuantityUninsuredAcres", totalQuantityUninsuredAcres, other.totalQuantityUninsuredAcres, 4);
+			result = result&&dtoUtils.equals("totalPlantInsuredAcres", totalPlantInsuredAcres, other.totalPlantInsuredAcres, 4);
+			result = result&&dtoUtils.equals("totalPlantUninsuredAcres", totalPlantUninsuredAcres, other.totalPlantUninsuredAcres, 4);
 		}
 		
 		return result;
@@ -127,20 +133,36 @@ public class InventoryContractCommodityBerriesDto extends BaseDto<InventoryContr
 		this.totalUninsuredPlants = totalUninsuredPlants;
 	}
 
-	public Double getTotalInsuredAcres() {
-		return totalInsuredAcres;
+	public Double getTotalQuantityInsuredAcres() {
+		return totalQuantityInsuredAcres;
 	}
 
-	public void setTotalInsuredAcres(Double totalInsuredAcres) {
-		this.totalInsuredAcres = totalInsuredAcres;
+	public void setTotalQuantityInsuredAcres(Double totalQuantityInsuredAcres) {
+		this.totalQuantityInsuredAcres = totalQuantityInsuredAcres;
 	}
 
-	public Double getTotalUninsuredAcres() {
-		return totalUninsuredAcres;
+	public Double getTotalQuantityUninsuredAcres() {
+		return totalQuantityUninsuredAcres;
 	}
 
-	public void setTotalUninsuredAcres(Double totalUninsuredAcres) {
-		this.totalUninsuredAcres = totalUninsuredAcres;
+	public void setTotalQuantityUninsuredAcres(Double totalQuantityUninsuredAcres) {
+		this.totalQuantityUninsuredAcres = totalQuantityUninsuredAcres;
+	}
+
+	public Double getTotalPlantInsuredAcres() {
+		return totalPlantInsuredAcres;
+	}
+
+	public void setTotalPlantInsuredAcres(Double totalPlantInsuredAcres) {
+		this.totalPlantInsuredAcres = totalPlantInsuredAcres;
+	}
+
+	public Double getTotalPlantUninsuredAcres() {
+		return totalPlantUninsuredAcres;
+	}
+
+	public void setTotalPlantUninsuredAcres(Double totalPlantUninsuredAcres) {
+		this.totalPlantUninsuredAcres = totalPlantUninsuredAcres;
 	}
 
 	public String getCreateUser() {
