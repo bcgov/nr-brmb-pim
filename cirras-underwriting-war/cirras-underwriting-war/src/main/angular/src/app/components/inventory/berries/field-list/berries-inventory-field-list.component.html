@@ -10,7 +10,7 @@
     <div *ngIf="showRowSpacing()" class="inventory-header" style="width:80px">Row <br/>Spacing</div>  
     <div *ngIf="showPlantSpacing()" class="inventory-header" style="width:80px">Plant <br/> Spacing</div>
     <div *ngIf="showTotalPlants()" class="inventory-header" style="width:80px">Total Plants</div>
-    <div *ngIf="showIsPlantInsured()" class="inventory-header" style="width:80px">Plant Insurable</div>
+    <div *ngIf="showIsPlantInsured()" class="inventory-header" [ngStyle]="setPlantInsuredStyles()">Plant Insurable</div>
 
     <div class="inventory-header" style="width:70px;">Manage Planting</div>
     <div class="inventory-header" style="width:75px;">Manage Field</div>

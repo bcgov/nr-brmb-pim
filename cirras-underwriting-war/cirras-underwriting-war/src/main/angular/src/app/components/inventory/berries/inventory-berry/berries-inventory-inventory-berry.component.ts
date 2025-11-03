@@ -30,7 +30,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
   inventoryBerriesFormGroup: UntypedFormGroup;
 
   filteredVarietyOptions: CropVarietyOptionsType[];  
-  plantInsurabilityOptions = getCodeOptions("plant_insurability_type_code");
+  plantInsurabilityOptions = getCodeOptions("berries_plant_insurability_type_code");
 
   BERRY_COMMODITY = BERRY_COMMODITY
 
@@ -177,6 +177,18 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }
 
+  updatePlantInsurabilityTypeCode() {
+    this.inventoryBerry.plantInsurabilityTypeCode = this.inventoryBerriesFormGroup.controls['plantInsurabilityTypeCode'].value
+    
+    if (this.inventoryBerry.plantInsurabilityTypeCode) {
+      this.inventoryBerry.isPlantInsurableInd = true
+    } else {
+      this.inventoryBerry.isPlantInsurableInd = false
+    }
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+  }
+
+
   onDeletePlanting() {
 
     if (this.numPlantingsToSave < 2 )  {
@@ -228,5 +240,15 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     return showIsPlantInsuredForBerries(this.selectedCommodity)
   }
 
-
+  setPlantInsuredStyles() {
+    if(this.selectedCommodity == BERRY_COMMODITY.Strawberry ) {
+      return {
+        'width': `140px`
+      };
+    } else {
+      return {
+        'width': `80px`
+      };
+    }
+  }
 }

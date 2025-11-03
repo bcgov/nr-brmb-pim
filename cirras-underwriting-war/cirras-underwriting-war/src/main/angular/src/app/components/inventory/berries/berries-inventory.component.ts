@@ -26,7 +26,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
   BERRY_COMMODITY = BERRY_COMMODITY
 
-  selectedCommodity = BERRY_COMMODITY.Blueberry // Blueberry is the default commodity for now 
+  selectedCommodity 
 
   policyId
   cropCommodityOptions = [];
@@ -62,9 +62,11 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       this.populateCropAndVarietyOptions()
 
       // find out what commodities are on the policy and assign the default commodity to one them
-      // if no commodities are on the policy then set to Blueberies - default
-      this.selectedCommodity = BERRY_COMMODITY.Blueberry
-      this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)  
+      // TODO: if there are no commodities on the policy then show blank commodity in the commodity dropdown
+      if (!this.selectedCommodity) {
+        this.selectedCommodity = BERRY_COMMODITY.Blueberry // set as default for now otherwise no fields will show up
+        this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)  
+      }
     }
 
     if (changes.inventoryContract) {

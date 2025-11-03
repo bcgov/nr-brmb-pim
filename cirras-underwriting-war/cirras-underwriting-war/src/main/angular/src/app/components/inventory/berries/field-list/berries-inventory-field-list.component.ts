@@ -26,7 +26,7 @@ export function showTotalPlantsForBerries(cmdty) {
 }
 
 export function showIsPlantInsuredForBerries(cmdty) {
-  if (cmdty == BERRY_COMMODITY.Raspberry || cmdty == BERRY_COMMODITY.Strawberry) {
+  if (cmdty == BERRY_COMMODITY.Raspberry) {
     return false
   }
   return true
@@ -39,9 +39,15 @@ export function setTableHeaderStyleForBerries(cmdty) {
     };
   }
   
-  if (cmdty == BERRY_COMMODITY.Raspberry || cmdty == BERRY_COMMODITY.Strawberry) {
+  if (cmdty == BERRY_COMMODITY.Raspberry) {
     return {
       'width': `1200px`
+    };
+  }
+
+  if (cmdty == BERRY_COMMODITY.Strawberry) {
+    return {
+      'width': `1340px`
     };
   }
 }
@@ -71,11 +77,17 @@ export class BerriesInventoryFieldListComponent  {
       };
     }
 
-    if (this.selectedCommodity == BERRY_COMMODITY.Raspberry || this.selectedCommodity == BERRY_COMMODITY.Strawberry) {
+    if (this.selectedCommodity == BERRY_COMMODITY.Raspberry ) {
       return {
           'width': `1215px` 
       };
-    }    
+    }  
+
+    if (this.selectedCommodity == BERRY_COMMODITY.Strawberry) {
+      return {
+          'width': `1355px` 
+      };
+    }  
   }
 
   showRowSpacing() {
@@ -94,4 +106,15 @@ export class BerriesInventoryFieldListComponent  {
     return showIsPlantInsuredForBerries(this.selectedCommodity)
   }
 
+    setPlantInsuredStyles() {
+    if(this.selectedCommodity == BERRY_COMMODITY.Strawberry ) {
+      return {
+        'width': `140px`
+      };
+    } else {
+      return {
+        'width': `80px`
+      };
+    }
+  }
 }

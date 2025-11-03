@@ -126,7 +126,7 @@
 
         <!-- totals -->
         <div *ngIf="inventoryContract && inventoryContract.inventoryContractCommodityBerries && inventoryContract.inventoryContractCommodityBerries.length > 0"
-            class="plcy-inv-cntrct" style="grid-template-columns: 400px 400px;">
+            class="plcy-inv-cntrct" style="grid-template-columns: 500px 400px;">
             
             <div *ngIf="isUnsaved" class="message-container">
                 <div class="has-yield-warning">
@@ -142,7 +142,8 @@
                     *ngIf="inventoryContract && inventoryContract.inventoryContractCommodityBerries.length > 0 && 
                         inventoryContract.inventoryContractCommodityBerries[0].cropCommodityId == selectedCommodity"
                     [type_total]="'acres'"
-                    [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" >
+                    [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" 
+                    [selectedCommodity]="selectedCommodity">
                 </berries-inventory-commodity-totals>
             </div>
             <div>
@@ -151,7 +152,8 @@
                         inventoryContract && inventoryContract.inventoryContractCommodityBerries.length > 0 && 
                         inventoryContract.inventoryContractCommodityBerries[0].cropCommodityId == selectedCommodity"
                     [type_total]="'plants'"
-                    [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" >
+                    [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" 
+                    [selectedCommodity]="selectedCommodity">
                 </berries-inventory-commodity-totals>
             </div>
         </div>
