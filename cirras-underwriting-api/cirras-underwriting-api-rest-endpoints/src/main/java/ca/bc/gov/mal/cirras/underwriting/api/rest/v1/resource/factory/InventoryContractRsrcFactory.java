@@ -676,7 +676,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		// Inventory Berries
 		if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId())) {
 			if ( ifDto.getInventoryBerries() != null) {
-				model.setInventoryBerries(createRolloverInventoryBerries(ifDto.getInventoryBerries()));
+				model.setInventoryBerries(createRolloverInventoryBerries(ifDto.getInventoryBerries(), cfdDto.getCropYear()));
 			} else {
 				model.setInventoryBerries(createDefaultInventoryBerries());
 			}
@@ -685,9 +685,29 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		return model;
 	}
 
-	private InventoryBerries createRolloverInventoryBerries(InventoryBerriesDto dto) {
+	private InventoryBerries createRolloverInventoryBerries(InventoryBerriesDto dto, Integer cropYear) {
 		
 		InventoryBerries model = new InventoryBerries();
+		
+		//Rollover insurability for STRAWBERRY works different than other commodities
+		if(dto.getCropCommodityId() != null && dto.getCropCommodityId().equals(13)) {
+			if(dto.getPlantInsurabilityTypeCode() == null) {
+				//If insurability is not set, it will be set to ST1 (Strawberry Year 1) if the planted year = crop year -1
+				Integer cropYearToCompare = cropYear -1;
+				if(dto.getPlantedYear().equals(cropYearToCompare)) {
+					dto.setPlantInsurabilityTypeCode("ST1");
+					dto.setIsPlantInsurableInd(true);
+				}
+			} else if (dto.getPlantInsurabilityTypeCode().equalsIgnoreCase("ST1")) {
+				//Strawberries that were previously insured with ST1 (Strawberry Year 1) will now be ST2 (Strawberry Year 2)
+				dto.setPlantInsurabilityTypeCode("ST2");
+				dto.setIsPlantInsurableInd(true); //Should already be set to true
+			} else if (dto.getPlantInsurabilityTypeCode().equalsIgnoreCase("ST2")) {
+				//Strawberries that were previously insured with ST2 (Strawberry Year 2) will become uninsurable and set to null
+				dto.setPlantInsurabilityTypeCode(null);
+				dto.setIsPlantInsurableInd(false);
+			}
+		}
 
 		model.setCropCommodityId(dto.getCropCommodityId());
 		model.setCropCommodityName(dto.getCropCommodityName());
