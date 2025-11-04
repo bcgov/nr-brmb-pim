@@ -141,7 +141,7 @@
                 <berries-inventory-commodity-totals 
                     *ngIf="inventoryContract && inventoryContract.inventoryContractCommodityBerries.length > 0 && 
                         inventoryContract.inventoryContractCommodityBerries[0].cropCommodityId == selectedCommodity"
-                    [type_total]="'acres'"
+                    [insurabilityType]="'quantity'"
                     [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" 
                     [selectedCommodity]="selectedCommodity">
                 </berries-inventory-commodity-totals>
@@ -151,7 +151,7 @@
                     *ngIf="(selectedCommodity == BERRY_COMMODITY.Blueberry || selectedCommodity == BERRY_COMMODITY.Strawberry) &&
                         inventoryContract && inventoryContract.inventoryContractCommodityBerries.length > 0 && 
                         inventoryContract.inventoryContractCommodityBerries[0].cropCommodityId == selectedCommodity"
-                    [type_total]="'plants'"
+                    [insurabilityType]="'plant'"
                     [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" 
                     [selectedCommodity]="selectedCommodity">
                 </berries-inventory-commodity-totals>

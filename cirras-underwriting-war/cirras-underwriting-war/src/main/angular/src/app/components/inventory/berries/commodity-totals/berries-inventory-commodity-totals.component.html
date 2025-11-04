@@ -2,20 +2,20 @@
 <div class="berries-tot-cmdty-container"> 
     <div class="border-right header border-top border-bottom border-left">{{ getTitle('insured') | titlecase }}</div>
     <div class="number border-right border-top border-bottom" style="justify-content: right; padding-right: 2px;">
-        {{ (( inventoryContractCommodityBerries && type_total== 'acres') ? inventoryContractCommodityBerries.totalQuantityInsuredAcres : "") | number: '1.2-2'}}
-        {{ (( inventoryContractCommodityBerries && type_total== 'plants') ? getInsuredPlants() : "") | number: '1.0-0' }}
+        {{ (( inventoryContractCommodityBerries && insurabilityType == 'quantity') ? inventoryContractCommodityBerries.totalQuantityInsuredAcres : "") | number: '1.2-2'}}
+        {{ (( inventoryContractCommodityBerries && insurabilityType == 'plant') ? getInsuredPlants() : "") | number: '1.0-0' }}
     </div>
 
     <div class="border-right header border-top border-bottom border-left">
         {{ getTitle('uninsured') | titlecase }}
     </div>
     <div class="number border-right border-top border-bottom" style="justify-content: right; padding-right: 2px;">
-        {{ (( inventoryContractCommodityBerries && type_total== 'acres') ? inventoryContractCommodityBerries.totalQuantityUninsuredAcres  : "") | number: '1.2-2' }}
-        {{ (( inventoryContractCommodityBerries && type_total== 'plants') ? getUninsuredPlants() : "") | number: '1.0-0' }}
+        {{ (( inventoryContractCommodityBerries && insurabilityType == 'quantity') ? inventoryContractCommodityBerries.totalQuantityUninsuredAcres  : "") | number: '1.2-2' }}
+        {{ (( inventoryContractCommodityBerries && insurabilityType == 'plant') ? getUninsuredPlants() : "") | number: '1.0-0' }}
     </div>
 
     <div class="border-right header border-top border-bottom border-left">
-        Total {{ type_total | titlecase }}
+        Total {{ (insurabilityType == 'quantity' ? "acres" : ( selectedCommodity == BERRY_COMMODITY.Strawberry ? "acres" : "plants") ) | titlecase }}
     </div>
     <div class="number border-right border-top border-bottom" style="justify-content: right; padding-right: 2px;">
         {{ calcTotals() | number: '1.0-2'}}

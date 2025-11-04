@@ -11,23 +11,23 @@ import { BERRY_COMMODITY } from 'src/app/utils/constants';
   standalone: false
 })
 export class BerriesInventoryCommodityListComponent {
-  @Input() type_total : string;
+  @Input() insurabilityType : string;
   @Input() inventoryContractCommodityBerries : InventoryContractCommodityBerries;
   @Input() selectedCommodity;
 
   BERRY_COMMODITY = BERRY_COMMODITY
 
   calcTotals() {
-    if ( this.inventoryContractCommodityBerries && this.type_total == 'acres') {
+    if ( this.inventoryContractCommodityBerries && this.insurabilityType == 'quantity') {
+      return (this.inventoryContractCommodityBerries.totalQuantityInsuredAcres + this.inventoryContractCommodityBerries.totalQuantityUninsuredAcres).toFixed(2)
+    }
+
+    if ( this.inventoryContractCommodityBerries && this.insurabilityType == 'plant') {
       if (this.selectedCommodity == BERRY_COMMODITY.Strawberry) {
         return (this.inventoryContractCommodityBerries.totalPlantInsuredAcres + this.inventoryContractCommodityBerries.totalPlantUninsuredAcres).toFixed(2)
       } else {
-        return (this.inventoryContractCommodityBerries.totalQuantityInsuredAcres + this.inventoryContractCommodityBerries.totalQuantityUninsuredAcres).toFixed(2)
+        return (this.inventoryContractCommodityBerries.totalInsuredPlants + this.inventoryContractCommodityBerries.totalUninsuredPlants)
       }
-    }
-
-    if ( this.inventoryContractCommodityBerries && this.type_total == 'plants') {
-      return (this.inventoryContractCommodityBerries.totalInsuredPlants + this.inventoryContractCommodityBerries.totalUninsuredPlants)
     }
   }
 
@@ -56,14 +56,20 @@ export class BerriesInventoryCommodityListComponent {
     // type_column: insured or uninsured
     if (this.selectedCommodity == BERRY_COMMODITY.Strawberry) {
 
-      if ( this.type_total == 'acres') {
+      if ( this.insurabilityType == 'quantity') {
         return ("Total Quantity " + type_column + " acres" )
       } else {
         return ("Total Plant " + type_column + " acres" )
       }
-
-    } else {
-      return ("Total " + type_column + " " + this.type_total)
     }
+
+    if (this.selectedCommodity == BERRY_COMMODITY.Blueberry || this.selectedCommodity == BERRY_COMMODITY.Raspberry) {
+      if ( this.insurabilityType == 'quantity') {
+        return ("Total Quantity " + type_column + " acres" )
+      } else {
+        return ("Total " + type_column + " plants" )
+      }
+    } 
   }
+
 }
