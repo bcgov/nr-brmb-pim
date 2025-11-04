@@ -31,20 +31,39 @@ export class BerriesInventoryCommodityListComponent {
     }
   }
 
-  getUninsuredAcres() {
+  getUninsuredPlants() {
+    if (this.selectedCommodity == BERRY_COMMODITY.Blueberry) {
+      return this.inventoryContractCommodityBerries.totalUninsuredPlants
+    }
     if (this.selectedCommodity == BERRY_COMMODITY.Strawberry) {
       return this.inventoryContractCommodityBerries.totalPlantUninsuredAcres
-    } else {
-      return this.inventoryContractCommodityBerries.totalQuantityUninsuredAcres
-    }
+    } 
+    return ""
   }
 
-  getInsuredAcres() {
+  getInsuredPlants() {
+    if (this.selectedCommodity == BERRY_COMMODITY.Blueberry) {
+      return this.inventoryContractCommodityBerries.totalInsuredPlants
+    }
     if (this.selectedCommodity == BERRY_COMMODITY.Strawberry) {
       return this.inventoryContractCommodityBerries.totalPlantInsuredAcres
-    } else {
-      return this.inventoryContractCommodityBerries.totalQuantityInsuredAcres
-    }
+    } 
+    return ""
   }
 
+  getTitle(type_column) {
+
+    // type_column: insured or uninsured
+    if (this.selectedCommodity == BERRY_COMMODITY.Strawberry) {
+
+      if ( this.type_total == 'acres') {
+        return ("Total Quantity " + type_column + " acres" )
+      } else {
+        return ("Total Plant " + type_column + " acres" )
+      }
+
+    } else {
+      return ("Total " + type_column + " " + this.type_total)
+    }
+  }
 }

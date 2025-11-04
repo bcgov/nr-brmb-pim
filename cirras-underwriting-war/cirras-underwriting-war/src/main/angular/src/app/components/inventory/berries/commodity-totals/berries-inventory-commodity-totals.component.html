@@ -1,18 +1,17 @@
 
 <div class="berries-tot-cmdty-container"> 
-    <div class="border-right header border-top border-bottom border-left">Total 
-       {{ (selectedCommodity == BERRY_COMMODITY.Strawberry) ? "Plant" : ""}} Insured {{ type_total | titlecase }}</div>
+    <div class="border-right header border-top border-bottom border-left">{{ getTitle('insured') | titlecase }}</div>
     <div class="number border-right border-top border-bottom" style="justify-content: right; padding-right: 2px;">
-        {{ (( inventoryContractCommodityBerries && type_total== 'acres') ? getInsuredAcres() : "") | number: '1.2-2'}}
-        {{ (( inventoryContractCommodityBerries && type_total== 'plants') ? inventoryContractCommodityBerries.totalInsuredPlants : "") | number: '1.0-0' }}
+        {{ (( inventoryContractCommodityBerries && type_total== 'acres') ? inventoryContractCommodityBerries.totalQuantityInsuredAcres : "") | number: '1.2-2'}}
+        {{ (( inventoryContractCommodityBerries && type_total== 'plants') ? getInsuredPlants() : "") | number: '1.0-0' }}
     </div>
 
     <div class="border-right header border-top border-bottom border-left">
-        Total {{ (selectedCommodity == BERRY_COMMODITY.Strawberry) ? "Plant" : ""}} Uninsured {{ type_total | titlecase }}
+        {{ getTitle('uninsured') | titlecase }}
     </div>
     <div class="number border-right border-top border-bottom" style="justify-content: right; padding-right: 2px;">
-        {{ (( inventoryContractCommodityBerries && type_total== 'acres') ? getUninsuredAcres()  : "") | number: '1.2-2' }}
-        {{ (( inventoryContractCommodityBerries && type_total== 'plants') ? inventoryContractCommodityBerries.totalUninsuredPlants : "") | number: '1.0-0' }}
+        {{ (( inventoryContractCommodityBerries && type_total== 'acres') ? inventoryContractCommodityBerries.totalQuantityUninsuredAcres  : "") | number: '1.2-2' }}
+        {{ (( inventoryContractCommodityBerries && type_total== 'plants') ? getUninsuredPlants() : "") | number: '1.0-0' }}
     </div>
 
     <div class="border-right header border-top border-bottom border-left">
