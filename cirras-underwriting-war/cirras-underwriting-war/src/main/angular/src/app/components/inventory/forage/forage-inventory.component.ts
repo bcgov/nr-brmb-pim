@@ -43,7 +43,6 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   hasDataChanged = false;
   hasYieldData = false;
 
-  //plantInsurabilityOptions = getCodeOptions("plant_insurability_type_code");
   plantInsurabilityOptions = []
 
   isHiddenFieldInTotals = false;
