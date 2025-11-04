@@ -92,38 +92,6 @@ WHERE
 				</textElement>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="70" y="0" width="30" height="15" uuid="c11cd802-752a-47f1-bf67-719b09266cd9">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box leftPadding="1">
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="100" y="0" width="150" height="15" backcolor="#FFFFFF" uuid="d1da2abd-0165-47d2-9a0e-9b704600b0dc">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="0.0" lineColor="#000000"/>
-					<topPen lineWidth="2.0" lineStyle="Solid" lineColor="#D93734"/>
-					<leftPen lineWidth="2.0" lineStyle="Solid" lineColor="#D93734"/>
-					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#D93734"/>
-					<rightPen lineWidth="2.0" lineStyle="Solid" lineColor="#D93734"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["TOTAL " + $F{commodity_name} + " ACRES"]]></textFieldExpression>
-			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="250" y="0" width="40" height="15" uuid="a4a9b776-eeaf-4713-9fb0-758c4425bc99">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -157,7 +125,7 @@ WHERE
 					<font size="8"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="310" y="0" width="175" height="15" uuid="98705b1a-6fca-4017-b414-0ff42b3c8ca8">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -221,38 +189,6 @@ WHERE
 				</textElement>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="70" y="15" width="30" height="15" uuid="7f94b59b-09da-4fc5-bf3c-0b04cf94ab33">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box leftPadding="1">
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="100" y="15" width="150" height="15" uuid="00366505-d5c8-4c44-8aac-9c267ab05f95">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<topPen lineWidth="2.0" lineStyle="Solid" lineColor="#25B85F"/>
-					<leftPen lineWidth="2.0" lineStyle="Solid" lineColor="#25B85F"/>
-					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#25B85F"/>
-					<rightPen lineWidth="2.0" lineStyle="Solid" lineColor="#25B85F"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Uninsured Acres"]]></textFieldExpression>
-			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="250" y="15" width="40" height="15" uuid="ba2b838c-f8e4-428d-abfa-c401df02e663">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -286,7 +222,7 @@ WHERE
 					<font size="8"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="310" y="15" width="175" height="15" uuid="ee6c69d8-e596-485d-9a65-ca8c089145b4">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -350,38 +286,6 @@ WHERE
 				</textElement>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="70" y="30" width="30" height="15" uuid="0228b637-247d-4ebe-9845-48df9bfda360">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box leftPadding="1">
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="100" y="30" width="150" height="15" uuid="30086146-9eab-487f-b0d0-cd6e03cc0bc9">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="0.0" lineColor="#000000"/>
-					<topPen lineWidth="2.0" lineStyle="Solid" lineColor="#E8E52C"/>
-					<leftPen lineWidth="2.0" lineStyle="Solid" lineColor="#E8E52C"/>
-					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#E8E52C"/>
-					<rightPen lineWidth="2.0" lineStyle="Solid" lineColor="#E8E52C"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["TOTAL INSURED " + $F{commodity_name} + " ACRES"]]></textFieldExpression>
-			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="250" y="30" width="40" height="15" uuid="0e9245f5-739a-48f0-81cc-6afec5d93d72">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -415,7 +319,7 @@ WHERE
 					<font size="8"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="310" y="30" width="175" height="15" uuid="8415fa7f-6368-42d9-bf5c-7b2e0f3cb9cf">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -463,6 +367,57 @@ WHERE
 					<font size="8"/>
 				</textElement>
 			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="70" y="0" width="180" height="15" uuid="02f0569f-4076-49a6-b8ac-4b4320deb32c">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["TOTAL " + $F{commodity_name} + " ACRES"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="70" y="15" width="180" height="15" uuid="adf1dcb5-4f7c-4358-86f3-0cd0a0455923">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Uninsured Acres"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="70" y="30" width="180" height="15" uuid="c8879d47-19d2-4be0-a569-79a4ab0bfce4">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["TOTAL INSURED " + $F{commodity_name} + " ACRES"]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
@@ -482,37 +437,6 @@ WHERE
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
-				</textElement>
-			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="70" y="0" width="30" height="15" uuid="bc74485c-b6a3-40ab-a911-4498ae83a042">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box leftPadding="1">
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="100" y="0" width="150" height="15" uuid="cf19274b-217a-447a-80f4-14a9a272586b">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="2.0" lineColor="#6E7ECC"/>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#6367D4"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#6367D4"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#6367D4"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#6367D4"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
 				</textElement>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
@@ -607,37 +531,6 @@ WHERE
 				</textElement>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="70" y="15" width="30" height="15" uuid="a6730220-2e3b-4876-b6ab-d3fb34cbe51a">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box leftPadding="1">
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="ElementGroupHeight" x="100" y="15" width="150" height="15" uuid="ea6d5131-85a1-4efa-a0c0-9113848d342e">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="2.0" lineColor="#4949C9"/>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#545FC7"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#545FC7"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#545FC7"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#545FC7"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="250" y="15" width="40" height="15" uuid="17cd5a8e-fd16-497d-9b18-8d657f78c50d">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -711,6 +604,40 @@ WHERE
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
+				</textElement>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="70" y="0" width="180" height="15" uuid="6be96c54-d5c6-45d9-8f46-a3e819d99206">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" x="70" y="15" width="180" height="15" uuid="ecab9a15-5d51-4693-b84f-f516a14f6300">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
 				</textElement>
 			</textField>
 		</band>
