@@ -106,7 +106,7 @@ WHERE
 					<font size="8"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="100" y="0" width="150" height="15" backcolor="#FFFFFF" uuid="d1da2abd-0165-47d2-9a0e-9b704600b0dc">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -235,7 +235,7 @@ WHERE
 					<font size="8"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="100" y="15" width="150" height="15" uuid="00366505-d5c8-4c44-8aac-9c267ab05f95">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -364,7 +364,7 @@ WHERE
 					<font size="8"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="100" y="30" width="150" height="15" uuid="30086146-9eab-487f-b0d0-cd6e03cc0bc9">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
