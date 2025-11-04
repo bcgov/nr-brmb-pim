@@ -241,11 +241,11 @@ WHERE
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
-					<pen lineWidth="2.0" lineColor="#000000"/>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0322F"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0322F"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0322F"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0322F"/>
+					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<topPen lineWidth="2.0" lineStyle="Solid" lineColor="#25B85F"/>
+					<leftPen lineWidth="2.0" lineStyle="Solid" lineColor="#25B85F"/>
+					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#25B85F"/>
+					<rightPen lineWidth="2.0" lineStyle="Solid" lineColor="#25B85F"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
@@ -370,11 +370,11 @@ WHERE
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
-					<pen lineWidth="2.0" lineColor="#000000"/>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#DE322F"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#DE322F"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#DE322F"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#DE322F"/>
+					<pen lineWidth="0.0" lineColor="#000000"/>
+					<topPen lineWidth="2.0" lineStyle="Solid" lineColor="#E8E52C"/>
+					<leftPen lineWidth="2.0" lineStyle="Solid" lineColor="#E8E52C"/>
+					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#E8E52C"/>
+					<rightPen lineWidth="2.0" lineStyle="Solid" lineColor="#E8E52C"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
