@@ -11,6 +11,10 @@ CREATE TABLE cuws.inventory_berries(
     total_plants                 numeric(10, 0),
     is_quantity_insurable_ind    varchar(1)        NOT NULL,
     is_plant_insurable_ind       varchar(1)        NOT NULL,
+    bog_id                       varchar(10),
+    bog_mowed_date               timestamp(0),
+    bog_renovated_date           timestamp(0),
+    is_harvested_ind             varchar(1)        NOT NULL,
     create_user                  varchar(64)       NOT NULL,
     create_date                  timestamp(0)      NOT NULL,
     update_user                  varchar(64)       NOT NULL,
@@ -43,6 +47,14 @@ COMMENT ON COLUMN cuws.inventory_berries.total_plants IS 'Total plants is a coun
 COMMENT ON COLUMN cuws.inventory_berries.is_quantity_insurable_ind IS 'Is Quantity Insured flag determines if the specified crop is quantity insurable (Y) or not (N).'
 ;
 COMMENT ON COLUMN cuws.inventory_berries.is_plant_insurable_ind IS 'Is Plant Insured flag determines if the specified crop is plant insurable (Y) or not (N).'
+;
+COMMENT ON COLUMN cuws.inventory_berries.bog_id IS 'Bog Id is the id of a cranberry bog used on the inventory contract'
+;
+COMMENT ON COLUMN cuws.inventory_berries.bog_mowed_date IS 'Bog Mowed Date is the date of when a cranberry bog has been mowed'
+;
+COMMENT ON COLUMN cuws.inventory_berries.bog_renovated_date IS 'Bog Renovated Date is the date of when a cranberry bog has been renovated'
+;
+COMMENT ON COLUMN cuws.inventory_berries.is_harvested_ind IS 'Is Harvested Ind indicates if a cranberry bog is being harvested or not'
 ;
 COMMENT ON COLUMN cuws.inventory_berries.create_user IS 'Create User is the user id of the user that created the record'
 ;
