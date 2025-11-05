@@ -74,8 +74,19 @@
             {{ (( inventoryBerry && inventoryBerry.totalPlants) ? inventoryBerry.totalPlants : "" ) | number: '1.0-2'}}
         </div>
 
-        <div *ngIf="showIsPlantInsured()" class="inventory-fill inventory-border-right" style="width: 80px;">
-            <mat-checkbox formControlName="isPlantInsurableInd" (change)="updateIsPlantInsurableInd()"></mat-checkbox>
+        <div *ngIf="showIsPlantInsured()" class="inventory-fill inventory-border-right"  [ngStyle]="setPlantInsuredStyles()">
+            <mat-checkbox *ngIf="selectedCommodity !== BERRY_COMMODITY.Strawberry" formControlName="isPlantInsurableInd" (change)="updateIsPlantInsurableInd()"></mat-checkbox>
+
+            <mat-form-field *ngIf="selectedCommodity == BERRY_COMMODITY.Strawberry" appearance="fill">
+                <mat-select hideSingleSelectionIndicator="true"
+                    formControlName="plantInsurabilityTypeCode"
+                    (selectionChange)="updatePlantInsurabilityTypeCode()">
+                    <mat-option [value]="null"></mat-option>
+                    <mat-option *ngFor="let option of plantInsurabilityOptions" [value]="option.code"
+                    >{{ option.description | titlecase }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
         </div>
 
         <div class="action-icons" style="width:30px;"> 

@@ -1,7 +1,7 @@
 
 <div [formGroup]="plantingFormGroup">  
     <div [ngStyle]="setWidth()"
-        [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border' : ( planting.isHiddenOnPrintoutInd ? 'inventory-border-exclude-printout border-left-exclude-printout' :  'inventory-border' )">
+        [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-bottom' : ( planting.isHiddenOnPrintoutInd ? 'inventory-border-exclude-printout border-left-exclude-printout' :  'inventory-border-bottom' )">
         <berries-inventory-inventory-berry *ngIf="plantingHasCommodity() && planting.inventoryBerries.deletedByUserInd !== true"
             [inventoryBerry]="planting.inventoryBerries" 
             [cropVarietyOptions]="cropVarietyOptions"

@@ -113,20 +113,20 @@
         <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
 
             <berries-inventory-field-list
-                *ngIf="(selectedCommodity == BERRY_COMMODITY.Blueberry || selectedCommodity == BERRY_COMMODITY.Raspberry) && inventoryContract && inventoryContract.fields"
+                *ngIf="(selectedCommodity == BERRY_COMMODITY.Blueberry || selectedCommodity == BERRY_COMMODITY.Raspberry || selectedCommodity == BERRY_COMMODITY.Strawberry) && inventoryContract && inventoryContract.fields"
                 [fields]="inventoryContract.fields"
                 [fieldsFormArray]="getViewModel().formGroup.controls.fields"
                 [cropVarietyOptions]="cropVarietyOptions"
                 [selectedCommodity]="selectedCommodity">
             </berries-inventory-field-list>
 
-            <p *ngIf="selectedCommodity == BERRY_COMMODITY.Cranberry || selectedCommodity == BERRY_COMMODITY.Strawberry" >Not implemented yet!</p>
+            <p *ngIf="selectedCommodity == BERRY_COMMODITY.Cranberry">Not implemented yet!</p>
 
         </div>
 
         <!-- totals -->
         <div *ngIf="inventoryContract && inventoryContract.inventoryContractCommodityBerries && inventoryContract.inventoryContractCommodityBerries.length > 0"
-            class="plcy-inv-cntrct" style="grid-template-columns: 400px 400px;">
+            class="plcy-inv-cntrct" style="grid-template-columns: 500px 400px;">
             
             <div *ngIf="isUnsaved" class="message-container">
                 <div class="has-yield-warning">
@@ -141,17 +141,19 @@
                 <berries-inventory-commodity-totals 
                     *ngIf="inventoryContract && inventoryContract.inventoryContractCommodityBerries.length > 0 && 
                         inventoryContract.inventoryContractCommodityBerries[0].cropCommodityId == selectedCommodity"
-                    [type_total]="'acres'"
-                    [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" >
+                    [insurabilityType]="'quantity'"
+                    [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" 
+                    [selectedCommodity]="selectedCommodity">
                 </berries-inventory-commodity-totals>
             </div>
             <div>
                 <berries-inventory-commodity-totals 
-                    *ngIf="selectedCommodity == BERRY_COMMODITY.Blueberry && 
+                    *ngIf="(selectedCommodity == BERRY_COMMODITY.Blueberry || selectedCommodity == BERRY_COMMODITY.Strawberry) &&
                         inventoryContract && inventoryContract.inventoryContractCommodityBerries.length > 0 && 
                         inventoryContract.inventoryContractCommodityBerries[0].cropCommodityId == selectedCommodity"
-                    [type_total]="'plants'"
-                    [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" >
+                    [insurabilityType]="'plant'"
+                    [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" 
+                    [selectedCommodity]="selectedCommodity">
                 </berries-inventory-commodity-totals>
             </div>
         </div>

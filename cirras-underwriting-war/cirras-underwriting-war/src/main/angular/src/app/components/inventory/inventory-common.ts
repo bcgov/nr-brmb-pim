@@ -780,6 +780,7 @@ export function addBerriesObject(inventoryFieldGuid, inventoryBerries: Inventory
     totalPlants:              [ (inventoryBerries && inventoryBerries.totalPlants) ? inventoryBerries.totalPlants : null],
     isQuantityInsurableInd:   [ (!inventoryBerries || inventoryBerries.isQuantityInsurableInd == null) ? false : inventoryBerries.isQuantityInsurableInd ],  // defaults to false
     isPlantInsurableInd:      [ (!inventoryBerries || inventoryBerries.isPlantInsurableInd == null) ? false : inventoryBerries.isPlantInsurableInd ],  // defaults to false
+    plantInsurabilityTypeCode: [ (inventoryBerries && inventoryBerries.plantInsurabilityTypeCode) ? inventoryBerries.plantInsurabilityTypeCode : null],
     deletedByUserInd:         [false]
   }
 }

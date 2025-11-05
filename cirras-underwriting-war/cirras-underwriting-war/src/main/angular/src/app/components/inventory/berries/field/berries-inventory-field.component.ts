@@ -107,6 +107,13 @@ export class BerriesInventoryFieldComponent implements OnChanges{
       };
     }
 
+    if (this.selectedCommodity == BERRY_COMMODITY.Strawberry ) {
+      return {
+          'display': 'grid',
+          'align-items': 'stretch',
+          'width': `650px`
+      };
+    }
   }
 
   updateFieldLocation() {
