@@ -685,6 +685,7 @@ public class DeclaredYieldFieldForageDaoTest {
 		newDto.setAnnualFieldDetailId(annualFieldDetailId);
 		newDto.setContractedFieldDetailId(contractedFieldDetailId);
 		newDto.setDisplayOrder(1);
+		newDto.setIsLeasedInd(false);
 		newDto.setGrowerContractYearId(gcyId);
 
 		contractedFieldDetailDao.insertDataSync(newDto, userId);

@@ -109,7 +109,7 @@ public class ContractedFieldDetailDaoTest {
 		Integer fieldId = 14875;
 		String fieldLabel = "LOT 8";
 		Integer legalLandId = 75;
-		String otherLegalDesc = "L 8 BLK 22 SEC 33 TP 26 PL 1249"; // ES: it used to be null but then I updated the OtherLegal to be equal to the ShortLegal, so the description is visible on the inventory screen
+		String otherLegalDesc = null;// "L 8 BLK 22 SEC 33 TP 26 PL 1249"; // ES: it used to be null but then I updated the OtherLegal to be equal to the ShortLegal, so the description is visible on the inventory screen
 		Integer displayOrder = 4;
 		Integer numExistingFieldsOnCn = 3;
 		
@@ -125,6 +125,7 @@ public class ContractedFieldDetailDaoTest {
 		newDto.setCropYear(cropYear);
 		newDto.setContractId(contractId);
 		newDto.setDisplayOrder(displayOrder);
+		newDto.setIsLeasedInd(false);
 		newDto.setFieldId(fieldId);
 		newDto.setFieldLabel(fieldLabel);
 		newDto.setGrowerContractYearId(growerContractYearId);
@@ -151,6 +152,7 @@ public class ContractedFieldDetailDaoTest {
 		Assert.assertEquals("CropYear", newDto.getCropYear(), fetchedDto.getCropYear());
 		Assert.assertEquals("ContractId", newDto.getContractId(), fetchedDto.getContractId());
 		Assert.assertEquals("DisplayOrder", newDto.getDisplayOrder(), fetchedDto.getDisplayOrder());
+		Assert.assertEquals("IsLeasedInd", newDto.getIsLeasedInd(), fetchedDto.getIsLeasedInd());
 		Assert.assertEquals("FieldId", newDto.getFieldId(), fetchedDto.getFieldId());
 		Assert.assertEquals("FieldLabel", newDto.getFieldLabel(), fetchedDto.getFieldLabel());
 		Assert.assertEquals("GrowerContractYearId", newDto.getGrowerContractYearId(), fetchedDto.getGrowerContractYearId());
@@ -162,6 +164,7 @@ public class ContractedFieldDetailDaoTest {
 		fetchedDto.setCropYear(cropYear);
 		fetchedDto.setContractId(contractId);
 		fetchedDto.setDisplayOrder(displayOrder + 1);
+		fetchedDto.setIsLeasedInd(true);
 		fetchedDto.setFieldId(fieldId);
 		fetchedDto.setFieldLabel(fieldLabel);
 		fetchedDto.setGrowerContractYearId(growerContractYearId);
@@ -177,6 +180,7 @@ public class ContractedFieldDetailDaoTest {
 		Assert.assertEquals("CropYear", fetchedDto.getCropYear(), updatedDto.getCropYear());
 		Assert.assertEquals("ContractId", fetchedDto.getContractId(), updatedDto.getContractId());
 		Assert.assertEquals("DisplayOrder", fetchedDto.getDisplayOrder(), updatedDto.getDisplayOrder());
+		Assert.assertEquals("IsLeasedInd", fetchedDto.getIsLeasedInd(), updatedDto.getIsLeasedInd());
 		Assert.assertEquals("FieldId", fetchedDto.getFieldId(), updatedDto.getFieldId());
 		Assert.assertEquals("FieldLabel", fetchedDto.getFieldLabel(), updatedDto.getFieldLabel());
 		Assert.assertEquals("GrowerContractYearId", fetchedDto.getGrowerContractYearId(), updatedDto.getGrowerContractYearId());
@@ -274,6 +278,7 @@ public class ContractedFieldDetailDaoTest {
 		newDto.setContractedFieldDetailId(null);
 		newDto.setAnnualFieldDetailId(annualFieldDetailId);
 		newDto.setDisplayOrder(displayOrder);
+		newDto.setIsLeasedInd(false);
 		newDto.setGrowerContractYearId(growerContractYearId);
 		
 		dao.insert(newDto, userId);
@@ -306,6 +311,7 @@ public class ContractedFieldDetailDaoTest {
 		Assert.assertEquals("ContractedFieldDetailId", newDto.getContractedFieldDetailId(), fetchedDto.getContractedFieldDetailId());
 		Assert.assertEquals("AnnualFieldDetailId", newDto.getAnnualFieldDetailId(), fetchedDto.getAnnualFieldDetailId());
 		Assert.assertEquals("DisplayOrder", newDto.getDisplayOrder(), fetchedDto.getDisplayOrder());
+		Assert.assertEquals("IsLeasedInd", newDto.getIsLeasedInd(), fetchedDto.getIsLeasedInd());
 		Assert.assertEquals("GrowerContractYearId", newDto.getGrowerContractYearId(), fetchedDto.getGrowerContractYearId());
 		
 		//UPDATE - only updating the display order
@@ -319,6 +325,7 @@ public class ContractedFieldDetailDaoTest {
 
 		Assert.assertEquals("AnnualFieldDetailId", fetchedDto.getAnnualFieldDetailId(), updatedDto.getAnnualFieldDetailId());
 		Assert.assertEquals("DisplayOrder", fetchedDto.getDisplayOrder(), updatedDto.getDisplayOrder());
+		Assert.assertEquals("IsLeasedInd", fetchedDto.getIsLeasedInd(), updatedDto.getIsLeasedInd());
 		Assert.assertEquals("GrowerContractYearId", fetchedDto.getGrowerContractYearId(), updatedDto.getGrowerContractYearId());
 
 		// selectForDeclaredYield
@@ -403,6 +410,7 @@ public class ContractedFieldDetailDaoTest {
 		Assert.assertEquals(cmpDto.getContractId(), cfdYieldDto.getContractId());
 		Assert.assertEquals(cmpDto.getCropYear(), cfdYieldDto.getCropYear());
 		Assert.assertEquals(cmpDto.getDisplayOrder(), cfdYieldDto.getDisplayOrder());
+		Assert.assertEquals(cmpDto.getIsLeasedInd(), cfdYieldDto.getIsLeasedInd());
 		Assert.assertEquals(cmpDto.getFieldId(), cfdYieldDto.getFieldId());
 		Assert.assertEquals(cmpDto.getFieldLabel(), cfdYieldDto.getFieldLabel());
 		Assert.assertEquals(cmpDto.getGrowerContractYearId(), cfdYieldDto.getGrowerContractYearId());
@@ -421,6 +429,7 @@ public class ContractedFieldDetailDaoTest {
 		Assert.assertEquals(cmpDto.getContractId(), cfdYieldDto.getContractId());
 		Assert.assertEquals(cmpDto.getCropYear(), cfdYieldDto.getCropYear());
 		Assert.assertEquals(cmpDto.getDisplayOrder(), cfdYieldDto.getDisplayOrder());
+		Assert.assertEquals(cmpDto.getIsLeasedInd(), cfdYieldDto.getIsLeasedInd());
 		Assert.assertEquals(cmpDto.getFieldId(), cfdYieldDto.getFieldId());
 		Assert.assertEquals(cmpDto.getFieldLabel(), cfdYieldDto.getFieldLabel());
 		Assert.assertEquals(cmpDto.getGrowerContractYearId(), cfdYieldDto.getGrowerContractYearId());
@@ -463,6 +472,7 @@ public class ContractedFieldDetailDaoTest {
 		Assert.assertEquals(cmpDto.getContractId(), cfdYieldDto.getContractId());
 		Assert.assertEquals(cmpDto.getCropYear(), cfdYieldDto.getCropYear());
 		Assert.assertEquals(cmpDto.getDisplayOrder(), cfdYieldDto.getDisplayOrder());
+		Assert.assertEquals(cmpDto.getIsLeasedInd(), cfdYieldDto.getIsLeasedInd());
 		Assert.assertEquals(cmpDto.getFieldId(), cfdYieldDto.getFieldId());
 		Assert.assertEquals(cmpDto.getFieldLabel(), cfdYieldDto.getFieldLabel());
 		Assert.assertEquals(cmpDto.getGrowerContractYearId(), cfdYieldDto.getGrowerContractYearId());
@@ -603,6 +613,7 @@ public class ContractedFieldDetailDaoTest {
 		cfdDto.setAnnualFieldDetailId(annualFieldDetailId);
 		cfdDto.setContractedFieldDetailId(contractedFieldDetailId);
 		cfdDto.setDisplayOrder(1);
+		cfdDto.setIsLeasedInd(false);
 		cfdDto.setGrowerContractYearId(growerContractYearId);
 
 		cfdDao.insertDataSync(cfdDto, userId);

@@ -6,6 +6,7 @@ export enum ResourcesRoutes {
     INVENTORY_GRAIN_UNSEEDED = "inventory/grain/unseeded",
     INVENTORY_GRAIN_SEEDED = "inventory/grain/seeded",
     INVENTORY_FORAGE = "inventory/forage",
+    INVENTORY_BERRIES = "inventory/berries",
     DOP_GRAIN = "dop/grain",
     DOP_FORAGE = "dop/forage",
     VERIFIED_YIELD = "verified-yield",
@@ -45,6 +46,13 @@ export const INSURANCE_NAME = {
     "VEGETABLES"    : "VEGETABLES",
     "FLOWERS"       : "FLOWERS"
 }
+
+export const BERRY_COMMODITY = {
+    "Blueberry"     : 10,  
+    "Cranberry"     : 11,  
+    "Raspberry"     : 12,   
+    "Strawberry"    : 13
+  }
 
 export const CROP_COMMODITY_TYPE_CONST = {
     ALL: "",  

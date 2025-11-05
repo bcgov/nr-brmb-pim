@@ -257,6 +257,7 @@ public class AnnualFieldDetailPrevSubsDaoTest {
 		cfdDto.setAnnualFieldDetailId(annualFieldDetailId2022);
 		cfdDto.setContractedFieldDetailId(contractedFieldDetailId);
 		cfdDto.setDisplayOrder(1);
+		cfdDto.setIsLeasedInd(false);
 		cfdDto.setGrowerContractYearId(growerContractYearId);
 
 		cfdDao.insertDataSync(cfdDto, userId);

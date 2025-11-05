@@ -18,8 +18,10 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.InventoryContractL
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.InventoryContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractList;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryCoverageTotalForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
@@ -30,6 +32,8 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.LinkedPlanting;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.PolicySimple;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryCoverageTotalForageDto;
@@ -81,6 +85,18 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			}
 
 			resource.setInventoryCoverageTotalForages(inventoryCoverageTotalForages);
+		}
+		
+		// Berries Commodities
+		if (!dto.getInventoryContractCommodityBerries().isEmpty()) {
+			List<InventoryContractCommodityBerries> invContractCommodityBerries = new ArrayList<InventoryContractCommodityBerries>();
+
+			for (InventoryContractCommodityBerriesDto iccbDto : dto.getInventoryContractCommodityBerries()) {
+				InventoryContractCommodityBerries iccbModel = createInventoryContractCommodityBerries(iccbDto);
+				invContractCommodityBerries.add(iccbModel);
+			}
+
+			resource.setInventoryContractCommodityBerries(invContractCommodityBerries);
 		}
 		
 		// Fields
@@ -205,6 +221,24 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		return model;
 	}
 
+	private InventoryContractCommodityBerries createInventoryContractCommodityBerries(InventoryContractCommodityBerriesDto dto) {
+		
+		InventoryContractCommodityBerries model = new InventoryContractCommodityBerries();
+		
+		model.setInventoryContractCommodityBerriesGuid(dto.getInventoryContractCommodityBerriesGuid());
+		model.setInventoryContractGuid(dto.getInventoryContractGuid());
+		model.setCropCommodityId(dto.getCropCommodityId());
+		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setTotalInsuredPlants(dto.getTotalInsuredPlants());
+		model.setTotalUninsuredPlants(dto.getTotalUninsuredPlants());
+		model.setTotalQuantityInsuredAcres(dto.getTotalQuantityInsuredAcres());
+		model.setTotalQuantityUninsuredAcres(dto.getTotalQuantityUninsuredAcres());
+		model.setTotalPlantInsuredAcres(dto.getTotalPlantInsuredAcres());
+		model.setTotalPlantUninsuredAcres(dto.getTotalPlantUninsuredAcres());
+
+		return model;
+	}
+
 	private InventoryCoverageTotalForage createInventoryCoverageTotalForage(InventoryCoverageTotalForageDto dto) {
 		
 		InventoryCoverageTotalForage model = new InventoryCoverageTotalForage();
@@ -322,7 +356,12 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			}
 
 			model.setInventorySeededForages(inventorySeededForages);
-		}	
+		}
+		
+		// Inventory Berries
+		if (dto.getInventoryBerries() != null) {
+			model.setInventoryBerries(createInventoryBerries(dto.getInventoryBerries()));
+		}
 		
 		if(dto.getUnderseededInventorySeededForageGuid() != null) {
 			LinkedPlanting linkedPlanting = new LinkedPlanting();
@@ -402,6 +441,27 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			linkedPlanting.setAcres(dto.getLinkedUnderseededAcres());
 			model.setLinkedPlanting(linkedPlanting);
 		}
+
+		return model;
+	}
+	
+	private InventoryBerries createInventoryBerries(InventoryBerriesDto dto) {
+		InventoryBerries model = new InventoryBerries();
+
+		model.setInventoryBerriesGuid(dto.getInventoryBerriesGuid());
+		model.setInventoryFieldGuid(dto.getInventoryFieldGuid());
+		model.setCropCommodityId(dto.getCropCommodityId());
+		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setCropVarietyId(dto.getCropVarietyId());
+		model.setCropVarietyName(dto.getCropVarietyName());
+		model.setPlantInsurabilityTypeCode(dto.getPlantInsurabilityTypeCode());
+		model.setPlantedYear(dto.getPlantedYear());
+		model.setPlantedAcres(dto.getPlantedAcres());
+		model.setRowSpacing(dto.getRowSpacing());
+		model.setPlantSpacing(dto.getPlantSpacing());
+		model.setTotalPlants(dto.getTotalPlants());
+		model.setIsQuantityInsurableInd(dto.getIsQuantityInsurableInd());
+		model.setIsPlantInsurableInd(dto.getIsPlantInsurableInd());
 
 		return model;
 	}
@@ -612,9 +672,59 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			
 			model.setInventorySeededForages(inventorySeededForageList);
 		}
-		
+
+		// Inventory Berries
+		if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId())) {
+			if ( ifDto.getInventoryBerries() != null) {
+				model.setInventoryBerries(createRolloverInventoryBerries(ifDto.getInventoryBerries(), cfdDto.getCropYear()));
+			} else {
+				model.setInventoryBerries(createDefaultInventoryBerries());
+			}
+		}
+
 		return model;
 	}
+
+	private InventoryBerries createRolloverInventoryBerries(InventoryBerriesDto dto, Integer cropYear) {
+		
+		InventoryBerries model = new InventoryBerries();
+		
+		//Rollover insurability for STRAWBERRY works different than other commodities
+		if(dto.getCropCommodityId() != null && dto.getCropCommodityId().equals(13)) {
+			if(dto.getPlantInsurabilityTypeCode() == null) {
+				//If insurability is not set, it will be set to ST1 (Strawberry Year 1) if the planted year = crop year -1
+				Integer cropYearToCompare = cropYear -1;
+				if(dto.getPlantedYear().equals(cropYearToCompare)) {
+					dto.setPlantInsurabilityTypeCode("ST1");
+					dto.setIsPlantInsurableInd(true);
+				}
+			} else if (dto.getPlantInsurabilityTypeCode().equalsIgnoreCase("ST1")) {
+				//Strawberries that were previously insured with ST1 (Strawberry Year 1) will now be ST2 (Strawberry Year 2)
+				dto.setPlantInsurabilityTypeCode("ST2");
+				dto.setIsPlantInsurableInd(true); //Should already be set to true
+			} else if (dto.getPlantInsurabilityTypeCode().equalsIgnoreCase("ST2")) {
+				//Strawberries that were previously insured with ST2 (Strawberry Year 2) will become uninsurable and set to null
+				dto.setPlantInsurabilityTypeCode(null);
+				dto.setIsPlantInsurableInd(false);
+			}
+		}
+
+		model.setCropCommodityId(dto.getCropCommodityId());
+		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setCropVarietyId(dto.getCropVarietyId());
+		model.setCropVarietyName(dto.getCropVarietyName());
+		model.setPlantInsurabilityTypeCode(dto.getPlantInsurabilityTypeCode());
+		model.setPlantedYear(dto.getPlantedYear());
+		model.setPlantedAcres(dto.getPlantedAcres());
+		model.setRowSpacing(dto.getRowSpacing());
+		model.setPlantSpacing(dto.getPlantSpacing());
+		model.setTotalPlants(dto.getTotalPlants());
+		model.setIsQuantityInsurableInd(dto.getIsQuantityInsurableInd());
+		model.setIsPlantInsurableInd(dto.getIsPlantInsurableInd());
+
+		return model;
+	}
+
 
 	private InventoryField createDefaultInventoryField(Integer insurancePlanId, ContractedFieldDetailDto dto) {
 		InventoryField model = new InventoryField();
@@ -644,6 +754,11 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			List<InventorySeededForage> inventorySeededForageList = new ArrayList<InventorySeededForage>();
 			inventorySeededForageList.add(createDefaultInventorySeededForage());
 			model.setInventorySeededForages(inventorySeededForageList);
+		}
+		
+		// InventoryBerries
+		if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId())) {
+			model.setInventoryBerries(createDefaultInventoryBerries());
 		}
 		
 		return model;
@@ -739,6 +854,25 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 
 		return model;
 	}
+	
+	private InventoryBerries createDefaultInventoryBerries() {
+		InventoryBerries model = new InventoryBerries();
+
+		model.setInventoryBerriesGuid(null);
+		model.setInventoryFieldGuid(null);
+		model.setCropCommodityId(null);
+		model.setCropVarietyId(null);
+		model.setPlantInsurabilityTypeCode(null);
+		model.setPlantedYear(null);
+		model.setPlantedAcres(null);
+		model.setRowSpacing(null);
+		model.setPlantSpacing(null);
+		model.setTotalPlants(null);
+		model.setIsQuantityInsurableInd(null);
+		model.setIsPlantInsurableInd(null);
+
+		return model;
+	}
 
 	@Override
 	public void updateDto(InventoryContractDto dto, InventoryContract<? extends AnnualField> model, String userId) {
@@ -765,6 +899,18 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		dto.setTotalUnseededAcres(model.getTotalUnseededAcres());
 		dto.setTotalUnseededAcresOverride(model.getTotalUnseededAcresOverride());
 		dto.setIsPedigreeInd(model.getIsPedigreeInd());
+	}
+
+	@Override
+	public void updateDto(InventoryContractCommodityBerriesDto dto, InventoryContractCommodityBerries model) {
+		dto.setInventoryContractGuid(model.getInventoryContractGuid());
+		dto.setCropCommodityId(model.getCropCommodityId());
+		dto.setTotalInsuredPlants(model.getTotalInsuredPlants());
+		dto.setTotalUninsuredPlants(model.getTotalUninsuredPlants());
+		dto.setTotalQuantityInsuredAcres(model.getTotalQuantityInsuredAcres());
+		dto.setTotalQuantityUninsuredAcres(model.getTotalQuantityUninsuredAcres());
+		dto.setTotalPlantInsuredAcres(model.getTotalPlantInsuredAcres());
+		dto.setTotalPlantUninsuredAcres(model.getTotalPlantUninsuredAcres());
 	}
 
 	@Override
@@ -888,6 +1034,42 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		}
 	}
 
+	@Override
+	public void updateDto(InventoryBerriesDto dto, InventoryBerries model) {
+
+		if (Boolean.TRUE.equals(model.getDeletedByUserInd())) {
+
+			// Flagged for deletion, but record could not be deleted, so clear the user-entered data.
+			//The commodity stays on the record to be able to show it in the correct table in the ui
+			dto.setCropCommodityId(model.getCropCommodityId());
+			dto.setCropCommodityName(model.getCropCommodityName());
+			dto.setCropVarietyId(null);
+			dto.setCropVarietyName(null);
+			dto.setPlantInsurabilityTypeCode(null);
+			dto.setPlantedYear(null);
+			dto.setPlantedAcres(null);
+			dto.setRowSpacing(null);
+			dto.setPlantSpacing(null);
+			dto.setTotalPlants(null);
+			dto.setIsQuantityInsurableInd(false);
+			dto.setIsPlantInsurableInd(false);
+
+		} else {		
+			dto.setCropCommodityId(model.getCropCommodityId());
+			dto.setCropCommodityName(model.getCropCommodityName());
+			dto.setCropVarietyId(model.getCropVarietyId());
+			dto.setCropVarietyName(model.getCropVarietyName());
+			dto.setPlantInsurabilityTypeCode(model.getPlantInsurabilityTypeCode());
+			dto.setPlantedYear(model.getPlantedYear());
+			dto.setPlantedAcres(model.getPlantedAcres());
+			dto.setRowSpacing(model.getRowSpacing());
+			dto.setPlantSpacing(model.getPlantSpacing());
+			dto.setTotalPlants(model.getTotalPlants());
+			dto.setIsQuantityInsurableInd(model.getIsQuantityInsurableInd());
+			dto.setIsPlantInsurableInd(model.getIsPlantInsurableInd());
+		}	
+	}
+	
 	@Override
 	public void updateDto(UnderwritingCommentDto dto, UnderwritingComment model) {
 		dto.setUnderwritingComment(model.getUnderwritingComment());

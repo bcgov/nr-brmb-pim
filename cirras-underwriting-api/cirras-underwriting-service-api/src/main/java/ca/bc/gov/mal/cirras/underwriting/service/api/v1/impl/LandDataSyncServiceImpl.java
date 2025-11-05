@@ -859,7 +859,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 								
 								// Create ContractedFieldDetail record.
 								ContractedFieldDetailDto currCfdDto = new ContractedFieldDetailDto();
-								contractedFieldDetailFactory.createRolloverContractedFieldDetail(currCfdDto, currAfdDto.getAnnualFieldDetailId(), currGcyModel.getGrowerContractYearId(), currDisplayOrder++);
+								contractedFieldDetailFactory.createRolloverContractedFieldDetail(currCfdDto, currAfdDto.getAnnualFieldDetailId(), currGcyModel.getGrowerContractYearId(), currDisplayOrder++, currCfdDto.getIsLeasedInd());
 								contractedFieldDetailDao.insert(currCfdDto, userId);
 							}
 						}

@@ -115,6 +115,7 @@ public class AnnualFieldRsrcFactory extends BaseResourceFactory implements Annua
 
 		resource.setFieldId(dto.getFieldId());
 		resource.setFieldLabel(dto.getFieldLabel());
+		resource.setFieldLocation(dto.getLocation());
 		resource.setOtherLegalDescription(dto.getOtherLegalDescription());
 		resource.setLegalLandId(dto.getLegalLandId());
 	}
@@ -128,12 +129,16 @@ public class AnnualFieldRsrcFactory extends BaseResourceFactory implements Annua
 		resource.setFieldLabel(dto.getFieldLabel());
 		resource.setLegalLandId(dto.getLegalLandId());
 		resource.setOtherLegalDescription(dto.getOtherLegalDescription());
+		resource.setIsLeasedInd(dto.getIsLeasedInd());
+		resource.setFieldLocation(dto.getFieldLocation());
+		resource.setPrimaryPropertyIdentifier(dto.getPrimaryPropertyIdentifier()); 
 	}
 
 	// Only supports updates to members that are editable on the Inventory screen.
 	@Override
 	public void updateDto(ContractedFieldDetailDto dto, AnnualField model) {
 		dto.setDisplayOrder(model.getDisplayOrder());
+		dto.setIsLeasedInd(model.getIsLeasedInd());
 	}
 	
 	public static String getAnnualFieldListSelfUri(

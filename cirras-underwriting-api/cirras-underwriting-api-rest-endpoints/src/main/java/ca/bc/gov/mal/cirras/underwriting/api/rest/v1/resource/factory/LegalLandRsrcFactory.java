@@ -297,6 +297,7 @@ public class LegalLandRsrcFactory extends BaseResourceFactory implements LegalLa
 		
 		resource.setFieldId(dto.getFieldId());
 		resource.setFieldLabel(dto.getFieldLabel());
+		resource.setFieldLocation(dto.getLocation());
 		resource.setTotalLegalLand(dto.getTotalLegalLand());
 
 		return resource;

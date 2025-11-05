@@ -18,6 +18,7 @@ public class FieldRsrc extends BaseResource implements Field {
 
 	private Integer fieldId;
 	private String fieldLabel;
+	private String fieldLocation;
 	private Integer activeFromCropYear;
 	private Integer activeToCropYear;
 	private Integer totalLegalLand;
@@ -37,6 +38,14 @@ public class FieldRsrc extends BaseResource implements Field {
 
 	public void setFieldLabel(String fieldLabel) {
 		this.fieldLabel = fieldLabel;
+	}
+	
+	public String getFieldLocation() {
+		return fieldLocation;
+	}
+
+	public void setFieldLocation(String fieldLocation) {
+		this.fieldLocation = fieldLocation;
 	}
  
  	public Integer getActiveFromCropYear() {

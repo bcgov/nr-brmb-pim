@@ -23,7 +23,7 @@
         (click)="goToLink('seeded')"
         [ngClass]="isLinkActive('seeded') ? 'active' : 'inactive'">
             <mat-icon 
-                matTooltip="Seeded Inventory" 
+                matTooltip="{{setSeededInventoryText()}}" 
                 svgIcon="seeded" 
                 [ngClass]="isLinkActive('seeded') ? 'svg-active' : 'svg-inactive'">
             </mat-icon>
@@ -32,7 +32,7 @@
         *ngIf="userCanAccessInventory()" 
         (click)="goToLink('seeded')"
         [ngClass]="isLinkActive('seeded') ? 'active' : 'inactive'">
-            Seeded Inventory
+            {{setSeededInventoryText()}}
     </div>
     <div *ngIf="userCanAccessDop();" class="filler"><!-- empty div --> </div>
     <div 

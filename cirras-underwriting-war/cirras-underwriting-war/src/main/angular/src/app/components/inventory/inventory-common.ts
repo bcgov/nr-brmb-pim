@@ -1,6 +1,6 @@
 import { ChangeDetectorRef } from "@angular/core"
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl } from "@angular/forms"
-import { InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
+import { InventoryBerries, InventoryField, InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
 import { AnnualField, CropVarietyCommodityType } from "src/app/conversion/models"
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from "src/app/utils/constants"
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
@@ -64,9 +64,12 @@ export function addAnnualFieldObject (field: AnnualField, fldPlantings: UntypedF
     displayOrder:          [ field.displayOrder ],
     fieldId:               [ field.fieldId ],
     fieldLabel:            [ field.fieldLabel ],
+    fieldLocation:         [ field.fieldLocation],
     landUpdateType:        [],
     legalLandId:           [ field.legalLandId ],
     otherLegalDescription: [ field.otherLegalDescription ],
+    primaryPropertyIdentifier:  [field.primaryPropertyIdentifier ], 
+    isLeasedInd:                [ field.isLeasedInd ], 
     transferFromGrowerContractYearId: [],
     plantings:             [ fldPlantings ],
     uwComments:            [ fldComments ],
@@ -161,26 +164,9 @@ export function getInventorySeededForagesObjForSave(inventorySeededForageGuid, i
   }
 }
 
-export function roundUpDecimalAcres(acres) {
-  
-  if (isNaN(parseFloat(acres))) {
-    //alert ("Acres must be a valid number" )
-    return ""
-  } else {
-
-    if (parseFloat(acres) % 1 == 0 ) {
-      // return integer if it's an integer, no zeros after the decimal point
-      return parseInt(acres)
-    }
-    
-    return parseFloat(acres).toFixed(1)
-  }
-}
-
-export function roundUpDecimalYield(numberToRound, precision) {
+export function roundUpDecimal(numberToRound, precision) {
 
   if (isNaN(parseFloat(numberToRound))) {
-    // alert ("Yield must be a valid number" )
     return ""
   } else {
 
@@ -744,3 +730,77 @@ export function linkedPlantingTooltipCommon(fieldId, inventoryFieldGuid, invento
   }
   return tooltip
 }
+
+export function addSimplePlantingObject(pltg: InventoryField, deletedByUserInd,
+                                        inventoryUnseeded: UntypedFormArray,
+                                        inventoryBerries: UntypedFormArray, 
+                                        inventorySeededForages: UntypedFormArray,
+                                        inventorySeededGrains: UntypedFormArray) {
+
+  return {
+    inventoryFieldGuid:                     [ pltg.inventoryFieldGuid ],
+    insurancePlanId:                        [ pltg.insurancePlanId ],
+    fieldId:                                [ pltg.fieldId ],
+    lastYearCropCommodityId:                [ pltg.lastYearCropCommodityId ],
+    lastYearCropCommodityName:              [ pltg.lastYearCropCommodityName ],
+    lastYearCropVarietyId:                  [ pltg.lastYearCropVarietyId ],
+    lastYearCropVarietyName:                [ pltg.lastYearCropVarietyName ],
+    cropYear:                               [ pltg.cropYear ],
+    plantingNumber:                         [ pltg.plantingNumber ],
+    isHiddenOnPrintoutInd:                  [ pltg.isHiddenOnPrintoutInd ],
+    underseededCropVarietyId:               [ pltg.underseededCropVarietyId ],
+    underseededCropVarietyName:             [ pltg.underseededCropVarietyName ],
+    underseededAcres:                       [ pltg.underseededAcres ],
+    underseededInventorySeededForageGuid:   [ pltg.underseededInventorySeededForageGuid ],
+    inventoryUnseeded:                      [ inventoryUnseeded ],
+    inventoryBerries:                       [ inventoryBerries ],
+    inventorySeededForages:                 [ inventorySeededForages ],
+    inventorySeededGrains:                  [ inventorySeededGrains ],
+    linkedPlanting:                         [ pltg.linkedPlanting ],
+    deletedByUserInd:                       [ deletedByUserInd ]
+  }
+}
+
+
+export function addBerriesObject(inventoryFieldGuid, inventoryBerries: InventoryBerries) {
+  return {
+    inventoryBerriesGuid: [ (inventoryBerries && inventoryBerries.inventoryBerriesGuid ) ? 
+                                  inventoryBerries.inventoryBerriesGuid : 
+                                  "newGUID_" + getUniqueKey().toString() ] , // create a local unique key which won't be sent to the backend
+    inventoryFieldGuid:       [ (inventoryBerries && inventoryBerries.inventoryFieldGuid) ? inventoryBerries.inventoryFieldGuid : inventoryFieldGuid ],
+    cropCommodityId:          [ (inventoryBerries && inventoryBerries.cropCommodityId) ? inventoryBerries.cropCommodityId : CROP_COMMODITY_UNSPECIFIED.ID ],
+    cropVarietyCtrl:          [ { 
+                                  cropVarietyId: ( inventoryBerries && inventoryBerries.cropVarietyId) ? inventoryBerries.cropVarietyId : CROP_COMMODITY_UNSPECIFIED.ID, 
+                                  varietyName: ( inventoryBerries && inventoryBerries.cropVarietyName) ? inventoryBerries.cropVarietyName : CROP_COMMODITY_UNSPECIFIED.NAME
+                                } ],
+    plantedYear:              [ (inventoryBerries && inventoryBerries.plantedYear) ? inventoryBerries.plantedYear : null],
+    plantedAcres:             [ (inventoryBerries && inventoryBerries.plantedAcres) ? inventoryBerries.plantedAcres : null],
+    rowSpacing:               [ (inventoryBerries && inventoryBerries.rowSpacing) ? inventoryBerries.rowSpacing : null],
+    plantSpacing:             [ (inventoryBerries && inventoryBerries.plantSpacing) ? inventoryBerries.plantSpacing : null],
+    totalPlants:              [ (inventoryBerries && inventoryBerries.totalPlants) ? inventoryBerries.totalPlants : null],
+    isQuantityInsurableInd:   [ (!inventoryBerries || inventoryBerries.isQuantityInsurableInd == null) ? false : inventoryBerries.isQuantityInsurableInd ],  // defaults to false
+    isPlantInsurableInd:      [ (!inventoryBerries || inventoryBerries.isPlantInsurableInd == null) ? false : inventoryBerries.isPlantInsurableInd ],  // defaults to false
+    plantInsurabilityTypeCode: [ (inventoryBerries && inventoryBerries.plantInsurabilityTypeCode) ? inventoryBerries.plantInsurabilityTypeCode : null],
+    deletedByUserInd:         [false]
+  }
+}
+
+export function getDefaultInventoryBerries(inventoryBerriesGuid, inventoryFieldGuid, selectedCommodity) {
+  return {
+        inventoryBerriesGuid: inventoryBerriesGuid,
+        inventoryFieldGuid: inventoryFieldGuid,
+        cropCommodityId: selectedCommodity,
+        cropVarietyId: null,
+        plantedYear: null,
+        plantedAcres: null,
+        rowSpacing: null,
+        plantSpacing: null,
+        totalPlants: null,
+        isQuantityInsurableInd: false,
+        isPlantInsurableInd: false,
+        cropCommodityName: null,
+        cropVarietyName: null,
+        deletedByUserInd: false
+      }
+}
+

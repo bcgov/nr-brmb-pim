@@ -1,0 +1,11 @@
+
+{
+  "databaseChangeLog": [
+{ "changeSet": {"author":"mhostettler","id":"90", "changes": [
+	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.alter.plant_insurability_type_code.sql"}},
+	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.inventory_berries.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.inventory_contract_commodity_berries.sql"}},
+	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.contracted_field_detail.sql"}},
+	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.field.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
+  ] } }]}

@@ -21,6 +21,8 @@
       { "include": {"file": "scripts/03_00_xx/03_06_00/00/cirras.cuws.03_06_00_00.ddl.json"} },
       { "include": {"file": "scripts/03_00_xx/03_06_00/00/cirras.cuws.03_06_00_00.dml.json"} },
       { "include": {"file": "scripts/03_00_xx/03_07_00/00/cirras.cuws.03_07_00_00.ddl.json"} },
-      { "include": {"file": "scripts/03_00_xx/03_08_01/00/cirras.cuws.03_08_01_00.ddl.json"} }
+      { "include": {"file": "scripts/03_00_xx/03_08_01/00/cirras.cuws.03_08_01_00.ddl.json"} } ,
+      { "include": {"file": "scripts/04_00_xx/04_00_00/00/cirras.cuws.04_00_00_00.ddl.json"} },
+      { "include": {"file": "scripts/04_00_xx/04_00_00/00/cirras.cuws.04_00_00_00.dml.json"} }
   ]
 }
