@@ -1,5 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.After;
@@ -60,7 +62,7 @@ public class InventoryBerriesDaoTest {
 		String inventoryFieldGuid;
 		String inventoryBerriesGuid;
 		String userId = "UNITTEST";
-
+		
 		createField();
 		
 		InventoryFieldDao invFieldDao = persistenceSpringConfig.inventoryFieldDao();
@@ -99,6 +101,11 @@ public class InventoryBerriesDaoTest {
 		newDto.setTotalPlants(5000);
 		newDto.setIsQuantityInsurableInd(true);
 		newDto.setIsPlantInsurableInd(false);
+		newDto.setBogId("BogId");
+		newDto.setBogMowedDate(getDate(2020, Calendar.JANUARY, 15));
+		newDto.setBogRenovatedDate(getDate(2020, Calendar.JANUARY, 20));
+		newDto.setIsHarvestedInd(false);
+
 		
 		invBerriesDao.insert(newDto, userId);
 		Assert.assertNotNull(newDto.getInventoryBerriesGuid());
@@ -126,6 +133,10 @@ public class InventoryBerriesDaoTest {
 		Assert.assertEquals("TotalPlants", newDto.getTotalPlants(), fetchedDto.getTotalPlants());
 		Assert.assertEquals("IsQuantityInsurableInd", newDto.getIsQuantityInsurableInd(), fetchedDto.getIsQuantityInsurableInd());
 		Assert.assertEquals("IsPlantInsurableInd", newDto.getIsPlantInsurableInd(), fetchedDto.getIsPlantInsurableInd());
+		Assert.assertEquals("BogId", newDto.getBogId(), fetchedDto.getBogId());
+		Assert.assertEquals("BogMowedDate", newDto.getBogMowedDate(), fetchedDto.getBogMowedDate());
+		Assert.assertEquals("BogRenovatedDate", newDto.getBogRenovatedDate(), fetchedDto.getBogRenovatedDate());
+		Assert.assertEquals("IsHarvestedInd", newDto.getIsHarvestedInd(), fetchedDto.getIsHarvestedInd());
 		
 		//UPDATE
 		fetchedDto.setCropCommodityId(13);
@@ -140,6 +151,10 @@ public class InventoryBerriesDaoTest {
 		fetchedDto.setTotalPlants(5001);
 		fetchedDto.setIsQuantityInsurableInd(false);
 		fetchedDto.setIsPlantInsurableInd(true);
+		fetchedDto.setBogId("BogId 2");
+		fetchedDto.setBogMowedDate(getDate(2020, Calendar.FEBRUARY, 16));
+		fetchedDto.setBogRenovatedDate(getDate(2020, Calendar.FEBRUARY, 21));
+		fetchedDto.setIsHarvestedInd(true);
 
 		invBerriesDao.update(fetchedDto, userId);
 
@@ -160,7 +175,11 @@ public class InventoryBerriesDaoTest {
 		Assert.assertEquals("TotalPlants", fetchedDto.getTotalPlants(), updatedDto.getTotalPlants());
 		Assert.assertEquals("IsQuantityInsurableInd", fetchedDto.getIsQuantityInsurableInd(), updatedDto.getIsQuantityInsurableInd());
 		Assert.assertEquals("IsPlantInsurableInd", fetchedDto.getIsPlantInsurableInd(), updatedDto.getIsPlantInsurableInd());
-		
+		Assert.assertEquals("BogId", fetchedDto.getBogId(), updatedDto.getBogId());
+		Assert.assertEquals("BogMowedDate", fetchedDto.getBogMowedDate(), updatedDto.getBogMowedDate());
+		Assert.assertEquals("BogRenovatedDate", fetchedDto.getBogRenovatedDate(), updatedDto.getBogRenovatedDate());
+		Assert.assertEquals("IsHarvestedInd", fetchedDto.getIsHarvestedInd(), updatedDto.getIsHarvestedInd());
+
 		//DELETE
 		invBerriesDao.delete(inventoryBerriesGuid);
 		
@@ -176,6 +195,13 @@ public class InventoryBerriesDaoTest {
 		//DELETE parent InventoryField
 		invFieldDao.delete(inventoryFieldGuid);
 		
+	}
+
+	private Date getDate(int year, int month, int day) {
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(year, month, day);
+		return cal.getTime();
 	}
 	
 	@Test 
@@ -220,6 +246,7 @@ public class InventoryBerriesDaoTest {
 		newDto.setCropCommodityName("BLUEBERRY");
 		newDto.setIsQuantityInsurableInd(true);
 		newDto.setIsPlantInsurableInd(false);
+		newDto.setIsHarvestedInd(true);
 		
 		invBerriesDao.insert(newDto, userId);
 		Assert.assertNotNull(newDto.getInventoryBerriesGuid());
@@ -289,6 +316,7 @@ public class InventoryBerriesDaoTest {
 		newDto.setCropCommodityName("BLUEBERRY");
 		newDto.setIsQuantityInsurableInd(true);
 		newDto.setIsPlantInsurableInd(false);
+		newDto.setIsHarvestedInd(true);
 		
 		invBerriesDao.insert(newDto, userId);
 		Assert.assertNotNull(newDto.getInventoryBerriesGuid());

@@ -17,6 +17,10 @@
 		<result property="totalPlants" column="total_plants" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="isQuantityInsurableInd" column="is_quantity_insurable_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
 		<result property="isPlantInsurableInd" column="is_plant_insurable_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+		<result property="bogId" column="bog_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="bogMowedDate" column="bog_mowed_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="bogRenovatedDate" column="bog_renovated_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="isHarvestedInd" column="is_harvested_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
 		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -41,6 +45,10 @@
 		t.total_plants, 
 		t.is_quantity_insurable_ind, 
 		t.is_plant_insurable_ind, 
+		t.bog_id, 
+		t.bog_mowed_date, 
+		t.bog_renovated_date, 
+		t.is_harvested_ind, 
 		t.create_user, 
 		t.create_date, 
 		t.update_user, 
@@ -76,6 +84,10 @@
 			total_plants,
 			is_quantity_insurable_ind,
 			is_plant_insurable_ind,
+			bog_id,
+			bog_mowed_date,
+			bog_renovated_date,
+			is_harvested_ind,
 			create_user, 
 			create_date, 
 			update_user, 
@@ -93,6 +105,10 @@
 			#{dto.totalPlants, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.isQuantityInsurableInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
 			#{dto.isPlantInsurableInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
+			#{dto.bogId, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.bogMowedDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN},
+			#{dto.bogRenovatedDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN},
+			#{dto.isHarvestedInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN},
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
 			now(),
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
@@ -112,6 +128,10 @@
 			total_plants = #{dto.totalPlants, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
 			is_quantity_insurable_ind = #{dto.isQuantityInsurableInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN}, 
 			is_plant_insurable_ind = #{dto.isPlantInsurableInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN}, 
+			bog_id = #{dto.bogId, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
+			bog_mowed_date = #{dto.bogMowedDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN}, 
+			bog_renovated_date = #{dto.bogRenovatedDate, javaType=java.util.Date , jdbcType=TIMESTAMP, mode=IN}, 
+			is_harvested_ind = #{dto.isHarvestedInd, javaType=java.lang.Boolean , jdbcType=VARCHAR, mode=IN}, 
 			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
 			update_date = now()
 		where inventory_berries_guid = #{dto.inventoryBerriesGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
