@@ -22,7 +22,7 @@ export class ForageDopYieldFieldComponent implements OnInit {
 
     yieldFieldFormGroup: UntypedFormGroup;
 
-    plantInsurabilityOptions = getCodeOptions("plant_insurability_type_code");  
+    plantInsurabilityOptions = getCodeOptions("forage_plant_insurability_type_code");  
 
     constructor(private fb: UntypedFormBuilder,
         private store: Store<RootState>,
