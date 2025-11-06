@@ -98,9 +98,11 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 			result = result&&dtoUtils.equals("isQuantityInsurableInd", isQuantityInsurableInd, other.isQuantityInsurableInd);
 			result = result&&dtoUtils.equals("isPlantInsurableInd", isPlantInsurableInd, other.isPlantInsurableInd);
 			result = result&&dtoUtils.equals("bogId", bogId, other.bogId);
-			result = result&&dtoUtils.equals("bogMowedDate", bogMowedDate, other.bogMowedDate);
-			result = result&&dtoUtils.equals("bogRenovatedDate", bogRenovatedDate, other.bogRenovatedDate);
 			result = result&&dtoUtils.equals("isHarvestedInd", isHarvestedInd, other.isHarvestedInd);
+			
+			//Nullable dates
+			result = result&&DateUtils.equalsDate(logger, "bogMowedDate", bogMowedDate, other.bogMowedDate);
+			result = result&&DateUtils.equalsDate(logger, "bogRenovatedDate", bogRenovatedDate, other.bogRenovatedDate);
 
 		}
 		

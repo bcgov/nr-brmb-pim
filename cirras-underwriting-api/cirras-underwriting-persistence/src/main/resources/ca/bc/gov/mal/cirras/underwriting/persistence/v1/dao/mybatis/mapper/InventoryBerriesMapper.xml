@@ -18,8 +18,8 @@
 		<result property="isQuantityInsurableInd" column="is_quantity_insurable_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
 		<result property="isPlantInsurableInd" column="is_plant_insurable_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
 		<result property="bogId" column="bog_id" javaType="java.lang.String" jdbcType="VARCHAR" />
-		<result property="bogMowedDate" column="bog_mowed_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-		<result property="bogRenovatedDate" column="bog_renovated_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="bogMowedDate" column="bog_mowed_date" javaType="java.util.Date" jdbcType="DATE" />
+		<result property="bogRenovatedDate" column="bog_renovated_date" javaType="java.util.Date" jdbcType="DATE" />
 		<result property="isHarvestedInd" column="is_harvested_ind" javaType="java.lang.Boolean" jdbcType="VARCHAR" />
 		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
