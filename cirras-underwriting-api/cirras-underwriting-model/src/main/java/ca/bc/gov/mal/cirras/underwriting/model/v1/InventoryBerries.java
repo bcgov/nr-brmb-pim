@@ -1,6 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.model.v1;
 
 import java.io.Serializable;
+import java.util.Date;
 
 //
 // This is not going to be a resource.
@@ -20,6 +21,10 @@ public class InventoryBerries implements Serializable {
 	private Integer totalPlants;
 	private Boolean isQuantityInsurableInd;
 	private Boolean isPlantInsurableInd;
+	private String bogId;
+	private Date bogMowedDate;
+	private Date bogRenovatedDate;
+	private Boolean isHarvestedInd;
 
 	private String cropCommodityName;
 	private String cropVarietyName;
@@ -123,6 +128,38 @@ public class InventoryBerries implements Serializable {
 		this.isPlantInsurableInd = isPlantInsurableInd;
 	}
 
+	public String getBogId() {
+		return bogId;
+	}
+
+	public void setBogId(String bogId) {
+		this.bogId = bogId;
+	}
+
+	public Date getBogMowedDate() {
+		return bogMowedDate;
+	}
+
+	public void setBogMowedDate(Date bogMowedDate) {
+		this.bogMowedDate = bogMowedDate;
+	}
+
+	public Date getBogRenovatedDate() {
+		return bogRenovatedDate;
+	}
+
+	public void setBogRenovatedDate(Date bogRenovatedDate) {
+		this.bogRenovatedDate = bogRenovatedDate;
+	}
+
+	public Boolean getIsHarvestedInd() {
+		return isHarvestedInd;
+	}
+
+	public void setIsHarvestedInd(Boolean isHarvestedInd) {
+		this.isHarvestedInd = isHarvestedInd;
+	}
+	
 	public String getCropCommodityName() {
 		return cropCommodityName;
 	}

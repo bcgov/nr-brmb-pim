@@ -462,6 +462,10 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setTotalPlants(dto.getTotalPlants());
 		model.setIsQuantityInsurableInd(dto.getIsQuantityInsurableInd());
 		model.setIsPlantInsurableInd(dto.getIsPlantInsurableInd());
+		model.setBogId(dto.getBogId());
+		model.setBogMowedDate(dto.getBogMowedDate());
+		model.setBogRenovatedDate(dto.getBogRenovatedDate());
+		model.setIsHarvestedInd(dto.getIsHarvestedInd());
 
 		return model;
 	}
@@ -870,6 +874,10 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setTotalPlants(null);
 		model.setIsQuantityInsurableInd(null);
 		model.setIsPlantInsurableInd(null);
+		model.setBogId(null);
+		model.setBogMowedDate(null);
+		model.setBogRenovatedDate(null);
+		model.setIsHarvestedInd(false);
 
 		return model;
 	}
@@ -1053,6 +1061,10 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			dto.setTotalPlants(null);
 			dto.setIsQuantityInsurableInd(false);
 			dto.setIsPlantInsurableInd(false);
+			dto.setBogId(null);
+			dto.setBogMowedDate(null);
+			dto.setBogRenovatedDate(null);
+			dto.setIsHarvestedInd(false);
 
 		} else {		
 			dto.setCropCommodityId(model.getCropCommodityId());
@@ -1067,6 +1079,12 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			dto.setTotalPlants(model.getTotalPlants());
 			dto.setIsQuantityInsurableInd(model.getIsQuantityInsurableInd());
 			dto.setIsPlantInsurableInd(model.getIsPlantInsurableInd());
+			dto.setBogId(model.getBogId());
+			dto.setBogMowedDate(model.getBogMowedDate());
+			dto.setBogRenovatedDate(model.getBogRenovatedDate());
+			///Not all commodities use the flag and it might be not set
+			dto.setIsHarvestedInd(notNull(model.getIsHarvestedInd(), false));
+
 		}	
 	}
 	
@@ -1271,5 +1289,9 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 
 		return result;
 	}
-		
+
+	private Boolean notNull(Boolean value, Boolean defaultValue) {
+		return (value == null) ? defaultValue : value;
+	}
+
 }

@@ -269,6 +269,104 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 	}
 	
 	@Test
+	public void testInsertUpdateDeleteInventoryCranBerries() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
+		logger.debug("<testInsertUpdateDeleteInventoryCranBerries");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+
+		createGrower();
+		createPolicy(policyId1, policyNumber1, cropYear1);
+		createGrowerContractYear(gcyId1, cropYear1);
+
+		createLegalLand();
+		createField();
+		createAnnualFieldDetail(annualFieldDetailId1, cropYear1);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, gcyId1, false);
+		
+		UwContractRsrc referrer = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(referrer);
+		Assert.assertNull(referrer.getInventoryContractGuid());
+		
+		InventoryContractRsrc invContract = service.rolloverInventoryContract(referrer);
+		Assert.assertNotNull(invContract);
+		Assert.assertNotNull(invContract.getFields());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries());
+		
+		InventoryBerries newBerries = invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
+		Assert.assertNull("InventoryBerriesGuid", newBerries.getInventoryBerriesGuid());
+		Assert.assertNull("InventoryFieldGuid", newBerries.getInventoryFieldGuid());
+		Assert.assertNull("CropCommodityId", newBerries.getCropCommodityId());
+		Assert.assertNull("CropVarietyId", newBerries.getCropVarietyId());
+		Assert.assertNull("PlantInsurabilityTypeCode", newBerries.getPlantInsurabilityTypeCode());
+		Assert.assertNull("PlantedYear", newBerries.getPlantedYear());
+		Assert.assertNull("PlantedAcres", newBerries.getPlantedAcres());
+		Assert.assertNull("RowSpacing", newBerries.getRowSpacing());
+		Assert.assertNull("PlantSpacing", newBerries.getPlantSpacing());
+		Assert.assertNull("TotalPlants", newBerries.getTotalPlants());
+		Assert.assertNull("IsQuantityInsurableInd", newBerries.getIsQuantityInsurableInd());
+		Assert.assertNull("IsPlantInsurableInd", newBerries.getIsPlantInsurableInd());
+
+		newBerries.setCropCommodityId(11);
+		newBerries.setCropCommodityName("CRANBERRY");
+		newBerries.setCropVarietyId(1010720);
+		newBerries.setCropVarietyName("BERGMAN");
+		newBerries.setPlantInsurabilityTypeCode(null);
+		newBerries.setPlantedYear(2020);
+		newBerries.setPlantedAcres((double)100);
+		newBerries.setIsQuantityInsurableInd(true);
+		newBerries.setBogId("BogId");
+		newBerries.setBogMowedDate(getDate(2020, Calendar.JANUARY, 15));
+		newBerries.setBogRenovatedDate(getDate(2020, Calendar.JANUARY, 20));
+		newBerries.setIsHarvestedInd(true);
+
+		//Not used by Cranberries
+		newBerries.setRowSpacing(null);
+		newBerries.setPlantSpacing(null);
+		newBerries.setTotalPlants(0);
+		newBerries.setIsPlantInsurableInd(false);
+		
+
+		//Create inventory contract
+		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
+
+		InventoryBerries fetchedBerries = fetchedInvContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
+
+		checkInventoryBerries(newBerries, fetchedBerries, false, fetchedInvContract.getCropYear());
+
+		//Update
+		fetchedBerries.setCropVarietyId(1010721);
+		fetchedBerries.setCropVarietyName("PILGRIM");
+		fetchedBerries.setPlantedYear(2021);
+		fetchedBerries.setPlantedAcres((double)200);
+		fetchedBerries.setIsQuantityInsurableInd(false);
+		fetchedBerries.setBogId("BogId 2");
+		fetchedBerries.setBogMowedDate(getDate(2020, Calendar.FEBRUARY, 16));
+		fetchedBerries.setBogRenovatedDate(getDate(2020, Calendar.FEBRUARY, 21));
+		fetchedBerries.setIsHarvestedInd(false);
+
+		InventoryContractRsrc updatedInvContract = service.updateInventoryContract(fetchedInvContract.getInventoryContractGuid(), fetchedInvContract);
+
+		InventoryBerries updatedBerries = updatedInvContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
+
+		checkInventoryBerries(fetchedBerries, updatedBerries, false, updatedInvContract.getCropYear());
+		
+		delete();
+		
+		logger.debug(">testInsertUpdateDeleteInventoryCranBerries");
+	}	
+	
+	private Date getDate(int year, int month, int day) {
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(year, month, day);
+		return cal.getTime();
+	}
+	
+	@Test
 	public void testRolloverInventoryBerries() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
 		logger.debug("<testRolloverInventoryBerries");
 		
@@ -683,69 +781,6 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		return iccb;
 	}
 
-//	@Test
-//	public void testGenerateInventoryReport() throws CirrasUnderwritingServiceException, Oauth2ClientException {
-//		logger.debug("<testGenerateInventoryReport");
-//		
-//		if(skipTests) {
-//			logger.warn("Skipping tests");
-//			return;
-//		}
-//
-//		// Test 1: Generate Forage report.
-//		byte[] reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "5", null, null, null, null, null, null, null);
-//		
-//		Assert.assertNotNull(reportContent);
-//		
-//		logger.debug(">testGenerateInventoryReport - Returned " + reportContent.length + " bytes");	
-//
-//		// Test 2: Generate Grain Unseeded report
-//		reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "4", null, null, null, null, null, null, InventoryReportType.unseeded.name());
-//		
-//		Assert.assertNotNull(reportContent);
-//		
-//		logger.debug(">testGenerateInventoryReport - Returned " + reportContent.length + " bytes");	
-//
-//		// Test 3: Generate Grain Seeded report
-//		reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "4", null, null, null, null, null, null, InventoryReportType.seeded.name());
-//		
-//		Assert.assertNotNull(reportContent);
-//		
-//		logger.debug(">testGenerateInventoryReport - Returned " + reportContent.length + " bytes");
-//		
-//		// Test 4: Omit Insurance Plan: Report generation should fail.
-//		try {
-//			reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", null, null, null, null, null, null, null, null);
-//			Assert.fail("Report generated for missing insurance plan id ");
-//		} catch ( CirrasUnderwritingServiceException e ) {
-//			// Ok.
-//		}
-//
-//		// Test 5: Invalid Insurance Plan: Report generation should fail.
-//		try {
-//			reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "2", null, null, null, null, null, null, null);
-//			Assert.fail("Report generated for invalid insurance plan id ");
-//		} catch ( CirrasUnderwritingServiceException e ) {
-//			// Ok.
-//		}
-//
-//		// Test 6: Omit Report Type for GRAIN: Report generation should fail.
-//		try {
-//			reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "4", null, null, null, null, null, null, null);
-//			Assert.fail("Report generated for omitted report type");
-//		} catch ( CirrasUnderwritingServiceException e ) {
-//			// Ok.
-//		}
-//	
-//		// Test 7: Invalid Report Type for GRAIN: Report generation should fail.
-//		try {
-//			reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "4", null, null, null, null, null, null, "nosuchtype");
-//			Assert.fail("Report generated for invalid report type");
-//		} catch ( CirrasUnderwritingServiceException e ) {
-//			// Ok.
-//		}
-//	}	
-	
 	private UwContractRsrc getUwContract(String policyNumber,
 			CirrasUnderwritingService service, 
 			EndpointsRsrc topLevelEndpoints) throws CirrasUnderwritingServiceException {

@@ -688,6 +688,7 @@ public class InventoryContractDaoTest {
 		newDto.setIsPlantInsurableInd(false);
 		newDto.setCropCommodityId(cropCommodityId);
 		newDto.setCropCommodityName(cropName);
+		newDto.setIsHarvestedInd(true);
 		
 		inventoryBerriesDao.insert(newDto, userId);
 	}
