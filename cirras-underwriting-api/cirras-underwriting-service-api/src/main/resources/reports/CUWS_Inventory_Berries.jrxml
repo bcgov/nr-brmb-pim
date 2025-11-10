@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_Inventory_Berries" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dae8acde-d8f2-47e4-9e95-8f4ccdfb0fc5">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_Inventory_Berries" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dae8acde-d8f2-47e4-9e95-8f4ccdfb0fc5">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="p_crop_year" class="java.lang.Integer"/>
@@ -998,4 +998,21 @@ order by sort_column,
 			</textField>
 		</band>
 	</pageFooter>
+	<noData>
+		<band height="30">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="99" y="5" width="350" height="25" uuid="d1db5f37-d567-42ee-8eb9-02dbebaed696">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No visible plantings to print]]></text>
+			</staticText>
+		</band>
+	</noData>
 </jasperReport>
