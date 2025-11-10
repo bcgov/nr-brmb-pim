@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
 	<artifactId>cirras-underwriting-war-parent</artifactId>
-	<version>3.9.0-SNAPSHOT</version>
+	<version>3.9.0</version>
 	<packaging>pom</packaging>
 	<name>cirras-underwriting-war-parent</name>
 	<modules>
