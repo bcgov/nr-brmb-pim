@@ -28,6 +28,29 @@
             <mat-checkbox formControlName="isQuantityInsurableInd" (change)="updateIsQuantityInsurableInd()"></mat-checkbox>
         </div>
 
+        <!-- cranberry specific -->
+        <div *ngIf="isCranberry()" class="inventory-fill inventory-border-right" style="width: 100px;">
+            <mat-form-field appearance="fill">
+                <input matInput formControlName="bogMowedDate"                                                             
+                    (blur)="updateBogMowedDate()"
+                    maxlength="5">
+            </mat-form-field>
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Planted Acres is writeable">edit</mat-icon>
+        </div>
+
+        <div *ngIf="isCranberry()" class="inventory-fill inventory-border-right" style="width: 100px;">
+            <mat-form-field appearance="fill">
+                <input matInput formControlName="bogRenovatedDate"                                                             
+                    (blur)="updateBogRenovatedDate()"
+                    maxlength="5">
+            </mat-form-field>
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Planted Acres is writeable">edit</mat-icon>
+        </div>
+        <div *ngIf="isCranberry()" class="inventory-fill inventory-border-right" style="width: 100px;">
+            <mat-checkbox formControlName="isHarvestedInd" (change)="updateIsHarvestedInd()"></mat-checkbox>
+        </div>
+        <!-- end cranberry specific -->
+
         <!-- variety -->
         <div class="inventory-fill inventory-border-right" style="width:180px;">
 

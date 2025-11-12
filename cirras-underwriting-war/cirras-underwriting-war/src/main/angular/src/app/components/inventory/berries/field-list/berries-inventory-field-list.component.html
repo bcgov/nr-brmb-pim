@@ -3,9 +3,14 @@
     <div class="inventory-header" style="width:280px;">Field Address</div>
     <div class="inventory-header" style="width:140px">Legal Description</div>
     <div class="inventory-header" style="width:80px">Is Leased</div>
+    <div *ngIf="isCranberry()" class="inventory-header" style="width:100px">Bog I.D.</div>
+    <div *ngIf="isCranberry()" class="inventory-header" style="width:150px">Bog Name</div>
     <div class="inventory-header" style="width:80px">Planted <br /> Year</div>
     <div class="inventory-header" style="width:100px">Acres</div>
     <div class="inventory-header" style="width:80px">Quantity <br />Insurable</div>
+    <div *ngIf="isCranberry()" class="inventory-header" style="width:100px">MM/YY Bogs Mowed</div>
+    <div *ngIf="isCranberry()" class="inventory-header" style="width:100px">MM/YY Bogs Renovated</div>
+    <div *ngIf="isCranberry()" class="inventory-header" style="width:100px">Harvested In {{ getCropYear() }} (Y/N)</div>
     <div class="inventory-header" style="width:180px">Variety</div>
     <div *ngIf="showRowSpacing()" class="inventory-header" style="width:80px">Row <br/>Spacing</div>  
     <div *ngIf="showPlantSpacing()" class="inventory-header" style="width:80px">Plant <br/> Spacing</div>
