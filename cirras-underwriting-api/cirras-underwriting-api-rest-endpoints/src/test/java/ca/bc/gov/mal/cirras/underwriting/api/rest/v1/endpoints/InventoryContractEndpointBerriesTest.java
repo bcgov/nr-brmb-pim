@@ -407,6 +407,10 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNull("TotalPlants", newBerries.getTotalPlants());
 		Assert.assertNull("IsQuantityInsurableInd", newBerries.getIsQuantityInsurableInd());
 		Assert.assertNull("IsPlantInsurableInd", newBerries.getIsPlantInsurableInd());
+		Assert.assertNull("BogId", newBerries.getBogId());
+		Assert.assertNull("BogMowedDate", newBerries.getBogMowedDate());
+		Assert.assertNull("BogRenovatedDate", newBerries.getBogRenovatedDate());
+		Assert.assertFalse("IsHarvestedInd", newBerries.getIsHarvestedInd());
 		//Check field data
 		AnnualFieldRsrc field = invContract.getFields().get(0);
 		Assert.assertEquals("FieldLocation", fieldLocation, field.getFieldLocation());
@@ -423,6 +427,10 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		newBerries.setTotalPlants(calculateTotalPlants(newBerries));
 		newBerries.setIsQuantityInsurableInd(true);
 		newBerries.setIsPlantInsurableInd(false);
+		newBerries.setBogId("BogId");
+		newBerries.setBogMowedDate(getDate(2020, Calendar.JANUARY, 15));
+		newBerries.setBogRenovatedDate(getDate(2020, Calendar.JANUARY, 20));
+		newBerries.setIsHarvestedInd(true);
 
 		//Create inventory contract
 		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
@@ -884,6 +892,11 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertEquals("IsQuantityInsurableInd", expected.getIsQuantityInsurableInd(), actual.getIsQuantityInsurableInd());
 		Assert.assertEquals("CropCommodityName", expected.getCropCommodityName(), actual.getCropCommodityName());
 		Assert.assertEquals("CropVarietyName", expected.getCropVarietyName(), actual.getCropVarietyName());
+		Assert.assertEquals("BogId", expected.getBogId(), actual.getBogId());
+		Assert.assertEquals("BogMowedDate", expected.getBogMowedDate(), actual.getBogMowedDate());
+		Assert.assertEquals("BogRenovatedDate", expected.getBogRenovatedDate(), actual.getBogRenovatedDate());
+		Assert.assertEquals("IsHarvestedInd", expected.getIsHarvestedInd(), actual.getIsHarvestedInd());
+
 
 	}
 
