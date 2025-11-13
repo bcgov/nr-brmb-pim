@@ -807,14 +807,11 @@ order by sort_column,
 				<subreportParameter name="p_contract_id">
 					<subreportParameterExpression><![CDATA[$F{contract_id}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="p_commodity_name">
-					<subreportParameterExpression><![CDATA["CRANBERRY"]]></subreportParameterExpression>
-				</subreportParameter>
 				<subreportParameter name="p_show_header_ind">
 					<subreportParameterExpression><![CDATA["Y"]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Plantings.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Plantings_Cran.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
 				<reportElement positionType="Float" x="0" y="385" width="555" height="75" isRemoveLineWhenBlank="true" uuid="a75a0592-1c1e-46c0-a5dd-37448f4070b8">
