@@ -725,6 +725,10 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setTotalPlants(dto.getTotalPlants());
 		model.setIsQuantityInsurableInd(dto.getIsQuantityInsurableInd());
 		model.setIsPlantInsurableInd(dto.getIsPlantInsurableInd());
+		model.setBogId(dto.getBogId());
+		model.setBogMowedDate(dto.getBogMowedDate());
+		model.setBogRenovatedDate(dto.getBogRenovatedDate());
+		model.setIsHarvestedInd(dto.getIsHarvestedInd());
 
 		return model;
 	}
