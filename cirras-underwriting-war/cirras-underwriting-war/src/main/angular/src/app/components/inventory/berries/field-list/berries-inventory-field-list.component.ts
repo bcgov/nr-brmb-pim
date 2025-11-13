@@ -5,28 +5,31 @@ import { BERRY_COMMODITY } from 'src/app/utils/constants';
 
 
 export function showRowSpacingForBerries(cmdty) {
-  if (cmdty == BERRY_COMMODITY.Raspberry || cmdty == BERRY_COMMODITY.Strawberry) {
+  if (cmdty == BERRY_COMMODITY.Blueberry) {
+    return true
+  } else {
     return false
   }
-  return true
 }
 
 export function showPlantSpacingForBerries(cmdty) {
-  if (cmdty == BERRY_COMMODITY.Raspberry || cmdty == BERRY_COMMODITY.Strawberry) {
+  if (cmdty == BERRY_COMMODITY.Blueberry) {
+    return true
+  } else {
     return false
   }
-  return true
 }
 
 export function showTotalPlantsForBerries(cmdty) {
-  if (cmdty == BERRY_COMMODITY.Raspberry || cmdty == BERRY_COMMODITY.Strawberry) {
+  if (cmdty == BERRY_COMMODITY.Blueberry) {
+    return true
+  } else {
     return false
   }
-  return true
 }
 
 export function showIsPlantInsuredForBerries(cmdty) {
-  if (cmdty == BERRY_COMMODITY.Raspberry) {
+  if (cmdty == BERRY_COMMODITY.Raspberry || cmdty == BERRY_COMMODITY.Cranberry) {
     return false
   }
   return true
@@ -50,6 +53,13 @@ export function setTableHeaderStyleForBerries(cmdty) {
       'width': `1340px`
     };
   }
+
+  if (cmdty == BERRY_COMMODITY.Cranberry) {
+    return {
+      'width': `1750px`
+    };
+  }
+
 }
 
 @Component({
@@ -88,6 +98,13 @@ export class BerriesInventoryFieldListComponent  {
           'width': `1355px` 
       };
     }  
+
+    if (this.selectedCommodity == BERRY_COMMODITY.Cranberry) {
+      return {
+          'width': `1765px` 
+      };
+    }  
+
   }
 
   showRowSpacing() {
@@ -106,7 +123,15 @@ export class BerriesInventoryFieldListComponent  {
     return showIsPlantInsuredForBerries(this.selectedCommodity)
   }
 
-    setPlantInsuredStyles() {
+  isCranberry() {
+    if(this.selectedCommodity == BERRY_COMMODITY.Cranberry ) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  setPlantInsuredStyles() {
     if(this.selectedCommodity == BERRY_COMMODITY.Strawberry ) {
       return {
         'width': `140px`
@@ -115,6 +140,15 @@ export class BerriesInventoryFieldListComponent  {
       return {
         'width': `80px`
       };
+    }
+  }
+
+  getCropYear() {
+    
+    if (this.fields && this.fields.length > 0 ) {
+      return this.fields[0].cropYear
+    } else {
+      return ""
     }
   }
 }

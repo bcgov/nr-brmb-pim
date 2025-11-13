@@ -188,6 +188,22 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }
 
+  updateBogMowedDate() {
+    // TODO validate and turn into date
+    //this.inventoryBerry.isPlantInsurableInd = this.inventoryBerriesFormGroup.value.bogMowedDate
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+
+  }
+
+  updateBogRenovatedDate() {
+    // TODO validate and turn into date
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+  }
+
+  updateIsHarvestedInd() {
+    this.inventoryBerry.isHarvestedInd = this.inventoryBerriesFormGroup.value.isHarvestedInd
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+  }
 
   onDeletePlanting() {
 
@@ -251,4 +267,13 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
       };
     }
   }
+
+  isCranberry() {
+    if(this.selectedCommodity == BERRY_COMMODITY.Cranberry ) {
+      return true
+    } else {
+      return false
+    }
+  }
+
 }

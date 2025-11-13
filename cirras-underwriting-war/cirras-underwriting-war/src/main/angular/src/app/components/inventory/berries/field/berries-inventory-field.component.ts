@@ -114,10 +114,37 @@ export class BerriesInventoryFieldComponent implements OnChanges{
           'width': `650px`
       };
     }
+
+    if (this.selectedCommodity == BERRY_COMMODITY.Cranberry ) {
+      return {
+          'display': 'grid',
+          'align-items': 'stretch',
+          'width': `810px`
+      };
+    }
+
   }
 
   updateFieldLocation() {
     this.field.fieldLocation = this.fieldFormGroup.value.fieldLocation
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+  }
+
+  updateBogId() {
+    // find all cranberry plantings for this field and update their bogId
+    if (this.field.plantings && this.field.plantings.length > 0) {
+      for (let i = 0; i < this.field.plantings.length; i++ ) {
+
+        if (this.field.plantings[i].inventoryBerries && this.field.plantings[i].inventoryBerries.cropCommodityId == BERRY_COMMODITY.Cranberry) {
+          this.field.plantings[i].inventoryBerries.bogId = this.fieldFormGroup.value.bogId
+        }
+      }
+    }
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+  }
+
+  updateFieldLabel() {
+    this.field.fieldLabel = this.fieldFormGroup.value.fieldLabel
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }
 
@@ -196,6 +223,14 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     } else {
       this.isFieldHiddenOnPrintout = false // at least one planting is not hidden
     } 
+  }
+
+  isCranberry() {
+    if(this.selectedCommodity == BERRY_COMMODITY.Cranberry ) {
+      return true
+    } else {
+      return false
+    }
   }
 
 }
