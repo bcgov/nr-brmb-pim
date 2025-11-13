@@ -238,7 +238,7 @@ WHERE
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Uninsured Acres"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_commodity_name}.equals("CRANBERRY") ? "Total Nonproducing Acres" : "Uninsured Acres"]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="250" y="0" width="40" height="15" uuid="ba2b838c-f8e4-428d-abfa-c401df02e663">
@@ -592,7 +592,7 @@ WHERE
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["TOTAL INSURED " + $F{commodity_name} + " ACRES"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_commodity_name}.equals("CRANBERRY") ? "Total Harvestable Acres" : "TOTAL INSURED " + $F{commodity_name} + " ACRES"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="250" y="60" width="40" height="15" uuid="0e9245f5-739a-48f0-81cc-6afec5d93d72">
