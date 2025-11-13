@@ -626,10 +626,10 @@ order by sort_column,
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="460" splitType="Immediate">
+		<band height="160" splitType="Immediate">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="0" width="555" height="30" isRemoveLineWhenBlank="true" uuid="c9707c9c-690b-4eb4-918f-8370d4157aae">
+				<reportElement positionType="Float" x="0" y="0" width="555" height="15" isRemoveLineWhenBlank="true" uuid="c9707c9c-690b-4eb4-918f-8370d4157aae">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -651,10 +651,11 @@ order by sort_column,
 				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Plantings.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="30" width="555" height="75" isRemoveLineWhenBlank="true" uuid="c10c4933-19b3-4288-986d-1af8cef55708">
+				<reportElement positionType="Float" x="0" y="15" width="555" height="15" isRemoveLineWhenBlank="true" uuid="c10c4933-19b3-4288-986d-1af8cef55708">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[$F{total_blueberry_plantings} > 0]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="p_crop_year">
@@ -676,10 +677,11 @@ order by sort_column,
 				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Totals.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="105" width="555" height="30" isRemoveLineWhenBlank="true" uuid="695803e3-1259-4f0f-9abb-8b6bed09e31d">
+				<reportElement positionType="Float" x="0" y="30" width="555" height="15" isRemoveLineWhenBlank="true" uuid="695803e3-1259-4f0f-9abb-8b6bed09e31d">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[$F{total_raspberry_plantings} > 0]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="p_crop_year">
@@ -698,10 +700,11 @@ order by sort_column,
 				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Plantings.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="135" width="555" height="75" isRemoveLineWhenBlank="true" uuid="4afd68db-7494-4ee1-939e-09d0cd69ab87">
+				<reportElement positionType="Float" x="0" y="45" width="555" height="15" isRemoveLineWhenBlank="true" uuid="4afd68db-7494-4ee1-939e-09d0cd69ab87">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[$F{total_raspberry_plantings} > 0]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="p_crop_year">
@@ -723,10 +726,11 @@ order by sort_column,
 				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Totals.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="210" width="555" height="30" isRemoveLineWhenBlank="true" uuid="41954f59-cb62-4107-9d4c-e2cf332520f4">
+				<reportElement positionType="Float" x="0" y="60" width="555" height="15" isRemoveLineWhenBlank="true" uuid="41954f59-cb62-4107-9d4c-e2cf332520f4">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[$F{total_strawberry_plantings} > 0]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="p_crop_year">
@@ -745,10 +749,11 @@ order by sort_column,
 				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Plantings.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="240" width="555" height="75" isRemoveLineWhenBlank="true" uuid="bf9525ca-c910-487d-ad90-3dc6c32d0431">
+				<reportElement positionType="Float" x="0" y="75" width="555" height="15" isRemoveLineWhenBlank="true" uuid="bf9525ca-c910-487d-ad90-3dc6c32d0431">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[$F{total_strawberry_plantings} > 0]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="p_crop_year">
@@ -770,7 +775,7 @@ order by sort_column,
 				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Totals.jasper"]]></subreportExpression>
 			</subreport>
 			<frame>
-				<reportElement positionType="Float" x="0" y="315" width="555" height="20" isRemoveLineWhenBlank="true" uuid="c9d674d3-c4ce-4257-9af9-9d16fda53f33">
+				<reportElement positionType="Float" x="0" y="90" width="555" height="20" isRemoveLineWhenBlank="true" uuid="c9d674d3-c4ce-4257-9af9-9d16fda53f33">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -779,7 +784,7 @@ order by sort_column,
 				</reportElement>
 			</frame>
 			<staticText>
-				<reportElement positionType="Float" x="0" y="335" width="70" height="20" isRemoveLineWhenBlank="true" uuid="d71de549-5c9d-4e0b-9eba-961b3a1d37fe">
+				<reportElement positionType="Float" x="0" y="110" width="70" height="20" isRemoveLineWhenBlank="true" uuid="d71de549-5c9d-4e0b-9eba-961b3a1d37fe">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -794,7 +799,7 @@ order by sort_column,
 				<text><![CDATA[Cranberry]]></text>
 			</staticText>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="355" width="555" height="30" isRemoveLineWhenBlank="true" uuid="56e4bd0c-0232-45ce-9bfe-91e2328f242b">
+				<reportElement positionType="Float" x="0" y="130" width="555" height="15" isRemoveLineWhenBlank="true" uuid="56e4bd0c-0232-45ce-9bfe-91e2328f242b">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -814,7 +819,7 @@ order by sort_column,
 				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Plantings_Cran.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="385" width="555" height="75" isRemoveLineWhenBlank="true" uuid="a75a0592-1c1e-46c0-a5dd-37448f4070b8">
+				<reportElement positionType="Float" x="0" y="145" width="555" height="15" isRemoveLineWhenBlank="true" uuid="a75a0592-1c1e-46c0-a5dd-37448f4070b8">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
