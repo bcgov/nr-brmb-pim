@@ -40,6 +40,7 @@ public class AnnualFieldListEndpointImpl extends BaseEndpointsImpl implements An
 	public Response getAnnualFieldList(
 			String legalLandId,
 			String fieldId,
+			String fieldLocation,
 			String cropYear) {
 		
 		Response response = null;
@@ -55,6 +56,7 @@ public class AnnualFieldListEndpointImpl extends BaseEndpointsImpl implements An
 			AnnualFieldListRsrc results = (AnnualFieldListRsrc) cirrasUnderwritingService.getAnnualFieldForLegalLandList(
 					toInteger(legalLandId),
 					toInteger(fieldId),
+					fieldLocation,
 					toInteger(cropYear),
 					getFactoryContext(), 
 					getWebAdeAuthentication());

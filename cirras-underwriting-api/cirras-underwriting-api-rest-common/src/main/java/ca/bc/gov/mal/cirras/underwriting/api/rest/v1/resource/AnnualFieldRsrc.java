@@ -39,6 +39,7 @@ public class AnnualFieldRsrc extends BaseResource implements AnnualField {
 	private Boolean isLeasedInd;
 	private String landUpdateType;
 	private Integer transferFromGrowerContractYearId;
+	private String associatedPropertyIdentifiers;
 
 	private List<InventoryField> plantings = new ArrayList<InventoryField>();
 
@@ -151,6 +152,14 @@ public class AnnualFieldRsrc extends BaseResource implements AnnualField {
 	@Override
 	public void setTransferFromGrowerContractYearId(Integer transferFromGrowerContractYearId) {
 		this.transferFromGrowerContractYearId = transferFromGrowerContractYearId;
+	}
+	
+	public String getAssociatedPropertyIdentifiers() {
+		return associatedPropertyIdentifiers;
+	}
+
+	public void setAssociatedPropertyIdentifiers(String associatedPropertyIdentifiers) {
+		this.associatedPropertyIdentifiers = associatedPropertyIdentifiers;
 	}
 	
 	public List<InventoryField> getPlantings() {

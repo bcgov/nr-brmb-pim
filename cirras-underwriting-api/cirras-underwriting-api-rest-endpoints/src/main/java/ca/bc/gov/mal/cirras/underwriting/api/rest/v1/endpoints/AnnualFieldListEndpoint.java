@@ -50,6 +50,7 @@ public interface AnnualFieldListEndpoint extends BaseEndpoints {
 	Response getAnnualFieldList(
 			@Parameter(description = "Filter the results by the legal land id") @QueryParam("legalLandId") String legalLandId,
 			@Parameter(description = "Filter the results by the field id") @QueryParam("fieldId") String fieldId,
+			@Parameter(description = "Filter the results by the field location") @QueryParam("fieldLocation") String fieldLocation,
 			@Parameter(description = "Crop year of the policy") @QueryParam("cropYear") String cropYear
 	);
 	

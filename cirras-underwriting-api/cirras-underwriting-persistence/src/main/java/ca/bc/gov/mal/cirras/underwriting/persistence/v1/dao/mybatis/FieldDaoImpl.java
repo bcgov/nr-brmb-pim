@@ -157,15 +157,20 @@ public class FieldDaoImpl extends BaseDao implements FieldDao {
 	}
 
 	@Override
-	public List<FieldDto> selectForLegalLandOrField(Integer legalLandId, Integer fieldId, Integer cropYear) throws DaoException {
+	public List<FieldDto> selectForLegalLandOrField(Integer legalLandId, Integer fieldId, String fieldLocation, Integer cropYear) throws DaoException {
 		List<FieldDto> dtos = null;
 
 		try {
 
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			
+			if ( fieldLocation != null ) {
+				fieldLocation = fieldLocation.toUpperCase() + "%";
+			}
+			
 			parameters.put("legalLandId", legalLandId);
 			parameters.put("fieldId", fieldId);
+			parameters.put("fieldLocation", fieldLocation);
 			parameters.put("cropYear", cropYear);
 						
 			dtos = this.mapper.selectForLegalLandOrField(parameters);

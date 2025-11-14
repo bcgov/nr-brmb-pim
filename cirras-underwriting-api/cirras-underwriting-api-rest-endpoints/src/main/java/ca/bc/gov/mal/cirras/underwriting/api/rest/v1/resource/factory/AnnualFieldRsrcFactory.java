@@ -27,6 +27,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualFieldList;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.PolicySimple;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.AnnualFieldFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
@@ -67,6 +68,20 @@ public class AnnualFieldRsrcFactory extends BaseResourceFactory implements Annua
 				}
 
 				resource.setPolicies(policies);
+			}
+			
+			//Associated Legal Land
+			if (!dto.getAssociatedLegalLand().isEmpty()) {
+				//List<PolicySimple> policies = new ArrayList<PolicySimple>();
+				String associatedPropertyIdentifiers = "";
+				String comma = "";
+
+				for (LegalLandDto llDto : dto.getAssociatedLegalLand()) {
+					associatedPropertyIdentifiers = comma + llDto.getPrimaryPropertyIdentifier(); 
+					comma = ", ";
+				}
+
+				resource.setAssociatedPropertyIdentifiers(associatedPropertyIdentifiers);
 			}
 			
 			setLinks(resource, baseUri, authentication);
@@ -118,6 +133,7 @@ public class AnnualFieldRsrcFactory extends BaseResourceFactory implements Annua
 		resource.setFieldLocation(dto.getLocation());
 		resource.setOtherLegalDescription(dto.getOtherLegalDescription());
 		resource.setLegalLandId(dto.getLegalLandId());
+		resource.setPrimaryPropertyIdentifier(dto.getPrimaryPropertyIdentifier());
 	}
 
 	static void populateResource(AnnualFieldRsrc resource, ContractedFieldDetailDto dto) {

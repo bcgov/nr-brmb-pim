@@ -51,6 +51,7 @@ public class AnnualFieldListEndpointTest extends EndpointsTest {
 				topLevelEndpoints, 
 				legalLandId.toString(), 
 				null,
+				null,
 				cropYear);
 
 		Assert.assertNotNull(searchResults);
@@ -89,6 +90,7 @@ public class AnnualFieldListEndpointTest extends EndpointsTest {
 				topLevelEndpoints, 
 				null,
 				fieldId,
+				null,
 				cropYear);
 
 		Assert.assertNotNull(searchResults);
