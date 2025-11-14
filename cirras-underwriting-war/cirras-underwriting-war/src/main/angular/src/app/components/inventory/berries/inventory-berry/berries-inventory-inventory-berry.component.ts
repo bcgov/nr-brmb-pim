@@ -69,18 +69,15 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     //     this.inventoryBerry.cropCommodityId = this.selectedCommodity  
     // }
 
-    // it would be nice if isQuantityInsurableInd, isPlantInsurableInd and deletedByUserInd come as false instead of null from the backend but they don't
+    // deletedByUserInd should be false by default
     if (this.inventoryBerry.deletedByUserInd == null) {
         this.inventoryBerry.deletedByUserInd = false  
     }
 
-    // set commodity specific default values
-    if (this.selectedCommodity == BERRY_COMMODITY.Blueberry || this.selectedCommodity == BERRY_COMMODITY.Raspberry) {
-      // make IsQuantityInsurableInd checked by default
-      if (this.inventoryBerry.isQuantityInsurableInd == null) {
-        this.inventoryBerry.isQuantityInsurableInd = true
-        this.inventoryBerriesFormGroup.controls['isQuantityInsurableInd'].setValue(true)
-      }
+    // make IsQuantityInsurableInd checked by default for all commodities
+    if (this.inventoryBerry.isQuantityInsurableInd == null) {
+      this.inventoryBerry.isQuantityInsurableInd = true
+      this.inventoryBerriesFormGroup.controls['isQuantityInsurableInd'].setValue(true)
     }
 
     if (this.selectedCommodity == BERRY_COMMODITY.Blueberry) {
@@ -89,11 +86,20 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
         this.inventoryBerry.isPlantInsurableInd = true
         this.inventoryBerriesFormGroup.controls['isPlantInsurableInd'].setValue(true)
       }
-    } else { 
-      if (this.inventoryBerry.isPlantInsurableInd == null) {
+    }
+
+    // for Strawberries the default value for isPlantInsurableInd is false 
+    if (this.selectedCommodity == BERRY_COMMODITY.Strawberry) { 
+      if (this.inventoryBerry.plantInsurabilityTypeCode == null) {
         this.inventoryBerry.isPlantInsurableInd = false
         this.inventoryBerriesFormGroup.controls['isPlantInsurableInd'].setValue(false)
       }
+    }
+
+    // isPlantInsurableInd is always false for Raspberry and Cranberry
+    if (this.selectedCommodity == BERRY_COMMODITY.Raspberry || this.selectedCommodity == BERRY_COMMODITY.Cranberry) {
+      this.inventoryBerry.isPlantInsurableInd = false
+      this.inventoryBerriesFormGroup.controls['isPlantInsurableInd'].setValue(false)
     }
   }
 
@@ -189,20 +195,86 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
   }
 
   updateBogMowedDate() {
-    // TODO validate and turn into date
-    //this.inventoryBerry.isPlantInsurableInd = this.inventoryBerriesFormGroup.value.bogMowedDate
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
 
+    let bogMowedDate = this.inventoryBerriesFormGroup.value.bogMowedDate
+
+    if (!this.isValidMMYY(bogMowedDate)) {
+      alert("Bog Mowed is not valid")
+      this.inventoryBerriesFormGroup.controls.bogMowedDate.setValue(null) 
+    } else {
+      this.inventoryBerry.bogMowedDate = this.convertMMYYToDateString(bogMowedDate)
+    }    
   }
 
   updateBogRenovatedDate() {
-    // TODO validate and turn into date
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+
+    let bogRenovatedDate = this.inventoryBerriesFormGroup.value.bogRenovatedDate
+
+    if (!this.isValidMMYY(bogRenovatedDate)) {
+      alert("Bog Renovated is not valid")
+      this.inventoryBerriesFormGroup.controls.bogRenovatedDate.setValue(null)
+    } else {
+      this.inventoryBerry.bogRenovatedDate = this.convertMMYYToDateString(bogRenovatedDate)
+    }    
   }
 
   updateIsHarvestedInd() {
     this.inventoryBerry.isHarvestedInd = this.inventoryBerriesFormGroup.value.isHarvestedInd
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+  }
+
+  isValidMMYY(dateString) {
+    if (!dateString) {
+      return true
+    }
+
+    // Regex: ^ asserts start of string.
+    // (\d{2}) matches exactly two digits for MM.
+    // \/ matches the literal slash character.
+    // (\d{2}) matches exactly two digits for YY.
+    // $ asserts end of string.
+    const regex = /^(\d{2})\/(\d{2})$/;
+
+    if (!regex.test(dateString)) {
+      return false; // Does not match the MM/YY format
+    }
+
+    // Extract month and year from the matched groups
+    const parts = dateString.match(regex);
+    const month = parseInt(parts[1], 10);
+
+    // Validate month (1-12)
+    if (month < 1 || month > 12) {
+      return false;
+    }
+    return true;
+  }
+
+  convertMMYYToDateString(dateString){
+    if (!dateString) {
+      return null
+    }
+
+    const regex = /^(\d{2})\/(\d{2})$/;
+    const parts = dateString.match(regex);
+    let  month = parseInt(parts[1], 10);
+    const year = parseInt(parts[2], 10); 
+
+    // if the year is bigger than 80 then it's from the last century 
+    let fullYear;
+    if (year >= 80) {
+        fullYear = 1900 + year;
+    } else {
+        fullYear = 2000 + year;
+    }
+
+    if (month < 10) {
+      return fullYear + "-0" + month + "-02" // I deliberately chose the second day of the month - to account for PACIFIC Time zone. Otherwise the api returns the date as in prevous month 
+    } else {
+      return fullYear + "-" + month + "-02"
+    }    
   }
 
   onDeletePlanting() {
@@ -217,7 +289,11 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
       this.inventoryBerry.plantSpacing = null
       this.inventoryBerry.isPlantInsurableInd = false
       this.inventoryBerry.totalPlants = null
-      
+      this.inventoryBerry.plantInsurabilityTypeCode = null
+      this.inventoryBerry.bogMowedDate = null
+      this.inventoryBerry.bogRenovatedDate = null
+      this.inventoryBerry.isHarvestedInd = false
+
       this.inventoryBerriesFormGroup.controls['plantedYear'].setValue(null)
       this.inventoryBerriesFormGroup.controls['plantedAcres'].setValue(null)
       this.inventoryBerriesFormGroup.controls['isQuantityInsurableInd'].setValue(false)
@@ -229,6 +305,10 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
       this.inventoryBerriesFormGroup.controls['rowSpacing'].setValue(null)
       this.inventoryBerriesFormGroup.controls['plantSpacing'].setValue(null)
       this.inventoryBerriesFormGroup.controls['isPlantInsurableInd'].setValue(false)
+      this.inventoryBerriesFormGroup.controls['plantInsurabilityTypeCode'].setValue(null)
+      this.inventoryBerriesFormGroup.controls['bogMowedDate'].setValue(null)
+      this.inventoryBerriesFormGroup.controls['bogRenovatedDate'].setValue(null)
+      this.inventoryBerriesFormGroup.controls['isHarvestedInd'].setValue(false)
 
     } else {
       // mark for deletion

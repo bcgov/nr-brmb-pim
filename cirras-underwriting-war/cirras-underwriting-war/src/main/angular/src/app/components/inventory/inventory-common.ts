@@ -810,8 +810,19 @@ export function addBerriesObject(inventoryFieldGuid, inventoryBerries: Inventory
   }
 }
 
-export function getMonthAndYear(myDate) {
-  return myDate.getMonth() + "/" + myDate.getYear()
+export function getMonthAndYear(myDateStr) {
+
+  let myDate  = new Date(myDateStr)
+
+  let month = (myDate.getMonth() + 1).toString()
+
+  if (month.length < 2 ){
+    month = "0" + month
+  }
+
+  let year = ((myDate.getFullYear()).toString()).slice(-2)
+
+  return month + "/" + year
 }
 
 export function getDefaultInventoryBerries(inventoryBerriesGuid, inventoryFieldGuid, selectedCommodity) {
@@ -827,6 +838,11 @@ export function getDefaultInventoryBerries(inventoryBerriesGuid, inventoryFieldG
         totalPlants: null,
         isQuantityInsurableInd: false,
         isPlantInsurableInd: false,
+        plantInsurabilityTypeCode: null,
+        // bogId is in the AnnualField object in the ui
+        bogMowedDate:    null,
+        bogRenovatedDate: null,
+        isHarvestedInd:  false, 
         cropCommodityName: null,
         cropVarietyName: null,
         deletedByUserInd: false

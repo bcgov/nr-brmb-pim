@@ -224,6 +224,9 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     let plantSpacing = planting.inventoryBerries.plantSpacing
     let isQuantityInsurableInd = planting.inventoryBerries.isQuantityInsurableInd
     let isPlantInsurableInd = planting.inventoryBerries.isPlantInsurableInd
+    let bogMowedDate = planting.inventoryBerries.bogMowedDate  // optional
+    let bogRenovatedDate = planting.inventoryBerries.bogRenovatedDate // optional
+    let isHarvestedInd = planting.inventoryBerries.isHarvestedInd
 
     // All user entered fields are mandatory: if at least one field has a value or one of the checkboxes is checked then all should have a value
     let message = "Partial data entry is not accepted. Please fill in all values for field ID " + fieldId + " or none of them."
@@ -259,6 +262,44 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       }
 
       if ( isQuantityInsurableInd && (!plantedAcres || !plantedYear || !variety ) ) {
+        alert(message)
+        return true
+      }
+    }
+
+    // Strawberry
+    if (this.selectedCommodity == BERRY_COMMODITY.Strawberry) {
+      if (plantedYear && (!plantedAcres || !variety) ) {
+        alert(message)
+        return true
+      }
+
+      if (!plantedYear && (plantedAcres || variety ) ) {
+        alert(message)
+        return true
+      }
+
+      if ( (isQuantityInsurableInd || isPlantInsurableInd) && (!plantedAcres || !plantedYear || !variety ) ) {
+        alert(message)
+        return true
+      }
+    }
+
+    message = "Partial data entry is not accepted. Planted Year, Planted Acres and Variety are mandatory for Cranberries. " +
+      "Please fill in these values for field ID " + fieldId + " or clear all planting values for that field."
+    
+    if (this.selectedCommodity == BERRY_COMMODITY.Cranberry) {
+      if (plantedYear && (!plantedAcres || !variety ) ) {
+        alert(message)
+        return true
+      }
+
+      if (!plantedYear && (plantedAcres || variety || bogMowedDate || bogRenovatedDate) ) {
+        alert(message)
+        return true
+      }
+
+      if ( (isQuantityInsurableInd || isHarvestedInd) && (!plantedAcres || !plantedYear || !variety) ) {
         alert(message)
         return true
       }
