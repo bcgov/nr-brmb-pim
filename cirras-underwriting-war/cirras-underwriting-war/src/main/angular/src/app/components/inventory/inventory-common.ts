@@ -2,7 +2,7 @@ import { ChangeDetectorRef } from "@angular/core"
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl } from "@angular/forms"
 import { InventoryBerries, InventoryField, InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
 import { AnnualField, CropVarietyCommodityType } from "src/app/conversion/models"
-import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from "src/app/utils/constants"
+import { BERRY_COMMODITY, CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from "src/app/utils/constants"
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { AddLandComponent, AddLandPopupData } from "./add-land/add-land.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -781,8 +781,27 @@ export function addBerriesObject(inventoryFieldGuid, inventoryBerries: Inventory
     isQuantityInsurableInd:   [ (!inventoryBerries || inventoryBerries.isQuantityInsurableInd == null) ? false : inventoryBerries.isQuantityInsurableInd ],  // defaults to false
     isPlantInsurableInd:      [ (!inventoryBerries || inventoryBerries.isPlantInsurableInd == null) ? false : inventoryBerries.isPlantInsurableInd ],  // defaults to false
     plantInsurabilityTypeCode: [ (inventoryBerries && inventoryBerries.plantInsurabilityTypeCode) ? inventoryBerries.plantInsurabilityTypeCode : null],
+    bogId:                    [ (inventoryBerries && inventoryBerries.bogId) ? inventoryBerries.bogId : null],
+    bogMowedDate:             [ (inventoryBerries && inventoryBerries.bogMowedDate) ? getMonthAndYear(inventoryBerries.bogMowedDate) : null ],
+    bogRenovatedDate:         [ (inventoryBerries && inventoryBerries.bogRenovatedDate) ? getMonthAndYear(inventoryBerries.bogRenovatedDate) : null ],
+    isHarvestedInd:           [ (!inventoryBerries || inventoryBerries.isHarvestedInd == null) ? false : inventoryBerries.isHarvestedInd ], 
     deletedByUserInd:         [false]
   }
+}
+
+export function getMonthAndYear(myDateStr) {
+
+  let myDate  = new Date(myDateStr)
+
+  let month = (myDate.getMonth() + 1).toString()
+
+  if (month.length < 2 ){
+    month = "0" + month
+  }
+
+  let year = ((myDate.getFullYear()).toString()).slice(-2)
+
+  return month + "/" + year
 }
 
 export function getDefaultInventoryBerries(inventoryBerriesGuid, inventoryFieldGuid, selectedCommodity) {
@@ -798,6 +817,11 @@ export function getDefaultInventoryBerries(inventoryBerriesGuid, inventoryFieldG
         totalPlants: null,
         isQuantityInsurableInd: false,
         isPlantInsurableInd: false,
+        plantInsurabilityTypeCode: null,
+        bogId:          null,
+        bogMowedDate:    null,
+        bogRenovatedDate: null,
+        isHarvestedInd:  false, 
         cropCommodityName: null,
         cropVarietyName: null,
         deletedByUserInd: false

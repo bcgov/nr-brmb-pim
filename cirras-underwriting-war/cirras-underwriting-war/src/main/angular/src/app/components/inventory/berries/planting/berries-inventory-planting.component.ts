@@ -79,6 +79,13 @@ export class BerriesInventoryPlantingComponent implements OnChanges {
           'width': `610px`
       };
     }
+
+    if (this.selectedCommodity == BERRY_COMMODITY.Cranberry ) {
+      return {
+          'width': `870px`
+      };
+    }
+
   }
 
   plantingHasCommodity() {

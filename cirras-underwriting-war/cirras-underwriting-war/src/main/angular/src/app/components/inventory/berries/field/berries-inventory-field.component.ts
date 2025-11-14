@@ -114,10 +114,24 @@ export class BerriesInventoryFieldComponent implements OnChanges{
           'width': `650px`
       };
     }
+
+    if (this.selectedCommodity == BERRY_COMMODITY.Cranberry ) {
+      return {
+          'display': 'grid',
+          'align-items': 'stretch',
+          'width': `910px`
+      };
+    }
+
   }
 
   updateFieldLocation() {
     this.field.fieldLocation = this.fieldFormGroup.value.fieldLocation
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+  }
+
+  updateFieldLabel() {
+    this.field.fieldLabel = this.fieldFormGroup.value.fieldLabel
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }
 
@@ -196,6 +210,14 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     } else {
       this.isFieldHiddenOnPrintout = false // at least one planting is not hidden
     } 
+  }
+
+  isCranberry() {
+    if(this.selectedCommodity == BERRY_COMMODITY.Cranberry ) {
+      return true
+    } else {
+      return false
+    }
   }
 
 }
