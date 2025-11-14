@@ -194,6 +194,11 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }
 
+  updateBogId() {
+    this.inventoryBerry.bogId = this.inventoryBerriesFormGroup.value.bogId
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
+  }
+
   updateBogMowedDate() {
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
 
@@ -290,6 +295,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
       this.inventoryBerry.isPlantInsurableInd = false
       this.inventoryBerry.totalPlants = null
       this.inventoryBerry.plantInsurabilityTypeCode = null
+      this.inventoryBerry.bogId = null
       this.inventoryBerry.bogMowedDate = null
       this.inventoryBerry.bogRenovatedDate = null
       this.inventoryBerry.isHarvestedInd = false
@@ -306,6 +312,7 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
       this.inventoryBerriesFormGroup.controls['plantSpacing'].setValue(null)
       this.inventoryBerriesFormGroup.controls['isPlantInsurableInd'].setValue(false)
       this.inventoryBerriesFormGroup.controls['plantInsurabilityTypeCode'].setValue(null)
+      this.inventoryBerriesFormGroup.controls['bogId'].setValue(null)
       this.inventoryBerriesFormGroup.controls['bogMowedDate'].setValue(null)
       this.inventoryBerriesFormGroup.controls['bogRenovatedDate'].setValue(null)
       this.inventoryBerriesFormGroup.controls['isHarvestedInd'].setValue(false)

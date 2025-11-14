@@ -224,6 +224,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     let plantSpacing = planting.inventoryBerries.plantSpacing
     let isQuantityInsurableInd = planting.inventoryBerries.isQuantityInsurableInd
     let isPlantInsurableInd = planting.inventoryBerries.isPlantInsurableInd
+    let bogId = planting.inventoryBerries.bogId
     let bogMowedDate = planting.inventoryBerries.bogMowedDate  // optional
     let bogRenovatedDate = planting.inventoryBerries.bogRenovatedDate // optional
     let isHarvestedInd = planting.inventoryBerries.isHarvestedInd
@@ -285,21 +286,21 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       }
     }
 
-    message = "Partial data entry is not accepted. Planted Year, Planted Acres and Variety are mandatory for Cranberries. " +
+    message = "Partial data entry is not accepted. Bog Id, Planted Year, Planted Acres and Variety are mandatory for Cranberries. " +
       "Please fill in these values for field ID " + fieldId + " or clear all planting values for that field."
     
     if (this.selectedCommodity == BERRY_COMMODITY.Cranberry) {
-      if (plantedYear && (!plantedAcres || !variety ) ) {
+      if (plantedYear && (!bogId || !plantedAcres || !variety ) ) {
         alert(message)
         return true
       }
 
-      if (!plantedYear && (plantedAcres || variety || bogMowedDate || bogRenovatedDate) ) {
+      if (!plantedYear && (bogId || plantedAcres || variety || bogMowedDate || bogRenovatedDate) ) {
         alert(message)
         return true
       }
 
-      if ( (isQuantityInsurableInd || isHarvestedInd) && (!plantedAcres || !plantedYear || !variety) ) {
+      if ( (isQuantityInsurableInd || isHarvestedInd) && (!bogId && !plantedAcres || !plantedYear || !variety) ) {
         alert(message)
         return true
       }

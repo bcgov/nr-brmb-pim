@@ -27,17 +27,6 @@
     </div>
 
     <!-- cranberry specific -->
-    <div *ngIf="isCranberry()" class="inventory-fill" style="width: 100px;"
-        [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout' : 'inventory-border'">
-        <mat-form-field appearance="fill" style="width: 100px;">
-            <input matInput type="text"
-                    formControlName="bogId"
-                    maxlength="10"
-                    (blur)="updateBogId()">
-        </mat-form-field>  
-        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Field address is writeable">edit</mat-icon>
-    </div>
-
     <div *ngIf="isCranberry()" class="inventory-fill" style="width: 150px;"
         [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout' : 'inventory-border'">
         <mat-form-field appearance="fill" style="width: 150px;">
