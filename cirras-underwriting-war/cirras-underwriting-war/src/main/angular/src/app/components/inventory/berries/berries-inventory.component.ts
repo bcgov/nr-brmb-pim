@@ -300,7 +300,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
         return true
       }
 
-      if ( (isQuantityInsurableInd || isHarvestedInd) && (!bogId && !plantedAcres || !plantedYear || !variety) ) {
+      if ( (isQuantityInsurableInd || isHarvestedInd) && (!bogId || !plantedAcres || !plantedYear || !variety) ) {
         alert(message)
         return true
       }
