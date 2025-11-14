@@ -65,8 +65,6 @@ export function addAnnualFieldObject (field: AnnualField, fldPlantings: UntypedF
     fieldId:               [ field.fieldId ],
     fieldLabel:            [ field.fieldLabel ],
     fieldLocation:         [ field.fieldLocation],
-    // bogId is in field.plantings.inventoryBerries object in the api but the ui requires it here
-    bogId:                 [ getBogId(field) ],
     landUpdateType:        [],
     legalLandId:           [ field.legalLandId ],
     otherLegalDescription: [ field.otherLegalDescription ],
@@ -78,25 +76,6 @@ export function addAnnualFieldObject (field: AnnualField, fldPlantings: UntypedF
     isNewFieldUI:          [ false ],
     deletedByUserInd:      [ false ]
   }
-}
-
-export function getBogId(field) {
-  
-  let bogId = null
-
-  if (field.plantings && field.plantings.length > 0 ) {
-
-    // find any cranberry planting if they exist
-    for (let i=0; i < field.plantings.length; i++) {
-
-      if (field.plantings[i].inventoryBerries && field.plantings[i].inventoryBerries.cropCommodityId == BERRY_COMMODITY.Cranberry) {
-        // get the bog id 
-        bogId = field.plantings[i].inventoryBerries.bogId
-        break
-      }
-    }
-  } 
-  return bogId
 }
 
 export function addSeededGrainsObject(inventoryFieldGuid, underseededAcres, underseededCropVarietyId, underseededVarietyName, isHiddenOnPrintoutInd, inventorySeededGrains: InventorySeededGrain) {
@@ -802,7 +781,7 @@ export function addBerriesObject(inventoryFieldGuid, inventoryBerries: Inventory
     isQuantityInsurableInd:   [ (!inventoryBerries || inventoryBerries.isQuantityInsurableInd == null) ? false : inventoryBerries.isQuantityInsurableInd ],  // defaults to false
     isPlantInsurableInd:      [ (!inventoryBerries || inventoryBerries.isPlantInsurableInd == null) ? false : inventoryBerries.isPlantInsurableInd ],  // defaults to false
     plantInsurabilityTypeCode: [ (inventoryBerries && inventoryBerries.plantInsurabilityTypeCode) ? inventoryBerries.plantInsurabilityTypeCode : null],
-    // bogId is in the AnnualField object
+    bogId:                    [ (inventoryBerries && inventoryBerries.bogId) ? inventoryBerries.bogId : null],
     bogMowedDate:             [ (inventoryBerries && inventoryBerries.bogMowedDate) ? getMonthAndYear(inventoryBerries.bogMowedDate) : null ],
     bogRenovatedDate:         [ (inventoryBerries && inventoryBerries.bogRenovatedDate) ? getMonthAndYear(inventoryBerries.bogRenovatedDate) : null ],
     isHarvestedInd:           [ (!inventoryBerries || inventoryBerries.isHarvestedInd == null) ? false : inventoryBerries.isHarvestedInd ], 
@@ -810,8 +789,19 @@ export function addBerriesObject(inventoryFieldGuid, inventoryBerries: Inventory
   }
 }
 
-export function getMonthAndYear(myDate) {
-  return myDate.getMonth() + "/" + myDate.getYear()
+export function getMonthAndYear(myDateStr) {
+
+  let myDate  = new Date(myDateStr)
+
+  let month = (myDate.getMonth() + 1).toString()
+
+  if (month.length < 2 ){
+    month = "0" + month
+  }
+
+  let year = ((myDate.getFullYear()).toString()).slice(-2)
+
+  return month + "/" + year
 }
 
 export function getDefaultInventoryBerries(inventoryBerriesGuid, inventoryFieldGuid, selectedCommodity) {
@@ -827,6 +817,11 @@ export function getDefaultInventoryBerries(inventoryBerriesGuid, inventoryFieldG
         totalPlants: null,
         isQuantityInsurableInd: false,
         isPlantInsurableInd: false,
+        plantInsurabilityTypeCode: null,
+        bogId:          null,
+        bogMowedDate:    null,
+        bogRenovatedDate: null,
+        isHarvestedInd:  false, 
         cropCommodityName: null,
         cropVarietyName: null,
         deletedByUserInd: false

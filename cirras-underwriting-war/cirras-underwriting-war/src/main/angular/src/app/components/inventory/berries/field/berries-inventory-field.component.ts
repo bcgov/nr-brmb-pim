@@ -119,7 +119,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
       return {
           'display': 'grid',
           'align-items': 'stretch',
-          'width': `810px`
+          'width': `910px`
       };
     }
 
@@ -127,19 +127,6 @@ export class BerriesInventoryFieldComponent implements OnChanges{
 
   updateFieldLocation() {
     this.field.fieldLocation = this.fieldFormGroup.value.fieldLocation
-    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
-  }
-
-  updateBogId() {
-    // find all cranberry plantings for this field and update their bogId
-    if (this.field.plantings && this.field.plantings.length > 0) {
-      for (let i = 0; i < this.field.plantings.length; i++ ) {
-
-        if (this.field.plantings[i].inventoryBerries && this.field.plantings[i].inventoryBerries.cropCommodityId == BERRY_COMMODITY.Cranberry) {
-          this.field.plantings[i].inventoryBerries.bogId = this.fieldFormGroup.value.bogId
-        }
-      }
-    }
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }
 

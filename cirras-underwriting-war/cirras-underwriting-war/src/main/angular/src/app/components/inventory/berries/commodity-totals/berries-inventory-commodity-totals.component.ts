@@ -63,7 +63,7 @@ export class BerriesInventoryCommodityListComponent {
       }
     }
 
-    if (this.selectedCommodity == BERRY_COMMODITY.Blueberry || this.selectedCommodity == BERRY_COMMODITY.Raspberry) {
+    if (this.selectedCommodity == BERRY_COMMODITY.Blueberry || this.selectedCommodity == BERRY_COMMODITY.Raspberry || this.selectedCommodity == BERRY_COMMODITY.Cranberry) {
       if ( this.insurabilityType == 'quantity') {
         return ("Total Quantity " + type_column + " acres" )
       } else {
