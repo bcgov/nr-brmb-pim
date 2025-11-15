@@ -77,7 +77,7 @@ public class AnnualFieldRsrcFactory extends BaseResourceFactory implements Annua
 				String comma = "";
 
 				for (LegalLandDto llDto : dto.getAssociatedLegalLand()) {
-					associatedPropertyIdentifiers = comma + llDto.getPrimaryPropertyIdentifier(); 
+					associatedPropertyIdentifiers = associatedPropertyIdentifiers + comma + llDto.getPrimaryPropertyIdentifier(); 
 					comma = ", ";
 				}
 
