@@ -505,7 +505,7 @@ order by sort_column,
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle" markup="none">
-						<font size="8" isBold="true"/>
+						<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
 					<text><![CDATA[Declaration]]></text>
 				</staticText>
