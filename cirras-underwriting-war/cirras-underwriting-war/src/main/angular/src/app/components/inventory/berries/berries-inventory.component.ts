@@ -9,6 +9,7 @@ import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { isInt, replaceNonAlphanumericCharacters } from 'src/app/utils';
+import { AddFieldComponent } from './add-field/add-field.component';
 
 @Component({
   selector: 'berries-inventory',
@@ -361,4 +362,33 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
   }
   
+  onAddNewField() {
+
+    if (this.inventoryContract && this.inventoryContract.fields) {
+
+      // open up the popup 
+      // TODO: add data for the popup
+      // const dataToSend : AddLandPopupData = {
+      //   fieldId: fieldId,
+      //   fieldLabel: fieldLabel,
+      //   cropYear: this.inventoryContract.cropYear,
+      //   policyId: this.policyId,
+      //   insurancePlanId: this.inventoryContract.insurancePlanId,
+      //   annualFieldDetailId: annualFieldDetailId ? annualFieldDetailId : null,
+      //   otherLegalDescription: otherLegalDescription
+      // }
+
+      let dialogRef = this.dialog.open(AddFieldComponent , {
+          width: '800px',
+          //data: dataToSend
+        });
+      
+      dialogRef.afterClosed().subscribe(result => {
+        // TODO
+      });
+
+    }
+
+  }
+
 }
