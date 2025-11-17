@@ -111,7 +111,7 @@ WHERE
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<box>
+				<box leftPadding="2">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -161,7 +161,7 @@ WHERE
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<box>
+				<box leftPadding="2">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -186,7 +186,7 @@ WHERE
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? $F{total_plants} : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? new java.text.DecimalFormat("#,##0").format($F{total_plants}.longValue()) : ""]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="525" y="0" width="30" height="15" uuid="66f49334-7473-4c92-81e2-defa277ab9fa">
@@ -229,7 +229,7 @@ WHERE
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
-					<box>
+					<box leftPadding="2">
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -279,7 +279,7 @@ WHERE
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
-					<box>
+					<box leftPadding="2">
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -304,7 +304,7 @@ WHERE
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? $F{total_uninsured_plants} : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? new java.text.DecimalFormat("#,##0").format($F{total_uninsured_plants}.longValue()) : ""]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="525" y="0" width="30" height="15" uuid="c917aace-9439-4ab4-96f2-bc0108b2e876">
@@ -350,7 +350,7 @@ WHERE
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
-					<box>
+					<box leftPadding="2">
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -469,7 +469,7 @@ WHERE
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
-					<box>
+					<box leftPadding="2">
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -583,7 +583,7 @@ WHERE
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<box>
+				<box leftPadding="2">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -636,7 +636,7 @@ WHERE
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<box>
+				<box leftPadding="2">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -662,7 +662,7 @@ WHERE
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? $F{total_insured_plants} : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? new java.text.DecimalFormat("#,##0").format($F{total_insured_plants}.longValue()) : ""]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="525" y="60" width="30" height="15" uuid="1273efae-b854-49c5-bd0f-76be0c605f8a">
