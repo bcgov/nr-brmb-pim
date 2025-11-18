@@ -4,32 +4,51 @@
         <form [formGroup]="addFieldForm">
 
         <mat-radio-group class="search-field-rb-group radio-group" formControlName="choiceSelected"> 
-            <mat-radio-button *ngFor="let option of searchChoices" [value]="option.value" class="search-field-rb-group radio-button" labelPosition="before">
+            <mat-radio-button *ngFor="let option of searchChoices" 
+                [value]="option.value" 
+                class="search-field-rb-group radio-button" 
+                labelPosition="before"
+                (click)="onNewChoice()">
                 {{ option.name }}
             </mat-radio-button>
         </mat-radio-group>
 
         <div class="grid-container">
             <div class="grid-item">
-                {{ selectedChoice }} 
+                Search {{ selectedSearch }} 
             </div>
             <div></div>
             <div class="grid-item">
                 <mat-form-field appearance="fill" [style.width.px]=580>
-                    <input matInput formControlName="searchLegalLandOrFieldId" maxlength="128">
+                    <input matInput formControlName="searchLegalLandOrFieldId" (keydown)="clearAllForm()" maxlength="128">
                     <mat-hint *ngIf="showSearchLegalMsg">Please enter at least 3 symbols</mat-hint>
                 </mat-form-field>
             </div>
             <div class="grid-item">
-                <button *ngIf="addFieldForm.controls.choiceSelected.value !== 'searchFieldLocation'" mat-raised-button class="secondary" (click)="onLegalLandSearch()" style=" margin-left:60px;">
+                <button *ngIf="addFieldForm.controls.choiceSelected.value !== 'searchFieldLocation'" 
+                    mat-raised-button class="secondary" 
+                    (click)="onSearch()" 
+                    style=" margin-left:60px;">
                     <mat-icon style="padding-right: 4px; margin-right: 4px;">search</mat-icon>Search
                 </button>
             </div> 
         </div>
-
     </form>
 
+    <div class="row-group-left">
+        <div *ngIf="showNewLegalLandMessage" >
+            <p style="padding-left: 0; padding-top: 0;">The {{ selectedSearch }}  was not found. If you wish to add it, please click Done and then Save on the main screen.</p>
+        </div>
 
+        <legal-land-list 
+            *ngIf="legalLandList && legalLandList.collection && legalLandList.collection.length > 0" 
+            [selectedSearch]="selectedSearch" 
+            [selectedSearchValue]="addFieldForm.controls.searchLegalLandOrFieldId.value"
+            [legalLandList]="legalLandList.collection"
+            [insurancePlanId]="dataReceived.insurancePlanId">
+        </legal-land-list>
+    
+    </div>
 </div>
 <div mat-dialog-actions align="end">
     <!-- <span *ngIf="showProceedButton" style="padding-right:160px;">To save field, click done and then click save on the main screen.</span>

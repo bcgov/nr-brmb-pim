@@ -367,7 +367,6 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     if (this.inventoryContract && this.inventoryContract.fields) {
 
       // open up the popup 
-      // TODO: add data for the popup
       // const dataToSend : AddLandPopupData = {
       //   fieldId: fieldId,
       //   fieldLabel: fieldLabel,
@@ -378,9 +377,13 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       //   otherLegalDescription: otherLegalDescription
       // }
 
+      const dataToSend : any = {
+        insurancePlanId: this.inventoryContract.insurancePlanId,
+      }
+
       let dialogRef = this.dialog.open(AddFieldComponent , {
           width: '800px',
-          //data: dataToSend
+          data: dataToSend
         });
       
       dialogRef.afterClosed().subscribe(result => {
