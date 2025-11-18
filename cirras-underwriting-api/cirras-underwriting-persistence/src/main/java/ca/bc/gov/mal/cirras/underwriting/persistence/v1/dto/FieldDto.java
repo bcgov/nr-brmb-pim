@@ -34,7 +34,6 @@ public class FieldDto extends BaseDto<FieldDto> {
 	private String primaryPropertyIdentifier;
 
 	private List<PolicyDto> policies = new ArrayList<PolicyDto>();
-	private List<LegalLandDto> associatedLegalLand;
 
 
 	public FieldDto() {
@@ -68,14 +67,6 @@ public class FieldDto extends BaseDto<FieldDto> {
 			}
 		}	
 		
-		if ( dto.associatedLegalLand != null ) {			
-			this.associatedLegalLand = new ArrayList<>();
-			
-			for ( LegalLandDto llDto : dto.associatedLegalLand) {
-				this.associatedLegalLand.add(llDto.copy());
-			}
-		}
-
 	}
 	
 
@@ -229,13 +220,5 @@ public class FieldDto extends BaseDto<FieldDto> {
 
 	public void setPrimaryPropertyIdentifier(String primaryPropertyIdentifier) {
 		this.primaryPropertyIdentifier = primaryPropertyIdentifier;
-	}
-
-	public List<LegalLandDto> getAssociatedLegalLand() {
-		return associatedLegalLand;
-	}
-
-	public void setAssociatedLegalLand(List<LegalLandDto> associatedLegalLand) {
-		this.associatedLegalLand = associatedLegalLand;
 	}
 }

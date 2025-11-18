@@ -154,16 +154,10 @@ public class FieldDaoTest {
 
 		//Legal Land
 		LegalLandDto legalLandDto1 = createLegalLand(legalLandId, cropYear, "legal desc 1", "short legal desc 1", "other legal desc 1", "111-222-333");
-		LegalLandDto legalLandDto2 = createLegalLand(legalLandId2, cropYear, "legal desc 2", "short legal desc 2", "other legal desc 2", "999-888-777");
 
 		// Fields
 		FieldDto field1 = createField(fieldId1, "LOT 1", cropYear, "TEST Location 16159");
 		FieldDto field2 = createField(fieldId2, "LOT 2", cropYear, "TEST Location 29943");
-
-		// Add Legal Land Field XREF
-		createLegalLandFieldXref(fieldId1, legalLandId);
-		createLegalLandFieldXref(fieldId1, legalLandId2);
-		createLegalLandFieldXref(fieldId2, legalLandId);
 		
 		createAnnualFieldDetail(afdId1, fieldId1, cropYear, legalLandId);
 		createAnnualFieldDetail(afdId2, fieldId2, cropYear, legalLandId);
@@ -210,16 +204,6 @@ public class FieldDaoTest {
 	private FieldDto getFieldById(Integer fieldId, List<FieldDto> fields) {
 		
 		List<FieldDto> filteredList = fields.stream().filter(x -> x.getFieldId().equals(fieldId)) 
-				.collect(Collectors.toList());
-		
-		Assert.assertEquals(1, filteredList.size());
-		
-		return filteredList.get(0);
-	}
-	
-	private LegalLandDto getLegaLandById(Integer legalLandId, List<LegalLandDto> legalLandList) {
-		
-		List<LegalLandDto> filteredList = legalLandList.stream().filter(x -> x.getLegalLandId().equals(legalLandId)) 
 				.collect(Collectors.toList());
 		
 		Assert.assertEquals(1, filteredList.size());
