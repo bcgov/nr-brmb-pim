@@ -2554,18 +2554,28 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 			if (errors.isEmpty()) {
 
+				//Returns all plans the field has ever been associated with (for most plans it's
 				List<InsurancePlanDto> assocPlans = insurancePlanDao.selectByField(fieldId);
 
 				Set<String> validPlans = new HashSet<String>();
-				validPlans.add(InventoryServiceEnums.InsurancePlans.GRAIN.name());
-				validPlans.add(InventoryServiceEnums.InsurancePlans.FORAGE.name());
+				String insurancePlans = "";
 
+				if ( InsurancePlans.BERRIES.getInsurancePlanId().equals(destPolicyDto.getInsurancePlanId()) ) { 
+					validPlans.add(InventoryServiceEnums.InsurancePlans.BERRIES.name());
+					insurancePlans = "Berries";
+				} else {
+					validPlans.add(InventoryServiceEnums.InsurancePlans.GRAIN.name());
+					validPlans.add(InventoryServiceEnums.InsurancePlans.FORAGE.name());
+					insurancePlans = "Grain or Forage";
+				}
+				
 				for (InsurancePlanDto assocPlanDto : assocPlans) {
 					if (!validPlans.contains(assocPlanDto.getInsurancePlanName())) {
-						errors.add(AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG);
+						errors.add(AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]]", insurancePlans));
 						break;
 					}
 				}
+
 			}
 
 			if (errors.isEmpty() && assocPolicies.isEmpty() ) {
@@ -2593,6 +2603,9 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 						errors.add(AddFieldValidation.TRANSFER_POLICY_ID_NOT_EMPTY_MSG);
 					}
 					
+					//Field is associated with another policy but it's not of the same plan
+					//This is only possible for plans that allow fields from other plans (For Grain and Forage only at the moment)
+					//FIELD_ON_INCOMPATIBLE_PLAN_MSG checks if a field has ever been on an ineligible plan.
 					if (errors.isEmpty()) {
 						warnings.add(AddFieldValidation.ADD_FIELD_TO_SECOND_POLICY_WARNING_MSG);
 					}
