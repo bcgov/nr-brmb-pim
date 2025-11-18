@@ -118,7 +118,7 @@ WHERE
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["TOTAL " + $F{commodity_name} + " ACRES"]]></textFieldExpression>
 			</textField>
@@ -134,7 +134,7 @@ WHERE
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[(double)$F{total_acres}.intValue() == $F{total_acres}.doubleValue() ? 
 	(new java.text.DecimalFormat("#,##0").format($F{total_acres}.doubleValue()))
@@ -168,7 +168,7 @@ WHERE
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? ("TOTAL " + $F{commodity_name} + " PLANTS") : ""]]></textFieldExpression>
 			</textField>
@@ -184,7 +184,7 @@ WHERE
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? new java.text.DecimalFormat("#,##0").format($F{total_plants}.longValue()) : ""]]></textFieldExpression>
 			</textField>
@@ -236,7 +236,7 @@ WHERE
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Uninsured Acres"]]></textFieldExpression>
 				</textField>
@@ -252,7 +252,7 @@ WHERE
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[(double)$F{total_quantity_uninsured_acres}.intValue() == $F{total_quantity_uninsured_acres}.doubleValue() ? 
 	(new java.text.DecimalFormat("#,##0").format($F{total_quantity_uninsured_acres}.doubleValue()))
@@ -286,7 +286,7 @@ WHERE
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? "Uninsured Plants" : ""]]></textFieldExpression>
 				</textField>
@@ -302,7 +302,7 @@ WHERE
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? new java.text.DecimalFormat("#,##0").format($F{total_uninsured_plants}.longValue()) : ""]]></textFieldExpression>
 				</textField>
@@ -357,7 +357,7 @@ WHERE
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Quantity Insured Acres"]]></textFieldExpression>
 				</textField>
@@ -373,7 +373,7 @@ WHERE
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[(double)$F{total_quantity_insured_acres}.intValue() == $F{total_quantity_insured_acres}.doubleValue() ? 
 	(new java.text.DecimalFormat("#,##0").format($F{total_quantity_insured_acres}.doubleValue()))
@@ -476,7 +476,7 @@ WHERE
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Plant Insured Acres"]]></textFieldExpression>
 				</textField>
@@ -492,7 +492,7 @@ WHERE
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[(double)$F{total_plant_insured_acres}.intValue() == $F{total_plant_insured_acres}.doubleValue() ? 
 	(new java.text.DecimalFormat("#,##0").format($F{total_plant_insured_acres}.doubleValue()))
@@ -590,7 +590,7 @@ WHERE
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<textFieldExpression><![CDATA["TOTAL INSURED " + $F{commodity_name} + " ACRES"]]></textFieldExpression>
 			</textField>
@@ -607,7 +607,7 @@ WHERE
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<textFieldExpression><![CDATA[(double)$F{total_quantity_insured_acres}.intValue() == $F{total_quantity_insured_acres}.doubleValue() ? 
 	(new java.text.DecimalFormat("#,##0").format($F{total_quantity_insured_acres}.doubleValue()))
@@ -643,7 +643,7 @@ WHERE
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? ("TOTAL INSURED " + $F{commodity_name} + " PLANTS") : ""]]></textFieldExpression>
 			</textField>
@@ -660,7 +660,7 @@ WHERE
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? new java.text.DecimalFormat("#,##0").format($F{total_insured_plants}.longValue()) : ""]]></textFieldExpression>
 			</textField>
