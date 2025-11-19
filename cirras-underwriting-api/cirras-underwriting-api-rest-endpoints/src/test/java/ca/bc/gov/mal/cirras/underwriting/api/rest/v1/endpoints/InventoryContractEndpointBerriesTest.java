@@ -533,7 +533,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		planting = createPlanting(field, 2, cropYear1);
 		createInventoryBerries(planting, 13, "STRAWBERRY", 1010705, "VALLEY RED", (double)15, null, null, false, true, "ST2", 2019, null, null, null, false);
 		
-		// Planting 3 - Not plant insured but eligible on rollover (ST1)
+		// Planting 3 - Not plant insured but eligible - stays null because it hasn't been set in the previous year
 		planting = createPlanting(field, 3, cropYear1);
 		createInventoryBerries(planting, 13, "STRAWBERRY", 1010703, "HONEOYE", (double)15, null, null, true, false, null, 2021, null, null, null, false);
 		
@@ -951,30 +951,12 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 			Assert.assertNull("InventoryFieldGuid", actual.getInventoryFieldGuid());
 			//Plant PlantInsurabilityTypeCode for strawberry
 			if(expected.getCropCommodityId().equals(13)) {
-				if(expected.getPlantInsurabilityTypeCode() == null) {
-					//Only if it's not an empty planting
-					if(expected.getPlantedYear() != null) {
-						//If insurability is not set, it will be set to ST1 (Strawberry Year 1) if the planted year = crop year -1
-						Integer cropYearToCompare = cropYear -1;
-						if(actual.getPlantedYear().equals(cropYearToCompare)) {
-							Assert.assertEquals("ST1", actual.getPlantInsurabilityTypeCode());
-							Assert.assertTrue(actual.getIsPlantInsurableInd());
-						} else {
-							//Should be the same as the previous year (null and false)
-							Assert.assertEquals("PlantInsurabilityTypeCode", expected.getPlantInsurabilityTypeCode(), actual.getPlantInsurabilityTypeCode());
-							Assert.assertEquals("IsPlantInsurableInd", expected.getIsPlantInsurableInd(), actual.getIsPlantInsurableInd());
-						}
-					} else {
-						//Should be the same as the previous year (null and false)
-						Assert.assertEquals("PlantInsurabilityTypeCode", expected.getPlantInsurabilityTypeCode(), actual.getPlantInsurabilityTypeCode());
-						Assert.assertEquals("IsPlantInsurableInd", expected.getIsPlantInsurableInd(), actual.getIsPlantInsurableInd());
-					}
-				} else if (expected.getPlantInsurabilityTypeCode().equalsIgnoreCase("ST1")) {
+				if (expected.getPlantInsurabilityTypeCode() != null && expected.getPlantInsurabilityTypeCode().equalsIgnoreCase("ST1")) {
 					//Strawberries that were previously insured with ST1 (Strawberry Year 1) will now be ST2 (Strawberry Year 2)
 					Assert.assertEquals("ST2", actual.getPlantInsurabilityTypeCode());
 					Assert.assertTrue(actual.getIsPlantInsurableInd());
-				} else if (expected.getPlantInsurabilityTypeCode().equalsIgnoreCase("ST2")) {
-					//Strawberries that were previously insured with ST2 (Strawberry Year 2) will become uninsurable and set to null
+				} else {
+					//All other cases it's null and plant insured = false
 					Assert.assertNull(actual.getPlantInsurabilityTypeCode());
 					Assert.assertFalse(actual.getIsPlantInsurableInd());
 				}
