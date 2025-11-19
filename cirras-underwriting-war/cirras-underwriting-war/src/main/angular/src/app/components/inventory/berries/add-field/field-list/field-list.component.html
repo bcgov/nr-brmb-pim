@@ -1,23 +1,46 @@
+<form [formGroup]="fieldListForm">
 
-        <div class="field-container field-info" >   
+    <div class="cuw-table-wrapper">
+        <div class="field-container" [ngStyle]="setStyles()">   
 
+            <div *ngIf="isRadioBtnVisible()" class="border-right header justify-center border-top border-bottom border-left"></div>
             <div class="border-right header justify-center border-top border-bottom border-left">Field Id</div>
-            <div class="border-right header justify-center border-top border-bottom border-left">Field Name</div>
-            <div class="border-right header justify-center border-top border-bottom border-left">Legal Location</div>
+
+            <div *ngIf="isFieldAddressVisible()" class="border-right header justify-center border-top border-bottom border-left">Field Address</div>
+            <div *ngIf="isPIDVisible()" class="border-right header justify-center border-top border-bottom border-left">PID</div>
+
+            <div class="border-right header justify-center border-top border-bottom border-left">{{ displayFieldName() }}</div>
+            <div *ngIf="isLegalLocationVisible()" class="border-right header justify-center border-top border-bottom border-left">Legal Location</div>
             <div class="border-right header justify-center border-top border-bottom">Policy (Plan) - Grower</div>
 
             <div 
                 *ngFor="let field of fieldList"   
                 style="display:contents">
 
+                <div *ngIf="isRadioBtnVisible()" class="border-right justify-center border-bottom border-left">
+                    <input 
+                        type="radio" 
+                        [value]="field.fieldId" 
+                        formControlName="fieldIdSelected" 
+                        (click)="validateFields(field)"/>
+                </div>
+
                 <div class="border-right justify-center border-top border-bottom border-left">
                     {{ field.fieldId }}
                 </div>
+
+                <div *ngIf="isFieldAddressVisible()" class="border-right justify-center border-top border-bottom border-left">
+                    {{ field.fieldLocation }}
+                </div>
+                <div *ngIf="isPIDVisible()" class="border-right justify-center border-top border-bottom border-left">
+                    {{ field.primaryPropertyIdentifier }}
+                </div>
+
                 <div class="border-right justify-center border-top border-bottom border-left">
                     {{ field.fieldLabel }}
                 </div>
 
-                <div class="border-right justify-center border-top border-bottom border-left">
+                <div *ngIf="isLegalLocationVisible()" class="border-right justify-center border-top border-bottom border-left">
                     {{ field.otherLegalDescription }}
                 </div>
 
@@ -25,4 +48,26 @@
                     {{ getPolicyAndPlan(field) }}
                 </div>
             </div>
+
+            <div *ngIf="isRadioBtnVisible()" style="display:contents">
+                <div class="border-left justify-center border-bottom" >
+                    <input 
+                        type="radio" 
+                        [value]="-1" 
+                        formControlName="fieldIdSelected" />
+                </div>
+
+                <div class="fill justify-left border-bottom border-right" [ngStyle]="setNewFieldStyles()">
+                    Add New Field: &nbsp;&nbsp; &nbsp;
+                    <mat-form-field appearance="fill">
+                        <input style="width: 100px;" matInput formControlName="fieldLabel" 
+                                maxlength="128" (keydown)="checkLength()">
+                        <mat-hint *ngIf="showSearchLegalMsg">Please enter at least 5 symbols</mat-hint>
+                    </mat-form-field> 
+
+                </div>
+            </div>
         </div>
+    </div>
+
+</form>

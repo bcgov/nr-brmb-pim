@@ -9,7 +9,7 @@ import { INSURANCE_PLAN } from 'src/app/utils/constants';
   standalone: false
 })
 export class LegalLandListComponent {
-  @Input() selectedSearch // e.g. PID
+  @Input() selectedSearch // e.g. searchPID
   @Input() selectedSearchValue  // e.g. the PID itself
   @Input() legalLandList 
   @Input() insurancePlanId

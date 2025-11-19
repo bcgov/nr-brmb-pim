@@ -38,7 +38,7 @@ export class AddFieldComponent implements OnInit{
   deafultSearchChoices = [
     { name: 'Legal Location', value: 'searchLegalLocation' , visible: [INSURANCE_PLAN.GRAIN, INSURANCE_PLAN.FORAGE] },
     { name: 'PID', value: 'searchPID' , visible: [INSURANCE_PLAN.BERRIES] },
-    { name: 'Field Location', value: 'searchFieldLocation' , visible: [INSURANCE_PLAN.BERRIES] },
+    { name: 'Field Address', value: 'searchFieldLocation' , visible: [INSURANCE_PLAN.BERRIES] },
     { name: 'Field ID', value: 'searchFieldId' , visible: [INSURANCE_PLAN.BERRIES, INSURANCE_PLAN.GRAIN, INSURANCE_PLAN.FORAGE] }
   ];
 
@@ -124,12 +124,15 @@ export class AddFieldComponent implements OnInit{
 
     this.clearAllForm()
 
-    const searchLegalLandOrFieldId = this.addFieldForm.controls.searchLegalLandOrFieldId.value
+    if (this.addFieldForm.controls.choiceSelected.value == 'searchFieldLocation') {
+       
+      const searchLegalLandOrFieldId = this.addFieldForm.controls.searchLegalLandOrFieldId.value
 
-    // start the search when least 3 symbols are entered
-    if (!searchLegalLandOrFieldId || searchLegalLandOrFieldId.length < 3) {
-      if (this.addFieldForm.controls.choiceSelected.value == 'searchFieldLocation') {
-        this.getFields(this.dataReceived.cropYear, "", "", searchLegalLandOrFieldId)
+      // start the search when at least 3 symbols are entered
+      if (searchLegalLandOrFieldId && searchLegalLandOrFieldId.length >= 3) {
+        if (this.addFieldForm.controls.choiceSelected.value == 'searchFieldLocation') {
+          this.getFields(this.dataReceived.cropYear, "", "", searchLegalLandOrFieldId)
+        }
       }
     }
   }
@@ -207,8 +210,12 @@ export class AddFieldComponent implements OnInit{
     return lastValueFrom(this.http.get(url,httpOptions)).then((data: AnnualFieldListRsrc) => {
       self.fieldList = data;
 
-      // TODO 
-      // this.validateFields(self.fieldList.collection[0])
+      if (self.fieldList && self.fieldList.collection && self.fieldList.collection.length > 0) {
+        // TODO validate field if the user searches for field id
+        // this.validateFields(self.fieldList.collection[0])
+      } else {
+        this.showNoFieldMessage = true
+      }
     })
   }
 
