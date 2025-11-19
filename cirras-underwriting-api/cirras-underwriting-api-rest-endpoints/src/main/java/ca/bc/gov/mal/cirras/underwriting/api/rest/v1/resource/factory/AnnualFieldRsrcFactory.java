@@ -8,29 +8,23 @@ import jakarta.ws.rs.core.UriBuilder;
 
 import ca.bc.gov.nrs.common.wfone.rest.resource.RelLink;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dto.PagedDtos;
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.AnnualFieldListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.AnnualFieldRolloverInvEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UwContractRolloverInvEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PolicyRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualFieldList;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.PolicySimple;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.AnnualFieldFactory;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 
 public class AnnualFieldRsrcFactory extends BaseResourceFactory implements AnnualFieldFactory { 
 	
@@ -68,20 +62,6 @@ public class AnnualFieldRsrcFactory extends BaseResourceFactory implements Annua
 				}
 
 				resource.setPolicies(policies);
-			}
-			
-			//Associated Legal Land
-			if (!dto.getAssociatedLegalLand().isEmpty()) {
-				//List<PolicySimple> policies = new ArrayList<PolicySimple>();
-				String associatedPropertyIdentifiers = "";
-				String comma = "";
-
-				for (LegalLandDto llDto : dto.getAssociatedLegalLand()) {
-					associatedPropertyIdentifiers = associatedPropertyIdentifiers + comma + llDto.getPrimaryPropertyIdentifier(); 
-					comma = ", ";
-				}
-
-				resource.setAssociatedPropertyIdentifiers(associatedPropertyIdentifiers);
 			}
 			
 			setLinks(resource, baseUri, authentication);

@@ -270,9 +270,6 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 				List<PolicyDto> policies = policyDao.selectByFieldAndYear(fDto.getFieldId(), fDto.getMaxCropYear());
 				fDto.setPolicies(policies);
 				
-				//Get other PIDs
-				List<LegalLandDto> nonPrimaryLegalLand = legalLandDao.searchOtherLegalLandForField(fDto.getFieldId(), fDto.getLegalLandId(), cropYear);
-				fDto.setAssociatedLegalLand(nonPrimaryLegalLand);
 			}
 			
 			
