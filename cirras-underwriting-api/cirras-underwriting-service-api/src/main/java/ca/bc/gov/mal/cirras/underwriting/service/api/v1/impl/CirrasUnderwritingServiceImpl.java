@@ -13,9 +13,11 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.UserSetting;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContractList;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UserSettingDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.FieldDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.LegalLandDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.PolicyDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.UserSettingDao;
 import ca.bc.gov.nrs.wfone.common.model.Message;
@@ -59,6 +61,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	// daos
 	private FieldDao fieldDao;
 	private PolicyDao policyDao;
+	private LegalLandDao legalLandDao;
 	private UserSettingDao userSettingDao;
 
 	//utils
@@ -102,6 +105,10 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	
 	public void setPolicyDao(PolicyDao policyDao) {
 		this.policyDao = policyDao;
+	}
+	
+	public void setLegalLandDao(LegalLandDao legalLandDao) {
+		this.legalLandDao = legalLandDao;
 	}
 
 	public void setUserSettingDao(UserSettingDao userSettingDao) {
@@ -245,6 +252,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	public AnnualFieldList<? extends AnnualField> getAnnualFieldForLegalLandList(
 			Integer legalLandId, 
 			Integer fieldId, 
+			String fieldLocation,
 			Integer cropYear,
 			FactoryContext context,
 			WebAdeAuthentication authentication) throws ServiceException {
@@ -255,12 +263,16 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 
 		try {
 			
-			List<FieldDto> dtos = fieldDao.selectForLegalLandOrField(legalLandId, fieldId, cropYear);
+			List<FieldDto> dtos = fieldDao.selectForLegalLandOrField(legalLandId, fieldId, fieldLocation, cropYear);
 			
 			for ( FieldDto fDto : dtos ) {
 
 				List<PolicyDto> policies = policyDao.selectByFieldAndYear(fDto.getFieldId(), fDto.getMaxCropYear());
 				fDto.setPolicies(policies);
+				
+				//Get other PIDs
+				List<LegalLandDto> nonPrimaryLegalLand = legalLandDao.searchOtherLegalLandForField(fDto.getFieldId(), fDto.getLegalLandId(), cropYear);
+				fDto.setAssociatedLegalLand(nonPrimaryLegalLand);
 			}
 			
 			

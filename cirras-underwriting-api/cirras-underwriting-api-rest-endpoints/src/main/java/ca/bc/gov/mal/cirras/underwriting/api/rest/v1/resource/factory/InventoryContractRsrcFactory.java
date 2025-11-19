@@ -231,8 +231,10 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setCropCommodityName(dto.getCropCommodityName());
 		model.setTotalInsuredPlants(dto.getTotalInsuredPlants());
 		model.setTotalUninsuredPlants(dto.getTotalUninsuredPlants());
-		model.setTotalInsuredAcres(dto.getTotalInsuredAcres());
-		model.setTotalUninsuredAcres(dto.getTotalUninsuredAcres());
+		model.setTotalQuantityInsuredAcres(dto.getTotalQuantityInsuredAcres());
+		model.setTotalQuantityUninsuredAcres(dto.getTotalQuantityUninsuredAcres());
+		model.setTotalPlantInsuredAcres(dto.getTotalPlantInsuredAcres());
+		model.setTotalPlantUninsuredAcres(dto.getTotalPlantUninsuredAcres());
 
 		return model;
 	}
@@ -452,6 +454,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setCropCommodityName(dto.getCropCommodityName());
 		model.setCropVarietyId(dto.getCropVarietyId());
 		model.setCropVarietyName(dto.getCropVarietyName());
+		model.setPlantInsurabilityTypeCode(dto.getPlantInsurabilityTypeCode());
 		model.setPlantedYear(dto.getPlantedYear());
 		model.setPlantedAcres(dto.getPlantedAcres());
 		model.setRowSpacing(dto.getRowSpacing());
@@ -459,6 +462,10 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setTotalPlants(dto.getTotalPlants());
 		model.setIsQuantityInsurableInd(dto.getIsQuantityInsurableInd());
 		model.setIsPlantInsurableInd(dto.getIsPlantInsurableInd());
+		model.setBogId(dto.getBogId());
+		model.setBogMowedDate(dto.getBogMowedDate());
+		model.setBogRenovatedDate(dto.getBogRenovatedDate());
+		model.setIsHarvestedInd(dto.getIsHarvestedInd());
 
 		return model;
 	}
@@ -669,9 +676,66 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 			
 			model.setInventorySeededForages(inventorySeededForageList);
 		}
-		
+
+		// Inventory Berries
+		if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId())) {
+			if ( ifDto.getInventoryBerries() != null) {
+				model.setInventoryBerries(createRolloverInventoryBerries(ifDto.getInventoryBerries(), cfdDto.getCropYear()));
+			} else {
+				model.setInventoryBerries(createDefaultInventoryBerries());
+			}
+		}
+
 		return model;
 	}
+
+	private InventoryBerries createRolloverInventoryBerries(InventoryBerriesDto dto, Integer cropYear) {
+		
+		InventoryBerries model = new InventoryBerries();
+		
+		//Rollover insurability for STRAWBERRY works different than other commodities
+		if(dto.getCropCommodityId() != null && dto.getCropCommodityId().equals(13)) {
+			if(dto.getPlantInsurabilityTypeCode() == null) {
+				//Only if it's not an empty record
+				if(dto.getPlantedYear() != null) {
+					//If insurability is not set, it will be set to ST1 (Strawberry Year 1) if the planted year = crop year -1
+					Integer cropYearToCompare = cropYear -1;
+					if(dto.getPlantedYear().equals(cropYearToCompare)) {
+						dto.setPlantInsurabilityTypeCode("ST1");
+						dto.setIsPlantInsurableInd(true);
+					}
+				}
+			} else if (dto.getPlantInsurabilityTypeCode().equalsIgnoreCase("ST1")) {
+				//Strawberries that were previously insured with ST1 (Strawberry Year 1) will now be ST2 (Strawberry Year 2)
+				dto.setPlantInsurabilityTypeCode("ST2");
+				dto.setIsPlantInsurableInd(true); //Should already be set to true
+			} else if (dto.getPlantInsurabilityTypeCode().equalsIgnoreCase("ST2")) {
+				//Strawberries that were previously insured with ST2 (Strawberry Year 2) will become uninsurable and set to null
+				dto.setPlantInsurabilityTypeCode(null);
+				dto.setIsPlantInsurableInd(false);
+			}
+		}
+
+		model.setCropCommodityId(dto.getCropCommodityId());
+		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setCropVarietyId(dto.getCropVarietyId());
+		model.setCropVarietyName(dto.getCropVarietyName());
+		model.setPlantInsurabilityTypeCode(dto.getPlantInsurabilityTypeCode());
+		model.setPlantedYear(dto.getPlantedYear());
+		model.setPlantedAcres(dto.getPlantedAcres());
+		model.setRowSpacing(dto.getRowSpacing());
+		model.setPlantSpacing(dto.getPlantSpacing());
+		model.setTotalPlants(dto.getTotalPlants());
+		model.setIsQuantityInsurableInd(dto.getIsQuantityInsurableInd());
+		model.setIsPlantInsurableInd(dto.getIsPlantInsurableInd());
+		model.setBogId(dto.getBogId());
+		model.setBogMowedDate(dto.getBogMowedDate());
+		model.setBogRenovatedDate(dto.getBogRenovatedDate());
+		model.setIsHarvestedInd(dto.getIsHarvestedInd());
+
+		return model;
+	}
+
 
 	private InventoryField createDefaultInventoryField(Integer insurancePlanId, ContractedFieldDetailDto dto) {
 		InventoryField model = new InventoryField();
@@ -809,6 +873,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setInventoryFieldGuid(null);
 		model.setCropCommodityId(null);
 		model.setCropVarietyId(null);
+		model.setPlantInsurabilityTypeCode(null);
 		model.setPlantedYear(null);
 		model.setPlantedAcres(null);
 		model.setRowSpacing(null);
@@ -816,6 +881,10 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setTotalPlants(null);
 		model.setIsQuantityInsurableInd(null);
 		model.setIsPlantInsurableInd(null);
+		model.setBogId(null);
+		model.setBogMowedDate(null);
+		model.setBogRenovatedDate(null);
+		model.setIsHarvestedInd(false);
 
 		return model;
 	}
@@ -845,6 +914,18 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		dto.setTotalUnseededAcres(model.getTotalUnseededAcres());
 		dto.setTotalUnseededAcresOverride(model.getTotalUnseededAcresOverride());
 		dto.setIsPedigreeInd(model.getIsPedigreeInd());
+	}
+
+	@Override
+	public void updateDto(InventoryContractCommodityBerriesDto dto, InventoryContractCommodityBerries model) {
+		dto.setInventoryContractGuid(model.getInventoryContractGuid());
+		dto.setCropCommodityId(model.getCropCommodityId());
+		dto.setTotalInsuredPlants(model.getTotalInsuredPlants());
+		dto.setTotalUninsuredPlants(model.getTotalUninsuredPlants());
+		dto.setTotalQuantityInsuredAcres(model.getTotalQuantityInsuredAcres());
+		dto.setTotalQuantityUninsuredAcres(model.getTotalQuantityUninsuredAcres());
+		dto.setTotalPlantInsuredAcres(model.getTotalPlantInsuredAcres());
+		dto.setTotalPlantUninsuredAcres(model.getTotalPlantUninsuredAcres());
 	}
 
 	@Override
@@ -968,6 +1049,52 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		}
 	}
 
+	@Override
+	public void updateDto(InventoryBerriesDto dto, InventoryBerries model) {
+
+		if (Boolean.TRUE.equals(model.getDeletedByUserInd())) {
+
+			// Flagged for deletion, but record could not be deleted, so clear the user-entered data.
+			//The commodity stays on the record to be able to show it in the correct table in the ui
+			dto.setCropCommodityId(model.getCropCommodityId());
+			dto.setCropCommodityName(model.getCropCommodityName());
+			dto.setCropVarietyId(null);
+			dto.setCropVarietyName(null);
+			dto.setPlantInsurabilityTypeCode(null);
+			dto.setPlantedYear(null);
+			dto.setPlantedAcres(null);
+			dto.setRowSpacing(null);
+			dto.setPlantSpacing(null);
+			dto.setTotalPlants(null);
+			dto.setIsQuantityInsurableInd(false);
+			dto.setIsPlantInsurableInd(false);
+			dto.setBogId(null);
+			dto.setBogMowedDate(null);
+			dto.setBogRenovatedDate(null);
+			dto.setIsHarvestedInd(false);
+
+		} else {		
+			dto.setCropCommodityId(model.getCropCommodityId());
+			dto.setCropCommodityName(model.getCropCommodityName());
+			dto.setCropVarietyId(model.getCropVarietyId());
+			dto.setCropVarietyName(model.getCropVarietyName());
+			dto.setPlantInsurabilityTypeCode(model.getPlantInsurabilityTypeCode());
+			dto.setPlantedYear(model.getPlantedYear());
+			dto.setPlantedAcres(model.getPlantedAcres());
+			dto.setRowSpacing(model.getRowSpacing());
+			dto.setPlantSpacing(model.getPlantSpacing());
+			dto.setTotalPlants(model.getTotalPlants());
+			dto.setIsQuantityInsurableInd(model.getIsQuantityInsurableInd());
+			dto.setIsPlantInsurableInd(model.getIsPlantInsurableInd());
+			dto.setBogId(model.getBogId());
+			dto.setBogMowedDate(model.getBogMowedDate());
+			dto.setBogRenovatedDate(model.getBogRenovatedDate());
+			///Not all commodities use the flag and it might be not set
+			dto.setIsHarvestedInd(notNull(model.getIsHarvestedInd(), false));
+
+		}	
+	}
+	
 	@Override
 	public void updateDto(UnderwritingCommentDto dto, UnderwritingComment model) {
 		dto.setUnderwritingComment(model.getUnderwritingComment());
@@ -1169,5 +1296,9 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 
 		return result;
 	}
-		
+
+	private Boolean notNull(Boolean value, Boolean defaultValue) {
+		return (value == null) ? defaultValue : value;
+	}
+
 }

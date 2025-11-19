@@ -8,8 +8,10 @@ import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractList;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryCoverageTotalForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
@@ -18,6 +20,8 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededGrain;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryUnseeded;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryCoverageTotalForageDto;
@@ -58,6 +62,8 @@ public interface InventoryContractFactory {
 
 	void updateDto(InventoryContractCommodityDto dto, InventoryContractCommodity model);
 
+	void updateDto(InventoryContractCommodityBerriesDto dto, InventoryContractCommodityBerries model);
+
 	void updateDto(InventoryCoverageTotalForageDto dto, InventoryCoverageTotalForage model);
 	
 	void updateDto(InventoryFieldDto dto, InventoryField model);
@@ -68,6 +74,8 @@ public interface InventoryContractFactory {
 
 	void updateDto(InventorySeededForageDto dto, InventorySeededForage model);
 	
+	void updateDto(InventoryBerriesDto dto, InventoryBerries model);
+
 	void updateDto(UnderwritingCommentDto dto, UnderwritingComment model);
 
 	AnnualFieldRsrc createAnnualField(ContractedFieldDetailDto dto, WebAdeAuthentication authentication);

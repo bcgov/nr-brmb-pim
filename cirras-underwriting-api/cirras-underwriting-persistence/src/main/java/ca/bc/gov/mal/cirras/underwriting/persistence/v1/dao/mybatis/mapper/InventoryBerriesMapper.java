@@ -22,4 +22,6 @@ public interface InventoryBerriesMapper {
 	int deleteForInventoryContract(Map<String, Object> parameters);
 	
 	List<InventoryBerriesDto> select(Map<String, Object> parameters);
+
+	InventoryBerriesDto selectForRollover(Map<String, Object> parameters);
 }

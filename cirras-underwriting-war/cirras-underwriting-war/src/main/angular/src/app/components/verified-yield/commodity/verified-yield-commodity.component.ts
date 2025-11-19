@@ -7,7 +7,7 @@ import { setFormStateUnsaved } from "src/app/store/application/application.actio
 import { VERIFIED_YIELD_COMPONENT_ID } from "src/app/store/verified-yield/verified-yield.state";
 import { makeNumberOnly } from "src/app/utils";
 import { SecurityUtilService } from 'src/app/services/security-util.service';
-import { roundUpDecimalYield, roundUpDecimalAcres } from "../../inventory/inventory-common";
+import { roundUpDecimal } from "../../inventory/inventory-common";
 
 @Component({
     selector: 'verified-yield-commodity',
@@ -65,7 +65,7 @@ export class VerifiedYieldCommodityComponent implements OnChanges {
 
   updateHarvestedAcresOverride(): void {
 
-    let harvestedAcresOverride = roundUpDecimalAcres(this.commodityFormGroup.value.harvestedAcresOverride)
+    let harvestedAcresOverride = roundUpDecimal(this.commodityFormGroup.value.harvestedAcresOverride, 1)
 
     if (!isNaN(parseFloat(harvestedAcresOverride.toString()))) {
       this.commodity.harvestedAcresOverride = parseFloat(harvestedAcresOverride.toString())
@@ -79,7 +79,7 @@ export class VerifiedYieldCommodityComponent implements OnChanges {
   }
 
   updateHarvestedYieldOverride(): void {
-    let harvestedYieldOverride = roundUpDecimalYield(this.commodityFormGroup.value.harvestedYieldOverride, 3)
+    let harvestedYieldOverride = roundUpDecimal(this.commodityFormGroup.value.harvestedYieldOverride, 3)
 
     if (!isNaN(parseFloat(harvestedYieldOverride.toString()))) {
       this.commodity.harvestedYieldOverride = parseFloat(harvestedYieldOverride.toString())

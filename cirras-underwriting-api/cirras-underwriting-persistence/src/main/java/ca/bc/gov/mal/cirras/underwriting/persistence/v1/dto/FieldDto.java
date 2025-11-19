@@ -30,8 +30,11 @@ public class FieldDto extends BaseDto<FieldDto> {
 	private String otherLegalDescription;
 	private Integer legalLandId;
 	private Integer totalLegalLand;
+	
+	private String primaryPropertyIdentifier;
 
 	private List<PolicyDto> policies = new ArrayList<PolicyDto>();
+	private List<LegalLandDto> associatedLegalLand;
 
 
 	public FieldDto() {
@@ -55,6 +58,8 @@ public class FieldDto extends BaseDto<FieldDto> {
 		this.otherLegalDescription = dto.otherLegalDescription;
 		this.totalLegalLand = dto.totalLegalLand;
 		
+		this.primaryPropertyIdentifier = dto.primaryPropertyIdentifier;
+		
 		if ( dto.policies != null ) {			
 			this.policies = new ArrayList<>();
 			
@@ -62,6 +67,14 @@ public class FieldDto extends BaseDto<FieldDto> {
 				this.policies.add(ifDto.copy());
 			}
 		}	
+		
+		if ( dto.associatedLegalLand != null ) {			
+			this.associatedLegalLand = new ArrayList<>();
+			
+			for ( LegalLandDto llDto : dto.associatedLegalLand) {
+				this.associatedLegalLand.add(llDto.copy());
+			}
+		}
 
 	}
 	
@@ -209,5 +222,20 @@ public class FieldDto extends BaseDto<FieldDto> {
 	public void setTotalLegalLand(Integer totalLegalLand) {
 		this.totalLegalLand = totalLegalLand;
 	}
+	
+	public String getPrimaryPropertyIdentifier() {
+		return primaryPropertyIdentifier;
+	}
 
+	public void setPrimaryPropertyIdentifier(String primaryPropertyIdentifier) {
+		this.primaryPropertyIdentifier = primaryPropertyIdentifier;
+	}
+
+	public List<LegalLandDto> getAssociatedLegalLand() {
+		return associatedLegalLand;
+	}
+
+	public void setAssociatedLegalLand(List<LegalLandDto> associatedLegalLand) {
+		this.associatedLegalLand = associatedLegalLand;
+	}
 }

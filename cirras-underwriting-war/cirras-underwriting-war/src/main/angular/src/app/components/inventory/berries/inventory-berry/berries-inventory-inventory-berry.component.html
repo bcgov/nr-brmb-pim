@@ -1,0 +1,135 @@
+
+<div [formGroup]="inventoryBerriesFormGroup">
+
+    <div style="display: contents;">
+
+        <!-- cranberry specific -->
+        <div *ngIf="isCranberry()" class="inventory-fill inventory-border-right" style="width: 100px;">
+            <mat-form-field appearance="fill" style="width: 100px;">
+                <input matInput type="text"
+                        formControlName="bogId"
+                        maxlength="10"
+                        (blur)="updateBogId()">
+            </mat-form-field>  
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Bog Id is writeable">edit</mat-icon>
+        </div>
+
+        <div class="inventory-fill inventory-border-right" style="width: 80px;">
+            <mat-form-field appearance="fill">
+                <input matInput formControlName="plantedYear"                                                             
+                    (keypress)="numberOnly($event)" 
+                    (blur)="updatePlantedYear()"
+                    maxlength="4">
+            </mat-form-field>
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Planted Year is writeable">edit</mat-icon>
+        
+        </div>
+
+        <div class="inventory-fill inventory-border-right" style="width: 100px;">
+            <mat-form-field appearance="fill">
+                <input matInput formControlName="plantedAcres"                                                             
+                    (keypress)="numberOnly($event)" 
+                    (blur)="updatePlantedAcres()"
+                    maxlength="10">
+            </mat-form-field>
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Planted Acres is writeable">edit</mat-icon>
+        </div>
+
+        <div class="inventory-fill inventory-border-right" style="width: 80px;">
+            <mat-checkbox formControlName="isQuantityInsurableInd" (change)="updateIsQuantityInsurableInd()"></mat-checkbox>
+        </div>
+
+        <!-- cranberry specific -->
+        <div *ngIf="isCranberry()" class="inventory-fill inventory-border-right" style="width: 100px;">
+            <mat-form-field appearance="fill">
+                <input matInput formControlName="bogMowedDate"                                                             
+                    (blur)="updateBogMowedDate()"
+                    maxlength="5">
+            </mat-form-field>
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Bog Mowed is writeable">edit</mat-icon>
+        </div>
+
+        <div *ngIf="isCranberry()" class="inventory-fill inventory-border-right" style="width: 100px;">
+            <mat-form-field appearance="fill">
+                <input matInput formControlName="bogRenovatedDate"                                                             
+                    (blur)="updateBogRenovatedDate()"
+                    maxlength="5">
+            </mat-form-field>
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Bog Renovated is writeable">edit</mat-icon>
+        </div>
+        <div *ngIf="isCranberry()" class="inventory-fill inventory-border-right" style="width: 100px;">
+            <mat-checkbox formControlName="isHarvestedInd" (change)="updateIsHarvestedInd()"></mat-checkbox>
+        </div>
+        <!-- end cranberry specific -->
+
+        <!-- variety -->
+        <div class="inventory-fill inventory-border-right" style="width:180px;">
+
+            <mat-form-field appearance="fill">
+                <input 
+                    type="text" 
+                    matInput 
+                    formControlName="cropVarietyCtrl" 
+                    [matAutocomplete]="autoVrty"
+                    (focus)="varietyFocus()"
+                    (keyup)="searchVariety($event.target.value)"
+                    (blur)="updateCropVariety()">
+                <mat-autocomplete #autoVrty="matAutocomplete"  hideSingleSelectionIndicator="true"
+                    [displayWith]="displayVarietyFn">
+                <mat-option *ngFor="let option of filteredVarietyOptions" [value]="option">
+                    {{ option.varietyName | titlecase }}
+                </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>  
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Variety is writeable">edit</mat-icon>
+        </div>
+
+        <div *ngIf="showRowSpacing()" class="inventory-fill inventory-border-right" style="width: 80px;">
+            <mat-form-field appearance="fill">
+                <input matInput formControlName="rowSpacing"                                                             
+                    (keypress)="numberOnly($event)" 
+                    (blur)="updateRowSpacing()"
+                    maxlength="4">
+            </mat-form-field>
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Row Spacing is writeable">edit</mat-icon>
+        </div>
+
+        <div *ngIf="showPlantSpacing()" class="inventory-fill inventory-border-right" style="width: 80px;">
+            <mat-form-field appearance="fill">
+                <input matInput formControlName="plantSpacing"                                                             
+                    (keypress)="numberOnly($event)" 
+                    (blur)="updatePlantSpacing()"
+                    maxlength="6">
+            </mat-form-field>
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Plant Spacing is writeable">edit</mat-icon>
+        </div>
+
+        <div *ngIf="showTotalPlants()" class="inventory-cell inventory-border-right" style="width: 80px;">
+            {{ (( inventoryBerry && inventoryBerry.totalPlants) ? inventoryBerry.totalPlants : "" ) | number: '1.0-2'}}
+        </div>
+
+        <div *ngIf="showIsPlantInsured()" class="inventory-fill inventory-border-right"  [ngStyle]="setPlantInsuredStyles()">
+            <mat-checkbox *ngIf="selectedCommodity !== BERRY_COMMODITY.Strawberry" formControlName="isPlantInsurableInd" (change)="updateIsPlantInsurableInd()"></mat-checkbox>
+
+            <mat-form-field *ngIf="selectedCommodity == BERRY_COMMODITY.Strawberry" appearance="fill">
+                <mat-select hideSingleSelectionIndicator="true"
+                    formControlName="plantInsurabilityTypeCode"
+                    (selectionChange)="updatePlantInsurabilityTypeCode()">
+                    <mat-option [value]="null"></mat-option>
+                    <mat-option *ngFor="let option of plantInsurabilityOptions" [value]="option.code"
+                    >{{ option.description | titlecase }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+        </div>
+
+        <div class="action-icons" style="width:30px;"> 
+            <mat-icon *ngIf="securityUtilService.canEditInventory()"
+                matTooltip="Delete Planting" 
+                style="margin-left: 4px; margin-right: 4px;"
+                (click)="onDeletePlanting()"
+                svgIcon="cancel"></mat-icon>
+        </div>
+
+    </div>
+</div>

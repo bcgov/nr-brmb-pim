@@ -3,6 +3,7 @@ CREATE TABLE cuws.inventory_berries(
     inventory_field_guid         varchar(32)       NOT NULL,
     crop_commodity_id            numeric(9, 0)     NOT NULL,
     crop_variety_id              numeric(9, 0),
+    plant_insurability_type_code    varchar(10),
     planted_year                 numeric(4, 0),
     planted_acres                numeric(10, 4),
     row_spacing                  numeric(4, 0),
@@ -10,6 +11,10 @@ CREATE TABLE cuws.inventory_berries(
     total_plants                 numeric(10, 0),
     is_quantity_insurable_ind    varchar(1)        NOT NULL,
     is_plant_insurable_ind       varchar(1)        NOT NULL,
+    bog_id                       varchar(10),
+    bog_mowed_date               date,
+    bog_renovated_date           date,
+    is_harvested_ind             varchar(1)        NOT NULL,
     create_user                  varchar(64)       NOT NULL,
     create_date                  timestamp(0)      NOT NULL,
     update_user                  varchar(64)       NOT NULL,
@@ -27,6 +32,8 @@ COMMENT ON COLUMN cuws.inventory_berries.crop_commodity_id IS 'Crop Commodity Id
 ;
 COMMENT ON COLUMN cuws.inventory_berries.crop_variety_id IS 'Crop Variety Id is a unique Id of a variety from cirr_crop_types.crpt_id'
 ;
+COMMENT ON COLUMN cuws.inventory_berries.plant_insurability_type_code IS 'Plant Insurability Type Code is a unique record identifier for plant insurability type records.'
+;
 COMMENT ON COLUMN cuws.inventory_berries.planted_year IS 'Planted Year was the year when the variety was planted'
 ;
 COMMENT ON COLUMN cuws.inventory_berries.planted_acres IS 'Planted Acres is the number of acres utilized by the planted crop'
@@ -40,6 +47,14 @@ COMMENT ON COLUMN cuws.inventory_berries.total_plants IS 'Total plants is a coun
 COMMENT ON COLUMN cuws.inventory_berries.is_quantity_insurable_ind IS 'Is Quantity Insured flag determines if the specified crop is quantity insurable (Y) or not (N).'
 ;
 COMMENT ON COLUMN cuws.inventory_berries.is_plant_insurable_ind IS 'Is Plant Insured flag determines if the specified crop is plant insurable (Y) or not (N).'
+;
+COMMENT ON COLUMN cuws.inventory_berries.bog_id IS 'Bog Id is the id of a cranberry bog used on the inventory contract'
+;
+COMMENT ON COLUMN cuws.inventory_berries.bog_mowed_date IS 'Bog Mowed Date is the date of when a cranberry bog has been mowed'
+;
+COMMENT ON COLUMN cuws.inventory_berries.bog_renovated_date IS 'Bog Renovated Date is the date of when a cranberry bog has been renovated'
+;
+COMMENT ON COLUMN cuws.inventory_berries.is_harvested_ind IS 'Is Harvested Ind indicates if a cranberry bog is being harvested or not'
 ;
 COMMENT ON COLUMN cuws.inventory_berries.create_user IS 'Create User is the user id of the user that created the record'
 ;
@@ -59,6 +74,9 @@ CREATE INDEX ix_ib_cva ON cuws.inventory_berries(crop_variety_id)
  TABLESPACE pg_default
 ;
 CREATE INDEX ix_ib_cco ON cuws.inventory_berries(crop_commodity_id)
+ TABLESPACE pg_default
+;
+CREATE INDEX ix_ib_pitc ON cuws.inventory_berries(plant_insurability_type_code)
  TABLESPACE pg_default
 ;
 ALTER TABLE cuws.inventory_berries ADD 
@@ -84,4 +102,7 @@ ALTER TABLE cuws.inventory_berries ADD CONSTRAINT fk_ib_cco
     REFERENCES cuws.crop_commodity(crop_commodity_id)
 ;
 
-
+ALTER TABLE cuws.inventory_berries ADD CONSTRAINT fk_ib_pitc 
+    FOREIGN KEY (plant_insurability_type_code)
+    REFERENCES cuws.plant_insurability_type_code(plant_insurability_type_code)
+;

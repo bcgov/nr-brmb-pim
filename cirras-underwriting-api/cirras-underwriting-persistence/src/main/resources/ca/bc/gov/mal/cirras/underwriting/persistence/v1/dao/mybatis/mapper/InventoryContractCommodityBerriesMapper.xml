@@ -10,8 +10,10 @@
 		<result property="cropCommodityId" column="crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="totalInsuredPlants" column="total_insured_plants" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="totalUninsuredPlants" column="total_uninsured_plants" javaType="java.lang.Integer" jdbcType="NUMERIC" />
-		<result property="totalInsuredAcres" column="total_insured_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
-		<result property="totalUninsuredAcres" column="total_uninsured_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="totalQuantityInsuredAcres" column="total_quantity_insured_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="totalQuantityUninsuredAcres" column="total_quantity_uninsured_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="totalPlantInsuredAcres" column="total_plant_insured_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="totalPlantUninsuredAcres" column="total_plant_uninsured_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
 		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -27,8 +29,10 @@
 			t.crop_commodity_id, 
 			t.total_insured_plants, 
 			t.total_uninsured_plants, 
-			t.total_insured_acres, 
-			t.total_uninsured_acres, 
+			t.total_quantity_insured_acres, 
+			t.total_quantity_uninsured_acres, 
+			t.total_plant_insured_acres, 
+			t.total_plant_uninsured_acres, 
 			t.create_user, 
 			t.create_date, 
 			t.update_user, 
@@ -55,8 +59,10 @@
 			crop_commodity_id,
 			total_insured_plants,
 			total_uninsured_plants,
-			total_insured_acres,
-			total_uninsured_acres,
+			total_quantity_insured_acres,
+			total_quantity_uninsured_acres,
+			total_plant_insured_acres,
+			total_plant_uninsured_acres,
 			create_user, 
 			create_date, 
 			update_user, 
@@ -67,8 +73,10 @@
 			#{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.totalInsuredPlants, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.totalUninsuredPlants, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
-			#{dto.totalInsuredAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
-			#{dto.totalUninsuredAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalQuantityInsuredAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalQuantityUninsuredAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalPlantInsuredAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalPlantUninsuredAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
 			now(),
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
@@ -80,8 +88,10 @@
 		update inventory_contract_commodity_berries
 		set total_insured_plants = #{dto.totalInsuredPlants, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
 			total_uninsured_plants = #{dto.totalUninsuredPlants, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
-			total_insured_acres = #{dto.totalInsuredAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
-			total_uninsured_acres = #{dto.totalUninsuredAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			total_quantity_insured_acres = #{dto.totalQuantityInsuredAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			total_quantity_uninsured_acres = #{dto.totalQuantityUninsuredAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			total_plant_insured_acres = #{dto.totalPlantInsuredAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			total_plant_uninsured_acres = #{dto.totalPlantUninsuredAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
 			update_date = now()
 		where inventory_contract_commodity_berries_guid = #{dto.inventoryContractCommodityBerriesGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}

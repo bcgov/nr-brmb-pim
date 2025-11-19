@@ -19,6 +19,7 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 	private String inventoryFieldGuid;
 	private Integer cropCommodityId;
 	private Integer cropVarietyId;
+	private String plantInsurabilityTypeCode;
 	private Integer plantedYear;
 	private Double plantedAcres;
 	private Integer rowSpacing;
@@ -26,6 +27,10 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 	private Integer totalPlants;
 	private Boolean isQuantityInsurableInd;
 	private Boolean isPlantInsurableInd;
+	private String bogId;
+	private Date bogMowedDate;
+	private Date bogRenovatedDate;
+	private Boolean isHarvestedInd;
 	private String createUser;
 	private Date createDate;
 	private String updateUser;
@@ -45,12 +50,17 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 		this.cropCommodityId = dto.cropCommodityId;
 		this.cropVarietyId = dto.cropVarietyId;
 		this.plantedYear = dto.plantedYear;
+		this.plantInsurabilityTypeCode = dto.plantInsurabilityTypeCode;
 		this.plantedAcres = dto.plantedAcres;
 		this.rowSpacing = dto.rowSpacing;
 		this.plantSpacing = dto.plantSpacing;
 		this.totalPlants = dto.totalPlants;
 		this.isQuantityInsurableInd = dto.isQuantityInsurableInd;
 		this.isPlantInsurableInd = dto.isPlantInsurableInd;
+		this.bogId = dto.bogId;
+		this.bogMowedDate = dto.bogMowedDate;
+		this.bogRenovatedDate = dto.bogRenovatedDate;
+		this.isHarvestedInd = dto.isHarvestedInd;
 		this.createUser = dto.createUser;
 		this.createDate = dto.createDate;
 		this.updateUser = dto.updateUser;
@@ -80,12 +90,20 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 			result = result&&dtoUtils.equals("cropCommodityId", cropCommodityId, other.cropCommodityId);
 			result = result&&dtoUtils.equals("cropVarietyId", cropVarietyId, other.cropVarietyId);
 			result = result&&dtoUtils.equals("plantedYear", plantedYear, other.plantedYear);
+			result = result&&dtoUtils.equals("plantInsurabilityTypeCode", plantInsurabilityTypeCode, other.plantInsurabilityTypeCode);
 			result = result&&dtoUtils.equals("plantedAcres", plantedAcres, other.plantedAcres, 4);
 			result = result&&dtoUtils.equals("rowSpacing", rowSpacing, other.rowSpacing);
 			result = result&&dtoUtils.equals("plantSpacing", plantSpacing, other.plantSpacing, 4);
 			result = result&&dtoUtils.equals("totalPlants", totalPlants, other.totalPlants);
 			result = result&&dtoUtils.equals("isQuantityInsurableInd", isQuantityInsurableInd, other.isQuantityInsurableInd);
 			result = result&&dtoUtils.equals("isPlantInsurableInd", isPlantInsurableInd, other.isPlantInsurableInd);
+			result = result&&dtoUtils.equals("bogId", bogId, other.bogId);
+			result = result&&dtoUtils.equals("isHarvestedInd", isHarvestedInd, other.isHarvestedInd);
+			
+			//Nullable dates
+			result = result&&DateUtils.equalsDate(logger, "bogMowedDate", bogMowedDate, other.bogMowedDate);
+			result = result&&DateUtils.equalsDate(logger, "bogRenovatedDate", bogRenovatedDate, other.bogRenovatedDate);
+
 		}
 		
 		return result;
@@ -131,6 +149,14 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 
 	public void setCropVarietyId(Integer cropVarietyId) {
 		this.cropVarietyId = cropVarietyId;
+	}
+
+	public String getPlantInsurabilityTypeCode() {
+		return plantInsurabilityTypeCode;
+	}
+
+	public void setPlantInsurabilityTypeCode(String plantInsurabilityTypeCode) {
+		this.plantInsurabilityTypeCode = plantInsurabilityTypeCode;
 	}
 
 	public Integer getPlantedYear() {
@@ -188,6 +214,38 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 
 	public void setIsPlantInsurableInd(Boolean isPlantInsurableInd) {
 		this.isPlantInsurableInd = isPlantInsurableInd;
+	}
+
+	public String getBogId() {
+		return bogId;
+	}
+
+	public void setBogId(String bogId) {
+		this.bogId = bogId;
+	}
+
+	public Date getBogMowedDate() {
+		return bogMowedDate;
+	}
+
+	public void setBogMowedDate(Date bogMowedDate) {
+		this.bogMowedDate = bogMowedDate;
+	}
+
+	public Date getBogRenovatedDate() {
+		return bogRenovatedDate;
+	}
+
+	public void setBogRenovatedDate(Date bogRenovatedDate) {
+		this.bogRenovatedDate = bogRenovatedDate;
+	}
+
+	public Boolean getIsHarvestedInd() {
+		return isHarvestedInd;
+	}
+
+	public void setIsHarvestedInd(Boolean isHarvestedInd) {
+		this.isHarvestedInd = isHarvestedInd;
 	}
 
 	public String getCreateUser() {

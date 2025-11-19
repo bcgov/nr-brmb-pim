@@ -1,4 +1,4 @@
-import {  InventoryContractCommodity, InventoryCoverageTotalForage, InventoryField, PolicySimple, UnderwritingComment } from "@cirras/cirras-underwriting-api";
+import {  InventoryContractCommodity, InventoryContractCommodityBerries, InventoryCoverageTotalForage, InventoryField, PolicySimple, UnderwritingComment } from "@cirras/cirras-underwriting-api";
 import {  DopYieldFieldForage, DopYieldFieldGrain, VerifiableCommodity, VerifiableVariety } from "./models-yield";
 
 
@@ -67,8 +67,11 @@ export interface AnnualField {
   legalLandId?: number;
   fieldLabel?: string;
   otherLegalDescription?: string;
+  primaryPropertyIdentifier?: string;
+  fieldLocation?: string;
   displayOrder?: number;
   cropYear?: number;
+  isLeasedInd?: boolean;
   landUpdateType?: string;
   transferFromGrowerContractYearId?: number;
   plantings?: Array<InventoryField>;
@@ -110,6 +113,7 @@ export interface InventoryContract {
   growerName?: string;
   commodities?: Array<InventoryContractCommodity>;
   inventoryCoverageTotalForages?: Array<InventoryCoverageTotalForage>;
+  inventoryContractCommodityBerries?: Array<InventoryContractCommodityBerries>
   fields?: Array<AnnualField>;
   etag?: string;
   type: string;

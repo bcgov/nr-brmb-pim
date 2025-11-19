@@ -8,48 +8,45 @@
                 {{ (growerContract && growerContract.policyNumber) ? growerContract.policyNumber : "" }}   
             </div>
             <!-- unsaved messages -->
-            <div *ngIf="hasDataChanged == true; else noWarningDiv">
+            <div *ngIf="isUnsaved; else noWarningDiv">
                 <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
             </div>
-            <div *ngIf="hasDataChanged == true; else noWarningDiv" class="unsaved-changes">
+            <div *ngIf="isUnsaved; else noWarningDiv" class="unsaved-changes">
                 Unsaved Changes 
             </div>
             <ng-template #noWarningDiv>
                 <div><!-- empty div to account for space when there is no warning --> </div>
             </ng-template>
-            <!-- related policies -->
-            <!-- <div>
-                <related-policies
-                    [growerContract]="growerContract"
-                ></related-policies> 
-            </div> -->
-            <div class="vertical-line"></div>
+            <div>
+                <!-- related policies -->
+            </div>
+            <div></div>
             <div matTooltip="Changes must be saved before download is possible.">
-                <!-- <button mat-raised-button class="secondary button-large-text" [disabled]="hasDataChanged == true"
+                <button mat-raised-button class="secondary button-large-text" [disabled]="isUnsaved == true"
                 (click)="onPrint()">
                     <mat-icon class="button-mat-icon">download</mat-icon>Download
-                </button> -->
+                </button>
             </div>
             <div>
-                <!-- <button 
+                <button 
                     *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
                     mat-raised-button 
-                    [ngClass]="isHiddenFieldInTotals ? 'secondary header-button-red' : 'primary button-large-text'"
-                    [disabled]="!hasDataChanged && inventoryContract?.inventoryContractGuid" 
+                    class="primary button-large-text" 
+                    [disabled]="!isUnsaved && inventoryContract?.inventoryContractGuid" 
                     (click)="onSave()">
                         Save
-                </button> -->
+                </button>
             </div>
         </div>
 
-        <!-- <div id="hidden-totals-warning">
-            <div *ngIf="isHiddenFieldInTotals">
+        <div id="hidden-totals-warning">
+            <div *ngIf="isHiddenPlantingInTotals">
                 <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
             </div>
-            <div *ngIf="isHiddenFieldInTotals">
-                Hidden fields are included in acre totals
+            <div *ngIf="isHiddenPlantingInTotals">
+                Hidden fields are included in the totals
             </div>
-        </div> -->
+        </div>
         
     <cirras-grower-contract-header
     [growerContract]="growerContract"
@@ -74,40 +71,93 @@
                 <h2>Berries Inventory</h2>
                 <p>Last Updated: {{ ((inventoryContract && inventoryContract.invUpdateTimestamp) ? inventoryContract.invUpdateTimestamp : "" ) | date }}</p>
             </div>
-            
+            <div class="plcy-frm-hdr-dropdown" matTooltip="Commodity">
+                <!-- Commodities: -->
+                <mat-form-field appearance="outline" style="width: 150px;">
+                    <mat-select formControlName="selectedCommodity" hideSingleSelectionIndicator="true" 
+                        (selectionChange)="commoditySelectionChanged()">
+                        <mat-option *ngFor="let option of cropCommodityOptions" [value]="option.cropCommodityId"
+                        >{{ option.commodityName | titlecase }}</mat-option>
+                    </mat-select>
+                    </mat-form-field>
+            </div>
+            <div><!-- empty div --></div>
             <div>
                 <!-- <button *ngIf="securityUtilService.canEditInventory() && !hasYieldData" mat-raised-button class="secondary header-button"  (click)="onAddNewField()">
                     <mat-icon class="button-mat-icon">add</mat-icon>Add Field
                 </button> -->
             </div>
             <div>
-                <!-- <button *ngIf="!hasYieldData" 
+                <button *ngIf="!hasYieldData" 
                     mat-raised-button 
                     class="secondary header-button"  
                     matTooltip="Clear unsaved changes"
                     (click)="onCancel()">
                     Clear Changes
-                </button> -->
+                </button>
             </div>
             <div class="vertical-line"></div>
             <div>
-                <!-- <button *ngIf="securityUtilService.canDeleteInventory() && 
+                <button *ngIf="securityUtilService.canDeleteInventory() && 
                                 inventoryContract && inventoryContract.inventoryContractGuid &&
                                 hasYieldData == false"  
                     mat-raised-button 
                     class="secondary header-button-red"  
                     (click)="onDeleteInventory()">
                     <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset Inventory
-                </button> -->
+                </button>
             </div>
         </div>
 
 
-        <div class=" plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
+        <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
 
-            <!-- TODO: inventory table  -->
+            <berries-inventory-field-list
+                *ngIf="inventoryContract && inventoryContract.fields"
+                [fields]="inventoryContract.fields"
+                [fieldsFormArray]="getViewModel().formGroup.controls.fields"
+                [cropVarietyOptions]="cropVarietyOptions"
+                [selectedCommodity]="selectedCommodity">
+            </berries-inventory-field-list>
 
         </div>
+
+        <!-- totals -->
+        <div *ngIf="inventoryContract && inventoryContract.inventoryContractCommodityBerries && inventoryContract.inventoryContractCommodityBerries.length > 0"
+            class="plcy-inv-cntrct" style="grid-template-columns: 500px 400px;">
+            
+            <div *ngIf="isUnsaved" class="message-container">
+                <div class="has-yield-warning">
+                    <mat-icon>warning</mat-icon>            
+                    <span class="warning-message">
+                        All Totals are calculated on save.</span> 
+                </div>
+            </div>
+            <div *ngIf="isUnsaved"></div>
+            
+            <div>
+                <berries-inventory-commodity-totals 
+                    *ngIf="inventoryContract && inventoryContract.inventoryContractCommodityBerries.length > 0 && 
+                        inventoryContract.inventoryContractCommodityBerries[0].cropCommodityId == selectedCommodity"
+                    [insurabilityType]="'quantity'"
+                    [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" 
+                    [selectedCommodity]="selectedCommodity">
+                </berries-inventory-commodity-totals>
+            </div>
+            <div>
+                <berries-inventory-commodity-totals 
+                    *ngIf="(selectedCommodity == BERRY_COMMODITY.Blueberry || selectedCommodity == BERRY_COMMODITY.Strawberry) &&
+                        inventoryContract && inventoryContract.inventoryContractCommodityBerries.length > 0 && 
+                        inventoryContract.inventoryContractCommodityBerries[0].cropCommodityId == selectedCommodity"
+                    [insurabilityType]="'plant'"
+                    [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" 
+                    [selectedCommodity]="selectedCommodity">
+                </berries-inventory-commodity-totals>
+            </div>
+        </div>
+
+       
+
     </form>
 </div>
 </div>

@@ -1,6 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.model.v1;
 
 import java.io.Serializable;
+import java.util.Date;
 
 //
 // This is not going to be a resource.
@@ -12,6 +13,7 @@ public class InventoryBerries implements Serializable {
 	private String inventoryFieldGuid;
 	private Integer cropCommodityId;
 	private Integer cropVarietyId;
+	private String plantInsurabilityTypeCode;
 	private Integer plantedYear;
 	private Double plantedAcres;
 	private Integer rowSpacing;
@@ -19,10 +21,16 @@ public class InventoryBerries implements Serializable {
 	private Integer totalPlants;
 	private Boolean isQuantityInsurableInd;
 	private Boolean isPlantInsurableInd;
+	private String bogId;
+	private Date bogMowedDate;
+	private Date bogRenovatedDate;
+	private Boolean isHarvestedInd;
 
 	private String cropCommodityName;
 	private String cropVarietyName;
-	
+
+	private Boolean deletedByUserInd;
+
 	public String getInventoryBerriesGuid() {
 		return inventoryBerriesGuid;
 	}
@@ -53,6 +61,14 @@ public class InventoryBerries implements Serializable {
 
 	public void setCropVarietyId(Integer cropVarietyId) {
 		this.cropVarietyId = cropVarietyId;
+	}
+
+	public String getPlantInsurabilityTypeCode() {
+		return plantInsurabilityTypeCode;
+	}
+
+	public void setPlantInsurabilityTypeCode(String plantInsurabilityTypeCode) {
+		this.plantInsurabilityTypeCode = plantInsurabilityTypeCode;
 	}
 
 	public Integer getPlantedYear() {
@@ -112,6 +128,38 @@ public class InventoryBerries implements Serializable {
 		this.isPlantInsurableInd = isPlantInsurableInd;
 	}
 
+	public String getBogId() {
+		return bogId;
+	}
+
+	public void setBogId(String bogId) {
+		this.bogId = bogId;
+	}
+
+	public Date getBogMowedDate() {
+		return bogMowedDate;
+	}
+
+	public void setBogMowedDate(Date bogMowedDate) {
+		this.bogMowedDate = bogMowedDate;
+	}
+
+	public Date getBogRenovatedDate() {
+		return bogRenovatedDate;
+	}
+
+	public void setBogRenovatedDate(Date bogRenovatedDate) {
+		this.bogRenovatedDate = bogRenovatedDate;
+	}
+
+	public Boolean getIsHarvestedInd() {
+		return isHarvestedInd;
+	}
+
+	public void setIsHarvestedInd(Boolean isHarvestedInd) {
+		this.isHarvestedInd = isHarvestedInd;
+	}
+	
 	public String getCropCommodityName() {
 		return cropCommodityName;
 	}
@@ -126,6 +174,13 @@ public class InventoryBerries implements Serializable {
 
 	public void setCropVarietyName(String cropVarietyName) {
 		this.cropVarietyName = cropVarietyName;
+	}
+	
+	public Boolean getDeletedByUserInd() {
+		return deletedByUserInd;
+	}
+	public void setDeletedByUserInd(Boolean deletedByUserInd) {
+		this.deletedByUserInd = deletedByUserInd;
 	}
 		
 }
