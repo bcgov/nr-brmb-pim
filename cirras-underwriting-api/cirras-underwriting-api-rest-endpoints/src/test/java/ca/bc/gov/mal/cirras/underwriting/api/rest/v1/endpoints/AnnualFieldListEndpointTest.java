@@ -18,7 +18,6 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldListRsr
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.EndpointsRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.FieldRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandFieldXrefRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandManagementEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.test.EndpointsTest;
@@ -91,8 +90,8 @@ public class AnnualFieldListEndpointTest extends EndpointsTest {
 
 		EndpointsRsrc topLevelEndpoints = service.getTopLevelEndpoints();
 		Integer legalLandId = 8129;
-		String fieldId = "22173";
-		String cropYear = "2022";
+		String fieldId = "25245";
+		String cropYear = "2024";
 		String otherLegalDescription = "NE SEC 19 TP 86 RNG 19 W 6TH M";
 
 		AnnualFieldListRsrc searchResults = service.getAnnualFieldList(
@@ -106,6 +105,7 @@ public class AnnualFieldListEndpointTest extends EndpointsTest {
 		
 		List<AnnualFieldRsrc> fields = searchResults.getCollection();
 		Assert.assertNotNull(fields);
+		Assert.assertTrue(fields.size() > 0);
 		
 		for (AnnualFieldRsrc resource: fields) {
 			Assert.assertNotNull(resource.getPolicies());
