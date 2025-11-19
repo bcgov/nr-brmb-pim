@@ -27,8 +27,6 @@ export class LegalLandListComponent {
     return false
   }
 
-  // grid-template-columns: 1fr 2fr 2fr 5fr;
-
   setStyles() {
     
     if (this.insurancePlanId == INSURANCE_PLAN.FORAGE || this.insurancePlanId == INSURANCE_PLAN.GRAIN ) {

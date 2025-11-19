@@ -1,0 +1,28 @@
+
+        <div class="field-container field-info" >   
+
+            <div class="border-right header justify-center border-top border-bottom border-left">Field Id</div>
+            <div class="border-right header justify-center border-top border-bottom border-left">Field Name</div>
+            <div class="border-right header justify-center border-top border-bottom border-left">Legal Location</div>
+            <div class="border-right header justify-center border-top border-bottom">Policy (Plan) - Grower</div>
+
+            <div 
+                *ngFor="let field of fieldList"   
+                style="display:contents">
+
+                <div class="border-right justify-center border-top border-bottom border-left">
+                    {{ field.fieldId }}
+                </div>
+                <div class="border-right justify-center border-top border-bottom border-left">
+                    {{ field.fieldLabel }}
+                </div>
+
+                <div class="border-right justify-center border-top border-bottom border-left">
+                    {{ field.otherLegalDescription }}
+                </div>
+
+                <div class="border-right justify-center border-top border-bottom" style="white-space: pre;">
+                    {{ getPolicyAndPlan(field) }}
+                </div>
+            </div>
+        </div>

@@ -20,7 +20,7 @@
             <div></div>
             <div class="grid-item">
                 <mat-form-field appearance="fill" [style.width.px]=580>
-                    <input matInput formControlName="searchLegalLandOrFieldId" (keydown)="clearAllForm()" maxlength="128">
+                    <input matInput formControlName="searchLegalLandOrFieldId" (keydown)="onTypeInSearchBox()" maxlength="128">
                     <mat-hint *ngIf="showSearchLegalMsg">Please enter at least 3 symbols</mat-hint>
                 </mat-form-field>
             </div>
@@ -47,12 +47,20 @@
             [legalLandList]="legalLandList.collection"
             [insurancePlanId]="dataReceived.insurancePlanId">
         </legal-land-list>
-    
     </div>
+
+    <div class="row-group-left">
+        <field-list 
+        *ngIf="fieldList && fieldList.collection && fieldList.collection.length > 0" 
+        [fieldList]="fieldList.collection"></field-list>
+    </div>
+    
+    
+
 </div>
 <div mat-dialog-actions align="end">
-    <!-- <span *ngIf="showProceedButton" style="padding-right:160px;">To save field, click done and then click save on the main screen.</span>
+    <span *ngIf="showProceedButton" style="padding-right:160px;">To save field, click done and then click save on the main screen.</span>
     <button mat-raised-button class="secondary" (click)="onCancelChanges()">Cancel</button>
-    <button *ngIf="showProceedButton" mat-raised-button class="primary" (click)="onProceed()">Done</button> -->
+    <!-- <button *ngIf="showProceedButton" mat-raised-button class="primary" (click)="onProceed()">Done</button> -->
 </div>
 </cuws-base-dialog>

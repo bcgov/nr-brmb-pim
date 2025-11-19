@@ -11,6 +11,15 @@ import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 
+export function getSearchFieldUrl(cropYear, legalLandId, fieldId, fieldLocation){
+    
+  let url = "/annualFields?legalLandId=" + legalLandId.toString()
+  url = url +"&fieldId=" + fieldId.toString()
+  url = url +"&fieldLocation=" + fieldLocation
+  url = url +"&cropYear=" +  cropYear.toString()
+
+  return url
+}
 
 @Component({
   selector: 'add-field',
@@ -66,7 +75,6 @@ export class AddFieldComponent implements OnInit{
 
     if (this.dataReceived) {
 
-      console.log("dataReceived")
       if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.GRAIN || this.dataReceived.insurancePlanId == INSURANCE_PLAN.FORAGE) {
         defaultChoice = 'searchLegalLocation'
       }
@@ -112,6 +120,20 @@ export class AddFieldComponent implements OnInit{
     this.fieldList = null
   }
 
+  onTypeInSearchBox() {
+
+    this.clearAllForm()
+
+    const searchLegalLandOrFieldId = this.addFieldForm.controls.searchLegalLandOrFieldId.value
+
+    // start the search when least 3 symbols are entered
+    if (!searchLegalLandOrFieldId || searchLegalLandOrFieldId.length < 3) {
+      if (this.addFieldForm.controls.choiceSelected.value == 'searchFieldLocation') {
+        this.getFields(this.dataReceived.cropYear, "", "", searchLegalLandOrFieldId)
+      }
+    }
+  }
+
   onSearch() {
     const searchLegalLandOrFieldId = this.addFieldForm.controls.searchLegalLandOrFieldId.value
 
@@ -127,14 +149,16 @@ export class AddFieldComponent implements OnInit{
     if (this.addFieldForm.controls.choiceSelected.value == 'searchLegalLocation' || this.addFieldForm.controls.choiceSelected.value == 'searchPID') {
       // search legal land
       this.searchLegalLand(searchLegalLandOrFieldId)
-    } else {
-      // search field 
-      // if (!isNaN(searchLegalLandOrFieldId)) {
-      //   this.getFields("", searchLegalLandOrFieldId)
-      // } else {
-      //   alert( searchLegalLandOrFieldId + " is not a valid Field ID")
-      // }
-    }    
+    } 
+
+    // search field 
+    if (this.addFieldForm.controls.choiceSelected.value == 'searchFieldId') {
+      if (!isNaN(searchLegalLandOrFieldId)) {
+        this.getFields(this.dataReceived.cropYear, "", searchLegalLandOrFieldId, "")
+      } else {
+        alert( searchLegalLandOrFieldId + " is not a valid Field ID")
+      }
+    }
   }
 
   getSearchLegalLandUrl(searchLegalLandOrFieldId) {
@@ -172,5 +196,23 @@ export class AddFieldComponent implements OnInit{
     })
   }
 
-  
+  getFields(cropYear, legalLandId, fieldId, fieldLocation){
+    
+    let url = this.appConfig.getConfig().rest["cirras_underwriting"]
+    url = url + getSearchFieldUrl(cropYear, legalLandId, fieldId, fieldLocation)
+
+    const httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
+
+    var self = this
+    return lastValueFrom(this.http.get(url,httpOptions)).then((data: AnnualFieldListRsrc) => {
+      self.fieldList = data;
+
+      // TODO 
+      // this.validateFields(self.fieldList.collection[0])
+    })
+  }
+
+  onCancelChanges() {
+    this.dialogRef.close({event:'Cancel'});
+  }
 }

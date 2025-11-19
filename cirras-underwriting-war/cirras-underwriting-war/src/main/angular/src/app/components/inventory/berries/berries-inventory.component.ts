@@ -378,6 +378,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       // }
 
       const dataToSend : any = {
+        cropYear: this.inventoryContract.cropYear,
         insurancePlanId: this.inventoryContract.insurancePlanId,
       }
 
