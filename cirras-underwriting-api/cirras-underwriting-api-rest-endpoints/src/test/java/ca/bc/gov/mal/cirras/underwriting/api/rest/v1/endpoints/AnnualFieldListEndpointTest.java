@@ -107,11 +107,11 @@ public class AnnualFieldListEndpointTest extends EndpointsTest {
 		Assert.assertNotNull(fields);
 		Assert.assertTrue(fields.size() > 0);
 		
-//		for (AnnualFieldRsrc resource: fields) {
-//			Assert.assertNotNull(resource.getPolicies());
-//			Assert.assertEquals("LegalLandId", legalLandId, resource.getLegalLandId());
-//			Assert.assertEquals("OtherLegalDescription", otherLegalDescription, resource.getOtherLegalDescription());
-//		}
+		for (AnnualFieldRsrc resource: fields) {
+			Assert.assertNotNull(resource.getPolicies());
+			Assert.assertEquals("LegalLandId", legalLandId, resource.getLegalLandId());
+			Assert.assertEquals("OtherLegalDescription", otherLegalDescription, resource.getOtherLegalDescription());
+		}
 		
 		logger.debug(">testSearchAnnualFieldsByField");
 	}
