@@ -1,0 +1,84 @@
+<form [formGroup]="fieldListForm">
+
+    <div *ngIf="!isSearchByFieldId()"
+        class="field-container error-messages" style="padding-top: 16px; padding-bottom: 16px;">
+
+        <div style="display:contents">
+            <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+            <div><span>
+                This legal location is already associated with the following fields. You can select an existing field or choose to create a new field.
+            </span></div>
+        </div>
+    </div>
+
+    <div class="cuw-table-wrapper">
+        <div class="field-container" [ngStyle]="setStyles()">   
+
+            <div *ngIf="!isSearchByFieldId()" class="border-right header justify-center border-top border-bottom border-left"></div>
+            <div class="border-right header justify-center border-top border-bottom border-left">Field Id</div>
+
+            <div *ngIf="isFieldAddressVisible()" class="border-right header justify-center border-top border-bottom border-left">Field Address</div>
+            <div *ngIf="isPIDVisible()" class="border-right header justify-center border-top border-bottom border-left">PID</div>
+
+            <div class="border-right header justify-center border-top border-bottom border-left">{{ displayFieldName() }}</div>
+            <div *ngIf="isLegalLocationVisible()" class="border-right header justify-center border-top border-bottom border-left">Legal Location</div>
+            <div class="border-right header justify-center border-top border-bottom">Policy (Plan) - Grower</div>
+
+            <div 
+                *ngFor="let field of fieldList"   
+                style="display:contents">
+
+                <div *ngIf="!isSearchByFieldId()" class="border-right justify-center border-bottom border-left">
+                    <input 
+                        type="radio" 
+                        [value]="field.fieldId" 
+                        formControlName="fieldIdSelected" 
+                        (click)="validateFields(field)"/>
+                </div>
+
+                <div class="border-right justify-center border-top border-bottom border-left">
+                    {{ field.fieldId }}
+                </div>
+
+                <div *ngIf="isFieldAddressVisible()" class="border-right justify-center border-top border-bottom border-left">
+                    {{ field.fieldLocation }}
+                </div>
+                <div *ngIf="isPIDVisible()" class="border-right justify-center border-top border-bottom border-left">
+                    {{ field.primaryPropertyIdentifier }}
+                </div>
+
+                <div class="border-right justify-center border-top border-bottom border-left">
+                    {{ field.fieldLabel }}
+                </div>
+
+                <div *ngIf="isLegalLocationVisible()" class="border-right justify-center border-top border-bottom border-left">
+                    {{ field.otherLegalDescription }}
+                </div>
+
+                <div class="border-right justify-center border-top border-bottom" style="white-space: pre;">
+                    {{ getPolicyAndPlan(field) }}
+                </div>
+            </div>
+
+            <div *ngIf="!isSearchByFieldId()" style="display:contents">
+                <div class="border-left justify-center border-bottom" >
+                    <input 
+                        type="radio" 
+                        [value]="-1" 
+                        formControlName="fieldIdSelected" />
+                </div>
+
+                <div class="fill justify-left border-bottom border-right" [ngStyle]="setNewFieldStyles()">
+                    Add New Field: &nbsp;&nbsp; &nbsp;
+                    <mat-form-field appearance="fill">
+                        <input style="width: 100px;" matInput formControlName="fieldLabel" 
+                                maxlength="128" (keydown)="checkLength()">
+                        <mat-hint *ngIf="showSearchLegalMsg">Please enter at least 5 symbols</mat-hint>
+                    </mat-form-field> 
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
