@@ -3,10 +3,6 @@
     display: grid;
     grid-auto-rows: minmax( 2em, auto );
 
-    // &.field-info {
-    //   grid-template-columns: 1fr 2fr 2fr 3fr;
-    // }
-
     &.error-messages {
       grid-template-columns: 1fr 20fr;
     }

@@ -1,9 +1,20 @@
 <form [formGroup]="fieldListForm">
 
+    <div *ngIf="!isSearchByFieldId()"
+        class="field-container error-messages" style="padding-top: 16px; padding-bottom: 16px;">
+
+        <div style="display:contents">
+            <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+            <div><span>
+                This legal location is already associated with the following fields. You can select an existing field or choose to create a new field.
+            </span></div>
+        </div>
+    </div>
+
     <div class="cuw-table-wrapper">
         <div class="field-container" [ngStyle]="setStyles()">   
 
-            <div *ngIf="isRadioBtnVisible()" class="border-right header justify-center border-top border-bottom border-left"></div>
+            <div *ngIf="!isSearchByFieldId()" class="border-right header justify-center border-top border-bottom border-left"></div>
             <div class="border-right header justify-center border-top border-bottom border-left">Field Id</div>
 
             <div *ngIf="isFieldAddressVisible()" class="border-right header justify-center border-top border-bottom border-left">Field Address</div>
@@ -17,7 +28,7 @@
                 *ngFor="let field of fieldList"   
                 style="display:contents">
 
-                <div *ngIf="isRadioBtnVisible()" class="border-right justify-center border-bottom border-left">
+                <div *ngIf="!isSearchByFieldId()" class="border-right justify-center border-bottom border-left">
                     <input 
                         type="radio" 
                         [value]="field.fieldId" 
@@ -49,7 +60,7 @@
                 </div>
             </div>
 
-            <div *ngIf="isRadioBtnVisible()" style="display:contents">
+            <div *ngIf="!isSearchByFieldId()" style="display:contents">
                 <div class="border-left justify-center border-bottom" >
                     <input 
                         type="radio" 

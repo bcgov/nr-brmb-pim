@@ -42,13 +42,10 @@ export class FieldListComponent {
       
     if (this.insurancePlanId == INSURANCE_PLAN.FORAGE || this.insurancePlanId == INSURANCE_PLAN.GRAIN ) {
       if (this.searchBy == 'searchFieldId') {
-        // the user is coming from add-field component
         return {
           'grid-template-columns': ' 1fr 2fr 2fr 3fr'
         }
       } else {
-        // the user is coming from legal-land-list component
-        // add one more column to allow the user to select a field
         return {
           'grid-template-columns': '1fr 1fr 2fr 2fr 3fr'
         };
@@ -56,44 +53,57 @@ export class FieldListComponent {
     }
 
     if (this.insurancePlanId == INSURANCE_PLAN.BERRIES ) {
+
       if (this.searchBy == 'searchFieldId') {
         return {
           'grid-template-columns': '1fr 2fr 2fr 2fr 2fr'
         }
-      } else {
-        // add one more column to allow the user to select a field
-        // the user is coming from add-field component or legal-land-list component
+      } 
+      if (this.searchBy == 'searchFieldLocation') {
         return {
           'grid-template-columns': '1fr 1fr 2fr 2fr 2fr 2fr'
         };
       }
+
+      if (this.searchBy == 'searchPID') {
+        return {
+          'grid-template-columns': '1fr 1fr 2fr 2fr 2fr'
+        };
+      }
+
     }
   }
   
-  // TODO
   setNewFieldStyles() {
-    debugger
+  
     if (this.insurancePlanId == INSURANCE_PLAN.FORAGE || this.insurancePlanId == INSURANCE_PLAN.GRAIN ) {
       return {
         'grid-column-start': '2',
-        'grid-column-end': '5'
-      };
-    }
-
-    if (this.insurancePlanId == INSURANCE_PLAN.BERRIES && this.searchBy == 'searchFieldLocation') {
-      return {
-        'grid-column-start': '2',
-        'grid-column-end': '7'
+        'grid-column-end': '6'
       };
     }
     
+    if (this.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+      if (this.searchBy == 'searchPID' || this.searchBy == 'searchFieldId') {
+        return {
+          'grid-column-start': '2',
+          'grid-column-end': '6'
+        };
+      } else {
+          return {
+          'grid-column-start': '2',
+          'grid-column-end': '7'
+        };
+      }
+      
+    }
   }
 
-  isRadioBtnVisible() {
+  isSearchByFieldId() {
     if (this.searchBy == 'searchFieldId') {
-      return false
-    } else {
       return true
+    } else {
+      return false
     }
   }
 
@@ -107,7 +117,11 @@ export class FieldListComponent {
 
   isPIDVisible() {
     if (this.insurancePlanId == INSURANCE_PLAN.BERRIES ) {
-      return true
+      if (this.searchBy == 'searchPID') {
+        return false
+      } else {
+        return true
+      }
     } else {
       return false
     }

@@ -11,16 +11,6 @@ import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 
-export function getSearchFieldUrl(cropYear, legalLandId, fieldId, fieldLocation){
-    
-  let url = "/annualFields?legalLandId=" + legalLandId.toString()
-  url = url +"&fieldId=" + fieldId.toString()
-  url = url +"&fieldLocation=" + fieldLocation
-  url = url +"&cropYear=" +  cropYear.toString()
-
-  return url
-}
-
 @Component({
   selector: 'add-field',
   templateUrl: './add-field.component.html',
@@ -34,6 +24,8 @@ export class AddFieldComponent implements OnInit{
   dialogType = DIALOG_TYPE.INFO;
 
   dataReceived // : AddLandPopupData;
+
+  legalLandId: number
 
   deafultSearchChoices = [
     { name: 'Legal Location', value: 'searchLegalLocation' , visible: [INSURANCE_PLAN.GRAIN, INSURANCE_PLAN.FORAGE] },
@@ -202,7 +194,10 @@ export class AddFieldComponent implements OnInit{
   getFields(cropYear, legalLandId, fieldId, fieldLocation){
     
     let url = this.appConfig.getConfig().rest["cirras_underwriting"]
-    url = url + getSearchFieldUrl(cropYear, legalLandId, fieldId, fieldLocation)
+    url = url + "/annualFields?legalLandId=" + legalLandId.toString()
+    url = url + "&fieldId=" + fieldId.toString()
+    url = url + "&fieldLocation=" + fieldLocation
+    url = url + "&cropYear=" +  cropYear.toString()
 
     const httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
 
@@ -217,6 +212,15 @@ export class AddFieldComponent implements OnInit{
         this.showNoFieldMessage = true
       }
     })
+  }
+
+  onLegalLandIdReceived(legalLandId: number) { 
+    this.legalLandId = legalLandId
+    console.log("onLegalLandIdReceived: " + legalLandId)
+
+    if (this.legalLandId > -1 ) {
+      this.getFields(this.dataReceived.cropYear, this.legalLandId, "", "")
+    }
   }
 
   onCancelChanges() {

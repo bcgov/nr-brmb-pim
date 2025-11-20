@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 
@@ -9,10 +9,11 @@ import { INSURANCE_PLAN } from 'src/app/utils/constants';
   standalone: false
 })
 export class LegalLandListComponent {
-  @Input() selectedSearch // e.g. searchPID
+  @Input() selectedSearch // e.g. PID
   @Input() selectedSearchValue  // e.g. the PID itself
   @Input() legalLandList 
   @Input() insurancePlanId
+  @Output() legalLandIdChanged = new EventEmitter<number>();
 
   legaLandListForm = new FormGroup({
     legalLandIdSelected: new FormControl('')
@@ -61,9 +62,8 @@ export class LegalLandListComponent {
     
   }
 
-
-  getFields() {
-    // TODO
-
+  sendLegalLandId(legalLandId: number) {
+    this.legalLandIdChanged.emit(legalLandId);
   }
+
 }

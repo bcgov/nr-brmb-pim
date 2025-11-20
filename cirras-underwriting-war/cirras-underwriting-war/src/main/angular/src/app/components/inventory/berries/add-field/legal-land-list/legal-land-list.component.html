@@ -29,7 +29,7 @@
                         type="radio" 
                         [value]="element.legalLandId" 
                         formControlName="legalLandIdSelected" 
-                        (click)="getFields(element.legalLandId, '')"/>
+                        (click)="sendLegalLandId(element.legalLandId)"/>
                 </div>
                 <div *ngIf="isLegalLocationVisible()" class="border-right justify-center border-bottom">
                     {{ element.otherDescription }}
@@ -48,7 +48,7 @@
                         type="radio" 
                         [value]="-1" 
                         formControlName="legalLandIdSelected" 
-                        (click)="getFields(-1, '')"/> 
+                        (click)="sendLegalLandId(-1)"/> 
                 </div>
 
                 <div class="border-right justify-left border-bottom" [ngStyle]="setNewLegalStyles()">

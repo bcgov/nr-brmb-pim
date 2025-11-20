@@ -49,11 +49,12 @@
             [selectedSearch]="selectedSearch" 
             [selectedSearchValue]="addFieldForm.controls.searchLegalLandOrFieldId.value"
             [legalLandList]="legalLandList.collection"
-            [insurancePlanId]="dataReceived.insurancePlanId">
+            [insurancePlanId]="dataReceived.insurancePlanId"
+            (legalLandIdChanged)="onLegalLandIdReceived($event)">
         </legal-land-list>
     </div>
 
-    <div class="row-group-left">
+    <div class="row-group-left" style="margin-top: 4px;">
         <field-list 
             *ngIf="fieldList && fieldList.collection && fieldList.collection.length > 0" 
             [fieldList]="fieldList.collection"
