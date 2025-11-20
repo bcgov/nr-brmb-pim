@@ -59,9 +59,16 @@
             *ngIf="fieldList && fieldList.collection && fieldList.collection.length > 0" 
             [fieldList]="fieldList.collection"
             [insurancePlanId]="dataReceived.insurancePlanId"
-            [searchBy]="addFieldForm.controls.choiceSelected.value"></field-list>
+            [searchBy]="addFieldForm.controls.choiceSelected.value"
+            (fieldIdChanged)="onFieldIdReceived($event)"></field-list>
     </div>
     
+    <div class="row-group-left" style="margin-top: 4px;">
+        <field-validations *ngIf="validationMessages && 
+                        ( (validationMessages.warningMessages && validationMessages.warningMessages.length > 0 ) || 
+                        (validationMessages.errorMessages && validationMessages.errorMessages.length > 0 ) )" 
+            [validationMessages]="validationMessages"></field-validations>
+    </div>
     
 
 </div>

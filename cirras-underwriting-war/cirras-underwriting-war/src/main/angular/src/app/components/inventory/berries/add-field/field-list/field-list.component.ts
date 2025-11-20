@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AnnualFieldRsrc } from '@cirras/cirras-underwriting-api';
 import { makeTitleCase } from 'src/app/utils';
@@ -14,6 +14,9 @@ export class FieldListComponent {
   @Input() fieldList 
   @Input() insurancePlanId
   @Input() searchBy // e.g. searchPID or searchFieldLocation, etc
+
+  //TODO: EventEmitter<{ fieldId: number; fieldName: string; fieldLocation: string }>();
+  @Output() fieldIdChanged = new EventEmitter<AnnualFieldRsrc>(); 
 
   showSearchLegalMsg = false 
   fieldListForm = new FormGroup({
@@ -147,18 +150,19 @@ export class FieldListComponent {
     return ""
   }
 
-  validateFields(field) {
-    //TODO
-  }
-
-
   checkLength() {
     // TODO
+    // send field name and / or field location back to the add-field component
+
     // this.validationMessages = <AddFieldValidationRsrc>{};
     // this.addLandForm.controls.fieldIdSelected.setValue(-1)
 
     // if (this.addLandForm.get("fieldLabel").value && this.addLandForm.get("fieldLabel").value.length > 1) {
     //   this.showProceedButton = true
     // }
+  }
+
+  sendFieldId(field: AnnualFieldRsrc) {
+    this.fieldIdChanged.emit(field);
   }
 }
