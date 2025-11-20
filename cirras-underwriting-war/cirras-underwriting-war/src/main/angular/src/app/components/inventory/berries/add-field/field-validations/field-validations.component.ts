@@ -8,4 +8,7 @@ import { Component, Input } from '@angular/core';
 })
 export class FieldValidationsComponent {
   @Input() validationMessages 
+
+  // ignore
+  // This Field is already on this Policy. Please add a new planting instead.
 }

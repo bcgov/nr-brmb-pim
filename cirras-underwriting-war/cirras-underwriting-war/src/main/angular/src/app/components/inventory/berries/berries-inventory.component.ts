@@ -363,6 +363,29 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
   }
   
+
+  getCurrentFieldsAndCommodities() {
+    let result = []
+  
+    for (let field of  this.inventoryContract.fields) {
+
+      let cmdties = []
+
+      for (let planting of field.plantings) {
+
+        if (planting.inventoryBerries.cropCommodityId) {
+          cmdties.push (planting.inventoryBerries.cropCommodityId)
+        }
+      }
+
+      result.push ({
+        fieldId: field.fieldId,
+        commodities: cmdties
+      })
+    }
+    return result
+  }
+
   onAddNewField() {
 
     if (this.inventoryContract && this.inventoryContract.fields) {
@@ -385,6 +408,10 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
           transferFromGrowerContractYearId : null,
           plantings: [],
           uwComments: []
+        },
+        berries: {
+          selectedCommodity: this.selectedCommodity,
+          fields: this.getCurrentFieldsAndCommodities()
         }
       }
 

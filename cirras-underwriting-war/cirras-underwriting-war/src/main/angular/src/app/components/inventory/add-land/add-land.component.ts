@@ -28,6 +28,13 @@ export interface AddLandPopupData {
     plantings?: Array<InventoryField>;
     uwComments?: Array<UnderwritingComment>;
   }
+  berries?: {
+    selectedCommodity?: number;
+    fields? : Array<{
+      fieldId?: number;
+      commodities?: Array<number>;
+    }>
+  }
 }
 
 @Component({

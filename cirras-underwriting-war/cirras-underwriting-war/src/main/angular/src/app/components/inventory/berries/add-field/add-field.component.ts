@@ -9,7 +9,7 @@ import { setHttpHeaders } from 'src/app/utils';
 import { lastValueFrom } from 'rxjs';
 import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { INSURANCE_PLAN } from 'src/app/utils/constants';
+import { BERRY_COMMODITY, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { AddLandPopupData } from '../../add-land/add-land.component';
 
 @Component({
@@ -24,7 +24,7 @@ export class AddFieldComponent implements OnInit{
 
   dialogType = DIALOG_TYPE.INFO;
 
-  dataReceived // : AddLandPopupData;
+  dataReceived : AddLandPopupData
 
   dataToSend : AddLandPopupData
 
@@ -209,8 +209,11 @@ export class AddFieldComponent implements OnInit{
       self.fieldList = data;
 
       if (self.fieldList && self.fieldList.collection && self.fieldList.collection.length > 0) {
-        // TODO validate field if the user searches for field id
-        // this.validateFields(self.fieldList.collection[0])
+        if (this.addFieldForm.controls.choiceSelected.value == 'searchFieldId') {
+          // if the user searches by field id then validate the field here
+          this.dataToSend.landData.fieldId = self.fieldList.collection[0].fieldId
+          this.validateFields(self.fieldList.collection[0])
+        }
       } else {
         this.showNoFieldMessage = true
       }
@@ -218,6 +221,8 @@ export class AddFieldComponent implements OnInit{
   }
 
   validateFields(field) {
+
+    this.validationMessages = null // clear any messages 
     
     // TODO
     // if (field == -1 ) { //the field would be added as new
@@ -226,7 +231,10 @@ export class AddFieldComponent implements OnInit{
     //   return
     // }
 
-    // this.addLandForm.controls.fieldLabel.setValue("")
+    if (this.isBerryFieldOnCurrentPolicy() ){
+      // don't go for validation to the API
+      return
+    }
 
     // we will be transfering field from the policy which is on the same plans as the inventoryContract's plan
     let policyId = ""  
@@ -262,7 +270,6 @@ export class AddFieldComponent implements OnInit{
     })
   }
 
-
   onLegalLandIdReceived(legalLandId: number) { 
     this.dataToSend.landData.legalLandId = legalLandId
 
@@ -283,6 +290,47 @@ export class AddFieldComponent implements OnInit{
     
     // run validation
     this.validateFields(field)
+  }
+
+  isBerryFieldOnCurrentPolicy() {
+    // this check is done in the UI only for BERRIES
+    // other plans should go through the API for validation
+
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+      debugger
+
+      if (this.dataReceived.berries && this.dataReceived.berries.selectedCommodity && this.dataReceived.berries.fields && this.dataReceived.berries.fields.length > 0) {
+        
+        let fld = this.dataReceived.berries.fields.find (x => x.fieldId == this.dataToSend.landData.fieldId)
+
+        if (fld) {
+          let cmdty = fld.commodities.find (x => x == this.dataReceived.berries.selectedCommodity)
+
+          if (cmdty) {
+            const berryName = Object.entries(BERRY_COMMODITY).find(([key, value]) => value === cmdty)?.[0];
+
+            let msg = "This Field is already on this Policy and it has " + berryName + " commodity. Please add the field to a new commodity instead."
+            
+            this.validationMessages = {
+                                        warningMessages: [],
+                                        errorMessages: [
+                                          {
+                                            path: null,
+                                            message: msg,
+                                            messageTemplate: null,
+                                            messageArguments: null
+                                          }
+                                        ]
+                                      } as any
+
+            // TODO do not allow PROCEED button if the selected commodity is the same as the commodity on the field
+            return true
+          }
+        }
+      }
+    }
+    // default
+    return false // and go thru validate field 
   }
 
   onCancelChanges() {
