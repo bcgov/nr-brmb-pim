@@ -122,9 +122,7 @@ export class AddFieldComponent implements OnInit{
 
       // start the search when at least 3 symbols are entered
       if (searchLegalLandOrFieldId && searchLegalLandOrFieldId.length >= 3) {
-        if (this.addFieldForm.controls.choiceSelected.value == 'searchFieldLocation') {
-          this.getFields(this.dataReceived.cropYear, "", "", searchLegalLandOrFieldId)
-        }
+        this.getFields(this.dataReceived.cropYear, "", "", searchLegalLandOrFieldId)
       }
     }
   }
@@ -164,7 +162,7 @@ export class AddFieldComponent implements OnInit{
     }
     
     if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES) {
-      url = url +"/legallands?primaryPropertyIdentifier=" + encodeURI(searchLegalLandOrFieldId) + "&isWildCardSearch=true" 
+      url = url +"/legallands?primaryPropertyIdentifier=" + encodeURI(searchLegalLandOrFieldId) + "&isWildCardSearch=false" 
     }
 
     return url
