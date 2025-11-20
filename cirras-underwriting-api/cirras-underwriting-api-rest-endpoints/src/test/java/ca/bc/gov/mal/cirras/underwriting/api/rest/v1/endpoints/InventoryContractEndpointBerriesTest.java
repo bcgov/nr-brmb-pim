@@ -85,6 +85,10 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 	
 	private Integer annualFieldDetailId2 = 92000017;
 	private Integer contractedFieldDetailId2 = 92000018;
+
+	private Integer annualFieldDetailId3 = null;
+	private Integer contractedFieldDetailId3 = null;
+
 	
 	private String fieldLocation = "Field Location";
 		
@@ -120,6 +124,16 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId1.toString());
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId2.toString());
 		service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId2.toString());
+
+		if(contractedFieldDetailId3 != null) {
+			service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId3.toString());
+			contractedFieldDetailId3 = null;
+		}
+
+		if(annualFieldDetailId3 != null) {
+			service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId3.toString());
+			annualFieldDetailId3 = null;
+		}
 
 		service.deleteField(topLevelEndpoints, fieldId.toString());
 		service.deleteLegalLandSync(topLevelEndpoints, legalLandId.toString());
@@ -233,6 +247,10 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		fetchedBerries.setTotalPlants(calculateTotalPlants(fetchedBerries));
 		fetchedBerries.setIsQuantityInsurableInd(false);
 		fetchedBerries.setIsPlantInsurableInd(true);
+		//Update Field location and is leased
+		fieldLocation = fieldLocation + " Update";
+		field.setFieldLocation(fieldLocation);
+		field.setIsLeasedInd(true);
 
 		InventoryContractRsrc updatedInvContract = service.updateInventoryContract(fetchedInvContract.getInventoryContractGuid(), fetchedInvContract);
 
@@ -240,28 +258,9 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 
 		checkInventoryBerries(fetchedBerries, updatedBerries, false, updatedInvContract.getCropYear());
 
-		//Update Field location
-		fieldLocation = fieldLocation + " Update";
-		FieldRsrc fetchedField = service.getField(topLevelEndpoints, fieldId.toString());
-		fetchedField.setFieldLocation(fieldLocation);
-		fetchedField.setTransactionType(LandManagementEventTypes.FieldUpdated);
-		service.synchronizeField(fetchedField);
-		
-		//Update is Leased
-		ContractedFieldDetailRsrc fetchedCfd = service.getContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString()); 
-		fetchedCfd.setIsLeasedInd(true);
-		fetchedCfd.setTransactionType(LandManagementEventTypes.ContractedFieldDetailUpdated);
-		service.synchronizeContractedFieldDetail(fetchedCfd);
-		
-		//Check field data
-		UwContractRsrc uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
-		Assert.assertNotNull(uwContract);
-		Assert.assertNotNull(uwContract.getInventoryContractGuid());
-		invContract = service.getInventoryContract(uwContract);
-
-		field = invContract.getFields().get(0);
-		Assert.assertEquals("FieldLocation", fieldLocation, field.getFieldLocation());
-		Assert.assertEquals("IsLeased", true, field.getIsLeasedInd());
+		AnnualFieldRsrc updatedField = updatedInvContract.getFields().get(0);
+		Assert.assertEquals("FieldLocation", field.getFieldLocation(), updatedField.getFieldLocation());
+		Assert.assertEquals("IsLeased", field.getIsLeasedInd(), updatedField.getIsLeasedInd());
 		
 		delete();
 		
@@ -431,12 +430,13 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		newBerries.setBogMowedDate(getDate(2020, Calendar.JANUARY, 15));
 		newBerries.setBogRenovatedDate(getDate(2020, Calendar.JANUARY, 20));
 		newBerries.setIsHarvestedInd(true);
+		field.setIsLeasedInd(true);
 
 		//Create inventory contract
 		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
 		
-		field = fetchedInvContract.getFields().get(0);
-		inventoryFieldGuid1 = field.getPlantings().get(0).getInventoryFieldGuid();
+		AnnualFieldRsrc fetchedField = fetchedInvContract.getFields().get(0);
+		inventoryFieldGuid1 = fetchedField.getPlantings().get(0).getInventoryFieldGuid();
 		newBerries.setInventoryFieldGuid(inventoryFieldGuid1);
 		
 		InventoryBerries fetchedBerries = fetchedInvContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
@@ -444,16 +444,15 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		checkInventoryBerries(newBerries, fetchedBerries, false, fetchedInvContract.getCropYear());
 		
 		//Check field data
-		field = fetchedInvContract.getFields().get(0);
-		Assert.assertEquals("FieldLocation", fieldLocation, field.getFieldLocation());
-		Assert.assertEquals("IsLeased", false, field.getIsLeasedInd());
+		Assert.assertEquals("FieldLocation", field.getFieldLocation(), fetchedField.getFieldLocation());
+		Assert.assertEquals("IsLeased", field.getIsLeasedInd(), fetchedField.getIsLeasedInd());
 
 		//********** Rollover Contract ****************************************
 		createPolicy(policyId2, policyNumber2, cropYear2);
 		createGrowerContractYear(gcyId2, cropYear2);
 
-		createAnnualFieldDetail(annualFieldDetailId2, cropYear2);
-		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId2, gcyId2, false);
+		annualFieldDetailId3 = null;
+		contractedFieldDetailId3 = null;
 		
 		uwContract = getUwContract(policyNumber2, service, topLevelEndpoints);
 		Assert.assertNotNull(uwContract);
@@ -464,14 +463,21 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNotNull(invContract.getFields());
 		Assert.assertNotNull(invContract.getFields().get(0).getPlantings());
 		Assert.assertNotNull(invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries());
-
-		field = invContract.getFields().get(0);
+		
+		AnnualFieldRsrc rolledOverfield = invContract.getFields().get(0);
 		inventoryFieldGuid2 = field.getPlantings().get(0).getInventoryFieldGuid();
 		newBerries.setInventoryFieldGuid(inventoryFieldGuid2);
+
+		annualFieldDetailId3 = rolledOverfield.getAnnualFieldDetailId();
+		contractedFieldDetailId3 = rolledOverfield.getContractedFieldDetailId();
 		
 		InventoryBerries rolledOverBerries = invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
 
 		checkInventoryBerries(fetchedBerries, rolledOverBerries, true, invContract.getCropYear());
+		
+		//Check field data
+		Assert.assertEquals("FieldLocation", fetchedField.getFieldLocation(), rolledOverfield.getFieldLocation());
+		Assert.assertEquals("IsLeased", fetchedField.getIsLeasedInd(), rolledOverfield.getIsLeasedInd());
 		
 		delete();
 		
@@ -556,8 +562,8 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		createPolicy(policyId2, policyNumber2, cropYear2);
 		createGrowerContractYear(gcyId2, cropYear2);
 
-		createAnnualFieldDetail(annualFieldDetailId2, cropYear2);
-		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId2, gcyId2, false);
+		annualFieldDetailId3 = null;
+		contractedFieldDetailId3 = null;
 		
 		uwContract = getUwContract(policyNumber2, service, topLevelEndpoints);
 		Assert.assertNotNull(uwContract);
@@ -568,7 +574,10 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNotNull(rolledOverInvContract.getFields());
 		Assert.assertNotNull(rolledOverInvContract.getFields().get(0).getPlantings());
 		Assert.assertEquals(fetchedInvContract.getFields().get(0).getPlantings().size(), rolledOverInvContract.getFields().get(0).getPlantings().size());
-		
+
+		annualFieldDetailId3 = rolledOverInvContract.getFields().get(0).getAnnualFieldDetailId();
+		contractedFieldDetailId3 = rolledOverInvContract.getFields().get(0).getContractedFieldDetailId();
+
 		expectedPlantings = fetchedInvContract.getFields().get(0).getPlantings();
 		actualPlantings = rolledOverInvContract.getFields().get(0).getPlantings();
 
@@ -660,8 +669,8 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		createPolicy(policyId2, policyNumber2, cropYear2);
 		createGrowerContractYear(gcyId2, cropYear2);
 
-		createAnnualFieldDetail(annualFieldDetailId2, cropYear2);
-		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId2, gcyId2, false);
+		annualFieldDetailId3 = null;
+		contractedFieldDetailId3 = null;
 		
 		uwContract = getUwContract(policyNumber2, service, topLevelEndpoints);
 		Assert.assertNotNull(uwContract);
@@ -672,6 +681,9 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNotNull(rolledOverInvContract.getFields());
 		Assert.assertNotNull(rolledOverInvContract.getFields().get(0).getPlantings());
 		Assert.assertEquals(fetchedInvContract.getFields().get(0).getPlantings().size(), rolledOverInvContract.getFields().get(0).getPlantings().size());
+		
+		annualFieldDetailId3 = rolledOverInvContract.getFields().get(0).getAnnualFieldDetailId();
+		contractedFieldDetailId3 = rolledOverInvContract.getFields().get(0).getContractedFieldDetailId();
 		
 		expectedPlantings = fetchedInvContract.getFields().get(0).getPlantings();
 		actualPlantings = rolledOverInvContract.getFields().get(0).getPlantings();
@@ -964,10 +976,15 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 				Assert.assertNull("PlantInsurabilityTypeCode Null", actual.getPlantInsurabilityTypeCode());
 				Assert.assertEquals("IsPlantInsurableInd", expected.getIsPlantInsurableInd(), actual.getIsPlantInsurableInd());
 			}
+			//Is Harvested is always set to false on rollover
+			Assert.assertFalse("IsHarvestedInd", actual.getIsHarvestedInd());
+
 		} else {
 			Assert.assertNotNull("InventoryBerriesGuid", actual.getInventoryBerriesGuid());
 			Assert.assertNotNull("InventoryFieldGuid", actual.getInventoryFieldGuid());
 			Assert.assertEquals("IsPlantInsurableInd", expected.getIsPlantInsurableInd(), actual.getIsPlantInsurableInd());
+			Assert.assertEquals("IsHarvestedInd", expected.getIsHarvestedInd(), actual.getIsHarvestedInd());
+
 
 			if(expected.getPlantInsurabilityTypeCode() == null) {
 				Assert.assertNull("PlantInsurabilityTypeCode Null", actual.getPlantInsurabilityTypeCode());
@@ -988,9 +1005,6 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertEquals("BogId", expected.getBogId(), actual.getBogId());
 		Assert.assertEquals("BogMowedDate", expected.getBogMowedDate(), actual.getBogMowedDate());
 		Assert.assertEquals("BogRenovatedDate", expected.getBogRenovatedDate(), actual.getBogRenovatedDate());
-		Assert.assertEquals("IsHarvestedInd", expected.getIsHarvestedInd(), actual.getIsHarvestedInd());
-
-
 	}
 
 	private InventoryField createPlanting(AnnualFieldRsrc field, Integer plantingNumber, Integer cropYear) {
