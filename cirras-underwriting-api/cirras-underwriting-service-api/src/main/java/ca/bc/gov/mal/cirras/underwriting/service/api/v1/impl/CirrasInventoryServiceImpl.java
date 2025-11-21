@@ -2571,7 +2571,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				
 				for (InsurancePlanDto assocPlanDto : assocPlans) {
 					if (!validPlans.contains(assocPlanDto.getInsurancePlanName())) {
-						errors.add(AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]]", insurancePlans));
+						errors.add(AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]", insurancePlans));
 						break;
 					}
 				}
