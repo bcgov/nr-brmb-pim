@@ -10,6 +10,7 @@ import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state'
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { isInt, replaceNonAlphanumericCharacters } from 'src/app/utils';
 import { AddFieldComponent } from './add-field/add-field.component';
+import { AddLandPopupData } from '../add-land/add-land.component';
 
 @Component({
   selector: 'berries-inventory',
@@ -362,26 +363,59 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
   }
   
+
+  getCurrentFieldsAndCommodities() {
+    let result = []
+  
+    for (let field of  this.inventoryContract.fields) {
+
+      let cmdties = []
+
+      for (let planting of field.plantings) {
+
+        if (planting.inventoryBerries.cropCommodityId) {
+          cmdties.push (planting.inventoryBerries.cropCommodityId)
+        }
+      }
+
+      result.push ({
+        fieldId: field.fieldId,
+        commodities: cmdties
+      })
+    }
+    return result
+  }
+
   onAddNewField() {
 
     if (this.inventoryContract && this.inventoryContract.fields) {
 
-      // open up the popup 
-      // const dataToSend : AddLandPopupData = {
-      //   fieldId: fieldId,
-      //   fieldLabel: fieldLabel,
-      //   cropYear: this.inventoryContract.cropYear,
-      //   policyId: this.policyId,
-      //   insurancePlanId: this.inventoryContract.insurancePlanId,
-      //   annualFieldDetailId: annualFieldDetailId ? annualFieldDetailId : null,
-      //   otherLegalDescription: otherLegalDescription
-      // }
-
-      const dataToSend : any = {
+      // for now I am only setting the variables that I need for Berries
+      const dataToSend : AddLandPopupData = {
+        fieldId: -1,  // TODO ??
+        fieldLabel: null,
         cropYear: this.inventoryContract.cropYear,
+        policyId: this.policyId,
         insurancePlanId: this.inventoryContract.insurancePlanId,
+        annualFieldDetailId: null,
+        otherLegalDescription : null,
+        landData: {
+          fieldId: null,
+          legalLandId: null,
+          fieldLabel: null,
+          otherLegalDescription: null,
+          landUpdateType: null,
+          transferFromGrowerContractYearId : null,
+          plantings: [],
+          uwComments: []
+        },
+        berries: {
+          selectedCommodity: this.selectedCommodity,
+          fields: this.getCurrentFieldsAndCommodities()
+        }
       }
 
+      // open up the popup
       let dialogRef = this.dialog.open(AddFieldComponent , {
           width: '800px',
           data: dataToSend

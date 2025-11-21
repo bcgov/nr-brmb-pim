@@ -155,6 +155,7 @@ import { BerriesInventoryCommodityListComponent } from "./components/inventory/b
 import { AddFieldComponent } from "./components/inventory/berries/add-field/add-field.component";
 import { LegalLandListComponent } from "./components/inventory/berries/add-field/legal-land-list/legal-land-list.component";
 import { FieldListComponent } from "./components/inventory/berries/add-field/field-list/field-list.component";
+import { FieldValidationsComponent } from "./components/inventory/berries/add-field/field-validations/field-validations.component";
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -222,9 +223,12 @@ if (!environment.production || !environment.restrict_imports) {
         BerriesInventoryPlantingComponent,
         BerriesInventoryInventoryBerryComponent,
         BerriesInventoryCommodityListComponent,
+        // add field for berries
         AddFieldComponent,
         LegalLandListComponent,
         FieldListComponent,
+        FieldValidationsComponent,
+        // add field for berries
         LandListComponent,
         LandListContainer,
         ManageLandComponent,

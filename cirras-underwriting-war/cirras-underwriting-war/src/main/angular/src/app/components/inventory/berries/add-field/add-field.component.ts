@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { AnnualFieldListRsrc, LegalLandRsrc } from '@cirras/cirras-underwriting-api';
+import { AddFieldValidationRsrc, AnnualFieldListRsrc, AnnualFieldRsrc, LegalLandRsrc } from '@cirras/cirras-underwriting-api';
 import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
 import { LegalLandList } from 'src/app/conversion/models';
 import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
@@ -9,7 +9,8 @@ import { setHttpHeaders } from 'src/app/utils';
 import { lastValueFrom } from 'rxjs';
 import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { INSURANCE_PLAN } from 'src/app/utils/constants';
+import { BERRY_COMMODITY, INSURANCE_PLAN } from 'src/app/utils/constants';
+import { AddLandPopupData } from '../../add-land/add-land.component';
 
 @Component({
   selector: 'add-field',
@@ -23,9 +24,9 @@ export class AddFieldComponent implements OnInit{
 
   dialogType = DIALOG_TYPE.INFO;
 
-  dataReceived // : AddLandPopupData;
+  dataReceived : AddLandPopupData
 
-  legalLandId: number
+  dataToSend : AddLandPopupData
 
   deafultSearchChoices = [
     { name: 'Legal Location', value: 'searchLegalLocation' , visible: [INSURANCE_PLAN.GRAIN, INSURANCE_PLAN.FORAGE] },
@@ -45,6 +46,7 @@ export class AddFieldComponent implements OnInit{
   
   legalLandList : LegalLandList = {};
   fieldList: AnnualFieldListRsrc;
+  validationMessages : AddFieldValidationRsrc;
 
   constructor( 
     public dialogRef: MatDialogRef<any>,
@@ -74,6 +76,8 @@ export class AddFieldComponent implements OnInit{
       if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES ) {
         defaultChoice = 'searchPID'
       }
+
+      this.dataToSend = this.dataReceived 
     }
 
     this.addFieldForm = new FormGroup({
@@ -110,6 +114,7 @@ export class AddFieldComponent implements OnInit{
 
     this.legalLandList = null
     this.fieldList = null
+    this.validationMessages = null
   }
 
   onTypeInSearchBox() {
@@ -204,21 +209,132 @@ export class AddFieldComponent implements OnInit{
       self.fieldList = data;
 
       if (self.fieldList && self.fieldList.collection && self.fieldList.collection.length > 0) {
-        // TODO validate field if the user searches for field id
-        // this.validateFields(self.fieldList.collection[0])
+        if (this.addFieldForm.controls.choiceSelected.value == 'searchFieldId') {
+          // if the user searches by field id then validate the field here
+          this.dataToSend.landData.fieldId = self.fieldList.collection[0].fieldId
+          this.validateFields(self.fieldList.collection[0])
+        }
       } else {
         this.showNoFieldMessage = true
       }
     })
   }
 
-  onLegalLandIdReceived(legalLandId: number) { 
-    this.legalLandId = legalLandId
-    console.log("onLegalLandIdReceived: " + legalLandId)
+  validateFields(field) {
 
-    if (this.legalLandId > -1 ) {
-      this.getFields(this.dataReceived.cropYear, this.legalLandId, "", "")
+    this.validationMessages = null // clear any messages 
+    
+    
+    if (!field ) { //the field would be added as new, no validations needed
+      // TODO
+      // this.showProceedButton = false // it needs a field label too
+      // this.validationMessages = <AddFieldValidationRsrc>{};
+      return
     }
+
+    if (this.isBerryFieldOnCurrentPolicy() ){
+      // don't go for validation to the API
+      // TODO - allow Proceed button
+      return
+    }
+
+    // we will be transfering field from the policy which is on the same plans as the inventoryContract's plan
+    let policyId = ""  
+    
+    field.policies.forEach(policy => {
+
+      if (this.dataReceived.insurancePlanId == policy.insurancePlanId && this.dataReceived.cropYear == policy.cropYear) {
+        policyId = policy.policyId
+        return
+      }
+    })
+
+    let url = this.appConfig.getConfig().rest["cirras_underwriting"]
+    // "/uwcontracts/{policyId}/validateAddField"
+
+    url = url + "/uwcontracts/" + this.dataReceived.policyId + "/validateAddField"
+    url = url + "?policyId=" +  this.dataReceived.policyId // policyId
+    url = url + "&fieldId=" +  field.fieldId.toString()
+    url = url + "&transferFromPolicyId=" + policyId
+
+    const httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
+
+    var self = this
+    return lastValueFrom(this.http.get(url,httpOptions)).then((data: AddFieldValidationRsrc) => {
+      self.validationMessages = data
+
+      // TODO
+      // if (self.validationMessages.errorMessages && self.validationMessages.errorMessages.length > 0) {
+      //   this.showProceedButton = false
+      // } else {
+      //   this.showProceedButton = true
+      // }
+    })
+  }
+
+  onLegalLandIdReceived(legalLandId: number) { 
+    this.dataToSend.landData.legalLandId = legalLandId
+
+    if (legalLandId > -1 ) {
+      this.getFields(this.dataReceived.cropYear, legalLandId, "", "")
+    } else {
+      // TODO: set
+      // this.dataToSend.landData.otherLegalDescription 
+      // this.dataToSend.landData.PID 
+    }
+  }
+
+  onFieldIdReceived(field: AnnualFieldRsrc) { 
+    this.dataToSend.landData.fieldId = field.fieldId
+    console.log("onFieldIdReceived: " + field.fieldId)
+
+    if (field && field.fieldId > -1) {
+      // run validation
+      this.validateFields(field)
+    } else {
+       // TODO: if empty field then no validations but set the field name and/or location in landData
+    }
+    
+  }
+
+  isBerryFieldOnCurrentPolicy() {
+    // this check is done in the UI only for BERRIES
+    // other plans should go through the API for validation
+
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+
+      if (this.dataReceived.berries && this.dataReceived.berries.selectedCommodity && this.dataReceived.berries.fields && this.dataReceived.berries.fields.length > 0) {
+        
+        let fld = this.dataReceived.berries.fields.find (x => x.fieldId == this.dataToSend.landData.fieldId)
+
+        if (fld) {
+          let cmdty = fld.commodities.find (x => x == this.dataReceived.berries.selectedCommodity)
+
+          if (cmdty) {
+            const berryName = Object.entries(BERRY_COMMODITY).find(([key, value]) => value === cmdty)?.[0];
+
+            let msg = "This Field is already on this Policy with " + berryName + ". Please add a new planting instead."
+
+            this.validationMessages = {
+                                        warningMessages: [],
+                                        errorMessages: [
+                                          {
+                                            message: msg,
+                                          }
+                                        ]
+                                      } as any
+
+            // TODO do not allow PROCEED button if the selected commodity is the same as the commodity on the field
+            return true
+          } else {
+            // TODO allow PROCEED button if the field is already on the policy but we're adding a different commodity on it
+            return true
+          }
+        }
+      }
+    }
+
+    return false // and go thru API to validate the field 
   }
 
   onCancelChanges() {
