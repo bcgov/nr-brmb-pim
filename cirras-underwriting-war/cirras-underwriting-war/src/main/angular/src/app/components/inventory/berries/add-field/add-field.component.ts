@@ -224,15 +224,17 @@ export class AddFieldComponent implements OnInit{
 
     this.validationMessages = null // clear any messages 
     
-    // TODO
-    // if (field == -1 ) { //the field would be added as new
-    //   this.showProceedButton = false // it needs a field label too
-    //   this.validationMessages = <AddFieldValidationRsrc>{};
-    //   return
-    // }
+    
+    if (!field ) { //the field would be added as new, no validations needed
+      // TODO
+      // this.showProceedButton = false // it needs a field label too
+      // this.validationMessages = <AddFieldValidationRsrc>{};
+      return
+    }
 
     if (this.isBerryFieldOnCurrentPolicy() ){
       // don't go for validation to the API
+      // TODO - allow Proceed button
       return
     }
 
@@ -286,10 +288,13 @@ export class AddFieldComponent implements OnInit{
     this.dataToSend.landData.fieldId = field.fieldId
     console.log("onFieldIdReceived: " + field.fieldId)
 
-    // TODO: if empty field then no validations but set the field name and/or location in landData
+    if (field && field.fieldId > -1) {
+      // run validation
+      this.validateFields(field)
+    } else {
+       // TODO: if empty field then no validations but set the field name and/or location in landData
+    }
     
-    // run validation
-    this.validateFields(field)
   }
 
   isBerryFieldOnCurrentPolicy() {
@@ -297,7 +302,6 @@ export class AddFieldComponent implements OnInit{
     // other plans should go through the API for validation
 
     if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES) {
-      debugger
 
       if (this.dataReceived.berries && this.dataReceived.berries.selectedCommodity && this.dataReceived.berries.fields && this.dataReceived.berries.fields.length > 0) {
         
@@ -315,10 +319,7 @@ export class AddFieldComponent implements OnInit{
                                         warningMessages: [],
                                         errorMessages: [
                                           {
-                                            path: null,
                                             message: msg,
-                                            messageTemplate: null,
-                                            messageArguments: null
                                           }
                                         ]
                                       } as any
@@ -329,8 +330,8 @@ export class AddFieldComponent implements OnInit{
         }
       }
     }
-    // default
-    return false // and go thru validate field 
+
+    return false // and go thru API to validate the field 
   }
 
   onCancelChanges() {
