@@ -21,6 +21,8 @@
 		<result property="otherLegalDescription" column="other_description" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="totalLegalLand" column="total_legal_land" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		
+		<result property="primaryPropertyIdentifier" column="primary_property_identifier" javaType="java.lang.String" jdbcType="VARCHAR" />
+		
 	</resultMap>
 	
     <sql id="selectColumns">
@@ -51,8 +53,10 @@
 	<select id="selectForLegalLandOrField" resultMap="FieldDtoMap">  
 		SELECT 	f.field_id, 
 				f.field_label, 
+				f.location, 
 				afd.legal_land_id,
 				ll.other_description,
+				ll.primary_property_identifier,
 				MAX(afd.crop_year) AS max_crop_year
 		FROM field f
 		join annual_field_detail afd on f.field_id = afd.field_id
@@ -65,7 +69,10 @@
  	    <if test="fieldId != null">
  		  AND afd.field_id = #{fieldId}
 	    </if>
-		GROUP BY f.field_id, f.field_label, afd.legal_land_id, ll.other_description
+   	    <if test="fieldLocation != null">
+ 		  AND UPPER(f.location) like #{fieldLocation}
+	    </if>
+		GROUP BY f.field_id, f.field_label, f.location, afd.legal_land_id, ll.other_description, ll.primary_property_identifier
 		HAVING MAX(afd.crop_year) = ( SELECT MAX(a.crop_year) 
 									  FROM annual_field_detail a 
 									  WHERE a.crop_year <![CDATA[ <= ]]> #{cropYear} 

@@ -352,6 +352,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 				topLevelEndpoints, 
 				null, 
 				fieldId1.toString(),
+				null, 
 				cropYear1.toString());
 
 		Assert.assertNotNull(fieldList);
@@ -415,6 +416,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 				topLevelEndpoints, 
 				null, 
 				fieldId1.toString(),
+				null, 
 				cropYear1.toString());
 
 		Assert.assertNotNull(fieldList2);
@@ -552,6 +554,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 				topLevelEndpoints, 
 				null, 
 				fieldId1.toString(),
+				null, 
 				cropYear1.toString());
 
 		Assert.assertNotNull(fieldList);
@@ -607,6 +610,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 				topLevelEndpoints, 
 				null, 
 				fieldId1.toString(),
+				null, 
 				cropYear1.toString());
 
 		Assert.assertNotNull(fieldList2);
@@ -695,6 +699,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 				topLevelEndpoints, 
 				null, 
 				fieldId1.toString(),
+				null, 
 				cropYear1.toString());
 
 		Assert.assertNotNull(fieldList);
@@ -858,6 +863,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 				topLevelEndpoints, 
 				null, 
 				fieldId1.toString(),
+				null, 
 				cropYear1.toString());
 
 		Assert.assertNotNull(fieldList);
@@ -1096,6 +1102,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 				topLevelEndpoints, 
 				null, 
 				fieldId1.toString(),
+				null, 
 				cropYear1.toString());
 
 		Assert.assertNotNull(fieldList);
@@ -1259,6 +1266,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 				topLevelEndpoints, 
 				null, 
 				fieldId2.toString(),
+				null, 
 				cropYear1.toString());
 
 		Assert.assertNotNull(fieldList);
@@ -1348,6 +1356,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 				topLevelEndpoints, 
 				null, 
 				fieldId1.toString(),
+				null, 
 				cropYear1.toString());
 
 		Assert.assertNotNull(fieldList);
@@ -1490,6 +1499,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 				topLevelEndpoints, 
 				null, 
 				fieldId1.toString(),
+				null, 
 				cropYear1.toString());
 
 		Assert.assertNotNull(fieldList);

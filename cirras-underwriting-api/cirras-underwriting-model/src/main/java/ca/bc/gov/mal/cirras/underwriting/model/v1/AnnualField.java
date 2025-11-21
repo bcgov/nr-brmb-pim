@@ -44,7 +44,7 @@ public interface AnnualField extends Serializable {
 	
 	public Integer getTransferFromGrowerContractYearId();
 	public void setTransferFromGrowerContractYearId(Integer growerTransferFromContractYearId);
-
+	
 	public List<InventoryField> getPlantings();
 	public void setPlantings(List<InventoryField> plantings);
 

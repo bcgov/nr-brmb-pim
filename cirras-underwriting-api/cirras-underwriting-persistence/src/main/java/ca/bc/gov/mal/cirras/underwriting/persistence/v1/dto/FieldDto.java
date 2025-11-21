@@ -30,6 +30,8 @@ public class FieldDto extends BaseDto<FieldDto> {
 	private String otherLegalDescription;
 	private Integer legalLandId;
 	private Integer totalLegalLand;
+	
+	private String primaryPropertyIdentifier;
 
 	private List<PolicyDto> policies = new ArrayList<PolicyDto>();
 
@@ -55,6 +57,8 @@ public class FieldDto extends BaseDto<FieldDto> {
 		this.otherLegalDescription = dto.otherLegalDescription;
 		this.totalLegalLand = dto.totalLegalLand;
 		
+		this.primaryPropertyIdentifier = dto.primaryPropertyIdentifier;
+		
 		if ( dto.policies != null ) {			
 			this.policies = new ArrayList<>();
 			
@@ -62,7 +66,7 @@ public class FieldDto extends BaseDto<FieldDto> {
 				this.policies.add(ifDto.copy());
 			}
 		}	
-
+		
 	}
 	
 
@@ -209,5 +213,12 @@ public class FieldDto extends BaseDto<FieldDto> {
 	public void setTotalLegalLand(Integer totalLegalLand) {
 		this.totalLegalLand = totalLegalLand;
 	}
+	
+	public String getPrimaryPropertyIdentifier() {
+		return primaryPropertyIdentifier;
+	}
 
+	public void setPrimaryPropertyIdentifier(String primaryPropertyIdentifier) {
+		this.primaryPropertyIdentifier = primaryPropertyIdentifier;
+	}
 }

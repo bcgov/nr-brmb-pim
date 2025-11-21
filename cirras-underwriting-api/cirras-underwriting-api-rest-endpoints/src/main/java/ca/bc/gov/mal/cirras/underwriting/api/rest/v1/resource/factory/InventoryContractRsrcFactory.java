@@ -694,18 +694,8 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		InventoryBerries model = new InventoryBerries();
 		
 		//Rollover insurability for STRAWBERRY works different than other commodities
-		if(dto.getCropCommodityId() != null && dto.getCropCommodityId().equals(13)) {
-			if(dto.getPlantInsurabilityTypeCode() == null) {
-				//Only if it's not an empty record
-				if(dto.getPlantedYear() != null) {
-					//If insurability is not set, it will be set to ST1 (Strawberry Year 1) if the planted year = crop year -1
-					Integer cropYearToCompare = cropYear -1;
-					if(dto.getPlantedYear().equals(cropYearToCompare)) {
-						dto.setPlantInsurabilityTypeCode("ST1");
-						dto.setIsPlantInsurableInd(true);
-					}
-				}
-			} else if (dto.getPlantInsurabilityTypeCode().equalsIgnoreCase("ST1")) {
+		if(dto.getCropCommodityId() != null && dto.getCropCommodityId().equals(13) && dto.getPlantInsurabilityTypeCode() != null) {
+			if (dto.getPlantInsurabilityTypeCode().equalsIgnoreCase("ST1")) {
 				//Strawberries that were previously insured with ST1 (Strawberry Year 1) will now be ST2 (Strawberry Year 2)
 				dto.setPlantInsurabilityTypeCode("ST2");
 				dto.setIsPlantInsurableInd(true); //Should already be set to true
@@ -731,7 +721,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setBogId(dto.getBogId());
 		model.setBogMowedDate(dto.getBogMowedDate());
 		model.setBogRenovatedDate(dto.getBogRenovatedDate());
-		model.setIsHarvestedInd(dto.getIsHarvestedInd());
+		model.setIsHarvestedInd(false); //Is Harvested is always set to false on rollover
 
 		return model;
 	}

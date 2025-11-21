@@ -97,6 +97,7 @@ public interface CirrasUnderwritingService {
 			EndpointsRsrc parent,
 			String legalLandId,
 			String fieldId,
+			String fieldLocation,
 			String cropYear
 		)	
 		throws CirrasUnderwritingServiceException;

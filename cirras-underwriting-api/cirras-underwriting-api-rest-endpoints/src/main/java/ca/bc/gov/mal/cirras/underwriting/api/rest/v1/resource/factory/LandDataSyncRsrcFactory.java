@@ -204,8 +204,12 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory implements Land
 		dto.setAnnualFieldDetailId(model.getAnnualFieldDetailId());
 		dto.setGrowerContractYearId(model.getGrowerContractYearId());
 		dto.setDisplayOrder(model.getDisplayOrder());
-		dto.setIsLeasedInd(model.getIsLeasedInd());
+		dto.setIsLeasedInd(notNull(model.getIsLeasedInd(), false));
 
+	}
+	
+	private Boolean notNull(Boolean value, Boolean defaultValue) {
+		return (value == null) ? defaultValue : value;
 	}
 
 	@Override

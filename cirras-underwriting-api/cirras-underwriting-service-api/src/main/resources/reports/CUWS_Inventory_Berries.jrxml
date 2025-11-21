@@ -311,7 +311,7 @@ order by sort_column,
 	<group name="Group1" isStartNewPage="true" isResetPageNumber="true" keepTogether="true">
 		<groupExpression><![CDATA[$F{policy_id} + $F{contract_id} + $F{policy_number} + $F{crop_year} + $F{grower_number} + $F{grower_name} + $F{grower_address_line1}  + $F{grower_address_line2} + $F{grower_city} + $F{grower_province} + $F{grower_postal_code} + $F{grower_primary_name} + $F{grower_primary_phone} + $F{grower_primary_email} + $F{inventory_contract_guid} + $F{inv_update_timestamp} + $F{total_blueberry_plantings} + $F{total_raspberry_plantings} + $F{total_strawberry_plantings} + $F{total_plantings} + $F{sort_column}]]></groupExpression>
 		<groupHeader>
-			<band height="255">
+			<band height="220">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<staticText>
 					<reportElement x="0" y="5" width="180" height="30" uuid="8b1039e3-68dd-4fee-a509-473586d7acf0"/>
@@ -345,14 +345,15 @@ order by sort_column,
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="16" isBold="true"/>
+						<font fontName="SansSerif" size="16" isBold="false"/>
 					</textElement>
 					<text><![CDATA[Summary of Berry Field Inventory]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="0" y="85" width="378" height="20" uuid="d3d32e03-2780-4f96-a6a1-14338afc2292">
+					<reportElement x="0" y="85" width="378" height="15" uuid="d3d32e03-2780-4f96-a6a1-14338afc2292">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" size="9"/>
@@ -360,9 +361,10 @@ order by sort_column,
 					<textFieldExpression><![CDATA["Grower: " + $F{grower_name}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="0" y="105" width="378" height="20" uuid="79c7ebf6-1747-40aa-90a9-5e8ba3efb495">
+					<reportElement x="0" y="100" width="378" height="15" uuid="79c7ebf6-1747-40aa-90a9-5e8ba3efb495">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" size="9"/>
@@ -375,9 +377,10 @@ order by sort_column,
 	($F{grower_postal_code} != null ? " " + $F{grower_postal_code} : "")]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="0" y="125" width="378" height="20" uuid="6ed93671-4957-4dc6-8ac8-d3f17cb8c070">
+					<reportElement x="0" y="115" width="378" height="15" uuid="6ed93671-4957-4dc6-8ac8-d3f17cb8c070">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" size="9"/>
@@ -392,9 +395,10 @@ order by sort_column,
 )]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="0" y="145" width="378" height="20" uuid="b8c60ad6-d584-4fd4-89fa-5b48a52ad197">
+					<reportElement x="0" y="130" width="378" height="15" uuid="b8c60ad6-d584-4fd4-89fa-5b48a52ad197">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" size="9"/>
@@ -402,9 +406,10 @@ order by sort_column,
 					<textFieldExpression><![CDATA["E-Mail: " + ($F{grower_primary_email} != null ? $F{grower_primary_email} : "")]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="0" y="165" width="378" height="20" uuid="d85e7cb6-2b0e-462f-aeee-0dac6664edc3">
+					<reportElement x="0" y="145" width="378" height="15" uuid="d85e7cb6-2b0e-462f-aeee-0dac6664edc3">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" size="9"/>
@@ -412,8 +417,9 @@ order by sort_column,
 					<textFieldExpression><![CDATA["Contact: " + ($F{grower_primary_name} != null ? $F{grower_primary_name} : "")]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="419" y="85" width="136" height="20" uuid="b21cbc27-34b1-4301-99ff-56ca3f5a8433">
+					<reportElement x="419" y="85" width="136" height="15" uuid="b21cbc27-34b1-4301-99ff-56ca3f5a8433">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="9"/>
@@ -421,9 +427,10 @@ order by sort_column,
 					<textFieldExpression><![CDATA["Policy: " + $F{policy_number}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="455" y="105" width="100" height="20" uuid="e7ff485d-7ce4-46bb-aa99-92dd7bb4cdcd">
+					<reportElement x="455" y="100" width="100" height="15" uuid="e7ff485d-7ce4-46bb-aa99-92dd7bb4cdcd">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="9"/>
@@ -431,8 +438,9 @@ order by sort_column,
 					<textFieldExpression><![CDATA["Crop Year: " + $F{crop_year}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="419" y="125" width="136" height="20" uuid="db2bc2c6-d8e4-42fa-bd0b-6350df3af88b">
+					<reportElement x="419" y="115" width="136" height="15" uuid="db2bc2c6-d8e4-42fa-bd0b-6350df3af88b">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="9"/>
@@ -440,19 +448,19 @@ order by sort_column,
 					<textFieldExpression><![CDATA["Updated: " + new SimpleDateFormat("MMM dd, yyyy").format($F{inv_update_timestamp})]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight">
-					<reportElement x="0" y="190" width="555" height="30" uuid="4158b9ca-8070-4e07-8594-0afda8dca01b">
+					<reportElement x="0" y="160" width="555" height="30" uuid="4158b9ca-8070-4e07-8594-0afda8dca01b">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
-					<textElement verticalAlignment="Middle">
+					<textElement verticalAlignment="Bottom">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA["The following information is submitted in support of the Continuous Production Insurance contract and is effective for the crop year commencing:"]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="0" y="220" width="555" height="15" uuid="a87edb68-6b63-4597-b816-b55ea88de7b4">
+					<reportElement x="0" y="190" width="555" height="15" uuid="a87edb68-6b63-4597-b816-b55ea88de7b4">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -464,7 +472,7 @@ order by sort_column,
 					<textFieldExpression><![CDATA["November 1, " + ($F{crop_year} - 1) + " Raspberry, Blueberry, Cranberry Crop, and Strawberry Plant"]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="23" y="235" width="532" height="15" uuid="7e538ab0-f265-4cbb-9dbf-cbc8c2b6414c">
+					<reportElement x="23" y="205" width="532" height="15" uuid="7e538ab0-f265-4cbb-9dbf-cbc8c2b6414c">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -497,7 +505,7 @@ order by sort_column,
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle" markup="none">
-						<font size="8" isBold="true"/>
+						<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
 					<text><![CDATA[Declaration]]></text>
 				</staticText>
@@ -874,7 +882,7 @@ order by sort_column,
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="16" isBold="true"/>
+					<font fontName="SansSerif" size="16" isBold="false"/>
 				</textElement>
 				<text><![CDATA[No visible plantings to print]]></text>
 			</staticText>

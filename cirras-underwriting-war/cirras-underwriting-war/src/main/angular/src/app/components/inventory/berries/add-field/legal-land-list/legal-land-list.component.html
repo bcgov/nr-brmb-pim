@@ -1,0 +1,87 @@
+
+
+    <div  class="legal-land-container error-messages" style="padding-bottom: 16px;">
+
+        <div style="display:contents">
+            <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+            <div><span>
+                This {{ selectedSearch }} is already associated with the following legal lands. You can select an existing land or create a new one.
+            </span></div>
+        </div>
+    </div>
+
+<form [formGroup]="legaLandListForm">
+    <div class="cuw-table-wrapper">
+        
+        <div class="legal-land-container" [ngStyle]="setStyles()">   
+
+            <div class="border-right header justify-center border-top border-bottom border-left"></div>
+            <div *ngIf="isLegalLocationVisible()" class="border-right header justify-center border-top border-bottom">Legal Location</div>
+            <div class="border-right header justify-center border-top border-bottom">Primary Identifier</div>
+            <div class="border-right header justify-center border-top border-bottom">Legal Description</div>
+
+            <div 
+                *ngFor="let element of legalLandList "
+                style="display:contents">
+                
+                <div class="border-right justify-center border-bottom border-left">
+                    <input 
+                        type="radio" 
+                        [value]="element.legalLandId" 
+                        formControlName="legalLandIdSelected" 
+                        (click)="sendLegalLandId(element.legalLandId)"/>
+                </div>
+                <div *ngIf="isLegalLocationVisible()" class="border-right justify-center border-bottom">
+                    {{ element.otherDescription }}
+                </div>
+                <div class="border-right justify-center border-bottom">
+                    {{ element.primaryPropertyIdentifier }}
+                </div>
+                <div class="border-right justify-center border-bottom">
+                    {{ element.legalDescription  }}
+                </div>
+            </div>
+
+            <div style="display:contents">
+                <div class="justify-center border-bottom border-left" >
+                    <input 
+                        type="radio" 
+                        [value]="-1" 
+                        formControlName="legalLandIdSelected" 
+                        (click)="sendLegalLandId(-1)"/> 
+                </div>
+
+                <div class="border-right justify-left border-bottom" [ngStyle]="setNewLegalStyles()">
+                    Add New Legal Land
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div *ngIf="legaLandListForm.controls.legalLandIdSelected.value == '-1'"
+        class="legal-land-container error-messages" style="padding-top: 16px; padding-bottom: 16px;">
+
+        <div style="display:contents">
+            <div class="justify-left"><mat-icon [ngStyle]="{'color':'green', 'font-size':'x-large'}">check_circle</mat-icon></div>
+            <div><span style="padding-left:10px;">
+                The {{ selectedSearch }} {{ selectedSearchValue }} will be added to the current policy.
+            </span></div>
+        </div>
+    </div>
+
+
+    <!-- TODO -->
+    <!-- <div *ngIf="selectedChoice == searchChoice.searchLegal && fieldList && fieldList.collection && fieldList.collection.length > 0"
+        class="legal-land-container error-messages" style="padding-top: 16px; padding-bottom: 16px;">
+
+        <div style="display:contents">
+            <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+            <div><span>
+                This legal location is already associated with the following fields. You can select an existing field or choose to create a new field.
+            </span></div>
+        </div>
+    </div> -->
+
+
+</form>
