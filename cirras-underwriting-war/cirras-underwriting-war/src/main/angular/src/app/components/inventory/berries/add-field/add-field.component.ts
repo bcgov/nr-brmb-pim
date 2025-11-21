@@ -313,8 +313,8 @@ export class AddFieldComponent implements OnInit{
           if (cmdty) {
             const berryName = Object.entries(BERRY_COMMODITY).find(([key, value]) => value === cmdty)?.[0];
 
-            let msg = "This Field is already on this Policy and it has " + berryName + " commodity. Please add the field to a new commodity instead."
-            
+            let msg = "This Field is already on this Policy with " + berryName + ". Please add a new planting instead."
+
             this.validationMessages = {
                                         warningMessages: [],
                                         errorMessages: [
@@ -325,6 +325,9 @@ export class AddFieldComponent implements OnInit{
                                       } as any
 
             // TODO do not allow PROCEED button if the selected commodity is the same as the commodity on the field
+            return true
+          } else {
+            // TODO allow PROCEED button if the field is already on the policy but we're adding a different commodity on it
             return true
           }
         }
