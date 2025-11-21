@@ -86,7 +86,7 @@ jobs:
           echo "IMAGE_BY_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $IMAGE)" >> $GITHUB_OUTPUT
 
       - name: Fill yaml files
-        uses: cschleiden/replace-tokens@v1.2
+        uses: cschleiden/replace-tokens@v1.3
         with:
           files: staging/**.yaml
         env:

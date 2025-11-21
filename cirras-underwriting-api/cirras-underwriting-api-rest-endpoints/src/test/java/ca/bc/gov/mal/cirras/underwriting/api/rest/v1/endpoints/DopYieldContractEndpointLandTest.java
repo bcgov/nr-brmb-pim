@@ -249,6 +249,7 @@ public class DopYieldContractEndpointLandTest extends EndpointsTest {
 				topLevelEndpoints, 
 				null, 
 				fieldId1.toString(),
+				null, 
 				cropYear.toString());
 
 		Assert.assertNotNull(fieldList);
@@ -360,6 +361,7 @@ public class DopYieldContractEndpointLandTest extends EndpointsTest {
 				topLevelEndpoints, 
 				null, 
 				fieldId1.toString(),
+				null, 
 				cropYear.toString());
 
 		Assert.assertNotNull(fieldList);

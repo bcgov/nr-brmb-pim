@@ -167,6 +167,7 @@ public class ServiceApiSpringConfig {
 
 		result.setFieldDao(persistenceSpringConfig.fieldDao());
 		result.setPolicyDao(persistenceSpringConfig.policyDao());
+		result.setLegalLandDao(persistenceSpringConfig.legalLandDao());
 		result.setUserSettingDao(persistenceSpringConfig.userSettingDao());
 		
 		result.setUnderwritingServiceHelper(underwritingServiceHelper());

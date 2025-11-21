@@ -804,8 +804,10 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 
 		String userId = getUserId(authentication);
 
-		// Only rollover for GRAIN or FORAGE.
-		if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(insurancePlanId) || InsurancePlans.FORAGE.getInsurancePlanId().equals(insurancePlanId) ) {
+		// Only rollover for GRAIN, FORAGE and BERRIES.
+		if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(insurancePlanId) 
+				|| InsurancePlans.FORAGE.getInsurancePlanId().equals(insurancePlanId)
+				|| InsurancePlans.BERRIES.getInsurancePlanId().equals(insurancePlanId)) {
 
 			try {
 				GrowerContractYearDto lastGcyDto = growerContractYearDao.selectLastYear(currGcyModel.getContractId(), currGcyModel.getCropYear());
@@ -859,7 +861,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 								
 								// Create ContractedFieldDetail record.
 								ContractedFieldDetailDto currCfdDto = new ContractedFieldDetailDto();
-								contractedFieldDetailFactory.createRolloverContractedFieldDetail(currCfdDto, currAfdDto.getAnnualFieldDetailId(), currGcyModel.getGrowerContractYearId(), currDisplayOrder++, currCfdDto.getIsLeasedInd());
+								contractedFieldDetailFactory.createRolloverContractedFieldDetail(currCfdDto, currAfdDto.getAnnualFieldDetailId(), currGcyModel.getGrowerContractYearId(), currDisplayOrder++, lastCfdDto.getIsLeasedInd());
 								contractedFieldDetailDao.insert(currCfdDto, userId);
 							}
 						}

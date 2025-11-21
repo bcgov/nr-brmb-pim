@@ -39,6 +39,7 @@ public interface FieldDao extends Serializable {
     List<FieldDto> selectForLegalLandOrField(
     		Integer legalLandId,
     		Integer fieldId,
+    		String fieldLocation,
     		Integer cropYear
     ) throws DaoException;
 
