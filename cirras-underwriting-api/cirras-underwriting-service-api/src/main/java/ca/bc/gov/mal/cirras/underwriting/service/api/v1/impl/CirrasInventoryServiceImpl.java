@@ -1879,6 +1879,12 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				inventorySeededForage.getSeedingDate() == null;
 	}
 	
+	private boolean checkEmptyInventoryBerries(InventoryBerriesDto inventoryBerries) {
+		return inventoryBerries.getCropVarietyId() == null && 
+				inventoryBerries.getPlantedYear() == null &&
+				inventoryBerries.getPlantedAcres() == null;
+	}
+	
 	// Returns a set of inventoryFieldGuid for plantings that are to be deleted, if any.
 	public Set<String> handleDeletedPlantings(AnnualField field) throws ServiceException {
 
@@ -2756,7 +2762,18 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 								}
 							}
 						}
-						
+
+						//Berries Inventory
+						if (isEmpty && ifdDto.getInsurancePlanId().equals(InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId())) {
+							List<InventoryBerriesDto> inventoryBerries = inventoryBerriesDao.select(ifdDto.getInventoryFieldGuid());
+							for (InventoryBerriesDto ibDto : inventoryBerries ) {
+								if ( !checkEmptyInventoryBerries(ibDto) ) {
+									isEmpty = false;
+									break;
+								}
+							}
+						}
+
 						if ( !isEmpty ) {
 							deleteFieldErrors.add(RemoveFieldValidation.FIELD_HAS_OTHER_INVENTORY_MSG);
 							break;

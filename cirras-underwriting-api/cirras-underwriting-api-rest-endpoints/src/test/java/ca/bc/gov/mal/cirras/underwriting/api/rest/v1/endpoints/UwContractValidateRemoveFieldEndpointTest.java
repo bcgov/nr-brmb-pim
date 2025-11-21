@@ -30,12 +30,14 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PolicyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.RemoveFieldValidationRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededGrain;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryUnseeded;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.RemoveFieldValidation;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.test.EndpointsTest;
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
@@ -92,6 +94,11 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 	private Integer annualFieldDetailId2 = 90000011;
 	private Integer contractedFieldDetailId2 = 90000012;
 
+//	private Integer annualFieldDetailId3 = null;
+//	private Integer contractedFieldDetailId3 = null;
+	private List<Integer> annualFieldDetailIds;
+	private List<Integer> contractedFieldDetailIds;
+
 	@Before
 	public void prepareTests() throws CirrasUnderwritingServiceException, Oauth2ClientException, NotFoundDaoException, DaoException{
 		service = getService(SCOPES);
@@ -112,6 +119,8 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 			deleteInventoryContract(policyNumber2);
 		}
 		
+		deleteInventoryContract(policyNumber1);
+		
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId2.toString());
 
@@ -120,6 +129,22 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 
 		service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId1.toString());
 		service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId2.toString());
+		
+		//Delete additional rolled over contracted field detail records
+		if(contractedFieldDetailIds != null && contractedFieldDetailIds.size() > 0) {
+			for(Integer cfdId : contractedFieldDetailIds) {
+				service.deleteContractedFieldDetail(topLevelEndpoints, cfdId.toString());
+			}
+			contractedFieldDetailIds.clear();
+		}
+
+		//Delete additional rolled over annual field detail records
+		if(annualFieldDetailIds != null && annualFieldDetailIds.size() > 0) {
+			for(Integer afdId : annualFieldDetailIds) {
+				service.deleteAnnualFieldDetail(topLevelEndpoints, afdId.toString());
+			}
+			annualFieldDetailIds.clear();
+		}
 		
 		service.deleteField(topLevelEndpoints, fieldId1.toString());
 
@@ -408,6 +433,36 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 		}
 	}
 	
+	private InventoryBerries createInventoryBerries(
+			InventoryField planting, 
+            Integer cropCommodityId,
+            Integer cropVarietyId
+			) {
+		
+		InventoryBerries ib = new InventoryBerries();
+
+		ib.setCropCommodityId(cropCommodityId);
+		ib.setCropCommodityName(null);
+		ib.setCropVarietyId(cropVarietyId);
+		ib.setCropVarietyName(null);
+		ib.setPlantInsurabilityTypeCode(null);
+		ib.setPlantedYear(null);
+		ib.setPlantedAcres(null);
+		ib.setRowSpacing(null);
+		ib.setPlantSpacing(null);
+		ib.setTotalPlants(null);
+		ib.setIsQuantityInsurableInd(false);
+		ib.setIsPlantInsurableInd(false);
+		ib.setBogId(null);
+		ib.setBogMowedDate(null);
+		ib.setBogRenovatedDate(null);
+		ib.setIsHarvestedInd(null);
+		
+		planting.setInventoryBerries(ib);
+
+		return ib;
+	}
+	
 	
 	@Test
 	public void testValidateRemoveField() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException, DaoException {
@@ -418,10 +473,6 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 			return;
 		}
 
-		// These must be set to a real policy in CIRRAS.
-		String policyNumberWithProducts = "212076-23";
-		Integer fieldIdOnPolicyWithProducts = 1030024;
-		
 		//Date and Time without millisecond
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
@@ -429,15 +480,12 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 		Date createTransactionDate = addSeconds(transactionDate, -1);
 
 		createGrower(growerId, 999888, "grower name", createTransactionDate);
-		createPolicy(policyId1, growerId, 4, policyNumber1, contractNumber1, contractId1, 2020, createTransactionDate);
-		createGrowerContractYear(growerContractYearId1, contractId1, growerId, 2020, 4, createTransactionDate);
+		createPolicy(policyId1, growerId, InventoryServiceEnums.InsurancePlans.GRAIN.getInsurancePlanId(), policyNumber1, contractNumber1, contractId1, 2020, createTransactionDate);
+		createGrowerContractYear(growerContractYearId1, contractId1, growerId, 2020, InventoryServiceEnums.InsurancePlans.GRAIN.getInsurancePlanId(), createTransactionDate);
 
 		createField(fieldId1, "LOT 1", 1980, null);
 		createAnnualFieldDetail(annualFieldDetailId1, null, fieldId1, 2020);
 		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId1, 1);
-				
-		Integer pageNumber = new Integer(1);
-		Integer pageRowCount = new Integer(20);
 
 		UwContractListRsrc searchResults = service.getUwContractList(
 				topLevelEndpoints, 
@@ -450,7 +498,7 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 				null, 
 				null, 
 				null, 
-				pageNumber, pageRowCount);
+				1, 20);
 
 		Assert.assertNotNull(searchResults);
 		Assert.assertEquals(1, searchResults.getCollection().size());
@@ -464,8 +512,8 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 		// Test 2: Field on other Contract.
 		// A. Other Contract in another Year.
 		policyNumber2 = contractNumber2 + "-19";
-		createPolicy(policyId2, growerId, 4, policyNumber2, contractNumber2, contractId2, 2019, createTransactionDate);
-		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2019, 4, createTransactionDate);
+		createPolicy(policyId2, growerId, InventoryServiceEnums.InsurancePlans.GRAIN.getInsurancePlanId(), policyNumber2, contractNumber2, contractId2, 2019, createTransactionDate);
+		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2019, InventoryServiceEnums.InsurancePlans.GRAIN.getInsurancePlanId(), createTransactionDate);
 		createAnnualFieldDetail(annualFieldDetailId2, null, fieldId1, 2019);
 		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId2, growerContractYearId2, 1);
 		
@@ -473,7 +521,7 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 		checkRemoveFieldValidation(removeFieldValidation, true, false, null, new String[] { RemoveFieldValidation.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy")});
 
 		// B. Other Contract in another Year With Empty Inventory and Comments.
-		createInventoryContract(policyNumber2, 4, false, false);
+		createInventoryContract(policyNumber2, InventoryServiceEnums.InsurancePlans.GRAIN.getInsurancePlanId(), false, false);
 
 		removeFieldValidation = service.validateRemoveField(referrer, fieldId1.toString());
 		checkRemoveFieldValidation(
@@ -488,7 +536,7 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 		deleteInventoryContract(policyNumber2);
 
 		// C. Other Contract in another Year With non-empty Unseeded Inventory and Comments.
-		createInventoryContract(policyNumber2, 4, true, false);
+		createInventoryContract(policyNumber2, InventoryServiceEnums.InsurancePlans.GRAIN.getInsurancePlanId(), true, false);
 
 		removeFieldValidation = service.validateRemoveField(referrer, fieldId1.toString());
 		checkRemoveFieldValidation(
@@ -504,7 +552,7 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 		deleteInventoryContract(policyNumber2);
 		
 		// D. Other Contract in another Year With non-empty Seeded Inventory and Comments.
-		createInventoryContract(policyNumber2, 4, false, true);
+		createInventoryContract(policyNumber2, InventoryServiceEnums.InsurancePlans.GRAIN.getInsurancePlanId(), false, true);
 
 		removeFieldValidation = service.validateRemoveField(referrer, fieldId1.toString());
 		checkRemoveFieldValidation(
@@ -527,15 +575,15 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 		
 		// E. Other Contract in same year, different plan:
 		policyNumber2 = contractNumber2 + "-20";
-		createPolicy(policyId2, growerId, 5, policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
-		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2020, 5, createTransactionDate);
+		createPolicy(policyId2, growerId, InventoryServiceEnums.InsurancePlans.FORAGE.getInsurancePlanId(), policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
+		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2020, InventoryServiceEnums.InsurancePlans.FORAGE.getInsurancePlanId(), createTransactionDate);
 		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId1, growerContractYearId2, 1);
 		
 		removeFieldValidation = service.validateRemoveField(referrer, fieldId1.toString());
 		checkRemoveFieldValidation(removeFieldValidation, true, false, null, new String[] { RemoveFieldValidation.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy")});
 
 		// F. Other Contract in same year, different plan with Empty Inventory and Comments (however comment does not trigger an error since it's the same year).
-		createInventoryContract(policyNumber2, 5, false, false);
+		createInventoryContract(policyNumber2, InventoryServiceEnums.InsurancePlans.FORAGE.getInsurancePlanId(), false, false);
 
 		removeFieldValidation = service.validateRemoveField(referrer, fieldId1.toString());
 		checkRemoveFieldValidation(
@@ -549,7 +597,7 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 		deleteInventoryContract(policyNumber2);
 
 		// G. Other Contract in same year, different plan with non-empty Seeded Inventory and Comments (however comment does not trigger an error since it's the same year).
-		createInventoryContract(policyNumber2, 5, false, true);
+		createInventoryContract(policyNumber2, InventoryServiceEnums.InsurancePlans.FORAGE.getInsurancePlanId(), false, true);
 
 		removeFieldValidation = service.validateRemoveField(referrer, fieldId1.toString());
 		checkRemoveFieldValidation(
@@ -568,7 +616,27 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId2.toString());
 		service.deletePolicy(topLevelEndpoints, policyId2.toString());
 
-		// Test 3: Policy has Products (cannot be fully automated since the Products are in CIRRAS)
+		delete();
+		
+		logger.debug(">testValidateRemoveField");
+	}
+
+	@Test
+	public void testValidateRemoveFieldWithProducts() throws CirrasUnderwritingServiceException, NotFoundDaoException, DaoException {
+		
+		logger.debug("<testValidateRemoveFieldWithProducts");
+
+		
+		UwContractListRsrc searchResults;
+		UwContractRsrc referrer;
+		RemoveFieldValidationRsrc removeFieldValidation;
+		
+		// These must be set to a real policy in CIRRAS.
+		String policyNumberWithProducts = "158220-24";
+		Integer fieldIdOnPolicyWithProducts = 1033870;
+		
+
+		// Test: Policy has Products (cannot be fully automated since the Products are in CIRRAS)
 		searchResults = service.getUwContractList(
 				topLevelEndpoints, 
 				null, 
@@ -580,7 +648,7 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 				null, 
 				null, 
 				null, 
-				pageNumber, pageRowCount);
+				1, 20);
 
 		Assert.assertNotNull(searchResults);
 		Assert.assertEquals(1, searchResults.getCollection().size());
@@ -590,9 +658,181 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 		removeFieldValidation = service.validateRemoveField(referrer, fieldIdOnPolicyWithProducts.toString());
 		checkRemoveFieldValidation(removeFieldValidation, true, true, new String[] { RemoveFieldValidation.POLICY_HAS_PRODUCTS_MSG}, null);
 		
-		logger.debug(">testValidateRemoveField");
+		logger.debug(">testValidateRemoveFieldWithProducts");
+	}
+	
+	@Test
+	public void testValidateRemoveFieldBerries() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException, DaoException {
+		logger.debug("<testValidateRemoveFieldBerries");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+
+		//Date and Time without millisecond
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 because they are not set in the database
+		Date transactionDate = cal.getTime();
+		Date createTransactionDate = addSeconds(transactionDate, -1);
+
+		createGrower(growerId, 999888, "grower name", createTransactionDate);
+		createPolicy(policyId1, growerId, InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId(), policyNumber1, contractNumber1, contractId1, 2020, createTransactionDate);
+		createGrowerContractYear(growerContractYearId1, contractId1, growerId, 2020, InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId(), createTransactionDate);
+
+		createField(fieldId1, "LOT 1", 1980, null);
+		createAnnualFieldDetail(annualFieldDetailId1, null, fieldId1, 2020);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId1, 1);
+
+		UwContractRsrc uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContract);
+
+		// Test 1: No errors or warnings.
+		RemoveFieldValidationRsrc removeFieldValidation = service.validateRemoveField(uwContract, fieldId1.toString());
+		checkRemoveFieldValidation(removeFieldValidation, true, true, null, null);
+		
+		InventoryContractRsrc invContract = service.rolloverInventoryContract(uwContract);
+		Assert.assertNotNull(invContract);
+		Assert.assertNotNull(invContract.getFields());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries());
+
+		AnnualFieldRsrc field = invContract.getFields().get(0);
+		
+		annualFieldDetailIds = new ArrayList<>();
+		contractedFieldDetailIds = new ArrayList<>();
+		
+		annualFieldDetailIds.add(field.getAnnualFieldDetailId());
+		contractedFieldDetailIds.add(field.getContractedFieldDetailId());
+
+		// Planting 1 - ST1 insured - Becomes ST2
+		InventoryField planting = field.getPlantings().get(0);
+		createInventoryBerries(planting, 13, 1010702);
+
+		//Create inventory contract
+		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
+		Assert.assertNotNull(fetchedInvContract);
+		Assert.assertNotNull(fetchedInvContract.getFields());
+		Assert.assertNotNull(fetchedInvContract.getFields().get(0).getPlantings());
+		Assert.assertNotNull(fetchedInvContract.getFields().get(0).getPlantings().get(0).getInventoryBerries());
+		
+		InventoryBerries invBerries = fetchedInvContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
+
+		Assert.assertNotNull("CropCommodityId", invBerries.getCropCommodityId());
+		Assert.assertNotNull("CropVarietyId", invBerries.getCropVarietyId());
+		
+		
+		removeFieldValidation = service.validateRemoveField(uwContract, fieldId1.toString());
+		
+		checkRemoveFieldValidation(removeFieldValidation, true, true, null, null);
+		
+		//Create new policy in the next year
+		policyNumber2 = contractNumber1 + "-21";
+		createPolicy(policyId2, growerId, InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId(), policyNumber2, contractNumber1, contractId1, 2021, createTransactionDate);
+		createGrowerContractYear(growerContractYearId2, contractId1, growerId, 2021, InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId(), createTransactionDate);
+		
+		uwContract = getUwContract(policyNumber2, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContract);
+
+		invContract = service.rolloverInventoryContract(uwContract);
+		Assert.assertNotNull(invContract);
+		Assert.assertNotNull(invContract.getFields());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries());
+
+		field = invContract.getFields().get(0);
+		
+		annualFieldDetailIds.add(field.getAnnualFieldDetailId());
+		contractedFieldDetailIds.add(field.getContractedFieldDetailId());
+
+		InventoryBerries rolledOverBerries = invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
+
+		Assert.assertNotNull("CropCommodityId", rolledOverBerries.getCropCommodityId());
+		Assert.assertNotNull("CropVarietyId", rolledOverBerries.getCropVarietyId());
+		
+		//Create inventory contract
+		invContract = service.createInventoryContract(topLevelEndpoints, invContract);
+		Assert.assertNotNull(invContract);
+		Assert.assertNotNull(invContract.getFields());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries());
+		
+		removeFieldValidation = service.validateRemoveField(uwContract, fieldId1.toString());
+
+		checkRemoveFieldValidation(
+				removeFieldValidation, 
+				true, 
+				false, 
+				null, 
+				new String[] { RemoveFieldValidation.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy"),
+			       RemoveFieldValidation.FIELD_HAS_OTHER_INVENTORY_MSG
+				});
+		
+		//Get first policy and remove variety
+		uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContract);
+		
+		invContract = service.getInventoryContract(uwContract);
+		Assert.assertNotNull(invContract);
+
+		//Remove variety and expect no more FIELD_HAS_OTHER_INVENTORY_MSG
+		invBerries = invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
+		invBerries.setCropVarietyId(null);
+		invContract = service.updateInventoryContract(invContract.getInventoryContractGuid(), invContract);
+		
+		InventoryBerries updatedBerries = invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
+		Assert.assertNotNull("CropCommodityId", updatedBerries.getCropCommodityId());
+		Assert.assertNull("CropVarietyId", updatedBerries.getCropVarietyId());
+
+		//Get second policy again to validate
+		uwContract = getUwContract(policyNumber2, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContract);
+		
+		removeFieldValidation = service.validateRemoveField(uwContract, fieldId1.toString());
+
+		//Because the berries inventory in the previous year is empty, the message FIELD_HAS_OTHER_INVENTORY_MSG isn't there anymore
+		checkRemoveFieldValidation(
+				removeFieldValidation, 
+				true, 
+				false, 
+				null, 
+				new String[] { RemoveFieldValidation.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy")
+				});
+		
+		delete();
+		
+		logger.debug(">testValidateRemoveFieldBerries");
+
 	}
 
+	private UwContractRsrc getUwContract(String policyNumber,
+			CirrasUnderwritingService service, 
+			EndpointsRsrc topLevelEndpoints) throws CirrasUnderwritingServiceException {
+
+		UwContractListRsrc searchResults = service.getUwContractList(
+		topLevelEndpoints, 
+		null, 
+		null, 
+		null,
+		null,
+		policyNumber,
+		null,
+		null, 
+		null, 
+		null, 
+		1, 
+		20);
+
+		Assert.assertNotNull(searchResults);
+
+		if ( searchResults.getCollection() != null && searchResults.getCollection().size() == 1 ) {
+			UwContractRsrc uwContract = searchResults.getCollection().get(0);
+			return uwContract;
+		}
+
+		return null;
+	}
+	
 	private void checkRemoveFieldValidation(RemoveFieldValidationRsrc resource,  Boolean expectedIsRemoveFromPolicyAllowed, Boolean expectedIsDeleteFieldAllowed, String[] expectedRemoveFromPolicyWarnings, String[] expectedDeleteFieldErrors) {
 		Assert.assertNotNull(resource);
 
