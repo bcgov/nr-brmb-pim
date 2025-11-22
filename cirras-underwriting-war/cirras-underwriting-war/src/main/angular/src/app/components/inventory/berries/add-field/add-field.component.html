@@ -50,7 +50,7 @@
             [selectedSearchValue]="addFieldForm.controls.searchLegalLandOrFieldId.value"
             [legalLandList]="legalLandList.collection"
             [insurancePlanId]="dataReceived.insurancePlanId"
-            (legalLandIdChanged)="onLegalLandIdReceived($event)">
+            (legalLandChanged)="onLegalLandReceived($event)">
         </legal-land-list>
     </div>
 
@@ -60,7 +60,8 @@
             [fieldList]="fieldList.collection"
             [insurancePlanId]="dataReceived.insurancePlanId"
             [searchBy]="addFieldForm.controls.choiceSelected.value"
-            (fieldIdChanged)="onFieldIdReceived($event)"></field-list>
+            [selectedCommodity]="dataReceived.berries.selectedCommodity"
+            (fieldChanged)="onFieldReceived($event)"></field-list>
     </div>
     
     <div class="row-group-left" style="margin-top: 4px;">
@@ -75,6 +76,6 @@
 <div mat-dialog-actions align="end">
     <span *ngIf="showProceedButton" style="padding-right:160px;">To save field, click done and then click save on the main screen.</span>
     <button mat-raised-button class="secondary" (click)="onCancelChanges()">Cancel</button>
-    <!-- <button *ngIf="showProceedButton" mat-raised-button class="primary" (click)="onProceed()">Done</button> -->
+    <button *ngIf="showProceedButton" mat-raised-button class="primary" (click)="onProceed()">Done</button>
 </div>
 </cuws-base-dialog>

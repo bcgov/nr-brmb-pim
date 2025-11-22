@@ -22,6 +22,8 @@ export interface AddLandPopupData {
     fieldId?: number;
     legalLandId?: number;
     fieldLabel?: string;
+    fieldLocation?: string;
+    primaryPropertyIdentifier?: string;
     otherLegalDescription?: string;
     landUpdateType?: string;
     transferFromGrowerContractYearId? : number;
