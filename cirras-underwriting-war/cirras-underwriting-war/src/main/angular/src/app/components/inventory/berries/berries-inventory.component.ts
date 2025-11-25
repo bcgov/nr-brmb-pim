@@ -11,6 +11,8 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { isInt, replaceNonAlphanumericCharacters } from 'src/app/utils';
 import { AddFieldComponent } from './add-field/add-field.component';
 import { AddLandPopupData } from '../add-land/add-land.component';
+import { createNewAnnualFieldObject } from '../inventory-common';
+import { AnnualFieldRsrc } from '@cirras/cirras-underwriting-api';
 
 @Component({
   selector: 'berries-inventory',
@@ -388,126 +390,51 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
   populateNewLand(landData) {
 
-  //     // var self = this
-  // // const flds: FormArray = this.viewModel.formGroup.controls.fields as FormArray
+    // find the max display_order
+    let maxDisplayOrder = 0; // field order should start with 1
+    let minFieldId = 0; // new fields should have negative field ids
 
-  //   // Now add the new field to the form
-  // let fldPlantings = new UntypedFormArray ([]) 
-
-  // let pltgInventorySeededGrains = new UntypedFormArray ([])
-
-  // let pltgInventorySeededForages =  new UntypedFormArray ([])
-
-    if (landData.plantings && landData.plantings.length > 0 ) {
+    this.inventoryContract.fields.forEach( function(fld : AnnualFieldRsrc) {
   
-  //   // add existing plantings
-  //   landData.plantings.forEach ( pltg => {
+      if (fld.displayOrder > maxDisplayOrder) {
+        maxDisplayOrder = fld.displayOrder
+      }
 
-  //     let pltgInventorySeededGrains = new UntypedFormArray ([])
+      if (fld.fieldId < minFieldId) {
+        minFieldId = fld.fieldId
+      }
+    });
 
-  //     let pltgInventorySeededForages =  new UntypedFormArray ([])
+    // this.inventoryContract.fields.push (
+    //   createNewAnnualFieldObject( (landData.fieldId > -1 ? landData.fieldId : (minFieldId - 1)), 
+    //                               (landData.legalLandId > -1 ? landData.legalLandId : null), 
+    //                               landData.fieldLabel, landData.otherLegalDescription, landData.primaryPropertyIdentifier,
+    //                               landData.fieldLocation, maxDisplayOrder + 1, this.inventoryContract.cropYear, landData.isLeasedInd, 
+    //                               landData.landUpdateType, landData.transferFromGrowerContractYearId, 
+    //                               landData.plantings, landData.uwComments)
+    // )
 
-  //     // add inventory seeded grains if any
-  //     if (pltg.inventorySeededGrains && pltg.inventorySeededGrains.length > 0) {
-  //       // for each inventory seeded grain within the planting object
-  //       pltg.inventorySeededGrains.forEach(item => {
+    this.inventoryContract.fields = [
+      ...this.inventoryContract.fields,
+      createNewAnnualFieldObject( (landData.fieldId > -1 ? landData.fieldId : (minFieldId - 1)), 
+                                  (landData.legalLandId > -1 ? landData.legalLandId : null), 
+                                  landData.fieldLabel, landData.otherLegalDescription, landData.primaryPropertyIdentifier,
+                                  landData.fieldLocation, maxDisplayOrder + 1, this.inventoryContract.cropYear, landData.isLeasedInd, 
+                                  landData.landUpdateType, landData.transferFromGrowerContractYearId, 
+                                  landData.plantings, landData.uwComments)
+    ];
 
-  //         // Add seededGrainInventory
-  //         pltgInventorySeededGrains.push( fb.group( 
-  //           addSeededGrainsObject(pltg.inventoryFieldGuid, pltg.underseededAcres, pltg.underseededCropVarietyId, pltg.underseededCropVarietyName, false, item)
-  //         ) )
+    this.cdr.detectChanges()
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
 
-  //       })
-
-  //     } else {
-  //       // no seeded grain inventory - prepare empty inventory seeded grain form controls
-  //       pltgInventorySeededGrains.push( fb.group( 
-  //         addSeededGrainsObject(pltg.inventoryFieldGuid, null, null, null, false, <InventorySeededGrain>[])
-  //       ) )
-  //     }
-      
-  //     // add inventory seeded forages if any
-  //     if (pltg.inventorySeededForages && pltg.inventorySeededForages.length > 0) {
-  //       // for each inventory seeded grain within the planting object
-  //       pltg.inventorySeededForages.forEach(item => {
-          
-  //         // Add seededForageInventory
-  //         pltgInventorySeededForages.push( fb.group( 
-  //           addSeededForagesObject (pltg.inventoryFieldGuid, pltg.isHiddenOnPrintoutInd, 
-  //                                   ( pltg.inventoryUnseeded ? pltg.inventoryUnseeded.acresToBeSeeded : null), 
-  //                                   ( pltg.inventoryUnseeded ? pltg.inventoryUnseeded.isUnseededInsurableInd : false ), 
-  //                                   item)
-  //         ) )
-
-  //       })
-
-
-  //     } else {
-  //       // no seeded grain inventory - prepare empty inventory seeded grain form controls
-  //       pltgInventorySeededForages.push( fb.group( 
-  //         addSeededForagesObject(pltg.inventoryFieldGuid, pltg.isHiddenOnPrintoutInd, 
-  //                               ( pltg.inventoryUnseeded ? pltg.inventoryUnseeded.acresToBeSeeded : null), 
-  //                               ( pltg.inventoryUnseeded ? pltg.inventoryUnseeded.isUnseededInsurableInd : false ), 
-  //                               <InventorySeededForage>[])
-  //       ) )
-
-  //     }
-
-  //     // Add the plantings to the newly created or transferred field
-  //     fldPlantings.push( fb.group( addPlantingObject( pltg.cropYear, pltg.fieldId, pltg.insurancePlanId, pltg.inventoryFieldGuid, 
-  //       pltg.lastYearCropCommodityId, pltg.lastYearCropCommodityName, pltg.lastYearCropCommodityVarietyId, pltg.lastYearCropCommodityVarietyName,
-  //       pltg.plantingNumber, pltg.isHiddenOnPrintoutInd, 
-  //       pltg.underseededInventorySeededForageGuid,
-  //       pltg.inventoryUnseeded,  pltgInventorySeededGrains, pltgInventorySeededForages ) ))
-
-  //   } )
-
-  // } else {
-
-  //   // add empty inventory seeded grain form controls
-  //   pltgInventorySeededGrains.push( fb.group( 
-  //     addSeededGrainsObject(null, null, null, null, false, <InventorySeededGrain>[])
-  //   ) )
-    
-  //   // add empty seeded forage
-  //   pltgInventorySeededForages.push( fb.group( 
-  //     addSeededForagesObject(null, false, null, false, <InventorySeededForage>[])
-  //   ) )
-
-  //   // add empty planting object
-  //   fldPlantings.push( fb.group( 
-  //     addPlantingObject( cropYear, landData.fieldId, insurancePlanId, '', '', '', '', '', 1, false, null, <InventoryUnseeded>{}, pltgInventorySeededGrains, pltgInventorySeededForages )
-  //     ))
-
+    // TODO how to focus on the new field ?? this might need to move to the field component
+    // for (let i = flds.length - 1; i >= 0; i--) {
+    //   if (flds['controls'][i].get("displayOrder").value  ==  displayOrder) {
+    //     (<any>flds.controls[i].get('fieldLabel')).nativeElement.focus();
+    //     break
+    //   }
+    // }
   }
-
-  // flds.push( fb.group( {
-  //   annualFieldDetailId:   [],
-  //   displayOrder:          [ displayOrder ],  
-  //   fieldId:               [ landData.fieldId ],
-  //   fieldLabel:            [ landData.fieldLabel ],
-  //   landUpdateType:        [ landData.landUpdateType ],
-  //   legalLandId:           [ landData.legalLandId ],
-  //   otherLegalDescription: [ landData.otherLegalDescription ],
-  //   transferFromGrowerContractYearId: [ landData.transferFromGrowerContractYearId ],
-  //   plantings:             [ fldPlantings ],
-  //   uwComments:            [ landData.uwComments ],
-  //   isNewFieldUI:          [ true ],
-  //   deletedByUserInd:      [ false ]
-  // } ) )
-
-  // cdr.detectChanges()
-
-  // // focus on the new field
-  // for (let i = flds.length - 1; i >= 0; i--) {
-  //   if (flds['controls'][i].get("displayOrder").value  ==  displayOrder) {
-  //     (<any>flds.controls[i].get('fieldLabel')).nativeElement.focus();
-  //     break
-  //   }
-  // }
-
-  }
-
 
   onAddNewField() {
 
@@ -529,6 +456,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
           fieldLocation: null,
           primaryPropertyIdentifier: null,
           otherLegalDescription: null,
+          isLeasedInd: false,
           landUpdateType: null,
           transferFromGrowerContractYearId : null,
           plantings: [],
@@ -548,11 +476,10 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       
       dialogRef.afterClosed().subscribe(result => {
         if (result && result.event == 'AddLand'){
-        
-        // add new land
-        if (result.data && result.data.landData) {
-          // TODO
-            // this.populateNewLand(fb, cdr, flds, result.data.landData, displayOrder, dataToSend.cropYear, dataToSend.insurancePlanId)
+          
+          // add new land
+          if (result.data && result.data.landData) {
+            this.populateNewLand(result.data.landData) 
           }
           
         } else if (result && result.event == 'Cancel'){

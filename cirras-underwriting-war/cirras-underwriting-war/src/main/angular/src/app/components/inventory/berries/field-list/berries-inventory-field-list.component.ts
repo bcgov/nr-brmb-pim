@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { UntypedFormArray } from '@angular/forms';
 import { AnnualField } from 'src/app/conversion/models';
 import { BERRY_COMMODITY } from 'src/app/utils/constants';
@@ -69,12 +69,23 @@ export function setTableHeaderStyleForBerries(cmdty) {
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false
 })
-export class BerriesInventoryFieldListComponent  {
+export class BerriesInventoryFieldListComponent implements OnChanges {
 
   @Input() fields: Array<AnnualField>;
   @Input() fieldsFormArray: UntypedFormArray;
   @Input() cropVarietyOptions;
   @Input() selectedCommodity;
+
+  constructor(protected cdr: ChangeDetectorRef,) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.fields && changes.fields.currentValue) {
+      if (this.fields) {
+        this.cdr.detectChanges()
+      }
+    }
+
+  }
 
   setTableHeaderStyle() {
     return setTableHeaderStyleForBerries(this.selectedCommodity)

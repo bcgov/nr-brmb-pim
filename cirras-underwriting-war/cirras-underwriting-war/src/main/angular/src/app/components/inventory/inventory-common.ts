@@ -828,3 +828,35 @@ export function getDefaultInventoryBerries(inventoryBerriesGuid, inventoryFieldG
       }
 }
 
+
+export function createNewAnnualFieldObject(fieldId, legalLandId, fieldLabel, otherLegalDescription, primaryPropertyIdentifier,
+                                        fieldLocation, displayOrder, cropYear, isLeasedInd, landUpdateType, transferFromGrowerContractYearId,
+                                        plantings, uwComments) {
+  return {
+    links: [],
+    contractedFieldDetailId: null,
+    annualFieldDetailId: null,
+    fieldId: fieldId,
+    legalLandId: legalLandId,
+    fieldLabel: fieldLabel, 
+    otherLegalDescription: otherLegalDescription,
+    primaryPropertyIdentifier: primaryPropertyIdentifier,
+    fieldLocation: fieldLocation, 
+    displayOrder: displayOrder, 
+    cropYear: cropYear,
+    isLeasedInd: isLeasedInd, 
+    landUpdateType: landUpdateType,
+    transferFromGrowerContractYearId: transferFromGrowerContractYearId,
+    plantings: plantings,
+    dopYieldFieldGrainList: [],
+    dopYieldFieldForageList: [],
+    uwComments: uwComments, 
+    policies: [],
+    verifiableCommodities: [],
+    verifiableVarieties: [],
+    etag: '',
+    type: '',
+    isNewFieldUI: true,
+    deletedByUserInd: false
+  }
+}

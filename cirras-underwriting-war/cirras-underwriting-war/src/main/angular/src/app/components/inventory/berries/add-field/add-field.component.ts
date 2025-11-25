@@ -9,7 +9,7 @@ import { setHttpHeaders } from 'src/app/utils';
 import { lastValueFrom } from 'rxjs';
 import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { BERRY_COMMODITY, INSURANCE_PLAN } from 'src/app/utils/constants';
+import { BERRY_COMMODITY, INSURANCE_PLAN, LAND_UPDATE_TYPE } from 'src/app/utils/constants';
 import { AddLandPopupData } from '../../add-land/add-land.component';
 
 @Component({
@@ -201,6 +201,8 @@ export class AddFieldComponent implements OnInit{
         this.showProceedButton = false
       } else {
         // give the option to add new legal land
+        this.dataToSend.landData.legalLandId = -1
+        this.dataToSend.landData.fieldId = -1
         this.showNewLegalLandMessage = true
         this.showProceedButton = true
       }
@@ -237,17 +239,11 @@ export class AddFieldComponent implements OnInit{
 
     this.validationMessages = null // clear any messages 
     
-    
     if (!field ) { //the field would be added as new, no validations needed
-      // TODO
-      // this.showProceedButton = false // it needs a field label too
-      // this.validationMessages = <AddFieldValidationRsrc>{};
       return
     }
 
     if (this.isBerryFieldOnCurrentPolicy() ){
-      // don't go for validation to the API
-      // TODO - allow Proceed button
       return
     }
 
@@ -289,10 +285,13 @@ export class AddFieldComponent implements OnInit{
     this.dataToSend.landData.primaryPropertyIdentifier = legalLand.primaryPropertyIdentifier
     this.dataToSend.landData.otherLegalDescription = legalLand.otherLegalDescription
 
+    this.fieldList = null
+
     if (legalLand.legalLandId > -1 ) {
       this.getFields(this.dataReceived.cropYear, legalLand.legalLandId, "", "") 
     } else { 
       // new legal land - allow Proceed
+      this.dataToSend.landData.fieldId = -1
       this.showProceedButton = true;
     }
   }
@@ -301,12 +300,15 @@ export class AddFieldComponent implements OnInit{
     this.dataToSend.landData.fieldId = field.fieldId
     this.dataToSend.landData.fieldLabel = field.fieldLabel
     this.dataToSend.landData.fieldLocation = field.fieldLocation
+    this.dataToSend.landData.isLeasedInd = ( field.isLeasedInd == null ? false : field.isLeasedInd )
+
+    this.validationMessages = null
 
     if (field && field.fieldId > -1) {
-      // run validation
+      // run validation for existing fields
       this.validateFields(field)
     } else {
-      //no validation
+      //no validation for new fields 
       this.showProceedButton = true
     }
   }
@@ -338,10 +340,12 @@ export class AddFieldComponent implements OnInit{
                                         ]
                                       } as any
 
-            // TODO do not allow PROCEED button if the selected commodity is the same as the commodity on the field
+            // do not allow PROCEED button if the selected commodity is the same as the commodity on the field
+            this.showProceedButton = false
             return true
           } else {
-            // TODO allow PROCEED button if the field is already on the policy but we're adding a different commodity on it
+            // allow PROCEED button if the field is already on the policy but we're adding a different commodity on it
+            this.showProceedButton = true
             return true
           }
         }
@@ -357,125 +361,89 @@ export class AddFieldComponent implements OnInit{
 
   onProceed(){
 
-    // let dataToSend : AddLandPopupData = this.dataReceived  
+    let landUpdateType = ""
+    let transferFromGrowerContractYearId 
 
-    // let landUpdateType = ""
+    if (this.addFieldForm.controls.choiceSelected.value == 'searchLegalLocation' || 
+        this.addFieldForm.controls.choiceSelected.value == 'searchPID') {
+      
+      if (this.dataToSend.landData.legalLandId && this.dataToSend.landData.legalLandId == -1) {
+        landUpdateType = LAND_UPDATE_TYPE.NEW_LAND
+      }
+    } 
 
-    // const legalLandId = this.addLandForm.get("legalLandIdSelected").value
-    // let otherLegalDescription = ""
+    if (this.dataToSend.landData.fieldId && this.dataToSend.landData.fieldId > -1) {
+      
+      let fld =  this.fieldList.collection.find(el => el.fieldId == this.dataToSend.landData.fieldId)
+      if (fld) {
 
-    // let fieldId = this.addLandForm.get("fieldIdSelected").value
-    // let fieldLabel = ""
+        fld.policies.forEach(policy => {
 
-    // let transferFromGrowerContractYearId 
+          if (this.dataReceived.insurancePlanId == policy.insurancePlanId && this.dataReceived.cropYear == policy.cropYear) {
 
-    // if (this.addLandForm.controls.choiceSelected.value == this.searchChoice.searchLegal) {
-
-    //   if (legalLandId && legalLandId > -1) {
-    //     otherLegalDescription = this.legalLandList.collection.find(el => el.legalLandId == legalLandId).otherDescription
-    //   } else {
-    //     otherLegalDescription = this.addLandForm.get("searchLegalLandOrFieldId").value
-    //     landUpdateType = LAND_UPDATE_TYPE.NEW_LAND
-    //   }
-
-    // } else {
-    //   // the user has searched for field id
-    //   otherLegalDescription = this.addLandForm.get("otherLegalDescription").value
-    // }
-
-
-    // if (fieldId && fieldId > -1) {
-    //   fieldLabel = this.fieldList.collection.find(el => el.fieldId == fieldId).fieldLabel
-
-    //   let fld =  this.fieldList.collection.find(el => el.fieldId == fieldId)
-    //   if (fld) {
-    //     fieldLabel = fld.fieldLabel
-
-    //     fld.policies.forEach(policy => {
-
-    //       if (this.dataReceived.insurancePlanId == policy.insurancePlanId && this.dataReceived.cropYear == policy.cropYear) {
-
-    //         transferFromGrowerContractYearId = policy.growerContractYearId
-    //         return
+            transferFromGrowerContractYearId = policy.growerContractYearId
+            return
             
-    //       }
+          }
+        })
 
-    //     })
+        landUpdateType = LAND_UPDATE_TYPE.ADD_EXISTING_LAND
+      }
+    } else {
+      landUpdateType = LAND_UPDATE_TYPE.ADD_NEW_FIELD
+    }
 
-    //     landUpdateType = LAND_UPDATE_TYPE.ADD_EXISTING_LAND
-    //   }
-    // } else {
-    //   fieldId = this.dataReceived.fieldId
-    //   fieldLabel = this.addLandForm.get("fieldLabel").value
-    //   if (fieldLabel && fieldLabel.length > 0) {
-    //     landUpdateType = LAND_UPDATE_TYPE.ADD_NEW_FIELD
-    //   }
-    // }
+    if (landUpdateType == "") {
+      alert ("Cannot determine land update type")
+      return
+    }
 
-    // if (landUpdateType == "") {
-    //   alert ("Cannot determine land update type")
-    //   return
-    // }
+    if (this.dataToSend.landData.fieldId > 0) {
+      // it's a field that was found in the system 
+      // the rollover endpoint should return plantings and comments 
 
-    // if (fieldId > 0) {
-    //   // it's a field that was found in the system 
-    //   // the rollover endpoint should return plantings and comments 
+      let url = this.appConfig.getConfig().rest["cirras_underwriting"]
+      url = url +"/annualField/" + this.dataToSend.landData.fieldId + "/rolloverInventory"
+      url = url + "?rolloverToCropYear=" +  this.dataReceived.cropYear 
+      url = url + "&insurancePlanId=" +  this.dataReceived.insurancePlanId
 
-    //   let url = this.appConfig.getConfig().rest["cirras_underwriting"]
-    //   url = url +"/annualField/" + fieldId + "/rolloverInventory"
-    //   url = url + "?rolloverToCropYear=" +  this.dataReceived.cropYear 
-    //   url = url + "&insurancePlanId=" +  this.dataReceived.insurancePlanId
+      const httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
 
-    //   const httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
+      var self = this
+      return lastValueFrom(this.http.get(url,httpOptions)).then((data: AnnualFieldRsrc) => {
 
-    //   return this.http.get(url,httpOptions).toPromise().then((data: AnnualFieldRsrc) => {
+        let plantings = []
+        let uwComments = []
 
-    //     let plantings = []
-    //     let uwComments = []
+        if (data && data.plantings && data.plantings.length > 0 ) {
+          plantings = data.plantings
+        }
 
-    //     if (data && data.plantings && data.plantings.length > 0 ) {
-    //       plantings = data.plantings
-    //     }
+        if (data && data.uwComments && data.uwComments.length > 0) {
+          uwComments = data.uwComments
+        }
 
-    //     if (data && data.uwComments && data.uwComments.length > 0) {
-    //       uwComments = data.uwComments
-    //     }
-
-    //     dataToSend.landData = {
-    //       legalLandId : (legalLandId) ? legalLandId : "",
-    //       otherLegalDescription : otherLegalDescription,
-    //       fieldId : fieldId,
-    //       fieldLabel : fieldLabel,
-    //       transferFromGrowerContractYearId : transferFromGrowerContractYearId,
-    //       landUpdateType : landUpdateType,
-    //       plantings: plantings,
-    //       uwComments: uwComments
-    //     }
+        self.dataToSend.landData.transferFromGrowerContractYearId = transferFromGrowerContractYearId
+        self.dataToSend.landData.landUpdateType = landUpdateType
+        self.dataToSend.landData.plantings = plantings
+        self.dataToSend.landData.uwComments = uwComments
     
-    //     // send the results to the main page
-    //     this.dialogRef.close({event:'AddLand', data: dataToSend});
-    //   })
+        // send the results to the main page
+        this.dialogRef.close({event:'AddLand', data: self.dataToSend});
+      })
 
-    // } else {
-    //   // new land / field, no need to get plantings and comments 
-    //   // just close the popup
+    } else {
+      // new land / field, no need to get plantings and comments 
+      // just close the popup
 
-    //   dataToSend.landData = {
-    //     legalLandId : (legalLandId) ? legalLandId : "",
-    //     otherLegalDescription : otherLegalDescription,
-    //     fieldId : fieldId,
-    //     fieldLabel : fieldLabel,
-    //     transferFromGrowerContractYearId : transferFromGrowerContractYearId,
-    //     landUpdateType : landUpdateType,
-    //     plantings: [],
-    //     uwComments: []
-    //   }
-  
-    //   // send the results to the main page
-    //   this.dialogRef.close({event:'AddLand', data: dataToSend});
+      this.dataToSend.landData.transferFromGrowerContractYearId = null
+      this.dataToSend.landData.landUpdateType = landUpdateType
+      this.dataToSend.landData.plantings = []
+      this.dataToSend.landData.uwComments = []
 
-    // }
-
+      // send the results to the main page
+      this.dialogRef.close({event:'AddLand', data: this.dataToSend});
+    }
   }
 
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from "@ngrx/store";
 import { RootState } from "src/app/store";
@@ -18,7 +18,7 @@ import { setTableHeaderStyleForBerries } from '../field-list/berries-inventory-f
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false
 })
-export class BerriesInventoryFieldComponent implements OnChanges{
+export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
 
   @Input() field: AnnualField;
   @Input() fieldsFormArray: UntypedFormArray;
