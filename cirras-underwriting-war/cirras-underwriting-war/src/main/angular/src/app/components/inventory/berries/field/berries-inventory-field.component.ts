@@ -3,7 +3,7 @@ import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular
 import { Store } from "@ngrx/store";
 import { RootState } from "src/app/store";
 import { AnnualField } from 'src/app/conversion/models';
-import { addAnnualFieldObject, getDefaultInventoryBerries } from '../../inventory-common';
+import { addAnnualFieldObject, getDefaultInventoryBerries, getDefaultPlanting } from '../../inventory-common';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { InventoryBerries, InventoryField, UnderwritingComment } from '@cirras/cirras-underwriting-api';
@@ -24,6 +24,7 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
   @Input() fieldsFormArray: UntypedFormArray;
   @Input() cropVarietyOptions;
   @Input() selectedCommodity;
+  @Input() minNewFieldId;
 
   fieldFormGroup: UntypedFormGroup;
   numPlantingsToSave = 1 // default
@@ -65,12 +66,6 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
       if (plantings && plantings.length > 0) {
         return true
       }
-
-      // TODO: remove the check for no commodity after add field is complete
-      plantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == null)
-      if (plantings && plantings.length > 0) {
-        return true
-      }
     }
 
     return false
@@ -78,14 +73,9 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
 
   updateNumPlantings() {
     if (this.field.plantings) {
-      // TODO when ADD Field is ready -> filter by commodity is as well
-      // this.numPlantingsToSave = this.field.plantings.filter(
-      //   x => (x.inventoryBerries.deletedByUserInd !== true  && 
-      //         x.inventoryBerries.cropCommodityId == this.selectedCommodity )).length
-
-      // but for now, all fields have the same commodity
       this.numPlantingsToSave = this.field.plantings.filter(
-        x => (x.inventoryBerries.deletedByUserInd !== true )).length
+        x => (x.inventoryBerries.deletedByUserInd !== true  && 
+              x.inventoryBerries.cropCommodityId == this.selectedCommodity )).length
     }
   }
 
@@ -150,27 +140,8 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
     if (this.securityUtilService.canEditInventory()) {
       let inventoryBerries: InventoryBerries = getDefaultInventoryBerries(null, null, this.selectedCommodity)
 
-      let pltg: InventoryField = {
-        inventoryFieldGuid: null,
-        insurancePlanId: INSURANCE_PLAN.BERRIES,
-        fieldId: this.field.fieldId,
-        lastYearCropCommodityId: null,
-        lastYearCropCommodityName: null,
-        lastYearCropVarietyId: null,
-        lastYearCropVarietyName: null,
-        cropYear: this.field.cropYear,
-        plantingNumber: this.getMaxPlantingNumber() + 1, 
-        isHiddenOnPrintoutInd: false, 
-        underseededCropVarietyId: null, 
-        underseededCropVarietyName: null, 
-        underseededAcres: null,
-        underseededInventorySeededForageGuid: null,
-        inventoryUnseeded: null,
-        inventoryBerries: inventoryBerries,
-        linkedPlanting: null,
-        inventorySeededGrains: [],
-        inventorySeededForages: []
-      }
+      let pltg: InventoryField = getDefaultPlanting(null, INSURANCE_PLAN.BERRIES, this.field.fieldId,  
+                      this.field.cropYear, this.getMaxPlantingNumber() + 1, inventoryBerries, [], [])
 
       this.field.plantings.push(pltg)
       this.updateNumPlantings()

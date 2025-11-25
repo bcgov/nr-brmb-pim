@@ -828,7 +828,30 @@ export function getDefaultInventoryBerries(inventoryBerriesGuid, inventoryFieldG
       }
 }
 
-
+export function getDefaultPlanting(inventoryFieldGuid, insurancePlanId, fieldId, cropYear, plantingNumber, inventoryBerries, inventorySeededGrains, inventorySeededForages) {
+  return {
+        inventoryFieldGuid: inventoryFieldGuid,
+        insurancePlanId: insurancePlanId,
+        fieldId: fieldId,
+        lastYearCropCommodityId: null,
+        lastYearCropCommodityName: null,
+        lastYearCropVarietyId: null,
+        lastYearCropVarietyName: null,
+        cropYear: cropYear,
+        plantingNumber: plantingNumber, 
+        isHiddenOnPrintoutInd: false, 
+        underseededCropVarietyId: null, 
+        underseededCropVarietyName: null, 
+        underseededAcres: null,
+        underseededInventorySeededForageGuid: null,
+        inventoryUnseeded: null,
+        inventoryBerries: inventoryBerries,
+        linkedPlanting: null,
+        inventorySeededGrains: inventorySeededGrains,
+        inventorySeededForages: inventorySeededForages
+      }
+    }
+    
 export function createNewAnnualFieldObject(fieldId, legalLandId, fieldLabel, otherLegalDescription, primaryPropertyIdentifier,
                                         fieldLocation, displayOrder, cropYear, isLeasedInd, landUpdateType, transferFromGrowerContractYearId,
                                         plantings, uwComments) {

@@ -2,13 +2,13 @@
     
     <div class="inventory-cell border-left" style="width: 115px;"
         [ngClass]=" isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout border-left-exclude-printout' : 'inventory-border'">
-        {{ fieldFormGroup.value.fieldId }}
+        {{ (fieldFormGroup.value.fieldId < 0 ? "" : fieldFormGroup.value.fieldId) }}
     </div>
     
     <div class="inventory-fill" style="width: 280px;"
         [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout' : 'inventory-border'">
         <mat-form-field appearance="fill" style="width: 260px;">
-            <input matInput type="text"
+            <input matInput type="text" appAutoFocus
                     formControlName="fieldLocation"
                     maxlength="128"
                     (blur)="updateFieldLocation()">

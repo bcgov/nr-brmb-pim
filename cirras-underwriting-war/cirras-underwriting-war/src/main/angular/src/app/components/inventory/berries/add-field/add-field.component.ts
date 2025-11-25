@@ -123,6 +123,7 @@ export class AddFieldComponent implements OnInit{
       fieldLocation: null,
       primaryPropertyIdentifier: null,
       otherLegalDescription: null,
+      isLeasedInd: false,
       landUpdateType: null,
       transferFromGrowerContractYearId: null,
       plantings: null,
@@ -201,12 +202,26 @@ export class AddFieldComponent implements OnInit{
         this.showProceedButton = false
       } else {
         // give the option to add new legal land
-        this.dataToSend.landData.legalLandId = -1
-        this.dataToSend.landData.fieldId = -1
+        this.setNewLegalLand(searchLegalLandOrFieldId)
+
         this.showNewLegalLandMessage = true
         this.showProceedButton = true
       }
     })
+  }
+
+  setNewLegalLand(searchLegalLandOrFieldId) {
+    this.dataToSend.landData.legalLandId = -1
+
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.GRAIN || this.dataReceived.insurancePlanId == INSURANCE_PLAN.FORAGE) {
+        this.dataToSend.landData.otherLegalDescription = searchLegalLandOrFieldId
+    }
+
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES ) {
+        this.dataToSend.landData.primaryPropertyIdentifier = searchLegalLandOrFieldId
+    }
+
+    this.dataToSend.landData.fieldId = -1
   }
 
   getFields(cropYear, legalLandId, fieldId, fieldLocation){
@@ -226,7 +241,15 @@ export class AddFieldComponent implements OnInit{
       if (self.fieldList && self.fieldList.collection && self.fieldList.collection.length > 0) {
         if (this.addFieldForm.controls.choiceSelected.value == 'searchFieldId') {
           // if the user searches by field id then validate the field here
+          this.dataToSend.landData.legalLandId = self.fieldList.collection[0].legalLandId
           this.dataToSend.landData.fieldId = self.fieldList.collection[0].fieldId
+
+          this.dataToSend.landData.fieldLabel = self.fieldList.collection[0].fieldLabel
+          this.dataToSend.landData.fieldLocation = self.fieldList.collection[0].fieldLocation
+          this.dataToSend.landData.primaryPropertyIdentifier = self.fieldList.collection[0].primaryPropertyIdentifier
+          this.dataToSend.landData.otherLegalDescription = self.fieldList.collection[0].otherLegalDescription
+          this.dataToSend.landData.isLeasedInd = ( self.fieldList.collection[0].isLeasedInd == null ? false : self.fieldList.collection[0].isLeasedInd)
+
           this.validateFields(self.fieldList.collection[0])
         }
       } else {
@@ -364,16 +387,21 @@ export class AddFieldComponent implements OnInit{
     let landUpdateType = ""
     let transferFromGrowerContractYearId 
 
-    if (this.addFieldForm.controls.choiceSelected.value == 'searchLegalLocation' || 
-        this.addFieldForm.controls.choiceSelected.value == 'searchPID') {
-      
-      if (this.dataToSend.landData.legalLandId && this.dataToSend.landData.legalLandId == -1) {
-        landUpdateType = LAND_UPDATE_TYPE.NEW_LAND
-      }
-    } 
+    if (!this.dataToSend.landData.legalLandId || !this.dataToSend.landData.fieldId){
+      alert ("Legal Land or Field were not selected. Proceed is not possible.")
+      return
+    }
 
-    if (this.dataToSend.landData.fieldId && this.dataToSend.landData.fieldId > -1) {
-      
+    if (this.dataToSend.landData.legalLandId == -1) {
+
+      landUpdateType = LAND_UPDATE_TYPE.NEW_LAND
+
+    } else if ( this.dataToSend.landData.legalLandId > -1 && this.dataToSend.landData.fieldId == -1) {
+
+      landUpdateType = LAND_UPDATE_TYPE.ADD_NEW_FIELD
+
+    } else if (this.dataToSend.landData.legalLandId > -1 && this.dataToSend.landData.fieldId > -1) {
+        
       let fld =  this.fieldList.collection.find(el => el.fieldId == this.dataToSend.landData.fieldId)
       if (fld) {
 
@@ -389,9 +417,7 @@ export class AddFieldComponent implements OnInit{
 
         landUpdateType = LAND_UPDATE_TYPE.ADD_EXISTING_LAND
       }
-    } else {
-      landUpdateType = LAND_UPDATE_TYPE.ADD_NEW_FIELD
-    }
+    } 
 
     if (landUpdateType == "") {
       alert ("Cannot determine land update type")

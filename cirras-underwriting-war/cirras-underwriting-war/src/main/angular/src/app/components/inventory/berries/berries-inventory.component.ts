@@ -11,8 +11,8 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { isInt, replaceNonAlphanumericCharacters } from 'src/app/utils';
 import { AddFieldComponent } from './add-field/add-field.component';
 import { AddLandPopupData } from '../add-land/add-land.component';
-import { createNewAnnualFieldObject } from '../inventory-common';
-import { AnnualFieldRsrc } from '@cirras/cirras-underwriting-api';
+import { createNewAnnualFieldObject, getDefaultInventoryBerries, getDefaultPlanting } from '../inventory-common';
+import { AnnualFieldRsrc, InventoryBerries, InventoryField } from '@cirras/cirras-underwriting-api';
 
 @Component({
   selector: 'berries-inventory',
@@ -134,7 +134,6 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       })
     }
 
-
   setFormSeededStyles(){
     return {
       'grid-template-columns':  '250px 200px auto  140px 150px 12px 190px'
@@ -165,7 +164,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       return
     }
 
-    this.setselectedCommodityForEmptyPlantings()
+    this.manageNewFields()
 
     if (this.inventoryContract.inventoryContractGuid) {
       this.store.dispatch(UpdateInventoryContract(INVENTORY_COMPONENT_ID, this.policyId, this.inventoryContract))
@@ -313,14 +312,15 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     return false
   }
 
-  setselectedCommodityForEmptyPlantings() {
-    // it allows us to save empty plantings
-    // TODO: remove this check after add field is ready
+  manageNewFields(){
+    // sets the new field ids to null
     for (let field of  this.inventoryContract.fields) {
-      for (let planting of field.plantings) {
-        if ( planting.inventoryBerries.cropCommodityId == null ) {
-          planting.inventoryBerries.cropCommodityId = this.selectedCommodity
-        }
+      if (field.fieldId < 0 && field.isNewFieldUI == true && field.deletedByUserInd !== true) {
+        field.fieldId = null
+      }
+
+      if (field.legalLandId < 0 && field.isNewFieldUI == true && field.deletedByUserInd !== true) {
+        field.legalLandId = null
       }
     }
   }
@@ -388,6 +388,35 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     return result
   }
 
+  // BEGIN LAND MANAGEMENT
+
+  pltgsWithSelectedCommodityExist(pltgs) {
+    // are there any existing plantings for the selected commodity 
+    if (!pltgs || pltgs.length == 0 || !pltgs.inventoryBerries) {
+      return false
+    } 
+
+    let el = pltgs.find(x => x.inventoryBerries.cropCommodityId == this.selectedCommodity)
+
+    if (el && el.length > 0) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  getMaxPlantingNumber(pltgs){
+    let maxNum = 0
+
+    pltgs.forEach((pltg: InventoryField) => {
+      if (pltg.plantingNumber > maxNum ) {
+        maxNum = pltg.plantingNumber
+      }
+    })
+
+    return maxNum
+  }
+
   populateNewLand(landData) {
 
     // find the max display_order
@@ -405,14 +434,26 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       }
     });
 
-    // this.inventoryContract.fields.push (
-    //   createNewAnnualFieldObject( (landData.fieldId > -1 ? landData.fieldId : (minFieldId - 1)), 
-    //                               (landData.legalLandId > -1 ? landData.legalLandId : null), 
-    //                               landData.fieldLabel, landData.otherLegalDescription, landData.primaryPropertyIdentifier,
-    //                               landData.fieldLocation, maxDisplayOrder + 1, this.inventoryContract.cropYear, landData.isLeasedInd, 
-    //                               landData.landUpdateType, landData.transferFromGrowerContractYearId, 
-    //                               landData.plantings, landData.uwComments)
-    // )
+    // if such field already exists on the policy then
+    //    if it doesn't have a planting with the selected commodit then add planting with the selected commodity
+    // if the field is not on the policy then add it to the policy and add planting with the selected commodity
+
+    let pltgs: Array<InventoryField> = []
+
+    // TODO if the field already exists on the policy, but the field has plantings with null commodity -> update the planting
+    // TODO if the field already exists on the policy and no such commodity then just add planting with the selected commodity
+
+    // - if no plantings with the selected commodity then add one planting 
+    if ( !landData.plantings || landData.plantings.length == 0 || !this.pltgsWithSelectedCommodityExist(landData.plantings)) {
+
+      let inventoryBerries: InventoryBerries = getDefaultInventoryBerries(null, null, this.selectedCommodity)
+
+      pltgs.push( getDefaultPlanting(null, INSURANCE_PLAN.BERRIES, (landData.fieldId > 0 ? landData.fieldId : null),  
+                this.inventoryContract.cropYear, this.getMaxPlantingNumber(landData.plantings) + 1, inventoryBerries, [], []))
+
+    } else {
+      pltgs = landData.plantings
+    }
 
     this.inventoryContract.fields = [
       ...this.inventoryContract.fields,
@@ -421,19 +462,12 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
                                   landData.fieldLabel, landData.otherLegalDescription, landData.primaryPropertyIdentifier,
                                   landData.fieldLocation, maxDisplayOrder + 1, this.inventoryContract.cropYear, landData.isLeasedInd, 
                                   landData.landUpdateType, landData.transferFromGrowerContractYearId, 
-                                  landData.plantings, landData.uwComments)
+                                  pltgs, landData.uwComments)
     ];
 
-    this.cdr.detectChanges()
+    this.cdr.markForCheck()
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
 
-    // TODO how to focus on the new field ?? this might need to move to the field component
-    // for (let i = flds.length - 1; i >= 0; i--) {
-    //   if (flds['controls'][i].get("displayOrder").value  ==  displayOrder) {
-    //     (<any>flds.controls[i].get('fieldLabel')).nativeElement.focus();
-    //     break
-    //   }
-    // }
   }
 
   onAddNewField() {
@@ -442,7 +476,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
       // for now I am only setting the variables that I need for Berries
       const dataToSend : AddLandPopupData = {
-        fieldId: -1,  // TODO ??
+        fieldId: null,  
         fieldLabel: null,
         cropYear: this.inventoryContract.cropYear,
         policyId: this.policyId,
@@ -486,9 +520,8 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
           // do nothing
         }
       });
-
     }
-
   }
 
+  // END LAND MANAGEMENT
 }

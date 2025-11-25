@@ -64,10 +64,6 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
   }
 
   setDefaultValuesForCommodity() {
-    // TODO when Add Field is ready
-    // if (this.inventoryBerry.cropCommodityId == null) {
-    //     this.inventoryBerry.cropCommodityId = this.selectedCommodity  
-    // }
 
     // deletedByUserInd should be false by default
     if (this.inventoryBerry.deletedByUserInd == null) {
