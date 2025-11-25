@@ -846,7 +846,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   deleteNewField(field) {
 
     const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
-    deleteNewFormField(field, flds)
+    deleteNewFormField(field.value.fieldId, field.value.isNewFieldUI, flds)
     
     this.isMyFormDirty()
   }

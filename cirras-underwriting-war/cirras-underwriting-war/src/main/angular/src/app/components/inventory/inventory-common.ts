@@ -245,8 +245,9 @@ export function updateComments(fieldId: number, uwComments: UnderwritingComment[
   })
 }
 
-export function deleteNewFormField(field, flds) {
-  if (field.value.isNewFieldUI) {
+//export function deleteNewFormField(field, flds) {
+export function deleteNewFormField(fieldId: number, isNewFieldUI: boolean, flds) {
+  if (isNewFieldUI) {
 
     let removedFieldDisplOrder = 99999;
     let indexToSplice = -1
@@ -258,7 +259,7 @@ export function deleteNewFormField(field, flds) {
 
       let dispOrder = flds['controls'][i].get("displayOrder").value
 
-      if (flds['controls'][i].get("fieldId").value  ==  field.value.fieldId) {
+      if (flds['controls'][i].get("fieldId").value  ==  fieldId) {
         
         removedFieldDisplOrder = flds['controls'][i].get("displayOrder").value
         indexToSplice = i;

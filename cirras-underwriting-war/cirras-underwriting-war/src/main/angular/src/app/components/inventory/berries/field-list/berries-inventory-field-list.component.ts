@@ -75,6 +75,7 @@ export class BerriesInventoryFieldListComponent  {
   @Input() fieldsFormArray: UntypedFormArray;
   @Input() cropVarietyOptions;
   @Input() selectedCommodity;
+  @Input() policyId;
 
   setTableHeaderStyle() {
     return setTableHeaderStyleForBerries(this.selectedCommodity)
