@@ -484,6 +484,128 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		logger.debug(">testRolloverInventoryBerries");
 	}
 	
+	//Testing rollover of is leased if the flag is set after the subsequent policy has been already rolled over
+	@Test
+	public void testRolloverInventoryBerriesIsLeased() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
+		logger.debug("<testRolloverInventoryBerriesIsLeased");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+
+		createGrower();
+		createPolicy(policyId1, policyNumber1, cropYear1);
+		createGrowerContractYear(gcyId1, cropYear1);
+
+		createLegalLand();
+		createField();
+		createAnnualFieldDetail(annualFieldDetailId1, cropYear1);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, gcyId1, false);
+		
+		//Create second year policy before adding inventory contract of the first year
+		createPolicy(policyId2, policyNumber2, cropYear2);
+		createGrowerContractYear(gcyId2, cropYear2);
+		
+		UwContractRsrc uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContract);
+		Assert.assertNull(uwContract.getInventoryContractGuid());
+		
+		InventoryContractRsrc invContract = service.rolloverInventoryContract(uwContract);
+		Assert.assertNotNull(invContract);
+		Assert.assertNotNull(invContract.getFields());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries());
+		
+		InventoryBerries newBerries = invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
+		Assert.assertNull("InventoryBerriesGuid", newBerries.getInventoryBerriesGuid());
+		Assert.assertNull("InventoryFieldGuid", newBerries.getInventoryFieldGuid());
+		Assert.assertNull("CropCommodityId", newBerries.getCropCommodityId());
+		Assert.assertNull("CropVarietyId", newBerries.getCropVarietyId());
+		Assert.assertNull("PlantedYear", newBerries.getPlantedYear());
+		Assert.assertNull("PlantedYear", newBerries.getPlantedYear());
+		Assert.assertNull("PlantedAcres", newBerries.getPlantedAcres());
+		Assert.assertNull("RowSpacing", newBerries.getRowSpacing());
+		Assert.assertNull("PlantSpacing", newBerries.getPlantSpacing());
+		Assert.assertNull("TotalPlants", newBerries.getTotalPlants());
+		Assert.assertNull("IsQuantityInsurableInd", newBerries.getIsQuantityInsurableInd());
+		Assert.assertNull("IsPlantInsurableInd", newBerries.getIsPlantInsurableInd());
+		Assert.assertNull("BogId", newBerries.getBogId());
+		Assert.assertNull("BogMowedDate", newBerries.getBogMowedDate());
+		Assert.assertNull("BogRenovatedDate", newBerries.getBogRenovatedDate());
+		Assert.assertFalse("IsHarvestedInd", newBerries.getIsHarvestedInd());
+		//Check field data
+		AnnualFieldRsrc field = invContract.getFields().get(0);
+		Assert.assertEquals("FieldLocation", fieldLocation, field.getFieldLocation());
+		Assert.assertEquals("IsLeased", false, field.getIsLeasedInd());
+
+		newBerries.setCropCommodityId(10);
+		newBerries.setCropCommodityName("BLUEBERRY");
+		newBerries.setCropVarietyId(1010689);
+		newBerries.setCropVarietyName("BLUEJAY");
+		newBerries.setPlantedYear(2020);
+		newBerries.setPlantedAcres((double)100);
+		newBerries.setRowSpacing(10);
+		newBerries.setPlantSpacing(5.3);
+		newBerries.setTotalPlants(calculateTotalPlants(newBerries));
+		newBerries.setIsQuantityInsurableInd(true);
+		newBerries.setIsPlantInsurableInd(false);
+		newBerries.setBogId("BogId");
+		newBerries.setBogMowedDate(getDate(2020, Calendar.JANUARY, 15));
+		newBerries.setBogRenovatedDate(getDate(2020, Calendar.JANUARY, 20));
+		newBerries.setIsHarvestedInd(true);
+		field.setIsLeasedInd(true);
+
+		//Create inventory contract
+		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
+		
+		AnnualFieldRsrc fetchedField = fetchedInvContract.getFields().get(0);
+		inventoryFieldGuid1 = fetchedField.getPlantings().get(0).getInventoryFieldGuid();
+		newBerries.setInventoryFieldGuid(inventoryFieldGuid1);
+		
+		InventoryBerries fetchedBerries = fetchedInvContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
+
+		checkInventoryBerries(newBerries, fetchedBerries, false, fetchedInvContract.getCropYear());
+		
+		//Check field data
+		Assert.assertEquals("FieldLocation", field.getFieldLocation(), fetchedField.getFieldLocation());
+		Assert.assertEquals("IsLeased", field.getIsLeasedInd(), fetchedField.getIsLeasedInd());
+
+		//********** Rollover Contract ****************************************
+
+		annualFieldDetailId3 = null;
+		contractedFieldDetailId3 = null;
+		
+		uwContract = getUwContract(policyNumber2, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContract);
+		Assert.assertNull(uwContract.getInventoryContractGuid());
+		
+		invContract = service.rolloverInventoryContract(uwContract);
+		Assert.assertNotNull(invContract);
+		Assert.assertNotNull(invContract.getFields());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries());
+		
+		AnnualFieldRsrc rolledOverfield = invContract.getFields().get(0);
+		inventoryFieldGuid2 = field.getPlantings().get(0).getInventoryFieldGuid();
+		newBerries.setInventoryFieldGuid(inventoryFieldGuid2);
+
+		annualFieldDetailId3 = rolledOverfield.getAnnualFieldDetailId();
+		contractedFieldDetailId3 = rolledOverfield.getContractedFieldDetailId();
+		
+		InventoryBerries rolledOverBerries = invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries();
+
+		checkInventoryBerries(fetchedBerries, rolledOverBerries, true, invContract.getCropYear());
+		
+		//Check field data
+		Assert.assertEquals("FieldLocation", fetchedField.getFieldLocation(), rolledOverfield.getFieldLocation());
+		Assert.assertEquals("IsLeased", fetchedField.getIsLeasedInd(), rolledOverfield.getIsLeasedInd());
+		
+		delete();
+		
+		logger.debug(">testRolloverInventoryBerriesIsLeased");
+	}
+	
 	@Test
 	public void testRolloverInventoryStrawberries() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
 		logger.debug("<testRolloverInventoryStrawberries");

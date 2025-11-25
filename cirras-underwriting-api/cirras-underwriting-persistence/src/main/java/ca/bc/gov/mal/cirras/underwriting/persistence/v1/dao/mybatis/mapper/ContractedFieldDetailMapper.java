@@ -42,4 +42,7 @@ public interface ContractedFieldDetailMapper {
 	List<ContractedFieldDetailDto> selectForYearAndField(Map<String, Object> parameters);
 	
 	List<ContractedFieldDetailDto> selectForField(Map<String, Object> parameters);
+
+	ContractedFieldDetailDto selectForFieldYearAndContract(Map<String, Object> parameters);
+	
 }
