@@ -60,12 +60,18 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     this.setIsFieldHiddenOnPrintout()
   }
 
+  showField(){
+    return (this.fieldHasCommodity() && (this.field.deletedByUserInd == null || this.field.deletedByUserInd == false));
+  }
+
   fieldHasCommodity() {
     // display field if the field has plantings with the desired commodity
     // or the field has no commodity 
     if (this.field && this.field.plantings && this.selectedCommodity) {
-
-      let plantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == this.selectedCommodity)
+      //Check if there are plantings with the selected commodity that are NOT marked for deletion
+      let plantings = this.field.plantings.filter ( pltg => 
+        pltg.inventoryBerries.cropCommodityId == this.selectedCommodity
+          && (pltg.inventoryBerries.deletedByUserInd == null || pltg.inventoryBerries.deletedByUserInd == false))
       if (plantings && plantings.length > 0) {
         return true
       }
@@ -79,6 +85,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
 
     return false
   }
+
 
   updateNumPlantings() {
     if (this.field.plantings) {
@@ -296,7 +303,9 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   fieldHasOtherCommodities(field: AnnualField) : boolean {
 
     if (field && field.plantings && this.selectedCommodity) {
-      let plantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId != this.selectedCommodity)
+      let plantings = this.field.plantings.filter ( pltg => 
+        pltg.inventoryBerries.cropCommodityId != this.selectedCommodity
+        && (pltg.inventoryBerries.deletedByUserInd == null || pltg.inventoryBerries.deletedByUserInd == false))
       if (plantings && plantings.length > 0) {
         return true
       }
