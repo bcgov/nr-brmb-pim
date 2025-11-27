@@ -18,13 +18,14 @@ import { setTableHeaderStyleForBerries } from '../field-list/berries-inventory-f
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false
 })
-export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
+export class BerriesInventoryFieldComponent implements OnInit, OnChanges{  
 
   @Input() field: AnnualField;
   @Input() fieldsFormArray: UntypedFormArray;
   @Input() cropVarietyOptions;
   @Input() selectedCommodity;
   @Input() minNewFieldId;
+  @Input() numComponentReloads;
 
   fieldFormGroup: UntypedFormGroup;
   numPlantingsToSave = 1 // default
@@ -40,13 +41,12 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.field && changes.field.currentValue) {
+    if ( (changes.field && changes.field.currentValue) || (changes.numComponentReloads && changes.numComponentReloads.currentValue) ) {
       if (this.field) {
         this.refreshForm()
         this.updateNumPlantings()  
       }
     }
-
   }
 
   refreshForm(){
@@ -63,6 +63,11 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
     if (this.field && this.field.plantings && this.selectedCommodity) {
 
       let plantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == this.selectedCommodity)
+      if (plantings && plantings.length > 0) {
+        return true
+      }
+
+      plantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == null)
       if (plantings && plantings.length > 0) {
         return true
       }

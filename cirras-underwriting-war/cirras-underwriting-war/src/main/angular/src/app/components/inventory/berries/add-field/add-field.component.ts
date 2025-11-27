@@ -123,7 +123,6 @@ export class AddFieldComponent implements OnInit{
       fieldLocation: null,
       primaryPropertyIdentifier: null,
       otherLegalDescription: null,
-      isLeasedInd: false,
       landUpdateType: null,
       transferFromGrowerContractYearId: null,
       plantings: null,
@@ -248,7 +247,6 @@ export class AddFieldComponent implements OnInit{
           this.dataToSend.landData.fieldLocation = self.fieldList.collection[0].fieldLocation
           this.dataToSend.landData.primaryPropertyIdentifier = self.fieldList.collection[0].primaryPropertyIdentifier
           this.dataToSend.landData.otherLegalDescription = self.fieldList.collection[0].otherLegalDescription
-          this.dataToSend.landData.isLeasedInd = ( self.fieldList.collection[0].isLeasedInd == null ? false : self.fieldList.collection[0].isLeasedInd)
 
           this.validateFields(self.fieldList.collection[0])
         }
@@ -323,7 +321,6 @@ export class AddFieldComponent implements OnInit{
     this.dataToSend.landData.fieldId = field.fieldId
     this.dataToSend.landData.fieldLabel = field.fieldLabel
     this.dataToSend.landData.fieldLocation = field.fieldLocation
-    this.dataToSend.landData.isLeasedInd = ( field.isLeasedInd == null ? false : field.isLeasedInd )
 
     this.validationMessages = null
 

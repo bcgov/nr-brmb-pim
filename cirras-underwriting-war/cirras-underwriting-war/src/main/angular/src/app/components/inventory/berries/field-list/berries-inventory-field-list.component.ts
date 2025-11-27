@@ -75,7 +75,7 @@ export class BerriesInventoryFieldListComponent {
   @Input() fieldsFormArray: UntypedFormArray;
   @Input() cropVarietyOptions;
   @Input() selectedCommodity;
-
+  @Input() numComponentReloads;
 
   minNewFieldId = 0
 
@@ -91,7 +91,7 @@ export class BerriesInventoryFieldListComponent {
 
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.fields && changes.fields.currentValue) {
+    if ((changes.fields && changes.fields.currentValue) || (changes.numComponentReloads && changes.numComponentReloads.currentValue)) {
       if (this.fields) {
         this.getLatestAddedNewField()
       }

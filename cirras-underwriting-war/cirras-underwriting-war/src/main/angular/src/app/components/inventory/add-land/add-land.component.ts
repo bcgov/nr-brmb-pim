@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AnnualFieldRsrc, AnnualFieldListRsrc, LegalLandRsrc, AddFieldValidationRsrc, InventoryContractRsrc, InventoryField, UnderwritingComment } from '@cirras/cirras-underwriting-api';
+import { AnnualFieldRsrc, AnnualFieldListRsrc, LegalLandRsrc, AddFieldValidationRsrc, InventoryField, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
 import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest';
 import { LegalLandList } from 'src/app/conversion/models';
@@ -25,7 +25,6 @@ export interface AddLandPopupData {
     fieldLocation?: string;
     primaryPropertyIdentifier?: string;
     otherLegalDescription?: string;
-    isLeasedInd?: boolean;
     landUpdateType?: string;
     transferFromGrowerContractYearId? : number;
     plantings?: Array<InventoryField>;
