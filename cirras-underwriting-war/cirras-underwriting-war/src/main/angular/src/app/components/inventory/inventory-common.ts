@@ -2,7 +2,7 @@ import { ChangeDetectorRef } from "@angular/core"
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl } from "@angular/forms"
 import { InventoryBerries, InventoryField, InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
 import { AnnualField, CropVarietyCommodityType } from "src/app/conversion/models"
-import { BERRY_COMMODITY, CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from "src/app/utils/constants"
+import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from "src/app/utils/constants"
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { AddLandComponent, AddLandPopupData } from "./add-land/add-land.component";
 import { MatDialog } from "@angular/material/dialog";

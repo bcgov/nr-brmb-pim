@@ -3,7 +3,7 @@ import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular
 import { Store } from "@ngrx/store";
 import { RootState } from "src/app/store";
 import { AnnualField } from 'src/app/conversion/models';
-import { addAnnualFieldObject, getDefaultInventoryBerries, getDefaultPlanting, fieldHasInventory, isThereAnyCommentForField, deleteFormField, deleteNewFormField, removeGapsInDisplayOrder } from '../../inventory-common';
+import { addAnnualFieldObject, getDefaultInventoryBerries, getDefaultPlanting, removeGapsInDisplayOrder } from '../../inventory-common';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { InventoryBerries, InventoryField, UnderwritingComment } from '@cirras/cirras-underwriting-api';
