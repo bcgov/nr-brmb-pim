@@ -14,6 +14,10 @@
                     <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
                     <div><span style="color:orange">The field has inventory or comments in the current year which will not be removed from the field.</span></div>
                 </div>
+                <div *ngIf="dataReceived && dataReceived.showRemoveCommodity && dataReceived.showRemoveCommodity == true" style="display:contents">
+                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+                    <div><span style="color:orange">Field has multiple commodities on this policy.</span></div>
+                </div>                
                 <div *ngFor="let msg of validation.deleteFieldErrors" style="display:contents">
                     <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
                     <div><span style="color:orange">{{ msg.message }}</span></div>
@@ -25,6 +29,14 @@
     <div mat-dialog-actions align="end">
         <button mat-raised-button class="primary" (click)="onCancelChanges()">
             <mat-icon style="padding-right: 4px; margin-right: 4px;">cancel_presentation</mat-icon>Cancel
+        </button>
+        &nbsp;
+        <button 
+            *ngIf="dataReceived && dataReceived.showRemoveCommodity && dataReceived.showRemoveCommodity == true"
+            mat-raised-button class="primary" 
+            (click)="onRemoveCommodityFromField()" 
+            matTooltip="Removes the selected commodity from the field but keeps the inventory of the other commodities on the field" >
+            <mat-icon style="padding-right: 4px; margin-right: 4px;">save_alt</mat-icon>Remove Commodity
         </button>
         &nbsp;
         <button 
