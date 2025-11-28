@@ -83,8 +83,8 @@ export interface AnnualField {
   verifiableVarieties?: Array<VerifiableVariety>;
   etag?: string;
   type: string;
-  isNewFieldUI?: boolean;
   deletedByUserInd?: boolean;
+  isNewFieldUI?: boolean;
 }
 
 export interface InventoryContractList extends PagedCollection {

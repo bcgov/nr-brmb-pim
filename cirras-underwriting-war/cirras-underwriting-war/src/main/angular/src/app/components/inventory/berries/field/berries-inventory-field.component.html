@@ -1,4 +1,4 @@
-<div *ngIf="fieldHasCommodity()" class="plcy-inv-field-box" [formGroup]="fieldFormGroup"  [ngStyle]="setTableHeaderStyle()">
+<div *ngIf="showField()" class="plcy-inv-field-box" [formGroup]="fieldFormGroup"  [ngStyle]="setTableHeaderStyle()">
     
     <div class="inventory-cell border-left" style="width: 115px;"
         [ngClass]=" isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout border-left-exclude-printout' : 'inventory-border'">
@@ -81,6 +81,12 @@
             [legalLocation]="field.otherLegalDescription"
             [uwComments]="field.uwComments"
             (onDone)="onInventoryCommentsDone($event)"></uw-comments-button>
-        <!-- TODO: Remove Field button -->
+
+        <mat-icon class="delete-icon"
+            *ngIf="securityUtilService.canEditInventory(); else elseBlockDelFld" 
+            matTooltip="Delete field or remove it from policy" 
+            (click)="onDeleteField(field)">delete_outline</mat-icon>
+        <ng-template #elseBlockDelFld><span style="width: 25px;"></span></ng-template>
+
     </div>
 </div>

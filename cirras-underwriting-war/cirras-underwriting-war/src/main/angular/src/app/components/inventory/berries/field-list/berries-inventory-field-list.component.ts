@@ -76,6 +76,7 @@ export class BerriesInventoryFieldListComponent {
   @Input() cropVarietyOptions;
   @Input() selectedCommodity;
   @Input() numComponentReloads;
+  @Input() policyId;
 
   minNewFieldId = 0
 
@@ -88,7 +89,6 @@ export class BerriesInventoryFieldListComponent {
       }
     })
   }
-
 
   ngOnChanges(changes: SimpleChanges) {
     if ((changes.fields && changes.fields.currentValue) || (changes.numComponentReloads && changes.numComponentReloads.currentValue)) {
