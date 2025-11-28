@@ -13,6 +13,7 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualFieldDetail;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.ContractedFieldDetail;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.Field;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.GrowerContractYear;
+import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.AnnualFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.ContractedFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldContractCommodityDao;
@@ -24,6 +25,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRo
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldRollupForageDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.FieldDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.GrowerContractYearDao;
+import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryContractDao;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.InventoryCoverageTotalForageDao;
@@ -94,6 +96,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	private InventoryUnseededDao inventoryUnseededDao;
 	private InventorySeededGrainDao inventorySeededGrainDao;
 	private InventorySeededForageDao inventorySeededForageDao;
+	private InventoryBerriesDao inventoryBerriesDao;
 	private UnderwritingCommentDao underwritingCommentDao;
 	private InventoryContractDao inventoryContractDao;
 	private InventoryContractCommodityDao inventoryContractCommodityDao;
@@ -179,6 +182,10 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 		this.inventorySeededForageDao = inventorySeededForageDao;
 	}
 	
+	public void setInventoryBerriesDao(InventoryBerriesDao inventoryBerriesDao) {
+		this.inventoryBerriesDao = inventoryBerriesDao;
+	}
+
 	public void setUnderwritingCommentDao(UnderwritingCommentDao underwritingCommentDao) {
 		this.underwritingCommentDao = underwritingCommentDao;
 	}
@@ -474,6 +481,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 		inventorySeededGrainDao.deleteForField(fieldId);
 		inventoryUnseededDao.deleteForField(fieldId);
 		inventorySeededForageDao.deleteForField(fieldId);
+		inventoryBerriesDao.deleteForField(fieldId);
 		inventoryFieldDao.deleteForField(fieldId);
 
 		fieldDao.delete(fieldId);
@@ -933,6 +941,8 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 				inventorySeededGrainDao.deleteForInventoryContract(icDto.getInventoryContractGuid());
 				//Unseeded
 				inventoryUnseededDao.deleteForInventoryContract(icDto.getInventoryContractGuid());
+				//Berries
+				inventoryBerriesDao.deleteForInventoryContract(icDto.getInventoryContractGuid());
 				//Inventory Field
 				inventoryFieldDao.deleteForInventoryContract(icDto.getInventoryContractGuid());
 				

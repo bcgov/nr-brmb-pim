@@ -799,6 +799,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		inventorySeededForageDao.deleteForField(fieldId);
 		inventorySeededGrainDao.deleteForField(fieldId);
 		inventoryUnseededDao.deleteForField(fieldId);
+		inventoryBerriesDao.deleteForField(fieldId);
 		inventoryFieldDao.deleteForField(fieldId);
 		
 		underwritingCommentDao.deleteForField(fieldId);
@@ -2315,6 +2316,12 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 			// For each field
 			for (ContractedFieldDetailDto cfdDto : fieldDtos) {
+				
+				//Get contracted field record from previous year to update isLeasedInd if necessary
+				ContractedFieldDetailDto previousYearCfdDto = contractedFieldDetailDao.selectForFieldYearAndContract(cfdDto.getFieldId(), cfdDto.getCropYear() -1, cfdDto.getContractId());
+				if(previousYearCfdDto != null) {
+					cfdDto.setIsLeasedInd(previousYearCfdDto.getIsLeasedInd());
+				}
 				
 				//Get associated policies
 				loadAssociatedPolicies(policyDto.getContractId(), cfdDto);
