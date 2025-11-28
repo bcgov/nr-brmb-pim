@@ -799,6 +799,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		inventorySeededForageDao.deleteForField(fieldId);
 		inventorySeededGrainDao.deleteForField(fieldId);
 		inventoryUnseededDao.deleteForField(fieldId);
+		inventoryBerriesDao.deleteForField(fieldId);
 		inventoryFieldDao.deleteForField(fieldId);
 		
 		underwritingCommentDao.deleteForField(fieldId);
