@@ -22,7 +22,6 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AddFieldValidation;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.Field;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractList;
@@ -107,6 +106,8 @@ import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnu
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InventoryCalculationType;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InventoryReportType;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.LandIdentifierTypeCode;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.PrimaryReferenceTypeCode;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandUpdateTypes;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.OutOfSync;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.ModelValidator;
@@ -749,7 +750,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				bUpdateContractedFieldDetails = true;
 				break;
 			case LandUpdateTypes.REPLACE_LEGAL_LOCATION_NEW:
-				replaceLegalLocationNew(annualField, userId);
+				replaceLegalLocationNew(annualField, inventoryContract, userId);
 				bUpdateContractedFieldDetails = true;
 				break;
 			case LandUpdateTypes.REMOVE_FIELD_FROM_POLICY:
@@ -925,7 +926,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		}
 	}
 
-	private void replaceLegalLocationNew(AnnualField annualField, String userId)
+	private void replaceLegalLocationNew(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract, String userId)
 			throws DaoException, NotFoundException {
 
 		AnnualFieldDetailDto afdDto = annualFieldDetailDao.fetch(annualField.getAnnualFieldDetailId());
@@ -939,7 +940,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		}
 
 		//Insert legal land
-		insertQuickLegalLand(annualField, userId);
+		insertQuickLegalLand(annualField, inventoryContract, userId);
 
 		//Update annual field detail
 		afdDto.setLegalLandId(annualField.getLegalLandId());
@@ -1089,7 +1090,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		// Legal Land doesn't have to be added if only a new field is added
 		if (annualField.getLandUpdateType().equals(LandUpdateTypes.NEW_LAND)) {
 			// Insert Legal Land
-			insertQuickLegalLand(annualField, userId);
+			insertQuickLegalLand(annualField, inventoryContract, userId);
 		}
 
 		// Insert Field
@@ -1123,10 +1124,20 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		legalLandFieldXrefDao.insert(legalLandFieldXrefDto, userId);
 	}
 
-	private void insertQuickLegalLand(AnnualField annualField, String userId) throws DaoException {
+	private void insertQuickLegalLand(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract, String userId) throws DaoException {
 		LegalLandDto legalLandDto = new LegalLandDto();
-		String newPid = generatePID();
-		legalLandFactory.createQuickLegalLand(legalLandDto, annualField, newPid);
+		if(annualField.getPrimaryPropertyIdentifier() == null || annualField.getPrimaryPropertyIdentifier().isEmpty()) {
+			annualField.setPrimaryPropertyIdentifier(generatePID());
+		}
+		
+		String primaryReferenceTypeCode = PrimaryReferenceTypeCode.OTHER.toString();
+		String landIdentifierTypeCode = LandIdentifierTypeCode.OTHER.toString();
+		
+		if(InsurancePlans.BERRIES.getInsurancePlanId().equals(inventoryContract.getInsurancePlanId())) {
+			primaryReferenceTypeCode = PrimaryReferenceTypeCode.IDENTIFIER.toString();
+			landIdentifierTypeCode = LandIdentifierTypeCode.PID.toString();
+		}
+		legalLandFactory.createQuickLegalLand(legalLandDto, annualField, primaryReferenceTypeCode, landIdentifierTypeCode);
 		legalLandDao.insert(legalLandDto, userId);
 		annualField.setLegalLandId(legalLandDto.getLegalLandId());
 	}
