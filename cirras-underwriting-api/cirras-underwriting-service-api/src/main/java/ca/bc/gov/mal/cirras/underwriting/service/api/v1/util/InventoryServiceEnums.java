@@ -71,5 +71,21 @@ public class InventoryServiceEnums {
 	public enum AmendmentTypeCode {
 		Appraisal,
 		Assessment
-	}	
+	}
+	
+	public enum PrimaryReferenceTypeCode {
+		ADDRESS,
+		IDENTIFIER,
+		LEGAL,
+		OTHER,
+		SHORT
+	}
+	
+	public enum LandIdentifierTypeCode {
+		IR,
+		LINC,
+		OTHER,
+		PID,
+		PIN
+	}
 }
