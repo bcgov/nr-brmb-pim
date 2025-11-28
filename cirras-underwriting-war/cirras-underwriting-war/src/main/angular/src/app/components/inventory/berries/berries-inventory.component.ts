@@ -349,16 +349,25 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
   manageNewFields(){
 
-    // TODO don't send the deleted new fields to the API 
+    for (let i = 0; i < this.inventoryContract.fields.length; i++) {
+      let field = this.inventoryContract.fields[i]
 
-    // sets the new field ids to null
-    for (let field of  this.inventoryContract.fields) {
-      if (field.fieldId < 0 && field.isNewFieldUI == true && field.deletedByUserInd !== true) {
-        field.fieldId = null
+      // sets the new field ids to null
+      if (field.isNewFieldUI == true && field.deletedByUserInd !== true) {
+
+        if (field.fieldId < 0) {
+          field.fieldId = null
+        }
+
+        if (field.legalLandId < 0) {
+          field.legalLandId = null
+        }
       }
 
-      if (field.legalLandId < 0 && field.isNewFieldUI == true && field.deletedByUserInd !== true) {
-        field.legalLandId = null
+      // don't send the deleted new fields to the API 
+      if (field.isNewFieldUI == true && field.deletedByUserInd == true ) {
+        this.inventoryContract.fields.splice(i, 1)
+        i--
       }
     }
   }
@@ -380,7 +389,13 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
 
   commoditySelectionChanged(){
-    this.selectedCommodity = this.getViewModel().formGroup.controls.selectedCommodity.value
+    if (this.isUnsaved) {
+      alert("There are unsaved changes on the screen. Please Save or Clear Changes before switching commodities.")
+      // prevent default behaviour
+      this.getViewModel().formGroup.controls.selectedCommodity.setValue (this.selectedCommodity)
+    } else {
+      this.selectedCommodity = this.getViewModel().formGroup.controls.selectedCommodity.value
+    }
   }
 
   onCheckForHiddenPlantingsInTotals() {
@@ -499,7 +514,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     
     const fld = this.inventoryContract.fields.find (field => field.fieldId == landData.fieldId)
 
-    if (fld) {
+    if (fld && fld.fieldId > 0 ) {
       // if the field is already on the policy then
       // remove empty plantings, they aren't visible anyway
       if (fld.plantings) {
@@ -511,7 +526,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
         }
       }
 
-      // add a planting with the selected commodity
+      // add a planting with the selected commodity but only for the existing fields
       let inventoryBerries: InventoryBerries = getDefaultInventoryBerries(null, null, this.selectedCommodity)
 
       fld.plantings.push(getDefaultPlanting(null, INSURANCE_PLAN.BERRIES, fld.fieldId,  
@@ -579,7 +594,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
           if (result.data && result.data.landData) {
             this.populateNewLand(result.data.landData) 
           }
-          
+          this.cdr.detectChanges()
         } else if (result && result.event == 'Cancel'){
           // do nothing
         }

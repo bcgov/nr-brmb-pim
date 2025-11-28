@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from "@ngrx/store";
 import { RootState } from "src/app/store";
@@ -38,7 +38,8 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
   constructor(private fb: UntypedFormBuilder,
               private store: Store<RootState>,
               protected securityUtilService: SecurityUtilService,
-              protected dialog: MatDialog) {}
+              protected dialog: MatDialog,
+              protected cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.refreshForm()
@@ -236,7 +237,7 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
 
   deleteNewField() {
 
-    deleteNewFormField(this.field.fieldId, this.field.isNewFieldUI, this.fieldsFormArray)
+    this.field.deletedByUserInd = true // so we know not to send it to the API
     
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
 
@@ -326,6 +327,7 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
               this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
             }            
           }
+          this.cdr.detectChanges()
         }
       } else if (result && result.event == 'Cancel'){
         // do nothing

@@ -146,7 +146,7 @@ export class AddFieldComponent implements OnInit{
   }
 
   onSearch() {
-    const searchLegalLandOrFieldId = this.addFieldForm.controls.searchLegalLandOrFieldId.value
+    const searchLegalLandOrFieldId = (this.addFieldForm.controls.searchLegalLandOrFieldId.value).trim()
 
     // start the search when least 3 symbols are entered
     if (!searchLegalLandOrFieldId || searchLegalLandOrFieldId.length < 3) {
