@@ -225,7 +225,7 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 		createLegalLand("test legal 1234", "Legal Description 2", "111-222-333", "Short Legal",  legalLandId3);
 		
 		// 1A. Legal Location matches 2 legal lands.
-		RenameLegalValidationRsrc renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "test legal 1234");
+		RenameLegalValidationRsrc renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "test legal 1234", null);
 		Assert.assertNotNull(renameLegalValidation);
 
 		Assert.assertEquals(true, renameLegalValidation.getIsWarningLegalsWithSameLoc());
@@ -239,7 +239,7 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 		service.deleteLegalLandSync(topLevelEndpoints, legalLandId3.toString());
 
 		// 1B. Legal Location matches 0 legal lands.
-		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "test legal 1234");
+		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "test legal 1234", null);
 		Assert.assertNotNull(renameLegalValidation);
 
 		Assert.assertEquals(false, renameLegalValidation.getIsWarningLegalsWithSameLoc());
@@ -255,7 +255,7 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 		
 		service.synchronizeLegalLand(ll);
 		
-		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC");
+		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC", null);
 		Assert.assertNotNull(renameLegalValidation);
 		
 		Assert.assertEquals(true, renameLegalValidation.getIsWarningOtherLegalData());
@@ -274,7 +274,7 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 		
 		service.synchronizeLegalLand(ll);
 		
-		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC");
+		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC", null);
 		Assert.assertNotNull(renameLegalValidation);
 		
 		Assert.assertEquals(true, renameLegalValidation.getIsWarningOtherLegalData());
@@ -294,7 +294,7 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 		
 		service.synchronizeLegalLand(ll);
 
-		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC");
+		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC", null);
 		Assert.assertNotNull(renameLegalValidation);
 		
 		Assert.assertEquals(true, renameLegalValidation.getIsWarningOtherLegalData());
@@ -312,7 +312,7 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 		
 		service.synchronizeLegalLand(ll);
 		
-		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC");
+		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC", null);
 		Assert.assertNotNull(renameLegalValidation);
 		
 		Assert.assertEquals(false, renameLegalValidation.getIsWarningOtherLegalData());
@@ -331,7 +331,7 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 		createContractedFieldDetail(contractedFieldDetailId3, annualFieldDetailId3, gcyId2, 1);
 		
 		// 3A. Other fields on same contract.
-		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC");
+		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC", null);
 		Assert.assertNotNull(renameLegalValidation);
 
 		Assert.assertEquals(true, renameLegalValidation.getIsWarningOtherFieldOnPolicy());
@@ -352,7 +352,7 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId3.toString());
 
 		// 3B. No other fields on same contract.
-		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC");
+		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC", null);
 		Assert.assertNotNull(renameLegalValidation);
 		
 		Assert.assertEquals(false, renameLegalValidation.getIsWarningOtherFieldOnPolicy());
@@ -367,7 +367,7 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 		createContractedFieldDetail(contractedFieldDetailId3, annualFieldDetailId3, gcyId4, 1);
 		
 		// 4A. Fields on other policies.
-		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC");
+		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC", null);
 		Assert.assertNotNull(renameLegalValidation);
 
 		Assert.assertEquals(true, renameLegalValidation.getIsWarningFieldOnOtherPolicy());
@@ -388,7 +388,7 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId3.toString());
 
 		// 4B. No fields on other policies.
-		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC");
+		renameLegalValidation = service.validateRenameLegal(referrer, annualFieldDetailId.toString(), "NEW LEGAL LOC", null);
 		Assert.assertNotNull(renameLegalValidation);
 		
 		Assert.assertEquals(false, renameLegalValidation.getIsWarningFieldOnOtherPolicy());

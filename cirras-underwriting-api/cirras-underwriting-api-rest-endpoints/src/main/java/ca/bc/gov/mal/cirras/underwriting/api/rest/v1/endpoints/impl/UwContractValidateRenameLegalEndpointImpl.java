@@ -19,7 +19,7 @@ public class UwContractValidateRenameLegalEndpointImpl extends BaseEndpointsImpl
 	
 
 	@Override
-	public Response validateRenameLegal(String policyId, String annualFieldDetailId, String newLegalLocation) {
+	public Response validateRenameLegal(String policyId, String annualFieldDetailId, String newLegalLocation, String primaryPropertyIdentifier) {
 		
 		Response response = null;
 		
@@ -33,7 +33,8 @@ public class UwContractValidateRenameLegalEndpointImpl extends BaseEndpointsImpl
 			RenameLegalValidationRsrc result = (RenameLegalValidationRsrc) cirrasInventoryService.validateRenameLegal(
 					toInteger(policyId),
 					toInteger(annualFieldDetailId),
-					newLegalLocation,
+					toStringWithoutDecode(newLegalLocation),
+					toStringWithoutDecode(primaryPropertyIdentifier),
 					getFactoryContext(), 
 					getWebAdeAuthentication());
 
@@ -51,5 +52,11 @@ public class UwContractValidateRenameLegalEndpointImpl extends BaseEndpointsImpl
 		return response;
 	}
 	
-	
+	private static String toStringWithoutDecode(String value) {
+		String result = null;
+		if(value!=null&&value.trim().length()>0) {
+			result = value;
+		}
+		return result;
+	}	
 }

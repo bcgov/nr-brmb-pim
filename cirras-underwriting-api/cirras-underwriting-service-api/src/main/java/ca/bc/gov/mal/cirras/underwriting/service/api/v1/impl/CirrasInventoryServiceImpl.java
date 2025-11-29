@@ -2834,7 +2834,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	
 	@Override
 	public RenameLegalValidation<? extends Message, ? extends LegalLand<? extends Field>, ? extends AnnualField> validateRenameLegal(
-			Integer policyId, Integer annualFieldDetailId, String newLegalLocation, FactoryContext factoryContext,
+			Integer policyId, Integer annualFieldDetailId, String newLegalLocation, String primaryPropertyIdentifier, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException {
 
 		logger.debug("<validateRenameLegal");
@@ -2842,11 +2842,19 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		RenameLegalValidation<? extends Message, ? extends LegalLand<? extends Field>, ? extends AnnualField> result = null;
 
 		try {
-
+			
 			PolicyDto policyDto = policyDao.fetch(policyId);
 
 			if (policyDto == null) {
 				throw new NotFoundException("Did not find the policy: " + policyId);
+			}
+
+			//Select correct wording for warnings
+			String legalLocationOrPid = "Legal Location"; //Default
+			String pidOrLegalLocation = "PID"; //Default
+			if(InsurancePlans.BERRIES.getInsurancePlanId().equals(policyDto.getInsurancePlanId())){
+				legalLocationOrPid = "PID";
+				pidOrLegalLocation = "Legal Location";
 			}
 
 			AnnualFieldDetailDto afdDto = annualFieldDetailDao.fetch(annualFieldDetailId);
@@ -2866,7 +2874,8 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 			if (legalsWithSameLocList.getResults().size() > 0) {
 				isWarningLegalsWithSameLoc = true;
-				legalsWithSameLocMsg = RenameLegalValidation.LEGALS_WITH_SAME_LOC_MSG;
+				legalsWithSameLocMsg = RenameLegalValidation.LEGALS_WITH_SAME_LOC_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
+
 			}
 
 			// OtherFieldOnPolicy
@@ -2885,7 +2894,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				}
 
 				isWarningOtherFieldOnPolicy = true;
-				otherFieldOnPolicyMsg = RenameLegalValidation.OTHER_FIELD_ON_POLICY_MSG;
+				otherFieldOnPolicyMsg = RenameLegalValidation.OTHER_FIELD_ON_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
 				otherFieldOnPolicyList = samePolicyFieldDtos;
 			}
 
@@ -2905,7 +2914,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				}
 
 				isWarningFieldOnOtherPolicy = true;
-				fieldOnOtherPolicyMsg = RenameLegalValidation.FIELD_ON_OTHER_POLICY_MSG;
+				fieldOnOtherPolicyMsg = RenameLegalValidation.FIELD_ON_OTHER_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
 				fieldOnOtherPolicyList = diffPolicyFieldDtos;
 			}
 
@@ -2921,7 +2930,9 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 							&& !llDto.getPrimaryPropertyIdentifier().matches("GF\\d+"))) {
 
 				isWarningOtherLegalData = true;
-				otherLegalDataMsg = RenameLegalValidation.OTHER_LEGAL_DATA_MSG;
+				otherLegalDataMsg = RenameLegalValidation.OTHER_LEGAL_DATA_MSG
+						.replace("[PidOrLegalLocation]", pidOrLegalLocation)
+						.replace("[LegalLocationOrPID]", legalLocationOrPid);
 				otherLegalData = llDto;
 			}
 

@@ -558,7 +558,7 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 	}
 	
 	@Override
-	public RenameLegalValidationRsrc validateRenameLegal(UwContractRsrc resource, String annualFieldDetailId, String newLegalLocation) throws CirrasUnderwritingServiceException {
+	public RenameLegalValidationRsrc validateRenameLegal(UwContractRsrc resource, String annualFieldDetailId, String newLegalLocation, String primaryPropertyIdentifier) throws CirrasUnderwritingServiceException {
 
 		GenericRestDAO<RenameLegalValidationRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(RenameLegalValidationRsrc.class);
 		
@@ -566,6 +566,7 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 			Map<String, String> queryParams = new HashMap<String, String>();
 			putQueryParam(queryParams, "annualFieldDetailId", annualFieldDetailId);
 			putQueryParam(queryParams, "newLegalLocation", newLegalLocation);
+			putQueryParam(queryParams, "primaryPropertyIdentifier", primaryPropertyIdentifier);
 			
 			Response<RenameLegalValidationRsrc> response = dao.Process(ResourceTypes.RENAME_LEGAL_VALIDATION, this.getTransformer(), resource, queryParams, getWebClient());
 			return response.getResource();
