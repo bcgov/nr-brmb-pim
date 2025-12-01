@@ -2870,7 +2870,13 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			// LegalsWithSameLoc
 			Boolean isWarningLegalsWithSameLoc = false;
 			String legalsWithSameLocMsg = null;
-			PagedDtos<LegalLandDto> legalsWithSameLocList = legalLandDao.select(newLegalLocation, null, null, null, false, false, null, null, DefaultMaximumResults, null, null);
+			PagedDtos<LegalLandDto> legalsWithSameLocList = new PagedDtos<LegalLandDto>();
+			//Search by PID if it's provided
+			if(primaryPropertyIdentifier != null) {
+				legalsWithSameLocList = legalLandDao.select(null, primaryPropertyIdentifier, null, null, false, false, null, null, DefaultMaximumResults, null, null);
+			} else {
+				legalsWithSameLocList = legalLandDao.select(newLegalLocation, null, null, null, false, false, null, null, DefaultMaximumResults, null, null);
+			}
 
 			if (legalsWithSameLocList.getResults().size() > 0) {
 				isWarningLegalsWithSameLoc = true;
@@ -2923,13 +2929,26 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			String otherLegalDataMsg = null;
 			LegalLandDto otherLegalData = null;
 
-			// For GRAIN or FORAGE Fields added by CUWS, the Primary PID defaults to GF0N,
-			// where N is zero-padded.
-			if (llDto.getLegalDescription() != null || llDto.getLegalShortDescription() != null
-					|| (llDto.getPrimaryPropertyIdentifier() != null
-							&& !llDto.getPrimaryPropertyIdentifier().matches("GF\\d+"))) {
+			if(InsurancePlans.BERRIES.getInsurancePlanId().equals(policyDto.getInsurancePlanId())){
+				// For Berries Fields. Check if data that wasn't saved when creating quick legal land has values
+				if (llDto.getLegalDescription() != null 
+						|| llDto.getLegalShortDescription() != null
+						|| llDto.getOtherDescription() != null) {
 
-				isWarningOtherLegalData = true;
+					isWarningOtherLegalData = true;
+				}
+			} else {
+				// For GRAIN or FORAGE Fields added by CUWS, the Primary PID defaults to GF0N,
+				// where N is zero-padded.
+				if (llDto.getLegalDescription() != null || llDto.getLegalShortDescription() != null
+						|| (llDto.getPrimaryPropertyIdentifier() != null
+								&& !llDto.getPrimaryPropertyIdentifier().matches("GF\\d+"))) {
+
+					isWarningOtherLegalData = true;
+				}
+			}
+			
+			if(isWarningOtherLegalData) {
 				otherLegalDataMsg = RenameLegalValidation.OTHER_LEGAL_DATA_MSG
 						.replace("[PidOrLegalLocation]", pidOrLegalLocation)
 						.replace("[LegalLocationOrPID]", legalLocationOrPid);
@@ -2939,7 +2958,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			result = uwContractFactory.getRenameLegalValidation(isWarningLegalsWithSameLoc, legalsWithSameLocMsg,
 					legalsWithSameLocList.getResults(), isWarningOtherFieldOnPolicy, otherFieldOnPolicyMsg, otherFieldOnPolicyList,
 					isWarningFieldOnOtherPolicy, fieldOnOtherPolicyMsg, fieldOnOtherPolicyList, isWarningOtherLegalData,
-					otherLegalDataMsg, otherLegalData, policyId, annualFieldDetailId, newLegalLocation, factoryContext,
+					otherLegalDataMsg, otherLegalData, policyId, annualFieldDetailId, newLegalLocation, primaryPropertyIdentifier, factoryContext,
 					authentication);
 
 		} catch (DaoException e) {
