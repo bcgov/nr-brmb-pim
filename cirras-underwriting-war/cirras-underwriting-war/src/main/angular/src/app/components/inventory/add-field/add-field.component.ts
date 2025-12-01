@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { AddFieldValidationRsrc, AnnualFieldListRsrc, AnnualFieldRsrc, LegalLandRsrc } from '@cirras/cirras-underwriting-api';
+import { AddFieldValidationRsrc, AnnualFieldListRsrc, AnnualFieldRsrc, InventoryField, LegalLandRsrc, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
 import { LegalLandList } from 'src/app/conversion/models';
 import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
@@ -10,7 +10,36 @@ import { lastValueFrom } from 'rxjs';
 import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BERRY_COMMODITY, INSURANCE_PLAN, LAND_UPDATE_TYPE } from 'src/app/utils/constants';
-import { AddLandPopupData } from '../../add-land/add-land.component';
+
+
+export interface AddLandPopupData {
+  fieldId: number;
+  fieldLabel?: string;
+  cropYear: number;
+  policyId: string;
+  insurancePlanId: number; 
+  annualFieldDetailId?: number;
+  otherLegalDescription? : string;
+  landData?: {
+    fieldId?: number;
+    legalLandId?: number;
+    fieldLabel?: string;
+    fieldLocation?: string;
+    primaryPropertyIdentifier?: string;
+    otherLegalDescription?: string;
+    landUpdateType?: string;
+    transferFromGrowerContractYearId? : number;
+    plantings?: Array<InventoryField>;
+    uwComments?: Array<UnderwritingComment>;
+  }
+  berries?: {
+    selectedCommodity?: number;
+    fields? : Array<{
+      fieldId?: number;
+      commodities?: Array<number>;
+    }>
+  }
+}
 
 @Component({
   selector: 'add-field',

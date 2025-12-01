@@ -9,8 +9,7 @@ import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { isInt, replaceNonAlphanumericCharacters } from 'src/app/utils';
-import { AddFieldComponent } from './add-field/add-field.component';
-import { AddLandPopupData } from '../add-land/add-land.component';
+import { AddFieldComponent, AddLandPopupData } from '../add-field/add-field.component';
 import { createNewAnnualFieldObject, getDefaultInventoryBerries, getDefaultPlanting } from '../inventory-common';
 import { AnnualFieldRsrc, InventoryBerries, InventoryField } from '@cirras/cirras-underwriting-api';
 
