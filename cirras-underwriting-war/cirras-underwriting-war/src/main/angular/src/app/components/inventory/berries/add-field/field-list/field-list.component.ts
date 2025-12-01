@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AnnualFieldRsrc } from '@cirras/cirras-underwriting-api';
 import { makeTitleCase } from 'src/app/utils';
-import { INSURANCE_PLAN } from 'src/app/utils/constants';
+import { BERRY_COMMODITY, INSURANCE_PLAN } from 'src/app/utils/constants';
 
 @Component({
   selector: 'field-list',
@@ -14,14 +14,15 @@ export class FieldListComponent {
   @Input() fieldList 
   @Input() insurancePlanId
   @Input() searchBy // e.g. searchPID or searchFieldLocation, etc
+  @Input() selectedCommodity
+  @Output() fieldChanged = new EventEmitter<AnnualFieldRsrc>(); 
 
-  //TODO: EventEmitter<{ fieldId: number; fieldName: string; fieldLocation: string }>();
-  @Output() fieldIdChanged = new EventEmitter<AnnualFieldRsrc>(); 
+  fieldNameHint = "Field Name"
 
-  showSearchLegalMsg = false 
   fieldListForm = new FormGroup({
     fieldIdSelected: new FormControl(''),
     fieldLabel: new FormControl(''),
+    fieldLocation: new FormControl('')
   });
 
   getPolicyAndPlan(field: AnnualFieldRsrc){
@@ -39,6 +40,14 @@ export class FieldListComponent {
     } 
 
     return policyAndPlan
+  }
+
+  getNewFieldNameHint(){
+    if (this.insurancePlanId == INSURANCE_PLAN.BERRIES && this.selectedCommodity == BERRY_COMMODITY.Cranberry) {
+      return "Bog Name"
+    } else {
+      return "Field Name"
+    }
   }
 
   setStyles() {
@@ -150,19 +159,45 @@ export class FieldListComponent {
     return ""
   }
 
-  checkLength() {
-    // TODO
-    // send field name and / or field location back to the add-field component
+  isNewFieldLabelVisible() {
+    if (this.insurancePlanId == INSURANCE_PLAN.FORAGE || this.insurancePlanId == INSURANCE_PLAN.GRAIN) {
+      return true
+    } 
 
-    // this.validationMessages = <AddFieldValidationRsrc>{};
-    // this.addLandForm.controls.fieldIdSelected.setValue(-1)
+    if (this.insurancePlanId == INSURANCE_PLAN.BERRIES && this.selectedCommodity == BERRY_COMMODITY.Cranberry) {
+      return true
+    } 
 
-    // if (this.addLandForm.get("fieldLabel").value && this.addLandForm.get("fieldLabel").value.length > 1) {
-    //   this.showProceedButton = true
-    // }
+    return false // default
   }
 
-  sendFieldId(field: AnnualFieldRsrc) {
-    this.fieldIdChanged.emit(field);
+  isNewFieldLocationVisible() {
+    if (this.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  checkLength() {
+
+    if ((this.fieldListForm.get("fieldLabel").value && this.fieldListForm.get("fieldLabel").value.length > 1 )
+        || (this.fieldListForm.get("fieldLocation").value && this.fieldListForm.get("fieldLocation").value.length > 1) ) {
+
+      // send the field info back to the add-field component
+      let field = {
+        type: '', // just to get aroung the mandatory type property
+        fieldId: -1,
+        fieldLabel: this.fieldListForm.get("fieldLabel").value,
+        fieldLocation: this.fieldListForm.get("fieldLocation").value
+      }
+
+      this.sendField(field)
+    }
+    
+  }
+
+  sendField(field: AnnualFieldRsrc) {
+    this.fieldChanged.emit(field);
   }
 }

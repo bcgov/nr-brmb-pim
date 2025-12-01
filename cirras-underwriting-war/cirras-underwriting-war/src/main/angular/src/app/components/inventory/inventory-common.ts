@@ -2,7 +2,7 @@ import { ChangeDetectorRef } from "@angular/core"
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl } from "@angular/forms"
 import { InventoryBerries, InventoryField, InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
 import { AnnualField, CropVarietyCommodityType } from "src/app/conversion/models"
-import { BERRY_COMMODITY, CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from "src/app/utils/constants"
+import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from "src/app/utils/constants"
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { AddLandComponent, AddLandPopupData } from "./add-land/add-land.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -829,3 +829,58 @@ export function getDefaultInventoryBerries(inventoryBerriesGuid, inventoryFieldG
       }
 }
 
+export function getDefaultPlanting(inventoryFieldGuid, insurancePlanId, fieldId, cropYear, plantingNumber, inventoryBerries, inventorySeededGrains, inventorySeededForages) {
+  return {
+        inventoryFieldGuid: inventoryFieldGuid,
+        insurancePlanId: insurancePlanId,
+        fieldId: fieldId,
+        lastYearCropCommodityId: null,
+        lastYearCropCommodityName: null,
+        lastYearCropVarietyId: null,
+        lastYearCropVarietyName: null,
+        cropYear: cropYear,
+        plantingNumber: plantingNumber, 
+        isHiddenOnPrintoutInd: false, 
+        underseededCropVarietyId: null, 
+        underseededCropVarietyName: null, 
+        underseededAcres: null,
+        underseededInventorySeededForageGuid: null,
+        inventoryUnseeded: null,
+        inventoryBerries: inventoryBerries,
+        linkedPlanting: null,
+        inventorySeededGrains: inventorySeededGrains,
+        inventorySeededForages: inventorySeededForages
+      }
+    }
+    
+export function createNewAnnualFieldObject(fieldId, legalLandId, fieldLabel, otherLegalDescription, primaryPropertyIdentifier,
+                                        fieldLocation, displayOrder, cropYear, isLeasedInd, landUpdateType, transferFromGrowerContractYearId,
+                                        plantings, uwComments) {
+  return {
+    links: [],
+    contractedFieldDetailId: null,
+    annualFieldDetailId: null,
+    fieldId: fieldId,
+    legalLandId: legalLandId,
+    fieldLabel: fieldLabel, 
+    otherLegalDescription: otherLegalDescription,
+    primaryPropertyIdentifier: primaryPropertyIdentifier,
+    fieldLocation: fieldLocation, 
+    displayOrder: displayOrder, 
+    cropYear: cropYear,
+    isLeasedInd: isLeasedInd, 
+    landUpdateType: landUpdateType,
+    transferFromGrowerContractYearId: transferFromGrowerContractYearId,
+    plantings: plantings,
+    dopYieldFieldGrainList: [],
+    dopYieldFieldForageList: [],
+    uwComments: uwComments, 
+    policies: [],
+    verifiableCommodities: [],
+    verifiableVarieties: [],
+    etag: '',
+    type: '',
+    isNewFieldUI: true,
+    deletedByUserInd: false
+  }
+}

@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from "@ngrx/store";
 import { RootState } from "src/app/store";
 import { AnnualField } from 'src/app/conversion/models';
-import { addAnnualFieldObject, getDefaultInventoryBerries, fieldHasInventory, isThereAnyCommentForField, deleteFormField, deleteNewFormField, removeGapsInDisplayOrder } from '../../inventory-common';
+import { addAnnualFieldObject, getDefaultInventoryBerries, getDefaultPlanting, removeGapsInDisplayOrder } from '../../inventory-common';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { InventoryBerries, InventoryField, UnderwritingComment } from '@cirras/cirras-underwriting-api';
@@ -20,12 +20,14 @@ import { MatDialog } from '@angular/material/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false
 })
-export class BerriesInventoryFieldComponent implements OnChanges{
+export class BerriesInventoryFieldComponent implements OnInit, OnChanges{  
 
   @Input() field: AnnualField;
   @Input() fieldsFormArray: UntypedFormArray;
   @Input() cropVarietyOptions;
   @Input() selectedCommodity;
+  @Input() minNewFieldId;
+  @Input() numComponentReloads;
   @Input() policyId;
 
   fieldFormGroup: UntypedFormGroup;
@@ -36,20 +38,20 @@ export class BerriesInventoryFieldComponent implements OnChanges{
   constructor(private fb: UntypedFormBuilder,
               private store: Store<RootState>,
               protected securityUtilService: SecurityUtilService,
-              protected dialog: MatDialog) {}
+              protected dialog: MatDialog,
+              protected cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.refreshForm()
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.field && changes.field.currentValue) {
+    if ( (changes.field && changes.field.currentValue) || (changes.numComponentReloads && changes.numComponentReloads.currentValue) ) {
       if (this.field) {
         this.refreshForm()
         this.updateNumPlantings()  
       }
     }
-
   }
 
   refreshForm(){
@@ -76,7 +78,6 @@ export class BerriesInventoryFieldComponent implements OnChanges{
         return true
       }
 
-      // TODO: remove the check for no commodity after add field is complete
       plantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == null)
       if (plantings && plantings.length > 0) {
         return true
@@ -89,14 +90,9 @@ export class BerriesInventoryFieldComponent implements OnChanges{
 
   updateNumPlantings() {
     if (this.field.plantings) {
-      // TODO when ADD Field is ready -> filter by commodity is as well
-      // this.numPlantingsToSave = this.field.plantings.filter(
-      //   x => (x.inventoryBerries.deletedByUserInd !== true  && 
-      //         x.inventoryBerries.cropCommodityId == this.selectedCommodity )).length
-
-      // but for now, all fields have the same commodity
       this.numPlantingsToSave = this.field.plantings.filter(
-        x => (x.inventoryBerries.deletedByUserInd !== true )).length
+        x => (x.inventoryBerries.deletedByUserInd !== true  && 
+              x.inventoryBerries.cropCommodityId == this.selectedCommodity )).length
     }
   }
 
@@ -161,27 +157,8 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     if (this.securityUtilService.canEditInventory()) {
       let inventoryBerries: InventoryBerries = getDefaultInventoryBerries(null, null, this.selectedCommodity)
 
-      let pltg: InventoryField = {
-        inventoryFieldGuid: null,
-        insurancePlanId: INSURANCE_PLAN.BERRIES,
-        fieldId: this.field.fieldId,
-        lastYearCropCommodityId: null,
-        lastYearCropCommodityName: null,
-        lastYearCropVarietyId: null,
-        lastYearCropVarietyName: null,
-        cropYear: this.field.cropYear,
-        plantingNumber: this.getMaxPlantingNumber() + 1, 
-        isHiddenOnPrintoutInd: false, 
-        underseededCropVarietyId: null, 
-        underseededCropVarietyName: null, 
-        underseededAcres: null,
-        underseededInventorySeededForageGuid: null,
-        inventoryUnseeded: null,
-        inventoryBerries: inventoryBerries,
-        linkedPlanting: null,
-        inventorySeededGrains: [],
-        inventorySeededForages: []
-      }
+      let pltg: InventoryField = getDefaultPlanting(null, INSURANCE_PLAN.BERRIES, this.field.fieldId,  
+                      this.field.cropYear, this.getMaxPlantingNumber() + 1, inventoryBerries, [], [])
 
       this.field.plantings.push(pltg)
       this.updateNumPlantings()
@@ -260,7 +237,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
 
   deleteNewField() {
 
-    deleteNewFormField(this.field.fieldId, this.field.isNewFieldUI, this.fieldsFormArray)
+    this.field.deletedByUserInd = true // so we know not to send it to the API
     
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
 
@@ -350,6 +327,7 @@ export class BerriesInventoryFieldComponent implements OnChanges{
               this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
             }            
           }
+          this.cdr.detectChanges()
         }
       } else if (result && result.event == 'Cancel'){
         // do nothing

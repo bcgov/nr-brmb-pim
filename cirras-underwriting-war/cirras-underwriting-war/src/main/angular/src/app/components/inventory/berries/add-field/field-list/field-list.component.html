@@ -33,7 +33,7 @@
                         type="radio" 
                         [value]="field.fieldId" 
                         formControlName="fieldIdSelected" 
-                        (click)="sendFieldId(field)"/>
+                        (click)="sendField(field)"/>
                 </div>
 
                 <div class="border-right justify-center border-top border-bottom border-left">
@@ -69,13 +69,19 @@
                 </div>
 
                 <div class="fill justify-left border-bottom border-right" [ngStyle]="setNewFieldStyles()">
-                    Add New Field: &nbsp;&nbsp; &nbsp;
-                    <mat-form-field appearance="fill">
+                    Add New Field: 
+                    &nbsp;&nbsp; &nbsp;
+                    <mat-form-field *ngIf="isNewFieldLocationVisible()" appearance="fill">
+                        <input style="width: 100px;" matInput formControlName="fieldLocation" 
+                                maxlength="128" (keydown)="checkLength()">
+                        <mat-hint>Address</mat-hint>
+                    </mat-form-field> 
+                    &nbsp;&nbsp; &nbsp;
+                    <mat-form-field *ngIf="isNewFieldLabelVisible()" appearance="fill">
                         <input style="width: 100px;" matInput formControlName="fieldLabel" 
                                 maxlength="128" (keydown)="checkLength()">
-                        <mat-hint *ngIf="showSearchLegalMsg">Please enter at least 5 symbols</mat-hint>
+                        <mat-hint>{{ getNewFieldNameHint() }} </mat-hint>
                     </mat-form-field> 
-
                 </div>
             </div>
         </div>

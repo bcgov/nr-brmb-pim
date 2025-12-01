@@ -71,9 +71,10 @@
                 <h2>Berries Inventory</h2>
                 <p>Last Updated: {{ ((inventoryContract && inventoryContract.invUpdateTimestamp) ? inventoryContract.invUpdateTimestamp : "" ) | date }}</p>
             </div>
-            <div class="plcy-frm-hdr-dropdown" matTooltip="Commodity">
+            <div class="plcy-frm-hdr-dropdown" [matTooltip]="selectedCommodityTooltip">
                 <!-- Commodities: -->
-                <mat-form-field appearance="outline" style="width: 150px;">
+                <mat-form-field appearance="outline" style="width: 150px;"
+                [ngStyle]="{'background-color': shouldHighlightCommodity() ? 'yellow' : '' }" >
                     <mat-select formControlName="selectedCommodity" hideSingleSelectionIndicator="true" 
                         (selectionChange)="commoditySelectionChanged()">
                         <mat-option *ngFor="let option of cropCommodityOptions" [value]="option.cropCommodityId"
@@ -118,6 +119,7 @@
                 [fieldsFormArray]="getViewModel().formGroup.controls.fields"
                 [cropVarietyOptions]="cropVarietyOptions"
                 [selectedCommodity]="selectedCommodity"
+                [numComponentReloads]="numComponentReloads"
                 [policyId]="policyId">
             </berries-inventory-field-list>
 
@@ -138,8 +140,7 @@
             
             <div>
                 <berries-inventory-commodity-totals 
-                    *ngIf="inventoryContract && inventoryContract.inventoryContractCommodityBerries.length > 0 && 
-                        inventoryContract.inventoryContractCommodityBerries[0].cropCommodityId == selectedCommodity"
+                    *ngIf="showQuantityTotals()"
                     [insurabilityType]="'quantity'"
                     [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" 
                     [selectedCommodity]="selectedCommodity">
@@ -147,9 +148,7 @@
             </div>
             <div>
                 <berries-inventory-commodity-totals 
-                    *ngIf="(selectedCommodity == BERRY_COMMODITY.Blueberry || selectedCommodity == BERRY_COMMODITY.Strawberry) &&
-                        inventoryContract && inventoryContract.inventoryContractCommodityBerries.length > 0 && 
-                        inventoryContract.inventoryContractCommodityBerries[0].cropCommodityId == selectedCommodity"
+                    *ngIf="showPlantTotals()"
                     [insurabilityType]="'plant'"
                     [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" 
                     [selectedCommodity]="selectedCommodity">

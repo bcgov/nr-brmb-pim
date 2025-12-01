@@ -89,9 +89,7 @@ export class BerriesInventoryPlantingComponent implements OnChanges {
   }
 
   plantingHasCommodity() {
-    // TODO - remove the check for empty commodity after add field is done
-    if (this.planting && 
-        ( this.planting.inventoryBerries.cropCommodityId == this.selectedCommodity || this.planting.inventoryBerries.cropCommodityId == null )) {
+    if (this.planting && this.planting.inventoryBerries.cropCommodityId == this.selectedCommodity) {
       return true
     } else {
       return false
