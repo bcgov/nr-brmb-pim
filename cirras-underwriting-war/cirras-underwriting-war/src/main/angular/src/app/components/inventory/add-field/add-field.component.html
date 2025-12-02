@@ -60,7 +60,7 @@
             [fieldList]="fieldList.collection"
             [insurancePlanId]="dataReceived.insurancePlanId"
             [searchBy]="addFieldForm.controls.choiceSelected.value"
-            [selectedCommodity]="dataReceived.berries.selectedCommodity"
+            [selectedCommodity]="(dataReceived.berries && dataReceived.berries.selectedCommodity) ? dataReceived.berries.selectedCommodity : null"
             (fieldChanged)="onFieldReceived($event)"></field-list>
     </div>
     

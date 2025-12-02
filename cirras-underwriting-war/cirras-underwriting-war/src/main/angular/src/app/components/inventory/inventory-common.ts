@@ -4,11 +4,11 @@ import { InventoryBerries, InventoryField, InventorySeededForage, InventorySeede
 import { AnnualField, CropVarietyCommodityType } from "src/app/conversion/models"
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from "src/app/utils/constants"
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
-import { AddLandComponent, AddLandPopupData } from "./add-land/add-land.component";
 import { MatDialog } from "@angular/material/dialog";
 import { EditLandComponent } from "./edit-land/edit-land.component";
 import { addUwCommentsObject, getUniqueKey } from 'src/app/utils';
 import { RemoveFieldComponent, RemoveFieldPopupData } from "./remove-field/remove-field.component"
+import { AddFieldComponent, AddLandPopupData } from "./add-field/add-field.component"
 
 export interface CropVarietyOptionsType {
   cropCommodityId: string;
@@ -366,7 +366,7 @@ export function openAddEditLandPopup(fb: UntypedFormBuilder, flds: UntypedFormAr
 
   if (isNewFieldUI) {
 
-    dialogRef = dialog.open(AddLandComponent , {
+    dialogRef = dialog.open(AddFieldComponent , {
       width: '800px',
       data: dataToSend
     });

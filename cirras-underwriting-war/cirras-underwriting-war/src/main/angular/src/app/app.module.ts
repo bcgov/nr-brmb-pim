@@ -84,7 +84,6 @@ import { UwCommentComponent } from "./components/uw-comments/uw-comment/uw-comme
 import { ReportsDownloadButtonComponent } from "./components/reports/reports-download-button/reports-download-button.component";
 import { ReportsDownloadDialogComponent } from "./components/reports/reports-download-dialog/reports-download-dialog.component";
 import { PrintoutLogoComponent } from './components/printout-logo/printout-logo.component';
-import { AddLandComponent } from './components/inventory/add-land/add-land.component';
 import { EditLandComponent } from './components/inventory/edit-land/edit-land.component';
 import { GrainUnseededInventoryComponent } from './components/inventory/grain/grain-unseeded/grain-unseeded-inventory.component';
 import { GrainSeededInventoryComponent } from "./components/inventory/grain/grain-seeded/grain-seeded-inventory.component";
@@ -152,10 +151,10 @@ import { BerriesInventoryFieldComponent } from "./components/inventory/berries/f
 import { BerriesInventoryPlantingComponent } from "./components/inventory/berries/planting/berries-inventory-planting.component";
 import { BerriesInventoryInventoryBerryComponent } from "./components/inventory/berries/inventory-berry/berries-inventory-inventory-berry.component";
 import { BerriesInventoryCommodityListComponent } from "./components/inventory/berries/commodity-totals/berries-inventory-commodity-totals.component";
-import { AddFieldComponent } from "./components/inventory/berries/add-field/add-field.component";
-import { LegalLandListComponent } from "./components/inventory/berries/add-field/legal-land-list/legal-land-list.component";
-import { FieldListComponent } from "./components/inventory/berries/add-field/field-list/field-list.component";
-import { FieldValidationsComponent } from "./components/inventory/berries/add-field/field-validations/field-validations.component";
+import { AddFieldComponent } from "./components/inventory/add-field/add-field.component";
+import { LegalLandListComponent } from "./components/inventory/add-field/legal-land-list/legal-land-list.component";
+import { FieldListComponent } from "./components/inventory/add-field/field-list/field-list.component";
+import { FieldValidationsComponent } from "./components/inventory/add-field/field-validations/field-validations.component";
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -210,7 +209,6 @@ if (!environment.production || !environment.restrict_imports) {
         ReportsDownloadButtonComponent,
         ReportsDownloadDialogComponent,
         PrintoutLogoComponent,
-        AddLandComponent,
         EditLandComponent,
         GrainUnseededInventoryComponent,
         GrainSeededInventoryComponent,

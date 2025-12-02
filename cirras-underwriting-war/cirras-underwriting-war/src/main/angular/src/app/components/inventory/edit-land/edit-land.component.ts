@@ -8,8 +8,8 @@ import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest'
 import { LegalLandList } from 'src/app/conversion/models';
 import { makeTitleCase, setHttpHeaders } from 'src/app/utils';
 import { LAND_UPDATE_TYPE } from 'src/app/utils/constants';
-import { AddLandPopupData } from '../add-land/add-land.component';
 import { DIALOG_TYPE } from '../../dialogs/base-dialog/base-dialog.component';
+import { AddLandPopupData } from '../add-field/add-field.component';
 
 @Component({
     selector: 'cirras-edit-land',
