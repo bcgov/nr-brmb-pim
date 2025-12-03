@@ -11,12 +11,12 @@ import { addUwCommentsObject, areDatesNotEqual, areNotEqual, makeNumberOnly, mak
 import { AddNewFormField, CropVarietyOptionsType, addAnnualFieldObject, addPlantingObject, addSeededForagesObject, deleteFormField, deleteNewFormField, dragField, fieldHasInventory, getInventorySeededForagesObjForSave, isLinkedFieldCommon, isLinkedPlantingCommon, isThereAnyCommentForField, linkedFieldTooltipCommon, linkedPlantingTooltipCommon, navigateUpDownTextbox, openAddEditLandPopup, roundUpDecimal, updateComments } from '../inventory-common';
 import { AddNewInventoryContract, DeleteInventoryContract, GetInventoryReport, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { AddLandPopupData } from '../add-land/add-land.component';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { RemoveFieldPopupData } from '../remove-field/remove-field.component';
 import {ViewEncapsulation } from '@angular/core';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { asapScheduler } from 'rxjs';
+import { AddLandPopupData } from '../add-field/add-field.component';
 
 @Component({
     selector: 'forage-inventory',
@@ -846,7 +846,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   deleteNewField(field) {
 
     const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
-    deleteNewFormField(field, flds)
+    deleteNewFormField(field.value.fieldId, field.value.isNewFieldUI, flds)
     
     this.isMyFormDirty()
   }

@@ -1,15 +1,17 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from "@ngrx/store";
 import { RootState } from "src/app/store";
 import { AnnualField } from 'src/app/conversion/models';
-import { addAnnualFieldObject, getDefaultInventoryBerries } from '../../inventory-common';
+import { addAnnualFieldObject, getDefaultInventoryBerries, getDefaultPlanting, removeGapsInDisplayOrder } from '../../inventory-common';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { InventoryBerries, InventoryField, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
-import { BERRY_COMMODITY, INSURANCE_PLAN } from 'src/app/utils/constants';
+import { BERRY_COMMODITY, INSURANCE_PLAN, LAND_UPDATE_TYPE } from 'src/app/utils/constants';
 import { setTableHeaderStyleForBerries } from '../field-list/berries-inventory-field-list.component';
+import { RemoveFieldComponent, RemoveFieldPopupData } from '../../remove-field/remove-field.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'berries-inventory-field',
@@ -18,12 +20,15 @@ import { setTableHeaderStyleForBerries } from '../field-list/berries-inventory-f
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false
 })
-export class BerriesInventoryFieldComponent implements OnChanges{
+export class BerriesInventoryFieldComponent implements OnInit, OnChanges{  
 
   @Input() field: AnnualField;
   @Input() fieldsFormArray: UntypedFormArray;
   @Input() cropVarietyOptions;
   @Input() selectedCommodity;
+  @Input() minNewFieldId;
+  @Input() numComponentReloads;
+  @Input() policyId;
 
   fieldFormGroup: UntypedFormGroup;
   numPlantingsToSave = 1 // default
@@ -32,20 +37,21 @@ export class BerriesInventoryFieldComponent implements OnChanges{
 
   constructor(private fb: UntypedFormBuilder,
               private store: Store<RootState>,
-              protected securityUtilService: SecurityUtilService) {}
+              protected securityUtilService: SecurityUtilService,
+              protected dialog: MatDialog,
+              protected cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.refreshForm()
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.field && changes.field.currentValue) {
+    if ( (changes.field && changes.field.currentValue) || (changes.numComponentReloads && changes.numComponentReloads.currentValue) ) {
       if (this.field) {
         this.refreshForm()
         this.updateNumPlantings()  
       }
     }
-
   }
 
   refreshForm(){
@@ -56,17 +62,22 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     this.setIsFieldHiddenOnPrintout()
   }
 
+  showField(){
+    return (this.fieldHasCommodity() && (this.field.deletedByUserInd == null || this.field.deletedByUserInd == false));
+  }
+
   fieldHasCommodity() {
     // display field if the field has plantings with the desired commodity
     // or the field has no commodity 
     if (this.field && this.field.plantings && this.selectedCommodity) {
-
-      let plantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == this.selectedCommodity)
+      //Check if there are plantings with the selected commodity that are NOT marked for deletion
+      let plantings = this.field.plantings.filter ( pltg => 
+        pltg.inventoryBerries.cropCommodityId == this.selectedCommodity
+          && (pltg.inventoryBerries.deletedByUserInd == null || pltg.inventoryBerries.deletedByUserInd == false))
       if (plantings && plantings.length > 0) {
         return true
       }
 
-      // TODO: remove the check for no commodity after add field is complete
       plantings = this.field.plantings.filter ( pltg => pltg.inventoryBerries.cropCommodityId == null)
       if (plantings && plantings.length > 0) {
         return true
@@ -76,16 +87,12 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     return false
   }
 
+
   updateNumPlantings() {
     if (this.field.plantings) {
-      // TODO when ADD Field is ready -> filter by commodity is as well
-      // this.numPlantingsToSave = this.field.plantings.filter(
-      //   x => (x.inventoryBerries.deletedByUserInd !== true  && 
-      //         x.inventoryBerries.cropCommodityId == this.selectedCommodity )).length
-
-      // but for now, all fields have the same commodity
       this.numPlantingsToSave = this.field.plantings.filter(
-        x => (x.inventoryBerries.deletedByUserInd !== true )).length
+        x => (x.inventoryBerries.deletedByUserInd !== true  && 
+              x.inventoryBerries.cropCommodityId == this.selectedCommodity )).length
     }
   }
 
@@ -150,27 +157,8 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     if (this.securityUtilService.canEditInventory()) {
       let inventoryBerries: InventoryBerries = getDefaultInventoryBerries(null, null, this.selectedCommodity)
 
-      let pltg: InventoryField = {
-        inventoryFieldGuid: null,
-        insurancePlanId: INSURANCE_PLAN.BERRIES,
-        fieldId: this.field.fieldId,
-        lastYearCropCommodityId: null,
-        lastYearCropCommodityName: null,
-        lastYearCropVarietyId: null,
-        lastYearCropVarietyName: null,
-        cropYear: this.field.cropYear,
-        plantingNumber: this.getMaxPlantingNumber() + 1, 
-        isHiddenOnPrintoutInd: false, 
-        underseededCropVarietyId: null, 
-        underseededCropVarietyName: null, 
-        underseededAcres: null,
-        underseededInventorySeededForageGuid: null,
-        inventoryUnseeded: null,
-        inventoryBerries: inventoryBerries,
-        linkedPlanting: null,
-        inventorySeededGrains: [],
-        inventorySeededForages: []
-      }
+      let pltg: InventoryField = getDefaultPlanting(null, INSURANCE_PLAN.BERRIES, this.field.fieldId,  
+                      this.field.cropYear, this.getMaxPlantingNumber() + 1, inventoryBerries, [], [])
 
       this.field.plantings.push(pltg)
       this.updateNumPlantings()
@@ -218,6 +206,133 @@ export class BerriesInventoryFieldComponent implements OnChanges{
     } else {
       return false
     }
+  }
+
+  // LAND Management
+  onDeleteField() {
+
+    if (this.field.isNewFieldUI == true ) {
+
+      this.deleteNewField()
+
+    } else {
+
+      const dataToSend : RemoveFieldPopupData = {
+        fieldId: this.field.fieldId,
+        fieldLabel: this.field.fieldLabel,
+        policyId: this.policyId,
+        hasInventory: this.fieldHasInventory(this.field),
+        hasComments: this.isThereAnyCommentForField(this.field),
+        showRemoveCommodity: this.fieldHasOtherCommodities(this.field), //Only shown if there are multiple commodities
+        landData: {
+          landUpdateType: ""
+        }  
+      }
+
+      this.deleteFormField(this.field, this.fieldsFormArray, this.dialog, dataToSend)
+
+      this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
+    }
+  }
+
+  deleteNewField() {
+
+    this.field.deletedByUserInd = true // so we know not to send it to the API
+    
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
+
+  }
+
+  isThereAnyCommentForField(field: AnnualField) {
+    // Checks if there are un-deleted comments
+    if (field.uwComments && field.uwComments.length > 0) {
+
+      for (let i = 0; i < field.uwComments.length; i++) {
+        if (field.uwComments[i].deletedByUserInd == true) {
+
+        } else {
+          return true
+        }
+      }
+      
+    }
+    return false
+  }
+
+  fieldHasInventory(field: AnnualField) : boolean {
+
+    if(field.plantings) {
+      field.plantings.forEach( pltg => {
+
+        if(pltg.inventoryBerries && !pltg.inventoryBerries.deletedByUserInd ) {
+
+          if ( pltg.inventoryBerries.cropVarietyId  ||
+            pltg.inventoryBerries.plantedYear  ||
+            pltg.inventoryBerries.plantedAcres) {
+              return true
+          }
+        }
+      })
+    }
+    return false
+  }
+
+  fieldHasOtherCommodities(field: AnnualField) : boolean {
+
+    if (field && field.plantings && this.selectedCommodity) {
+      let plantings = this.field.plantings.filter ( pltg => 
+        pltg.inventoryBerries.cropCommodityId != this.selectedCommodity
+        && (pltg.inventoryBerries.deletedByUserInd == null || pltg.inventoryBerries.deletedByUserInd == false))
+      if (plantings && plantings.length > 0) {
+        return true
+      }
+    }
+    return false
+  }
+  
+  deleteFormField(field: AnnualField, flds: UntypedFormArray, dialog: MatDialog, dataToSend: RemoveFieldPopupData) {
+
+    let dialogRef = dialog.open(RemoveFieldComponent, {
+      width: '800px',
+      data: dataToSend
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      if (result && result.event == 'Proceed'){
+        if (result.data && result.data.fieldId) {
+          //If user selected remove from policy or delete field
+          if(result.data.landData 
+              && (result.data.landData.landUpdateType == LAND_UPDATE_TYPE.REMOVE_FIELD_FROM_POLICY
+                  || result.data.landData.landUpdateType == LAND_UPDATE_TYPE.DELETE_FIELD)) {
+
+            field.landUpdateType = result.data.landData.landUpdateType;
+
+            // remove the field on the screen
+            field.deletedByUserInd = true;
+
+            // recalculate displayorder
+            removeGapsInDisplayOrder(flds)
+
+            this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
+
+          } else if (dataToSend.removeCommodityFromField && dataToSend.removeCommodityFromField == true){
+            //Remove all plantings
+            if(field.plantings) {
+              field.plantings.forEach( pltg => {
+                if(pltg.inventoryBerries.cropCommodityId == this.selectedCommodity){
+                  pltg.inventoryBerries.deletedByUserInd = true;
+                }
+              })
+              this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
+            }            
+          }
+          this.cdr.detectChanges()
+        }
+      } else if (result && result.event == 'Cancel'){
+        // do nothing
+      }
+    });
   }
 
 }

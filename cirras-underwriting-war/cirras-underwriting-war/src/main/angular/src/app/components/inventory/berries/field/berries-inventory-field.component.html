@@ -1,18 +1,27 @@
-<div *ngIf="fieldHasCommodity()" class="plcy-inv-field-box" [formGroup]="fieldFormGroup"  [ngStyle]="setTableHeaderStyle()">
+<div *ngIf="showField()" class="plcy-inv-field-box" [formGroup]="fieldFormGroup"  [ngStyle]="setTableHeaderStyle()">
     
     <div class="inventory-cell border-left" style="width: 115px;"
         [ngClass]=" isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout border-left-exclude-printout' : 'inventory-border'">
-        {{ fieldFormGroup.value.fieldId }}
+        {{ (fieldFormGroup.value.fieldId < 0 ? "" : fieldFormGroup.value.fieldId) }}
     </div>
     
     <div class="inventory-fill" style="width: 280px;"
         [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout' : 'inventory-border'">
-        <mat-form-field appearance="fill" style="width: 260px;">
-            <input matInput type="text"
+        <mat-form-field *ngIf="fieldFormGroup.value.fieldId == minNewFieldId; else fieldLocationWithoutFocus" appearance="fill" style="width: 260px;">
+            <input matInput type="text" appAutoFocus
                     formControlName="fieldLocation"
                     maxlength="128"
                     (blur)="updateFieldLocation()">
         </mat-form-field>  
+
+        <ng-template #fieldLocationWithoutFocus>
+            <mat-form-field appearance="fill" style="width: 260px;">
+                <input matInput type="text" 
+                        formControlName="fieldLocation"
+                        maxlength="128"
+                        (blur)="updateFieldLocation()">
+            </mat-form-field>  
+        </ng-template>
         <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Field address is writeable">edit</mat-icon>
     </div>
 
@@ -72,6 +81,12 @@
             [legalLocation]="field.otherLegalDescription"
             [uwComments]="field.uwComments"
             (onDone)="onInventoryCommentsDone($event)"></uw-comments-button>
-        <!-- TODO: Remove Field button -->
+
+        <mat-icon class="delete-icon"
+            *ngIf="securityUtilService.canEditInventory(); else elseBlockDelFld" 
+            matTooltip="Delete field or remove it from policy" 
+            (click)="onDeleteField(field)">delete_outline</mat-icon>
+        <ng-template #elseBlockDelFld><span style="width: 25px;"></span></ng-template>
+
     </div>
 </div>

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { AddFieldValidationRsrc, AnnualFieldListRsrc, AnnualFieldRsrc, LegalLandRsrc } from '@cirras/cirras-underwriting-api';
+import { AddFieldValidationRsrc, AnnualFieldListRsrc, AnnualFieldRsrc, InventoryField, LegalLandRsrc, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
 import { LegalLandList } from 'src/app/conversion/models';
 import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
@@ -9,8 +9,37 @@ import { setHttpHeaders } from 'src/app/utils';
 import { lastValueFrom } from 'rxjs';
 import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { BERRY_COMMODITY, INSURANCE_PLAN } from 'src/app/utils/constants';
-import { AddLandPopupData } from '../../add-land/add-land.component';
+import { BERRY_COMMODITY, INSURANCE_PLAN, LAND_UPDATE_TYPE } from 'src/app/utils/constants';
+
+
+export interface AddLandPopupData {
+  fieldId: number;
+  fieldLabel?: string;
+  cropYear: number;
+  policyId: string;
+  insurancePlanId: number; 
+  annualFieldDetailId?: number;
+  otherLegalDescription? : string;
+  landData?: {
+    fieldId?: number;
+    legalLandId?: number;
+    fieldLabel?: string;
+    fieldLocation?: string;
+    primaryPropertyIdentifier?: string;
+    otherLegalDescription?: string;
+    landUpdateType?: string;
+    transferFromGrowerContractYearId? : number;
+    plantings?: Array<InventoryField>;
+    uwComments?: Array<UnderwritingComment>;
+  }
+  berries?: {
+    selectedCommodity?: number;
+    fields? : Array<{
+      fieldId?: number;
+      commodities?: Array<number>;
+    }>
+  }
+}
 
 @Component({
   selector: 'add-field',
@@ -115,6 +144,19 @@ export class AddFieldComponent implements OnInit{
     this.legalLandList = null
     this.fieldList = null
     this.validationMessages = null
+
+    this.dataToSend.landData = {
+      fieldId: null,
+      legalLandId: null,
+      fieldLabel: null,
+      fieldLocation: null,
+      primaryPropertyIdentifier: null,
+      otherLegalDescription: null,
+      landUpdateType: null,
+      transferFromGrowerContractYearId: null,
+      plantings: null,
+      uwComments: null  
+    }
   }
 
   onTypeInSearchBox() {
@@ -133,7 +175,7 @@ export class AddFieldComponent implements OnInit{
   }
 
   onSearch() {
-    const searchLegalLandOrFieldId = this.addFieldForm.controls.searchLegalLandOrFieldId.value
+    const searchLegalLandOrFieldId = (this.addFieldForm.controls.searchLegalLandOrFieldId.value).trim()
 
     // start the search when least 3 symbols are entered
     if (!searchLegalLandOrFieldId || searchLegalLandOrFieldId.length < 3) {
@@ -188,10 +230,26 @@ export class AddFieldComponent implements OnInit{
         this.showProceedButton = false
       } else {
         // give the option to add new legal land
+        this.setNewLegalLand(searchLegalLandOrFieldId)
+
         this.showNewLegalLandMessage = true
         this.showProceedButton = true
       }
     })
+  }
+
+  setNewLegalLand(searchLegalLandOrFieldId) {
+    this.dataToSend.landData.legalLandId = -1
+
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.GRAIN || this.dataReceived.insurancePlanId == INSURANCE_PLAN.FORAGE) {
+        this.dataToSend.landData.otherLegalDescription = searchLegalLandOrFieldId
+    }
+
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES ) {
+        this.dataToSend.landData.primaryPropertyIdentifier = searchLegalLandOrFieldId
+    }
+
+    this.dataToSend.landData.fieldId = -1
   }
 
   getFields(cropYear, legalLandId, fieldId, fieldLocation){
@@ -211,7 +269,14 @@ export class AddFieldComponent implements OnInit{
       if (self.fieldList && self.fieldList.collection && self.fieldList.collection.length > 0) {
         if (this.addFieldForm.controls.choiceSelected.value == 'searchFieldId') {
           // if the user searches by field id then validate the field here
+          this.dataToSend.landData.legalLandId = self.fieldList.collection[0].legalLandId
           this.dataToSend.landData.fieldId = self.fieldList.collection[0].fieldId
+
+          this.dataToSend.landData.fieldLabel = self.fieldList.collection[0].fieldLabel
+          this.dataToSend.landData.fieldLocation = self.fieldList.collection[0].fieldLocation
+          this.dataToSend.landData.primaryPropertyIdentifier = self.fieldList.collection[0].primaryPropertyIdentifier
+          this.dataToSend.landData.otherLegalDescription = self.fieldList.collection[0].otherLegalDescription
+
           this.validateFields(self.fieldList.collection[0])
         }
       } else {
@@ -224,17 +289,11 @@ export class AddFieldComponent implements OnInit{
 
     this.validationMessages = null // clear any messages 
     
-    
     if (!field ) { //the field would be added as new, no validations needed
-      // TODO
-      // this.showProceedButton = false // it needs a field label too
-      // this.validationMessages = <AddFieldValidationRsrc>{};
       return
     }
 
     if (this.isBerryFieldOnCurrentPolicy() ){
-      // don't go for validation to the API
-      // TODO - allow Proceed button
       return
     }
 
@@ -263,38 +322,44 @@ export class AddFieldComponent implements OnInit{
     return lastValueFrom(this.http.get(url,httpOptions)).then((data: AddFieldValidationRsrc) => {
       self.validationMessages = data
 
-      // TODO
-      // if (self.validationMessages.errorMessages && self.validationMessages.errorMessages.length > 0) {
-      //   this.showProceedButton = false
-      // } else {
-      //   this.showProceedButton = true
-      // }
+      if (self.validationMessages.errorMessages && self.validationMessages.errorMessages.length > 0) {
+        this.showProceedButton = false
+      } else {
+        this.showProceedButton = true
+      }
     })
   }
 
-  onLegalLandIdReceived(legalLandId: number) { 
-    this.dataToSend.landData.legalLandId = legalLandId
+  onLegalLandReceived(legalLand) { 
+    this.dataToSend.landData.legalLandId = legalLand.legalLandId
+    this.dataToSend.landData.primaryPropertyIdentifier = legalLand.primaryPropertyIdentifier
+    this.dataToSend.landData.otherLegalDescription = legalLand.otherLegalDescription
 
-    if (legalLandId > -1 ) {
-      this.getFields(this.dataReceived.cropYear, legalLandId, "", "")
-    } else {
-      // TODO: set
-      // this.dataToSend.landData.otherLegalDescription 
-      // this.dataToSend.landData.PID 
+    this.fieldList = null
+
+    if (legalLand.legalLandId > -1 ) {
+      this.getFields(this.dataReceived.cropYear, legalLand.legalLandId, "", "") 
+    } else { 
+      // new legal land - allow Proceed
+      this.dataToSend.landData.fieldId = -1
+      this.showProceedButton = true;
     }
   }
 
-  onFieldIdReceived(field: AnnualFieldRsrc) { 
+  onFieldReceived(field: AnnualFieldRsrc) { 
     this.dataToSend.landData.fieldId = field.fieldId
-    console.log("onFieldIdReceived: " + field.fieldId)
+    this.dataToSend.landData.fieldLabel = field.fieldLabel
+    this.dataToSend.landData.fieldLocation = field.fieldLocation
+
+    this.validationMessages = null
 
     if (field && field.fieldId > -1) {
-      // run validation
+      // run validation for existing fields
       this.validateFields(field)
     } else {
-       // TODO: if empty field then no validations but set the field name and/or location in landData
+      //no validation for new fields 
+      this.showProceedButton = true
     }
-    
   }
 
   isBerryFieldOnCurrentPolicy() {
@@ -324,10 +389,12 @@ export class AddFieldComponent implements OnInit{
                                         ]
                                       } as any
 
-            // TODO do not allow PROCEED button if the selected commodity is the same as the commodity on the field
+            // do not allow PROCEED button if the selected commodity is the same as the commodity on the field
+            this.showProceedButton = false
             return true
           } else {
-            // TODO allow PROCEED button if the field is already on the policy but we're adding a different commodity on it
+            // allow PROCEED button if the field is already on the policy but we're adding a different commodity on it
+            this.showProceedButton = true
             return true
           }
         }
@@ -340,4 +407,95 @@ export class AddFieldComponent implements OnInit{
   onCancelChanges() {
     this.dialogRef.close({event:'Cancel'});
   }
+
+  onProceed(){
+
+    let landUpdateType = ""
+    let transferFromGrowerContractYearId 
+
+    if (!this.dataToSend.landData.legalLandId || !this.dataToSend.landData.fieldId){
+      alert ("Legal Land or Field were not selected. Proceed is not possible.")
+      return
+    }
+
+    if (this.dataToSend.landData.legalLandId == -1) {
+
+      landUpdateType = LAND_UPDATE_TYPE.NEW_LAND
+
+    } else if ( this.dataToSend.landData.legalLandId > -1 && this.dataToSend.landData.fieldId == -1) {
+
+      landUpdateType = LAND_UPDATE_TYPE.ADD_NEW_FIELD
+
+    } else if (this.dataToSend.landData.legalLandId > -1 && this.dataToSend.landData.fieldId > -1) {
+        
+      let fld =  this.fieldList.collection.find(el => el.fieldId == this.dataToSend.landData.fieldId)
+      if (fld) {
+
+        fld.policies.forEach(policy => {
+
+          if (this.dataReceived.insurancePlanId == policy.insurancePlanId && this.dataReceived.cropYear == policy.cropYear) {
+
+            transferFromGrowerContractYearId = policy.growerContractYearId
+            return
+            
+          }
+        })
+
+        landUpdateType = LAND_UPDATE_TYPE.ADD_EXISTING_LAND
+      }
+    } 
+
+    if (landUpdateType == "") {
+      alert ("Cannot determine land update type")
+      return
+    }
+
+    if (this.dataToSend.landData.fieldId > 0) {
+      // it's a field that was found in the system 
+      // the rollover endpoint should return plantings and comments 
+
+      let url = this.appConfig.getConfig().rest["cirras_underwriting"]
+      url = url +"/annualField/" + this.dataToSend.landData.fieldId + "/rolloverInventory"
+      url = url + "?rolloverToCropYear=" +  this.dataReceived.cropYear 
+      url = url + "&insurancePlanId=" +  this.dataReceived.insurancePlanId
+
+      const httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
+
+      var self = this
+      return lastValueFrom(this.http.get(url,httpOptions)).then((data: AnnualFieldRsrc) => {
+
+        let plantings = []
+        let uwComments = []
+
+        if (data && data.plantings && data.plantings.length > 0 ) {
+          plantings = data.plantings
+        }
+
+        if (data && data.uwComments && data.uwComments.length > 0) {
+          uwComments = data.uwComments
+        }
+
+        self.dataToSend.landData.transferFromGrowerContractYearId = transferFromGrowerContractYearId
+        self.dataToSend.landData.landUpdateType = landUpdateType
+        self.dataToSend.landData.plantings = plantings
+        self.dataToSend.landData.uwComments = uwComments
+    
+        // send the results to the main page
+        this.dialogRef.close({event:'AddLand', data: self.dataToSend});
+      })
+
+    } else {
+      // new land / field, no need to get plantings and comments 
+      // just close the popup
+
+      this.dataToSend.landData.transferFromGrowerContractYearId = null
+      this.dataToSend.landData.landUpdateType = landUpdateType
+      this.dataToSend.landData.plantings = []
+      this.dataToSend.landData.uwComments = []
+
+      // send the results to the main page
+      this.dialogRef.close({event:'AddLand', data: this.dataToSend});
+    }
+  }
+
 }

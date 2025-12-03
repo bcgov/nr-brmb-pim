@@ -13,7 +13,7 @@ export class LegalLandListComponent {
   @Input() selectedSearchValue  // e.g. the PID itself
   @Input() legalLandList 
   @Input() insurancePlanId
-  @Output() legalLandIdChanged = new EventEmitter<number>();
+  @Output() legalLandChanged = new EventEmitter<{ legalLandId: number; primaryPropertyIdentifier: string; otherLegalDescription: string }>();
 
   legaLandListForm = new FormGroup({
     legalLandIdSelected: new FormControl('')
@@ -62,8 +62,12 @@ export class LegalLandListComponent {
     
   }
 
-  sendLegalLandId(legalLandId: number) {
-    this.legalLandIdChanged.emit(legalLandId);
+  sendLegalLandId(legalLandId: number, primaryPropertyIdentifier: string, otherLegalDescription: string) {
+    this.legalLandChanged.emit({ 
+      legalLandId: legalLandId, 
+      primaryPropertyIdentifier: primaryPropertyIdentifier, 
+      otherLegalDescription: otherLegalDescription 
+    });
   }
 
 }

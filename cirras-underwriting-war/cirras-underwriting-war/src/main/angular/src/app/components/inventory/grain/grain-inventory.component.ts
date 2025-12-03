@@ -9,13 +9,13 @@ import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state'
 import { addUwCommentsObject, areDatesNotEqual, areNotEqual, areNullableBooleanNotEqual, isBaseCommodity, makeNumberOnly, replaceNonAlphanumericCharacters } from 'src/app/utils';
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { BaseComponent } from '../../common/base/base.component';
-import { AddLandPopupData } from '../add-land/add-land.component';
 import { GrainInventoryComponentModel } from './grain-inventory.component.model';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { AddNewFormField, addAnnualFieldObject, addPlantingObject, addSeededGrainsObject, deleteFormField, deleteNewFormField, dragField, fieldHasInventory, isLinkedFieldCommon, isLinkedPlantingCommon, isThereAnyCommentForField, linkedFieldTooltipCommon, linkedPlantingTooltipCommon, navigateUpDownTextbox, openAddEditLandPopup, updateComments } from '../inventory-common';
 import { RemoveFieldPopupData } from '../remove-field/remove-field.component';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { asapScheduler } from 'rxjs';
+import { AddLandPopupData } from '../add-field/add-field.component';
 
 @Directive()
 export class GrainInventoryComponent extends BaseComponent implements OnChanges {
@@ -1025,7 +1025,7 @@ onDeleteField(field) {
   deleteNewField(field) {
 
     const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
-    deleteNewFormField(field, flds)
+    deleteNewFormField(field.value.fieldId, field.value.isNewFieldUI, flds)
 
     this.isMyFormDirty()
 

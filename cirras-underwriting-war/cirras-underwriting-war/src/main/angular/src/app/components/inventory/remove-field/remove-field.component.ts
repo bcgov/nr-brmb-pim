@@ -15,6 +15,8 @@ export interface RemoveFieldPopupData {
   policyId: string;
   hasInventory: boolean;
   hasComments: boolean;
+  showRemoveCommodity?: boolean; //Only used for berries at the moment
+  removeCommodityFromField?: boolean;
   landData?: {
     landUpdateType?: string;
   }
@@ -81,6 +83,15 @@ export class RemoveFieldComponent implements OnInit {
     })
 
 
+  }
+
+  onRemoveCommodityFromField(){
+    let dataToSend : RemoveFieldPopupData = this.dataReceived  
+
+    dataToSend.removeCommodityFromField = true;
+
+    // send the results to the main page
+    this.dialogRef.close({event: 'Proceed', data: dataToSend});
   }
 
   onRemoveFieldFromPolicy() {

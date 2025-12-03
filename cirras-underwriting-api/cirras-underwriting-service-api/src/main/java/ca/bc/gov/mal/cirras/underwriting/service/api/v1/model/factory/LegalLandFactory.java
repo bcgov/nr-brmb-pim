@@ -30,7 +30,7 @@ public interface LegalLandFactory {
 		) 
 		throws FactoryException, DaoException;
 
-	void createQuickLegalLand(LegalLandDto dto, AnnualField model, String pid);
+	void createQuickLegalLand(LegalLandDto dto, AnnualField model, String primaryReferenceTypeCode, String landIdentifierTypeCode);
 	void updateLegalLand(LegalLandDto dto, LegalLand<? extends Field> model);
 
 	LegalLand<? extends Field> getLegalLand(

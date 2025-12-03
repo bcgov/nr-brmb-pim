@@ -13,6 +13,7 @@ public class FieldRsrcFactory extends BaseResourceFactory implements FieldFactor
 
 		dto.setFieldId(null);
 		dto.setFieldLabel(model.getFieldLabel());
+		dto.setLocation(model.getFieldLocation());
 		dto.setActiveFromCropYear(model.getCropYear());
 		dto.setActiveToCropYear(null);
 

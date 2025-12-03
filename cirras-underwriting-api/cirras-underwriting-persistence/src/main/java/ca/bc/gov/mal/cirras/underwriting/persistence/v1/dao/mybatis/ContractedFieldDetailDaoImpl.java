@@ -121,7 +121,7 @@ public class ContractedFieldDetailDaoImpl extends BaseDao implements ContractedF
 		logger.debug(">selectForFieldRollover " + result);
 		return result;	
 	}	
-	
+
 	@Override
 	public void insert(ContractedFieldDetailDto dto, String userId) throws DaoException {
 		logger.debug("<insert");
@@ -480,6 +480,29 @@ public class ContractedFieldDetailDaoImpl extends BaseDao implements ContractedF
 		return dtos;
 	}	
 	
+	@Override
+	public ContractedFieldDetailDto selectForFieldYearAndContract(Integer fieldId, Integer cropYear, Integer contractId) throws DaoException {
+		logger.debug("<selectForFieldYearAndContract");
+
+		ContractedFieldDetailDto result = null;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("fieldId", fieldId);
+			parameters.put("cropYear", cropYear);
+			parameters.put("contractId", contractId);
+			result = this.mapper.selectForFieldYearAndContract(parameters);
+			
+			if(result!=null) {
+				result.resetDirty();
+			}
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectForFieldYearAndContract " + result);
+		return result;	
+	}
 	
 	private String getOrderBy(String modelColumnName, String sortDirection) {
 		

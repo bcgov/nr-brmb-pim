@@ -46,6 +46,7 @@ public interface UwContractValidateRenameLegalEndpoint extends BaseEndpoints {
 	Response validateRenameLegal(
 		@Parameter(description = "The Policy ID of the uw contract.") @PathParam("policyId") String policyId,
 		@Parameter(description = "The Annual Field Detail ID to update.") @QueryParam("annualFieldDetailId") String annualFieldDetailId,
-		@Parameter(description = "The new value for legal location.") @QueryParam("newLegalLocation") String newLegalLocation
+		@Parameter(description = "The new value for legal location.") @QueryParam("newLegalLocation") String newLegalLocation,
+		@Parameter(description = "Filter the results by property identifier") @QueryParam("primaryPropertyIdentifier") String primaryPropertyIdentifier
 	);
 }
