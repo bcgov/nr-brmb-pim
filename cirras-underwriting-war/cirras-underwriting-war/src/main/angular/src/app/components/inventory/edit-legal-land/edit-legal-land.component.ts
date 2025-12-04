@@ -2,24 +2,26 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AnnualFieldRsrc, AnnualFieldListRsrc, LegalLandRsrc, AddFieldValidationRsrc, RenameLegalValidationRsrc, ReplaceLegalValidationRsrc } from '@cirras/cirras-underwriting-api';
+import { AnnualFieldRsrc, AnnualFieldListRsrc, LegalLandRsrc, RenameLegalValidationRsrc, ReplaceLegalValidationRsrc } from '@cirras/cirras-underwriting-api';
 import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
 import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest';
 import { LegalLandList } from 'src/app/conversion/models';
-import { makeTitleCase, setHttpHeaders } from 'src/app/utils';
-import { LAND_UPDATE_TYPE } from 'src/app/utils/constants';
+import { setHttpHeaders } from 'src/app/utils';
+import { INSURANCE_PLAN, LAND_UPDATE_TYPE } from 'src/app/utils/constants';
 import { DIALOG_TYPE } from '../../dialogs/base-dialog/base-dialog.component';
 import { AddLandPopupData } from '../add-field/add-field.component';
+import { getThePolicyAndPlan } from '../inventory-common';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
     selector: 'cirras-edit-land',
-    templateUrl: './edit-land.component.html',
-    styleUrls: ['./edit-land.component.scss'],
+    templateUrl: './edit-legal-land.component.html',
+    styleUrls: ['./edit-legal-land.component.scss'],
     standalone: false
 })
 
 
-export class EditLandComponent implements OnInit {
+export class EditLegalLandInInventoryComponent implements OnInit {
   titleLabel = "Edit Legal Location";
   dialogType = DIALOG_TYPE.INFO;
 
@@ -36,14 +38,15 @@ export class EditLandComponent implements OnInit {
   legalLandList : LegalLandList = {};
 
   otherDescription = ""
+  primaryPropertyIdentifier = ""
 
   showSearchLegalMsg = false;
-  showNewLegalLandMessage = false;
+  showNewLegalLandMessage = false; // TODO
   showProceedButton = false;
 
 
   constructor(
-    public dialogRef: MatDialogRef<EditLandComponent>,
+    public dialogRef: MatDialogRef<EditLegalLandInInventoryComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AddLandPopupData,
     private fb: UntypedFormBuilder,
     private tokenService: TokenService,
@@ -60,6 +63,16 @@ export class EditLandComponent implements OnInit {
 
   ngOnInit(): void {
 
+    if (this.dataReceived && this.dataReceived.insurancePlanId) {
+      if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.GRAIN || this.dataReceived.insurancePlanId == INSURANCE_PLAN.FORAGE) {
+        this.titleLabel = "Edit Legal Location"
+      }
+
+      if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+        this.titleLabel = "Edit PID"
+      }
+    }
+    
     // add fields to the form
     this.editLandForm = this.fb.group({
       choiceSelected: ['rename'],
@@ -69,6 +82,26 @@ export class EditLandComponent implements OnInit {
 
     this.onChoiceClick('rename')
 
+  }
+
+  getEditLegalLandTitle() {
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.GRAIN || this.dataReceived.insurancePlanId == INSURANCE_PLAN.FORAGE) {
+      return "Location " + this.dataReceived?.otherLegalDescription
+    }
+
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+      return "PID " + this.dataReceived?.primaryPropertyIdentifier
+    }
+  }
+
+  getSearchLegalLable() {
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.GRAIN || this.dataReceived.insurancePlanId == INSURANCE_PLAN.FORAGE) {
+      return  "Legal Location"
+    }
+
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+      return "PID"
+    }
   }
 
   onChoiceClick( choice ) {
@@ -127,25 +160,24 @@ export class EditLandComponent implements OnInit {
     url = url +"/uwcontracts/" + this.dataReceived.policyId + "/validateRenameLegal" 
     url = url + "?policyId=" + this.dataReceived.policyId
     url = url + "&annualFieldDetailId=" + this.dataReceived.annualFieldDetailId
-    url = url + "&newLegalLocation=" + encodeURI(searchLegal)  
+    
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.GRAIN || this.dataReceived.insurancePlanId == INSURANCE_PLAN.FORAGE) {
+      url = url + "&newLegalLocation=" + encodeURI(searchLegal) 
+      url = url + "&primaryPropertyIdentifier=" 
+    }
+    
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+      url = url + "&newLegalLocation=" 
+      url = url + "&primaryPropertyIdentifier=" + encodeURI(searchLegal) 
+    }
 
     const httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
 
     var self = this
-    return this.http.get(url,httpOptions).toPromise().then((data: RenameLegalValidationRsrc) => {
+    return lastValueFrom(this.http.get(url,httpOptions)).then((data: RenameLegalValidationRsrc) => {
+
       self.renameLegalLandList = data
-         
       this.showProceedButton = true
-
-      if( !self.renameLegalLandList || 
-            ( self.renameLegalLandList && 
-              self.renameLegalLandList.isWarningLegalsWithSameLoc == false &&
-              self.renameLegalLandList.isWarningOtherFieldOnPolicy == false &&
-              self.renameLegalLandList.isWarningFieldOnOtherPolicy == false &&
-              self.renameLegalLandList.isWarningOtherLegalData == false )) {
-
-                this.showNewLegalLandMessage = true
-              }
      })
   }
 
@@ -236,7 +268,13 @@ export class EditLandComponent implements OnInit {
     // let otherLegalDescription = ""
 
     if ( choiceSelected == 'rename') {
-      this.otherDescription = this.editLandForm.controls.searchLegal.value
+      if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.GRAIN || this.dataReceived.insurancePlanId == INSURANCE_PLAN.FORAGE) {
+        this.otherDescription = this.editLandForm.controls.searchLegal.value
+      }
+
+      if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+        this.primaryPropertyIdentifier = this.editLandForm.controls.searchLegal.value
+      }
     } 
 
     // if ( choiceSelected == 'replace') {
@@ -246,6 +284,7 @@ export class EditLandComponent implements OnInit {
     dataToSend.landData = {
       legalLandId : ((legalLandId && legalLandId > -1) ? legalLandId : null ),
       otherLegalDescription : this.otherDescription,
+      primaryPropertyIdentifier: this.primaryPropertyIdentifier,
       fieldId : this.dataReceived.fieldId,
       fieldLabel : null,
       transferFromGrowerContractYearId : null,
@@ -275,20 +314,7 @@ export class EditLandComponent implements OnInit {
   }
 
   getPolicyAndPlan(field: AnnualFieldRsrc){
-    let policyAndPlan = ""
-
-    if (field && field.policies) {
-
-      field.policies.forEach(policy => {
-
-        if ( policyAndPlan.length > 0 ) {
-          policyAndPlan = policyAndPlan + "\n" // add a line break
-        }
-        policyAndPlan = policyAndPlan + policy.policyNumber + " (" + makeTitleCase(policy.insurancePlanName) + ")"
-      })
-    } 
-
-    return policyAndPlan
+    return getThePolicyAndPlan(field)
   }
 
 }

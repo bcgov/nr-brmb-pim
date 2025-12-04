@@ -20,6 +20,7 @@ export interface AddLandPopupData {
   insurancePlanId: number; 
   annualFieldDetailId?: number;
   otherLegalDescription? : string;
+  primaryPropertyIdentifier?: string;
   landData?: {
     fieldId?: number;
     legalLandId?: number;
