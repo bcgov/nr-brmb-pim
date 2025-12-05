@@ -21,8 +21,9 @@ import { selectUnderwritingYears } from "src/app/store/maintenance/maintenance.s
             [underwritingYears]="underwritingYears$ | async"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"
-        ></cirras-dashboard>`, 
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+        ></cirras-dashboard>`,
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 
 export class DashboardContainer extends BaseContainer {

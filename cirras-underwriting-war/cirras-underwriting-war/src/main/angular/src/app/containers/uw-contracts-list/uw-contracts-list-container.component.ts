@@ -30,7 +30,8 @@ import { selectUserSetting } from "src/app/store/maintenance/maintenance.selecto
                 [errorState]="errorState$ | async"
                 [reportCollection]="reportCollection$ | async"
         ></cirras-uw-contracts-list>`,
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 export class UwContractsListContainer extends BaseContainer {
     collection$: Observable<any> = this.store.pipe(select(selectUwContractsList()));

@@ -1,4 +1,4 @@
-@import 'src/styles/variables';
+@use 'src/styles/variables' as var;
 
 .application-toolbar-header {
   display: flex;
@@ -6,7 +6,7 @@
   align-items: center;
   padding: 0 8px;
   box-sizing: border-box;
-  background-color: $colour-toolbar-background;
+  background-color: var.$colour-toolbar-background;
   z-index: 500;
 }
 
@@ -46,7 +46,7 @@ span.back-route-label {
   margin: 0px 0 !important;
   width: 100%;
   justify-content: space-between;
-  background-color: $colour-header-background;
+  background-color: var.$colour-header-background;
 
   button.nav-menu-button {
     background: transparent;
@@ -128,27 +128,27 @@ span.back-route-label {
 
 .user-summary {
   position: fixed;
-  color: $colour-white;
+  color: var.$colour-white;
   z-index: 3;
   top: var(--cirras-underwriting-gutter-space);
   right: var(--cirras-underwriting-gutter-space);
-  font-size: $font-size-small;
+  font-size: var.$font-size-small;
 }
 
 .user-summary-org {
   position: fixed;
-  color: $colour-white;
+  color: var.$colour-white;
   z-index: 3;
   top: 35px;
   right: var(--cirras-underwriting-gutter-space);
-  font-size: $font-size-small;
+  font-size: var.$font-size-small;
 }
 
 .title {
   position: relative;
   display: flex;
   justify-content: center;
-  color: $colour-white;
+  color: var.$colour-white;
   z-index: 3;
   top: 25px;
   font-size: 30px !important;

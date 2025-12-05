@@ -1,12 +1,12 @@
-@import '../variables';
+@use '../variables' as var;
 
 .mdc-text-field--filled,
 .mdc-text-field--outlined,
 .mat-mdc-select,
 .mat-mdc-option // for a dropdown list
 {
-    font-family: $font-family-main !important;
-    font-size: $font-size !important;
+    font-family: var.$font-family-main !important;
+    font-size: var.$font-size !important;
     background-color: transparent !important;
 }
 
@@ -15,8 +15,8 @@
 }
 
 .mat-internal-form-field>label {
-    font-family: $font-family-main;
-    font-weight: $font-weight-emphasis;
+    font-family: var.$font-family-main;
+    font-weight: var.$font-weight-emphasis;
 }
 
 .inventory-fill {

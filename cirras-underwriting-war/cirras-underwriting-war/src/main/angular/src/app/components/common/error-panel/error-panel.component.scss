@@ -1,7 +1,7 @@
-@import 'src/styles/variables';
+@use 'src/styles/variables' as var;
 
 mat-card.error-panel {
-  font-size: $font-size;
+  font-size: var.$font-size;
   padding: 0;
   display: block;
   overflow: hidden;
@@ -11,12 +11,12 @@ mat-card.error-panel {
   border-radius: 0;
 
   mat-card-header.warnings {
-    background-color: $colour-warnings;
+    background-color: var.$colour-warnings;
   }
  
   mat-card-header {
-    background-color: $colour-errors;
-    color: $colour-white;
+    background-color: var.$colour-errors;
+    color: var.$colour-white;
     padding: 0.16px var(--cirras-underwriting-gutter-space);
     text-transform: uppercase;
     cursor: pointer;
@@ -47,18 +47,18 @@ mat-card.error-panel {
     margin: 0;
 
     .info-message {
-      background-color: $colour-white;
-      color: $colour-green;
+      background-color: var.$colour-white;
+      color: var.$colour-green;
     }
 
     .warning-message {
-      background-color: $colour-white;
-      color: $colour-yellow;
+      background-color: var.$colour-white;
+      color: var.$colour-yellow;
     }
 
     .error-message {
-      background-color: $colour-white;
-      color: $colour-errors;
+      background-color: var.$colour-white;
+      color: var.$colour-errors;
 
       span{
         word-break: break-word;

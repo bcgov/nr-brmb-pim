@@ -4,7 +4,8 @@ import {UntypedFormControl} from "@angular/forms";
 import {Subscription} from "rxjs";
 
 @Directive({
-  selector: '[appWFTimeMask]'
+    selector: '[appWFTimeMask]',
+    standalone: false
 })
 export class TimeMaskDirective implements OnDestroy, OnChanges {
   mask = CONSTANTS.DATE_MASK;

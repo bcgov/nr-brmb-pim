@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
 		<artifactId>cirras-underwriting-api-parent</artifactId>
-		<version>3.8.0</version>
+		<version>3.9.0</version>
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -104,6 +104,31 @@
 			<artifactId>itext</artifactId>
 		</dependency>
 		
+		<dependency>
+		    <groupId>jakarta.xml.bind</groupId>
+		    <artifactId>jakarta.xml.bind-api</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
+		</dependency>
+
+		<dependency>
+		    <groupId>com.fasterxml.jackson.dataformat</groupId>
+		    <artifactId>jackson-dataformat-xml</artifactId>
+		</dependency>
+
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
+		</dependency>
+
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		</dependency>
+				
 	</dependencies>
 	<build>
 		<!-- Configure the resources to be filtered for property replacement -->
@@ -134,7 +159,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.11.0</version>
 				<configuration>
 					<source>${java-source-version}</source>
 					<target>${java-target-version}</target>

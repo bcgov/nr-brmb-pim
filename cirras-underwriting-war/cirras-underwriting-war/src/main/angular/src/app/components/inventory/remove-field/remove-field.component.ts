@@ -22,9 +22,10 @@ export interface RemoveFieldPopupData {
 
 
 @Component({
-  selector: 'cirras-remove-field',
-  templateUrl: './remove-field.component.html',
-  styleUrls: ['./remove-field.component.scss']
+    selector: 'cirras-remove-field',
+    templateUrl: './remove-field.component.html',
+    styleUrls: ['./remove-field.component.scss'],
+    standalone: false
 })
 export class RemoveFieldComponent implements OnInit {
 

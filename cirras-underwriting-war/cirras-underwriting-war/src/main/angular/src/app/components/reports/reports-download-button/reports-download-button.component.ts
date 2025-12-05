@@ -10,7 +10,8 @@ import { GetDopReport } from "src/app/store/dop/dop.actions";
 @Component({
     selector: 'reports-download-button',
     templateUrl: './reports-download-button.component.html',
-    styleUrls: ['./reports-download-button.component.scss']
+    styleUrls: ['./reports-download-button.component.scss'],
+    standalone: false
 })
 export class ReportsDownloadButtonComponent {
     @Input() reportChoice: string;

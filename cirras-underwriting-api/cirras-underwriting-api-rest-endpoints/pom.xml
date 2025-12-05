@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
 		<artifactId>cirras-underwriting-api-parent</artifactId>
-		<version>3.8.0</version>
+		<version>3.9.0</version>
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -78,11 +78,31 @@
 		</dependency>
 
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
+		    <groupId>io.swagger.core.v3</groupId>
+		    <artifactId>swagger-jaxrs2-jakarta</artifactId>
+		</dependency>
+
+		<dependency>
+		    <groupId>jakarta.ws.rs</groupId>
+		    <artifactId>jakarta.ws.rs-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+		    <groupId>jakarta.el</groupId>
+		    <artifactId>jakarta.el-api</artifactId>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.glassfish</groupId>
+		    <artifactId>jakarta.el</artifactId>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -105,32 +125,28 @@
 			<artifactId>jetty-server</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-annotations</artifactId>
+		    <groupId>org.eclipse.jetty.ee10</groupId>
+		    <artifactId>jetty-ee10-annotations</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
+		    <groupId>org.eclipse.jetty.ee10</groupId>
+		    <artifactId>jetty-ee10-webapp</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-jndi</artifactId>
+		    <groupId>org.eclipse.jetty.ee10</groupId>
+		    <artifactId>jetty-ee10-jndi</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-plus</artifactId>
+		    <groupId>org.eclipse.jetty.ee10</groupId>
+		    <artifactId>jetty-ee10-plus</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-jsp</artifactId>
-			<scope>test</scope>
-		</dependency>
-  
+
 		<dependency>
 			<groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
 			<artifactId>cirras-underwriting-api-rest-client</artifactId>
@@ -152,7 +168,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>5.3.2.RELEASE</version>
+            <version>6.2.1</version>
             <scope>compile</scope>
         </dependency>
 
@@ -198,7 +214,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.11.0</version>
 				<configuration>
 					<source>${java-source-version}</source>
 					<target>${java-target-version}</target>
@@ -209,8 +225,8 @@
 			</plugin>
             <plugin>
                 <groupId>io.swagger.core.v3</groupId>
-                <artifactId>swagger-maven-plugin</artifactId>
-                <version>2.1.1</version>
+                <artifactId>swagger-maven-plugin-jakarta</artifactId>
+                <version>2.2.20</version>
                 <configuration>
                     <outputFileName>swagger</outputFileName>
                     <outputPath>${project.build.directory}</outputPath>
@@ -266,7 +282,7 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!-- This disables generation of swagger.json when building in Eclipse. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -280,10 +296,10 @@
 											io.swagger.core.v3
 										</groupId>
 										<artifactId>
-											swagger-maven-plugin
+											swagger-maven-plugin-jakarta
 										</artifactId>
 										<versionRange>
-											[2.1.1,)
+											[2.2.20,)
 										</versionRange>
 										<goals>
 											<goal>resolve</goal>

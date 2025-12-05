@@ -6,7 +6,8 @@ import { INSURANCE_PLAN, REPORT_CHOICES, REPORT_SORT_BY, REPORT_TYPE_OPTIONS, SO
 @Component({
     selector: 'reports-download-dialog',
     templateUrl: './reports-download-dialog.component.html',
-    styleUrls: ['./reports-download-dialog.component.scss']
+    styleUrls: ['./reports-download-dialog.component.scss'],
+    standalone: false
 })
 export class ReportsDownloadDialogComponent implements OnInit {
     titleLabel = "Report Details";

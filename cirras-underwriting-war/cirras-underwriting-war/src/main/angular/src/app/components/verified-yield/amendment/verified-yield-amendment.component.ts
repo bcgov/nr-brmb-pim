@@ -12,11 +12,12 @@ import { roundUpDecimalAcres, roundUpDecimalYield } from '../../inventory/invent
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 
 @Component({
-  selector: 'verified-yield-amendment',
-  templateUrl: './verified-yield-amendment.component.html',
-  styleUrls: ['./verified-yield-amendment.component.scss', '../../../../styles/_inventory.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+    selector: 'verified-yield-amendment',
+    templateUrl: './verified-yield-amendment.component.html',
+    styleUrls: ['./verified-yield-amendment.component.scss', '../../../../styles/_inventory.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class VerifiedYieldAmendmentComponent implements OnChanges {
 

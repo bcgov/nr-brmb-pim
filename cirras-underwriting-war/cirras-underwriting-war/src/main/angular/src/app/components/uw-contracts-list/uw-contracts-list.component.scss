@@ -1,8 +1,8 @@
-@import '../../../styles/variables';
+@use '../../../styles/variables' as var;
 
 .mat-mdc-table {
     display: block;
-    font-family: $font-family-main;
+    font-family: var.$font-family-main;
   }
   
   .mat-mdc-row,

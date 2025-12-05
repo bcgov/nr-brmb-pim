@@ -27,8 +27,9 @@ import { DOP_COMPONENT_ID } from "src/app/store/dop/dop.state";
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"     
             [isUnsaved]="isUnsaved$ | async"       
-        ></forage-dop>`, 
-    providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
+        ></forage-dop>`,
+    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
+    standalone: false
 })
 
 export class ForageDopContainer extends BaseContainer implements OnInit {
