@@ -73,13 +73,13 @@
                     &nbsp;&nbsp; &nbsp;
                     <mat-form-field *ngIf="isNewFieldLocationVisible()" appearance="fill">
                         <input style="width: 100px;" matInput formControlName="fieldLocation" 
-                                maxlength="128" (keydown)="checkLength()">
+                                maxlength="128" (keyup)="checkLength()">
                         <mat-hint>Address</mat-hint>
                     </mat-form-field> 
                     &nbsp;&nbsp; &nbsp;
                     <mat-form-field *ngIf="isNewFieldLabelVisible()" appearance="fill">
                         <input style="width: 100px;" matInput formControlName="fieldLabel" 
-                                maxlength="128" (keydown)="checkLength()">
+                                maxlength="128" (keyup)="checkLength()">
                         <mat-hint>{{ getNewFieldNameHint() }} </mat-hint>
                     </mat-form-field> 
                 </div>
