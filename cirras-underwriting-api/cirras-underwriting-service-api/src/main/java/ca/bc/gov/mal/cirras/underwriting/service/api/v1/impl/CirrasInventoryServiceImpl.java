@@ -874,7 +874,13 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			throw new NotFoundException("Did not find the legal land: " + annualField.getLegalLandId());
 		}
 
-		// Updates other description in cuws database and CIRRAS if it's different.
+		// Updates pid and other description in cuws database and CIRRAS if it's different.
+		if (!notNull(dto.getPrimaryPropertyIdentifier(), "").equals(notNull(annualField.getPrimaryPropertyIdentifier(), ""))) {
+			
+			dto.setPrimaryPropertyIdentifier(annualField.getPrimaryPropertyIdentifier());
+			legalLandDao.update(dto, userId);
+		}
+		
 		if (!notNull(dto.getOtherDescription(), "").equals(notNull(annualField.getOtherLegalDescription(), ""))) {
 
 			dto.setOtherDescription(annualField.getOtherLegalDescription());
