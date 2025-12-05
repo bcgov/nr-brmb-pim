@@ -240,7 +240,6 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
             //Field identifier for message
             let fieldIdentifier = this.getFieldIdentifierForMessage(field);
 
-
             // Planted Year: 4-digit positive integers are allowed
             if ( plantedYear && (!isInt(plantedYear) || plantedYear < 1000 || plantedYear > 9999 ) ) {
               alert("Planted Year for " + fieldIdentifier + " should be a 4-digit positive integer.")
@@ -359,7 +358,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   private getFieldIdentifierForMessage(field: any) {
     //Default fieldId, if user entered a field address, show the address else the PID
     let fieldIdentifier = "field ID " + field.fieldId;
-    if (field.fieldId == -1) {
+    if (field.fieldId < 0) {
       if (field.fieldLocation && field.fieldLocation.length > 0) {
         fieldIdentifier = "Field Address " + field.fieldLocation;
       } else {
