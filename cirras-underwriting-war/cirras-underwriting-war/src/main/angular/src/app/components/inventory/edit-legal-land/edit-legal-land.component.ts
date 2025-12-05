@@ -94,7 +94,7 @@ export class EditLegalLandInInventoryComponent implements OnInit {
     }
   }
 
-  getSearchLegalLable() {
+  getSearchLegalLabel() {
     if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.GRAIN || this.dataReceived.insurancePlanId == INSURANCE_PLAN.FORAGE) {
       return  "Legal Location"
     }
@@ -131,7 +131,11 @@ export class EditLegalLandInInventoryComponent implements OnInit {
 
   onLegalLandValidate() {
 
-    const searchLegal = this.editLandForm.controls.searchLegal.value
+    let searchLegal = this.editLandForm.controls.searchLegal.value
+    
+    if (searchLegal) {
+      searchLegal = searchLegal.trim()
+    }
 
     // start the search when least 5 symbols are entered
     if (!searchLegal || searchLegal.length < 3) {
