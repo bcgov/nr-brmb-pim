@@ -225,26 +225,29 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   isFormValid() {
 
     for (let field of  this.inventoryContract.fields) {
-      for (let planting of field.plantings) {
+      //Don't check fields that are deleted
+      if (field.deletedByUserInd != true ) {
+        for (let planting of field.plantings) {
 
-        if (planting && planting.inventoryBerries && planting.inventoryBerries.cropCommodityId == this.selectedCommodity) {
-          let plantedYear = planting.inventoryBerries.plantedYear
-          let rowSpacing = planting.inventoryBerries.rowSpacing
-          
-          if (this.hasPartialData(field.fieldId, planting)) {
-            return false
-          }
+          if (planting && planting.inventoryBerries && planting.inventoryBerries.cropCommodityId == this.selectedCommodity) {
+            let plantedYear = planting.inventoryBerries.plantedYear
+            let rowSpacing = planting.inventoryBerries.rowSpacing
+            
+            if (this.hasPartialData(field.fieldId, planting)) {
+              return false
+            }
 
-          // Planted Year: 4-digit positive integers are allowed
-          if ( plantedYear && (!isInt(plantedYear) || plantedYear < 1000 || plantedYear > 9999 ) ) {
-            alert("Planted Year for Field Id " + field.fieldId + " should be a 4-digit positive integer.")
-            return false
-          }
+            // Planted Year: 4-digit positive integers are allowed
+            if ( plantedYear && (!isInt(plantedYear) || plantedYear < 1000 || plantedYear > 9999 ) ) {
+              alert("Planted Year for Field Id " + field.fieldId + " should be a 4-digit positive integer.")
+              return false
+            }
 
-          // Row Spacing: only 0 and positive integer values up to 4 digits are accepted.
-          if ( rowSpacing && (!isInt(rowSpacing) || rowSpacing < 0 || rowSpacing > 9999 )) {
-            alert("Row Spacing for Field Id " + field.fieldId + " should be a positive integer.")
-            return false
+            // Row Spacing: only 0 and positive integer values up to 4 digits are accepted.
+            if ( rowSpacing && (!isInt(rowSpacing) || rowSpacing < 0 || rowSpacing > 9999 )) {
+              alert("Row Spacing for Field Id " + field.fieldId + " should be a positive integer.")
+              return false
+            }
           }
         }
       }
