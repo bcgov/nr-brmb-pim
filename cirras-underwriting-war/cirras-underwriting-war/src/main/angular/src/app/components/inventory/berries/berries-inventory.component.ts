@@ -237,15 +237,19 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
               return false
             }
 
+            //Field identifier for message
+            let fieldIdentifier = this.getFieldIdentifierForMessage(field);
+
+
             // Planted Year: 4-digit positive integers are allowed
             if ( plantedYear && (!isInt(plantedYear) || plantedYear < 1000 || plantedYear > 9999 ) ) {
-              alert("Planted Year for Field Id " + field.fieldId + " should be a 4-digit positive integer.")
+              alert("Planted Year for " + fieldIdentifier + " should be a 4-digit positive integer.")
               return false
             }
 
             // Row Spacing: only 0 and positive integer values up to 4 digits are accepted.
             if ( rowSpacing && (!isInt(rowSpacing) || rowSpacing < 0 || rowSpacing > 9999 )) {
-              alert("Row Spacing for Field Id " + field.fieldId + " should be a positive integer.")
+              alert("Row Spacing for " + fieldIdentifier + " should be a positive integer.")
               return false
             }
           }
@@ -270,15 +274,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     let isHarvestedInd = planting.inventoryBerries.isHarvestedInd
 
     //Field identifier for message
-    //Default fieldId, if user entered a field address, show the address else the PID
-    let fieldIdentifier = "field ID " + field.fieldId
-    if(field.fieldId == -1){
-      if(field.fieldLocation && field.fieldLocation.length > 0){
-        fieldIdentifier = "Field Address " + field.fieldLocation
-      } else {
-        fieldIdentifier = "Legal Description " + field.primaryPropertyIdentifier
-      }
-    }
+    let fieldIdentifier = this.getFieldIdentifierForMessage(field);
 
     // All user entered fields are mandatory: if at least one field has a value or one of the checkboxes is checked then all should have a value
     let message = "Partial data entry is not accepted. Please fill in all values for " + fieldIdentifier + " or none of them."
@@ -358,6 +354,19 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     }
 
     return false
+  }
+
+  private getFieldIdentifierForMessage(field: any) {
+    //Default fieldId, if user entered a field address, show the address else the PID
+    let fieldIdentifier = "field ID " + field.fieldId;
+    if (field.fieldId == -1) {
+      if (field.fieldLocation && field.fieldLocation.length > 0) {
+        fieldIdentifier = "Field Address " + field.fieldLocation;
+      } else {
+        fieldIdentifier = "Legal Description " + field.primaryPropertyIdentifier;
+      }
+    }
+    return fieldIdentifier;
   }
 
   manageNewFields(){
