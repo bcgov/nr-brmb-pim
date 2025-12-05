@@ -233,7 +233,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
             let plantedYear = planting.inventoryBerries.plantedYear
             let rowSpacing = planting.inventoryBerries.rowSpacing
             
-            if (this.hasPartialData(field.fieldId, planting)) {
+            if (this.hasPartialData(field, planting)) {
               return false
             }
 
@@ -256,7 +256,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     return true // all checks have passed successfully
   }
 
-  hasPartialData(fieldId, planting) {
+  hasPartialData(field, planting) {
     let plantedYear = planting.inventoryBerries.plantedYear
     let plantedAcres = planting.inventoryBerries.plantedAcres
     let variety = planting.inventoryBerries.cropVarietyId
@@ -269,8 +269,19 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     let bogRenovatedDate = planting.inventoryBerries.bogRenovatedDate // optional
     let isHarvestedInd = planting.inventoryBerries.isHarvestedInd
 
+    //Field identifier for message
+    //Default fieldId, if user entered a field address, show the address else the PID
+    let fieldIdentifier = "field ID " + field.fieldId
+    if(field.fieldId == -1){
+      if(field.fieldLocation && field.fieldLocation.length > 0){
+        fieldIdentifier = "Field Address " + field.fieldLocation
+      } else {
+        fieldIdentifier = "Legal Description " + field.primaryPropertyIdentifier
+      }
+    }
+
     // All user entered fields are mandatory: if at least one field has a value or one of the checkboxes is checked then all should have a value
-    let message = "Partial data entry is not accepted. Please fill in all values for field ID " + fieldId + " or none of them."
+    let message = "Partial data entry is not accepted. Please fill in all values for " + fieldIdentifier + " or none of them."
     
     // Blueberry
     if (this.selectedCommodity == BERRY_COMMODITY.Blueberry) {
@@ -327,7 +338,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     }
 
     message = "Partial data entry is not accepted. Bog Id, Planted Year, Planted Acres and Variety are mandatory for Cranberries. " +
-      "Please fill in these values for field ID " + fieldId + " or clear all planting values for that field."
+      "Please fill in these values for " + fieldIdentifier + " or clear all planting values for that field."
     
     if (this.selectedCommodity == BERRY_COMMODITY.Cranberry) {
       if (plantedYear && (!bogId || !plantedAcres || !variety ) ) {
