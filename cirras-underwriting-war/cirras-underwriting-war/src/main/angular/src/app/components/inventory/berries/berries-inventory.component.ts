@@ -466,13 +466,13 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
   pltgsWithSelectedCommodityExist(pltgs) {
     // are there any existing plantings for the selected commodity 
-    if (!pltgs || pltgs.length == 0 || !pltgs.inventoryBerries) {
+    if (!pltgs || pltgs.length == 0) {
       return false
     } 
 
     let el = pltgs.find(x => x.inventoryBerries.cropCommodityId == this.selectedCommodity)
 
-    if (el && el.length > 0) {
+    if (el) {
       return true
     } else {
       return false
@@ -493,10 +493,9 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
   getPlantings(landData) {
     let pltgs: Array<InventoryField> = []
-
     if ( landData.plantings && landData.plantings.length > 0 ) {
       for ( let i=0; i < landData.plantings.length; i++) {
-        if ( landData.plantings[i].inventoryBerries && !landData.plantings[i].inventoryBerries.cropCommodityId) {
+        if ( landData.plantings[i].inventoryBerries && landData.plantings[i].inventoryBerries.cropCommodityId) {
           pltgs.push(landData.plantings[i]) // get the existing plantings with non-null commodities
         }
       }
@@ -531,7 +530,6 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
         minFieldId = fld.fieldId
       }
     });
-
     
     const fld = this.inventoryContract.fields.find (field => field.fieldId == landData.fieldId)
 
