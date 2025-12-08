@@ -23,6 +23,14 @@
                     <div><span style="color:orange">{{ msg.message }}</span></div>
                 </div>
             </div>
+            <div *ngIf="showRemoveCommodityFromField || showRemoveFieldFromPolicy || disableDeleteButton == false">
+                You have the following options:
+                <ul>
+                    <li *ngIf="showRemoveCommodityFromField">Remove Commodity: Removes the selected commodity from the field but keeps the inventory of the other commodities on the field</li>
+                    <li *ngIf="showRemoveFieldFromPolicy">Remove from policy: Removes the field from this policy but keeps the inventory and comments</li>
+                    <li *ngIf="disableDeleteButton == false">Delete: {{ deleteToolTip }}</li>
+                </ul>
+            </div>
         </div>
 
     </div>
@@ -32,7 +40,7 @@
         </button>
         &nbsp;
         <button 
-            *ngIf="dataReceived && dataReceived.showRemoveCommodity && dataReceived.showRemoveCommodity == true"
+            *ngIf="showRemoveCommodityFromField"
             mat-raised-button class="primary" 
             (click)="onRemoveCommodityFromField()" 
             matTooltip="Removes the selected commodity from the field but keeps the inventory of the other commodities on the field" >
@@ -40,7 +48,7 @@
         </button>
         &nbsp;
         <button 
-            *ngIf="validation && validation.isRemoveFromPolicyAllowed" 
+            *ngIf="showRemoveFieldFromPolicy" 
             mat-raised-button class="primary" 
             (click)="onRemoveFieldFromPolicy()" 
             matTooltip="Removes the field from this policy but keeps the inventory and comments">
@@ -48,7 +56,7 @@
         </button>
         &nbsp;
         <button 
-            [disabled]="!validation || (validation && validation.isDeleteFieldAllowed == false)"
+            [disabled]="disableDeleteButton"
             mat-raised-button class="primary" 
             (click)="onDeleteField()" 
             [matTooltip]=deleteToolTip >
