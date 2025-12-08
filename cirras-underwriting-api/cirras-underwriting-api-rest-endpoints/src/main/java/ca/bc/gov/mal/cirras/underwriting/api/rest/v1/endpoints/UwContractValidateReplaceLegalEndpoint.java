@@ -47,6 +47,7 @@ public interface UwContractValidateReplaceLegalEndpoint extends BaseEndpoints {
 		@Parameter(description = "The Policy ID of the uw contract.") @PathParam("policyId") String policyId,
 		@Parameter(description = "The Annual Field Detail ID of the field and year of the policy.") @QueryParam("annualFieldDetailId") String annualFieldDetailId,
 		@Parameter(description = "The Field Label of the Field the Legal Land is replaced.") @QueryParam("fieldLabel") String fieldLabel,
-		@Parameter(description = "The id of the new legal land.") @QueryParam("legalLandId") String legalLandId
+		@Parameter(description = "The id of the new legal land.") @QueryParam("legalLandId") String legalLandId,
+		@Parameter(description = "The id of the new legal land.") @QueryParam("fieldLocation") String fieldLocation
 	);
 }
