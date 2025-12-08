@@ -1,0 +1,79 @@
+    
+.row-group-left {
+    padding-top: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 20px;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    
+    .legal-land-container {
+        display: grid;
+        grid-auto-rows: minmax( 2em, auto );
+        padding-top: 10px;
+
+    // &.same-location-legal-land-info {
+    //   grid-template-columns: 1fr 1fr;
+    // }
+
+    // &.other-legal-land-info {
+    //   grid-template-columns: 1fr 2.5fr 2.5fr;
+    // }
+
+    // &.legal-land-info {
+    //   grid-template-columns: 1fr 2fr 2fr 8fr;
+    // }
+
+    // &.field-info {
+    //   grid-template-columns: 2fr 2fr 3fr;
+    // }
+
+    &.field-on-other-policy {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    &.error-messages {
+      grid-template-columns: 1fr 20fr;
+    }
+
+    div {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .center {
+        justify-content: center;
+    }
+
+    .header {
+        font-weight: bold;            
+    }
+
+    .border-right {
+        border-right: 2px solid #ccc;          
+    }
+
+    .border-top {
+        border-top: 2px solid #ccc;          
+    }
+
+    .border-left {
+        border-left: 2px solid #ccc;          
+    }
+
+    .justify-center {
+        justify-content: center;   
+    }
+
+    .border-bottom {
+        border-bottom: 2px solid #ccc;
+    }
+
+    .padding {
+        padding: 8px;
+    }
+  }
+}

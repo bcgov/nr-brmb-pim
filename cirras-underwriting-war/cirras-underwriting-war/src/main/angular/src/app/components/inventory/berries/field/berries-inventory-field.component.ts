@@ -12,6 +12,8 @@ import { BERRY_COMMODITY, INSURANCE_PLAN, LAND_UPDATE_TYPE } from 'src/app/utils
 import { setTableHeaderStyleForBerries } from '../field-list/berries-inventory-field-list.component';
 import { RemoveFieldComponent, RemoveFieldPopupData } from '../../remove-field/remove-field.component';
 import { MatDialog } from '@angular/material/dialog';
+import { AddLandPopupData } from '../../add-field/add-field.component';
+import { EditLegalLandInInventoryComponent } from '../../edit-legal-land/edit-legal-land.component';
 
 @Component({
   selector: 'berries-inventory-field',
@@ -335,4 +337,51 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
     });
   }
 
+  onEditLegalLand(field){
+    
+    const dataToSend : AddLandPopupData = {
+      fieldId: field.fieldId,
+      fieldLabel: field.fieldLabel,
+      cropYear: field.cropYear,
+      policyId: this.policyId,
+      insurancePlanId: INSURANCE_PLAN.BERRIES, 
+      annualFieldDetailId: field.annualFieldDetailId,
+      otherLegalDescription: field.otherLegalDescription,
+      primaryPropertyIdentifier: field.primaryPropertyIdentifier
+    }
+
+    let dialogRef = this.dialog.open(EditLegalLandInInventoryComponent, {
+        width: '1110px',
+        data: dataToSend,
+        autoFocus: false // if you remove this line of code then the first radio button would be selected
+      });
+      
+    dialogRef.afterClosed().subscribe(result => {
+    
+      if (result && result.event == 'RenameLand'){
+        
+        // Rename legal land 
+        if (result.data && result.data.fieldId && result.data.landData) {
+          this.renameLegalLand (result.data.landData) 
+        }
+      } else if (result && result.event == 'ReplaceLand'){
+        // TODO: Replace  legal land
+        // replaceLegalLand(flds, result.data.fieldId, result.data.landData, cdr)
+  
+      } else if (result && result.event == 'Cancel'){
+        // do nothing
+      }
+    });
+  }
+
+  renameLegalLand(landData) {
+
+    this.field.primaryPropertyIdentifier = landData.primaryPropertyIdentifier
+    this.field.landUpdateType = landData.landUpdateType
+
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
+
+    this.cdr.detectChanges()
+  }
+  
 }

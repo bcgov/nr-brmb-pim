@@ -1,12 +1,12 @@
 import { ChangeDetectorRef } from "@angular/core"
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl } from "@angular/forms"
-import { InventoryBerries, InventoryField, InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
+import { AnnualFieldRsrc, InventoryBerries, InventoryField, InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
 import { AnnualField, CropVarietyCommodityType } from "src/app/conversion/models"
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from "src/app/utils/constants"
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { MatDialog } from "@angular/material/dialog";
-import { EditLandComponent } from "./edit-land/edit-land.component";
-import { addUwCommentsObject, getUniqueKey } from 'src/app/utils';
+import { EditLegalLandInInventoryComponent } from "./edit-legal-land/edit-legal-land.component";
+import { addUwCommentsObject, getUniqueKey, makeTitleCase } from 'src/app/utils';
 import { RemoveFieldComponent, RemoveFieldPopupData } from "./remove-field/remove-field.component"
 import { AddFieldComponent, AddLandPopupData } from "./add-field/add-field.component"
 
@@ -373,7 +373,7 @@ export function openAddEditLandPopup(fb: UntypedFormBuilder, flds: UntypedFormAr
 
   } else {
 
-    dialogRef = dialog.open(EditLandComponent, {
+    dialogRef = dialog.open(EditLegalLandInInventoryComponent, {
       width: '1110px',
       data: dataToSend,
       autoFocus: false // if you remove this line of code then the first radio button would be selected
@@ -883,4 +883,22 @@ export function createNewAnnualFieldObject(fieldId, legalLandId, fieldLabel, oth
     isNewFieldUI: true,
     deletedByUserInd: false
   }
+
+}
+
+export function getThePolicyAndPlan(field: AnnualFieldRsrc){
+    let policyAndPlan = ""
+
+    if (field && field.policies) {
+
+      field.policies.forEach(policy => {
+
+        if ( policyAndPlan.length > 0 ) {
+          policyAndPlan = policyAndPlan + "\n" // add a line break
+        }
+        policyAndPlan = policyAndPlan + policy.policyNumber + " (" + makeTitleCase(policy.insurancePlanName) + ")"
+      })
+    } 
+
+    return policyAndPlan
 }

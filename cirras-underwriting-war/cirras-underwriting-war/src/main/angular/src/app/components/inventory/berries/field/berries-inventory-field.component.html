@@ -25,9 +25,11 @@
         <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Field address is writeable">edit</mat-icon>
     </div>
 
-    <div class="inventory-cell" style="width: 140px;"
+    <div class="inventory-cell" style="width: 140px; justify-content: end;"
         [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout' : 'inventory-border'">
-        {{ fieldFormGroup.value.primaryPropertyIdentifier }}
+        {{ field.primaryPropertyIdentifier }}
+        <mat-icon *ngIf="securityUtilService.canEditInventory() && field.isNewFieldUI == false" 
+            style="margin-left:10px;" matTooltip="Edit Legal Description" (click)="onEditLegalLand(field)">arrow_forward</mat-icon>
     </div>
 
     <div class="inventory-fill" style="width: 80px;"

@@ -225,26 +225,32 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   isFormValid() {
 
     for (let field of  this.inventoryContract.fields) {
-      for (let planting of field.plantings) {
+      //Don't check fields that are deleted
+      if (field.deletedByUserInd != true ) {
+        for (let planting of field.plantings) {
 
-        if (planting && planting.inventoryBerries && planting.inventoryBerries.cropCommodityId == this.selectedCommodity) {
-          let plantedYear = planting.inventoryBerries.plantedYear
-          let rowSpacing = planting.inventoryBerries.rowSpacing
-          
-          if (this.hasPartialData(field.fieldId, planting)) {
-            return false
-          }
+          if (planting && planting.inventoryBerries && planting.inventoryBerries.cropCommodityId == this.selectedCommodity) {
+            let plantedYear = planting.inventoryBerries.plantedYear
+            let rowSpacing = planting.inventoryBerries.rowSpacing
+            
+            if (this.hasPartialData(field, planting)) {
+              return false
+            }
 
-          // Planted Year: 4-digit positive integers are allowed
-          if ( plantedYear && (!isInt(plantedYear) || plantedYear < 1000 || plantedYear > 9999 ) ) {
-            alert("Planted Year for Field Id " + field.fieldId + " should be a 4-digit positive integer.")
-            return false
-          }
+            //Field identifier for message
+            let fieldIdentifier = this.getFieldIdentifierForMessage(field);
 
-          // Row Spacing: only 0 and positive integer values up to 4 digits are accepted.
-          if ( rowSpacing && (!isInt(rowSpacing) || rowSpacing < 0 || rowSpacing > 9999 )) {
-            alert("Row Spacing for Field Id " + field.fieldId + " should be a positive integer.")
-            return false
+            // Planted Year: 4-digit positive integers are allowed
+            if ( plantedYear && (!isInt(plantedYear) || plantedYear < 1000 || plantedYear > 9999 ) ) {
+              alert("Planted Year for " + fieldIdentifier + " should be a 4-digit positive integer.")
+              return false
+            }
+
+            // Row Spacing: only 0 and positive integer values up to 4 digits are accepted.
+            if ( rowSpacing && (!isInt(rowSpacing) || rowSpacing < 0 || rowSpacing > 9999 )) {
+              alert("Row Spacing for " + fieldIdentifier + " should be a positive integer.")
+              return false
+            }
           }
         }
       }
@@ -253,7 +259,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     return true // all checks have passed successfully
   }
 
-  hasPartialData(fieldId, planting) {
+  hasPartialData(field, planting) {
     let plantedYear = planting.inventoryBerries.plantedYear
     let plantedAcres = planting.inventoryBerries.plantedAcres
     let variety = planting.inventoryBerries.cropVarietyId
@@ -266,8 +272,11 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     let bogRenovatedDate = planting.inventoryBerries.bogRenovatedDate // optional
     let isHarvestedInd = planting.inventoryBerries.isHarvestedInd
 
+    //Field identifier for message
+    let fieldIdentifier = this.getFieldIdentifierForMessage(field);
+
     // All user entered fields are mandatory: if at least one field has a value or one of the checkboxes is checked then all should have a value
-    let message = "Partial data entry is not accepted. Please fill in all values for field ID " + fieldId + " or none of them."
+    let message = "Partial data entry is not accepted. Please fill in all values for " + fieldIdentifier + " or none of them."
     
     // Blueberry
     if (this.selectedCommodity == BERRY_COMMODITY.Blueberry) {
@@ -324,7 +333,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     }
 
     message = "Partial data entry is not accepted. Bog Id, Planted Year, Planted Acres and Variety are mandatory for Cranberries. " +
-      "Please fill in these values for field ID " + fieldId + " or clear all planting values for that field."
+      "Please fill in these values for " + fieldIdentifier + " or clear all planting values for that field."
     
     if (this.selectedCommodity == BERRY_COMMODITY.Cranberry) {
       if (plantedYear && (!bogId || !plantedAcres || !variety ) ) {
@@ -344,6 +353,19 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     }
 
     return false
+  }
+
+  private getFieldIdentifierForMessage(field: any) {
+    //Default fieldId, if user entered a field address, show the address else the PID
+    let fieldIdentifier = "field ID " + field.fieldId;
+    if (field.fieldId < 0) {
+      if (field.fieldLocation && field.fieldLocation.length > 0) {
+        fieldIdentifier = "Field Address " + field.fieldLocation;
+      } else {
+        fieldIdentifier = "Legal Description " + field.primaryPropertyIdentifier;
+      }
+    }
+    return fieldIdentifier;
   }
 
   manageNewFields(){
