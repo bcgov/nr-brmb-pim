@@ -194,7 +194,7 @@ export class EditLegalLandInInventoryComponent implements OnInit {
     const httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
 
     var self = this
-    return this.http.get(url,httpOptions).toPromise().then((data: LegalLandRsrc) => {
+    return lastValueFrom(this.http.get(url,httpOptions)).then((data: LegalLandRsrc) => {
       self.legalLandList = convertToLegalLandList(data)
 
       if (self.legalLandList && self.legalLandList.collection && self.legalLandList.collection.length > 0) {
@@ -225,11 +225,12 @@ export class EditLegalLandInInventoryComponent implements OnInit {
     url = url + "&annualFieldDetailId=" + this.dataReceived.annualFieldDetailId
     url = url + "&legalLandId=" + ((legalLandId > -1) ? legalLandId : "" )
     url = url + "&fieldLabel=" + encodeURI(this.dataReceived.fieldLabel)   
+    // TODO add fieldLocation
     
     const httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
 
     var self = this
-    return this.http.get(url,httpOptions).toPromise().then((data: ReplaceLegalValidationRsrc) => {
+    return lastValueFrom(this.http.get(url,httpOptions)).then((data: ReplaceLegalValidationRsrc) => {
 
       self.replaceLegalLandList = data
          

@@ -1,4 +1,5 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
+import { INSURANCE_PLAN } from 'src/app/utils/constants';
 
 @Component({
   selector: 'replace-legal-land',
@@ -18,7 +19,7 @@ export class ReplaceLegalLandComponent {
       
       this.showNewLegalLandMessage = false
 
-      if( // !this.replaceLegalLandList || 
+      if( // TODO ?? - there might be something other condition here
           ( this.replaceLegalLandList && 
             this.replaceLegalLandList.isWarningFieldOnOtherPolicy == false &&
             this.replaceLegalLandList.isWarningOtherFieldsOnLegal == false &&
@@ -26,6 +27,18 @@ export class ReplaceLegalLandComponent {
 
               this.showNewLegalLandMessage = true
             }      
+    }
+  }
+
+
+  get legalLandSearchBy(): string {
+    
+    if (this.insurancePlanId == INSURANCE_PLAN.GRAIN || this.insurancePlanId == INSURANCE_PLAN.FORAGE) {
+      return "Legal Location" 
+    }
+
+    if (this.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+      return "PID"
     }
   }
 

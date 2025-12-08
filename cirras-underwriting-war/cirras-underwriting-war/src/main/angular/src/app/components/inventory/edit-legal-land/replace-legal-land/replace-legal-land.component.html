@@ -1,7 +1,7 @@
         <!-- Warning #1 -->
         <p *ngIf="showNewLegalLandMessage" class="location-warning">
             <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
-            This legal location does not exist but the system will create it.
+            This {{ legalLandSearchBy }} does not exist but the system will create it.
         </p>
 
         <!-- Warning #2 -->
@@ -12,7 +12,7 @@
 
         <!-- Warning #3 -->
         <!-- <p *ngIf="legalLandList?.collection?.length > 0" class="location-warning">
-            Select an existing legal location or choose to replace the location with a new legal land.
+            Select an existing {{ legalLandSearchBy }} or choose to replace the {{ legalLandSearchBy }} with a new legal land.
         </p>
         <mat-radio-group formControlName="legalLandIdSelected">
             <div *ngIf="legalLandList?.collection?.length > 0" class="legal-land-container legal-land-info">
