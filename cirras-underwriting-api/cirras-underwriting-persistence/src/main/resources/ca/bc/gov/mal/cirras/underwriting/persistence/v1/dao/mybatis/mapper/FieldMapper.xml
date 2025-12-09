@@ -112,6 +112,7 @@
 	<select id="selectOtherFieldsForLegalLand" resultMap="FieldDtoMap">  
 		SELECT 	f.field_id, 
 				f.field_label, 
+				f.location,
 				last_policy.max_crop_year
 		FROM field f
 		JOIN legal_land_field_xref llx ON llx.field_id = f.field_id

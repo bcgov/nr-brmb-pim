@@ -129,6 +129,7 @@ public interface CirrasInventoryService {
 		Integer annualFieldDetailId,
 		String fieldLabel,
 		Integer legalLandId,
+		String fieldLocation,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
 	)

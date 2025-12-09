@@ -2979,7 +2979,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 	@Override
 	public ReplaceLegalValidation<? extends Message, ? extends LegalLand<? extends Field>, ? extends AnnualField> validateReplaceLegal(
-			Integer policyId, Integer annualFieldDetailId, String fieldLabel, Integer legalLandId,
+			Integer policyId, Integer annualFieldDetailId, String fieldLabel, Integer legalLandId, String fieldLocation, 
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 
@@ -2999,6 +2999,18 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			if (afdDto == null) {
 				throw new NotFoundException("Did not find the annual field detail: " + annualFieldDetailId);
 			}
+			
+			//Select correct wording for warnings
+			String legalLocationOrPid = "Legal Location"; //Default
+			if(InsurancePlans.BERRIES.getInsurancePlanId().equals(policyDto.getInsurancePlanId())){
+				legalLocationOrPid = "PID";
+			}
+			
+			//Show field location if it's not null
+			String fieldLocationOrfieldLabel = fieldLabel; //Default
+			if(fieldLocation != null) {
+				fieldLocationOrfieldLabel = fieldLocation;
+			}
 
 			// FieldOnOtherPolicy
 			Boolean isWarningFieldOnOtherPolicy = false;
@@ -3011,7 +3023,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 					if (!assocPolicyDto.getPolicyId().equals(policyId)) {
 						isWarningFieldOnOtherPolicy = true;
 						fieldOnOtherPolicyMsg = ReplaceLegalValidation.FIELD_ON_OTHER_POLICY_MSG
-								.replace("[fieldLabel]", fieldLabel)
+								.replace("[fieldLocationOrfieldLabel]", fieldLocationOrfieldLabel)
 								.replace("[fieldId]", afdDto.getFieldId().toString())
 								.replace("[policyNumber]", assocPolicyDto.getPolicyNumber());
 					}
@@ -3027,7 +3039,9 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			if (!otherLegalLandOfFieldList.isEmpty()) {
 				isWarningFieldHasOtherLegalLand = true;
 				fieldHasOtherLegalLandMsg = ReplaceLegalValidation.FIELD_HAS_OTHER_LEGAL_MSG
-						.replace("[fieldLabel]", fieldLabel).replace("[fieldId]", afdDto.getFieldId().toString());
+						.replace("[legalLocationOrPid]", legalLocationOrPid)
+						.replace("[fieldLocationOrfieldLabel]", fieldLocationOrfieldLabel)
+						.replace("[fieldId]", afdDto.getFieldId().toString());
 			}
 
 			// Other fields associated with legal land
@@ -3053,10 +3067,16 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 								fDto.getMaxCropYear());
 						fDto.setPolicies(policies);
 					}
+					
+					String otherDescriptionOrPid = llDto.getOtherDescription();
+					if(InsurancePlans.BERRIES.getInsurancePlanId().equals(policyDto.getInsurancePlanId())){
+						otherDescriptionOrPid = llDto.getPrimaryPropertyIdentifier();
+					}
 
 					isWarningOtherFieldsOnLegal = true;
 					otherFieldsOnLegalMsg = ReplaceLegalValidation.OTHER_FIELD_ON_LEGAL_MSG
-							.replace("[otherDescription]", llDto.getOtherDescription());
+							.replace("[legalLocationOrPid]", legalLocationOrPid)
+							.replace("[otherDescriptionOrPid]", otherDescriptionOrPid);
 				}
 			}
 
