@@ -52,8 +52,8 @@
                 <!-- Replace Legal Land -->
                 <replace-legal-land *ngIf="editLandForm.controls.choiceSelected.value == 'replace'"
                     [replaceLegalLandList]="replaceLegalLandList"
-                    [insurancePlanId]="dataReceived.insurancePlanId"></replace-legal-land>
-
+                    [insurancePlanId]="dataReceived.insurancePlanId"
+                    [legalLandList]="legalLandList"></replace-legal-land>
             </form>
         </div>
     </div>

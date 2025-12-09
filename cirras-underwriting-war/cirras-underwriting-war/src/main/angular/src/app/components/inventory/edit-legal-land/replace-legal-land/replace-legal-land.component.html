@@ -11,42 +11,45 @@
         </p>
 
         <!-- Warning #3 -->
-        <!-- <p *ngIf="legalLandList?.collection?.length > 0" class="location-warning">
+        <p *ngIf="legalLandList?.collection?.length > 0" class="location-warning">
             Select an existing {{ legalLandSearchBy }} or choose to replace the {{ legalLandSearchBy }} with a new legal land.
         </p>
-        <mat-radio-group formControlName="legalLandIdSelected">
-            <div *ngIf="legalLandList?.collection?.length > 0" class="legal-land-container legal-land-info">
-                <div class="border-left header border-top border-bottom padding"></div>
-                <div class="border-left header border-top border-bottom padding">Legal Location</div>
-                <div class="border-left header border-top border-bottom padding">Primary Identifier</div>
-                <div class="border-left header border-top border-bottom border-right padding">Legal
-                    Description
-                </div>
-                <ng-container *ngFor="let element of legalLandList.collection">
+        <form [formGroup]="replaceLegalLandForm">
+            <mat-radio-group formControlName="legalLandIdSelected">
+                <div *ngIf="legalLandList?.collection?.length > 0" class="legal-land-container legal-land-info">
+                    <div class="border-left header border-top border-bottom padding"></div>
+                    <div class="border-left header border-top border-bottom padding">Legal Location</div>
+                    <div class="border-left header border-top border-bottom padding">Primary Identifier</div>
+                    <div class="border-left header border-top border-bottom border-right padding">Legal
+                        Description
+                    </div>
+                    <ng-container *ngFor="let element of legalLandList.collection">
+                        <div class="border-left border-bottom justify-center padding">
+                            <mat-radio-button [value]="element.legalLandId"
+                                (click)="validateReplaceLegalLand(element.legalLandId, element.otherDescription)"></mat-radio-button>
+                        </div>
+                        <div class="border-left border-bottom padding">
+                            {{ element.otherDescription }}
+                        </div>
+                        <div class="border-left border-bottom padding">
+                            {{ element.primaryPropertyIdentifier }}
+                        </div>
+                        <div class="border-left border-bottom border-right padding">
+                            {{ element.legalDescription }}
+                        </div>
+                    </ng-container>
                     <div class="border-left border-bottom justify-center padding">
-                        <mat-radio-button [value]="element.legalLandId"
-                            (click)="validateReplaceLegalLand(element.legalLandId, element.otherDescription)"></mat-radio-button>
+                        <mat-radio-button [value]="-1"
+                            (click)="validateReplaceLegalLand(-1, '')"></mat-radio-button>
                     </div>
-                    <div class="border-left border-bottom padding">
-                        {{ element.otherDescription }}
+                    <div class="border-left border-bottom border-right padding"
+                        style="grid-column-start:2; grid-column-end: 5;">
+                        Replace with new Legal Land
                     </div>
-                    <div class="border-left border-bottom padding">
-                        {{ element.primaryPropertyIdentifier }}
-                    </div>
-                    <div class="border-left border-bottom border-right padding">
-                        {{ element.legalDescription }}
-                    </div>
-                </ng-container>
-                <div class="border-left border-bottom justify-center padding">
-                    <mat-radio-button [value]="-1"
-                        (click)="validateReplaceLegalLand(-1, '')"></mat-radio-button>
                 </div>
-                <div class="border-left border-bottom border-right padding"
-                    style="grid-column-start:2; grid-column-end: 5;">
-                    Replace with new Legal Land
-                </div>
-            </div>
-        </mat-radio-group> -->
+            </mat-radio-group>
+        </form>
+        
 
         <!-- Warning #4 -->
         <!-- <p *ngIf="replaceLegalLandList?.isWarningOtherFieldsOnLegal" class="location-warning">

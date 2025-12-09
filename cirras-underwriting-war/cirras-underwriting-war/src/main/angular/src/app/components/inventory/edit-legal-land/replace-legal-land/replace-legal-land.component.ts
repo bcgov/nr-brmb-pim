@@ -1,4 +1,5 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 
 @Component({
@@ -7,11 +8,22 @@ import { INSURANCE_PLAN } from 'src/app/utils/constants';
   styleUrl: './replace-legal-land.component.scss',
   standalone: false
 })
-export class ReplaceLegalLandComponent {
+export class ReplaceLegalLandComponent implements OnInit, OnChanges {
   @Input() replaceLegalLandList
   @Input() insurancePlanId
+  @Input() legalLandList
 
   showNewLegalLandMessage = false 
+
+  replaceLegalLandForm: FormGroup;
+
+  ngOnInit(): void {
+
+    // add fields to the form
+    this.replaceLegalLandForm = new FormGroup({
+      legalLandIdSelected: new FormControl()
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges) {
 
@@ -30,7 +42,6 @@ export class ReplaceLegalLandComponent {
     }
   }
 
-
   get legalLandSearchBy(): string {
     
     if (this.insurancePlanId == INSURANCE_PLAN.GRAIN || this.insurancePlanId == INSURANCE_PLAN.FORAGE) {
@@ -41,5 +52,6 @@ export class ReplaceLegalLandComponent {
       return "PID"
     }
   }
+
 
 }
