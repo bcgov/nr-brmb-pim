@@ -5,11 +5,15 @@
     </p>
     <div *ngIf="fieldList.length > 0"
         class="legal-land-container field-on-other-policy">
-        <div class="border-left header border-top border-bottom padding">Field Name</div>
+        <div *ngIf="isFieldAddressVisible()" class="border-left header border-top border-bottom padding">Field Address</div>
+        <div *ngIf="!isFieldAddressVisible()" class="border-left header border-top border-bottom padding">Field Name</div>
         <div class="border-left header border-top border-bottom padding">Field ID</div>
         <div class="border-left header border-top border-bottom border-right padding">Policy (Plan) </div>
         <ng-container *ngFor="let field of fieldList">
-            <div class="border-left border-bottom padding">
+            <div *ngIf="isFieldAddressVisible()" class="border-left border-bottom padding">
+                {{ field.fieldLocation }}
+            </div>
+            <div *ngIf="!isFieldAddressVisible()" class="border-left border-bottom padding">
                 {{ field.fieldLabel }}
             </div>
             <div class="border-left border-bottom padding">

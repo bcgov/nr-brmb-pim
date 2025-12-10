@@ -10,7 +10,6 @@ import { setHttpHeaders } from 'src/app/utils';
 import { INSURANCE_PLAN, LAND_UPDATE_TYPE } from 'src/app/utils/constants';
 import { DIALOG_TYPE } from '../../dialogs/base-dialog/base-dialog.component';
 import { AddLandPopupData } from '../add-field/add-field.component';
-import { getThePolicyAndPlan } from '../inventory-common';
 import { lastValueFrom } from 'rxjs';
 
 @Component({
@@ -20,30 +19,25 @@ import { lastValueFrom } from 'rxjs';
     standalone: false
 })
 
-
 export class EditLegalLandInInventoryComponent implements OnInit {
   titleLabel = "Edit Legal Location";
   dialogType = DIALOG_TYPE.INFO;
 
   dataReceived : AddLandPopupData;
+  dataToSend : AddLandPopupData
 
   editLandForm: UntypedFormGroup;
   
   choiceExplanation = "";
 
   renameLegalLandList : RenameLegalValidationRsrc;
-  fieldList: AnnualFieldListRsrc;
 
   replaceLegalLandList : ReplaceLegalValidationRsrc;
   legalLandList : LegalLandList = {};
 
-  otherDescription = ""
-  primaryPropertyIdentifier = ""
-
   showSearchLegalMsg = false;
-  showNewLegalLandMessage = false; // TODO
+  showNewLegalLandMessage = false; 
   showProceedButton = false;
-
 
   constructor(
     public dialogRef: MatDialogRef<EditLegalLandInInventoryComponent>,
@@ -56,10 +50,9 @@ export class EditLegalLandInInventoryComponent implements OnInit {
       if (data) {
         //capture the data that comes from the main page
         this.dataReceived = data;
+        this.dataToSend = this.dataReceived 
       } 
-
     }
-
 
   ngOnInit(): void {
 
@@ -81,7 +74,6 @@ export class EditLegalLandInInventoryComponent implements OnInit {
     })
 
     this.onChoiceClick('rename')
-
   }
 
   getEditLegalLandTitle() {
@@ -189,7 +181,13 @@ export class EditLegalLandInInventoryComponent implements OnInit {
   legalLandSearch(searchLegal) {
 
     let url = this.appConfig.getConfig().rest["cirras_underwriting"]
-    url = url +"/legallands?legalLocation=" + encodeURI(searchLegal) + "&isWildCardSearch=true&searchByLegalLocOrLegalDesc=true" 
+
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.GRAIN || this.dataReceived.insurancePlanId == INSURANCE_PLAN.FORAGE) {
+      url = url +"/legallands?legalLocation=" + encodeURI(searchLegal) + "&isWildCardSearch=true&searchByLegalLocOrLegalDesc=true" 
+    }
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+      url = url +"/legallands?primaryPropertyIdentifier=" + encodeURI(searchLegal) + "&isWildCardSearch=false&searchByLegalLocOrLegalDesc=false" 
+    }
 
     const httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
 
@@ -203,20 +201,14 @@ export class EditLegalLandInInventoryComponent implements OnInit {
       } else {
         // give the option to add new legal land
         this.showNewLegalLandMessage = true
-        this.validateReplaceLegalLand(-1, searchLegal) // no legal land was found
+        this.validateReplaceLegalLand(-1) // no legal land was found
         // this.showProceedButton = true
       }
 
      })
   }
 
-  validateReplaceLegalLand(legalLandId, otherDescription) {
-
-    if ( legalLandId == -1 && otherDescription == "" ) {
-      this.otherDescription = this.editLandForm.controls.searchLegal.value
-    } else {
-      this.otherDescription = otherDescription
-    }       
+  validateReplaceLegalLand(legalLandId) {      
 
     // /uwcontracts/{policyId}/validateReplaceLegal
     let url = this.appConfig.getConfig().rest["cirras_underwriting"]
@@ -225,7 +217,7 @@ export class EditLegalLandInInventoryComponent implements OnInit {
     url = url + "&annualFieldDetailId=" + this.dataReceived.annualFieldDetailId
     url = url + "&legalLandId=" + ((legalLandId > -1) ? legalLandId : "" )
     url = url + "&fieldLabel=" + encodeURI(this.dataReceived.fieldLabel)   
-    // TODO add fieldLocation
+    url = url + "&fieldLocation=" + encodeURI(this.dataReceived.fieldLocation)  
     
     const httpOptions = setHttpHeaders(this.tokenService.getOauthToken())
 
@@ -240,25 +232,20 @@ export class EditLegalLandInInventoryComponent implements OnInit {
 
   onProceed(){
 
-    let dataToSend : AddLandPopupData = this.dataReceived  
-
     const choiceSelected = this.editLandForm.controls.choiceSelected.value
 
     let eventType = ""
     let landUpdateType = ""
-
-    let legalLandId = (this.editLandForm.controls.legalLandIdSelected.value ? this.editLandForm.controls.legalLandIdSelected.value : null)
 
     if ( choiceSelected == 'rename') {
       eventType = 'RenameLand'
       landUpdateType = LAND_UPDATE_TYPE.RENAME_LEGAL_LOCATION 
     }
 
-
     if ( choiceSelected == 'replace') {
       eventType = 'ReplaceLand'
 
-      if (legalLandId && legalLandId > -1) {
+      if (this.dataToSend.landData.legalLandId && this.dataToSend.landData.legalLandId > -1) {
         landUpdateType = LAND_UPDATE_TYPE.REPLACE_LEGAL_LOCATION_EXISTING
       } else {
         landUpdateType = LAND_UPDATE_TYPE.REPLACE_LEGAL_LOCATION_NEW
@@ -270,36 +257,31 @@ export class EditLegalLandInInventoryComponent implements OnInit {
       return
     }
 
-    // let otherLegalDescription = ""
-
     if ( choiceSelected == 'rename') {
+      this.dataToSend.landData.legalLandId = null
+
       if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.GRAIN || this.dataReceived.insurancePlanId == INSURANCE_PLAN.FORAGE) {
-        this.otherDescription = this.editLandForm.controls.searchLegal.value
+        this.dataToSend.landData.otherLegalDescription = (this.editLandForm.controls.searchLegal.value).trim()
       }
 
       if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES) {
-        this.primaryPropertyIdentifier = this.editLandForm.controls.searchLegal.value
+        this.dataToSend.landData.primaryPropertyIdentifier = (this.editLandForm.controls.searchLegal.value).trim()
       }
     } 
 
-    // if ( choiceSelected == 'replace') {
-    //   this.otherDescription should already be set in validateReplaceLegalLand
-    // }
-
-    dataToSend.landData = {
-      legalLandId : ((legalLandId && legalLandId > -1) ? legalLandId : null ),
-      otherLegalDescription : this.otherDescription,
-      primaryPropertyIdentifier: this.primaryPropertyIdentifier,
-      fieldId : this.dataReceived.fieldId,
-      fieldLabel : null,
-      transferFromGrowerContractYearId : null,
-      landUpdateType : landUpdateType,
-      plantings: [],
-      uwComments: []
+    if ( choiceSelected == 'replace') {
+      // acount for the case when replacing with new legal land
+      if (this.dataToSend.landData.legalLandId == null || this.dataToSend.landData.legalLandId == -1) {
+        this.setNewLegalLand()
+      } 
+      // if replacing with existing legal land then the params legalLandId, otherLegalDescription, and primaryPropertyIdentifier should already be set in onLegalLandReceived
     }
 
+    this.dataToSend.landData.fieldId = this.dataReceived.fieldId
+    this.dataToSend.landData.landUpdateType = landUpdateType
+
     // send the results to the main page
-    this.dialogRef.close({event: eventType, data: dataToSend});
+    this.dialogRef.close({event: eventType, data: this.dataToSend});
 
   }
 
@@ -309,17 +291,44 @@ export class EditLegalLandInInventoryComponent implements OnInit {
     this.showProceedButton = false;
 
     this.renameLegalLandList = null;
-    this.fieldList = <AnnualFieldListRsrc>{};
+    //this.fieldList = <AnnualFieldListRsrc>{};
     this.replaceLegalLandList = null;
     this.legalLandList = {};
-  
-    this.otherDescription = ""
 
-    //this.editLandForm.controls.searchLegal.setValue("")
+    this.dataToSend.landData.legalLandId = null
+    this.dataToSend.landData.primaryPropertyIdentifier = null
+    this.dataToSend.landData.otherLegalDescription = null
   }
 
-  getPolicyAndPlan(field: AnnualFieldRsrc){
-    return getThePolicyAndPlan(field)
+  onLegalLandReceived(legalLand) { 
+    this.dataToSend.landData.legalLandId = legalLand.legalLandId
+
+    if (legalLand.legalLandId > -1 ) {
+
+      this.dataToSend.landData.primaryPropertyIdentifier = legalLand.primaryPropertyIdentifier
+      this.dataToSend.landData.otherLegalDescription = legalLand.otherLegalDescription
+      this.validateReplaceLegalLand(legalLand.legalLandId) 
+      
+    } else { 
+      // new legal land - allow Proceed
+      this.showProceedButton = true;
+    }
   }
+
+  setNewLegalLand() {
+    this.dataToSend.landData.legalLandId = -1
+
+    let searchLegal = (this.editLandForm.controls.searchLegal.value).trim()
+    
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.GRAIN || this.dataReceived.insurancePlanId == INSURANCE_PLAN.FORAGE) {
+        this.dataToSend.landData.otherLegalDescription = searchLegal
+    }
+
+    if (this.dataReceived.insurancePlanId == INSURANCE_PLAN.BERRIES ) {
+        this.dataToSend.landData.primaryPropertyIdentifier = searchLegal
+    }
+
+  }
+
 
 }

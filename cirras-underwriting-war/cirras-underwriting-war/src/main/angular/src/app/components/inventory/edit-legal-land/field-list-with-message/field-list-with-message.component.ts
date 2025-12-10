@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { getThePolicyAndPlan } from '../../inventory-common';
 import { AnnualFieldRsrc } from '@cirras/cirras-underwriting-api';
+import { INSURANCE_PLAN } from 'src/app/utils/constants';
 
 @Component({
   selector: 'field-list-with-message',
@@ -15,5 +16,13 @@ export class FieldListWithMessageComponent {
 
   getPolicyAndPlan(field: AnnualFieldRsrc) {
     return getThePolicyAndPlan(field)
+  }
+
+  isFieldAddressVisible() {
+    if (this.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+      return true
+    } else {
+      return false
+    }
   }
 }

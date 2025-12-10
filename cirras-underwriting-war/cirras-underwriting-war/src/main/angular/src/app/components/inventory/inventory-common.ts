@@ -340,11 +340,25 @@ export function AddNewFormField(fb: UntypedFormBuilder, flds: UntypedFormArray, 
       const dataToSend : AddLandPopupData = {
           fieldId: minFieldId - 1,
           fieldLabel: "",
+          fieldLocation: "",
           cropYear: cropYear,
           policyId: policyId,
           insurancePlanId: insurancePlanId,
           annualFieldDetailId: null,
-          otherLegalDescription: ""
+          otherLegalDescription: "",
+          primaryPropertyIdentifier: null,
+          landData: {
+            fieldId: null,
+            legalLandId: null,
+            fieldLabel: null,
+            fieldLocation: null,
+            primaryPropertyIdentifier: null,
+            otherLegalDescription: null,
+            landUpdateType: null,
+            transferFromGrowerContractYearId : null,
+            plantings: [],
+            uwComments: []
+          }
         }
   
       openAddEditLandPopup(fb, flds, dialog, dataToSend, maxDisplayOrder + 1, true, cdr)
@@ -544,6 +558,7 @@ export function replaceLegalLand(flds: UntypedFormArray, fieldId, landData, cdr:
 
   for (let i = 0 ; i < flds.length; i++) {
     if (flds['controls'][i].get("fieldId").value  ==  fieldId) {
+      flds.controls[i].get('primaryPropertyIdentifier').setValue(landData.primaryPropertyIdentifier);
       flds.controls[i].get('otherLegalDescription').setValue(landData.otherLegalDescription);
       flds.controls[i].get('legalLandId').setValue(landData.legalLandId);
       flds.controls[i].get('landUpdateType').setValue(landData.landUpdateType);

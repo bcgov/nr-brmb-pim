@@ -577,11 +577,13 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       const dataToSend : AddLandPopupData = {
         fieldId: null,  
         fieldLabel: null,
+        fieldLocation: null,
         cropYear: this.inventoryContract.cropYear,
         policyId: this.policyId,
         insurancePlanId: this.inventoryContract.insurancePlanId,
         annualFieldDetailId: null,
         otherLegalDescription : null,
+        primaryPropertyIdentifier: null,
         landData: {
           fieldId: null,
           legalLandId: null,

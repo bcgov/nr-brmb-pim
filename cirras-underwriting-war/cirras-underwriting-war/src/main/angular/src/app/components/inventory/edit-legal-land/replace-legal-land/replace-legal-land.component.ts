@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 
@@ -8,12 +8,12 @@ import { INSURANCE_PLAN } from 'src/app/utils/constants';
   styleUrl: './replace-legal-land.component.scss',
   standalone: false
 })
-export class ReplaceLegalLandComponent implements OnInit, OnChanges {
+export class ReplaceLegalLandComponent implements OnInit {
   @Input() replaceLegalLandList
   @Input() insurancePlanId
   @Input() legalLandList
-
-  showNewLegalLandMessage = false 
+  @Input() showNewLegalLandMessage
+  @Output() legalLandChanged = new EventEmitter<{ legalLandId: number; primaryPropertyIdentifier: string; otherLegalDescription: string }>();
 
   replaceLegalLandForm: FormGroup;
 
@@ -23,23 +23,6 @@ export class ReplaceLegalLandComponent implements OnInit, OnChanges {
     this.replaceLegalLandForm = new FormGroup({
       legalLandIdSelected: new FormControl()
     });
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-
-    if (changes.replaceLegalLandList) {
-      
-      this.showNewLegalLandMessage = false
-
-      if( // TODO ?? - there might be something other condition here
-          ( this.replaceLegalLandList && 
-            this.replaceLegalLandList.isWarningFieldOnOtherPolicy == false &&
-            this.replaceLegalLandList.isWarningOtherFieldsOnLegal == false &&
-            this.replaceLegalLandList.isWarningFieldHasOtherLegalLand == false )) {
-
-              this.showNewLegalLandMessage = true
-            }      
-    }
   }
 
   get legalLandSearchBy(): string {
@@ -53,5 +36,12 @@ export class ReplaceLegalLandComponent implements OnInit, OnChanges {
     }
   }
 
+  sendLegalLandId(legalLandId: number, primaryPropertyIdentifier: string, otherLegalDescription: string) {
+    this.legalLandChanged.emit({ 
+      legalLandId: legalLandId, 
+      primaryPropertyIdentifier: primaryPropertyIdentifier, 
+      otherLegalDescription: otherLegalDescription 
+    });
+  }
 
 }

@@ -541,7 +541,8 @@ ngOnChanges2(changes: SimpleChanges) {
         updField.landUpdateType = formField.value.landUpdateType
         updField.legalLandId = formField.value.legalLandId
 
-        updField.otherLegalDescription = formField.value.otherLegalDescription        
+        updField.otherLegalDescription = formField.value.otherLegalDescription   
+        updField.primaryPropertyIdentifier = formField.value.primaryPropertyIdentifier // to account for replace / rename legal land
         updField.uwComments = formField.value.uwComments 
 
         for (let i = 0; i < formField.value.plantings.length; i++) {
@@ -1045,11 +1046,25 @@ onDeleteField(field) {
       const dataToSend : AddLandPopupData = {
         fieldId: field.value.fieldId,
         fieldLabel: field.value.fieldLabel,
+        fieldLocation: null,
         cropYear: this.cropYear,
         policyId: this.policyId,
         insurancePlanId: this.insurancePlanId,
         annualFieldDetailId: field.value.annualFieldDetailId,
-        otherLegalDescription: field.value.otherLegalDescription
+        otherLegalDescription: field.value.otherLegalDescription,
+        primaryPropertyIdentifier: null,
+        landData: {
+          fieldId: null,
+          legalLandId: null,
+          fieldLabel: null,
+          fieldLocation: null,
+          primaryPropertyIdentifier: null,
+          otherLegalDescription: null,
+          landUpdateType: null,
+          transferFromGrowerContractYearId : null,
+          plantings: [],
+          uwComments: []
+        }
       }
 
       openAddEditLandPopup(this.fb, flds, this.dialog, dataToSend, field.value.maxDisplayOrder, false, this.cdr)

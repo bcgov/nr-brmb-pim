@@ -14,28 +14,9 @@
         grid-auto-rows: minmax( 2em, auto );
         padding-top: 10px;
 
-    // &.same-location-legal-land-info {
-    //   grid-template-columns: 1fr 1fr;
-    // }
-
-    // &.other-legal-land-info {
-    //   grid-template-columns: 1fr 2.5fr 2.5fr;
-    // }
-
-    // &.legal-land-info {
-    //   grid-template-columns: 1fr 2fr 2fr 8fr;
-    // }
-
-    // &.field-info {
-    //   grid-template-columns: 2fr 2fr 3fr;
-    // }
 
     &.field-on-other-policy {
       grid-template-columns: 1fr 1fr 1fr;
-    }
-
-    &.error-messages {
-      grid-template-columns: 1fr 20fr;
     }
 
     div {
