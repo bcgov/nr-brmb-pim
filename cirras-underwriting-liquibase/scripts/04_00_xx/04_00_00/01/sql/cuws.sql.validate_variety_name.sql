@@ -3,6 +3,7 @@
 select *
 from berries_2026_staging bs
 left join crop_variety cv on upper(trim(from cv.variety_name)) = upper(trim(from bs.variety_name))
+                         and cv.crop_commodity_id in (select cc2.crop_commodity_id from crop_commodity cc2 where cc2.insurance_plan_id = 3)
 left join crop_commodity cc on upper(cc.commodity_name) = upper(trim(from bs.crop_name))
                            and cc.crop_commodity_id = cv.crop_commodity_id
 where (trim(from bs.variety_name) = ''
