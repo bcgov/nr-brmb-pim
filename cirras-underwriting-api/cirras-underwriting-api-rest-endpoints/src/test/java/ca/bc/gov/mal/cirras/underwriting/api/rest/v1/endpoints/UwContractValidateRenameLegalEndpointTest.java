@@ -125,12 +125,13 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 
 	}
 	
-	private void createField( Integer fieldId, String fieldLabel, Integer activeFromCropYear, Integer activeToCropYear) throws CirrasUnderwritingServiceException, ValidationException {
+	private void createField( Integer fieldId, String fieldLabel, String fieldLocation, Integer activeFromCropYear, Integer activeToCropYear) throws CirrasUnderwritingServiceException, ValidationException {
 
 		FieldRsrc resource = new FieldRsrc();
 		
 		resource.setFieldId(fieldId);
 		resource.setFieldLabel(fieldLabel);
+		resource.setFieldLocation(fieldLocation);
 		resource.setActiveFromCropYear(activeFromCropYear);
 		resource.setActiveToCropYear(activeToCropYear);
 		resource.setTransactionType(LandManagementEventTypes.FieldCreated);
@@ -195,7 +196,7 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 
 		String primaryPropertyIdentifier = "GF0099999";
 		createLegalLand("TEST LEGAL LOC 123", null, primaryPropertyIdentifier, null, legalLandId);
-		createField( fieldId, "Field Label", 2011, 2022);
+		createField( fieldId, "Field Label", null, 2011, 2022);
 		createAnnualFieldDetail(annualFieldDetailId, legalLandId, fieldId, 2022);
 		createContractedFieldDetail(contractedFieldDetailId, annualFieldDetailId, gcyId, 1);
 		
@@ -331,12 +332,12 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 
 		// Test 3: Other fields on same policy
 		// Field on same policy
-		createField( fieldId2, "Field Label 2", 2011, 2022);
+		createField( fieldId2, "Field Label 2", null, 2011, 2022);
 		createAnnualFieldDetail(annualFieldDetailId2, legalLandId, fieldId2, 2022);
 		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId2, gcyId, 1);
 
 		// Field on same contract, older policy.
-		createField( fieldId3, "Field Label 3", 2011, 2022);
+		createField( fieldId3, "Field Label 3", null, 2011, 2022);
 		createAnnualFieldDetail(annualFieldDetailId3, legalLandId, fieldId3, 2022);
 		createContractedFieldDetail(contractedFieldDetailId3, annualFieldDetailId3, gcyId2, 1);
 		
@@ -451,7 +452,7 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 		String primaryPropertyIdentifier2 = "000-999-123";
 		String primaryPropertyIdentifierValidate = "515-999-991";
 		createLegalLand(null, null, primaryPropertyIdentifier, null, legalLandId);
-		createField( fieldId, "Field Label", 2011, 2022);
+		createField( fieldId, "Field Label", "Location", 2011, 2022);
 		createAnnualFieldDetail(annualFieldDetailId, legalLandId, fieldId, 2022);
 		createContractedFieldDetail(contractedFieldDetailId, annualFieldDetailId, gcyId, 1);
 
@@ -573,12 +574,12 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 
 		// Test 3: Other fields on same policy
 		// Field on same policy
-		createField( fieldId2, "Field Label 2", 2011, 2022);
+		createField( fieldId2, "Field Label 2", "Location 2", 2011, 2022);
 		createAnnualFieldDetail(annualFieldDetailId2, legalLandId, fieldId2, 2022);
 		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId2, gcyId, 1);
 
 		// Field on same contract, older policy.
-		createField( fieldId3, "Field Label 3", 2011, 2022);
+		createField( fieldId3, "Field Label 3", "Location 3", 2011, 2022);
 		createAnnualFieldDetail(annualFieldDetailId3, legalLandId, fieldId3, 2022);
 		createContractedFieldDetail(contractedFieldDetailId3, annualFieldDetailId3, gcyId2, 1);
 		
@@ -628,11 +629,13 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 		
 		Assert.assertEquals(fieldId2, renameLegalValidation.getFieldOnOtherPolicyList().get(0).getFieldId());
 		Assert.assertEquals("Field Label 2", renameLegalValidation.getFieldOnOtherPolicyList().get(0).getFieldLabel());
+		Assert.assertEquals("Location 2", renameLegalValidation.getFieldOnOtherPolicyList().get(0).getFieldLocation());
 		Assert.assertEquals(1, renameLegalValidation.getFieldOnOtherPolicyList().get(0).getPolicies().size());
 		Assert.assertEquals(policyNumber3, renameLegalValidation.getFieldOnOtherPolicyList().get(0).getPolicies().get(0).getPolicyNumber());
 
 		Assert.assertEquals(fieldId3, renameLegalValidation.getFieldOnOtherPolicyList().get(1).getFieldId());
 		Assert.assertEquals("Field Label 3", renameLegalValidation.getFieldOnOtherPolicyList().get(1).getFieldLabel());
+		Assert.assertEquals("Location 3", renameLegalValidation.getFieldOnOtherPolicyList().get(1).getFieldLocation());
 		Assert.assertEquals(1, renameLegalValidation.getFieldOnOtherPolicyList().get(1).getPolicies().size());
 		Assert.assertEquals(policyNumber4, renameLegalValidation.getFieldOnOtherPolicyList().get(1).getPolicies().get(0).getPolicyNumber());
 
