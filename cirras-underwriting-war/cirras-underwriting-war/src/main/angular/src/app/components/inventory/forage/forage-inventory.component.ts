@@ -865,7 +865,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
       const dataToSend : AddLandPopupData = {
         fieldId: field.value.fieldId,
         fieldLabel: field.value.fieldLabel,
-        fieldLocation: null,
+        fieldLocation: "",
         cropYear: this.cropYear,
         policyId: this.policyId,
         insurancePlanId: this.insurancePlanId,
