@@ -25,4 +25,21 @@ export class FieldListWithMessageComponent {
       return false
     }
   }
+
+  setStyles() {
+    if (this.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+      return {
+        'grid-template-columns': '1fr 1fr 1fr 1fr'
+      };
+
+    } else {
+
+      return {
+        'grid-template-columns': '1fr 1fr 1fr'
+
+      }
+    }
+
+  }
+
 }
