@@ -3,12 +3,15 @@
         <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
         {{ message }}
     </p>
-    <div *ngIf="fieldList.length > 0"
-        class="legal-land-container field-on-other-policy">
-        <div class="border-left header border-top border-bottom padding">Field Name</div>
+    <div *ngIf="fieldList.length > 0" class="legal-land-container"  [ngStyle]="setStyles()">
+        <div *ngIf="isFieldAddressVisible()" class="border-left header border-top border-bottom padding">Field Address</div>
+        <div class=" header border-top border-bottom border-left padding">Field Name</div>
         <div class="border-left header border-top border-bottom padding">Field ID</div>
         <div class="border-left header border-top border-bottom border-right padding">Policy (Plan) </div>
         <ng-container *ngFor="let field of fieldList">
+            <div *ngIf="isFieldAddressVisible()" class="border-left border-bottom padding">
+                {{ field.fieldLocation }}
+            </div>
             <div class="border-left border-bottom padding">
                 {{ field.fieldLabel }}
             </div>

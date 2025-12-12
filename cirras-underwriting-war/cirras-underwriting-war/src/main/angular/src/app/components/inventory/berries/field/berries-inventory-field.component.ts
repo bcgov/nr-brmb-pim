@@ -342,12 +342,25 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
     const dataToSend : AddLandPopupData = {
       fieldId: field.fieldId,
       fieldLabel: field.fieldLabel,
+      fieldLocation: field.fieldLocation,
       cropYear: field.cropYear,
       policyId: this.policyId,
       insurancePlanId: INSURANCE_PLAN.BERRIES, 
       annualFieldDetailId: field.annualFieldDetailId,
       otherLegalDescription: field.otherLegalDescription,
-      primaryPropertyIdentifier: field.primaryPropertyIdentifier
+      primaryPropertyIdentifier: field.primaryPropertyIdentifier,
+      landData: {
+          fieldId: null,
+          legalLandId: null,
+          fieldLabel: null,
+          fieldLocation: null,
+          primaryPropertyIdentifier: null,
+          otherLegalDescription: null,
+          landUpdateType: null,
+          transferFromGrowerContractYearId : null,
+          plantings: [],
+          uwComments: []
+        }
     }
 
     let dialogRef = this.dialog.open(EditLegalLandInInventoryComponent, {
@@ -357,31 +370,30 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
       });
       
     dialogRef.afterClosed().subscribe(result => {
-    
-      if (result && result.event == 'RenameLand'){
-        
-        // Rename legal land 
-        if (result.data && result.data.fieldId && result.data.landData) {
-          this.renameLegalLand (result.data.landData) 
+
+      if (result && (result.event == 'RenameLand' || result.event == 'ReplaceLand' )){
+
+        if (result.data && result.data.landData) {
+
+          this.renameOrReplaceLegalLand(result.data.landData, result.event)
         }
-      } else if (result && result.event == 'ReplaceLand'){
-        // TODO: Replace  legal land
-        // replaceLegalLand(flds, result.data.fieldId, result.data.landData, cdr)
-  
       } else if (result && result.event == 'Cancel'){
         // do nothing
       }
     });
   }
 
-  renameLegalLand(landData) {
-
+  renameOrReplaceLegalLand(landData, event) {
+    
+    if (event == 'ReplaceLand') {
+      this.field.legalLandId = landData.legalLandId
+    }
+    
     this.field.primaryPropertyIdentifier = landData.primaryPropertyIdentifier
+    this.field.otherLegalDescription = landData.otherLegalDescription // to account for replace / rename legal land
     this.field.landUpdateType = landData.landUpdateType
 
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
-
     this.cdr.detectChanges()
   }
-  
 }

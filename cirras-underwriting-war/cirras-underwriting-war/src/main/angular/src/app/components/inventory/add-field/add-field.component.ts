@@ -15,6 +15,7 @@ import { BERRY_COMMODITY, INSURANCE_PLAN, LAND_UPDATE_TYPE } from 'src/app/utils
 export interface AddLandPopupData {
   fieldId: number;
   fieldLabel?: string;
+  fieldLocation?: string;
   cropYear: number;
   policyId: string;
   insurancePlanId: number; 

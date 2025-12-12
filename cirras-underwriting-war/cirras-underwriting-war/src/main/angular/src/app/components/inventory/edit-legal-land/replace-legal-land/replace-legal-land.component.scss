@@ -1,22 +1,30 @@
-    
-.row-group-left {
-    padding-top: 0px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-bottom: 20px;
-    
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    
-    .legal-land-container {
-        display: grid;
-        grid-auto-rows: minmax( 2em, auto );
-        padding-top: 10px;
+.legal-land-container {
+    display: grid;
+    grid-auto-rows: minmax( 2em, auto );
+    padding-top: 10px;
 
+    &.same-location-legal-land-info {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    &.other-legal-land-info {
+      grid-template-columns: 1fr 2.5fr 2.5fr;
+    }
+
+    &.legal-land-info {
+      grid-template-columns: 1fr 2fr 2fr 8fr;
+    }
+
+    &.field-info {
+      grid-template-columns: 2fr 2fr 3fr;
+    }
 
     &.field-on-other-policy {
       grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    &.error-messages {
+      grid-template-columns: 1fr 20fr;
     }
 
     div {
@@ -57,4 +65,12 @@
         padding: 8px;
     }
   }
-}
+
+
+  ::ng-deep  .mdc-text-field--filled {
+
+    /* change the background color */
+    .mat-mdc-form-field-focus-overlay {
+        background-color: transparent !important;
+    }
+  }

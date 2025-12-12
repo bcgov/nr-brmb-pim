@@ -865,11 +865,25 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
       const dataToSend : AddLandPopupData = {
         fieldId: field.value.fieldId,
         fieldLabel: field.value.fieldLabel,
+        fieldLocation: "",
         cropYear: this.cropYear,
         policyId: this.policyId,
         insurancePlanId: this.insurancePlanId,
         annualFieldDetailId: field.value.annualFieldDetailId,
-        otherLegalDescription: field.value.otherLegalDescription
+        otherLegalDescription: field.value.otherLegalDescription,
+        primaryPropertyIdentifier: null,
+        landData: {
+          fieldId: null,
+          legalLandId: null,
+          fieldLabel: null,
+          fieldLocation: null,
+          primaryPropertyIdentifier: null,
+          otherLegalDescription: null,
+          landUpdateType: null,
+          transferFromGrowerContractYearId : null,
+          plantings: [],
+          uwComments: []
+        }
       }
 
       openAddEditLandPopup(this.fb, flds, this.dialog, dataToSend, field.value.maxDisplayOrder, false, this.cdr)

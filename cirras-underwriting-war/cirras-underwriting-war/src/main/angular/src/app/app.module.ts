@@ -158,6 +158,7 @@ import { FieldValidationsComponent } from "./components/inventory/add-field/fiel
 import { RenameLegalLandComponent } from "./components/inventory/edit-legal-land/rename-legal-land/rename-legal-land.component";
 import { LegalLandListWithMessageComponent } from "./components/inventory/edit-legal-land/legal-land-list-with-message/legal-land-list-with-message.component";
 import { FieldListWithMessageComponent } from "./components/inventory/edit-legal-land/field-list-with-message/field-list-with-message.component";
+import { ReplaceLegalLandComponent } from "./components/inventory/edit-legal-land/replace-legal-land/replace-legal-land.component";
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -214,6 +215,7 @@ if (!environment.production || !environment.restrict_imports) {
         PrintoutLogoComponent,
         EditLegalLandInInventoryComponent,
         RenameLegalLandComponent,
+        ReplaceLegalLandComponent,
         LegalLandListWithMessageComponent,
         FieldListWithMessageComponent,
         GrainUnseededInventoryComponent,
