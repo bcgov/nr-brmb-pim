@@ -56,7 +56,7 @@ where secondary_property_identifiers is not null;
 -- Plantings
 
 \qecho 'crop_name: Trim whitespace, upper-case to match db names'
-update berries_2026_staging set crop_name = upper(trim(from crop_name);
+update berries_2026_staging set crop_name = upper(trim(from crop_name));
 
 \qecho 'crop_commodity_id: Lookup using crop_name'
 update berries_2026_staging t
@@ -103,8 +103,8 @@ update berries_2026_staging set year_planted = null where year_planted = '';
 update berries_2026_staging set acres = trim(from acres);
 update berries_2026_staging set acres = null where acres = '';
 
-\qecho 'ownership: Trim whitespace, default to OWNED'
-update berries_2026_staging set ownership = trim(from ownership);
+\qecho 'ownership: Trim whitespace, upper-case, default to OWNED'
+update berries_2026_staging set ownership = upper(trim(from ownership));
 update berries_2026_staging set ownership = 'OWNED' where ownership = '';
 
 \qecho 'row_spacing, plant_spacing: Trim whitespace'
@@ -129,7 +129,6 @@ set is_quantity_insurable_ind = 'N',
     plant_insurability_type_code = null
 ;
 
--- TODO: Place near bottom
 
 \echo 'is_quantity_insurable_ind, is_plant_insurable_ind, plant_insurability_type_code: Set to Y for eligible plantings'
 update berries_2026_staging t
@@ -164,6 +163,5 @@ update berries_2026_staging t
 set planting_number = (select bs.rn 
                        from bs
                        where bs.input_line_number = t.input_line_number
-
                       );
 
