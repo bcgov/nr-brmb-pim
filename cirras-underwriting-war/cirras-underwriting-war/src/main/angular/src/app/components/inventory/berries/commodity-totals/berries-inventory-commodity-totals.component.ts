@@ -36,7 +36,7 @@ export class BerriesInventoryCommodityListComponent {
       return this.inventoryContractCommodityBerries.totalUninsuredPlants
     }
     if (this.selectedCommodity == BERRY_COMMODITY.Strawberry) {
-      return this.inventoryContractCommodityBerries.totalPlantUninsuredAcres
+      return this.inventoryContractCommodityBerries.totalPlantUninsuredAcres.toFixed(2)
     } 
     return ""
   }
@@ -46,7 +46,7 @@ export class BerriesInventoryCommodityListComponent {
       return this.inventoryContractCommodityBerries.totalInsuredPlants
     }
     if (this.selectedCommodity == BERRY_COMMODITY.Strawberry) {
-      return this.inventoryContractCommodityBerries.totalPlantInsuredAcres
+      return this.inventoryContractCommodityBerries.totalPlantInsuredAcres.toFixed(2)
     } 
     return ""
   }
