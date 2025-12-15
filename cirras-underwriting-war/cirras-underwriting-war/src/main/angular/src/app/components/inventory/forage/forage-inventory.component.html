@@ -32,7 +32,7 @@
             </div>
             <div class="vertical-line"></div>
             <div matTooltip="Changes must be saved before download is possible.">
-                <button mat-raised-button class="secondary button-large-text" [disabled]="hasDataChanged == true"
+                <button mat-raised-button class="secondary button-large-text" [disabled]="hasDataChanged == true || !inventoryContract || !inventoryContract.inventoryContractGuid"
                 (click)="onPrint()">
                     <mat-icon class="button-mat-icon">download</mat-icon>Download
                 </button>
