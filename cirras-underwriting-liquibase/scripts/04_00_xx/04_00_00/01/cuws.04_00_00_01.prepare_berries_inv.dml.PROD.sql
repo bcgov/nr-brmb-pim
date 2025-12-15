@@ -4,6 +4,12 @@
 -- Load plantings for 2026 BERRIES policies.
 \i dml/cuws.dml.insert_berries_2026_staging.sql
 
+-- Run pre-validation extracts.
+-- These will generate csv files in the sql folder.
+\cd sql
+\i cuws.sql.validate_all.sql
+\cd ..
+
 -- Transform and validate.
 \i dml/cuws.dml.transform_berries_2026_staging.sql
 \i dml/cuws.dml.validate_berries_2026_staging.sql
