@@ -40,6 +40,8 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
   numComponentReloads = 0 // the field-list, etc..  components are not loaded for whatever reason, so I have to go thru an external variable to make it reload
 
+  fieldsWithNoCommoditiesArray = []
+
   initModels() {
     this.viewModel = new BerriesInventoryComponentModel(this.sanitizer, this.fb, this.inventoryContract);
   }
@@ -72,50 +74,11 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       if (this.inventoryContract && this.inventoryContract.fields && this.inventoryContract.fields.length > 0) {
         this.onCheckForHiddenPlantingsInTotals() // check for values that don't show in the report but are included in the totals
 
-        // check if the selectedCommodity is already set, if yes, then check if the inventoryContract has fields with the same commodity
-        // if yes, then no need to change the selected commodity, 
-        // otherwise find out what commodities are on the policy and assign the default commodity to one them
-
-        let shouldSetCommodity = true
-
-        if (this.selectedCommodity) {
-          for (let i = 0; i < this.inventoryContract.fields.length; i++){
-
-            if (this.inventoryContract.fields[i].plantings && this.inventoryContract.fields[i].plantings.length > 0) {
-
-              let pltg = this.inventoryContract.fields[i].plantings.find(x => x.inventoryBerries.cropCommodityId == this.selectedCommodity)
-
-              if (pltg) {
-                shouldSetCommodity = false
-                break
-              }
-            }
-          }
+        if (!this.fieldsWithoutCommoditiesExist() ) {
+          this.setCommodityDropdown()
         }
 
-        if (shouldSetCommodity) {
-          for (let i = 0; i < this.inventoryContract.fields.length; i++){
-
-            if (this.inventoryContract.fields[i].plantings && this.inventoryContract.fields[i].plantings.length > 0) {
-              
-              for (let j = 0; j < this.inventoryContract.fields[i].plantings.length; j++){
-                
-                let pltg = this.inventoryContract.fields[i].plantings[j]
-
-                if( pltg.inventoryBerries && pltg.inventoryBerries.cropCommodityId ) {
-
-                  this.selectedCommodity = pltg.inventoryBerries.cropCommodityId
-                  this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)
-
-                  return
-                }
-
-              }
-            }
-          }
-        }
-
-        //if there are no commodities on the policy then show blank commodity in the commodity dropdown
+        // if the commodity has not been set up then show blank commodity in the commodity dropdown
         if (!this.selectedCommodity) {
           // Add empty commodity
           this.cropCommodityOptions = [
@@ -130,6 +93,85 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
           this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)  
         }
       }      
+    }
+  }
+
+  fieldsWithoutCommoditiesExist() {
+
+    let fieldWithoutCommodity = false
+
+    this.fieldsWithNoCommoditiesArray = []
+
+    for (let i = 0; i < this.inventoryContract.fields.length; i++){
+      for (let k = 0; k < this.inventoryContract.fields[i].plantings.length; k++){
+        let pltg = this.inventoryContract.fields[i].plantings[k]
+
+        if ( !pltg.inventoryBerries.cropCommodityId ) {
+          // write the empty fields in an array in order to display them on the screen
+          this.fieldsWithNoCommoditiesArray.push({
+            fieldId: this.inventoryContract.fields[i].fieldId,
+            fieldLabel: this.inventoryContract.fields[i].fieldLabel,
+            fieldLocation: this.inventoryContract.fields[i].fieldLocation
+          })
+          
+          // set BLUEBERRY as default commodity for plantings with no commodities
+          pltg.inventoryBerries.cropCommodityId = BERRY_COMMODITY.Blueberry
+          fieldWithoutCommodity =  true
+        }
+      }
+    }
+
+    if (fieldWithoutCommodity) {
+      // set BLUEBERRY as default commodity in the dropdown
+      this.selectedCommodity = BERRY_COMMODITY.Blueberry
+      this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)
+    }
+
+    return fieldWithoutCommodity
+  }
+
+  setCommodityDropdown(){
+    // check if the selectedCommodity is already set, if yes, then check if the inventoryContract has fields with the same commodity
+    // if yes, then no need to change the selected commodity, 
+    // otherwise find out what commodities are on the policy and assign the selected commodity to one them
+
+    let shouldSetCommodity = true
+
+    if (this.selectedCommodity) {
+      for (let i = 0; i < this.inventoryContract.fields.length; i++){
+
+        if (this.inventoryContract.fields[i].plantings && this.inventoryContract.fields[i].plantings.length > 0) {
+
+          let pltg = this.inventoryContract.fields[i].plantings.find(x => x.inventoryBerries.cropCommodityId == this.selectedCommodity)
+
+          if (pltg) {
+            shouldSetCommodity = false
+            break
+          }
+        }
+      }
+    }
+
+    if (shouldSetCommodity) {
+      for (let i = 0; i < this.inventoryContract.fields.length; i++){
+
+        if (this.inventoryContract.fields[i].plantings && this.inventoryContract.fields[i].plantings.length > 0) {
+          
+          for (let j = 0; j < this.inventoryContract.fields[i].plantings.length; j++){
+            
+            let pltg = this.inventoryContract.fields[i].plantings[j]
+
+            if( pltg.inventoryBerries && pltg.inventoryBerries.cropCommodityId ) {
+
+              this.selectedCommodity = pltg.inventoryBerries.cropCommodityId
+              this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)
+
+              return
+            }
+
+          }
+        }
+      }
     }
   }
 
