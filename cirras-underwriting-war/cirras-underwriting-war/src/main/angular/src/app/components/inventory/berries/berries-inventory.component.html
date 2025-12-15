@@ -57,7 +57,6 @@
                 If you need to update the inventory, delete the DOP data first.</span> 
         </div>
     </div> -->
-    
     <form [formGroup]="getViewModel().formGroup" (keydown.enter)="$event.preventDefault()">
 
         <div class="plcy-inv-form-header" [ngStyle]="setFormSeededStyles()">
@@ -104,6 +103,31 @@
             </div>
         </div>
 
+        <!-- warning message - fields with no commodities -->
+        <div *ngIf="fieldsWithNoCommoditiesArray && fieldsWithNoCommoditiesArray.length > 0"  
+            class="field-with-no-cmdty-warnings-container" style="margin-bottom: 10px;">
+
+            <div class="field-with-no-cmdty-warning-messages" style="margin-bottom: 10px; margin-top: 10px;">
+                <div><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+                <div>
+                    The following fields have no commodities assigned to them. 
+                    They will be assigned Blueberry commodity as default commodity. 
+                    Please review these fields and change their commodities if needed, 
+                    using the Add Field and/or Remove Field → Remove commodity functionality.
+                </div>
+            </div>
+            <div class="field-with-no-cmdty-warnings-grid" style="margin-bottom: 10px;">
+                <div class="header border-left">Field ID</div>
+                <div class="header">Field Address</div>
+                <div class="header">Field / Bog Name</div>
+
+                <div *ngFor="let field of fieldsWithNoCommoditiesArray" style="display:contents">
+                    <div class="cell border-left">{{ field.fieldId }}</div>
+                    <div class="cell">{{ field.fieldLocation }}</div>
+                    <div class="cell">{{ field.fieldLabel }}</div>
+                </div>
+            </div>
+        </div>
 
         <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
 
