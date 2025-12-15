@@ -124,7 +124,7 @@ public interface CirrasUnderwritingService {
 	
 	RenameLegalValidationRsrc validateRenameLegal(UwContractRsrc resource, String annualFieldDetailId, String newLegalLocation, String primaryPropertyIdentifier) throws CirrasUnderwritingServiceException;
 	
-	ReplaceLegalValidationRsrc validateReplaceLegal(UwContractRsrc resource, String annualFieldDetailId, String fieldLabel, String legalLandId) throws CirrasUnderwritingServiceException;
+	ReplaceLegalValidationRsrc validateReplaceLegal(UwContractRsrc resource, String annualFieldDetailId, String fieldLabel, String legalLandId, String fieldLocation) throws CirrasUnderwritingServiceException;
 	
 	InventoryContractListRsrc getInventoryContractList(
 			EndpointsRsrc parent,

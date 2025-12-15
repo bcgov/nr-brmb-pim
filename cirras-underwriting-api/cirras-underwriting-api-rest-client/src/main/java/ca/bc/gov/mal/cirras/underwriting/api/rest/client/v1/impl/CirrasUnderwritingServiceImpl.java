@@ -576,7 +576,7 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 	}	
 
 	@Override
-	public ReplaceLegalValidationRsrc validateReplaceLegal(UwContractRsrc resource, String annualFieldDetailId, String fieldLabel, String legalLandId) throws CirrasUnderwritingServiceException {
+	public ReplaceLegalValidationRsrc validateReplaceLegal(UwContractRsrc resource, String annualFieldDetailId, String fieldLabel, String legalLandId, String fieldLocation) throws CirrasUnderwritingServiceException {
 
 		GenericRestDAO<ReplaceLegalValidationRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(ReplaceLegalValidationRsrc.class);
 		
@@ -585,6 +585,7 @@ public class CirrasUnderwritingServiceImpl extends BaseRestServiceClient impleme
 			putQueryParam(queryParams, "annualFieldDetailId", annualFieldDetailId);
 			putQueryParam(queryParams, "fieldLabel", fieldLabel);
 			putQueryParam(queryParams, "legalLandId", legalLandId);
+			putQueryParam(queryParams, "fieldLocation", fieldLocation);
 			
 			Response<ReplaceLegalValidationRsrc> response = dao.Process(ResourceTypes.REPLACE_LEGAL_VALIDATION, this.getTransformer(), resource, queryParams, getWebClient());
 			return response.getResource();
