@@ -208,14 +208,14 @@ insert into contracted_field_detail (
          t.annual_field_detail_id,
          t.grower_contract_year_id,
          t.min_field_order,
-         case when t.ownership = 'LEASED' then 'Y' else 'N' end,
+         case when t.min_ownership = 'LEASED' then 'Y' else 'N' end,
          'CUWS_04_00_00',
          now(),
          'CUWS_04_00_00',
          now()
   from (select bs.grower_contract_year_id,
                min(bs.input_line_number) as min_field_order,         -- In case of multiple plantings, pick the lowest one.
-               min(bs.ownership),
+               min(bs.ownership) as min_ownership,
                afd.annual_field_detail_id
         from berries_2026_staging bs
         join annual_field_detail afd on afd.field_id = bs.field_id and afd.crop_year = bs.crop_year
