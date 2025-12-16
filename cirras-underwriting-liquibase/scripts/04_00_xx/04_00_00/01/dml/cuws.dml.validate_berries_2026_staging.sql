@@ -100,6 +100,38 @@ from berries_2026_staging bs
 where bs.ownership is null
    or bs.ownership not in ('OWNED', 'LEASED');
 
+\qecho 'ownership: Not mixed within a field'
+select case when count(*) = 0 then 'PASS'
+            else 'FAIL'
+            end as test_result,
+            count(*) as error_count
+from (select v.contract_number, 
+             v.crop_year, 
+             v.field_bog_name, 
+             v.field_location, 
+             v.primary_property_identifier, 
+             v.primary_land_identifier_type_code 
+      from (select distinct t.contract_number, 
+                            t.crop_year, 
+                            t.field_bog_name, 
+                            t.field_location, 
+                            t.primary_property_identifier, 
+                            t.primary_land_identifier_type_code, 
+                            t.ownership 
+            from berries_2026_staging t
+            where t.year_planted is not null
+              and t.acres is not null
+              and t.variety_name is not null
+           ) v 
+      group by v.contract_number, 
+               v.crop_year, 
+               v.field_bog_name, 
+               v.field_location, 
+               v.primary_property_identifier, 
+               v.primary_land_identifier_type_code 
+      having count(*) > 1
+     ) u;
+
 \qecho 'harvested_ind, is_quantity_insurable_ind, is_plant_insurable_ind: Populated:'
 select case when count(*) = 0 then 'PASS'
             else 'FAIL'
