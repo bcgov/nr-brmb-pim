@@ -160,7 +160,7 @@
                 <berries-inventory-commodity-totals 
                     *ngIf="showQuantityTotals()"
                     [insurabilityType]="'quantity'"
-                    [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" 
+                    [inventoryContractCommodityBerries]="getBerryCommodityTotals()" 
                     [selectedCommodity]="selectedCommodity">
                 </berries-inventory-commodity-totals>
             </div>
@@ -168,7 +168,7 @@
                 <berries-inventory-commodity-totals 
                     *ngIf="showPlantTotals()"
                     [insurabilityType]="'plant'"
-                    [inventoryContractCommodityBerries]="inventoryContract.inventoryContractCommodityBerries[0]" 
+                    [inventoryContractCommodityBerries]="getBerryCommodityTotals()" 
                     [selectedCommodity]="selectedCommodity">
                 </berries-inventory-commodity-totals>
             </div>

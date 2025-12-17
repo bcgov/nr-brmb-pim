@@ -701,4 +701,14 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
     return false
   }
+
+  // inventoryContract.inventoryContractCommodityBerries[0]
+  getBerryCommodityTotals(){
+    if (this.inventoryContract && this.inventoryContract.inventoryContractCommodityBerries){
+      let contractCommoditiy = this.inventoryContract.inventoryContractCommodityBerries.find (x => x.cropCommodityId == this.selectedCommodity)
+
+      return contractCommoditiy
+    } 
+
+  }
 }
