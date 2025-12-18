@@ -100,8 +100,8 @@ insert into inventory_berries (
 		 t.row_spacing::numeric,
 		 t.plant_spacing::numeric, 
 		 CASE
-	        WHEN t.row_spacing::numeric > 0 AND t.plant_spacing::numeric > 0  THEN ((t.acres::numeric  * 43560.0) / (t.row_spacing::numeric * t.plant_spacing::numeric))::integer
-	        ELSE null
+	        WHEN t.row_spacing::numeric > 0 AND t.plant_spacing::numeric > 0  THEN round((t.acres::numeric  * 43560.0) / (t.row_spacing::numeric * t.plant_spacing::numeric))
+	        ELSE 0
 	     END total_plants,
 		 t.is_quantity_insurable_ind, 
 		 t.is_plant_insurable_ind,
@@ -145,7 +145,6 @@ select replace(cast(gen_random_uuid() as text), '-', ''),
                             			and ic2.crop_year = t2.crop_year
 		 where ic2.inventory_contract_guid = ic.inventory_contract_guid
 		 and ib2.crop_commodity_id = ib.crop_commodity_id
-		 and ib2.crop_commodity_id = 10 -- blueberry specific
 		 and ib2.is_plant_insurable_ind = 'Y'
 		 and ib2.total_plants > 0) , 0),
 		 
@@ -160,7 +159,6 @@ select replace(cast(gen_random_uuid() as text), '-', ''),
                             			and ic2.crop_year = t2.crop_year
 		 where ic2.inventory_contract_guid = ic.inventory_contract_guid
 		 and ib2.crop_commodity_id = ib.crop_commodity_id
-		 and ib2.crop_commodity_id = 10 -- blueberry specific
 		 and ib2.is_plant_insurable_ind = 'N'
 		 and ib2.total_plants > 0) , 0) ,
 
@@ -203,7 +201,6 @@ select replace(cast(gen_random_uuid() as text), '-', ''),
                             			and ic2.crop_year = t2.crop_year
 		 where ic2.inventory_contract_guid = ic.inventory_contract_guid
 		 and ib2.crop_commodity_id = ib.crop_commodity_id
-		 and ib2.crop_commodity_id = 13 -- strawberry specific
 		 and ib2.is_plant_insurable_ind = 'Y'
 		 and ib2.planted_acres > 0), 0),
 
@@ -218,7 +215,6 @@ select replace(cast(gen_random_uuid() as text), '-', ''),
                             			and ic2.crop_year = t2.crop_year
 		 where ic2.inventory_contract_guid = ic.inventory_contract_guid
 		 and ib2.crop_commodity_id = ib.crop_commodity_id
-		 and ib2.crop_commodity_id = 13 -- strawberry specific
 		 and ib2.is_plant_insurable_ind = 'N'
 		 and ib2.planted_acres > 0), 0),
 		 'CUWS_04_00_00',
