@@ -39,7 +39,7 @@ insert into inventory_contract(
   group by t.contract_id, 
            t.crop_year;
 
--- \qecho 'Insert inventory_field'
+\qecho 'Insert inventory_field'
 
 insert into inventory_field (
 	inventory_field_guid, 
@@ -72,7 +72,7 @@ insert into inventory_field (
 		 null
   from berries_2026_staging t;
 
--- \qecho 'Insert inventory_berries'
+\qecho 'Insert inventory_berries'
 
 insert into inventory_berries (
 	inventory_berries_guid, 
@@ -96,10 +96,13 @@ insert into inventory_berries (
 		 t.crop_commodity_id,
 		 t.crop_variety_id,
 		 t.year_planted::integer, 
-		 t.acres::double precision, 
-		 t.row_spacing::double precision,
-		 t.plant_spacing::double precision, 
-		 (t.acres::double precision  * 43560.0) / (t.row_spacing::double precision * t.plant_spacing::double precision),
+		 t.acres::numeric, 
+		 t.row_spacing::numeric,
+		 t.plant_spacing::numeric, 
+		 CASE
+	        WHEN t.row_spacing::numeric > 0 AND t.plant_spacing::numeric > 0  THEN ((t.acres::numeric  * 43560.0) / (t.row_spacing::numeric * t.plant_spacing::numeric))::integer
+	        ELSE null
+	     END total_plants,
 		 t.is_quantity_insurable_ind, 
 		 t.is_plant_insurable_ind,
 		 t.harvested_ind,
@@ -112,7 +115,7 @@ insert into inventory_berries (
                            and invf.crop_year = t.crop_year 
 						   and invf.planting_number = t.planting_number;
 
--- \qecho 'Insert inventory_contract_commodity_berries'
+\qecho 'Insert inventory_contract_commodity_berries'
 
 INSERT INTO cuws.inventory_contract_commodity_berries(
 	inventory_contract_commodity_berries_guid, 
