@@ -1,4 +1,4 @@
-\o cuws.04_00_00_01.prepare_berries_inv.dml.NON_PROD.log
+\o cuws.04_00_00_01.prepare_berries_inv.dml.NON_PROD.one.log
 
 
 -- Load plantings for 2026 BERRIES policies.
@@ -6,9 +6,13 @@
 
 -- Run pre-validation extracts.
 -- These will generate csv files in the sql folder.
+\o
 \cd sql
 \i cuws.sql.validate_all.sql
 \cd ..
+
+-- Set output back to a log file.
+\o cuws.04_00_00_01.prepare_berries_inv.dml.NON_PROD.two.log
 
 -- For non-PROD environments, swap policies that do not exist with a test policy.
 \i dml/cuws.dml.swap_invalid_policies.sql
