@@ -22,8 +22,6 @@
 		<module>cirras-underwriting-api-rest-client</module>
 		<module>cirras-underwriting-api-rest-common</module>
 		<module>cirras-underwriting-api-rest-endpoints</module>
-		<module>cirras-underwriting-api-rest-integration-test</module>
-		<module>cirras-underwriting-api-rest-ear</module>
 		<module>cirras-underwriting-persistence</module>
 	</modules>
 <distributionManagement>
