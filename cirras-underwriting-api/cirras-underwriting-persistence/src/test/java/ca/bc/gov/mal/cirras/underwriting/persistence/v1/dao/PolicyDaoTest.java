@@ -32,6 +32,7 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.VerifiedYieldContrac
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.spring.PersistenceSpringConfig;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.nrs.wfone.common.persistence.dao.TooManyRecordsException;
 import ca.bc.gov.nrs.wfone.common.persistence.dto.PagedDtos;
 
 
@@ -752,44 +753,81 @@ public class PolicyDaoTest {
 		
 	}	
 	
+	private Integer maxRows = 1000;
+	private Integer pageNumber = 1;
+	private Integer pageRowCount = 200;
+	
 	@Test 
-	public void testFetchEligibleInventory() throws Exception {
+	public void testFetchEligibleInventoryGrain() throws Exception {
 
 		//Get policy Ids: SELECT  p.policy_id from policy p where p.policy_number = ''
-		Integer grainPolicyIdWithInv = 1069665; 	//grain policy with eligible inventory
-		Integer grainPolicyIdWithoutInv = 1069666;	//grain policy without eligible inventory
-		Integer foragePolicyIdWithInv = 1068969;	//forage policy with eligible inventory
-		Integer foragePolicyIdWithoutInv = 1068994;	//forage policy without eligible inventory
+		Integer policyIdWithInv = 1069665; 	//grain policy with eligible inventory
+		Integer policyIdWithoutInv = 1069666;	//grain policy without eligible inventory
+		
+		testEligibleInventory(policyIdWithInv, policyIdWithoutInv);
+	}
+	
+	@Test 
+	public void testFetchEligibleInventoryForage() throws Exception {
+
+		//Get policy Ids: SELECT  p.policy_id from policy p where p.policy_number = ''
+		Integer policyIdWithInv = 1068969; 	//policy with eligible inventory
+		Integer policyIdWithoutInv = 1068994;	//policy without eligible inventory
+		
+		testEligibleInventory(policyIdWithInv, policyIdWithoutInv);
+	}
+	
+	@Test 
+	public void testEligibleInventoryBerries() throws Exception {
+
+		//Get policy Ids: SELECT  p.policy_id from policy p where p.policy_number = ''
+		Integer policyIdWithInv = 1072240; 	//policy with eligible inventory
+		Integer policyIdWithoutInv = 1066901;	//policy without eligible inventory
+		
+		testEligibleInventory(policyIdWithInv, policyIdWithoutInv);
+}
+
+	private void testEligibleInventory(Integer policyIdWithInv, Integer policyIdWithoutInv)
+			throws DaoException, TooManyRecordsException {
+		PolicyDao dao = persistenceSpringConfig.policyDao();
+
+		//FETCH With
+		PolicyDto fetchedDto = dao.fetch(policyIdWithInv);
+
+		Assert.assertEquals("PolicyId", policyIdWithInv, fetchedDto.getPolicyId());
+		Assert.assertTrue("Eligible Inventory", fetchedDto.getTotalDopEligibleInventory().intValue() > 0);
+		Assert.assertNotNull(fetchedDto.getPolicyNumber());
+		
+		// Test: search
+		PagedDtos<PolicyDto> dtos = dao.select(null, null, null, null, fetchedDto.getPolicyNumber(), null, null, null, null, maxRows, pageNumber, pageRowCount);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(1, dtos.getResults().size());
+		fetchedDto = dtos.getResults().get(0);
+		Assert.assertTrue("Eligible Inventory", fetchedDto.getTotalDopEligibleInventory().intValue() > 0);
+		
+		//FETCH Without
+		fetchedDto = dao.fetch(policyIdWithoutInv);
+
+		Assert.assertEquals("PolicyId", policyIdWithoutInv, fetchedDto.getPolicyId());
+		Assert.assertEquals("Eligible Inventory", 0, fetchedDto.getTotalDopEligibleInventory().intValue());
+
+		// Test: search
+		dtos = dao.select(null, null, null, null, fetchedDto.getPolicyNumber(), null, null, null, null, maxRows, pageNumber, pageRowCount);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(1, dtos.getResults().size());
+		fetchedDto = dtos.getResults().get(0);
+		Assert.assertEquals("Eligible Inventory", 0, fetchedDto.getTotalDopEligibleInventory().intValue());
+	}	
+	
+	@Test 
+	public void testFetchEligibleInventoryUnsupportedPlan() throws Exception {
+
 		Integer unsupportedInsurancePlan = 1068244;	//Unsupported plan
 		
 		PolicyDao dao = persistenceSpringConfig.policyDao();
 
-		//FETCH Grain With
-		PolicyDto fetchedDto = dao.fetch(grainPolicyIdWithInv);
-
-		Assert.assertEquals("PolicyId", grainPolicyIdWithInv, fetchedDto.getPolicyId());
-		Assert.assertEquals("Eligible Inventory", 1, fetchedDto.getTotalDopEligibleInventory().intValue());
-		
-		//FETCH Grain Without
-		fetchedDto = dao.fetch(grainPolicyIdWithoutInv);
-
-		Assert.assertEquals("PolicyId", grainPolicyIdWithoutInv, fetchedDto.getPolicyId());
-		Assert.assertEquals("Eligible Inventory", 0, fetchedDto.getTotalDopEligibleInventory().intValue());
-		
-		//FETCH Forage With
-		fetchedDto = dao.fetch(foragePolicyIdWithInv);
-
-		Assert.assertEquals("PolicyId", foragePolicyIdWithInv, fetchedDto.getPolicyId());
-		Assert.assertEquals("Eligible Inventory", 1, fetchedDto.getTotalDopEligibleInventory().intValue());
-		
-		//FETCH Forage Without
-		fetchedDto = dao.fetch(foragePolicyIdWithoutInv);
-
-		Assert.assertEquals("PolicyId", foragePolicyIdWithoutInv, fetchedDto.getPolicyId());
-		Assert.assertEquals("Eligible Inventory", 0, fetchedDto.getTotalDopEligibleInventory().intValue());
-		
 		//FETCH Plan not supported
-		fetchedDto = dao.fetch(unsupportedInsurancePlan);
+		PolicyDto fetchedDto = dao.fetch(unsupportedInsurancePlan);
 
 		Assert.assertEquals("PolicyId", unsupportedInsurancePlan, fetchedDto.getPolicyId());
 		Assert.assertEquals("Eligible Inventory", 0, fetchedDto.getTotalDopEligibleInventory().intValue());
