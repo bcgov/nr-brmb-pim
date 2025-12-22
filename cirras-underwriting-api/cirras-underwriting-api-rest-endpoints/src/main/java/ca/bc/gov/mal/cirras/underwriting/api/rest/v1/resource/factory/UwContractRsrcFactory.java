@@ -314,7 +314,8 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 			else if(resource.getDeclaredYieldContractGuid() == null 
 				&& resource.getPolicyId() != null 
 				&& (resource.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.GRAIN.toString())
-					|| resource.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.FORAGE.toString())) 
+					|| resource.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.FORAGE.toString())
+					|| resource.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.BERRIES.toString())) 
 				&& authentication.hasAuthority(Scopes.CREATE_DOP_YIELD_CONTRACT)) {
 				// Yield DOP does not exist, but could be rolled over.
 				// TODO: Should perhaps be checking plan based on UnderwritingCommodity table or something rather than hard-coding.
