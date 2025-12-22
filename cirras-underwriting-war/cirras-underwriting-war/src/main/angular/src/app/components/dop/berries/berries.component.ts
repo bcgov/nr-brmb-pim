@@ -4,7 +4,6 @@ import { DopYieldContract } from 'src/app/conversion/models-yield';
 
 @Component({
   selector: 'berries-dop',
-  imports: [],
   templateUrl: './berries.component.html',
   styleUrl: './berries.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

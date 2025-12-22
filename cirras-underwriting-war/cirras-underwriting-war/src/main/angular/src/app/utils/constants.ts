@@ -9,6 +9,7 @@ export enum ResourcesRoutes {
     INVENTORY_BERRIES = "inventory/berries",
     DOP_GRAIN = "dop/grain",
     DOP_FORAGE = "dop/forage",
+    DOP_BERRIES = "dop/berries",
     VERIFIED_YIELD = "verified-yield",
     MAINTAIN_DASHBOARD = "maintain/dashboard",
     MAINTAIN_SEEDING_DEADLINES = "maintain/seeding-deadlines",
