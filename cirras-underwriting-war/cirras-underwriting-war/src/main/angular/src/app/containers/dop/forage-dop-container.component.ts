@@ -20,14 +20,14 @@ import { DOP_COMPONENT_ID } from "src/app/store/dop/dop.state";
 @Component({
     selector: "dop-container",
     template: `
-        <forage-dop
+        <dop-selector
             [growerContract]="growerContract$ | async"
             [dopYieldContract]="dopYieldContract"
             [yieldMeasUnitList]="yieldMeasUnitList$ | async"
             [loadState]="loadState$ | async"
             [errorState]="errorState$ | async"     
             [isUnsaved]="isUnsaved$ | async"       
-        ></forage-dop>`,
+        ></dop-selector>`,
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
     standalone: false
 })
