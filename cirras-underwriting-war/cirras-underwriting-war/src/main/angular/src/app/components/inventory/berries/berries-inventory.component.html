@@ -76,8 +76,11 @@
                     </mat-form-field>
             </div>
             <div><!-- empty div --></div>
-            <div>
-                <button *ngIf="securityUtilService.canEditInventory() && !hasYieldData" mat-raised-button class="secondary header-button"  (click)="onAddNewField()">
+            <div matTooltip="Please select a commodity to add field">
+                <button *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
+                mat-raised-button class="secondary header-button"  
+                (click)="onAddNewField()"
+                [disabled]="!selectedCommodity">
                     <mat-icon class="button-mat-icon">add</mat-icon>Add Field
                 </button>
             </div>
