@@ -40,10 +40,6 @@
             <p style="padding-left: 0; padding-top: 0;">The {{ selectedSearch }}  was not found. If you wish to add it, please click Done and then Save on the main screen.</p>
         </div>
 
-        <div *ngIf="showNoFieldMessage" >
-            <p style="padding-left: 0; padding-top: 0;">The {{ selectedSearch }}  was not found.</p>
-        </div>
-
         <legal-land-list 
             *ngIf="legalLandList && legalLandList.collection && legalLandList.collection.length > 0" 
             [selectedSearch]="selectedSearch" 
@@ -52,6 +48,10 @@
             [insurancePlanId]="dataReceived.insurancePlanId"
             (legalLandChanged)="onLegalLandReceived($event)">
         </legal-land-list>
+
+        <div *ngIf="showNoFieldMessage" >
+            <p style="padding-left: 0; padding-top: 0;">No fields are associated with this legal land.</p>
+        </div>
     </div>
 
     <div class="row-group-left" style="margin-top: 4px;">
