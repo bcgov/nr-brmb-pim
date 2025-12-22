@@ -3,7 +3,7 @@
     <div class="border-right header border-top border-bottom border-left">{{ getTitle('insured') | titlecase }}</div>
     <div class="number border-right border-top border-bottom" style="justify-content: right; padding-right: 2px;">
         {{ (( inventoryContractCommodityBerries && insurabilityType == 'quantity') ? inventoryContractCommodityBerries.totalQuantityInsuredAcres : "") | number: '1.2-2'}}
-        {{ (( inventoryContractCommodityBerries && insurabilityType == 'plant') ? getInsuredPlants() : "") | number: '1.0-0' }}
+        {{ (( inventoryContractCommodityBerries && insurabilityType == 'plant') ? getInsuredPlants() : "") }}
     </div>
 
     <div class="border-right header border-top border-bottom border-left">
@@ -11,13 +11,13 @@
     </div>
     <div class="number border-right border-top border-bottom" style="justify-content: right; padding-right: 2px;">
         {{ (( inventoryContractCommodityBerries && insurabilityType == 'quantity') ? inventoryContractCommodityBerries.totalQuantityUninsuredAcres  : "") | number: '1.2-2' }}
-        {{ (( inventoryContractCommodityBerries && insurabilityType == 'plant') ? getUninsuredPlants() : "") | number: '1.0-0' }}
+        {{ (( inventoryContractCommodityBerries && insurabilityType == 'plant') ? getUninsuredPlants() : "") }}
     </div>
 
     <div class="border-right header border-top border-bottom border-left">
         Total {{ (insurabilityType == 'quantity' ? "acres" : ( selectedCommodity == BERRY_COMMODITY.Strawberry ? "acres" : "plants") ) | titlecase }}
     </div>
     <div class="number border-right border-top border-bottom" style="justify-content: right; padding-right: 2px;">
-        {{ calcTotals() | number: '1.0-2'}}
+        {{ calcTotals() }}
     </div>
 </div>  

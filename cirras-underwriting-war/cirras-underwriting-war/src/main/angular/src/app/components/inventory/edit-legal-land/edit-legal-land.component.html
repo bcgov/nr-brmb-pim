@@ -1,0 +1,70 @@
+<cuws-base-dialog [titleLabel]="titleLabel" [type]="dialogType">
+
+    <div mat-dialog-content>
+        <div class="row-group-left">
+            <span class="location-title">{{ getEditLegalLandTitle() }}</span>
+
+            <form [formGroup]="editLandForm">
+
+                <mat-radio-group formControlName="choiceSelected">
+                    <span class="location-subtitle">Rename Legal Land</span>
+                    <mat-radio-button [value]="'rename'" (click)="onChoiceClick('rename')"></mat-radio-button>
+                    <p>This change will be applied to all fields associated with that legal land, for all years. It is
+                        intended
+                        to fix a typo on a legal location that was never valid. This change will take place when the
+                        inventory
+                        is saved.</p>
+                    <span class="location-subtitle">Replace Legal Land</span>
+                    <mat-radio-button [value]="'replace'" (click)="onChoiceClick('replace')"></mat-radio-button>
+                    <p>The change would affect only this field, in only this crop year. It is intended to change the
+                        legal
+                        location from one that was valid in prior years to a new one that is valid in this crop year.
+                    </p>
+                </mat-radio-group>
+
+                <div>
+                    <span class="location-subtitle">{{ getSearchLegalLabel()}}<span style="color: red;">*</span></span>
+                </div>
+                <div style="display: grid; grid-template-columns: 6fr 1fr;">
+                    <mat-form-field appearance="fill">
+                        <input matInput formControlName="searchLegal" (keydown)="clearAllForm()" maxlength="128">
+                        <mat-hint *ngIf="showSearchLegalMsg">Please enter at least 3 symbols</mat-hint>
+                    </mat-form-field>
+                    <div class="location-button">
+                        <button *ngIf="editLandForm.controls.choiceSelected.value == 'rename'" mat-raised-button
+                            class="secondary" (click)="onLegalLandValidate()">
+                            <mat-icon>check</mat-icon>
+                            Validate
+                        </button>
+                        <button *ngIf="editLandForm.controls.choiceSelected.value == 'replace'" mat-raised-button
+                            class="secondary" (click)="onLegalLandValidate()">
+                            <mat-icon>search</mat-icon>
+                            Search
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Rename Legal Land -->
+                <rename-legal-land  *ngIf="editLandForm.controls.choiceSelected.value == 'rename'"
+                    [renameLegalLandList]="renameLegalLandList"
+                    [insurancePlanId]="dataReceived.insurancePlanId"></rename-legal-land>
+
+                <!-- Replace Legal Land -->
+                <replace-legal-land *ngIf="editLandForm.controls.choiceSelected.value == 'replace'"
+                    [replaceLegalLandList]="replaceLegalLandList"
+                    [insurancePlanId]="dataReceived.insurancePlanId"
+                    [legalLandList]="legalLandList"
+                    [showNewLegalLandMessage]="showNewLegalLandMessage"
+                    (legalLandChanged)="onLegalLandReceived($event)"></replace-legal-land>
+            </form>
+        </div>
+    </div>
+
+    <div mat-dialog-actions align="end">
+        <p style="margin-right: auto;">To save legal location information, click done and then click save on the main
+            screen.</p>
+        <button mat-raised-button class="secondary" (click)="onCancelChanges()">Cancel</button>
+        <button *ngIf="showProceedButton" mat-raised-button class="primary" (click)="onProceed()">Done</button>
+    </div>
+
+</cuws-base-dialog>

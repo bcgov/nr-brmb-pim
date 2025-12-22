@@ -15,11 +15,13 @@ import { BERRY_COMMODITY, INSURANCE_PLAN, LAND_UPDATE_TYPE } from 'src/app/utils
 export interface AddLandPopupData {
   fieldId: number;
   fieldLabel?: string;
+  fieldLocation?: string;
   cropYear: number;
   policyId: string;
   insurancePlanId: number; 
   annualFieldDetailId?: number;
   otherLegalDescription? : string;
+  primaryPropertyIdentifier?: string;
   landData?: {
     fieldId?: number;
     legalLandId?: number;
@@ -332,16 +334,21 @@ export class AddFieldComponent implements OnInit{
 
   onLegalLandReceived(legalLand) { 
     this.dataToSend.landData.legalLandId = legalLand.legalLandId
-    this.dataToSend.landData.primaryPropertyIdentifier = legalLand.primaryPropertyIdentifier
-    this.dataToSend.landData.otherLegalDescription = legalLand.otherLegalDescription
 
     this.fieldList = null
 
     if (legalLand.legalLandId > -1 ) {
+
+      this.dataToSend.landData.primaryPropertyIdentifier = legalLand.primaryPropertyIdentifier
+      this.dataToSend.landData.otherLegalDescription = legalLand.otherLegalDescription
       this.getFields(this.dataReceived.cropYear, legalLand.legalLandId, "", "") 
+      
     } else { 
       // new legal land - allow Proceed
-      this.dataToSend.landData.fieldId = -1
+      
+      const searchLegalLandOrFieldId = (this.addFieldForm.controls.searchLegalLandOrFieldId.value).trim()
+      this.setNewLegalLand(searchLegalLandOrFieldId)
+
       this.showProceedButton = true;
     }
   }

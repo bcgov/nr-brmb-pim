@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { AnnualFieldRsrc } from '@cirras/cirras-underwriting-api';
 import { makeTitleCase } from 'src/app/utils';
 import { BERRY_COMMODITY, INSURANCE_PLAN } from 'src/app/utils/constants';
+import { getThePolicyAndPlan } from '../../inventory-common';
 
 @Component({
   selector: 'field-list',
@@ -26,20 +27,7 @@ export class FieldListComponent {
   });
 
   getPolicyAndPlan(field: AnnualFieldRsrc){
-    let policyAndPlan = ""
-
-    if (field && field.policies) {
-
-      field.policies.forEach(policy => {
-
-        if ( policyAndPlan.length > 0 ) {
-          policyAndPlan = policyAndPlan + "\n" // add a line break
-        }
-        policyAndPlan = policyAndPlan + policy.policyNumber + " (" + makeTitleCase(policy.insurancePlanName) + ") - " + policy.growerName
-      })
-    } 
-
-    return policyAndPlan
+    return getThePolicyAndPlan(field)
   }
 
   getNewFieldNameHint(){

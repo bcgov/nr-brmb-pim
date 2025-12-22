@@ -37,6 +37,9 @@ export class RemoveFieldComponent implements OnInit {
   dataReceived : RemoveFieldPopupData;
   validation: RemoveFieldValidationRsrc;
   deleteToolTip: String;
+  showRemoveCommodityFromField: Boolean
+  showRemoveFieldFromPolicy: Boolean
+  disableDeleteButton: Boolean
 
   constructor(
     public dialogRef: MatDialogRef<RemoveFieldComponent>,
@@ -50,9 +53,19 @@ export class RemoveFieldComponent implements OnInit {
         //capture the data that comes from the main page
         this.dataReceived = data;
 
-        this.titleLabel = "Remove or Delete Field " + 
-          ((this.dataReceived && this.dataReceived.fieldId) ? 
-            (": " + this.dataReceived. fieldLabel + " (" + this.dataReceived.fieldId + ")") : "")
+        let titleDetails = ""
+        if (this.dataReceived && this.dataReceived.fieldId){
+          //Show field name and field id in the title if there is a field name
+          if(this.dataReceived.fieldLabel && this.dataReceived.fieldLabel.length > 0){
+            titleDetails = ": " + this.dataReceived.fieldLabel + " (" + this.dataReceived.fieldId + ")"
+          } else {
+            titleDetails = ": " + this.dataReceived.fieldId
+          }
+        }
+
+        this.titleLabel = "Remove or Delete Field " + titleDetails
+
+        this.showRemoveCommodityFromField = (this.dataReceived && this.dataReceived.showRemoveCommodity && this.dataReceived.showRemoveCommodity == true)
       } 
     }
 
@@ -76,13 +89,15 @@ export class RemoveFieldComponent implements OnInit {
 
       if(data && data.isDeleteFieldAllowed) {
         this.deleteToolTip = "Deletes the field from the system";
+        this.disableDeleteButton = false;
       } else {
         this.deleteToolTip = "Delete the field from the system is only possible if it's not associated with another policy or contract and has no inventory, comments and yield in any year";
+        this.disableDeleteButton = true;
       }
 
+      this.showRemoveFieldFromPolicy = (data && data.isRemoveFromPolicyAllowed)
+
     })
-
-
   }
 
   onRemoveCommodityFromField(){

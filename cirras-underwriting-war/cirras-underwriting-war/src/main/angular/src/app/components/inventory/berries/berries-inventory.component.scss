@@ -1,0 +1,46 @@
+.field-with-no-cmdty-warnings-container {
+    
+    margin-left: 10px;
+    margin-top: 8px;
+    padding-left: 6px;
+    width: 1016px;
+
+    border: 1px solid orange;
+    border-radius: 5px;
+    background: #fff9ea;
+
+    .field-with-no-cmdty-warning-messages {
+        display: grid;
+        grid-auto-rows: minmax( 2em, auto );
+        grid-template-columns: 30px 900px;
+    }
+
+    .field-with-no-cmdty-warnings-grid {
+        display: grid;
+        grid-auto-rows: minmax( 2em, auto );
+        grid-template-columns: 150px 350px 250px;
+
+        div {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .header {
+            font-weight: bold; 
+    
+            border-right: 1px solid #DDDDDD;
+            border-top: 1px solid #DDDDDD;
+            border-bottom: 1px solid #DDDDDD;
+        }
+
+        .cell {
+            border-right: 1px solid #DDDDDD;  
+            border-bottom: 1px solid #DDDDDD;
+        }
+
+        .border-right {
+            border-right: 1px solid #DDDDDD;  
+        }
+    }
+  }

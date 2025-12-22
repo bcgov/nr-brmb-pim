@@ -1,12 +1,12 @@
 import { ChangeDetectorRef } from "@angular/core"
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl } from "@angular/forms"
-import { InventoryBerries, InventoryField, InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
+import { AnnualFieldRsrc, InventoryBerries, InventoryField, InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
 import { AnnualField, CropVarietyCommodityType } from "src/app/conversion/models"
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from "src/app/utils/constants"
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { MatDialog } from "@angular/material/dialog";
-import { EditLandComponent } from "./edit-land/edit-land.component";
-import { addUwCommentsObject, getUniqueKey } from 'src/app/utils';
+import { EditLegalLandInInventoryComponent } from "./edit-legal-land/edit-legal-land.component";
+import { addUwCommentsObject, getUniqueKey, makeTitleCase } from 'src/app/utils';
 import { RemoveFieldComponent, RemoveFieldPopupData } from "./remove-field/remove-field.component"
 import { AddFieldComponent, AddLandPopupData } from "./add-field/add-field.component"
 
@@ -340,11 +340,25 @@ export function AddNewFormField(fb: UntypedFormBuilder, flds: UntypedFormArray, 
       const dataToSend : AddLandPopupData = {
           fieldId: minFieldId - 1,
           fieldLabel: "",
+          fieldLocation: "",
           cropYear: cropYear,
           policyId: policyId,
           insurancePlanId: insurancePlanId,
           annualFieldDetailId: null,
-          otherLegalDescription: ""
+          otherLegalDescription: "",
+          primaryPropertyIdentifier: null,
+          landData: {
+            fieldId: null,
+            legalLandId: null,
+            fieldLabel: null,
+            fieldLocation: null,
+            primaryPropertyIdentifier: null,
+            otherLegalDescription: null,
+            landUpdateType: null,
+            transferFromGrowerContractYearId : null,
+            plantings: [],
+            uwComments: []
+          }
         }
   
       openAddEditLandPopup(fb, flds, dialog, dataToSend, maxDisplayOrder + 1, true, cdr)
@@ -373,7 +387,7 @@ export function openAddEditLandPopup(fb: UntypedFormBuilder, flds: UntypedFormAr
 
   } else {
 
-    dialogRef = dialog.open(EditLandComponent, {
+    dialogRef = dialog.open(EditLegalLandInInventoryComponent, {
       width: '1110px',
       data: dataToSend,
       autoFocus: false // if you remove this line of code then the first radio button would be selected
@@ -544,6 +558,7 @@ export function replaceLegalLand(flds: UntypedFormArray, fieldId, landData, cdr:
 
   for (let i = 0 ; i < flds.length; i++) {
     if (flds['controls'][i].get("fieldId").value  ==  fieldId) {
+      flds.controls[i].get('primaryPropertyIdentifier').setValue(landData.primaryPropertyIdentifier);
       flds.controls[i].get('otherLegalDescription').setValue(landData.otherLegalDescription);
       flds.controls[i].get('legalLandId').setValue(landData.legalLandId);
       flds.controls[i].get('landUpdateType').setValue(landData.landUpdateType);
@@ -883,4 +898,22 @@ export function createNewAnnualFieldObject(fieldId, legalLandId, fieldLabel, oth
     isNewFieldUI: true,
     deletedByUserInd: false
   }
+
+}
+
+export function getThePolicyAndPlan(field: AnnualFieldRsrc){
+    let policyAndPlan = ""
+
+    if (field && field.policies) {
+
+      field.policies.forEach(policy => {
+
+        if ( policyAndPlan.length > 0 ) {
+          policyAndPlan = policyAndPlan + "\n" // add a line break
+        }
+        policyAndPlan = policyAndPlan + policy.policyNumber + " (" + makeTitleCase(policy.insurancePlanName) + ")"
+      })
+    } 
+
+    return policyAndPlan
 }
