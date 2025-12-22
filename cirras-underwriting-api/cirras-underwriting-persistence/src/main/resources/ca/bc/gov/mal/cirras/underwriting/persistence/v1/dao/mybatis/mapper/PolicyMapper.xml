@@ -118,6 +118,18 @@
 				  and isf.field_acres <![CDATA[ > ]]> 0
 				  and inv.is_hidden_on_printout_ind = 'N'
 			)
+		WHEN p.insurance_plan_id = 3 THEN	--Berries specific
+			(select count(1)
+				from inventory_berries ib
+				join inventory_field inv on inv.inventory_field_guid = ib.inventory_field_guid
+				join annual_field_detail afd on afd.field_id = inv.field_id and afd.crop_year = inv.crop_year
+				join contracted_field_detail cfd on cfd.annual_field_detail_id = afd.annual_field_detail_id
+				where gcy.grower_contract_year_id = cfd.grower_contract_year_id
+				  and gcy.insurance_plan_id = inv.insurance_plan_id
+				  and ib.crop_commodity_id is not null
+				  --and ib.planted_acres <![CDATA[ > ]]> 0
+				  --and inv.is_hidden_on_printout_ind = 'N'
+			)
 		ELSE 
 			0
 		END AS total_dop_eligible_inventory 		
@@ -467,6 +479,18 @@
 					  and isf.crop_commodity_id is not null
 					  and isf.field_acres <![CDATA[ > ]]> 0
 					  and inv.is_hidden_on_printout_ind = 'N'
+				)
+			WHEN p.insurance_plan_id = 3 THEN	--Berries specific
+				(select count(1)
+					from inventory_berries ib
+					join inventory_field inv on inv.inventory_field_guid = ib.inventory_field_guid
+					join annual_field_detail afd on afd.field_id = inv.field_id and afd.crop_year = inv.crop_year
+					join contracted_field_detail cfd on cfd.annual_field_detail_id = afd.annual_field_detail_id
+					where gcy.grower_contract_year_id = cfd.grower_contract_year_id
+					  and gcy.insurance_plan_id = inv.insurance_plan_id
+					  and ib.crop_commodity_id is not null
+					  --and ib.planted_acres <![CDATA[ > ]]> 0
+					  --and inv.is_hidden_on_printout_ind = 'N'
 				)
 			ELSE 
 				0
