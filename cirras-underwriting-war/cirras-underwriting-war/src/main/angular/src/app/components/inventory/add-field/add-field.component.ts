@@ -256,6 +256,9 @@ export class AddFieldComponent implements OnInit{
 
   getFields(cropYear, legalLandId, fieldId, fieldLocation){
     
+    this.showNoFieldMessage = false
+    this.showProceedButton = false
+
     let url = this.appConfig.getConfig().rest["cirras_underwriting"]
     url = url + "/annualFields?legalLandId=" + legalLandId.toString()
     url = url + "&fieldId=" + fieldId.toString()
@@ -282,7 +285,8 @@ export class AddFieldComponent implements OnInit{
           this.validateFields(self.fieldList.collection[0])
         }
       } else {
-        this.showNoFieldMessage = true
+        self.showNoFieldMessage = true
+        self.showProceedButton = true
       }
     })
   }
