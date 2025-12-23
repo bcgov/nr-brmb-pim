@@ -159,7 +159,7 @@ import { RenameLegalLandComponent } from "./components/inventory/edit-legal-land
 import { LegalLandListWithMessageComponent } from "./components/inventory/edit-legal-land/legal-land-list-with-message/legal-land-list-with-message.component";
 import { FieldListWithMessageComponent } from "./components/inventory/edit-legal-land/field-list-with-message/field-list-with-message.component";
 import { ReplaceLegalLandComponent } from "./components/inventory/edit-legal-land/replace-legal-land/replace-legal-land.component";
-import { BerriesDopComponent } from "./components/dop/berries/berries.component";
+import { BerriesDopComponent } from "./components/dop/berries/berries-dop.component";
 import { DopSelectorComponent } from "./components/dop/dop-selector/dop-selector.component";
 
 /**
