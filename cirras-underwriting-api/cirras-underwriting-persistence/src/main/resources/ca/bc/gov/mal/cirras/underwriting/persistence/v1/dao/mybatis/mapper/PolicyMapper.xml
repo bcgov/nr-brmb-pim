@@ -127,8 +127,8 @@
 				where gcy.grower_contract_year_id = cfd.grower_contract_year_id
 				  and gcy.insurance_plan_id = inv.insurance_plan_id
 				  and ib.crop_commodity_id is not null
-				  --and ib.planted_acres <![CDATA[ > ]]> 0
-				  --and inv.is_hidden_on_printout_ind = 'N'
+				  and ib.planted_acres <![CDATA[ > ]]> 0
+				  and inv.is_hidden_on_printout_ind = 'N'
 			)
 		ELSE 
 			0
@@ -489,8 +489,8 @@
 					where gcy.grower_contract_year_id = cfd.grower_contract_year_id
 					  and gcy.insurance_plan_id = inv.insurance_plan_id
 					  and ib.crop_commodity_id is not null
-					  --and ib.planted_acres <![CDATA[ > ]]> 0
-					  --and inv.is_hidden_on_printout_ind = 'N'
+					  and ib.planted_acres <![CDATA[ > ]]> 0
+					  and inv.is_hidden_on_printout_ind = 'N'
 				)
 			ELSE 
 				0
