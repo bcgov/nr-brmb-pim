@@ -8,12 +8,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldAmendment;
-import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContractCommodity;
-import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContractSimple;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldSummary;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.ContractedFieldDetailDao;
@@ -31,6 +28,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.VerifiedYieldAmendmen
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.VerifiedYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.VerifiedYieldContractDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.VerifiedYieldSummaryDao;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.VerifiedYieldContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.VerifiedYieldContractSimpleRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.VerifiedYieldGrainBasketDao;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityDto;
@@ -174,13 +173,13 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	}
 	
 	@Override
-	public VerifiedYieldContract<? extends AnnualField, ? extends Message> rolloverVerifiedYieldContract(Integer policyId,
+	public VerifiedYieldContractRsrc rolloverVerifiedYieldContract(Integer policyId,
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 		logger.debug("<rolloverVerifiedYieldContract");
 
 		// Add verified yield contract
-		VerifiedYieldContract<? extends AnnualField, ? extends Message> result = null;
+		VerifiedYieldContractRsrc result = null;
 
 		try {
 
@@ -257,7 +256,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		}
 	}
 	
-	private void rollupVerifiedYield(VerifiedYieldContract<? extends AnnualField, ? extends Message> vyc) {
+	private void rollupVerifiedYield(VerifiedYieldContractRsrc vyc) {
 		
 		if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(vyc.getInsurancePlanId()) ) {
 		
@@ -412,7 +411,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		}
 	}
 
-	private void calculateVerifiedYieldContractCommodities(VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract) {
+	private void calculateVerifiedYieldContractCommodities(VerifiedYieldContractRsrc verifiedYieldContract) {
 		if ( verifiedYieldContract.getVerifiedYieldContractCommodities() != null && !verifiedYieldContract.getVerifiedYieldContractCommodities().isEmpty() ) {
 			for ( VerifiedYieldContractCommodity vycc : verifiedYieldContract.getVerifiedYieldContractCommodities() ) {
 
@@ -494,13 +493,13 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	}
 	
 	@Override
-	public VerifiedYieldContract<? extends AnnualField, ? extends Message> getVerifiedYieldContract(String verifiedYieldContractGuid,
+	public VerifiedYieldContractRsrc getVerifiedYieldContract(String verifiedYieldContractGuid,
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 
 		logger.debug("<getVerifiedYieldContract");
 
-		VerifiedYieldContract<? extends AnnualField, ? extends Message> result = null;
+		VerifiedYieldContractRsrc result = null;
 
 		try {
 			VerifiedYieldContractDto dto = verifiedYieldContractDao.fetch(verifiedYieldContractGuid);
@@ -519,7 +518,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		return result;
 	}	
 
-	private VerifiedYieldContract<? extends AnnualField, ? extends Message> loadVerifiedYieldContract(
+	private VerifiedYieldContractRsrc loadVerifiedYieldContract(
 			VerifiedYieldContractDto dto,
 			FactoryContext factoryContext, 
 			WebAdeAuthentication authentication) throws DaoException {
@@ -572,7 +571,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	}
 	
 	@Override
-	public VerifiedYieldContractSimple getVerifiedYieldContractSimple(
+	public VerifiedYieldContractSimpleRsrc getVerifiedYieldContractSimple(
 			Integer contractId,
 			Integer cropYear,
 			Integer cropCommodityId,
@@ -588,7 +587,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 		logger.debug("<getVerifiedYieldContractSimple");
 
-		VerifiedYieldContractSimple result = null;
+		VerifiedYieldContractSimpleRsrc result = null;
 
 		//Is pedigree needs to be set if commodity is set
 		if(cropCommodityId != null && isPedigreeInd == null) {
@@ -621,7 +620,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		return result;
 	}	
 
-	private VerifiedYieldContractSimple loadVerifiedYieldContractSimple(
+	private VerifiedYieldContractSimpleRsrc loadVerifiedYieldContractSimple(
 			VerifiedYieldContractDto dto,
 			Integer cropCommodityId,
 			Boolean isPedigreeInd,
@@ -649,14 +648,14 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	}
 	
 	@Override
-	public VerifiedYieldContract<? extends AnnualField, ? extends Message> createVerifiedYieldContract(
-			VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract, FactoryContext factoryContext,
+	public VerifiedYieldContractRsrc createVerifiedYieldContract(
+			VerifiedYieldContractRsrc verifiedYieldContract, FactoryContext factoryContext,
 			WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, ValidationFailureException {
 
 		logger.debug("<createVerifiedYieldContract");
 
-		VerifiedYieldContract<? extends AnnualField, ? extends Message> result = null;
+		VerifiedYieldContractRsrc result = null;
 		String userId = getUserId(authentication);
 
 		try {
@@ -726,7 +725,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	
 	private void calculateAndSaveGrainBasket(
 			String verifiedYieldContractGuid, 
-			VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract,
+			VerifiedYieldContractRsrc verifiedYieldContract,
 			List<ProductDto> productDtos, 
 			String userId,
 			WebAdeAuthentication authentication) throws DaoException {
@@ -831,7 +830,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	
 	private void calculateAndSaveVerifiedYieldSummaries(
 			String verifiedYieldContractGuid, 
-			VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract,
+			VerifiedYieldContractRsrc verifiedYieldContract,
 			List<ProductDto> productDtos,
 			String userId,
 			WebAdeAuthentication authentication) throws DaoException {
@@ -1188,7 +1187,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 	}
 
-	private void setProductValues(VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract,
+	private void setProductValues(VerifiedYieldContractRsrc verifiedYieldContract,
 			List<ProductDto> productDtos, VerifiedYieldSummary vys) {
 		//Get product
 		ProductDto product = getProductDto(vys.getCropCommodityId(), vys.getIsPedigreeInd(), productDtos);
@@ -1335,7 +1334,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		return product;
 	}
 
-	private String insertVerifiedYieldContract(VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract, String userId)
+	private String insertVerifiedYieldContract(VerifiedYieldContractRsrc verifiedYieldContract, String userId)
 			throws DaoException {
 
 		VerifiedYieldContractDto dto = new VerifiedYieldContractDto();
@@ -1453,17 +1452,17 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	
 	
 	@Override
-	public VerifiedYieldContract<? extends AnnualField, ? extends Message> updateVerifiedYieldContract(
+	public VerifiedYieldContractRsrc updateVerifiedYieldContract(
 			String verifiedYieldContractGuid,
 			String optimisticLock, 
-			VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract,
+			VerifiedYieldContractRsrc verifiedYieldContract,
 			FactoryContext factoryContext, 
 			WebAdeAuthentication authentication) throws ServiceException,
 			NotFoundException, ForbiddenException, ConflictException, ValidationFailureException {
 
 		logger.debug("<updateVerifiedYieldContract");
 
-		VerifiedYieldContract<? extends AnnualField, ? extends Message> result = null;
+		VerifiedYieldContractRsrc result = null;
 		String userId = getUserId(authentication);
 
 		try {
@@ -1535,7 +1534,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		return result;
 	}
 	
-	private void updateVerifiedYieldContract(VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract, String userId)
+	private void updateVerifiedYieldContract(VerifiedYieldContractRsrc verifiedYieldContract, String userId)
 			throws DaoException, NotFoundException {
 
 		VerifiedYieldContractDto dto = verifiedYieldContractDao.fetch(verifiedYieldContract.getVerifiedYieldContractGuid());

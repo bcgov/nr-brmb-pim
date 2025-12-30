@@ -12,7 +12,6 @@ import jakarta.ws.rs.core.UriBuilder;
 
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityVarietyRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.SyncCommodityVariety;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.GrowerContactDto;
 import ca.bc.gov.mal.cirras.underwriting.controllers.SyncCommodityVarietyEndpoint;
@@ -39,18 +38,9 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerContactRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.PolicyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.ProductRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCodeRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeCodeRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeVarietyXrefRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeCode;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeVarietyXref;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Contact;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ContactEmail;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ContactPhone;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Grower;
-import ca.bc.gov.mal.cirras.underwriting.data.models.GrowerContact;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Policy;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Product;
-import ca.bc.gov.mal.cirras.underwriting.data.models.SyncCode;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.GrowerDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.OfficeDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyDto;
@@ -72,7 +62,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 	
 	
-	public PolicyStatusCodeDto createPolicyStatusCode(SyncCode model) {
+	public PolicyStatusCodeDto createPolicyStatusCode(SyncCodeRsrc model) {
 		
 		PolicyStatusCodeDto dto = new PolicyStatusCodeDto();
 		
@@ -89,7 +79,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public void updatePolicyStatusCode(PolicyStatusCodeDto dto, SyncCode model) {
+	public void updatePolicyStatusCode(PolicyStatusCodeDto dto, SyncCodeRsrc model) {
 
 		Map<String, Date> dates = calculateDates(model.getIsActive(), dto.getEffectiveDate(), dto.getExpiryDate());
 		
@@ -105,7 +95,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public void updateGrower(GrowerDto dto, Grower model) {
+	public void updateGrower(GrowerDto dto, GrowerRsrc model) {
 
 		dto.setGrowerId(model.getGrowerId());
 		dto.setGrowerNumber(model.getGrowerNumber());
@@ -122,7 +112,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 
 	
 	
-	public Grower getGrower(GrowerDto dto) {
+	public GrowerRsrc getGrower(GrowerDto dto) {
 		GrowerRsrc resource = new GrowerRsrc();
 		
 		resource.setGrowerId(dto.getGrowerId());
@@ -145,7 +135,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public void updatePolicy(PolicyDto dto, Policy model) {
+	public void updatePolicy(PolicyDto dto, PolicyRsrc model) {
 
 		dto.setPolicyId(model.getPolicyId());
 		dto.setGrowerId(model.getGrowerId());
@@ -162,7 +152,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 
 	
 	
-	public Policy getPolicy(PolicyDto dto) {
+	public PolicyRsrc getPolicy(PolicyDto dto) {
 		PolicyRsrc resource = new PolicyRsrc();
 		
 		resource.setPolicyId(dto.getPolicyId());
@@ -184,7 +174,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public void updateProduct(ProductDto dto, Product model) {
+	public void updateProduct(ProductDto dto, ProductRsrc model) {
 
 		dto.setCommodityCoverageCode(model.getCommodityCoverageCode());
 		dto.setCropCommodityId(model.getCropCommodityId());
@@ -202,7 +192,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 
 	
 	
-	public Product getProduct(ProductDto dto) {
+	public ProductRsrc getProduct(ProductDto dto) {
 		ProductRsrc resource = new ProductRsrc();
 		
 		resource.setCommodityCoverageCode(dto.getCommodityCoverageCode());
@@ -227,7 +217,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 	
 	
-	public CropCommodityDto createCropCommodity(SyncCommodityVariety model) {
+	public CropCommodityDto createCropCommodity(SyncCommodityVarietyRsrc model) {
 		CropCommodityDto dto = new CropCommodityDto();
 		
 		dto.setCropCommodityId(model.getCropId());
@@ -252,7 +242,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public void updateCropCommodity(CropCommodityDto dto, SyncCommodityVariety model) {
+	public void updateCropCommodity(CropCommodityDto dto, SyncCommodityVarietyRsrc model) {
 
 		dto.setCommodityName(model.getCropName());
 		dto.setInsurancePlanId(model.getInsurancePlanId());
@@ -280,7 +270,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public SyncCommodityVariety getSyncCommodityVarietyFromCropCommodity(CropCommodityDto dto) {
+	public SyncCommodityVarietyRsrc getSyncCommodityVarietyFromCropCommodity(CropCommodityDto dto) {
 		SyncCommodityVarietyRsrc resource = new SyncCommodityVarietyRsrc();
 		
 		resource.setCropId(dto.getCropCommodityId());
@@ -308,7 +298,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public CropVarietyDto createCropVariety(SyncCommodityVariety model) {
+	public CropVarietyDto createCropVariety(SyncCommodityVarietyRsrc model) {
 		CropVarietyDto dto = new CropVarietyDto();
 		
 		dto.setCropVarietyId(model.getCropId());
@@ -323,7 +313,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public void updateCropVariety(CropVarietyDto dto, SyncCommodityVariety model) {
+	public void updateCropVariety(CropVarietyDto dto, SyncCommodityVarietyRsrc model) {
 
 		dto.setCropCommodityId(model.getParentCropId());
 		dto.setVarietyName(model.getCropName());
@@ -340,7 +330,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public SyncCommodityVariety getSyncCommodityVarietyFromVariety(CropVarietyDto dto) {
+	public SyncCommodityVarietyRsrc getSyncCommodityVarietyFromVariety(CropVarietyDto dto) {
 		SyncCommodityVarietyRsrc resource = new SyncCommodityVarietyRsrc();
 		
 		resource.setCropId(dto.getCropVarietyId());
@@ -356,7 +346,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public OfficeDto createOffice(OfficeDto dto, SyncCode model) {
+	public OfficeDto createOffice(OfficeDto dto, SyncCodeRsrc model) {
 		
 		dto.setOfficeId(model.getUniqueKeyInteger());
 		dto.setOfficeName(model.getDescription());
@@ -371,7 +361,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public void updateContact(ContactDto dto, Contact model) {
+	public void updateContact(ContactDto dto, ContactRsrc model) {
 
 		dto.setContactId(model.getContactId());
 		dto.setFirstName(model.getFirstName());
@@ -381,7 +371,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public Contact getContact(ContactDto dto) {
+	public ContactRsrc getContact(ContactDto dto) {
 
 		ContactRsrc resource = new ContactRsrc();
 		
@@ -398,7 +388,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public void updateGrowerContact(GrowerContactDto dto, GrowerContact model) {
+	public void updateGrowerContact(GrowerContactDto dto, GrowerContactRsrc model) {
 
 		dto.setGrowerContactId(model.getGrowerContactId());
 		dto.setGrowerId(model.getGrowerId());
@@ -410,7 +400,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public GrowerContact getGrowerContact(GrowerContactDto dto) {
+	public GrowerContactRsrc getGrowerContact(GrowerContactDto dto) {
 
 		GrowerContactRsrc resource = new GrowerContactRsrc();
 		
@@ -429,7 +419,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public void updateContactEmail(ContactEmailDto dto, ContactEmail model) {
+	public void updateContactEmail(ContactEmailDto dto, ContactEmailRsrc model) {
 
 		Map<String, Date> dates = calculateDates(model.getIsActive(), dto.getEffectiveDate(), dto.getExpiryDate());
 		
@@ -445,7 +435,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public ContactEmail getContactEmail(ContactEmailDto dto) {
+	public ContactEmailRsrc getContactEmail(ContactEmailDto dto) {
 
 		ContactEmailRsrc resource = new ContactEmailRsrc();
 		
@@ -465,7 +455,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public void updateContactPhone(ContactPhoneDto dto, ContactPhone model) {
+	public void updateContactPhone(ContactPhoneDto dto, ContactPhoneRsrc model) {
 
 		Map<String, Date> dates = calculateDates(model.getIsActive(), dto.getEffectiveDate(), dto.getExpiryDate());
 
@@ -481,7 +471,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public ContactPhone getContactPhone(ContactPhoneDto dto) {
+	public ContactPhoneRsrc getContactPhone(ContactPhoneDto dto) {
 
 		ContactPhoneRsrc resource = new ContactPhoneRsrc();
 
@@ -510,7 +500,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public void updateCommodityTypeCode(CommodityTypeCodeDto dto, CommodityTypeCode model) {
+	public void updateCommodityTypeCode(CommodityTypeCodeDto dto, SyncCommodityTypeCodeRsrc model) {
 
 		Map<String, Date> dates = calculateDates(model.getIsActive(), dto.getEffectiveDate(), dto.getExpiryDate());
 
@@ -524,7 +514,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public CommodityTypeCode getCommodityTypeCode(CommodityTypeCodeDto dto) {
+	public SyncCommodityTypeCodeRsrc getCommodityTypeCode(CommodityTypeCodeDto dto) {
 		
 		SyncCommodityTypeCodeRsrc resource = new SyncCommodityTypeCodeRsrc();
 		
@@ -543,7 +533,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public void updateCommodityTypeVarietyXref(CommodityTypeVarietyXrefDto dto, CommodityTypeVarietyXref model) {
+	public void updateCommodityTypeVarietyXref(CommodityTypeVarietyXrefDto dto, SyncCommodityTypeVarietyXrefRsrc model) {
 
 		dto.setCommodityTypeCode(model.getCommodityTypeCode());
 		dto.setCropVarietyId(model.getCropVarietyId());
@@ -552,7 +542,7 @@ public class CirrasDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public CommodityTypeVarietyXref getCommodityTypeVarietyXref(CommodityTypeVarietyXrefDto dto) {
+	public SyncCommodityTypeVarietyXrefRsrc getCommodityTypeVarietyXref(CommodityTypeVarietyXrefDto dto) {
 
 		SyncCommodityTypeVarietyXrefRsrc resource = new SyncCommodityTypeVarietyXrefRsrc();
 

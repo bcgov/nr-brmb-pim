@@ -9,13 +9,12 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Policy;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.POLICY_NAME)
 @XmlSeeAlso({ PolicyRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class PolicyRsrc extends BaseResource implements Policy {
+public class PolicyRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
 
@@ -120,12 +119,12 @@ public class PolicyRsrc extends BaseResource implements Policy {
 		this.dataSyncTransDate = dataSyncTransDate;
 	}
 
-	@Override
+	
 	public String getTransactionType() {
 		return transactionType;
 	}
 
-	@Override
+	
 	public void setTransactionType(String transactionType) {
 		this.transactionType = transactionType;
 	}

@@ -2,14 +2,14 @@ package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContract;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
 
 public class ContractedFieldDetailRsrcFactory extends BaseResourceFactory { 
 	
 	
-	public void createContractedFieldDetail(ContractedFieldDetailDto dto, AnnualField model, InventoryContract<? extends AnnualField> inventoryContract) {
+	public void createContractedFieldDetail(ContractedFieldDetailDto dto, AnnualFieldRsrc model, InventoryContractRsrc inventoryContract) {
 
 		dto.setAnnualFieldDetailId(model.getAnnualFieldDetailId());
 		dto.setGrowerContractYearId(inventoryContract.getGrowerContractYearId());

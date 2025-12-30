@@ -1,9 +1,5 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,7 +11,6 @@ import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingServiceException;
 import ca.bc.gov.mal.cirras.underwriting.clients.ValidationException;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactEmailRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.EndpointsRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UserSettingRsrc;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;

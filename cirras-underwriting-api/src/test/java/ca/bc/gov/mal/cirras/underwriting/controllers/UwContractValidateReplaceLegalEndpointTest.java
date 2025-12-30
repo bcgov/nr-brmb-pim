@@ -1,6 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
 import org.junit.After;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +23,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandFieldXrefRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ReplaceLegalValidation;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
@@ -251,7 +251,7 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 		ReplaceLegalValidationRsrc replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), fieldLabel, legalLandId.toString(), null);
 		Assert.assertNotNull(replaceLegalValidation);
 
-		String fieldOnOtherPolicyMsg = ReplaceLegalValidation.FIELD_ON_OTHER_POLICY_MSG
+		String fieldOnOtherPolicyMsg = ReplaceLegalValidationRsrc.FIELD_ON_OTHER_POLICY_MSG
 				.replace("[fieldLocationOrfieldLabel]", fieldLabel)
 				.replace("[fieldId]", fieldId.toString())
 				.replace("[policyNumber]", policyNumber2);
@@ -268,7 +268,7 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 		replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), fieldLabel, legalLandId.toString(), null);
 		Assert.assertNotNull(replaceLegalValidation);
 		
-		String fieldHasOtherLegalLandMsg = ReplaceLegalValidation.FIELD_HAS_OTHER_LEGAL_MSG
+		String fieldHasOtherLegalLandMsg = ReplaceLegalValidationRsrc.FIELD_HAS_OTHER_LEGAL_MSG
 				.replace("[legalLocationOrPid]", legalLocationOrPid)
 				.replace("[fieldLocationOrfieldLabel]", fieldLabel)
 				.replace("[fieldId]", fieldId.toString());
@@ -289,7 +289,7 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 		replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), fieldLabel, legalLandId2.toString(), null);
 		Assert.assertNotNull(replaceLegalValidation);
 
-		String otherFieldsOnLegalMsg = ReplaceLegalValidation.OTHER_FIELD_ON_LEGAL_MSG
+		String otherFieldsOnLegalMsg = ReplaceLegalValidationRsrc.OTHER_FIELD_ON_LEGAL_MSG
 											.replace("[legalLocationOrPid]", legalLocationOrPid)
 											.replace("[otherDescriptionOrPid]", legalLocation2);
 		
@@ -367,7 +367,7 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 		ReplaceLegalValidationRsrc replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), null, legalLandId.toString(), fieldLocation);
 		Assert.assertNotNull(replaceLegalValidation);
 
-		String fieldOnOtherPolicyMsg = ReplaceLegalValidation.FIELD_ON_OTHER_POLICY_MSG
+		String fieldOnOtherPolicyMsg = ReplaceLegalValidationRsrc.FIELD_ON_OTHER_POLICY_MSG
 				.replace("[fieldLocationOrfieldLabel]", fieldLocation)
 				.replace("[fieldId]", fieldId.toString())
 				.replace("[policyNumber]", policyNumber2);
@@ -384,7 +384,7 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 		replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), null, legalLandId.toString(), fieldLocation);
 		Assert.assertNotNull(replaceLegalValidation);
 		
-		String fieldHasOtherLegalLandMsg = ReplaceLegalValidation.FIELD_HAS_OTHER_LEGAL_MSG
+		String fieldHasOtherLegalLandMsg = ReplaceLegalValidationRsrc.FIELD_HAS_OTHER_LEGAL_MSG
 				.replace("[legalLocationOrPid]", legalLocationOrPid)
 				.replace("[fieldLocationOrfieldLabel]", fieldLocation)
 				.replace("[fieldId]", fieldId.toString());
@@ -408,7 +408,7 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 		replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), null, legalLandId2.toString(), fieldLocation);
 		Assert.assertNotNull(replaceLegalValidation);
 
-		String otherFieldsOnLegalMsg = ReplaceLegalValidation.OTHER_FIELD_ON_LEGAL_MSG
+		String otherFieldsOnLegalMsg = ReplaceLegalValidationRsrc.OTHER_FIELD_ON_LEGAL_MSG
 											.replace("[legalLocationOrPid]", legalLocationOrPid)
 											.replace("[otherDescriptionOrPid]", pid);
 		

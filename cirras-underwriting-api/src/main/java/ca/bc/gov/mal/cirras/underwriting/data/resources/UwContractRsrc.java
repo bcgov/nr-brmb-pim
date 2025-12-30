@@ -10,13 +10,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.data.models.OtherYearPolicy;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UwContract;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.UWCONTRACT_NAME)
 @XmlSeeAlso({ UwContractRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class UwContractRsrc extends BaseResource implements UwContract<UwContractRsrc> {
+public class UwContractRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
 

@@ -7,17 +7,16 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualFieldList;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UserSetting;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UwContract;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UwContractList;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.UserSettingDto;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.FieldDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.PolicyDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.UserSettingDao;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.UserSettingRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractRsrc;
 import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.TooManyRecordsException;
@@ -88,7 +87,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	}
 	
 	@Override
-	public UwContractList<? extends UwContract<? extends UwContract<?>>> getUwContractList(
+	public UwContractListRsrc getUwContractList(
 			Integer cropYear, 
 			Integer insurancePlanId, 
 			Integer officeId,
@@ -105,7 +104,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 
 		logger.debug("<getUwContractList");
 		
-		UwContractList<? extends UwContract<? extends UwContract<?>>> results = null;
+		UwContractListRsrc results = null;
 
 		try {
 			int maximumRows = DefaultMaximumResults;
@@ -153,7 +152,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 
 
 	@Override
-	public UwContract<? extends UwContract<?>> getUwContract(Integer policyId, 
+	public UwContractRsrc getUwContract(Integer policyId, 
 			                                                 Boolean loadLinkedPolicies, 
 			                                         		 Boolean loadOtherYearPolicies,
 			                                        		 String screenType,
@@ -162,7 +161,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 			throws ServiceException, NotFoundException {
 		logger.debug("<getUwContract");
 
-		UwContract<? extends UwContract<?>> result = null;
+		UwContractRsrc result = null;
 
 		try {
 			PolicyDto dto = policyDao.fetch(policyId);
@@ -217,7 +216,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	}
 
 	@Override
-	public AnnualFieldList<? extends AnnualField> getAnnualFieldForLegalLandList(
+	public AnnualFieldListRsrc getAnnualFieldForLegalLandList(
 			Integer legalLandId, 
 			Integer fieldId, 
 			String fieldLocation,
@@ -227,7 +226,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 
 		logger.debug("<getAnnualFieldList");
 		
-		AnnualFieldList<? extends AnnualField> results = null;
+		AnnualFieldListRsrc results = null;
 
 		try {
 			
@@ -259,11 +258,11 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	}
 
 	@Override
-	public UserSetting searchUserSetting(FactoryContext factoryContext, WebAdeAuthentication authentication)
+	public UserSettingRsrc searchUserSetting(FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 		logger.debug("<searchUserSetting");
 
-		UserSetting result = null;
+		UserSettingRsrc result = null;
 
 		String loginUserGuid = null;
 		if ( authentication != null && authentication.getUserGuid() != null ) {
@@ -290,14 +289,14 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	}
 
 	@Override
-	public UserSetting getUserSetting(
+	public UserSettingRsrc getUserSetting(
 			String userSettingGuid, 
 			FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException {
 
 		logger.debug("<getUserSetting");
 		
-		UserSetting result = null;
+		UserSettingRsrc result = null;
 
 		try {
 			
@@ -319,15 +318,15 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	}
 
 	@Override
-	public UserSetting createUserSetting(
-			UserSetting userSetting, 
+	public UserSettingRsrc createUserSetting(
+			UserSettingRsrc userSetting, 
 			FactoryContext factoryContext,
 			WebAdeAuthentication authentication
 			) throws ServiceException, NotFoundException, ValidationFailureException {
 
 		logger.debug("<createUserSetting");
 
-		UserSetting result = null;
+		UserSettingRsrc result = null;
 
 		try {
 			
@@ -347,17 +346,17 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	
 
 	@Override
-	public UserSetting updateUserSetting(
+	public UserSettingRsrc updateUserSetting(
 			String userSettingGuid, 
 			String optimisticLock, 
-			UserSetting userSetting,
+			UserSettingRsrc userSetting,
 			FactoryContext factoryContext, 
 			WebAdeAuthentication authentication
 			) throws ServiceException, NotFoundException, ForbiddenException, ConflictException, ValidationFailureException {
 		
 		logger.debug("<updateUserSetting");
 
-		UserSetting result = null;
+		UserSettingRsrc result = null;
 
 		try {
 			List<Message> errors = new ArrayList<Message>();
@@ -381,7 +380,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	}
 	
 	private void saveUserSetting(
-			UserSetting userSetting, 
+			UserSettingRsrc userSetting, 
 			WebAdeAuthentication authentication) throws DaoException {
 
 		logger.debug("<updateUserSetting");
@@ -410,7 +409,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 		logger.debug(">updateUserSetting");
 	}
 
-	private void insertUserSetting(UserSetting userSetting, String userId) throws DaoException {
+	private void insertUserSetting(UserSettingRsrc userSetting, String userId) throws DaoException {
 
 		logger.debug("<insertUserSetting");
 

@@ -18,22 +18,19 @@ import org.slf4j.LoggerFactory;
 import ca.bc.gov.mal.cirras.policies.api.rest.client.v1.CirrasPolicyService;
 import ca.bc.gov.mal.cirras.policies.api.rest.client.v1.CirrasPolicyServiceException;
 import ca.bc.gov.mal.cirras.policies.api.rest.v1.resource.ProductListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AddFieldValidationRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AddFieldValidation;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
-import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContract;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.RemoveFieldValidationRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.RenameLegalValidationRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ReplaceLegalValidationRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodity;
-import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractList;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededGrain;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryUnseeded;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandList;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RemoveFieldValidation;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RenameLegalValidation;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ReplaceLegalValidation;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.AnnualFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.ContractedFieldDetailDao;
@@ -42,7 +39,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContract
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldForageDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.FieldDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.GrowerContractYearDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryContractDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryCoverageTotalForageDao;
@@ -109,7 +105,6 @@ import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.In
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.LandIdentifierTypeCode;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.PrimaryReferenceTypeCode;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.LandUpdateTypes;
-import ca.bc.gov.mal.cirras.underwriting.services.utils.OutOfSync;
 
 public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
@@ -149,7 +144,6 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	private DeclaredYieldFieldForageDao declaredYieldFieldForageDao;
 	private DeclaredYieldContractDao declaredYieldContractDao;
 	private CropCommodityDao cropCommodityDao;
-	private GrowerContractYearDao growerContractYearDao;
 
 	// services
 	private CirrasPolicyService cirrasPolicyService;
@@ -293,10 +287,6 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	public void setCropCommodityDao(CropCommodityDao cropCommodityDao) {
 		this.cropCommodityDao = cropCommodityDao;
 	}
-	
-	public void setGrowerContractYearDao(GrowerContractYearDao growerContractYearDao) {
-		this.growerContractYearDao = growerContractYearDao;
-	}
 
 	public void setCirrasPolicyService(CirrasPolicyService cirrasPolicyService) {
 		this.cirrasPolicyService = cirrasPolicyService;
@@ -307,12 +297,12 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 	
 	@Override
-	public InventoryContract<? extends AnnualField> createInventoryContract(
-			InventoryContract<? extends AnnualField> inventoryContract, FactoryContext factoryContext,
+	public InventoryContractRsrc createInventoryContract(
+			InventoryContractRsrc inventoryContract, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, ValidationFailureException {
 		logger.debug("<createInventoryContract");
 
-		InventoryContract<? extends AnnualField> result = null;
+		InventoryContractRsrc result = null;
 		String userId = getUserId(authentication);
 
 		try {
@@ -326,13 +316,13 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 			List<InventoryContractCommodity> commodities = inventoryContract.getCommodities();
 
-			List<? extends AnnualField> fields = inventoryContract.getFields();
+			List<AnnualFieldRsrc> fields = inventoryContract.getFields();
 			if (fields != null && !fields.isEmpty()) {
 				// Stores all contracts that need to be re-calculated at the end of the loop
 				// It needs to be done for each contract a field is added to this contract
 				HashSet<Integer> contractsToRecalculate = new HashSet<Integer>();
 
-				for (AnnualField field : fields) {
+				for (AnnualFieldRsrc field : fields) {
 					updateAnnualField(field, inventoryContract, userId, contractsToRecalculate);
 
 					//If field is being deleted these steps are not necessary 
@@ -410,7 +400,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		return result;
 	}
 
-	private String insertInventoryContract(InventoryContract<? extends AnnualField> inventoryContract, String userId)
+	private String insertInventoryContract(InventoryContractRsrc inventoryContract, String userId)
 			throws DaoException {
 
 		InventoryContractDto dto = new InventoryContractDto();
@@ -424,7 +414,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 
 	private String insertInventoryContractCommodity(InventoryContractCommodity inventoryContractCommodity,
-			List<? extends AnnualField> fields, String inventoryContractGuid, String userId) throws DaoException {
+			List<AnnualFieldRsrc> fields, String inventoryContractGuid, String userId) throws DaoException {
 
 		logger.debug("<insertInventoryContractCommodity");
 
@@ -445,7 +435,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 
 	private void updateCalculatedAcres(InventoryContractCommodity inventoryContractCommodity,
-			List<? extends AnnualField> fields) {
+			List<AnnualFieldRsrc> fields) {
 
 		logger.debug("<updateCalculatedAcres");
 
@@ -454,7 +444,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		Double totalSeededAcres = (double) 0;
 		Double totalSpotLossAcres = (double) 0;
 
-		for (AnnualField field : fields) {
+		for (AnnualFieldRsrc field : fields) {
 
 			//Don't include field if it has been removed from the policy or deleted
 			Boolean includeField = true;
@@ -504,7 +494,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 	}
 
-	private Double getUnseededAcres(InventoryContractCommodity inventoryContractCommodity, AnnualField field) {
+	private Double getUnseededAcres(InventoryContractCommodity inventoryContractCommodity, AnnualFieldRsrc field) {
 
 		logger.debug("<getUnseededAcres");
 
@@ -553,7 +543,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		SPOT_LOSS_ACRES
 	}
 
-	private Map<TotalAcresType, Double> getSeededFieldTotals(InventoryContractCommodity inventoryContractCommodity, AnnualField field) {
+	private Map<TotalAcresType, Double> getSeededFieldTotals(InventoryContractCommodity inventoryContractCommodity, AnnualFieldRsrc field) {
 
 		logger.debug("<getSeededFieldTotals");
 		
@@ -628,13 +618,13 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		return acres;
 	}
 
-	private void updateInventoryCoverageTotalForages(InventoryContract invContract, String inventoryContractGuid, String userId) throws DaoException {
+	private void updateInventoryCoverageTotalForages(InventoryContractRsrc invContract, String inventoryContractGuid, String userId) throws DaoException {
 		if ( invContract.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.FORAGE.toString())) {
 			underwritingServiceHelper.updateInventoryCoverageTotalForages(invContract.getFields(), inventoryContractGuid, userId, InventoryCalculationType.Full);
 		}
 	}
 	
-	private void updateInventoryContractCommodityBerries(InventoryContract<? extends AnnualField> invContract, String inventoryContractGuid, String userId) throws DaoException {
+	private void updateInventoryContractCommodityBerries(InventoryContractRsrc invContract, String inventoryContractGuid, String userId) throws DaoException {
 		if ( invContract.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.BERRIES.toString())) {
 			berriesService.updateInventoryContractCommodityBerries(invContract, inventoryContractGuid, userId);
 		}
@@ -708,7 +698,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		return dto.getUnderwritingCommentGuid();
 	}
 
-	private void updateAnnualField(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract,
+	private void updateAnnualField(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract,
 			String userId, HashSet<Integer> contractsToRecalculate) throws DaoException, NotFoundException, ServiceException {
 
 		Boolean bUpdateContractedFieldDetails = false;
@@ -762,7 +752,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		}
 	}
 
-	private void deleteDopData(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract) throws NotFoundDaoException, DaoException {
+	private void deleteDopData(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract) throws NotFoundDaoException, DaoException {
 
 		if ( inventoryContract.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.FORAGE.toString()) ) { 
 			declaredYieldFieldForageDao.deleteForFieldAndYear(annualField.getFieldId(), inventoryContract.getCropYear());
@@ -772,7 +762,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		
 	}
 
-	private void deleteField(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract,
+	private void deleteField(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract,
 			HashSet<Integer> contractsToRecalculate, String userId) throws DaoException, NotFoundException {
 
 		logger.debug("<deleteField");
@@ -799,7 +789,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 
 	private void removeFieldFromPolicy(
-					AnnualField annualField, 
+					AnnualFieldRsrc annualField, 
 					String userId
 				) throws DaoException, NotFoundException {
 		
@@ -821,7 +811,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		
 	}
 
-	private void updateField(AnnualField annualField, String userId)
+	private void updateField(AnnualFieldRsrc annualField, String userId)
 			throws DaoException, NotFoundException {
 		
 		FieldDto dto = fieldDao.fetch(annualField.getFieldId());
@@ -851,7 +841,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		}
 	}
 
-	private void renameLegalLocation(AnnualField annualField, String userId)
+	private void renameLegalLocation(AnnualFieldRsrc annualField, String userId)
 			throws DaoException, NotFoundException{
 
 		LegalLandDto dto = legalLandDao.fetch(annualField.getLegalLandId());
@@ -874,7 +864,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 	}
 
-	private void replaceLegalLocationExisting(AnnualField annualField, String userId)
+	private void replaceLegalLocationExisting(AnnualFieldRsrc annualField, String userId)
 			throws DaoException, NotFoundException {
 
 		//Check if the new primary legal land exists
@@ -918,7 +908,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		}
 	}
 
-	private void replaceLegalLocationNew(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract, String userId)
+	private void replaceLegalLocationNew(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, String userId)
 			throws DaoException, NotFoundException {
 
 		AnnualFieldDetailDto afdDto = annualFieldDetailDao.fetch(annualField.getAnnualFieldDetailId());
@@ -942,7 +932,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		insertLegalLandFieldXref(annualField, userId);
 	}
 
-	private void addExistingLand(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract,
+	private void addExistingLand(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract,
 			String userId, HashSet<Integer> contractsToRecalculate) throws DaoException, NotFoundException, ServiceException {
 
 		// Adds a new annual field record if necessary
@@ -952,7 +942,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		processContractedFieldDetail(annualField, inventoryContract, userId, contractsToRecalculate);
 	}
 
-	private void processContractedFieldDetail(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract, String userId,
+	private void processContractedFieldDetail(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, String userId,
 			HashSet<Integer> contractsToRecalculate) throws DaoException {
 
 		ContractedFieldDetailDto fromCfdDto = null;
@@ -984,7 +974,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		}
 	}
 
-	private void updateContractedFieldDetails(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract, 
+	private void updateContractedFieldDetails(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, 
 			ContractedFieldDetailDto dto, String userId) throws DaoException, NotFoundDaoException {
 		
 		contractedFieldDetailRsrcFactory.createContractedFieldDetail(dto, annualField, inventoryContract);
@@ -992,7 +982,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		
 	}
 
-	private void addContractedFieldDetail(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract, String userId)
+	private void addContractedFieldDetail(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, String userId)
 			throws DaoException {
 
 		ContractedFieldDetailDto dto = contractedFieldDetailDao.fetch(annualField.getContractedFieldDetailId());
@@ -1004,7 +994,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		}
 	}
 
-	private void processAnnualFieldDetail(AnnualField annualField, String userId)
+	private void processAnnualFieldDetail(AnnualFieldRsrc annualField, String userId)
 			throws DaoException {
 
 		// Check if annual field detail record exists
@@ -1028,7 +1018,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		}
 	}
 	
-	private void setPrimaryLegalLandId(AnnualField annualField) throws DaoException {
+	private void setPrimaryLegalLandId(AnnualFieldRsrc annualField) throws DaoException {
 
 		Integer legalLandId = null;
 		//Get previous and subsequent annual records
@@ -1076,7 +1066,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 	
 	// This method is public for testing reasons
-	public void insertNewLand(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract, String userId)
+	public void insertNewLand(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, String userId)
 			throws DaoException {
 
 		// Legal Land doesn't have to be added if only a new field is added
@@ -1110,13 +1100,13 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 	}
 
-	private void insertLegalLandFieldXref(AnnualField annualField, String userId) throws DaoException {
+	private void insertLegalLandFieldXref(AnnualFieldRsrc annualField, String userId) throws DaoException {
 		LegalLandFieldXrefDto legalLandFieldXrefDto = new LegalLandFieldXrefDto();
 		legalLandFieldXrefRsrcFactory.createLegalLandFieldXref(legalLandFieldXrefDto, annualField);
 		legalLandFieldXrefDao.insert(legalLandFieldXrefDto, userId);
 	}
 
-	private void insertQuickLegalLand(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract, String userId) throws DaoException {
+	private void insertQuickLegalLand(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, String userId) throws DaoException {
 		LegalLandDto legalLandDto = new LegalLandDto();
 		if(annualField.getPrimaryPropertyIdentifier() == null || annualField.getPrimaryPropertyIdentifier().isEmpty()) {
 			annualField.setPrimaryPropertyIdentifier(generatePID());
@@ -1152,7 +1142,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		
 	}
 
-	private void insertAnnualFieldDetail(AnnualField annualField, String userId) throws DaoException {
+	private void insertAnnualFieldDetail(AnnualFieldRsrc annualField, String userId) throws DaoException {
 
 		logger.debug("<insertAnnualFieldDetail");
 		
@@ -1165,7 +1155,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		logger.debug(">insertAnnualFieldDetail");
 	}
 
-	private void insertContractedFieldDetail(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract, String userId)
+	private void insertContractedFieldDetail(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, String userId)
 			throws DaoException {
 		
 		logger.debug("<insertContractedFieldDetail");
@@ -1181,7 +1171,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		logger.debug(">insertContractedFieldDetail");
 	}
 
-	private void updateContractedFieldDetails(AnnualField annualField, String userId)
+	private void updateContractedFieldDetails(AnnualFieldRsrc annualField, String userId)
 			throws DaoException, NotFoundException {
 
 		ContractedFieldDetailDto dto = contractedFieldDetailDao.fetch(annualField.getContractedFieldDetailId());
@@ -1196,13 +1186,13 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 
 	@Override
-	public InventoryContractList<? extends InventoryContract<? extends AnnualField>> getInventoryContractList(
+	public InventoryContractListRsrc getInventoryContractList(
 			Integer cropYear, Integer insurancePlanId, Integer officeId, String policyStatusCode, String policyNumber,
 			String growerInfo, String sortColumn, String inventoryContractGuids, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication)
 			throws DaoException, TooManyRecordsException, ServiceException, NotFoundException {
 
-		InventoryContractList<? extends InventoryContract<? extends AnnualField>> results = null;
+		InventoryContractListRsrc results = null;
 		List<String> inventoryContractGuidsList = null;
 
 		if (inventoryContractGuids == null || inventoryContractGuids.length() == 0) {
@@ -1256,9 +1246,9 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 		// Sorting (Default by policy number)
 		if (sortColumn == null || sortColumn.equals("policyNumber")) {
-			results.getCollection().sort(Comparator.comparing(InventoryContract::getPolicyNumber));
+			results.getCollection().sort(Comparator.comparing(InventoryContractRsrc::getPolicyNumber));
 		} else if (sortColumn.equals("growerName")) {
-			results.getCollection().sort(Comparator.comparing(InventoryContract::getGrowerName));
+			results.getCollection().sort(Comparator.comparing(InventoryContractRsrc::getGrowerName));
 		}
 
 		return results;
@@ -1370,12 +1360,12 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 	
 	@Override
-	public InventoryContract<? extends AnnualField> getInventoryContract(String inventoryContractGuid,
+	public InventoryContractRsrc getInventoryContract(String inventoryContractGuid,
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 		logger.debug("<getInventoryContract");
 
-		InventoryContract<? extends AnnualField> result = null;
+		InventoryContractRsrc result = null;
 
 		try {
 			InventoryContractDto dto = inventoryContractDao.fetch(inventoryContractGuid);
@@ -1394,7 +1384,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		return result;
 	}
 
-	private InventoryContract<? extends AnnualField> loadInventoryContract(InventoryContractDto dto, Boolean loadCommentsAndAssociatedPolicies,
+	private InventoryContractRsrc loadInventoryContract(InventoryContractDto dto, Boolean loadCommentsAndAssociatedPolicies,
 			FactoryContext factoryContext, WebAdeAuthentication authentication) throws DaoException {
 
 		loadCommoditiesAndFields(dto, loadCommentsAndAssociatedPolicies);
@@ -1461,14 +1451,14 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 
 	@Override
-	public InventoryContract<? extends AnnualField> updateInventoryContract(String inventoryContractGuid,
-			String optimisticLock, InventoryContract<? extends AnnualField> inventoryContract,
+	public InventoryContractRsrc updateInventoryContract(String inventoryContractGuid,
+			String optimisticLock, InventoryContractRsrc inventoryContract,
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, ForbiddenException, ConflictException,
 			ValidationFailureException {
 		logger.debug("<updateInventoryContract");
 
-		InventoryContract<? extends AnnualField> result = null;
+		InventoryContractRsrc result = null;
 		String userId = getUserId(authentication);
 
 		try {
@@ -1480,13 +1470,13 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 			updateInventoryContract(inventoryContract, userId);
 
-			List<? extends AnnualField> fields = inventoryContract.getFields();
+			List<AnnualFieldRsrc> fields = inventoryContract.getFields();
 			if (fields != null && !fields.isEmpty()) {
 				// Stores all contracts that need to be re-calculated at the end of the loop
 				// It needs to be done for each contract a field is added to this contract
 				HashSet<Integer> contractsToRecalculate = new HashSet<Integer>();
 
-				for (AnnualField field : fields) {
+				for (AnnualFieldRsrc field : fields) {
 					updateAnnualField(field, inventoryContract, userId, contractsToRecalculate);
 
 					//If field is being deleted these steps are not necessary 
@@ -1622,7 +1612,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 		if (contractsToRecalculate != null && contractsToRecalculate.size() > 0) {
 
-			InventoryContract<? extends AnnualField> sourceContract = null;
+			InventoryContractRsrc sourceContract = null;
 
 			for (Integer gcyId : contractsToRecalculate) {
 				InventoryContractDto dto = inventoryContractDao.getByGrowerContract(gcyId);
@@ -1888,7 +1878,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 	
 	// Returns a set of inventoryFieldGuid for plantings that are to be deleted, if any.
-	public Set<String> handleDeletedPlantings(AnnualField field) throws ServiceException {
+	public Set<String> handleDeletedPlantings(AnnualFieldRsrc field) throws ServiceException {
 
 		logger.debug("<handleDeletedPlantings");
 		
@@ -1958,7 +1948,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		return deletedInventoryFieldGuids;
 	}
 
-	private void updateInventoryContract(InventoryContract<? extends AnnualField> inventoryContract, String userId)
+	private void updateInventoryContract(InventoryContractRsrc inventoryContract, String userId)
 			throws DaoException, NotFoundException {
 
 		InventoryContractDto dto = inventoryContractDao.fetch(inventoryContract.getInventoryContractGuid());
@@ -1973,7 +1963,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		inventoryContractDao.update(dto, userId);
 	}
 
-	private void updateInventoryContractCommodities(InventoryContract<? extends AnnualField> inventoryContract,
+	private void updateInventoryContractCommodities(InventoryContractRsrc inventoryContract,
 			String inventoryContractGuid, String userId) throws DaoException, NotFoundException {
 
 		logger.debug("<updateInventoryContractCommodities");
@@ -2055,7 +2045,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 
 	private void updateInventoryContractCommodity(InventoryContractCommodity inventoryContractCommodity,
-			InventoryContractCommodityDto dto, List<? extends AnnualField> fields, String userId)
+			InventoryContractCommodityDto dto, List<AnnualFieldRsrc> fields, String userId)
 			throws DaoException, NotFoundException {
 
 		logger.debug("<updateInventoryContractCommodity");
@@ -2292,14 +2282,14 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 	
 	@Override
-	public InventoryContract<? extends AnnualField> rolloverInventoryContract(Integer policyId,
+	public InventoryContractRsrc rolloverInventoryContract(Integer policyId,
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 		logger.debug("<rolloverInventoryContract");
 
 		// Add inventory contract and rollover inventory data from the previous year and
 		// if there is none, create a default resource
-		InventoryContract<? extends AnnualField> result = null;
+		InventoryContractRsrc result = null;
 
 		try {
 
@@ -2477,7 +2467,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 
 	@Override
-	public LegalLandList<? extends LegalLand<? extends Field>> getLegalLandList(			
+	public LegalLandListRsrc getLegalLandList(			
 			String legalLocation, 
 			String primaryPropertyIdentifier, 
 			String growerInfo,
@@ -2494,7 +2484,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 		logger.debug("<getLegalLandList");
 
-		LegalLandList<? extends LegalLand<? extends Field>> results = null;
+		LegalLandListRsrc results = null;
 
 		try {
 			int maximumRows = DefaultMaximumResults;
@@ -2539,13 +2529,13 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 
 	@Override
-	public AddFieldValidation<? extends Message> validateAddField(Integer policyId, Integer fieldId,
+	public AddFieldValidationRsrc validateAddField(Integer policyId, Integer fieldId,
 			Integer transferFromPolicyId, FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 
 		logger.debug("<validateAddField");
 
-		AddFieldValidation<? extends Message> result = null;
+		AddFieldValidationRsrc result = null;
 
 		try {
 
@@ -2562,7 +2552,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 			for (PolicyDto assocPolicyDto : assocPolicies) {
 				if (assocPolicyDto.getPolicyId().equals(destPolicyDto.getPolicyId())) {
-					errors.add(AddFieldValidation.FIELD_ALREADY_ON_POLICY_MSG);
+					errors.add(AddFieldValidationRsrc.FIELD_ALREADY_ON_POLICY_MSG);
 				}
 			}
 
@@ -2585,7 +2575,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				
 				for (InsurancePlanDto assocPlanDto : assocPlans) {
 					if (!validPlans.contains(assocPlanDto.getInsurancePlanName())) {
-						errors.add(AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]", insurancePlans));
+						errors.add(AddFieldValidationRsrc.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]", insurancePlans));
 						break;
 					}
 				}
@@ -2596,7 +2586,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 				if ( transferFromPolicyId != null ) {
 					// Should never happen.
-					errors.add(AddFieldValidation.TRANSFER_POLICY_ID_NOT_EMPTY_MSG);
+					errors.add(AddFieldValidationRsrc.TRANSFER_POLICY_ID_NOT_EMPTY_MSG);
 				}
 				
 			} else if (errors.isEmpty() && !assocPolicies.isEmpty()) {
@@ -2614,21 +2604,21 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 					
 					if ( transferFromPolicyId != null ) {
 						// Should never happen.
-						errors.add(AddFieldValidation.TRANSFER_POLICY_ID_NOT_EMPTY_MSG);
+						errors.add(AddFieldValidationRsrc.TRANSFER_POLICY_ID_NOT_EMPTY_MSG);
 					}
 					
 					//Field is associated with another policy but it's not of the same plan
 					//This is only possible for plans that allow fields from other plans (For Grain and Forage only at the moment)
 					//FIELD_ON_INCOMPATIBLE_PLAN_MSG checks if a field has ever been on an ineligible plan.
 					if (errors.isEmpty()) {
-						warnings.add(AddFieldValidation.ADD_FIELD_TO_SECOND_POLICY_WARNING_MSG);
+						warnings.add(AddFieldValidationRsrc.ADD_FIELD_TO_SECOND_POLICY_WARNING_MSG);
 					}
 					
 				} else {
 
 					if (!expectedTransferFromPolicyId.equals(transferFromPolicyId)) {
 						// Should never happen.
-						errors.add(AddFieldValidation.TRANSFER_POLICY_ID_INCORRECT_MSG);
+						errors.add(AddFieldValidationRsrc.TRANSFER_POLICY_ID_INCORRECT_MSG);
 					} else {
 					
 						//Check for DOP Data
@@ -2641,18 +2631,18 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 						}
 
 						if (totalDopRecords > 0) {
-							errors.add(AddFieldValidation.TRANSFER_POLICY_HAS_DOP_MSG);
+							errors.add(AddFieldValidationRsrc.TRANSFER_POLICY_HAS_DOP_MSG);
 						}
 						
 						ca.bc.gov.mal.cirras.policies.api.rest.v1.resource.EndpointsRsrc endpoints = cirrasPolicyService.getTopLevelEndpoints();
 						ProductListRsrc productList = cirrasPolicyService.getProducts(endpoints, transferFromPolicyId.toString(), "false", null, null);
 	
 						if (productList.getCollection().size() > 0) {
-							errors.add(AddFieldValidation.TRANSFER_POLICY_HAS_PRODUCTS_MSG);
+							errors.add(AddFieldValidationRsrc.TRANSFER_POLICY_HAS_PRODUCTS_MSG);
 						} 
 	
 						if ( errors.isEmpty() ) {
-							warnings.add(AddFieldValidation.TRANSFER_POLICY_WARNING_MSG);
+							warnings.add(AddFieldValidationRsrc.TRANSFER_POLICY_WARNING_MSG);
 						}
 					}
 				}
@@ -2672,7 +2662,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 
 	@Override
-	public RemoveFieldValidation<? extends Message> validateRemoveField(
+	public RemoveFieldValidationRsrc validateRemoveField(
 			Integer policyId, 
 			Integer fieldId,
 			FactoryContext factoryContext, 
@@ -2681,7 +2671,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 		logger.debug("<validateRemoveField");
 
-		RemoveFieldValidation<? extends Message> result = null;
+		RemoveFieldValidationRsrc result = null;
 
 		try {
 
@@ -2699,7 +2689,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			ProductListRsrc productList = cirrasPolicyService.getProducts(endpoints, policyId.toString(), "false", null, null);
 
 			if (productList.getCollection().size() > 0) {
-				removeFromPolicyWarnings.add(RemoveFieldValidation.POLICY_HAS_PRODUCTS_MSG);
+				removeFromPolicyWarnings.add(RemoveFieldValidationRsrc.POLICY_HAS_PRODUCTS_MSG);
 			}
 
 			Integer targetAnnualFieldDetailId = null;
@@ -2714,7 +2704,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 					if(numOtherContracts.equals(1)) {
 						policyText = "policy";
 					}
-					deleteFieldErrors.add(RemoveFieldValidation.FIELD_ON_OTHER_CONTRACTS_MSG
+					deleteFieldErrors.add(RemoveFieldValidationRsrc.FIELD_ON_OTHER_CONTRACTS_MSG
 												.replace("[numOtherContracts]", numOtherContracts.toString())
 												.replace("[policy]", policyText));
 				}
@@ -2783,7 +2773,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 						}
 
 						if ( !isEmpty ) {
-							deleteFieldErrors.add(RemoveFieldValidation.FIELD_HAS_OTHER_INVENTORY_MSG);
+							deleteFieldErrors.add(RemoveFieldValidationRsrc.FIELD_HAS_OTHER_INVENTORY_MSG);
 							break;
 						}
 					}
@@ -2795,7 +2785,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			if ( ucDtos != null ) {
 				for ( UnderwritingCommentDto ucDto : ucDtos ) {
 					if ( !ucDto.getAnnualFieldDetailId().equals(targetAnnualFieldDetailId) ) {
-						deleteFieldErrors.add(RemoveFieldValidation.FIELD_HAS_OTHER_COMMENTS_MSG);
+						deleteFieldErrors.add(RemoveFieldValidationRsrc.FIELD_HAS_OTHER_COMMENTS_MSG);
 						break;
 					}
 				}
@@ -2823,13 +2813,13 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	
 	
 	@Override
-	public RenameLegalValidation<? extends Message, ? extends LegalLand<? extends Field>, ? extends AnnualField> validateRenameLegal(
+	public RenameLegalValidationRsrc validateRenameLegal(
 			Integer policyId, Integer annualFieldDetailId, String newLegalLocation, String primaryPropertyIdentifier, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException {
 
 		logger.debug("<validateRenameLegal");
 
-		RenameLegalValidation<? extends Message, ? extends LegalLand<? extends Field>, ? extends AnnualField> result = null;
+		RenameLegalValidationRsrc result = null;
 
 		try {
 			
@@ -2870,7 +2860,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 			if (legalsWithSameLocList.getResults().size() > 0) {
 				isWarningLegalsWithSameLoc = true;
-				legalsWithSameLocMsg = RenameLegalValidation.LEGALS_WITH_SAME_LOC_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
+				legalsWithSameLocMsg = RenameLegalValidationRsrc.LEGALS_WITH_SAME_LOC_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
 
 			}
 
@@ -2890,7 +2880,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				}
 
 				isWarningOtherFieldOnPolicy = true;
-				otherFieldOnPolicyMsg = RenameLegalValidation.OTHER_FIELD_ON_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
+				otherFieldOnPolicyMsg = RenameLegalValidationRsrc.OTHER_FIELD_ON_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
 				otherFieldOnPolicyList = samePolicyFieldDtos;
 			}
 
@@ -2910,7 +2900,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				}
 
 				isWarningFieldOnOtherPolicy = true;
-				fieldOnOtherPolicyMsg = RenameLegalValidation.FIELD_ON_OTHER_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
+				fieldOnOtherPolicyMsg = RenameLegalValidationRsrc.FIELD_ON_OTHER_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
 				fieldOnOtherPolicyList = diffPolicyFieldDtos;
 			}
 
@@ -2939,7 +2929,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			}
 			
 			if(isWarningOtherLegalData) {
-				otherLegalDataMsg = RenameLegalValidation.OTHER_LEGAL_DATA_MSG
+				otherLegalDataMsg = RenameLegalValidationRsrc.OTHER_LEGAL_DATA_MSG
 						.replace("[PidOrLegalLocation]", pidOrLegalLocation)
 						.replace("[LegalLocationOrPID]", legalLocationOrPid);
 				otherLegalData = llDto;
@@ -2962,14 +2952,14 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	}
 
 	@Override
-	public ReplaceLegalValidation<? extends Message, ? extends LegalLand<? extends Field>, ? extends AnnualField> validateReplaceLegal(
+	public ReplaceLegalValidationRsrc validateReplaceLegal(
 			Integer policyId, Integer annualFieldDetailId, String fieldLabel, Integer legalLandId, String fieldLocation, 
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 
 		logger.debug("<validateReplaceLegal");
 
-		ReplaceLegalValidation<? extends Message, ? extends LegalLand<? extends Field>, ? extends AnnualField> result = null;
+		ReplaceLegalValidationRsrc result = null;
 
 		try {
 
@@ -3006,7 +2996,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				for (PolicyDto assocPolicyDto : assocPolicies) {
 					if (!assocPolicyDto.getPolicyId().equals(policyId)) {
 						isWarningFieldOnOtherPolicy = true;
-						fieldOnOtherPolicyMsg = ReplaceLegalValidation.FIELD_ON_OTHER_POLICY_MSG
+						fieldOnOtherPolicyMsg = ReplaceLegalValidationRsrc.FIELD_ON_OTHER_POLICY_MSG
 								.replace("[fieldLocationOrfieldLabel]", fieldLocationOrfieldLabel)
 								.replace("[fieldId]", afdDto.getFieldId().toString())
 								.replace("[policyNumber]", assocPolicyDto.getPolicyNumber());
@@ -3022,7 +3012,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 			if (!otherLegalLandOfFieldList.isEmpty()) {
 				isWarningFieldHasOtherLegalLand = true;
-				fieldHasOtherLegalLandMsg = ReplaceLegalValidation.FIELD_HAS_OTHER_LEGAL_MSG
+				fieldHasOtherLegalLandMsg = ReplaceLegalValidationRsrc.FIELD_HAS_OTHER_LEGAL_MSG
 						.replace("[legalLocationOrPid]", legalLocationOrPid)
 						.replace("[fieldLocationOrfieldLabel]", fieldLocationOrfieldLabel)
 						.replace("[fieldId]", afdDto.getFieldId().toString());
@@ -3058,7 +3048,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 					}
 
 					isWarningOtherFieldsOnLegal = true;
-					otherFieldsOnLegalMsg = ReplaceLegalValidation.OTHER_FIELD_ON_LEGAL_MSG
+					otherFieldsOnLegalMsg = ReplaceLegalValidationRsrc.OTHER_FIELD_ON_LEGAL_MSG
 							.replace("[legalLocationOrPid]", legalLocationOrPid)
 							.replace("[otherDescriptionOrPid]", otherDescriptionOrPid);
 				}

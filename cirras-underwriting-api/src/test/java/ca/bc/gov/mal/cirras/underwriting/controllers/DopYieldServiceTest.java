@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForageCut;
@@ -169,7 +167,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 
 		//Convert BUSHEL to TONNE
 		dopYieldContract.setEnteredYieldMeasUnitTypeCode("BUSHEL");
-		DopYieldContract<? extends AnnualField> convertedDopYieldContract = dopService.calculateYieldRollupTest(dopYieldContract);
+		DopYieldContractRsrc convertedDopYieldContract = dopService.calculateYieldRollupTest(dopYieldContract);
 		
 		double estimatedYieldPerAcre;
 		double convertedValue;
@@ -424,7 +422,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 		
 		dopYieldContract.setDopYieldContractCommodityForageList(dopYieldContractCommodityForageList);
 
-		DopYieldContract<? extends AnnualField> convertedDopYieldContract = dopService.calculateYieldContractCommodityForageTest(dopYieldContract);
+		DopYieldContractRsrc convertedDopYieldContract = dopService.calculateYieldContractCommodityForageTest(dopYieldContract);
 		
 		Assert.assertNotNull(convertedDopYieldContract);
 		
@@ -621,7 +619,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 		
 		dopYieldContract.setDopYieldFieldRollupForageList(dopYieldFieldRollupForageList);
 
-		DopYieldContract<? extends AnnualField> convertedDopYieldContract = dopService.calculateYieldFieldRollupForageTest(dopYieldContract);
+		DopYieldContractRsrc convertedDopYieldContract = dopService.calculateYieldFieldRollupForageTest(dopYieldContract);
 		
 		Assert.assertNotNull(convertedDopYieldContract);
 		

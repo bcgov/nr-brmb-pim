@@ -12,14 +12,12 @@ import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.mal.cirras.underwriting.controllers.YieldMeasUnitTypeCodeListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.YieldMeasUnitTypeCodeListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.YieldMeasUnitTypeCodeRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitTypeCode;
-import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitTypeCodeList;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.YieldMeasUnitTypeCodeDto;
 
 public class YieldMeasUnitTypeCodeRsrcFactory extends BaseResourceFactory { 
 
 	
-	public YieldMeasUnitTypeCodeList<? extends YieldMeasUnitTypeCode> getYieldMeasUnitTypeCodeList(
+	public YieldMeasUnitTypeCodeListRsrc getYieldMeasUnitTypeCodeList(
 			List<YieldMeasUnitTypeCodeDto> dtos
 		)  throws FactoryException, DaoException {
 		

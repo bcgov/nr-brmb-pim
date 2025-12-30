@@ -16,14 +16,12 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.RiskAreaListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.RiskAreaListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.RiskAreaRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RiskArea;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RiskAreaList;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.RiskAreaDto;
 
 public class RiskAreaRsrcFactory extends BaseResourceFactory { 
 
 	
-	public RiskAreaList<? extends RiskArea> getRiskAreaList(
+	public RiskAreaListRsrc getRiskAreaList(
 			List<RiskAreaDto> dtos,
 			Integer insurancePlanId,
 			FactoryContext context, 

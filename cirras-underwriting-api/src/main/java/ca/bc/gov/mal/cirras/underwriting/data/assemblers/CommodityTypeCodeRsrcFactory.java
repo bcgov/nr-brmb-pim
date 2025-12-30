@@ -16,14 +16,12 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.CommodityTypeCodeListEndpoi
 import ca.bc.gov.mal.cirras.underwriting.data.resources.CommodityTypeCodeListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeCodeRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeCode;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeCodeList;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeCodeDto;
 
 public class CommodityTypeCodeRsrcFactory extends BaseResourceFactory { 
 
 	
-	public CommodityTypeCodeList<? extends CommodityTypeCode> getCommodityTypeCodeList(
+	public CommodityTypeCodeListRsrc getCommodityTypeCodeList(
 			List<CommodityTypeCodeDto> dtos,
 			Integer insurancePlanId,
 			FactoryContext context, 

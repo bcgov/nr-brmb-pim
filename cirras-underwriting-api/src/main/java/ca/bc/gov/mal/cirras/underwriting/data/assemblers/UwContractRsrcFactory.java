@@ -8,7 +8,6 @@ import jakarta.ws.rs.core.UriBuilder;
 
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
 import ca.bc.gov.nrs.common.wfone.rest.resource.RelLink;
-import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dto.PagedDtos;
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
@@ -37,17 +36,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.ReplaceLegalValidationRs
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AddFieldValidation;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
 import ca.bc.gov.mal.cirras.underwriting.data.models.OtherYearPolicy;
 import ca.bc.gov.mal.cirras.underwriting.data.models.PolicySimple;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RemoveFieldValidation;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RenameLegalValidation;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ReplaceLegalValidation;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UwContract;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UwContractList;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyDto;
@@ -61,7 +51,7 @@ public class UwContractRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public UwContractList<? extends UwContract<? extends UwContract<?>>> getUwContractList(
+	public UwContractListRsrc getUwContractList(
 			PagedDtos<PolicyDto> dtos,
 			Integer cropYear,
 			Integer insurancePlanId,
@@ -144,7 +134,7 @@ public class UwContractRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public UwContract<? extends UwContract<?>> getUwContract(
+	public UwContractRsrc getUwContract(
 			PolicyDto dto, 
 			List<PolicyDto> linkedPolicyDtos,
 			List<PolicyDto> otherYearPolicyDtos,
@@ -495,7 +485,7 @@ public class UwContractRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public AddFieldValidation<? extends Message> getAddFieldValidation(List<String> warnings, List<String> errors, Integer policyId, Integer fieldId, Integer transferFromPolicyId,
+	public AddFieldValidationRsrc getAddFieldValidation(List<String> warnings, List<String> errors, Integer policyId, Integer fieldId, Integer transferFromPolicyId,
 			FactoryContext context, WebAdeAuthentication authentication) throws FactoryException {
 		AddFieldValidationRsrc resource = new AddFieldValidationRsrc();
 
@@ -545,7 +535,7 @@ public class UwContractRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public RemoveFieldValidation<? extends Message> getRemoveFieldValidation(
+	public RemoveFieldValidationRsrc getRemoveFieldValidation(
 			Boolean isRemoveFromPolicyAllowed,
 			Boolean isDeleteFieldAllowed, 
 			List<String> removeFromPolicyWarnings, 
@@ -595,7 +585,7 @@ public class UwContractRsrcFactory extends BaseResourceFactory {
 	}
 	
 	
-	public RenameLegalValidation<? extends Message, ? extends LegalLand<? extends Field>, ? extends AnnualField> getRenameLegalValidation(
+	public RenameLegalValidationRsrc getRenameLegalValidation(
 		Boolean isWarningLegalsWithSameLoc, String legalsWithSameLocMsg, List<LegalLandDto> legalsWithSameLocList,
 		Boolean isWarningOtherFieldOnPolicy, String otherFieldOnPolicyMsg, List<FieldDto> otherFieldOnPolicyList,
 		Boolean isWarningFieldOnOtherPolicy, String fieldOnOtherPolicyMsg, List<FieldDto> fieldOnOtherPolicyList,
@@ -695,7 +685,7 @@ public class UwContractRsrcFactory extends BaseResourceFactory {
 	}
 	
 	
-	public ReplaceLegalValidation<? extends Message, ? extends LegalLand<? extends Field>, ? extends AnnualField> getReplaceLegalValidation(
+	public ReplaceLegalValidationRsrc getReplaceLegalValidation(
 			Boolean isWarningFieldOnOtherPolicy,
 			String fieldOnOtherPolicyMsg,
 			Boolean isWarningFieldHasOtherLegalLand,

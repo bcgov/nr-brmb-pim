@@ -9,17 +9,21 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ReplaceLegalValidation;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.REPLACE_LEGAL_VALIDATION_NAME)
 @XmlSeeAlso({ ReplaceLegalValidationRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class ReplaceLegalValidationRsrc extends BaseResource implements ReplaceLegalValidation<MessageRsrc, LegalLandRsrc, AnnualFieldRsrc> {
+public class ReplaceLegalValidationRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
-	
+
+	// Warnings.
+	public static final String FIELD_ON_OTHER_POLICY_MSG = "The field [fieldLocationOrfieldLabel] (ID: [fieldId]) is also on another policy [policyNumber] in this crop year.";
+	public static final String FIELD_HAS_OTHER_LEGAL_MSG = "There are other [legalLocationOrPid]s associated with the field [fieldLocationOrfieldLabel] (ID: [fieldId]).";
+	public static final String OTHER_FIELD_ON_LEGAL_MSG = "The [legalLocationOrPid] [otherDescriptionOrPid] is associated with other field(s).";
+
 	private Boolean isWarningFieldOnOtherPolicy;
 	private MessageRsrc fieldOnOtherPolicyMsg;
 
@@ -46,62 +50,62 @@ public class ReplaceLegalValidationRsrc extends BaseResource implements ReplaceL
 		this.fieldOnOtherPolicyMsg = fieldOnOtherPolicyMsg;
 	}
 
-	@Override
+	
 	public Boolean getIsWarningFieldHasOtherLegalLand() {
 		return isWarningFieldHasOtherLegalLand;
 	}
 
-	@Override
+	
 	public void setIsWarningFieldHasOtherLegalLand(Boolean isWarningFieldHasOtherLegalLand) {
 		this.isWarningFieldHasOtherLegalLand = isWarningFieldHasOtherLegalLand;
 	}
 	
-	@Override
+	
 	public MessageRsrc getFieldHasOtherLegalLandMsg() {
 		return fieldHasOtherLegalLandMsg;
 	}
 
-	@Override
+	
 	public void setFieldHasOtherLegalLandMsg(MessageRsrc fieldHasOtherLegalLandMsg) {
 		this.fieldHasOtherLegalLandMsg = fieldHasOtherLegalLandMsg;
 	}
 	
-	@Override
+	
 	public List<LegalLandRsrc> getOtherLegalLandOfFieldList() {
 		return otherLegalLandOfFieldList;
 	}
 	
-	@Override
+	
 	public void setOtherLegalLandOfFieldList(List<LegalLandRsrc> otherLegalLandOfFieldList) {
 		this.otherLegalLandOfFieldList = otherLegalLandOfFieldList;
 	}
 	
-	@Override
+	
 	public Boolean getIsWarningOtherFieldsOnLegal() {
 		return isWarningOtherFieldsOnLegal;
 	}
 	
-	@Override
+	
 	public void setIsWarningOtherFieldsOnLegal(Boolean isWarningOtherFieldsOnLegal) {
 		this.isWarningOtherFieldsOnLegal = isWarningOtherFieldsOnLegal;
 	}
 	
-	@Override
+	
 	public MessageRsrc getOtherFieldsOnLegalMsg() {
 		return otherFieldsOnLegalMsg;
 	}
 	
-	@Override
+	
 	public void setOtherFieldsOnLegalMsg(MessageRsrc otherFieldsOnLegalMsg) {
 		this.otherFieldsOnLegalMsg = otherFieldsOnLegalMsg;
 	}
 	
-	@Override
+	
 	public List<AnnualFieldRsrc> getOtherFieldsOnLegalLandList() {
 		return otherFieldsOnLegalLandList;
 	}
 	
-	@Override
+	
 	public void setOtherFieldsOnLegalLandList(List<AnnualFieldRsrc> otherFieldsOnLegalLandList) {
 		this.otherFieldsOnLegalLandList = otherFieldsOnLegalLandList;
 	}

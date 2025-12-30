@@ -17,14 +17,12 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.GradeModifierListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.GradeModifierRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifier;
-import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifierList;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.GradeModifierDto;
 
 public class GradeModifierRsrcFactory extends BaseResourceFactory { 
 
 	
-	public GradeModifierList<? extends GradeModifier> getGradeModifierList(
+	public GradeModifierListRsrc getGradeModifierList(
 			List<GradeModifierDto> dtos,
 			Integer cropYear,
 			Integer insurancePlanId,
@@ -104,7 +102,7 @@ public class GradeModifierRsrcFactory extends BaseResourceFactory {
 
 
 	
-	public void updateDto(GradeModifierDto dto, GradeModifier model) throws FactoryException {
+	public void updateDto(GradeModifierDto dto, GradeModifierRsrc model) throws FactoryException {
 
 		dto.setGradeModifierGuid(model.getGradeModifierGuid());
 		dto.setCropCommodityId(model.getCropCommodityId());

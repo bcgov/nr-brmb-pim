@@ -11,12 +11,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeCodeList;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.COMMODITY_TYPE_CODE_LIST_NAME)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonSubTypes({ @Type(value = CommodityTypeCodeListRsrc.class, name = ResourceTypes.COMMODITY_TYPE_CODE_LIST) })
-public class CommodityTypeCodeListRsrc extends BaseResource implements CommodityTypeCodeList<SyncCommodityTypeCodeRsrc> {
+public class CommodityTypeCodeListRsrc extends BaseResource {
 	private static final long serialVersionUID = 1L;
 
 	private List<SyncCommodityTypeCodeRsrc> collection = new ArrayList<SyncCommodityTypeCodeRsrc>(0);
@@ -25,12 +24,12 @@ public class CommodityTypeCodeListRsrc extends BaseResource implements Commodity
 		collection = new ArrayList<SyncCommodityTypeCodeRsrc>();
 	}
 
-	@Override
+	
 	public List<SyncCommodityTypeCodeRsrc> getCollection() {
 		return collection;
 	}
 
-	@Override
+	
 	public void setCollection(List<SyncCommodityTypeCodeRsrc> collection) {
 		this.collection = collection;
 	}

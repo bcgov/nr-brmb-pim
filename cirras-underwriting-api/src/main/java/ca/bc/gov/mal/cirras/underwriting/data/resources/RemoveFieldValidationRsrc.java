@@ -9,16 +9,21 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RemoveFieldValidation;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.REMOVE_FIELD_VALIDATION_NAME)
 @XmlSeeAlso({ RemoveFieldValidationRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class RemoveFieldValidationRsrc extends BaseResource implements RemoveFieldValidation<MessageRsrc> {
+public class RemoveFieldValidationRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
+
+	// Warnings.
+	public static final String POLICY_HAS_PRODUCTS_MSG = "This Policy has products on it. Removing this field may impact insurable inventory.";
+	public static final String FIELD_ON_OTHER_CONTRACTS_MSG = "This Field is associated with [numOtherContracts] other [policy].";
+	public static final String FIELD_HAS_OTHER_INVENTORY_MSG = "This Field has Inventory for another year and/or plan.";
+	public static final String FIELD_HAS_OTHER_COMMENTS_MSG = "This Field has one or more Comments for another year.";
 
 	private Boolean isRemoveFromPolicyAllowed;
 	private Boolean isDeleteFieldAllowed;

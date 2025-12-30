@@ -8,11 +8,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualFieldDetail;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ContractedFieldDetail;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
-import ca.bc.gov.mal.cirras.underwriting.data.models.GrowerContractYear;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.AnnualFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.ContractedFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityDao;
@@ -43,10 +38,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededGrainDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryUnseededDto;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.LegalLandDao;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandDto;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandFieldXref;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.LegalLandFieldXrefDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.UnderwritingCommentDao;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandFieldXrefDto;
@@ -60,13 +53,19 @@ import ca.bc.gov.mal.cirras.underwriting.services.utils.UnderwritingServiceHelpe
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InventoryCalculationType;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.LandManagementEventTypes;
-
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldDetailRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ContractedFieldDetailRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.FieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerContractYearSyncRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandFieldXrefRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.PoliciesSyncEventTypes;
 
 public class LandDataSyncServiceImpl implements LandDataSyncService {
@@ -244,12 +243,12 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	// LEGAL LAND
 	//////////////////////////////////////////////////
 	@Override
-	public LegalLand<? extends Field> getLegalLand(Integer legalLandId, FactoryContext factoryContext, WebAdeAuthentication authentication)
+	public LegalLandRsrc getLegalLand(Integer legalLandId, FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<getLegalLand");
 
-		LegalLand<? extends Field> result = null;
+		LegalLandRsrc result = null;
 
 		try {
 			LegalLandDto dto = legalLandDao.fetch(legalLandId);
@@ -271,7 +270,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	}
 
 	@Override
-	public void synchronizeLegalLand(LegalLand<? extends Field> model, FactoryContext factoryContext,
+	public void synchronizeLegalLand(LegalLandRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<synchronizeLegalLand");
@@ -298,7 +297,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 
 	}
 
-	private void updateLegalLand(LegalLand<? extends Field> model, LegalLandDto dto, 
+	private void updateLegalLand(LegalLandRsrc model, LegalLandDto dto, 
 			FactoryContext factoryContext, WebAdeAuthentication authentication) {
 
 		logger.debug("<updateLegalLand");
@@ -319,7 +318,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 
 	}
 
-	private void createLegalLand(LegalLand<? extends Field> model, FactoryContext factoryContext,
+	private void createLegalLand(LegalLandRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) {
 
 		logger.debug("<createLegalLand");
@@ -359,12 +358,12 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	//////////////////////////////////////////////////
 	
 	@Override
-	public Field getField(Integer fieldId, FactoryContext factoryContext, WebAdeAuthentication authentication)
+	public FieldRsrc getField(Integer fieldId, FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<getField");
 
-		Field result = null;
+		FieldRsrc result = null;
 
 		try {
 			FieldDto dto = fieldDao.fetch(fieldId);
@@ -386,7 +385,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	}
 
 	@Override
-	public void synchronizeField(Field model, FactoryContext factoryContext,
+	public void synchronizeField(FieldRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<synchronizeField");
@@ -413,7 +412,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 
 	}
 
-	private void updateField(Field model, FieldDto dto, 
+	private void updateField(FieldRsrc model, FieldDto dto, 
 			FactoryContext factoryContext, WebAdeAuthentication authentication) {
 
 		logger.debug("<updateField");
@@ -434,7 +433,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 
 	}
 
-	private void createField(Field model, FactoryContext factoryContext,
+	private void createField(FieldRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) {
 
 		logger.debug("<createField");
@@ -486,13 +485,13 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	// LEGAL LAND - FIELD XREF
 	//////////////////////////////////////////////////
 	@Override
-	public LegalLandFieldXref getLegalLandFieldXref(Integer legalLandId, 
+	public LegalLandFieldXrefRsrc getLegalLandFieldXref(Integer legalLandId, 
 			Integer fieldId, FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, DaoException {
 	
 		logger.debug("<getLegalLandFieldXref");
 		
-		LegalLandFieldXref result = null;
+		LegalLandFieldXrefRsrc result = null;
 		
 		try {
 			LegalLandFieldXrefDto dto = legalLandFieldXrefDao.fetch(legalLandId, fieldId);
@@ -513,7 +512,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	}
 
 	@Override
-	public void synchronizeLegalLandFieldXref(LegalLandFieldXref model, FactoryContext factoryContext,
+	public void synchronizeLegalLandFieldXref(LegalLandFieldXrefRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, DaoException {
 	
 		logger.debug("<synchronizeLegalLandFieldXref");
@@ -538,7 +537,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	
 	}
 
-	private void createLegalLandFieldXref(LegalLandFieldXref model, FactoryContext factoryContext,
+	private void createLegalLandFieldXref(LegalLandFieldXrefRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) {
 	
 		logger.debug("<createLegalLandFieldXref");
@@ -581,12 +580,12 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	//////////////////////////////////////////////////
 	
 	@Override
-	public AnnualFieldDetail getAnnualFieldDetail(Integer annualFieldDetailId, FactoryContext factoryContext, WebAdeAuthentication authentication)
+	public AnnualFieldDetailRsrc getAnnualFieldDetail(Integer annualFieldDetailId, FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, DaoException {
 	
 		logger.debug("<getAnnualFieldDetail");
 		
-		AnnualFieldDetail result = null;
+		AnnualFieldDetailRsrc result = null;
 		
 		try {
 			AnnualFieldDetailDto dto = annualFieldDetailDao.fetch(annualFieldDetailId);
@@ -608,7 +607,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	}
 
 	@Override
-	public void synchronizeAnnualFieldDetail(AnnualFieldDetail model, FactoryContext factoryContext,
+	public void synchronizeAnnualFieldDetail(AnnualFieldDetailRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, DaoException {
 	
 		logger.debug("<synchronizeAnnualFieldDetail");
@@ -635,7 +634,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	
 	}
 
-	private void updateAnnualFieldDetail(AnnualFieldDetail model, AnnualFieldDetailDto dto, 
+	private void updateAnnualFieldDetail(AnnualFieldDetailRsrc model, AnnualFieldDetailDto dto, 
 			FactoryContext factoryContext, WebAdeAuthentication authentication) {
 	
 		logger.debug("<updateAnnualFieldDetail");
@@ -656,7 +655,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	
 	}
 
-	private void createAnnualFieldDetail(AnnualFieldDetail model, FactoryContext factoryContext,
+	private void createAnnualFieldDetail(AnnualFieldDetailRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) {
 	
 		logger.debug("<createAnnualFieldDetail");
@@ -697,12 +696,12 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	// GROWER CONTRACT YEAR
 	//////////////////////////////////////////////////
 	@Override
-	public GrowerContractYear getGrowerContractYear(Integer growerContractYearId, FactoryContext factoryContext, WebAdeAuthentication authentication)
+	public GrowerContractYearSyncRsrc getGrowerContractYear(Integer growerContractYearId, FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<getGrowerContractYear");
 
-		GrowerContractYear result = null;
+		GrowerContractYearSyncRsrc result = null;
 
 		try {
 			GrowerContractYearDto dto = growerContractYearDao.fetch(growerContractYearId);
@@ -724,7 +723,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	}
 
 	@Override
-	public void synchronizeGrowerContractYear(GrowerContractYear model, FactoryContext factoryContext,
+	public void synchronizeGrowerContractYear(GrowerContractYearSyncRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<synchronizeGrowerContractYear");
@@ -752,7 +751,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 
 	}
 
-	private void updateGrowerContractYear(GrowerContractYear model, GrowerContractYearDto dto, 
+	private void updateGrowerContractYear(GrowerContractYearSyncRsrc model, GrowerContractYearDto dto, 
 			FactoryContext factoryContext, WebAdeAuthentication authentication) {
 
 		logger.debug("<updateGrowerContractYear");
@@ -773,7 +772,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 
 	}
 
-	private void createGrowerContractYear(GrowerContractYear model, FactoryContext factoryContext,
+	private void createGrowerContractYear(GrowerContractYearSyncRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) {
 
 		logger.debug("<createGrowerContractYear");
@@ -796,7 +795,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 
 	}
 
-	private void rolloverGrowerContractYear(GrowerContractYear currGcyModel, WebAdeAuthentication authentication) {
+	private void rolloverGrowerContractYear(GrowerContractYearSyncRsrc currGcyModel, WebAdeAuthentication authentication) {
 
 		logger.debug("<rolloverGrowerContractYear");
 		
@@ -987,12 +986,12 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	//////////////////////////////////////////////////
 	
 	@Override
-	public ContractedFieldDetail getContractedFieldDetail(Integer contractedFieldDetailId, FactoryContext factoryContext, WebAdeAuthentication authentication)
+	public ContractedFieldDetailRsrc getContractedFieldDetail(Integer contractedFieldDetailId, FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, DaoException {
 	
 		logger.debug("<getContractedFieldDetail");
 		
-		ContractedFieldDetail result = null;
+		ContractedFieldDetailRsrc result = null;
 		
 		try {
 			ContractedFieldDetailDto dto = contractedFieldDetailDao.fetchSimple(contractedFieldDetailId);
@@ -1014,7 +1013,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	}
 
 	@Override
-	public void synchronizeContractedFieldDetail(ContractedFieldDetail model, FactoryContext factoryContext,
+	public void synchronizeContractedFieldDetail(ContractedFieldDetailRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, DaoException {
 	
 		logger.debug("<synchronizeContractedFieldDetail");
@@ -1306,9 +1305,9 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 				ifDto.setInventorySeededForages(inventorySeededForages);				
 			}
 
-			AnnualField field = inventoryContractRsrcFactory.createAnnualField(cfdDto, authentication);
+			AnnualFieldRsrc field = inventoryContractRsrcFactory.createAnnualField(cfdDto, authentication);
 
-			List<AnnualField> fields = new ArrayList<AnnualField>();			
+			List<AnnualFieldRsrc> fields = new ArrayList<AnnualFieldRsrc>();			
 			fields.add(field);
 			
 			InventoryCalculationType calcType = null;
@@ -1324,7 +1323,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 		
 	}
 	
-	private void updateContractedFieldDetail(ContractedFieldDetail model, ContractedFieldDetailDto dto, 
+	private void updateContractedFieldDetail(ContractedFieldDetailRsrc model, ContractedFieldDetailDto dto, 
 			FactoryContext factoryContext, WebAdeAuthentication authentication) {
 	
 		logger.debug("<updateContractedFieldDetail");
@@ -1345,7 +1344,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	
 	}
 
-	private void createContractedFieldDetail(ContractedFieldDetail model, FactoryContext factoryContext,
+	private void createContractedFieldDetail(ContractedFieldDetailRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) {
 	
 		logger.debug("<createContractedFieldDetail");
@@ -1371,7 +1370,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 	
 	}
 	
-	private void insertInventoryField(ContractedFieldDetail model, String userId) 
+	private void insertInventoryField(ContractedFieldDetailRsrc model, String userId) 
 			  throws DaoException {
 		
 		//Check if there is an inventory contract record for the policy and add a inventory field record if there is.

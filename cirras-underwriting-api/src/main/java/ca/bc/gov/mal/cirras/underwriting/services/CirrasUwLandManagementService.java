@@ -2,10 +2,8 @@ package ca.bc.gov.mal.cirras.underwriting.services;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.RiskArea;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RiskAreaList;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.RiskAreaListRsrc;
 import ca.bc.gov.nrs.wfone.common.service.api.ConflictException;
 import ca.bc.gov.nrs.wfone.common.service.api.ForbiddenException;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
@@ -20,8 +18,8 @@ public interface CirrasUwLandManagementService {
 	// Legal Land
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	LegalLand<? extends Field> createLegalLand(
-		LegalLand<? extends Field> legalLand,
+	LegalLandRsrc createLegalLand(
+		LegalLandRsrc legalLand,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
 	) 
@@ -29,7 +27,7 @@ public interface CirrasUwLandManagementService {
 
 	
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	LegalLand<? extends Field> getLegalLand(
+	LegalLandRsrc getLegalLand(
 			Integer legalLandId, 
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -37,10 +35,10 @@ public interface CirrasUwLandManagementService {
 	throws ServiceException, NotFoundException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	LegalLand<? extends Field> updateLegalLand(
+	LegalLandRsrc updateLegalLand(
 			Integer legalLandId, 
 		String optimisticLock,
-		LegalLand<? extends Field> legalLand, 
+		LegalLandRsrc legalLand, 
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
 	)
@@ -55,7 +53,7 @@ public interface CirrasUwLandManagementService {
 	throws ServiceException, NotFoundException, ForbiddenException, ConflictException;	
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	RiskAreaList<? extends RiskArea> getRiskAreaList(
+	RiskAreaListRsrc getRiskAreaList(
 			Integer insurancePlanId, 
 			FactoryContext context, 
 			WebAdeAuthentication authentication

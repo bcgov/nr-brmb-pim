@@ -17,12 +17,9 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryBerries;
-import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContract;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodityBerries;
-import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractList;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryCoverageTotalForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededForage;
@@ -52,7 +49,7 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 public class InventoryContractRsrcFactory extends BaseResourceFactory {
 
 	
-	public InventoryContract<? extends AnnualField> getInventoryContract(
+	public InventoryContractRsrc getInventoryContract(
 			InventoryContractDto dto, 
 			FactoryContext context, 
 			WebAdeAuthentication authentication
@@ -147,7 +144,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory {
 	}
 	
 	
-	public InventoryContractList<? extends InventoryContract<? extends AnnualField>> getInventoryContractList(
+	public InventoryContractListRsrc getInventoryContractList(
 			List<InventoryContractDto> inventoryContractDtos, 
 			Integer cropYear, 
 			Integer insurancePlanId,
@@ -495,7 +492,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory {
 	}
 	
 	
-	public InventoryContract<? extends AnnualField> createRolloverInventoryContract(
+	public InventoryContractRsrc createRolloverInventoryContract(
 			PolicyDto policyDto,
 			List<AnnualFieldRsrc> fields,
 			FactoryContext context, 
@@ -879,7 +876,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public void updateDto(InventoryContractDto dto, InventoryContract<? extends AnnualField> model, String userId) {
+	public void updateDto(InventoryContractDto dto, InventoryContractRsrc model, String userId) {
 		dto.setContractId(model.getContractId());
 		dto.setCropYear(model.getCropYear());
 		dto.setFertilizerInd(model.getFertilizerInd());

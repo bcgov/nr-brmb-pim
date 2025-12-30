@@ -6,13 +6,12 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.FIELD_NAME)
 @XmlSeeAlso({ FieldRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class FieldRsrc extends BaseResource implements Field {
+public class FieldRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
 
@@ -64,22 +63,22 @@ public class FieldRsrc extends BaseResource implements Field {
 		this.activeToCropYear = activeToCropYear;
 	}
 	
-	@Override
+	
 	public Integer getTotalLegalLand() {
 		return totalLegalLand;
 	}
 	
-	@Override
+	
 	public void setTotalLegalLand(Integer totalLegalLand) {
 		this.totalLegalLand = totalLegalLand;
 	}
 
-	@Override
+	
 	public String getTransactionType() {
 		return transactionType;
 	}
 
-	@Override
+	
 	public void setTransactionType(String transactionType) {
 		this.transactionType = transactionType;
 	}

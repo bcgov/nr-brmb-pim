@@ -7,8 +7,6 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.CropCommodity;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CropCommodityList;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeCodeDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CropCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CommodityTypeCodeDao;
@@ -17,6 +15,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyInsPlantInsXrefDto;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropVarietyDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropVarietyInsPlantInsXrefDao;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.CropCommodityListRsrc;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
@@ -64,7 +63,7 @@ public class CirrasCommodityServiceImpl implements CirrasCommodityService {
 	}
 	
 	@Override
-	public CropCommodityList<? extends CropCommodity> getCropCommodityList(
+	public CropCommodityListRsrc getCropCommodityList(
 			Integer insurancePlanId, 
 			Integer cropYear,
 	    	String commodityType,
@@ -76,7 +75,7 @@ public class CirrasCommodityServiceImpl implements CirrasCommodityService {
 
 		logger.debug("<getCropCommodityList");
 		
-		CropCommodityList<? extends CropCommodity> results = null;
+		CropCommodityListRsrc results = null;
 		
 		try {
 			

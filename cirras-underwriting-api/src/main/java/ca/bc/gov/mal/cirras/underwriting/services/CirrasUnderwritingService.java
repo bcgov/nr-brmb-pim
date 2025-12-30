@@ -2,11 +2,10 @@ package ca.bc.gov.mal.cirras.underwriting.services;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualFieldList;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UserSetting;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UwContract;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UwContractList;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.UserSettingRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractRsrc;
 import ca.bc.gov.nrs.wfone.common.service.api.ConflictException;
 import ca.bc.gov.nrs.wfone.common.service.api.ForbiddenException;
 import ca.bc.gov.nrs.wfone.common.service.api.MaxResultsExceededException;
@@ -19,7 +18,7 @@ import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 public interface CirrasUnderwritingService {
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	UwContractList<? extends UwContract<? extends UwContract<?>>> getUwContractList(
+	UwContractListRsrc getUwContractList(
 			Integer cropYear, 
 			Integer insurancePlanId, 
 			Integer officeId,
@@ -37,7 +36,7 @@ public interface CirrasUnderwritingService {
 	throws ServiceException, MaxResultsExceededException;	
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	UwContract<? extends UwContract<?>> getUwContract(
+	UwContractRsrc getUwContract(
 		Integer policyId, 
 		Boolean loadLinkedPolicies,
 		Boolean loadOtherYearPolicies,
@@ -48,7 +47,7 @@ public interface CirrasUnderwritingService {
 	throws ServiceException, NotFoundException;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	AnnualFieldList<? extends AnnualField> getAnnualFieldForLegalLandList(
+	AnnualFieldListRsrc getAnnualFieldForLegalLandList(
 			Integer legalLandId, 
 			Integer fieldId, 
 			String fieldLocation,
@@ -59,14 +58,14 @@ public interface CirrasUnderwritingService {
 	throws ServiceException, MaxResultsExceededException;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	UserSetting searchUserSetting(
+	UserSettingRsrc searchUserSetting(
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
 	)
 	throws ServiceException, NotFoundException;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	UserSetting getUserSetting(
+	UserSettingRsrc getUserSetting(
 			String userSettingGuid, 
 			FactoryContext factoryContext,
 			WebAdeAuthentication authentication
@@ -74,18 +73,18 @@ public interface CirrasUnderwritingService {
 	throws ServiceException, NotFoundException;	
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	UserSetting createUserSetting(
-			UserSetting userSetting, 
+	UserSettingRsrc createUserSetting(
+			UserSettingRsrc userSetting, 
 			FactoryContext factoryContext,
 			WebAdeAuthentication authentication
 	) 
 	throws ServiceException, NotFoundException, ValidationFailureException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	UserSetting updateUserSetting(
+	UserSettingRsrc updateUserSetting(
 			String userSettingGuid, 
 			String optimisticLock, 
-			UserSetting userSetting,
+			UserSettingRsrc userSetting,
 			FactoryContext factoryContext, 
 			WebAdeAuthentication authentication
 	)

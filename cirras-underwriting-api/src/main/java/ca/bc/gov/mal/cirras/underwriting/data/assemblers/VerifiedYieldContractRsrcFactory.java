@@ -2,7 +2,6 @@ package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
 import ca.bc.gov.nrs.common.wfone.rest.resource.RelLink;
-import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
@@ -30,16 +29,13 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.VerifiedYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.VerifiedYieldContractSimpleRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiableCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiableVariety;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldSummary;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldGrainBasket;
-import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContractCommodity;
-import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContractSimple;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityForageDto;
@@ -61,7 +57,7 @@ import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.In
 public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory { 
 	
 	
-	public VerifiedYieldContract<? extends AnnualField, ? extends Message> getDefaultVerifiedYieldContract(
+	public VerifiedYieldContractRsrc getDefaultVerifiedYieldContract(
 			PolicyDto policyDto,
 			DeclaredYieldContractDto dycDto,
 			List<ProductDto> productDtos,
@@ -201,7 +197,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory {
 	}
 	
 	
-	public VerifiedYieldContract<? extends AnnualField, ? extends Message> getVerifiedYieldContract(VerifiedYieldContractDto dto, List<ProductDto> productDtos,
+	public VerifiedYieldContractRsrc getVerifiedYieldContract(VerifiedYieldContractDto dto, List<ProductDto> productDtos,
 			FactoryContext context, WebAdeAuthentication authentication) throws FactoryException {
 
 		VerifiedYieldContractRsrc resource = new VerifiedYieldContractRsrc();
@@ -279,7 +275,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory {
 	}
 	
 	
-	public VerifiedYieldContractSimple getVerifiedYieldContractSimple(
+	public VerifiedYieldContractSimpleRsrc getVerifiedYieldContractSimple(
 			VerifiedYieldContractDto dto,
 			Integer cropCommodityId, 
 			Boolean isPedigreeInd, 
@@ -857,7 +853,7 @@ public class VerifiedYieldContractRsrcFactory extends BaseResourceFactory {
 
 
 	
-	public void updateDto(VerifiedYieldContractDto dto, VerifiedYieldContract<? extends AnnualField, ? extends Message> model, String userId) {
+	public void updateDto(VerifiedYieldContractDto dto, VerifiedYieldContractRsrc model, String userId) {
 		 
 		dto.setVerifiedYieldContractGuid(model.getVerifiedYieldContractGuid());
 		dto.setContractId(model.getContractId());

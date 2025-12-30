@@ -15,13 +15,12 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityFo
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollup;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollupForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
-import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContract;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.DOP_YIELD_CONTRACT_NAME)
 @XmlSeeAlso({ DopYieldContractRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class DopYieldContractRsrc extends BaseResource implements DopYieldContract<AnnualFieldRsrc> {
+public class DopYieldContractRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
 

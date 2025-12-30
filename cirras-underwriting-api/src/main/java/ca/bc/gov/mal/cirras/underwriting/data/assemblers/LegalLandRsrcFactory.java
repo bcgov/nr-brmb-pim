@@ -16,14 +16,11 @@ import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.controllers.LegalLandEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.LegalLandListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.FieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandList;
 import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandRiskArea;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandDto;
@@ -36,7 +33,7 @@ public class LegalLandRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public LegalLandList<? extends LegalLand<? extends Field>> getLegalLandList(
+	public LegalLandListRsrc getLegalLandList(
 			PagedDtos<LegalLandDto> dtos, 
 			String legalLocation,
 			String primaryPropertyIdentifier, 
@@ -232,7 +229,7 @@ public class LegalLandRsrcFactory extends BaseResourceFactory {
 	
 	
 	
-	public LegalLand<? extends Field> getLegalLand(
+	public LegalLandRsrc getLegalLand(
 			LegalLandDto dto, 
 			FactoryContext context, 
 			WebAdeAuthentication authentication
@@ -347,7 +344,7 @@ public class LegalLandRsrcFactory extends BaseResourceFactory {
 	}
 	
 	
-	public void createQuickLegalLand(LegalLandDto dto, AnnualField model, String primaryReferenceTypeCode, String landIdentifierTypeCode) {
+	public void createQuickLegalLand(LegalLandDto dto, AnnualFieldRsrc model, String primaryReferenceTypeCode, String landIdentifierTypeCode) {
 
 		dto.setLegalLandId(null);
 		dto.setPrimaryReferenceTypeCode(primaryReferenceTypeCode);
@@ -363,7 +360,7 @@ public class LegalLandRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public void updateLegalLand(LegalLandDto dto, LegalLand<? extends Field> model) {
+	public void updateLegalLand(LegalLandDto dto, LegalLandRsrc model) {
 
 		dto.setLegalLandId(model.getLegalLandId());
 		dto.setPrimaryPropertyIdentifier(model.getPrimaryPropertyIdentifier());

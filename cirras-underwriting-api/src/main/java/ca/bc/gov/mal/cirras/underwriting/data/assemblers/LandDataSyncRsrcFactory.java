@@ -18,10 +18,6 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.GrowerContractYearSyncEndpo
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldDetailRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.ContractedFieldDetailRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.FieldRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualFieldDetail;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ContractedFieldDetail;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
-import ca.bc.gov.mal.cirras.underwriting.data.models.GrowerContractYear;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerContractYearSyncRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.AnnualFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
@@ -29,12 +25,9 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.GrowerContractYearDto;
 import ca.bc.gov.mal.cirras.underwriting.controllers.LegalLandSyncEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandDto;
-
 import ca.bc.gov.mal.cirras.underwriting.controllers.LegalLandFieldXrefEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandFieldXrefRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandFieldXref;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandFieldXrefDto;
 
 public class LandDataSyncRsrcFactory extends BaseResourceFactory { 
@@ -47,7 +40,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public void updateLegalLand(LegalLandDto dto, LegalLand<? extends Field> model) {
+	public void updateLegalLand(LegalLandDto dto, LegalLandRsrc model) {
 
 		dto.setLegalLandId(model.getLegalLandId());
 		dto.setPrimaryPropertyIdentifier(model.getPrimaryPropertyIdentifier());
@@ -64,7 +57,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory {
 
 
 	
-	public LegalLand<? extends Field> getLegalLandSync(LegalLandDto dto) {
+	public LegalLandRsrc getLegalLandSync(LegalLandDto dto) {
 		LegalLandRsrc resource = new LegalLandRsrc();
 		
 		resource.setLegalLandId(dto.getLegalLandId());
@@ -87,7 +80,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public void updateField(FieldDto dto, Field model) {
+	public void updateField(FieldDto dto, FieldRsrc model) {
 
 		dto.setFieldId(model.getFieldId());
 		dto.setFieldLabel(model.getFieldLabel());
@@ -98,7 +91,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public Field getField(FieldDto dto) {
+	public FieldRsrc getField(FieldDto dto) {
 		FieldRsrc resource = new FieldRsrc();
 		
 		resource.setFieldId(dto.getFieldId());
@@ -115,7 +108,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public void updateLegalLandFieldXref(LegalLandFieldXrefDto dto, LegalLandFieldXref model) {
+	public void updateLegalLandFieldXref(LegalLandFieldXrefDto dto, LegalLandFieldXrefRsrc model) {
 
 		dto.setLegalLandId(model.getLegalLandId());
 		dto.setFieldId(model.getFieldId());
@@ -124,7 +117,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory {
 
 
 	
-	public LegalLandFieldXref getLegalLandFieldXrefSync(LegalLandFieldXrefDto dto) {
+	public LegalLandFieldXrefRsrc getLegalLandFieldXrefSync(LegalLandFieldXrefDto dto) {
 		LegalLandFieldXrefRsrc resource = new LegalLandFieldXrefRsrc();
 		
 		resource.setLegalLandId(dto.getLegalLandId());
@@ -138,7 +131,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public void updateAnnualFieldDetail(AnnualFieldDetailDto dto, AnnualFieldDetail model) {
+	public void updateAnnualFieldDetail(AnnualFieldDetailDto dto, AnnualFieldDetailRsrc model) {
 
 		dto.setAnnualFieldDetailId(model.getAnnualFieldDetailId());
 		dto.setLegalLandId(model.getLegalLandId());
@@ -148,7 +141,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public AnnualFieldDetail getAnnualFieldDetail(AnnualFieldDetailDto dto) {
+	public AnnualFieldDetailRsrc getAnnualFieldDetail(AnnualFieldDetailDto dto) {
 		AnnualFieldDetailRsrc resource = new AnnualFieldDetailRsrc();
 		
 		resource.setAnnualFieldDetailId(dto.getAnnualFieldDetailId());
@@ -165,7 +158,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public void updateGrowerContractYear(GrowerContractYearDto dto, GrowerContractYear model) {
+	public void updateGrowerContractYear(GrowerContractYearDto dto, GrowerContractYearSyncRsrc model) {
 
 		dto.setGrowerContractYearId(model.getGrowerContractYearId());
 		dto.setContractId(model.getContractId());
@@ -178,7 +171,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory {
 
 
 	
-	public GrowerContractYear getGrowerContractYear(GrowerContractYearDto dto) {
+	public GrowerContractYearSyncRsrc getGrowerContractYear(GrowerContractYearDto dto) {
 		GrowerContractYearSyncRsrc resource = new GrowerContractYearSyncRsrc();
 		
 		resource.setGrowerContractYearId(dto.getGrowerContractYearId());
@@ -196,7 +189,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public void updateContractedFieldDetail(ContractedFieldDetailDto dto, ContractedFieldDetail model) {
+	public void updateContractedFieldDetail(ContractedFieldDetailDto dto, ContractedFieldDetailRsrc model) {
 
 		dto.setContractedFieldDetailId(model.getContractedFieldDetailId());
 		dto.setAnnualFieldDetailId(model.getAnnualFieldDetailId());
@@ -211,7 +204,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public ContractedFieldDetail getContractedFieldDetail(ContractedFieldDetailDto dto) {
+	public ContractedFieldDetailRsrc getContractedFieldDetail(ContractedFieldDetailDto dto) {
 		ContractedFieldDetailRsrc resource = new ContractedFieldDetailRsrc();
 		
 		resource.setContractedFieldDetailId(dto.getContractedFieldDetailId());

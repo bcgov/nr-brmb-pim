@@ -5,14 +5,13 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldDetailRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ContractedFieldDetailRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.FieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualFieldDetail;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ContractedFieldDetail;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandFieldXref;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandFieldXrefRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasInventoryService;
 import ca.bc.gov.mal.cirras.underwriting.services.LandDataSyncService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.LandUpdateTypes;
@@ -50,7 +49,7 @@ public class CreateNewLandServiceTest extends EndpointsTest {
 
 		inventoryContract.setGrowerContractYearId(growerContractYearId);
 
-		AnnualField annualField = new AnnualFieldRsrc();
+		AnnualFieldRsrc annualField = new AnnualFieldRsrc();
 		
 		annualField.setCropYear(cropYear);
 		annualField.setFieldLabel(fieldLabel);
@@ -68,7 +67,7 @@ public class CreateNewLandServiceTest extends EndpointsTest {
 		LandDataSyncService landDataSyncService = (LandDataSyncService)webApplicationContext.getBean("landDataSyncService");
 
 		//Check Contracted Field Details
-		ContractedFieldDetail contractedFieldDetail = landDataSyncService.getContractedFieldDetail(contractedFieldDetailId, null, null);
+		ContractedFieldDetailRsrc contractedFieldDetail = landDataSyncService.getContractedFieldDetail(contractedFieldDetailId, null, null);
 		
 		Assert.assertEquals("ContractedFieldDetailId 1", contractedFieldDetailId, contractedFieldDetail.getContractedFieldDetailId());
 		Assert.assertEquals("AnnualFieldDetailId 1", annualFieldDetailId, contractedFieldDetail.getAnnualFieldDetailId());
@@ -76,7 +75,7 @@ public class CreateNewLandServiceTest extends EndpointsTest {
 		Assert.assertEquals("DisplayOrder 1", annualField.getDisplayOrder(), contractedFieldDetail.getDisplayOrder());
 
 		//Check Annual Field Details
-		AnnualFieldDetail annualFieldDetail = landDataSyncService.getAnnualFieldDetail(annualFieldDetailId, null, null);
+		AnnualFieldDetailRsrc annualFieldDetail = landDataSyncService.getAnnualFieldDetail(annualFieldDetailId, null, null);
 		
 		Assert.assertEquals("AnnualFieldDetailId 1", annualFieldDetailId, annualFieldDetail.getAnnualFieldDetailId());
 		Assert.assertEquals("LegalLandId 1", legalLandId, annualFieldDetail.getLegalLandId());
@@ -84,7 +83,7 @@ public class CreateNewLandServiceTest extends EndpointsTest {
 		Assert.assertEquals("CropYear 1", cropYear, annualFieldDetail.getCropYear());
 
 		//Check Legal Land
-		LegalLand legalLand = landDataSyncService.getLegalLand(legalLandId, null, null); 
+		LegalLandRsrc legalLand = landDataSyncService.getLegalLand(legalLandId, null, null); 
 
 		Assert.assertEquals("LegalLandId 1", legalLandId, legalLand.getLegalLandId());
 		//Assert.assertEquals("PrimaryReferenceTypeCode 1", contractedLotDetailRsrc.getAnnualLotDetail().getLegalLand().getPrimaryReferenceTypeCode(), legalLand.getPrimaryReferenceTypeCode());
@@ -95,7 +94,7 @@ public class CreateNewLandServiceTest extends EndpointsTest {
 		Assert.assertNull("ActiveToCropYear 1", legalLand.getActiveToCropYear());
 		
 		//Check Field 
-		Field field = landDataSyncService.getField(fieldId, null, null); 
+		FieldRsrc field = landDataSyncService.getField(fieldId, null, null); 
 
 		Assert.assertEquals("FieldId 1", fieldId, field.getFieldId());
 		Assert.assertEquals("Field Label 1", fieldLabel, field.getFieldLabel());
@@ -103,7 +102,7 @@ public class CreateNewLandServiceTest extends EndpointsTest {
 		Assert.assertNull("ActiveToCropYear 1", field.getActiveToCropYear());
 
 		//Check Legal Land Field Xref
-		LegalLandFieldXref xref = landDataSyncService.getLegalLandFieldXref(legalLandId, fieldId, null, null);
+		LegalLandFieldXrefRsrc xref = landDataSyncService.getLegalLandFieldXref(legalLandId, fieldId, null, null);
 		
 		Assert.assertEquals("FieldId 1", fieldId, xref.getFieldId());
 		Assert.assertEquals("LegalLandId 1", legalLandId, xref.getLegalLandId());
@@ -132,7 +131,7 @@ public class CreateNewLandServiceTest extends EndpointsTest {
 		
 		CirrasInventoryService invService = (CirrasInventoryService)webApplicationContext.getBean("cirrasInventoryService");
 
-		AnnualField annualField = new AnnualFieldRsrc();
+		AnnualFieldRsrc annualField = new AnnualFieldRsrc();
 		
 		//CREATE Contracted Lot Detail
 		InventoryContractRsrc inventoryContract = new InventoryContractRsrc();

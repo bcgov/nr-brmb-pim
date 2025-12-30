@@ -9,16 +9,22 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RenameLegalValidation;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.RENAME_LEGAL_VALIDATION_NAME)
 @XmlSeeAlso({ RenameLegalValidationRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class RenameLegalValidationRsrc extends BaseResource implements RenameLegalValidation<MessageRsrc, LegalLandRsrc, AnnualFieldRsrc> {
+public class RenameLegalValidationRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
+
+	// Warnings.
+	public static final String LEGALS_WITH_SAME_LOC_MSG = "Entered [LegalLocationOrPID] already exists in another Legal Land. If you would like to use the existing one please use the Replace Legal Land option." 
+			+ " If you want to rename this one, please proceed.";
+	public static final String OTHER_FIELD_ON_POLICY_MSG = "This legal land is associated with another field on the same contract, in this or another crop year. This will rename [LegalLocationOrPID] for all associated fields.";
+	public static final String FIELD_ON_OTHER_POLICY_MSG = "This legal land is associated with the same or another field on a different policy. This will rename [LegalLocationOrPID] for all associated fields.";
+	public static final String OTHER_LEGAL_DATA_MSG = "Legal Description, Short Legal Description or [PidOrLegalLocation] is filled in with non-default values. They may not match the new [LegalLocationOrPID].";
 
 	private Boolean isWarningLegalsWithSameLoc;
 	private MessageRsrc legalsWithSameLocMsg;

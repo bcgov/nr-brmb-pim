@@ -8,13 +8,12 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RiskArea;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.RISK_AREA_NAME)
 @XmlSeeAlso({ RiskAreaRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class RiskAreaRsrc extends BaseResource implements RiskArea {
+public class RiskAreaRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
 	

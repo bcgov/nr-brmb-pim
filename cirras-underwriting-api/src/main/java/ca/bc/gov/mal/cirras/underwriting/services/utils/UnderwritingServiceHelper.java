@@ -5,17 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryUnseeded;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryCoverageTotalForageDao;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryCoverageTotalForageDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryUnseededDto;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InventoryCalculationType;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
@@ -30,7 +28,7 @@ public class UnderwritingServiceHelper {
 		this.inventoryCoverageTotalForageDao = inventoryCoverageTotalForageDao;
 	}
 
-	public void updateInventoryCoverageTotalForages(List<AnnualField> fields, String inventoryContractGuid, String userId, InventoryCalculationType calcType) throws DaoException {
+	public void updateInventoryCoverageTotalForages(List<AnnualFieldRsrc> fields, String inventoryContractGuid, String userId, InventoryCalculationType calcType) throws DaoException {
 
 		Map<Integer, InventoryCoverageTotalForageDto> cropTotalMap = new HashMap<Integer, InventoryCoverageTotalForageDto>();
 		Map<String, InventoryCoverageTotalForageDto> plantInsTotalMap = new HashMap<String, InventoryCoverageTotalForageDto>();
@@ -79,7 +77,7 @@ public class UnderwritingServiceHelper {
 		
 	}
 
-	private void calculateInventoryCoverageTotalForageDtos(List<AnnualField> fields, 
+	private void calculateInventoryCoverageTotalForageDtos(List<AnnualFieldRsrc> fields, 
 			                                               String inventoryContractGuid, 
 			                                               Map<Integer, InventoryCoverageTotalForageDto> cropTotalMap, 
 			                                               Map<String, InventoryCoverageTotalForageDto> plantInsTotalMap,
@@ -87,7 +85,7 @@ public class UnderwritingServiceHelper {
 			                                               InventoryCalculationType calcType) {
 
 		if ( fields != null ) {
-			for ( AnnualField field : fields ) {
+			for ( AnnualFieldRsrc field : fields ) {
 				//Don't include field if it has been removed from the policy or deleted
 				Boolean includeField = true;
 				if(field.getLandUpdateType() != null && 

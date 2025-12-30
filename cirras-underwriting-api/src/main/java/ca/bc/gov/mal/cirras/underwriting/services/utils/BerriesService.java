@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryBerries;
-import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContract;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryContractCommodityBerriesDao;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.InventoryContractRsrcFactory;
@@ -111,7 +111,7 @@ public class BerriesService {
 	
 
 	public void updateInventoryContractCommodityBerries(
-			InventoryContract<? extends AnnualField> inventoryContract, 
+			InventoryContractRsrc inventoryContract, 
 			String inventoryContractGuid, 
 			String userId) throws DaoException {
 
@@ -138,12 +138,12 @@ public class BerriesService {
 	
 	//Total Insured Acres are total Quantity insured acres
 	//Total Insured Plants are total Plant insured plants
-	private void calculateTotals(InventoryContract<? extends AnnualField> inventoryContract, 
+	private void calculateTotals(InventoryContractRsrc inventoryContract, 
 			String inventoryContractGuid) throws DaoException {
 
 		List<InventoryContractCommodityBerries> iccbList = new ArrayList<InventoryContractCommodityBerries>();
 		
-		for (AnnualField field : inventoryContract.getFields()) {
+		for (AnnualFieldRsrc field : inventoryContract.getFields()) {
 			for ( InventoryField planting : field.getPlantings() ) {
 				if(planting.getInventoryBerries() != null) {
 					InventoryBerries ib = planting.getInventoryBerries();

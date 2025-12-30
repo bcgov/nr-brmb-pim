@@ -6,15 +6,13 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.RiskArea;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RiskAreaList;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
 import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandRiskArea;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.FieldDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.LegalLandDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.LegalLandRiskAreaXrefDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.RiskAreaDao;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.RiskAreaListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.RiskAreaDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandDto;
@@ -87,11 +85,11 @@ public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagement
 	}
 	
 	@Override
-	public LegalLand<? extends Field> createLegalLand(LegalLand<? extends Field> legalLand, FactoryContext factoryContext,
+	public LegalLandRsrc createLegalLand(LegalLandRsrc legalLand, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, ValidationFailureException{
 		logger.debug("<createLegalLand");
 
-		LegalLand<? extends Field> result = null;
+		LegalLandRsrc result = null;
 
 		try {
 
@@ -120,17 +118,17 @@ public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagement
 	}
 	
 	@Override
-	public LegalLand<? extends Field> updateLegalLand(
+	public LegalLandRsrc updateLegalLand(
 			Integer legalLandId, 
 			String optimisticLock,
-			LegalLand<? extends Field> legalLand, 
+			LegalLandRsrc legalLand, 
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, ForbiddenException, ConflictException,
 			ValidationFailureException {
 	
 		logger.debug("<updateLegalLand");
 
-		LegalLand<? extends Field> result = null;
+		LegalLandRsrc result = null;
 
 		try {
 
@@ -158,7 +156,7 @@ public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagement
 		return result;
 	}
 
-	private void saveLegalLandRiskAreas(LegalLand<? extends Field> legalLand, String userId, WebAdeAuthentication authentication) throws ServiceException, DaoException {
+	private void saveLegalLandRiskAreas(LegalLandRsrc legalLand, String userId, WebAdeAuthentication authentication) throws ServiceException, DaoException {
 		logger.debug("<saveLegalLandRiskAreas");
 
 		List<LegalLandRiskArea> riskAreas = legalLand.getRiskAreas();
@@ -224,13 +222,13 @@ public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagement
 	}
 
 	@Override
-	public LegalLand<? extends Field> getLegalLand(
+	public LegalLandRsrc getLegalLand(
 			Integer legalLandId,
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 		logger.debug("<getLegalLand");
 
-		LegalLand<? extends Field> result = null;
+		LegalLandRsrc result = null;
 
 		try {
 			
@@ -301,12 +299,12 @@ public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagement
 	}
 
 	@Override
-	public RiskAreaList<? extends RiskArea> getRiskAreaList(Integer insurancePlanId,
+	public RiskAreaListRsrc getRiskAreaList(Integer insurancePlanId,
 			FactoryContext context, WebAdeAuthentication authentication) throws ServiceException {
 
 		logger.debug("<getRiskAreaList");
 
-		RiskAreaList<? extends RiskArea> result = null;
+		RiskAreaListRsrc result = null;
 		
 		try {
 			List<RiskAreaDto> dtos = riskAreaDao.select(insurancePlanId);

@@ -13,13 +13,12 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldSummary;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldGrainBasket;
-import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContractSimple;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.VERIFIED_YIELD_CONTRACT_SIMPLE_NAME)
 @XmlSeeAlso({ VerifiedYieldContractSimpleRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class VerifiedYieldContractSimpleRsrc extends BaseResource implements VerifiedYieldContractSimple {
+public class VerifiedYieldContractSimpleRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
 

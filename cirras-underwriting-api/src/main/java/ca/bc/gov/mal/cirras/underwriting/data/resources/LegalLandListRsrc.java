@@ -11,12 +11,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.nrs.common.wfone.rest.resource.PagedResource;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandList;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.LEGAL_LAND_LIST_NAME)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonSubTypes({ @Type(value = LegalLandListRsrc.class, name = ResourceTypes.LEGAL_LAND_LIST) })
-public class LegalLandListRsrc extends PagedResource implements LegalLandList<LegalLandRsrc> {
+public class LegalLandListRsrc extends PagedResource {
 	private static final long serialVersionUID = 1L;
 
 	private List<LegalLandRsrc> collection = new ArrayList<LegalLandRsrc>(0);
@@ -25,12 +24,10 @@ public class LegalLandListRsrc extends PagedResource implements LegalLandList<Le
 		collection = new ArrayList<LegalLandRsrc>();
 	}
 
-	@Override
 	public List<LegalLandRsrc> getCollection() {
 		return collection;
 	}
 
-	@Override
 	public void setCollection(List<LegalLandRsrc> collection) {
 		this.collection = collection;
 	}

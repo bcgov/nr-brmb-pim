@@ -2,17 +2,14 @@ package ca.bc.gov.mal.cirras.underwriting.services;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AddFieldValidationRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AddFieldValidation;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
-import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContract;
-import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractList;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandList;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RemoveFieldValidation;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RenameLegalValidation;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ReplaceLegalValidation;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.RemoveFieldValidationRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.RenameLegalValidationRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ReplaceLegalValidationRsrc;
 import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.TooManyRecordsException;
@@ -28,15 +25,15 @@ import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 public interface CirrasInventoryService {
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	InventoryContract<? extends AnnualField> createInventoryContract(
-		InventoryContract<? extends AnnualField> inventoryContract,
+	InventoryContractRsrc createInventoryContract(
+		InventoryContractRsrc inventoryContract,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
 	) 
 	throws ServiceException, NotFoundException, ValidationFailureException;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	InventoryContract<? extends AnnualField> getInventoryContract(
+	InventoryContractRsrc getInventoryContract(
 		String inventoryContractGuid, 
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -44,10 +41,10 @@ public interface CirrasInventoryService {
 	throws ServiceException, NotFoundException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	InventoryContract<? extends AnnualField> updateInventoryContract(
+	InventoryContractRsrc updateInventoryContract(
 		String inventoryContractGuid, 
 		String optimisticLock,
-		InventoryContract<? extends AnnualField> inventoryContract, 
+		InventoryContractRsrc inventoryContract, 
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
 	)
@@ -62,7 +59,7 @@ public interface CirrasInventoryService {
 	throws ServiceException, NotFoundException, ForbiddenException, ConflictException;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	InventoryContract<? extends AnnualField> rolloverInventoryContract(
+	InventoryContractRsrc rolloverInventoryContract(
 		Integer policyId, 
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -70,14 +67,14 @@ public interface CirrasInventoryService {
 	throws ServiceException, NotFoundException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	void insertNewLand(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract, String userId)
+	void insertNewLand(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, String userId)
 			throws DaoException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
 	String generatePID() throws DaoException;
 	
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	LegalLandList<? extends LegalLand<? extends Field>> getLegalLandList(
+	LegalLandListRsrc getLegalLandList(
 			String legalLocation, 
 			String primaryPropertyIdentifier, 
 			String growerInfo,
@@ -94,7 +91,7 @@ public interface CirrasInventoryService {
 	throws ServiceException, MaxResultsExceededException;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	AddFieldValidation<? extends Message> validateAddField(
+	AddFieldValidationRsrc validateAddField(
 		Integer policyId, 
 		Integer fieldId,
 		Integer transferFromPolicyId,
@@ -104,7 +101,7 @@ public interface CirrasInventoryService {
 	throws ServiceException, NotFoundException;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	RemoveFieldValidation<? extends Message> validateRemoveField(
+	RemoveFieldValidationRsrc validateRemoveField(
 		Integer policyId, 
 		Integer fieldId,
 		FactoryContext factoryContext, 
@@ -113,7 +110,7 @@ public interface CirrasInventoryService {
 	throws ServiceException, NotFoundException;
 	
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	RenameLegalValidation<? extends Message, ? extends LegalLand<? extends Field>, ? extends AnnualField> validateRenameLegal(
+	RenameLegalValidationRsrc validateRenameLegal(
 		Integer policyId,
 		Integer annualFieldDetailId,
 		String newLegalLocation,
@@ -124,7 +121,7 @@ public interface CirrasInventoryService {
 	throws ServiceException, NotFoundException;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	ReplaceLegalValidation<? extends Message, ? extends LegalLand<? extends Field>, ? extends AnnualField> validateReplaceLegal(
+	ReplaceLegalValidationRsrc validateReplaceLegal(
 		Integer policyId,
 		Integer annualFieldDetailId,
 		String fieldLabel,
@@ -145,7 +142,7 @@ public interface CirrasInventoryService {
 		)
 		throws ServiceException, NotFoundException, DaoException;
 
-	InventoryContractList<? extends InventoryContract<? extends AnnualField>> getInventoryContractList(
+	InventoryContractListRsrc getInventoryContractList(
 			Integer cropYear,
 			Integer insurancePlanId, 
 			Integer officeId,

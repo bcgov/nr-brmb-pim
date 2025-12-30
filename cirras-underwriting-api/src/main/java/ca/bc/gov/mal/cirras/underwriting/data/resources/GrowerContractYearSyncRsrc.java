@@ -9,13 +9,12 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.GrowerContractYear;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.GROWER_CONTRACT_YEAR_NAME)
 @XmlSeeAlso({ GrowerContractYearSyncRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class GrowerContractYearSyncRsrc extends BaseResource implements GrowerContractYear {
+public class GrowerContractYearSyncRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
 
@@ -75,12 +74,10 @@ public class GrowerContractYearSyncRsrc extends BaseResource implements GrowerCo
 		this.dataSyncTransDate = dataSyncTransDate;
 	}
 
-	@Override
 	public String getTransactionType() {
 		return transactionType;
 	}
 
-	@Override
 	public void setTransactionType(String transactionType) {
 		this.transactionType = transactionType;
 	}

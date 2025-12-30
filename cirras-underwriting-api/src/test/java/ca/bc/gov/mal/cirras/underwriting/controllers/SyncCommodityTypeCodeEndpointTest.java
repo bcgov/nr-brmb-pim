@@ -77,7 +77,7 @@ public class SyncCommodityTypeCodeEndpointTest extends EndpointsTest {
 		
 		//Date and Time without millisecond
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 because they are not set in the database
 		Date transactionDate = cal.getTime();
 
 		Date createTransactionDate = addSeconds(transactionDate, -1);

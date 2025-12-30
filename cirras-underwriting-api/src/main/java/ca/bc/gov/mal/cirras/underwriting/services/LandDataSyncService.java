@@ -2,12 +2,12 @@ package ca.bc.gov.mal.cirras.underwriting.services;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualFieldDetail;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ContractedFieldDetail;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
-import ca.bc.gov.mal.cirras.underwriting.data.models.GrowerContractYear;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandFieldXref;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldDetailRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ContractedFieldDetailRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.FieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerContractYearSyncRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandFieldXrefRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
@@ -20,7 +20,7 @@ public interface LandDataSyncService {
 	// Legal Land
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	LegalLand<? extends Field> getLegalLand(
+	LegalLandRsrc getLegalLand(
 		Integer legalLandId,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -28,7 +28,7 @@ public interface LandDataSyncService {
 	throws ServiceException, NotFoundException, DaoException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	void synchronizeLegalLand (LegalLand<? extends Field> model, FactoryContext factoryContext,
+	void synchronizeLegalLand (LegalLandRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication) throws ServiceException, NotFoundException, DaoException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
@@ -44,7 +44,7 @@ public interface LandDataSyncService {
 	// Field
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	Field getField(
+	FieldRsrc getField(
 	Integer fieldId,
 	FactoryContext factoryContext, 
 	WebAdeAuthentication authentication
@@ -52,7 +52,7 @@ public interface LandDataSyncService {
 	throws ServiceException, NotFoundException, DaoException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	void synchronizeField (Field model, FactoryContext factoryContext,
+	void synchronizeField (FieldRsrc model, FactoryContext factoryContext,
 	WebAdeAuthentication webAdeAuthentication) throws ServiceException, NotFoundException, DaoException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
@@ -68,7 +68,7 @@ public interface LandDataSyncService {
 	// Legal Land - Field Xref
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	LegalLandFieldXref getLegalLandFieldXref(
+	LegalLandFieldXrefRsrc getLegalLandFieldXref(
 		Integer legalLandId,
 		Integer fieldId,
 		FactoryContext factoryContext, 
@@ -77,7 +77,7 @@ public interface LandDataSyncService {
 	throws ServiceException, NotFoundException, DaoException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	void synchronizeLegalLandFieldXref (LegalLandFieldXref model, FactoryContext factoryContext,
+	void synchronizeLegalLandFieldXref (LegalLandFieldXrefRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication) throws ServiceException, NotFoundException, DaoException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
@@ -94,7 +94,7 @@ public interface LandDataSyncService {
 	// Annual Field Detail
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	AnnualFieldDetail getAnnualFieldDetail(
+	AnnualFieldDetailRsrc getAnnualFieldDetail(
 		Integer annualFieldDetailId,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -102,7 +102,7 @@ public interface LandDataSyncService {
 		throws ServiceException, NotFoundException, DaoException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	void synchronizeAnnualFieldDetail (AnnualFieldDetail model, FactoryContext factoryContext,
+	void synchronizeAnnualFieldDetail (AnnualFieldDetailRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication) throws ServiceException, NotFoundException, DaoException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
@@ -117,7 +117,7 @@ public interface LandDataSyncService {
 	// Grower Contract Year
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	GrowerContractYear getGrowerContractYear(
+	GrowerContractYearSyncRsrc getGrowerContractYear(
 		Integer growerContractYearId,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -125,7 +125,7 @@ public interface LandDataSyncService {
 	throws ServiceException, NotFoundException, DaoException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	void synchronizeGrowerContractYear (GrowerContractYear model, FactoryContext factoryContext,
+	void synchronizeGrowerContractYear (GrowerContractYearSyncRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication) throws ServiceException, NotFoundException, DaoException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
@@ -140,7 +140,7 @@ public interface LandDataSyncService {
 	// Contracted Field Detail
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	ContractedFieldDetail getContractedFieldDetail(
+	ContractedFieldDetailRsrc getContractedFieldDetail(
 		Integer contractedFieldDetailId,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -148,7 +148,7 @@ public interface LandDataSyncService {
 		throws ServiceException, NotFoundException, DaoException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	void synchronizeContractedFieldDetail (ContractedFieldDetail model, FactoryContext factoryContext,
+	void synchronizeContractedFieldDetail (ContractedFieldDetailRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication) throws ServiceException, NotFoundException, DaoException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)

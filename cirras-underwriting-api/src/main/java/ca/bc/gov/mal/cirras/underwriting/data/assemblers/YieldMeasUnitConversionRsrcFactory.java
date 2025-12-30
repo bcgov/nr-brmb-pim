@@ -18,13 +18,12 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.YieldMeasUnitConversionListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitConversion;
-import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitConversionList;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.YieldMeasUnitConversionDto;
 
 public class YieldMeasUnitConversionRsrcFactory extends BaseResourceFactory { 
 
 	
-	public YieldMeasUnitConversionList<? extends YieldMeasUnitConversion> getYieldMeasUnitConversionList(
+	public YieldMeasUnitConversionListRsrc getYieldMeasUnitConversionList(
 			List<YieldMeasUnitConversionDto> yieldMeasUnitConversionDtos,
 			Integer insurancePlanId,
 			String srcYieldMeasUnitTypeCode,

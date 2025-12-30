@@ -13,8 +13,6 @@ import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.mal.cirras.underwriting.controllers.CropCommodityListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.CropCommodityListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.CropCommodityRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CropCommodity;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CropCommodityList;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeCodeDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CropCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.data.models.CropVariety;
@@ -30,7 +28,7 @@ public class CommodityRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 
 	
-	public CropCommodityList<? extends CropCommodity> getCropCommodityList(
+	public CropCommodityListRsrc getCropCommodityList(
 			List<CropCommodityDto> dtos, 
 			List<CropVarietyDto> cropVarietyDtos,
 			List<CommodityTypeCodeDto> commodityTypeCodeDtos,

@@ -1,18 +1,9 @@
 package ca.bc.gov.mal.cirras.underwriting.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.transaction.annotation.Transactional;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldAmendment;
-import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContract;
-import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContractCommodity;
-import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContractSimple;
-import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldGrainBasket;
-import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldSummary;
-import ca.bc.gov.nrs.wfone.common.model.Message;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.VerifiedYieldContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.VerifiedYieldContractSimpleRsrc;
 import ca.bc.gov.nrs.wfone.common.service.api.ConflictException;
 import ca.bc.gov.nrs.wfone.common.service.api.ForbiddenException;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
@@ -24,7 +15,7 @@ import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 public interface CirrasVerifiedYieldService {
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	VerifiedYieldContract<? extends AnnualField, ? extends Message> rolloverVerifiedYieldContract(
+	VerifiedYieldContractRsrc rolloverVerifiedYieldContract(
 		Integer policyId, 
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -32,7 +23,7 @@ public interface CirrasVerifiedYieldService {
 	throws ServiceException, NotFoundException;
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	VerifiedYieldContract<? extends AnnualField, ? extends Message> getVerifiedYieldContract(
+	VerifiedYieldContractRsrc getVerifiedYieldContract(
 		String verifiedYieldContractGuid, 
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -40,18 +31,18 @@ public interface CirrasVerifiedYieldService {
 	throws ServiceException, NotFoundException;	
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	VerifiedYieldContract<? extends AnnualField, ? extends Message> createVerifiedYieldContract(
-		VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract,
+	VerifiedYieldContractRsrc createVerifiedYieldContract(
+		VerifiedYieldContractRsrc verifiedYieldContract,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
 	) 
 	throws ServiceException, NotFoundException, ValidationFailureException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	VerifiedYieldContract<? extends AnnualField, ? extends Message> updateVerifiedYieldContract(
+	VerifiedYieldContractRsrc updateVerifiedYieldContract(
 		String verifiedYieldContractGuid, 
 		String optimisticLock,
-		VerifiedYieldContract<? extends AnnualField, ? extends Message> verifiedYieldContract, 
+		VerifiedYieldContractRsrc verifiedYieldContract, 
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
 	)
@@ -67,7 +58,7 @@ public interface CirrasVerifiedYieldService {
 	
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	VerifiedYieldContractSimple getVerifiedYieldContractSimple(
+	VerifiedYieldContractSimpleRsrc getVerifiedYieldContractSimple(
 		Integer contractId,
 		Integer cropYear,
 		Integer cropCommodityId,

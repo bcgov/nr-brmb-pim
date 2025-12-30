@@ -15,11 +15,8 @@ import ca.bc.gov.nrs.wfone.common.service.api.ConflictException;
 import ca.bc.gov.nrs.wfone.common.service.api.ForbiddenException;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
 import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
-import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
-import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasInventoryService;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContract;
 import ca.bc.gov.mal.cirras.underwriting.controllers.InventoryContractEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 

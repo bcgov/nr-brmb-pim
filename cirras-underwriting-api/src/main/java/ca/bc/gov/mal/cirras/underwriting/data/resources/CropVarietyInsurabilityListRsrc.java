@@ -11,13 +11,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyInsurabilityList;
 import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyInsurability;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.CROP_VARIETY_INSURABILITY_LIST_NAME)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonSubTypes({ @Type(value = CropVarietyInsurabilityListRsrc.class, name = ResourceTypes.CROP_VARIETY_INSURABILITY_LIST) })
-public class CropVarietyInsurabilityListRsrc extends BaseResource implements CropVarietyInsurabilityList<CropVarietyInsurability> {
+public class CropVarietyInsurabilityListRsrc extends BaseResource {
 	private static final long serialVersionUID = 1L;
 
 	private List<CropVarietyInsurability> collection = new ArrayList<CropVarietyInsurability>(0);
@@ -26,12 +25,10 @@ public class CropVarietyInsurabilityListRsrc extends BaseResource implements Cro
 		collection = new ArrayList<CropVarietyInsurability>();
 	}
 
-	@Override
 	public List<CropVarietyInsurability> getCollection() {
 		return collection;
 	}
 
-	@Override
 	public void setCollection(List<CropVarietyInsurability> collection) {
 		this.collection = collection;
 	}

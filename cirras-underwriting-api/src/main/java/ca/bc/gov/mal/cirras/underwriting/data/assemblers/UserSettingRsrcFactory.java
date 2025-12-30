@@ -14,13 +14,12 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.UserSettingListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UserSettingRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UserSetting;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.UserSettingDto;
 
 public class UserSettingRsrcFactory extends BaseResourceFactory { 
 
 	
-	public UserSetting getDefaultUserSetting(FactoryContext context, WebAdeAuthentication authentication)
+	public UserSettingRsrc getDefaultUserSetting(FactoryContext context, WebAdeAuthentication authentication)
 			throws FactoryException {
 
 		UserSettingRsrc resource = new UserSettingRsrc();
@@ -48,7 +47,7 @@ public class UserSettingRsrcFactory extends BaseResourceFactory {
 	}
 	
 	
-	public UserSetting getUserSetting(
+	public UserSettingRsrc getUserSetting(
 			UserSettingDto dto, 
 			FactoryContext context, 
 			WebAdeAuthentication authentication
@@ -70,7 +69,7 @@ public class UserSettingRsrcFactory extends BaseResourceFactory {
 	}
 	
 	
-	public void updateDto(UserSettingDto dto, UserSetting model) throws FactoryException {
+	public void updateDto(UserSettingDto dto, UserSettingRsrc model) throws FactoryException {
 
 		dto.setUserSettingGuid(model.getUserSettingGuid());
 		dto.setLoginUserGuid(model.getLoginUserGuid());

@@ -15,7 +15,6 @@ import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpoints;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityVarietyRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.SyncCommodityVariety;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -85,7 +84,7 @@ public interface SyncCommodityVarietyEndpoint extends BaseEndpoints {
 		@Parameter(name = HeaderConstants.AUTHORIZATION_HEADER, description = HeaderConstants.AUTHORIZATION_HEADER_DESCRIPTION, required = false, schema = @Schema(implementation = String.class), in = ParameterIn.HEADER) 
 	})
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = SyncCommodityVariety.class)), headers = @Header(name = HeaderConstants.ETAG_HEADER, schema = @Schema(implementation = String.class), description = HeaderConstants.ETAG_DESCRIPTION)),
+		@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = SyncCommodityVarietyRsrc.class)), headers = @Header(name = HeaderConstants.ETAG_HEADER, schema = @Schema(implementation = String.class), description = HeaderConstants.ETAG_DESCRIPTION)),
 		@ApiResponse(responseCode = "404", description = "Not Found"),
 		@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = MessageListRsrc.class))) })
 	@GET

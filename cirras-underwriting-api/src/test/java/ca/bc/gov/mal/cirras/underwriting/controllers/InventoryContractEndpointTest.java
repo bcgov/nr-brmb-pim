@@ -29,8 +29,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContract;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededGrain;
@@ -2007,11 +2005,11 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		Integer legalLandId = 11326; //Must be existing legal land on the policy
 
 		//Get legal land
-		List<AnnualField> fields = invContract.getFields().stream()
+		List<AnnualFieldRsrc> fields = invContract.getFields().stream()
 				.filter(x -> x.getLegalLandId().equals(legalLandId))
 				.collect(Collectors.toList());
 		
-		AnnualField field = null;
+		AnnualFieldRsrc field = null;
 		if(fields != null) {
 			field = fields.get(0);
 		}
@@ -2191,7 +2189,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		Assert.assertTrue(invContract.getFields().size() > 0);
 
 		// Pick a field, any field.
-		AnnualField field = invContract.getFields().get(0);
+		AnnualFieldRsrc field = invContract.getFields().get(0);
 		Integer fieldId = field.getFieldId();
 		Integer origLegalLandId = field.getLegalLandId();
 		String origOtherDesc = field.getOtherLegalDescription();
@@ -3341,7 +3339,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		return invContract;
 	}	
 
-	private void checkInventoryContract(InventoryContract expected, InventoryContract actual) {
+	private void checkInventoryContract(InventoryContractRsrc expected, InventoryContractRsrc actual) {
 
 		Assert.assertNotNull("InventoryContractGuid", actual.getInventoryContractGuid());
 		Assert.assertEquals("ContractId", expected.getContractId(), actual.getContractId());

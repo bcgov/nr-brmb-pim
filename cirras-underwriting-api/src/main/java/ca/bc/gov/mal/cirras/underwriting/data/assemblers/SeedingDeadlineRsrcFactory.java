@@ -12,18 +12,16 @@ import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFa
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.controllers.InventoryContractListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.SeedingDeadlineListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SeedingDeadlineListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.data.models.SeedingDeadline;
-import ca.bc.gov.mal.cirras.underwriting.data.models.SeedingDeadlineList;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.SeedingDeadlineDto;
 
 public class SeedingDeadlineRsrcFactory extends BaseResourceFactory { 
 
 	
-	public SeedingDeadlineList<? extends SeedingDeadline> getSeedingDeadlineList(
+	public SeedingDeadlineListRsrc getSeedingDeadlineList(
 			List<SeedingDeadlineDto> dtos,
 			Integer cropYear,
 			FactoryContext context, 

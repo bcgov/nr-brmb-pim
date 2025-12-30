@@ -11,12 +11,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.nrs.common.wfone.rest.resource.PagedResource;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UwContractList;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.UWCONTRACT_LIST_NAME)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonSubTypes({ @Type(value = UwContractListRsrc.class, name = ResourceTypes.UWCONTRACT_LIST) })
-public class UwContractListRsrc extends PagedResource implements UwContractList<UwContractRsrc> {
+public class UwContractListRsrc extends PagedResource {
 	private static final long serialVersionUID = 1L;
 
 	private List<UwContractRsrc> collection = new ArrayList<UwContractRsrc>(0);
@@ -25,12 +24,10 @@ public class UwContractListRsrc extends PagedResource implements UwContractList<
 		collection = new ArrayList<UwContractRsrc>();
 	}
 
-	@Override
 	public List<UwContractRsrc> getCollection() {
 		return collection;
 	}
 
-	@Override
 	public void setCollection(List<UwContractRsrc> collection) {
 		this.collection = collection;
 	}

@@ -1,6 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
 import java.util.ArrayList;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +36,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededGrain;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryUnseeded;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RemoveFieldValidation;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InsurancePlans;
@@ -518,7 +518,7 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId2, growerContractYearId2, 1);
 		
 		removeFieldValidation = service.validateRemoveField(referrer, fieldId1.toString());
-		checkRemoveFieldValidation(removeFieldValidation, true, false, null, new String[] { RemoveFieldValidation.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy")});
+		checkRemoveFieldValidation(removeFieldValidation, true, false, null, new String[] { RemoveFieldValidationRsrc.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy")});
 
 		// B. Other Contract in another Year With Empty Inventory and Comments.
 		createInventoryContract(policyNumber2, InventoryServiceEnums.InsurancePlans.GRAIN.getInsurancePlanId(), false, false);
@@ -529,8 +529,8 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 				true, 
 				false, 
 				null, 
-				new String[] { RemoveFieldValidation.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy"), 
-						       RemoveFieldValidation.FIELD_HAS_OTHER_COMMENTS_MSG
+				new String[] { RemoveFieldValidationRsrc.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy"), 
+						       RemoveFieldValidationRsrc.FIELD_HAS_OTHER_COMMENTS_MSG
 				});
 
 		deleteInventoryContract(policyNumber2);
@@ -544,9 +544,9 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 				true, 
 				false, 
 				null, 
-				new String[] { RemoveFieldValidation.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy"), 
-						       RemoveFieldValidation.FIELD_HAS_OTHER_INVENTORY_MSG,
-						       RemoveFieldValidation.FIELD_HAS_OTHER_COMMENTS_MSG
+				new String[] { RemoveFieldValidationRsrc.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy"), 
+						       RemoveFieldValidationRsrc.FIELD_HAS_OTHER_INVENTORY_MSG,
+						       RemoveFieldValidationRsrc.FIELD_HAS_OTHER_COMMENTS_MSG
 				});
 
 		deleteInventoryContract(policyNumber2);
@@ -560,9 +560,9 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 				true, 
 				false, 
 				null, 
-				new String[] { RemoveFieldValidation.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy"), 
-						       RemoveFieldValidation.FIELD_HAS_OTHER_INVENTORY_MSG,
-						       RemoveFieldValidation.FIELD_HAS_OTHER_COMMENTS_MSG
+				new String[] { RemoveFieldValidationRsrc.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy"), 
+						       RemoveFieldValidationRsrc.FIELD_HAS_OTHER_INVENTORY_MSG,
+						       RemoveFieldValidationRsrc.FIELD_HAS_OTHER_COMMENTS_MSG
 				});
 
 		deleteInventoryContract(policyNumber2);
@@ -580,7 +580,7 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId1, growerContractYearId2, 1);
 		
 		removeFieldValidation = service.validateRemoveField(referrer, fieldId1.toString());
-		checkRemoveFieldValidation(removeFieldValidation, true, false, null, new String[] { RemoveFieldValidation.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy")});
+		checkRemoveFieldValidation(removeFieldValidation, true, false, null, new String[] { RemoveFieldValidationRsrc.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy")});
 
 		// F. Other Contract in same year, different plan with Empty Inventory and Comments (however comment does not trigger an error since it's the same year).
 		createInventoryContract(policyNumber2, InventoryServiceEnums.InsurancePlans.FORAGE.getInsurancePlanId(), false, false);
@@ -591,7 +591,7 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 				true, 
 				false, 
 				null, 
-				new String[] { RemoveFieldValidation.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy") 
+				new String[] { RemoveFieldValidationRsrc.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy") 
 				});
 
 		deleteInventoryContract(policyNumber2);
@@ -605,8 +605,8 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 				true, 
 				false, 
 				null, 
-				new String[] { RemoveFieldValidation.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy"),
-						       RemoveFieldValidation.FIELD_HAS_OTHER_INVENTORY_MSG
+				new String[] { RemoveFieldValidationRsrc.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy"),
+						       RemoveFieldValidationRsrc.FIELD_HAS_OTHER_INVENTORY_MSG
 				});
 
 		deleteInventoryContract(policyNumber2);
@@ -656,7 +656,7 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 		referrer = searchResults.getCollection().get(0);
 
 		removeFieldValidation = service.validateRemoveField(referrer, fieldIdOnPolicyWithProducts.toString());
-		checkRemoveFieldValidation(removeFieldValidation, true, true, new String[] { RemoveFieldValidation.POLICY_HAS_PRODUCTS_MSG}, null);
+		checkRemoveFieldValidation(removeFieldValidation, true, true, new String[] { RemoveFieldValidationRsrc.POLICY_HAS_PRODUCTS_MSG}, null);
 		
 		logger.debug(">testValidateRemoveFieldWithProducts");
 	}
@@ -764,8 +764,8 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 				true, 
 				false, 
 				null, 
-				new String[] { RemoveFieldValidation.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy"),
-			       RemoveFieldValidation.FIELD_HAS_OTHER_INVENTORY_MSG
+				new String[] { RemoveFieldValidationRsrc.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy"),
+			       RemoveFieldValidationRsrc.FIELD_HAS_OTHER_INVENTORY_MSG
 				});
 		
 		//Get first policy and remove variety
@@ -796,7 +796,7 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 				true, 
 				false, 
 				null, 
-				new String[] { RemoveFieldValidation.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy")
+				new String[] { RemoveFieldValidationRsrc.FIELD_ON_OTHER_CONTRACTS_MSG.replace("[numOtherContracts]", "1").replace("[policy]", "policy")
 				});
 		
 		delete();

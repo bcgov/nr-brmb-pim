@@ -18,7 +18,6 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.CropVarietyInsurabilityListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyInsurability;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyInsurabilityList;
 import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyPlantInsurability;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyInsPlantInsXrefDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyInsurabilityDto;
@@ -26,7 +25,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyInsurabilityDt
 public class CropVarietyInsurabilityRsrcFactory extends BaseResourceFactory { 
 
 	
-	public CropVarietyInsurabilityList<? extends CropVarietyInsurability> getCropVarietyInsurabilityList(
+	public CropVarietyInsurabilityListRsrc getCropVarietyInsurabilityList(
 			List<CropVarietyInsurabilityDto> cropVarietyInsurabilityDtos,
 			List<CropVarietyInsurabilityDto> validationDtos,
 			List<CropVarietyInsPlantInsXrefDto> cropVarietyInsPlantInsXrefDtos,

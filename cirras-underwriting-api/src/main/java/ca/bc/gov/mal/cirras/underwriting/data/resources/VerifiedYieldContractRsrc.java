@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldAmendment;
-import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldSummary;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldGrainBasket;
@@ -21,7 +20,7 @@ import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.VERIFIED_YIELD_CONTRACT_NAME)
 @XmlSeeAlso({ VerifiedYieldContractRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class VerifiedYieldContractRsrc extends BaseResource implements VerifiedYieldContract<AnnualFieldRsrc, MessageRsrc> {
+public class VerifiedYieldContractRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
 

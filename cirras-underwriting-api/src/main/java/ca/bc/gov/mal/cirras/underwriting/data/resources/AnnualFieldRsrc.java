@@ -9,7 +9,6 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldGrain;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
@@ -22,7 +21,7 @@ import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.ANNUAL_FIELD_NAME)
 @XmlSeeAlso({ AnnualFieldRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class AnnualFieldRsrc extends BaseResource implements AnnualField {
+public class AnnualFieldRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
 
@@ -134,21 +133,21 @@ public class AnnualFieldRsrc extends BaseResource implements AnnualField {
 		this.isLeasedInd = isLeasedInd;
 	}
 	
-	@Override
+	
 	public String getLandUpdateType() {
 		return landUpdateType;
 	}
 
-	@Override
+	
 	public void setLandUpdateType(String landUpdateType) {
 		this.landUpdateType = landUpdateType;
 	}
 	
-	@Override
+	
 	public Integer getTransferFromGrowerContractYearId() {
 		return transferFromGrowerContractYearId;
 	}
-	@Override
+	
 	public void setTransferFromGrowerContractYearId(Integer transferFromGrowerContractYearId) {
 		this.transferFromGrowerContractYearId = transferFromGrowerContractYearId;
 	}

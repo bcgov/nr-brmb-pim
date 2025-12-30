@@ -6,13 +6,12 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingYear;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.UNDERWRITING_YEAR_NAME)
 @XmlSeeAlso({ UnderwritingYearRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class UnderwritingYearRsrc extends BaseResource implements UnderwritingYear {
+public class UnderwritingYearRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
 	

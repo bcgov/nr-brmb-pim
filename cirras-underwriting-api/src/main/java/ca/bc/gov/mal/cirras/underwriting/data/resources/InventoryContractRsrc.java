@@ -10,7 +10,6 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContract;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryCoverageTotalForage;
@@ -19,7 +18,7 @@ import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.INVENTORY_CONTRACT_NAME)
 @XmlSeeAlso({ InventoryContractRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class InventoryContractRsrc extends BaseResource implements InventoryContract<AnnualFieldRsrc> {
+public class InventoryContractRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
 

@@ -9,14 +9,13 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
 import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandRiskArea;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.LEGAL_LAND_NAME)
 @XmlSeeAlso({ LegalLandRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class LegalLandRsrc extends BaseResource implements LegalLand<FieldRsrc> {
+public class LegalLandRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
 
@@ -115,32 +114,32 @@ public class LegalLandRsrc extends BaseResource implements LegalLand<FieldRsrc> 
 		this.totalAcres = totalAcres;
 	}
 	
-	@Override
+	
 	public String getTransactionType() {
 		return transactionType;
 	}
 
-	@Override
+	
 	public void setTransactionType(String transactionType) {
 		this.transactionType = transactionType;
 	}
 
-	@Override
+	
 	public List<LegalLandRiskArea> getRiskAreas() {
 		return riskAreas;
 	}
 
-	@Override
+	
 	public void setRiskAreas(List<LegalLandRiskArea> riskAreas) {
 		this.riskAreas = riskAreas;
 	}
 	
-	@Override
+	
 	public List<FieldRsrc> getFields() {
 		return fields;
 	}
 
-	@Override
+	
 	public void setFields(List<FieldRsrc> fields) {
 		this.fields = fields;
 	}

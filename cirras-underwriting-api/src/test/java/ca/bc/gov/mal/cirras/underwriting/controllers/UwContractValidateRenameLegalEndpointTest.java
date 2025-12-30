@@ -1,6 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
 import org.junit.After;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +22,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.RenameLegalValidation;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
@@ -224,12 +224,12 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 		String legalLocationOrPid = "Legal Location"; //Default
 		String pidOrLegalLocation = "PID"; //Default
 		
-		String legalsWithSameLocMsg = RenameLegalValidation.LEGALS_WITH_SAME_LOC_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
-		String otherLegalDataMsg = RenameLegalValidation.OTHER_LEGAL_DATA_MSG
+		String legalsWithSameLocMsg = RenameLegalValidationRsrc.LEGALS_WITH_SAME_LOC_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
+		String otherLegalDataMsg = RenameLegalValidationRsrc.OTHER_LEGAL_DATA_MSG
 									.replace("[PidOrLegalLocation]", pidOrLegalLocation)
 									.replace("[LegalLocationOrPID]", legalLocationOrPid);
-		String otherFieldOnPolicyMsg = RenameLegalValidation.OTHER_FIELD_ON_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
-		String fieldOnOtherPolicyMsg = RenameLegalValidation.FIELD_ON_OTHER_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
+		String otherFieldOnPolicyMsg = RenameLegalValidationRsrc.OTHER_FIELD_ON_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
+		String fieldOnOtherPolicyMsg = RenameLegalValidationRsrc.FIELD_ON_OTHER_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
 
 		// Test 1: Legal Location already exists.
 		createLegalLand("test legal 1234", "Legal Description", "111-222-333", "Short Legal", legalLandId2);
@@ -424,12 +424,12 @@ public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 		String legalLocationOrPid = "PID";
 		String pidOrLegalLocation = "Legal Location";
 		
-		String legalsWithSameLocMsg = RenameLegalValidation.LEGALS_WITH_SAME_LOC_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
-		String otherLegalDataMsg = RenameLegalValidation.OTHER_LEGAL_DATA_MSG
+		String legalsWithSameLocMsg = RenameLegalValidationRsrc.LEGALS_WITH_SAME_LOC_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
+		String otherLegalDataMsg = RenameLegalValidationRsrc.OTHER_LEGAL_DATA_MSG
 									.replace("[PidOrLegalLocation]", pidOrLegalLocation)
 									.replace("[LegalLocationOrPID]", legalLocationOrPid);
-		String otherFieldOnPolicyMsg = RenameLegalValidation.OTHER_FIELD_ON_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
-		String fieldOnOtherPolicyMsg = RenameLegalValidation.FIELD_ON_OTHER_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
+		String otherFieldOnPolicyMsg = RenameLegalValidationRsrc.OTHER_FIELD_ON_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
+		String fieldOnOtherPolicyMsg = RenameLegalValidationRsrc.FIELD_ON_OTHER_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
 
 
 		// Main Policy

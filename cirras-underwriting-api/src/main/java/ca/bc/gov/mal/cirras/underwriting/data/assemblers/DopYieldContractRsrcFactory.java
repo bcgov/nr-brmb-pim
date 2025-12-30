@@ -20,7 +20,6 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForage;
@@ -28,7 +27,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForageCut;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollup;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollupForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
-import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldGrain;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityDto;
@@ -49,7 +47,7 @@ import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.In
 public class DopYieldContractRsrcFactory extends BaseResourceFactory { 
 	
 	
-	public DopYieldContract<? extends AnnualField> getDefaultDopYieldContract(
+	public DopYieldContractRsrc getDefaultDopYieldContract(
 			PolicyDto policyDto,
 			String defaultMeasurementUnitCode,
 			DeclaredYieldContractDto dycDto,
@@ -136,7 +134,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 	}
    
 	
-	public DopYieldContract<? extends AnnualField> getDopYieldContract(
+	public DopYieldContractRsrc getDopYieldContract(
 			DeclaredYieldContractDto dto, 
 			FactoryContext context, 
 			WebAdeAuthentication authentication
@@ -552,7 +550,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 	}
 	
 	
-	public void updateDto(DeclaredYieldContractDto dto, DopYieldContract<? extends AnnualField> model, String userId) {
+	public void updateDto(DeclaredYieldContractDto dto, DopYieldContractRsrc model, String userId) {
 
 		dto.setContractId(model.getContractId());
 		dto.setCropYear(model.getCropYear());

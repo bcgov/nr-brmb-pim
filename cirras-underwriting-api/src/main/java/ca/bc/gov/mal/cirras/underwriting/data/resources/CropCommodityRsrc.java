@@ -9,14 +9,13 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CropCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.CropVariety;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.CROP_COMMODITY_NAME)
 @XmlSeeAlso({ CropCommodityRsrc.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-public class CropCommodityRsrc extends BaseResource implements CropCommodity {
+public class CropCommodityRsrc extends BaseResource {
 
 	private static final long serialVersionUID = 1L;
 

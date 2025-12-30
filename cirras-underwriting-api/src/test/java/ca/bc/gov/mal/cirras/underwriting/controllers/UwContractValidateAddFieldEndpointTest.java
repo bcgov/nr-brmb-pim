@@ -31,7 +31,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.PolicyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AddFieldValidation;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForageCut;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldGrain;
@@ -547,7 +546,7 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId1, 1);
 		
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), null);
-		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.FIELD_ALREADY_ON_POLICY_MSG });
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidationRsrc.FIELD_ALREADY_ON_POLICY_MSG });
 		
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
 		service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId1.toString());
@@ -562,7 +561,7 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		String insurancePlans = "Grain or Forage";
 		
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), null);
-		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]", insurancePlans) });
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidationRsrc.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]", insurancePlans) });
 		
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
 		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId2.toString());
@@ -575,18 +574,18 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		
 		
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), policyId2.toString());
-		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.TRANSFER_POLICY_ID_NOT_EMPTY_MSG });
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidationRsrc.TRANSFER_POLICY_ID_NOT_EMPTY_MSG });
 		
 		// Test 4b: AddFieldValidation.TRANSFER_POLICY_ID_NOT_EMPTY_MSG (No Policy Association in crop year of same plan, but there is one with a different plan)
 		createAnnualFieldDetail(annualFieldDetailId1, null, fieldId1, 2020);
 		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId2, 1);
 
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), policyId2.toString());
-		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.TRANSFER_POLICY_ID_NOT_EMPTY_MSG });
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidationRsrc.TRANSFER_POLICY_ID_NOT_EMPTY_MSG });
 
 		// Test 5: AddFieldValidation.ADD_FIELD_TO_SECOND_POLICY_WARNING_MSG
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), null);
-		checkAddFieldValidation(addFieldValidation, new String[] { AddFieldValidation.ADD_FIELD_TO_SECOND_POLICY_WARNING_MSG }, null);
+		checkAddFieldValidation(addFieldValidation, new String[] { AddFieldValidationRsrc.ADD_FIELD_TO_SECOND_POLICY_WARNING_MSG }, null);
 		
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
 		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId2.toString());
@@ -601,21 +600,21 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId2, 1);
 
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), null);
-		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.TRANSFER_POLICY_ID_INCORRECT_MSG });
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidationRsrc.TRANSFER_POLICY_ID_INCORRECT_MSG });
 
 		// Test 7: AddFieldValidation.TRANSFER_POLICY_HAS_DOP_MSG
 		createInventoryContract(policyNumber2, 4);
 		createDopYieldContract(policyNumber2, 4);
 
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), policyId2.toString());
-		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.TRANSFER_POLICY_HAS_DOP_MSG });
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidationRsrc.TRANSFER_POLICY_HAS_DOP_MSG });
 		
 		deleteDopYieldContract(policyNumber2);
 		deleteInventoryContract(policyNumber2);
 		
 		// Test 8: AddFieldValidation.TRANSFER_POLICY_WARNING_MSG
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), policyId2.toString());
-		checkAddFieldValidation(addFieldValidation, new String[] { AddFieldValidation.TRANSFER_POLICY_WARNING_MSG }, null);
+		checkAddFieldValidation(addFieldValidation, new String[] { AddFieldValidationRsrc.TRANSFER_POLICY_WARNING_MSG }, null);
 		
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
 		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId2.toString());
@@ -642,7 +641,7 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		UwContractRsrc policyWithProducts = searchResults.getCollection().get(0);
 		
 		addFieldValidation = service.validateAddField(referrer, fieldIdOnPolicyWithProducts.toString(), policyWithProducts.getPolicyId().toString());
-		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.TRANSFER_POLICY_HAS_PRODUCTS_MSG });
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidationRsrc.TRANSFER_POLICY_HAS_PRODUCTS_MSG });
 		
 		logger.debug(">testValidateAddField");
 	}
@@ -700,7 +699,7 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		createDopYieldContract(policyNumber2, 5);
 
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), policyId2.toString());
-		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.TRANSFER_POLICY_HAS_DOP_MSG });
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidationRsrc.TRANSFER_POLICY_HAS_DOP_MSG });
 		
 		deleteDopYieldContract(policyNumber2);
 		deleteInventoryContract(policyNumber2);
@@ -767,7 +766,7 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		String insurancePlans = "Berries";
 		
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), null);
-		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]", insurancePlans) });
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidationRsrc.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]", insurancePlans) });
 		
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
 		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId2.toString());

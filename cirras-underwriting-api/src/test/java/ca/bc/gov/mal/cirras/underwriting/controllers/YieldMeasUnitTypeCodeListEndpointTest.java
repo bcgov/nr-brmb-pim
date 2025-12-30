@@ -1,8 +1,5 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,22 +7,12 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.data.resources.PoliciesSyncEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingServiceException;
-import ca.bc.gov.mal.cirras.underwriting.clients.ValidationException;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.EndpointsRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeCodeRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeVarietyXrefRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityVarietyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.YieldMeasUnitTypeCodeListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.YieldMeasUnitTypeCodeRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CropVariety;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyCommodityType;
-import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitTypeCodeList;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.CropCommodityListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.CropCommodityRsrc;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;

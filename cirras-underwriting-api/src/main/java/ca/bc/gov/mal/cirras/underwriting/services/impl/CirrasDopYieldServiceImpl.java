@@ -11,8 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContract;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForage;
@@ -21,8 +19,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldGrain;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollup;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollupForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
-import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitTypeCode;
-import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitTypeCodeList;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.ContractedFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityForageDao;
@@ -39,6 +35,9 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.PolicyDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.UnderwritingCommentDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.YieldMeasUnitConversionDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.YieldMeasUnitTypeCodeDao;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.YieldMeasUnitTypeCodeListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityForageDto;
@@ -196,13 +195,13 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 
 	@Override
-	public DopYieldContract<? extends AnnualField> rolloverDopYieldContract(Integer policyId,
+	public DopYieldContractRsrc rolloverDopYieldContract(Integer policyId,
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 		logger.debug("<rolloverDopYieldContract");
 
 		// Add dop yield contract
-		DopYieldContract<? extends AnnualField> result = null;
+		DopYieldContractRsrc result = null;
 
 		try {
 
@@ -257,14 +256,14 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 
 	@Override
-	public DopYieldContract<? extends AnnualField> getDopYieldContract(
+	public DopYieldContractRsrc getDopYieldContract(
 			String declaredYieldContractGuid,
 			FactoryContext factoryContext, 
 			WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 		logger.debug("<getDopYieldContract");
 
-		DopYieldContract<? extends AnnualField> result = null;
+		DopYieldContractRsrc result = null;
 
 		try {
 			DeclaredYieldContractDto dto = declaredYieldContractDao.fetch(declaredYieldContractGuid);
@@ -283,7 +282,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		return result;
 	}
 
-	private DopYieldContract<? extends AnnualField> loadDopYieldContract(
+	private DopYieldContractRsrc loadDopYieldContract(
 			DeclaredYieldContractDto dto,
 			FactoryContext factoryContext, 
 			WebAdeAuthentication authentication) throws DaoException {
@@ -487,14 +486,14 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 
 	@Override
-	public DopYieldContract<? extends AnnualField> createDopYieldContract(
-			DopYieldContract<? extends AnnualField> dopYieldContract, FactoryContext factoryContext,
+	public DopYieldContractRsrc createDopYieldContract(
+			DopYieldContractRsrc dopYieldContract, FactoryContext factoryContext,
 			WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, ValidationFailureException {
 
 		logger.debug("<createDopYieldContract");
 
-		DopYieldContract<? extends AnnualField> result = null;
+		DopYieldContractRsrc result = null;
 		String userId = getUserId(authentication);
 
 		try {
@@ -551,7 +550,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		return result;
 	}
 
-	private void updateAnnualField(DopYieldContract<? extends AnnualField> dopYieldContract,
+	private void updateAnnualField(DopYieldContractRsrc dopYieldContract,
 			Map<String, YieldMeasUnitConversionDto> ymucMap, WebAdeAuthentication authentication) {
 
 		logger.debug("<updateAnnualField");
@@ -559,9 +558,9 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		String userId = getUserId(authentication);
 
 		try {
-			List<? extends AnnualField> fields = dopYieldContract.getFields();
+			List<AnnualFieldRsrc> fields = dopYieldContract.getFields();
 			if (fields != null && !fields.isEmpty()) {
-				for (AnnualField field : fields) {
+				for (AnnualFieldRsrc field : fields) {
 
 					if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(dopYieldContract.getInsurancePlanId()) ) {
 						List<DopYieldFieldGrain> dopYieldFields = field.getDopYieldFieldGrainList();
@@ -623,7 +622,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 	
 	private void updateDeclaredYieldContractCommodityForage(String declaredYieldContractGuid,
-			DopYieldContract<? extends AnnualField> dopYieldContract, 
+			DopYieldContractRsrc dopYieldContract, 
 			Map<String, YieldMeasUnitConversionDto> ymucMap, String userId) throws DaoException {
 
 		logger.debug("<updateDeclaredYieldContractCommodityForage");
@@ -647,7 +646,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 	
 	private void updateDeclaredYieldFieldRollupForage(String declaredYieldContractGuid,
-			DopYieldContract<? extends AnnualField> dopYieldContract, String userId) throws DaoException {
+			DopYieldContractRsrc dopYieldContract, String userId) throws DaoException {
 
 		logger.debug("<updateDeclaredYieldFieldRollupForage");
 		
@@ -670,7 +669,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 	
 	// This is only used in unit tests
-	public DopYieldContract<?> calculateYieldFieldRollupForageTest(DopYieldContract<? extends AnnualField> dopYieldContract)
+	public DopYieldContractRsrc calculateYieldFieldRollupForageTest(DopYieldContractRsrc dopYieldContract)
 			throws ServiceException, DaoException {
 
 		Map<String, YieldMeasUnitConversionDto> ymucMap = loadYieldMeasUnitConversionsMap(
@@ -682,7 +681,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 	
 	// This is only used in unit tests
-	public DopYieldContract<?> calculateYieldContractCommodityForageTest(DopYieldContract<? extends AnnualField> dopYieldContract)
+	public DopYieldContractRsrc calculateYieldContractCommodityForageTest(DopYieldContractRsrc dopYieldContract)
 			throws ServiceException, DaoException {
 		
 		Map<String, YieldMeasUnitConversionDto> ymucMap = loadYieldMeasUnitConversionsMap(
@@ -694,7 +693,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 	
 	private void calculateForageDop(String declaredYieldContractGuid,
-			DopYieldContract<? extends AnnualField> dopYieldContract,
+			DopYieldContractRsrc dopYieldContract,
 			Map<String, YieldMeasUnitConversionDto> ymucMap) {
 
 		logger.debug("<calculateForageDop");
@@ -704,7 +703,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		
 		if (dopYieldContract.getFields() != null && dopYieldContract.getFields().size() > 0) {
 
-			for (AnnualField field : dopYieldContract.getFields()) {
+			for (AnnualFieldRsrc field : dopYieldContract.getFields()) {
 				
 				if (field.getDopYieldFieldForageList() != null && field.getDopYieldFieldForageList().size() > 0) {
 
@@ -864,7 +863,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		}
 	}
 
-	private void calculateContractCommoditiesForage(DopYieldContract<? extends AnnualField> dopYieldContract,
+	private void calculateContractCommoditiesForage(DopYieldContractRsrc dopYieldContract,
 			Map<String, YieldMeasUnitConversionDto> ymucMap,
 			List<DopYieldContractCommodityForage> dopNewYieldContractCommodityForageList) {
 		
@@ -918,7 +917,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}	
 
 
-	private DopYieldContractCommodityForage getExistingContractCommodity(DopYieldContract<? extends AnnualField> dopYieldContract,
+	private DopYieldContractCommodityForage getExistingContractCommodity(DopYieldContractRsrc dopYieldContract,
 			String commodityTypeCode) {
 		List<DopYieldContractCommodityForage> dyccfFiltered = new ArrayList<DopYieldContractCommodityForage>();
 		
@@ -937,7 +936,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 
 
 	private void updateDeclaredYieldContractCommodity(String declaredYieldContractGuid,
-			DopYieldContract<? extends AnnualField> dopYieldContract, DopYieldContractCommodity dopContractCommodity,
+			DopYieldContractRsrc dopYieldContract, DopYieldContractCommodity dopContractCommodity,
 			Map<String, YieldMeasUnitConversionDto> ymucMap, String userId) throws DaoException {
 
 		logger.debug("<updateDeclaredYieldContractCommodity");
@@ -995,7 +994,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 
 	}
 
-	private String insertDeclaredYieldContract(DopYieldContract<? extends AnnualField> dopYieldContract, String userId)
+	private String insertDeclaredYieldContract(DopYieldContractRsrc dopYieldContract, String userId)
 			throws DaoException {
 
 		DeclaredYieldContractDto dto = new DeclaredYieldContractDto();
@@ -1034,7 +1033,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	
 	/// converts a value (Grain = acres, Forage = weight) into the default units and returns the converted value
 	private Double convertDopYieldFieldAcresWeight(Double valueToConvert, Integer cropCommodityId,
-			DopYieldContract<? extends AnnualField> dopYieldContract, Map<String, YieldMeasUnitConversionDto> ymucMap)
+			DopYieldContractRsrc dopYieldContract, Map<String, YieldMeasUnitConversionDto> ymucMap)
 			throws ServiceException {
 
 		logger.debug("<convertDopYieldFieldAcresWeight");
@@ -1067,14 +1066,14 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}	
 
 	@Override
-	public DopYieldContract<? extends AnnualField> updateDopYieldContract(String declaredYieldContractGuid,
-			String optimisticLock, DopYieldContract<? extends AnnualField> dopYieldContract,
+	public DopYieldContractRsrc updateDopYieldContract(String declaredYieldContractGuid,
+			String optimisticLock, DopYieldContractRsrc dopYieldContract,
 			FactoryContext factoryContext, WebAdeAuthentication authentication) throws ServiceException,
 			NotFoundException, ForbiddenException, ConflictException, ValidationFailureException {
 
 		logger.debug("<updateDopYieldContract");
 
-		DopYieldContract<? extends AnnualField> result = null;
+		DopYieldContractRsrc result = null;
 		String userId = getUserId(authentication);
 
 		try {
@@ -1136,7 +1135,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 
 	private void updateContractUwComments(String declaredYieldContractGuid,
-			DopYieldContract<? extends AnnualField> dopYieldContract, String userId,
+			DopYieldContractRsrc dopYieldContract, String userId,
 			WebAdeAuthentication authentication) throws DaoException, ServiceException {
 
 		List<UnderwritingComment> contractUwComments = dopYieldContract.getUwComments();
@@ -1236,7 +1235,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		logger.debug(">deleteUnderwritingComment");
 	}
 
-	private void updateDeclaredYieldContract(DopYieldContract<? extends AnnualField> dopYieldContract, String userId)
+	private void updateDeclaredYieldContract(DopYieldContractRsrc dopYieldContract, String userId)
 			throws DaoException, NotFoundException {
 
 		DeclaredYieldContractDto dto = declaredYieldContractDao.fetch(dopYieldContract.getDeclaredYieldContractGuid());
@@ -1307,7 +1306,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 
 	private void updateDeclaredYieldFieldRollup(String declaredYieldContractGuid,
-			DopYieldContract<? extends AnnualField> dopYieldContract, String userId,
+			DopYieldContractRsrc dopYieldContract, String userId,
 			Map<String, YieldMeasUnitConversionDto> unitConversionMap) throws DaoException {
 
 		// Delete rollup records
@@ -1326,7 +1325,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 
 	// This is only used in unit tests
-	public DopYieldContract<?> calculateYieldRollupTest(DopYieldContract<? extends AnnualField> dopYieldContract)
+	public DopYieldContractRsrc calculateYieldRollupTest(DopYieldContractRsrc dopYieldContract)
 			throws ServiceException, DaoException {
 
 		Map<String, YieldMeasUnitConversionDto> ymucMap = loadYieldMeasUnitConversionsMap(
@@ -1338,7 +1337,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 
 	private void calculateYieldRollup(String declaredYieldContractGuid,
-			DopYieldContract<? extends AnnualField> dopYieldContract, Map<String, YieldMeasUnitConversionDto> ymucMap) {
+			DopYieldContractRsrc dopYieldContract, Map<String, YieldMeasUnitConversionDto> ymucMap) {
 
 		// Reset the list
 		dopYieldContract.setDopYieldFieldRollupList(null);
@@ -1346,7 +1345,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 
 		if (dopYieldContract.getFields() != null && dopYieldContract.getFields().size() > 0) {
 
-			for (AnnualField field : dopYieldContract.getFields()) {
+			for (AnnualFieldRsrc field : dopYieldContract.getFields()) {
 
 				if (field.getDopYieldFieldGrainList() != null && field.getDopYieldFieldGrainList().size() > 0) {
 					// Loop through each dop field record
@@ -1417,7 +1416,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 
 	// This is only used in unit tests
-	public double convertEstimatedYieldTest(DopYieldContract<? extends AnnualField> dopYieldContract, String targetUnit,
+	public double convertEstimatedYieldTest(DopYieldContractRsrc dopYieldContract, String targetUnit,
 			Integer cropCommodityId, double valueToConvert) throws ServiceException, DaoException {
 
 		Map<String, YieldMeasUnitConversionDto> ymucMap = loadYieldMeasUnitConversionsMap(
@@ -1427,7 +1426,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 
 	}
 
-	private double convertEstimatedYield(DopYieldContract<? extends AnnualField> dopYieldContract, String targetUnit,
+	private double convertEstimatedYield(DopYieldContractRsrc dopYieldContract, String targetUnit,
 			Integer cropCommodityId, double valueToConvert, Map<String, YieldMeasUnitConversionDto> ymucMap) {
 
 		String enteredUnit = dopYieldContract.getEnteredYieldMeasUnitTypeCode();
@@ -1500,14 +1499,13 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	}
 
 	@Override
-	public YieldMeasUnitTypeCodeList<? extends YieldMeasUnitTypeCode> getYieldMeasUnitTypeCodeList(
+	public YieldMeasUnitTypeCodeListRsrc getYieldMeasUnitTypeCodeList(
 			Integer insurancePlanId, FactoryContext context, WebAdeAuthentication authentication)
 			throws ServiceException, DaoException {
 
 		List<YieldMeasUnitTypeCodeDto> dtos = yieldMeasUnitTypeCodeDao.selectByPlan(insurancePlanId);
 
-		YieldMeasUnitTypeCodeList<? extends YieldMeasUnitTypeCode> result = yieldMeasUnitTypeCodeRsrcFactory
-				.getYieldMeasUnitTypeCodeList(dtos);
+		YieldMeasUnitTypeCodeListRsrc result = yieldMeasUnitTypeCodeRsrcFactory.getYieldMeasUnitTypeCodeList(dtos);
 
 		return result;
 	}

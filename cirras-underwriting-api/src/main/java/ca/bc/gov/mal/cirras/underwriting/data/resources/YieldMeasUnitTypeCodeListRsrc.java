@@ -11,12 +11,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitTypeCodeList;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.YIELD_MEAS_UNIT_TYPE_CODE_LIST_NAME)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonSubTypes({ @Type(value = YieldMeasUnitTypeCodeListRsrc.class, name = ResourceTypes.YIELD_MEAS_UNIT_TYPE_CODE_LIST) })
-public class YieldMeasUnitTypeCodeListRsrc extends BaseResource implements YieldMeasUnitTypeCodeList<YieldMeasUnitTypeCodeRsrc> {
+public class YieldMeasUnitTypeCodeListRsrc extends BaseResource {
 	private static final long serialVersionUID = 1L;
 
 	private List<YieldMeasUnitTypeCodeRsrc> collection = new ArrayList<YieldMeasUnitTypeCodeRsrc>(0);
@@ -25,12 +24,10 @@ public class YieldMeasUnitTypeCodeListRsrc extends BaseResource implements Yield
 		collection = new ArrayList<YieldMeasUnitTypeCodeRsrc>();
 	}
 
-	@Override
 	public List<YieldMeasUnitTypeCodeRsrc> getCollection() {
 		return collection;
 	}
 
-	@Override
 	public void setCollection(List<YieldMeasUnitTypeCodeRsrc> collection) {
 		this.collection = collection;
 	}

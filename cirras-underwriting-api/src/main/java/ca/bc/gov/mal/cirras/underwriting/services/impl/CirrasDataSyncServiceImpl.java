@@ -5,21 +5,17 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactEmailRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactPhoneRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerContactRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.PolicyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.ProductRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCodeRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeCode;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeVarietyXref;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Contact;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ContactEmail;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ContactPhone;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Grower;
-import ca.bc.gov.mal.cirras.underwriting.data.models.GrowerContact;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Policy;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Product;
-import ca.bc.gov.mal.cirras.underwriting.data.models.SyncCode;
-import ca.bc.gov.mal.cirras.underwriting.data.models.SyncCommodityVariety;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeCodeRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeVarietyXrefRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityVarietyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.GrowerDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.OfficeDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.PolicyDao;
@@ -170,7 +166,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	// Generic Code Tables
 	////////////////////////////////////////////////////////////////////
 	@Override
-	public SyncCode getSyncCode(String codeTableType, String uniqueKey, FactoryContext factoryContext,
+	public SyncCodeRsrc getSyncCode(String codeTableType, String uniqueKey, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, DaoException {
 
 		logger.debug("<getSyncCode");
@@ -411,12 +407,12 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	}
 
 	@Override
-	public Grower getGrower(Integer growerId, FactoryContext factoryContext, WebAdeAuthentication authentication)
+	public GrowerRsrc getGrower(Integer growerId, FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<getGrower");
 
-		Grower result = null;
+		GrowerRsrc result = null;
 
 		try {
 			GrowerDto dto = growerDao.fetch(growerId);
@@ -522,12 +518,12 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	}
 	
 	@Override
-	public Policy getPolicy(Integer policyId, FactoryContext factoryContext, WebAdeAuthentication authentication)
+	public PolicyRsrc getPolicy(Integer policyId, FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<getPolicy");
 
-		Policy result = null;
+		PolicyRsrc result = null;
 
 		try {
 			PolicyDto dto = policyDao.fetch(policyId);
@@ -633,12 +629,12 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	}
 
 	@Override
-	public Product getProduct(Integer productId, FactoryContext factoryContext, WebAdeAuthentication authentication)
+	public ProductRsrc getProduct(Integer productId, FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<getProduct");
 
-		Product result = null;
+		ProductRsrc result = null;
 
 		try {
 			ProductDto dto = productDao.fetch(productId);
@@ -748,7 +744,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public void synchronizeCommodityVariety(SyncCommodityVariety model, FactoryContext factoryContext,
+	public void synchronizeCommodityVariety(SyncCommodityVarietyRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<synchronizeCommodityVariety");
@@ -790,7 +786,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void createCropCommodity(SyncCommodityVariety model, FactoryContext factoryContext,
+	private void createCropCommodity(SyncCommodityVarietyRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication) {
 
 		logger.debug("<createCropCommodity");
@@ -811,7 +807,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void updateCropCommodity(SyncCommodityVariety model, CropCommodityDto dto, 
+	private void updateCropCommodity(SyncCommodityVarietyRsrc model, CropCommodityDto dto, 
 			FactoryContext factoryContext, WebAdeAuthentication webAdeAuthentication) {
 
 		logger.debug("<updateCropCommodity");
@@ -832,7 +828,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void createCropVariety(SyncCommodityVariety model, FactoryContext factoryContext,
+	private void createCropVariety(SyncCommodityVarietyRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication) {
 
 		logger.debug("<createCropVariety");
@@ -853,7 +849,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void updateCropVariety(SyncCommodityVariety model, CropVarietyDto dto, 
+	private void updateCropVariety(SyncCommodityVarietyRsrc model, CropVarietyDto dto, 
 			FactoryContext factoryContext, WebAdeAuthentication webAdeAuthentication) {
 
 		logger.debug("<updateCropVariety");
@@ -877,7 +873,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	// The crop record is not deleted but the expiry date is set to the current
 	// date.
 	// It's possible that the record doesn't exist in the calculator.
-	private void inactivateSyncCommodityVariety(SyncCommodityVariety model, WebAdeAuthentication authentication)
+	private void inactivateSyncCommodityVariety(SyncCommodityVarietyRsrc model, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<inactivateSyncCommodityVariety");
@@ -910,7 +906,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 		logger.debug("<deleteSyncCommodityVariety");
 
-		SyncCommodityVariety model = getSyncCommodityVariety(crptId, factoryContext, authentication);
+		SyncCommodityVarietyRsrc model = getSyncCommodityVariety(crptId, factoryContext, authentication);
 
 		// Determine if it's commodity or variety update
 		if (model != null && model.getParentCropId() == null) {
@@ -928,12 +924,12 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	// This method is used to determine if the crop is a commodity or a variety and
 	// return the cropId and the parentId (if it's a variety)
 	@Override
-	public SyncCommodityVariety getSyncCommodityVariety(Integer crptId, FactoryContext factoryContext,
+	public SyncCommodityVarietyRsrc getSyncCommodityVariety(Integer crptId, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException {
 
 		logger.debug("<getSyncCommodityVariety");
 
-		SyncCommodityVariety model = null;
+		SyncCommodityVarietyRsrc model = null;
 
 		if (crptId != null) {
 			try {
@@ -971,12 +967,12 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	// CONTACT
 	//////////////////////////////////////////////////
 	@Override
-	public Contact getContact(Integer contactId, FactoryContext factoryContext, WebAdeAuthentication authentication)
+	public ContactRsrc getContact(Integer contactId, FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 
 		logger.debug("<getContact");
 
-		Contact result = null;
+		ContactRsrc result = null;
 
 		try {
 			ContactDto dto = contactDao.fetch(contactId);
@@ -997,7 +993,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	}
 
 	@Override
-	public void synchronizeContact(Contact model, FactoryContext factoryContext,
+	public void synchronizeContact(ContactRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<synchronizeContact");
@@ -1024,7 +1020,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void updateContact(Contact model, ContactDto dto, 
+	private void updateContact(ContactRsrc model, ContactDto dto, 
 			FactoryContext factoryContext, WebAdeAuthentication authentication) {
 
 		logger.debug("<updateContact");
@@ -1045,7 +1041,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void createContact(Contact model, FactoryContext factoryContext,
+	private void createContact(ContactRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) {
 
 		logger.debug("<createContact");
@@ -1084,12 +1080,12 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	// GROWER CONTACT
 	//////////////////////////////////////////////////
 	@Override
-	public GrowerContact getGrowerContact(Integer growerContactId, FactoryContext factoryContext, WebAdeAuthentication authentication)
+	public GrowerContactRsrc getGrowerContact(Integer growerContactId, FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 
 		logger.debug("<getGrowerContact");
 
-		GrowerContact result = null;
+		GrowerContactRsrc result = null;
 
 		try {
 			GrowerContactDto dto = growerContactDao.fetch(growerContactId);
@@ -1110,7 +1106,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	}
 
 	@Override
-	public void synchronizeGrowerContact(GrowerContact model, FactoryContext factoryContext,
+	public void synchronizeGrowerContact(GrowerContactRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<synchronizeGrowerContact");
@@ -1138,7 +1134,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void updateGrowerContact(GrowerContact model, GrowerContactDto dto, 
+	private void updateGrowerContact(GrowerContactRsrc model, GrowerContactDto dto, 
 			FactoryContext factoryContext, WebAdeAuthentication authentication) {
 
 		logger.debug("<updateGrowerContact");
@@ -1159,7 +1155,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void createGrowerContact(GrowerContact model, FactoryContext factoryContext,
+	private void createGrowerContact(GrowerContactRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) {
 
 		logger.debug("<createGrowerContact");
@@ -1198,12 +1194,12 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	// CONTACT EMAIL
 	//////////////////////////////////////////////////
 	@Override
-	public ContactEmail getContactEmail(Integer contactEmailId, FactoryContext factoryContext, WebAdeAuthentication authentication)
+	public ContactEmailRsrc getContactEmail(Integer contactEmailId, FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 
 		logger.debug("<getContactEmail");
 
-		ContactEmail result = null;
+		ContactEmailRsrc result = null;
 
 		try {
 			ContactEmailDto dto = contactEmailDao.fetch(contactEmailId);
@@ -1224,7 +1220,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	}
 
 	@Override
-	public void synchronizeContactEmail(ContactEmail model, FactoryContext factoryContext,
+	public void synchronizeContactEmail(ContactEmailRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<synchronizeContactEmail");
@@ -1256,7 +1252,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void updateContactEmail(ContactEmail model, ContactEmailDto dto, 
+	private void updateContactEmail(ContactEmailRsrc model, ContactEmailDto dto, 
 			FactoryContext factoryContext, WebAdeAuthentication authentication) {
 
 		logger.debug("<updateContactEmail");
@@ -1277,7 +1273,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void createContactEmail(ContactEmail model, FactoryContext factoryContext,
+	private void createContactEmail(ContactEmailRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) {
 
 		logger.debug("<createContactEmail");
@@ -1316,12 +1312,12 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	// CONTACT PHONE
 	//////////////////////////////////////////////////
 	@Override
-	public ContactPhone getContactPhone(Integer contactPhoneId, FactoryContext factoryContext, WebAdeAuthentication authentication)
+	public ContactPhoneRsrc getContactPhone(Integer contactPhoneId, FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 
 		logger.debug("<getContactPhone");
 
-		ContactPhone result = null;
+		ContactPhoneRsrc result = null;
 
 		try {
 			ContactPhoneDto dto = contactPhoneDao.fetch(contactPhoneId);
@@ -1342,7 +1338,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	}
 
 	@Override
-	public void synchronizeContactPhone(ContactPhone model, FactoryContext factoryContext,
+	public void synchronizeContactPhone(ContactPhoneRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<synchronizeContactPhone");
@@ -1379,7 +1375,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void updateContactPhone(ContactPhone model, ContactPhoneDto dto, 
+	private void updateContactPhone(ContactPhoneRsrc model, ContactPhoneDto dto, 
 			FactoryContext factoryContext, WebAdeAuthentication authentication) {
 
 		logger.debug("<updateContactPhone");
@@ -1400,7 +1396,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void createContactPhone(ContactPhone model, FactoryContext factoryContext,
+	private void createContactPhone(ContactPhoneRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) {
 
 		logger.debug("<createContactPhone");
@@ -1439,13 +1435,13 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	// COMMODITY TYPE CODE
 	//////////////////////////////////////////////////
 	@Override
-	public CommodityTypeCode getCommodityTypeCode(String commodityTypeCode,
+	public SyncCommodityTypeCodeRsrc getCommodityTypeCode(String commodityTypeCode,
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 
 		logger.debug("<getCommodityTypeCode");
 
-		CommodityTypeCode result = null;
+		SyncCommodityTypeCodeRsrc result = null;
 
 		try {
 			CommodityTypeCodeDto dto = commodityTypeCodeDao.fetch(commodityTypeCode);
@@ -1466,7 +1462,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	}
 
 	@Override
-	public void synchronizeCommodityTypeCode(CommodityTypeCode model, FactoryContext factoryContext,
+	public void synchronizeCommodityTypeCode(SyncCommodityTypeCodeRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<synchronizeCommodityTypeCode");
@@ -1493,7 +1489,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void updateCommodityTypeCode(CommodityTypeCode model, CommodityTypeCodeDto dto, 
+	private void updateCommodityTypeCode(SyncCommodityTypeCodeRsrc model, CommodityTypeCodeDto dto, 
 			FactoryContext factoryContext, WebAdeAuthentication authentication) {
 
 		logger.debug("<updateCommodityTypeCode");
@@ -1514,7 +1510,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void createCommodityTypeCode(CommodityTypeCode model, FactoryContext factoryContext,
+	private void createCommodityTypeCode(SyncCommodityTypeCodeRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) {
 
 		logger.debug("<createCommodityTypeCode");
@@ -1537,7 +1533,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 	
-	private void inactivateCommodityTypeCode(CommodityTypeCode model, WebAdeAuthentication authentication) throws DaoException {
+	private void inactivateCommodityTypeCode(SyncCommodityTypeCodeRsrc model, WebAdeAuthentication authentication) throws DaoException {
 
 		logger.debug("<inactivateCommodityTypeCode");
 
@@ -1570,13 +1566,13 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	// COMMODITY TYPE VARIETY XREF
 	//////////////////////////////////////////////////
 	@Override
-	public CommodityTypeVarietyXref getCommodityTypeVarietyXref(String commodityTypeCode, Integer cropVarietyId,
+	public SyncCommodityTypeVarietyXrefRsrc getCommodityTypeVarietyXref(String commodityTypeCode, Integer cropVarietyId,
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 
 		logger.debug("<getCommodityTypeVarietyXref");
 
-		CommodityTypeVarietyXref result = null;
+		SyncCommodityTypeVarietyXrefRsrc result = null;
 
 		try {
 			CommodityTypeVarietyXrefDto dto = commodityTypeVarietyXrefDao.fetch(commodityTypeCode, cropVarietyId);
@@ -1597,7 +1593,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	}
 
 	@Override
-	public void synchronizeCommodityTypeVarietyXref(CommodityTypeVarietyXref model, FactoryContext factoryContext,
+	public void synchronizeCommodityTypeVarietyXref(SyncCommodityTypeVarietyXrefRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException, DaoException {
 
 		logger.debug("<synchronizeCommodityTypeCode");
@@ -1622,7 +1618,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 	}
 
-	private void createCommodityTypeVarietyXref(CommodityTypeVarietyXref model, FactoryContext factoryContext,
+	private void createCommodityTypeVarietyXref(SyncCommodityTypeVarietyXrefRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) {
 
 		logger.debug("<createCommodityTypeVarietyXref");

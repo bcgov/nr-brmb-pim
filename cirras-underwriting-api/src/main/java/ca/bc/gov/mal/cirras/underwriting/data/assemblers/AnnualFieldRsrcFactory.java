@@ -18,8 +18,6 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualFieldList;
 import ca.bc.gov.mal.cirras.underwriting.data.models.PolicySimple;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.FieldDto;
@@ -32,7 +30,7 @@ public class AnnualFieldRsrcFactory extends BaseResourceFactory {
 	//======================================================================================================================
 	
 	
-	public AnnualFieldList<? extends AnnualField> getAnnualFieldList(
+	public AnnualFieldListRsrc getAnnualFieldList(
 			List<FieldDto> dtos,
 			Integer legalLandId, 
 			Integer cropYear,
@@ -131,7 +129,7 @@ public class AnnualFieldRsrcFactory extends BaseResourceFactory {
 
 	// Only supports updates to members that are editable on the Inventory screen.
 	
-	public void updateDto(ContractedFieldDetailDto dto, AnnualField model) {
+	public void updateDto(ContractedFieldDetailDto dto, AnnualFieldRsrc model) {
 		dto.setDisplayOrder(model.getDisplayOrder());
 		dto.setIsLeasedInd(model.getIsLeasedInd());
 	}

@@ -17,13 +17,12 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.GradeModifierTypeListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifierType;
-import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifierTypeList;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.GradeModifierTypeCodeDto;
 
 public class GradeModifierTypeRsrcFactory extends BaseResourceFactory { 
 
 	
-	public GradeModifierTypeList<? extends GradeModifierType> getGradeModifierTypeList(
+	public GradeModifierTypeListRsrc getGradeModifierTypeList(
 			List<GradeModifierTypeCodeDto> dtos,
 			Integer cropYear,
 			FactoryContext context, 

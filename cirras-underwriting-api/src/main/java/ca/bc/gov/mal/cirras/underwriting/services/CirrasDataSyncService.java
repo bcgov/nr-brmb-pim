@@ -2,21 +2,17 @@ package ca.bc.gov.mal.cirras.underwriting.services;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.SyncCommodityVariety;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeCodeRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactEmailRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactPhoneRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerContactRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.PolicyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.ProductRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCodeRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeCode;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeVarietyXref;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Contact;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ContactEmail;
-import ca.bc.gov.mal.cirras.underwriting.data.models.ContactPhone;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Grower;
-import ca.bc.gov.mal.cirras.underwriting.data.models.GrowerContact;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Policy;
-import ca.bc.gov.mal.cirras.underwriting.data.models.Product;
-import ca.bc.gov.mal.cirras.underwriting.data.models.SyncCode;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeVarietyXrefRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityVarietyRsrc;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
@@ -29,7 +25,7 @@ public interface CirrasDataSyncService {
 	//Generic Code Tables
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	SyncCode getSyncCode(
+	SyncCodeRsrc getSyncCode(
 		String codeTableType, 
 		String uniqueKey,
 		FactoryContext factoryContext, 
@@ -54,7 +50,7 @@ public interface CirrasDataSyncService {
 	//Grower
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	Grower getGrower(
+	GrowerRsrc getGrower(
 		Integer growerId,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -77,7 +73,7 @@ public interface CirrasDataSyncService {
 	//Policy
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	Policy getPolicy(
+	PolicyRsrc getPolicy(
 		Integer policyId,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -101,7 +97,7 @@ public interface CirrasDataSyncService {
 	//Product
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	Product getProduct(
+	ProductRsrc getProduct(
 		Integer productId,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -125,7 +121,7 @@ public interface CirrasDataSyncService {
 	//Commodity Variety Sync
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	SyncCommodityVariety getSyncCommodityVariety(
+	SyncCommodityVarietyRsrc getSyncCommodityVariety(
 		Integer crptId,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -133,7 +129,7 @@ public interface CirrasDataSyncService {
 	throws ServiceException, NotFoundException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	void synchronizeCommodityVariety (SyncCommodityVariety model, FactoryContext factoryContext,
+	void synchronizeCommodityVariety (SyncCommodityVarietyRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication) throws ServiceException, NotFoundException, DaoException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
@@ -148,7 +144,7 @@ public interface CirrasDataSyncService {
 	//Contact
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	Contact getContact(
+	ContactRsrc getContact(
 		Integer contactId,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -156,7 +152,7 @@ public interface CirrasDataSyncService {
 	throws ServiceException, NotFoundException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	void synchronizeContact (Contact model, FactoryContext factoryContext,
+	void synchronizeContact (ContactRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication) throws ServiceException, NotFoundException, DaoException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
@@ -171,7 +167,7 @@ public interface CirrasDataSyncService {
 	//Grower Contact
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	GrowerContact getGrowerContact(
+	GrowerContactRsrc getGrowerContact(
 		Integer growerContactId,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -179,7 +175,7 @@ public interface CirrasDataSyncService {
 	throws ServiceException, NotFoundException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	void synchronizeGrowerContact (GrowerContact model, FactoryContext factoryContext,
+	void synchronizeGrowerContact (GrowerContactRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication) throws ServiceException, NotFoundException, DaoException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
@@ -194,7 +190,7 @@ public interface CirrasDataSyncService {
 	//Contact Email
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	ContactEmail getContactEmail(
+	ContactEmailRsrc getContactEmail(
 		Integer contactEmailId,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -202,7 +198,7 @@ public interface CirrasDataSyncService {
 	throws ServiceException, NotFoundException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	void synchronizeContactEmail (ContactEmail model, FactoryContext factoryContext,
+	void synchronizeContactEmail (ContactEmailRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication) throws ServiceException, NotFoundException, DaoException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
@@ -217,7 +213,7 @@ public interface CirrasDataSyncService {
 	//Contact Phone
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	ContactPhone getContactPhone(
+	ContactPhoneRsrc getContactPhone(
 		Integer contactPhoneId,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -225,7 +221,7 @@ public interface CirrasDataSyncService {
 	throws ServiceException, NotFoundException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	void synchronizeContactPhone (ContactPhone model, FactoryContext factoryContext,
+	void synchronizeContactPhone (ContactPhoneRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication) throws ServiceException, NotFoundException, DaoException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
@@ -240,7 +236,7 @@ public interface CirrasDataSyncService {
 	//Commodity Type Code
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	CommodityTypeCode getCommodityTypeCode(
+	SyncCommodityTypeCodeRsrc getCommodityTypeCode(
 		String commodityTypeCode,
 		FactoryContext factoryContext, 
 		WebAdeAuthentication authentication
@@ -248,7 +244,7 @@ public interface CirrasDataSyncService {
 	throws ServiceException, NotFoundException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	void synchronizeCommodityTypeCode (CommodityTypeCode model, FactoryContext factoryContext,
+	void synchronizeCommodityTypeCode (SyncCommodityTypeCodeRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication) throws ServiceException, NotFoundException, DaoException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
@@ -263,7 +259,7 @@ public interface CirrasDataSyncService {
 	//Commodity Type Variety Xref
 	////////////////////////////////////////////////////////////////////
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
-	CommodityTypeVarietyXref getCommodityTypeVarietyXref(
+	SyncCommodityTypeVarietyXrefRsrc getCommodityTypeVarietyXref(
 		String commodityTypeCode,
 		Integer cropVarietyId,
 		FactoryContext factoryContext, 
@@ -272,7 +268,7 @@ public interface CirrasDataSyncService {
 	throws ServiceException, NotFoundException;
 	
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	void synchronizeCommodityTypeVarietyXref(CommodityTypeVarietyXref model, FactoryContext factoryContext,
+	void synchronizeCommodityTypeVarietyXref(SyncCommodityTypeVarietyXrefRsrc model, FactoryContext factoryContext,
 			WebAdeAuthentication webAdeAuthentication) throws ServiceException, NotFoundException, DaoException;
 
 	@Transactional(readOnly = false, rollbackFor = Exception.class)

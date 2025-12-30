@@ -7,21 +7,11 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeCode;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeCodeList;
 import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyInsurability;
-import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyInsurabilityList;
 import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyPlantInsurability;
-import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifier;
-import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifierList;
 import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifierType;
-import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifierTypeList;
 import ca.bc.gov.mal.cirras.underwriting.data.models.SeedingDeadline;
-import ca.bc.gov.mal.cirras.underwriting.data.models.SeedingDeadlineList;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingYear;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingYearList;
 import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitConversion;
-import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitConversionList;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeCodeDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyInsPlantInsXrefDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyInsurabilityDto;
@@ -50,6 +40,15 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.GradeModifierTypeCode
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.SeedingDeadlineDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.UnderwritingYearDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.YieldMeasUnitConversionDao;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.CommodityTypeCodeListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.CropVarietyInsurabilityListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.GradeModifierListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.GradeModifierRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.GradeModifierTypeListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SeedingDeadlineListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.UnderwritingYearListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.UnderwritingYearRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.YieldMeasUnitConversionListRsrc;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.ConflictException;
@@ -199,14 +198,14 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	}
 		
 	@Override
-	public CommodityTypeCodeList<? extends CommodityTypeCode> getCommodityTypeCodeList(
+	public CommodityTypeCodeListRsrc getCommodityTypeCodeList(
 			Integer insurancePlanId,
 			FactoryContext context,
 			WebAdeAuthentication authentication) throws ServiceException {
 
 		logger.debug("<getCommodityTypeCodeList");
 		
-		CommodityTypeCodeList<? extends CommodityTypeCode> results = null;
+		CommodityTypeCodeListRsrc results = null;
 		
 		try {
 			
@@ -225,14 +224,14 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	}
 
 	@Override
-	public SeedingDeadlineList<? extends SeedingDeadline> saveSeedingDeadlines(
-			SeedingDeadlineList<? extends SeedingDeadline> seedingDeadlines, 
+	public SeedingDeadlineListRsrc saveSeedingDeadlines(
+			SeedingDeadlineListRsrc seedingDeadlines, 
 			Integer cropYear,
 			FactoryContext factoryContext,
 			WebAdeAuthentication authentication
 			) throws ServiceException, NotFoundException, ValidationFailureException {
 		
-		SeedingDeadlineList<? extends SeedingDeadline> result = null;
+		SeedingDeadlineListRsrc result = null;
 		String userId = getUserId(authentication);
 
 		try {
@@ -312,7 +311,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	}
 
 	@Override
-	public SeedingDeadlineList<? extends SeedingDeadline> getSeedingDeadlines(
+	public SeedingDeadlineListRsrc getSeedingDeadlines(
 			Integer cropYear,
 			FactoryContext factoryContext, 
 			WebAdeAuthentication authentication
@@ -320,7 +319,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 
 		logger.debug("<getSeedingDeadlines");
 
-		SeedingDeadlineList<? extends SeedingDeadline> result = null;
+		SeedingDeadlineListRsrc result = null;
 		
 		try {
 			List<SeedingDeadlineDto> dtos = seedingDeadlineDao.selectByYear(cropYear);
@@ -337,15 +336,15 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	
 
 	@Override
-	public UnderwritingYear createUnderwritingYear(
-			UnderwritingYear underwritingYear, 
+	public UnderwritingYearRsrc createUnderwritingYear(
+			UnderwritingYearRsrc underwritingYear, 
 			FactoryContext factoryContext,
 			WebAdeAuthentication authentication
 		) throws ServiceException, NotFoundException, ValidationFailureException {
 
 		logger.debug("<createUnderwritingYear");
 		
-		UnderwritingYear result = null;
+		UnderwritingYearRsrc result = null;
 		String userId = getUserId(authentication);
 		
 		try {
@@ -378,7 +377,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	}
 
 	@Override
-	public UnderwritingYear getUnderwritingYear(
+	public UnderwritingYearRsrc getUnderwritingYear(
 			Integer cropYear, 
 			FactoryContext factoryContext,
 			WebAdeAuthentication authentication
@@ -386,7 +385,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		
 		logger.debug("<getUnderwritingYear");
 
-		UnderwritingYear result = null;
+		UnderwritingYearRsrc result = null;
 
 		try {
 			
@@ -431,14 +430,14 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	}
 
 	@Override
-	public UnderwritingYearList<? extends UnderwritingYear> getUnderwritingYearList(
+	public UnderwritingYearListRsrc getUnderwritingYearList(
 			FactoryContext factoryContext,
 			WebAdeAuthentication authentication
 		) throws ServiceException, NotFoundException, ForbiddenException, ConflictException {
 
 		logger.debug("<getUnderwritingYearList");
 
-		UnderwritingYearList<? extends UnderwritingYear> result = null;
+		UnderwritingYearListRsrc result = null;
 		
 		try {
 			List<UnderwritingYearDto> dtos = underwritingYearDao.fetchAll();
@@ -454,7 +453,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	}
 	
 	@Override
-	public GradeModifierList<? extends GradeModifier> getGradeModifierList(
+	public GradeModifierListRsrc getGradeModifierList(
 			Integer cropYear, 
 			Integer insurancePlanId, 
 			Integer cropCommodityId,
@@ -463,7 +462,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 
 		logger.debug("<getGradeModifierList");
 
-		GradeModifierList<? extends GradeModifier> result = null;
+		GradeModifierListRsrc result = null;
 
 		try {
 			List<GradeModifierDto> dtos = gradeModifierDao.selectByYearPlanCommodity(cropYear, insurancePlanId, cropCommodityId);
@@ -480,22 +479,22 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	}
 	
 	@Override
-	public GradeModifierList<? extends GradeModifier> saveGradeModifiers(
+	public GradeModifierListRsrc saveGradeModifiers(
 			Integer cropYear, 
 			Integer insurancePlanId, 
 			Integer cropCommodityId,
-			GradeModifierList<? extends GradeModifier> gradeModifiers, 
+			GradeModifierListRsrc gradeModifiers, 
 			FactoryContext factoryContext,
 			WebAdeAuthentication authentication
 			) throws ServiceException, NotFoundException, ValidationFailureException {
 		
-		GradeModifierList<? extends GradeModifier> result = null;
+		GradeModifierListRsrc result = null;
 		String userId = getUserId(authentication);
 
 		try {
 
 			if(gradeModifiers != null && gradeModifiers.getCollection().size() > 0) {
-				for (GradeModifier gradeModifier : gradeModifiers.getCollection()) {
+				for (GradeModifierRsrc gradeModifier : gradeModifiers.getCollection()) {
 					if ( Boolean.TRUE.equals(gradeModifier.getDeletedByUserInd())) {
 						//delete
 						deleteGradeModifier(gradeModifier);
@@ -519,7 +518,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		
 	}	
 
-	private void deleteGradeModifier(GradeModifier gradeModifier)
+	private void deleteGradeModifier(GradeModifierRsrc gradeModifier)
 			throws NotFoundDaoException, DaoException {
 		logger.debug("<deleteGradeModifier");
 
@@ -530,7 +529,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		logger.debug(">deleteGradeModifier");
 	}
 	
-	private void updateGradeModifier(GradeModifier gradeModifier, String userId) throws DaoException {
+	private void updateGradeModifier(GradeModifierRsrc gradeModifier, String userId) throws DaoException {
 
 		logger.debug("<updateGradeModifier");
 
@@ -554,7 +553,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 
 	}
 	
-	private String insertGradeModifier(GradeModifier gradeModifier, String userId) throws DaoException {
+	private String insertGradeModifier(GradeModifierRsrc gradeModifier, String userId) throws DaoException {
 
 		logger.debug("<insertGradeModifier");
 
@@ -571,7 +570,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	}
 
 	@Override
-	public GradeModifierTypeList<? extends GradeModifierType> getGradeModifierTypeList(
+	public GradeModifierTypeListRsrc getGradeModifierTypeList(
 			Integer cropYear,
 			FactoryContext context,
 			WebAdeAuthentication authentication
@@ -579,7 +578,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 
 		logger.debug("<getGradeModifierTypeList");
 
-		GradeModifierTypeList<? extends GradeModifierType> result = null;
+		GradeModifierTypeListRsrc result = null;
 
 		try {
 			List<GradeModifierTypeCodeDto> dtos = gradeModifierTypeCodeDao.select(cropYear);
@@ -596,9 +595,9 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	}
 
 	@Override
-	public GradeModifierTypeList<? extends GradeModifierType> saveGradeModifierTypes(
+	public GradeModifierTypeListRsrc saveGradeModifierTypes(
 			Integer cropYear,
-			GradeModifierTypeList<? extends GradeModifierType> gradeModifierTypes, 
+			GradeModifierTypeListRsrc gradeModifierTypes, 
 			FactoryContext factoryContext,
 			WebAdeAuthentication authentication
 		)
@@ -606,7 +605,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 
 		logger.debug("<saveGradeModifierTypes");
 
-		GradeModifierTypeList<? extends GradeModifierType> result = null;
+		GradeModifierTypeListRsrc result = null;
 		String userId = getUserId(authentication);
 
 		try {
@@ -685,7 +684,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	}
 	
 	@Override
-	public CropVarietyInsurabilityList<? extends CropVarietyInsurability> getCropVarietyInsurabilities(
+	public CropVarietyInsurabilityListRsrc getCropVarietyInsurabilities(
 			Integer insurancePlanId, 
 			Boolean loadForEdit, 
 			FactoryContext context, 
@@ -694,7 +693,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		
 		logger.debug("<getCropVarietyInsurabilities");
 
-		CropVarietyInsurabilityList<? extends CropVarietyInsurability> result = null;
+		CropVarietyInsurabilityListRsrc result = null;
 
 		try {
 			List<CropVarietyInsurabilityDto> cropVarietyInsurabilityDtos = cropVarietyInsurabilityDao.selectForInsurancePlan(insurancePlanId);
@@ -725,17 +724,17 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	}
 
 	@Override
-	public CropVarietyInsurabilityList<? extends CropVarietyInsurability> saveCropVarietyInsurabilities(
+	public CropVarietyInsurabilityListRsrc saveCropVarietyInsurabilities(
 			Integer insurancePlanId, 
 			Boolean loadForEdit,
-			CropVarietyInsurabilityList<? extends CropVarietyInsurability> cropVarietyInsurabilities,
+			CropVarietyInsurabilityListRsrc cropVarietyInsurabilities,
 			FactoryContext factoryContext, 
 			WebAdeAuthentication authentication
 		) throws ServiceException, NotFoundException, ValidationFailureException {
 		
 		logger.debug("<saveCropVarietyInsurabilities");
 
-		CropVarietyInsurabilityList<? extends CropVarietyInsurability> result = null;
+		CropVarietyInsurabilityListRsrc result = null;
 		String userId = getUserId(authentication);
 
 		try {
@@ -963,7 +962,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	}
 	
 	@Override
-	public 	YieldMeasUnitConversionList<? extends YieldMeasUnitConversion> getYieldMeasUnitConversions(
+	public 	YieldMeasUnitConversionListRsrc getYieldMeasUnitConversions(
 			Integer insurancePlanId,
 			String srcYieldMeasUnitTypeCode,
 			String targetYieldMeasUnitTypeCode,
@@ -973,7 +972,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		
 		logger.debug("<getYieldMeasUnitConversions");
 
-		YieldMeasUnitConversionList<? extends YieldMeasUnitConversion> result = null;
+		YieldMeasUnitConversionListRsrc result = null;
 
 		try {
 			List<YieldMeasUnitConversionDto> yieldMeasUnitConversionDtos = yieldMeasUnitConversionDao.selectLatestVersionByPlan(
@@ -999,8 +998,8 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	}	
 	
 	@Override
-	public YieldMeasUnitConversionList<? extends YieldMeasUnitConversion> saveYieldMeasUnitConversions(
-			YieldMeasUnitConversionList<? extends YieldMeasUnitConversion> yieldMeasUnitConversions,
+	public YieldMeasUnitConversionListRsrc saveYieldMeasUnitConversions(
+			YieldMeasUnitConversionListRsrc yieldMeasUnitConversions,
 			Integer insurancePlanId, 
 			String srcYieldMeasUnitTypeCode, 
 			String targetYieldMeasUnitTypeCode,
@@ -1010,7 +1009,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		
 		logger.debug("<saveYieldMeasUnitConversions");
 
-		YieldMeasUnitConversionList<? extends YieldMeasUnitConversion> result = null;
+		YieldMeasUnitConversionListRsrc result = null;
 		String userId = getUserId(webAdeAuthentication);
 
 		try {

@@ -18,7 +18,6 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UnderwritingYearListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UnderwritingYearRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingYear;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.UnderwritingYearDto;
 
 public class UnderwritingYearRsrcFactory extends BaseResourceFactory { 
@@ -59,7 +58,7 @@ public class UnderwritingYearRsrcFactory extends BaseResourceFactory {
 	}
 
 	
-	public void updateDto(UnderwritingYearDto dto, UnderwritingYear model) throws FactoryException {
+	public void updateDto(UnderwritingYearDto dto, UnderwritingYearRsrc model) throws FactoryException {
 
 		dto.setUnderwritingYearGuid(model.getUnderwritingYearGuid());
 		dto.setCropYear(model.getCropYear());
