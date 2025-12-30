@@ -14,7 +14,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryUnseeded;
-import ca.bc.gov.mal.cirras.underwriting.services.impl.CirrasInventoryServiceImpl;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.BerriesService;
 
 
@@ -31,7 +30,7 @@ public class InventoryServiceTest {
 	public void testHandleDelete() throws Exception {
 		logger.debug("<testHandleDelete");
 
-		CirrasInventoryServiceImpl invService = new CirrasInventoryServiceImpl();
+		CirrasInventoryService invService = new CirrasInventoryService();
 		invService.setBerriesService(new BerriesService());
 		AnnualFieldRsrc field = new AnnualFieldRsrc();
 		
@@ -73,7 +72,7 @@ public class InventoryServiceTest {
 	public void testHandleDeleteForageSeeded() throws Exception {
 		logger.debug("<testHandleDeleteForageSeeded");
 
-		CirrasInventoryServiceImpl invService = new CirrasInventoryServiceImpl();
+		CirrasInventoryService invService = new CirrasInventoryService();
 		invService.setBerriesService(new BerriesService());
 		AnnualFieldRsrc field = new AnnualFieldRsrc();
 		

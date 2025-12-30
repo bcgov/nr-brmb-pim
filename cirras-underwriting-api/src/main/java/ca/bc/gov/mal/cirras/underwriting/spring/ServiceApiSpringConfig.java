@@ -12,23 +12,23 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 
 import ca.bc.gov.mal.cirras.underwriting.spring.PersistenceSpringConfig;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasUnderwritingService;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.services.LandDataSyncService;
-import ca.bc.gov.mal.cirras.underwriting.services.impl.CirrasUnderwritingServiceImpl;
-import ca.bc.gov.mal.cirras.underwriting.services.impl.LandDataSyncServiceImpl;
+import ca.bc.gov.mal.cirras.underwriting.services.LandDataSyncService;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasCommodityService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasCommodityService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasDataSyncService;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasDataSyncService;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasDopYieldService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasDopYieldService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasInventoryService;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasInventoryService;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasMaintenanceService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasMaintenanceService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasUwLandManagementService;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasUwLandManagementService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasVerifiedYieldService;
-import ca.bc.gov.mal.cirras.underwriting.services.impl.CirrasCommodityServiceImpl;
-import ca.bc.gov.mal.cirras.underwriting.services.impl.CirrasDataSyncServiceImpl;
-import ca.bc.gov.mal.cirras.underwriting.services.impl.CirrasDopYieldServiceImpl;
-import ca.bc.gov.mal.cirras.underwriting.services.impl.CirrasInventoryServiceImpl;
-import ca.bc.gov.mal.cirras.underwriting.services.impl.CirrasMaintenanceServiceImpl;
-import ca.bc.gov.mal.cirras.underwriting.services.impl.CirrasUwLandManagementServiceImpl;
-import ca.bc.gov.mal.cirras.underwriting.services.impl.CirrasVerifiedYieldServiceImpl;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasVerifiedYieldService;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityTypeCodeRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.ContractedFieldDetailRsrcFactory;
@@ -154,9 +154,9 @@ public class ServiceApiSpringConfig {
 	
 	@Bean()
 	public CirrasUnderwritingService cirrasUnderwritingService() {
-		CirrasUnderwritingServiceImpl result;
+		CirrasUnderwritingService result;
 		
-		result = new CirrasUnderwritingServiceImpl();
+		result = new CirrasUnderwritingService();
 		result.setApplicationProperties(applicationProperties);
 
 		result.setAnnualFieldRsrcFactory(annualFieldRsrcFactory);
@@ -172,9 +172,9 @@ public class ServiceApiSpringConfig {
 
 	@Bean()
 	public CirrasInventoryService cirrasInventoryService() {
-		CirrasInventoryServiceImpl result;
+		CirrasInventoryService result;
 		
-		result = new CirrasInventoryServiceImpl();
+		result = new CirrasInventoryService();
 		result.setApplicationProperties(applicationProperties);
 
 		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
@@ -221,9 +221,9 @@ public class ServiceApiSpringConfig {
 
 	@Bean()
 	public CirrasCommodityService cirrasCommodityService() {
-		CirrasCommodityServiceImpl result;
+		CirrasCommodityService result;
 		
-		result = new CirrasCommodityServiceImpl();
+		result = new CirrasCommodityService();
 		result.setApplicationProperties(applicationProperties);
 
 		result.setCommodityRsrcFactory(commodityRsrcFactory);
@@ -238,9 +238,9 @@ public class ServiceApiSpringConfig {
 	
 	@Bean()
 	public CirrasDataSyncService cirrasDataSyncService() {
-		CirrasDataSyncServiceImpl result;
+		CirrasDataSyncService result;
 		
-		result = new CirrasDataSyncServiceImpl();
+		result = new CirrasDataSyncService();
 		result.setApplicationProperties(applicationProperties);
 
 		result.setCirrasDataSyncRsrcFactory(cirrasDataSyncRsrcFactory);
@@ -264,9 +264,9 @@ public class ServiceApiSpringConfig {
 	
 	@Bean()
 	public LandDataSyncService landDataSyncService() {
-		LandDataSyncServiceImpl result;
+		LandDataSyncService result;
 		
-		result = new LandDataSyncServiceImpl();
+		result = new LandDataSyncService();
 		result.setApplicationProperties(applicationProperties);
 
 		result.setLandDataSyncRsrcFactory(landDataSyncRsrcFactory);
@@ -304,9 +304,9 @@ public class ServiceApiSpringConfig {
 
 	@Bean()
 	public CirrasDopYieldService cirrasDopYieldService() {
-		CirrasDopYieldServiceImpl result;
+		CirrasDopYieldService result;
 		
-		result = new CirrasDopYieldServiceImpl();
+		result = new CirrasDopYieldService();
 		result.setApplicationProperties(applicationProperties);
 
 		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
@@ -337,9 +337,9 @@ public class ServiceApiSpringConfig {
 	
 	@Bean()
 	public CirrasUwLandManagementService cirrasUwLandManagementService() {
-		CirrasUwLandManagementServiceImpl result;
+		CirrasUwLandManagementService result;
 		
-		result = new CirrasUwLandManagementServiceImpl();
+		result = new CirrasUwLandManagementService();
 		
 		result.setApplicationProperties(applicationProperties);
 
@@ -357,9 +357,9 @@ public class ServiceApiSpringConfig {
 	
 	@Bean()
 	public CirrasMaintenanceService cirrasMaintenanceService() {
-		CirrasMaintenanceServiceImpl result;
+		CirrasMaintenanceService result;
 		
-		result = new CirrasMaintenanceServiceImpl();
+		result = new CirrasMaintenanceService();
 		result.setApplicationProperties(applicationProperties);
 
 		result.setCommodityTypeCodeRsrcFactory(commodityTypeCodeRsrcFactory);
@@ -391,9 +391,9 @@ public class ServiceApiSpringConfig {
 
 	@Bean()
 	public CirrasVerifiedYieldService cirrasVerifiedYieldService() {
-		CirrasVerifiedYieldServiceImpl result;
+		CirrasVerifiedYieldService result;
 		
-		result = new CirrasVerifiedYieldServiceImpl();
+		result = new CirrasVerifiedYieldService();
 		result.setApplicationProperties(applicationProperties);
 
 		result.setVerifiedYieldContractRsrcFactory(verifiedYieldContractRsrcFactory);
