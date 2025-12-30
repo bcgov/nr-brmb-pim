@@ -59,8 +59,8 @@ import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasVerifiedYieldService;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.InventoryContractFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.VerifiedYieldContractFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.InventoryContractRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.VerifiedYieldContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.CommodityCoverageCode;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InsurancePlans;
@@ -76,8 +76,8 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 	public static final int DefaultMaximumResults = 800;
 
 	// factories
-	private VerifiedYieldContractFactory verifiedYieldContractFactory;
-	private InventoryContractFactory inventoryContractFactory;
+	private VerifiedYieldContractRsrcFactory verifiedYieldContractRsrcFactory;
+	private InventoryContractRsrcFactory inventoryContractRsrcFactory;
 
 	// daos
 	private PolicyDao policyDao;
@@ -101,12 +101,12 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		this.applicationProperties = applicationProperties;
 	}
 	
-	public void setVerifiedYieldContractFactory(VerifiedYieldContractFactory verifiedYieldContractFactory) {
-		this.verifiedYieldContractFactory = verifiedYieldContractFactory;
+	public void setVerifiedYieldContractRsrcFactory(VerifiedYieldContractRsrcFactory verifiedYieldContractRsrcFactory) {
+		this.verifiedYieldContractRsrcFactory = verifiedYieldContractRsrcFactory;
 	}
 
-	public void setInventoryContractFactory(InventoryContractFactory inventoryContractFactory) {
-		this.inventoryContractFactory = inventoryContractFactory;
+	public void setInventoryContractRsrcFactory(InventoryContractRsrcFactory inventoryContractRsrcFactory) {
+		this.inventoryContractRsrcFactory = inventoryContractRsrcFactory;
 	}
 
 	public void setPolicyDao(PolicyDao policyDao) {
@@ -209,7 +209,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 					rollupVerifiedYield(dycDto);
 				}
 				
-				result = verifiedYieldContractFactory.getDefaultVerifiedYieldContract(policyDto, dycDto, productDtos, factoryContext, authentication);
+				result = verifiedYieldContractRsrcFactory.getDefaultVerifiedYieldContract(policyDto, dycDto, productDtos, factoryContext, authentication);
 
 				calculateVerifiedYieldContractCommodities(result);
 				
@@ -531,7 +531,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		loadVerifiedYieldSummaries(dto);
 		loadVerifiedYieldGrainBasket(dto);
 
-		return verifiedYieldContractFactory.getVerifiedYieldContract(dto, productDtos, factoryContext, authentication);
+		return verifiedYieldContractRsrcFactory.getVerifiedYieldContract(dto, productDtos, factoryContext, authentication);
 	}
 	
 	private List<ProductDto> loadProducts(Integer contractId, Integer cropYear) throws DaoException {
@@ -645,7 +645,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			loadVerifiedYieldGrainBasket(dto);
 		}
 
-		return verifiedYieldContractFactory.getVerifiedYieldContractSimple(dto, cropCommodityId, isPedigreeInd, factoryContext, authentication);
+		return verifiedYieldContractRsrcFactory.getVerifiedYieldContractSimple(dto, cropCommodityId, isPedigreeInd, factoryContext, authentication);
 	}
 	
 	@Override
@@ -1009,7 +1009,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 				// Check that user is authorized to edit this comment.
 				// Note that this could return null if the current user or create user cannot be
 				// determined.
-				Boolean userCanEditComment = inventoryContractFactory.checkUserCanEditComment(dto, authentication);
+				Boolean userCanEditComment = inventoryContractRsrcFactory.checkUserCanEditComment(dto, authentication);
 				if (!Boolean.TRUE.equals(userCanEditComment)) {
 					logger.error("User " + userId + " attempted to edit comment "
 							+ underwritingComment.getUnderwritingCommentGuid() + " created by " + dto.getCreateUser());
@@ -1018,7 +1018,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 			}
 
-			inventoryContractFactory.updateDto(dto, underwritingComment);
+			inventoryContractRsrcFactory.updateDto(dto, underwritingComment);
 
 			underwritingCommentDao.update(dto, userId);
 		}
@@ -1033,7 +1033,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 		logger.debug("<insertYieldSummaryComment");
 		
 		UnderwritingCommentDto dto = new UnderwritingCommentDto();
-		inventoryContractFactory.updateDto(dto, underwritingComment);
+		inventoryContractRsrcFactory.updateDto(dto, underwritingComment);
 
 		dto.setUnderwritingCommentGuid(null);
 		dto.setVerifiedYieldSummaryGuid(verifiedYieldSummaryGuid);
@@ -1059,7 +1059,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			// Check that user is authorized to delete this comment.
 			// Note that this could return false if the current user or create user cannot
 			// be determined.
-			Boolean userCanDeleteComment = inventoryContractFactory.checkUserCanDeleteComment(dto, authentication);
+			Boolean userCanDeleteComment = inventoryContractRsrcFactory.checkUserCanDeleteComment(dto, authentication);
 			if (!Boolean.TRUE.equals(userCanDeleteComment)) {
 				logger.error("User " + userId + " attempted to delete comment " + dto.getUnderwritingCommentGuid()
 						+ " created by " + dto.getCreateUser());
@@ -1088,7 +1088,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			// Insert if it doesn't exist
 			insertVerifiedYieldSummary(verifiedSummary, userId);
 		} else {
-			verifiedYieldContractFactory.updateDto(dto, verifiedSummary);
+			verifiedYieldContractRsrcFactory.updateDto(dto, verifiedSummary);
 
 			verifiedYieldSummaryDao.update(dto, userId);
 		}
@@ -1103,7 +1103,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 		VerifiedYieldSummaryDto dto = new VerifiedYieldSummaryDto();
 
-		verifiedYieldContractFactory.updateDto(dto, verifiedYieldSummary);
+		verifiedYieldContractRsrcFactory.updateDto(dto, verifiedYieldSummary);
 
 		dto.setVerifiedYieldSummaryGuid(null);
 
@@ -1157,7 +1157,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			// Insert if it doesn't exist
 			insertVerifiedYieldGrainBasket(verifiedYieldContractGuid, verifiedGrainBasket, userId);
 		} else {
-			verifiedYieldContractFactory.updateDto(dto, verifiedGrainBasket);
+			verifiedYieldContractRsrcFactory.updateDto(dto, verifiedGrainBasket);
 
 			verifiedYieldGrainBasketDao.update(dto, userId);
 		}
@@ -1175,7 +1175,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 		VerifiedYieldGrainBasketDto dto = new VerifiedYieldGrainBasketDto();
 
-		verifiedYieldContractFactory.updateDto(dto, verifiedYieldGrainBasket);
+		verifiedYieldContractRsrcFactory.updateDto(dto, verifiedYieldGrainBasket);
 
 		dto.setVerifiedYieldGrainBasketGuid(null);
 		dto.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
@@ -1323,7 +1323,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			List<ProductDto> products = productDtos.stream()
 					.filter(x -> x.getNonPedigreeCropCommodityId().equals(cropCommodityId) 
 							&& x.getIsPedigreeProduct().equals(isPedigree)
-							&& verifiedYieldContractFactory.getForageGrainCoverageCodes().contains(x.getCommodityCoverageCode()))
+							&& verifiedYieldContractRsrcFactory.getForageGrainCoverageCodes().contains(x.getCommodityCoverageCode()))
 					.collect(Collectors.toList());
 			
 			if (products != null && !products.isEmpty()) {
@@ -1339,7 +1339,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			throws DaoException {
 
 		VerifiedYieldContractDto dto = new VerifiedYieldContractDto();
-		verifiedYieldContractFactory.updateDto(dto, verifiedYieldContract, userId);
+		verifiedYieldContractRsrcFactory.updateDto(dto, verifiedYieldContract, userId);
 		dto.setVerifiedYieldContractGuid(null);
 		verifiedYieldContractDao.insert(dto, userId);
 
@@ -1366,7 +1366,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			// Insert if it doesn't exist
 			insertVerifiedYieldContractCommodity(verifiedYieldContractGuid, verifiedContractCommodity, insurancePlanId, userId);
 		} else {
-			verifiedYieldContractFactory.updateDto(dto, verifiedContractCommodity, productDtos, updateProductValues, insurancePlanId);
+			verifiedYieldContractRsrcFactory.updateDto(dto, verifiedContractCommodity, productDtos, updateProductValues, insurancePlanId);
 
 			verifiedYieldContractCommodityDao.update(dto, userId);
 		}
@@ -1384,7 +1384,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 		VerifiedYieldContractCommodityDto dto = new VerifiedYieldContractCommodityDto();
 
-		verifiedYieldContractFactory.updateDto(dto, verifiedContractCommodity, null, false, insurancePlanId);
+		verifiedYieldContractRsrcFactory.updateDto(dto, verifiedContractCommodity, null, false, insurancePlanId);
 
 		dto.setVerifiedYieldContractCommodityGuid(null);
 		dto.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
@@ -1412,7 +1412,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			// Insert if it doesn't exist
 			insertVerifiedYieldAmendment(verifiedYieldContractGuid, verifiedAmendment, userId);
 		} else {
-			verifiedYieldContractFactory.updateDto(dto, verifiedAmendment);
+			verifiedYieldContractRsrcFactory.updateDto(dto, verifiedAmendment);
 
 			verifiedYieldAmendmentDao.update(dto, userId);
 		}
@@ -1428,7 +1428,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 
 		VerifiedYieldAmendmentDto dto = new VerifiedYieldAmendmentDto();
 
-		verifiedYieldContractFactory.updateDto(dto, verifiedAmendment);
+		verifiedYieldContractRsrcFactory.updateDto(dto, verifiedAmendment);
 
 		dto.setVerifiedYieldAmendmentGuid(null);
 		dto.setVerifiedYieldContractGuid(verifiedYieldContractGuid);
@@ -1544,7 +1544,7 @@ public class CirrasVerifiedYieldServiceImpl implements CirrasVerifiedYieldServic
 			throw new NotFoundException("Did not find the verified yield contract: " + verifiedYieldContract.getVerifiedYieldContractGuid());
 		}
 
-		verifiedYieldContractFactory.updateDto(dto, verifiedYieldContract, userId);
+		verifiedYieldContractRsrcFactory.updateDto(dto, verifiedYieldContract, userId);
 		verifiedYieldContractDao.update(dto, userId);
 	}
 

@@ -22,7 +22,7 @@ import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasCommodityService;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.CommodityFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityRsrcFactory;
 
 public class CirrasCommodityServiceImpl implements CirrasCommodityService {
 
@@ -31,7 +31,7 @@ public class CirrasCommodityServiceImpl implements CirrasCommodityService {
 	private Properties applicationProperties;
 
 	// factories
-	private CommodityFactory commodityFactory;
+	private CommodityRsrcFactory commodityRsrcFactory;
 	
 	// daos
 	private CropCommodityDao cropCommodityDao;
@@ -43,8 +43,8 @@ public class CirrasCommodityServiceImpl implements CirrasCommodityService {
 		this.applicationProperties = applicationProperties;
 	}
 
-	public void setCommodityFactory(CommodityFactory commodityFactory) {
-		this.commodityFactory = commodityFactory;
+	public void setCommodityRsrcFactory(CommodityRsrcFactory commodityRsrcFactory) {
+		this.commodityRsrcFactory = commodityRsrcFactory;
 	}
 
 	public void setCropCommodityDao(CropCommodityDao cropCommodityDao) {
@@ -99,7 +99,7 @@ public class CirrasCommodityServiceImpl implements CirrasCommodityService {
 				cropVarietyInsPlantInsXrefDtos = cropVarietyInsPlantInsXrefDao.selectPlantInsForCropVarieties(null);
 			}
 		
-			results = commodityFactory.getCropCommodityList(dtos, cropVarietyDtos, commodityTypeCodeDtos, cropVarietyInsPlantInsXrefDtos);
+			results = commodityRsrcFactory.getCropCommodityList(dtos, cropVarietyDtos, commodityTypeCodeDtos, cropVarietyInsPlantInsXrefDtos);
 			
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);

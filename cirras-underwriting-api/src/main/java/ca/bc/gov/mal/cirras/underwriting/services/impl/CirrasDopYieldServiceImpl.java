@@ -66,9 +66,9 @@ import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasDopYieldService;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.DopYieldContractFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.InventoryContractFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.YieldMeasUnitTypeCodeFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.InventoryContractRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.YieldMeasUnitTypeCodeRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.services.reports.JasperReportService;
 import ca.bc.gov.mal.cirras.underwriting.services.reports.JasperReportServiceException;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums;
@@ -85,9 +85,9 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	public static final int DefaultMaximumResults = 800;
 
 	// factories
-	private InventoryContractFactory inventoryContractFactory;
-	private DopYieldContractFactory dopYieldContractFactory;
-	private YieldMeasUnitTypeCodeFactory yieldMeasUnitTypeCodeFactory;
+	private InventoryContractRsrcFactory inventoryContractRsrcFactory;
+	private DopYieldContractRsrcFactory dopYieldContractRsrcFactory;
+	private YieldMeasUnitTypeCodeRsrcFactory yieldMeasUnitTypeCodeRsrcFactory;
 
 	// daos
 	private YieldMeasUnitTypeCodeDao yieldMeasUnitTypeCodeDao;
@@ -114,16 +114,16 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		this.applicationProperties = applicationProperties;
 	}
 
-	public void setInventoryContractFactory(InventoryContractFactory inventoryContractFactory) {
-		this.inventoryContractFactory = inventoryContractFactory;
+	public void setInventoryContractRsrcFactory(InventoryContractRsrcFactory inventoryContractRsrcFactory) {
+		this.inventoryContractRsrcFactory = inventoryContractRsrcFactory;
 	}
 
-	public void setDopYieldContractFactory(DopYieldContractFactory dopYieldContractFactory) {
-		this.dopYieldContractFactory = dopYieldContractFactory;
+	public void setDopYieldContractRsrcFactory(DopYieldContractRsrcFactory dopYieldContractRsrcFactory) {
+		this.dopYieldContractRsrcFactory = dopYieldContractRsrcFactory;
 	}
 
-	public void setYieldMeasUnitTypeCodeFactory(YieldMeasUnitTypeCodeFactory yieldMeasUnitTypeCodeFactory) {
-		this.yieldMeasUnitTypeCodeFactory = yieldMeasUnitTypeCodeFactory;
+	public void setYieldMeasUnitTypeCodeRsrcFactory(YieldMeasUnitTypeCodeRsrcFactory yieldMeasUnitTypeCodeRsrcFactory) {
+		this.yieldMeasUnitTypeCodeRsrcFactory = yieldMeasUnitTypeCodeRsrcFactory;
 	}
 
 	public void setYieldMeasUnitTypeCodeDao(YieldMeasUnitTypeCodeDao yieldMeasUnitTypeCodeDao) {
@@ -225,7 +225,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 			loadDopYieldContractCommodities(dycDto);
 			loadFields(dycDto);
 
-			result = dopYieldContractFactory.getDefaultDopYieldContract(policyDto, defaultMeasurementUnitCode,
+			result = dopYieldContractRsrcFactory.getDefaultDopYieldContract(policyDto, defaultMeasurementUnitCode,
 					dycDto, factoryContext, authentication);
 
 		} catch (DaoException e) {
@@ -293,7 +293,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		loadFields(dto);
 		loadContractUwComments(dto);
 
-		return dopYieldContractFactory.getDopYieldContract(dto, factoryContext, authentication);
+		return dopYieldContractRsrcFactory.getDopYieldContract(dto, factoryContext, authentication);
 	}
 
 	private void loadContractUwComments(DeclaredYieldContractDto dto) throws DaoException {
@@ -332,11 +332,11 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		
 		List<InventorySeededForageDto> dtos = inventorySeededForageDao.selectForDopContractCommodityTotals(dto.getContractId(), dto.getCropYear());
 		//Contract Commodity Totals
-		List<DeclaredYieldContractCommodityForageDto> declaredYieldContractCommodityForageList = dopYieldContractFactory.getDopForageCommoditiesFromInventorySeeded(dtos);
+		List<DeclaredYieldContractCommodityForageDto> declaredYieldContractCommodityForageList = dopYieldContractRsrcFactory.getDopForageCommoditiesFromInventorySeeded(dtos);
 		dto.setDeclaredYieldContractCommodityForageList(declaredYieldContractCommodityForageList);
 
 		//Rollup Totals
-		List<DeclaredYieldFieldRollupForageDto> declaredYieldFieldRollupForageList = dopYieldContractFactory.getDopForageRollupCommoditiesFromInventorySeeded(dtos);
+		List<DeclaredYieldFieldRollupForageDto> declaredYieldFieldRollupForageList = dopYieldContractRsrcFactory.getDopForageRollupCommoditiesFromInventorySeeded(dtos);
 		dto.setDeclaredYieldFieldRollupForageList(declaredYieldFieldRollupForageList);
 
 	}
@@ -351,7 +351,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	private void getInventoryContractCommodities(DeclaredYieldContractDto dto) throws DaoException {
 		
 		List<InventoryContractCommodityDto> dtos = inventoryContractCommodityDao.selectForDopContract(dto.getContractId(), dto.getCropYear());
-		List<DeclaredYieldContractCommodityDto> dopCommodities = dopYieldContractFactory.getDopCommoditiesFromInventoryCommodities(dtos);
+		List<DeclaredYieldContractCommodityDto> dopCommodities = dopYieldContractRsrcFactory.getDopCommoditiesFromInventoryCommodities(dtos);
 		dto.setDeclaredYieldContractCommodities(dopCommodities);
 
 	}
@@ -636,7 +636,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 				// Insert records
 				for (DopYieldContractCommodityForage dyccf : dopYieldContract.getDopYieldContractCommodityForageList()) {
 					DeclaredYieldContractCommodityForageDto dto = new DeclaredYieldContractCommodityForageDto();
-					dopYieldContractFactory.updateDto(dto, dyccf);
+					dopYieldContractRsrcFactory.updateDto(dto, dyccf);
 					declaredYieldContractCommodityForageDao.insert(dto, userId);
 				}
 			}
@@ -659,7 +659,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 				// Insert records
 				for (DopYieldFieldRollupForage dyrf : dopYieldContract.getDopYieldFieldRollupForageList()) {
 					DeclaredYieldFieldRollupForageDto dto = new DeclaredYieldFieldRollupForageDto();
-					dopYieldContractFactory.updateDto(dto, dyrf);
+					dopYieldContractRsrcFactory.updateDto(dto, dyrf);
 					declaredYieldFieldRollupForageDao.insert(dto, userId);
 				}
 			}
@@ -969,7 +969,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 			// Insert if it doesn't exist
 			insertDeclaredYieldContractCommodity(declaredYieldContractGuid, dopContractCommodity, userId);
 		} else {
-			dopYieldContractFactory.updateDto(dto, dopContractCommodity);
+			dopYieldContractRsrcFactory.updateDto(dto, dopContractCommodity);
 
 			declaredYieldContractCommodityDao.update(dto, userId);
 		}
@@ -984,7 +984,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 
 		DeclaredYieldContractCommodityDto dto = new DeclaredYieldContractCommodityDto();
 
-		dopYieldContractFactory.updateDto(dto, dopContractCommodity);
+		dopYieldContractRsrcFactory.updateDto(dto, dopContractCommodity);
 
 		dto.setDeclaredYieldContractCommodityGuid(null);
 		dto.setDeclaredYieldContractGuid(declaredYieldContractGuid);
@@ -999,7 +999,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 			throws DaoException {
 
 		DeclaredYieldContractDto dto = new DeclaredYieldContractDto();
-		dopYieldContractFactory.updateDto(dto, dopYieldContract, userId);
+		dopYieldContractRsrcFactory.updateDto(dto, dopYieldContract, userId);
 		dto.setDeclaredYieldContractGuid(null);
 		declaredYieldContractDao.insert(dto, userId);
 
@@ -1009,7 +1009,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	private String insertDeclaredYieldField(DopYieldFieldGrain dopYieldField, String userId) throws DaoException {
 
 		DeclaredYieldFieldDto dto = new DeclaredYieldFieldDto();
-		dopYieldContractFactory.updateDto(dto, dopYieldField);
+		dopYieldContractRsrcFactory.updateDto(dto, dopYieldField);
 
 		dto.setDeclaredYieldFieldGuid(null);
 		dto.setInventoryFieldGuid(dopYieldField.getInventoryFieldGuid());
@@ -1022,7 +1022,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 	private String insertDeclaredYieldFieldForage(DopYieldFieldForageCut dopYieldFieldForage, String userId) throws DaoException {
 
 		DeclaredYieldFieldForageDto dto = new DeclaredYieldFieldForageDto();
-		dopYieldContractFactory.updateDto(dto, dopYieldFieldForage);
+		dopYieldContractRsrcFactory.updateDto(dto, dopYieldFieldForage);
 
 		dto.setDeclaredYieldFieldForageGuid(null);
 		dto.setInventoryFieldGuid(dopYieldFieldForage.getInventoryFieldGuid());
@@ -1177,7 +1177,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 				// Check that user is authorized to edit this comment.
 				// Note that this could return null if the current user or create user cannot be
 				// determined.
-				Boolean userCanEditComment = inventoryContractFactory.checkUserCanEditComment(dto, authentication);
+				Boolean userCanEditComment = inventoryContractRsrcFactory.checkUserCanEditComment(dto, authentication);
 				if (!Boolean.TRUE.equals(userCanEditComment)) {
 					logger.error("User " + userId + " attempted to edit comment "
 							+ underwritingComment.getUnderwritingCommentGuid() + " created by " + dto.getCreateUser());
@@ -1186,7 +1186,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 
 			}
 
-			inventoryContractFactory.updateDto(dto, underwritingComment);
+			inventoryContractRsrcFactory.updateDto(dto, underwritingComment);
 
 			underwritingCommentDao.update(dto, userId);
 		}
@@ -1197,7 +1197,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 			Integer growerContractYearId, String declaredYieldContractGuid, String userId) throws DaoException {
 
 		UnderwritingCommentDto dto = new UnderwritingCommentDto();
-		inventoryContractFactory.updateDto(dto, underwritingComment);
+		inventoryContractRsrcFactory.updateDto(dto, underwritingComment);
 
 		dto.setUnderwritingCommentGuid(null);
 		dto.setAnnualFieldDetailId(annualFieldDetailId);
@@ -1223,7 +1223,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 			// Check that user is authorized to delete this comment.
 			// Note that this could return false if the current user or create user cannot
 			// be determined.
-			Boolean userCanDeleteComment = inventoryContractFactory.checkUserCanDeleteComment(dto, authentication);
+			Boolean userCanDeleteComment = inventoryContractRsrcFactory.checkUserCanDeleteComment(dto, authentication);
 			if (!Boolean.TRUE.equals(userCanDeleteComment)) {
 				logger.error("User " + userId + " attempted to delete comment " + dto.getUnderwritingCommentGuid()
 						+ " created by " + dto.getCreateUser());
@@ -1246,7 +1246,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 					"Did not find the dop yield contract: " + dopYieldContract.getDeclaredYieldContractGuid());
 		}
 
-		dopYieldContractFactory.updateDto(dto, dopYieldContract, userId);
+		dopYieldContractRsrcFactory.updateDto(dto, dopYieldContract, userId);
 		declaredYieldContractDao.update(dto, userId);
 	}
 
@@ -1268,7 +1268,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		} else {
 			declaredYieldFieldForageGuid = dto.getDeclaredYieldFieldForageGuid();
 
-			dopYieldContractFactory.updateDto(dto, dopYieldFieldForage);
+			dopYieldContractRsrcFactory.updateDto(dto, dopYieldFieldForage);
 
 			declaredYieldFieldForageDao.update(dto, userId);
 		}
@@ -1296,7 +1296,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 		} else {
 			declaredYieldFieldGuid = dto.getDeclaredYieldFieldGuid();
 
-			dopYieldContractFactory.updateDto(dto, dopYieldField);
+			dopYieldContractRsrcFactory.updateDto(dto, dopYieldField);
 
 			declaredYieldFieldDao.update(dto, userId);
 		}
@@ -1319,7 +1319,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 			// Insert records
 			for (DopYieldFieldRollup dyfr : dopYieldContract.getDopYieldFieldRollupList()) {
 				DeclaredYieldFieldRollupDto dto = new DeclaredYieldFieldRollupDto();
-				dopYieldContractFactory.updateDto(dto, dyfr);
+				dopYieldContractRsrcFactory.updateDto(dto, dyfr);
 				declaredYieldFieldRollupDao.insert(dto, userId);
 			}
 		}
@@ -1506,7 +1506,7 @@ public class CirrasDopYieldServiceImpl implements CirrasDopYieldService {
 
 		List<YieldMeasUnitTypeCodeDto> dtos = yieldMeasUnitTypeCodeDao.selectByPlan(insurancePlanId);
 
-		YieldMeasUnitTypeCodeList<? extends YieldMeasUnitTypeCode> result = yieldMeasUnitTypeCodeFactory
+		YieldMeasUnitTypeCodeList<? extends YieldMeasUnitTypeCode> result = yieldMeasUnitTypeCodeRsrcFactory
 				.getYieldMeasUnitTypeCodeList(dtos);
 
 		return result;

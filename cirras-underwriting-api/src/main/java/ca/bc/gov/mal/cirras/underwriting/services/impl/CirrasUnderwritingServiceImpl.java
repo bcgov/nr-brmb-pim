@@ -13,11 +13,9 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.UserSetting;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UwContract;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UwContractList;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.FieldDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.UserSettingDto;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.FieldDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.LegalLandDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.PolicyDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.UserSettingDao;
 import ca.bc.gov.nrs.wfone.common.model.Message;
@@ -33,12 +31,10 @@ import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasUnderwritingService;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.AnnualFieldFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.UserSettingFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.UwContractFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.utils.UnderwritingServiceHelper;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.AnnualFieldRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UserSettingRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UwContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.ScreenType;
-import ca.bc.gov.mal.cirras.underwriting.services.utils.OutOfSync;
 
 public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService {
 
@@ -47,23 +43,15 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	private Properties applicationProperties;
 
 	// factories
-	private AnnualFieldFactory annualFieldFactory;
-	private UwContractFactory uwContractFactory;
-	private UserSettingFactory userSettingFactory;
-	
-	// utils
-	private OutOfSync outOfSync;
+	private AnnualFieldRsrcFactory annualFieldRsrcFactory;
+	private UwContractRsrcFactory uwContractRsrcFactory;
+	private UserSettingRsrcFactory userSettingRsrcFactory;
 
 	// daos
 	private FieldDao fieldDao;
 	private PolicyDao policyDao;
-	private LegalLandDao legalLandDao;
 	private UserSettingDao userSettingDao;
 
-	//utils
-	//@Autowired
-	private UnderwritingServiceHelper underwritingServiceHelper;
-	
 	public static final String MaximumResultsProperty = "maximum.results";
 
 	public static final int DefaultMaximumResults = 800;
@@ -71,24 +59,20 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	// Number of past or future years to search when loading UwContract.otherYearPolicies.
 	public static final Integer numOtherYearPoliciesToLoad = 5;
 	
-	public void setUnderwritingServiceHelper(UnderwritingServiceHelper underwritingServiceHelper) {
-		this.underwritingServiceHelper = underwritingServiceHelper;
-	}
-	
 	public void setApplicationProperties(Properties applicationProperties) {
 		this.applicationProperties = applicationProperties;
 	}
 
-	public void setAnnualFieldFactory(AnnualFieldFactory annualFieldFactory) {
-		this.annualFieldFactory = annualFieldFactory;
+	public void setAnnualFieldRsrcFactory(AnnualFieldRsrcFactory annualFieldRsrcFactory) {
+		this.annualFieldRsrcFactory = annualFieldRsrcFactory;
 	}
 	
-	public void setUwContractFactory(UwContractFactory uwContractFactory) {
-		this.uwContractFactory = uwContractFactory;
+	public void setUwContractRsrcFactory(UwContractRsrcFactory uwContractRsrcFactory) {
+		this.uwContractRsrcFactory = uwContractRsrcFactory;
 	}
 
-	public void setUserSettingFactory(UserSettingFactory userSettingFactory) {
-		this.userSettingFactory = userSettingFactory;
+	public void setUserSettingRsrcFactory(UserSettingRsrcFactory userSettingRsrcFactory) {
+		this.userSettingRsrcFactory = userSettingRsrcFactory;
 	}
 	
 	public void setFieldDao(FieldDao fieldDao) {
@@ -98,17 +82,9 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 	public void setPolicyDao(PolicyDao policyDao) {
 		this.policyDao = policyDao;
 	}
-	
-	public void setLegalLandDao(LegalLandDao legalLandDao) {
-		this.legalLandDao = legalLandDao;
-	}
 
 	public void setUserSettingDao(UserSettingDao userSettingDao) {
 		this.userSettingDao = userSettingDao;
-	}
-
-	public void setOutOfSync(OutOfSync outOfSync) {
-		this.outOfSync = outOfSync;
 	}
 	
 	@Override
@@ -148,7 +124,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 					pageNumber, 
 					pageRowCount);
 
-			results = uwContractFactory.getUwContractList(
+			results = uwContractRsrcFactory.getUwContractList(
 					dtos, 
 					cropYear, 
 					insurancePlanId,
@@ -228,7 +204,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 				}
 			}
 
-			result = uwContractFactory.getUwContract(dto, linkedPolicyDtos, otherYearPolicyDtos, loadLinkedPolicies, loadOtherYearPolicies, screenType, factoryContext, authentication);
+			result = uwContractRsrcFactory.getUwContract(dto, linkedPolicyDtos, otherYearPolicyDtos, loadLinkedPolicies, loadOtherYearPolicies, screenType, factoryContext, authentication);
 
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);
@@ -265,7 +241,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 			}
 			
 			
-			results = annualFieldFactory.getAnnualFieldList(
+			results = annualFieldRsrcFactory.getAnnualFieldList(
 					dtos, 
 					legalLandId, 
 					cropYear,
@@ -297,9 +273,9 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 				UserSettingDto dto = userSettingDao.getByLoginUserGuid(loginUserGuid);
 	
 				if (dto == null) {
-					result = userSettingFactory.getDefaultUserSetting(factoryContext, authentication);
+					result = userSettingRsrcFactory.getDefaultUserSetting(factoryContext, authentication);
 				} else {	
-					result = userSettingFactory.getUserSetting(dto, factoryContext, authentication);
+					result = userSettingRsrcFactory.getUserSetting(dto, factoryContext, authentication);
 				}
 	
 			} catch (DaoException e) {
@@ -331,7 +307,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 				throw new NotFoundException("Did not find the user setting: " + userSettingGuid);
 			}
 
-			result = userSettingFactory.getUserSetting(dto, factoryContext, authentication);
+			result = userSettingRsrcFactory.getUserSetting(dto, factoryContext, authentication);
 
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);
@@ -426,7 +402,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 			// Insert if it doesn't exist
 			insertUserSetting(userSetting, userId);
 		} else {
-			userSettingFactory.updateDto(dto, userSetting);
+			userSettingRsrcFactory.updateDto(dto, userSetting);
 
 			userSettingDao.update(dto, userId);
 		}
@@ -440,7 +416,7 @@ public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService 
 
 		UserSettingDto dto = new UserSettingDto();
 
-		userSettingFactory.updateDto(dto, userSetting);
+		userSettingRsrcFactory.updateDto(dto, userSetting);
 
 		userSetting.setUserSettingGuid(null);
 

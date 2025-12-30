@@ -12,7 +12,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeCodeList;
 import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyInsurability;
 import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyInsurabilityList;
 import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyPlantInsurability;
-import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifier;
 import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifierList;
 import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifierType;
@@ -61,17 +60,15 @@ import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasMaintenanceService;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.CommodityTypeCodeFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.CropVarietyInsurabilityFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.CommodityFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.GradeModifierFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.GradeModifierTypeFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.SeedingDeadlineFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.UnderwritingYearFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.YieldMeasUnitConversionFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityTypeCodeRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CropVarietyInsurabilityRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.GradeModifierRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.GradeModifierTypeRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.SeedingDeadlineRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UnderwritingYearRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.YieldMeasUnitConversionRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InsurancePlans;
-import ca.bc.gov.mal.cirras.underwriting.services.validation.ModelValidator;
-
 
 public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 
@@ -79,17 +76,15 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 
 	private Properties applicationProperties;
 
-	private ModelValidator modelValidator;
-
 	// factories
-	private CommodityTypeCodeFactory commodityTypeCodeFactory;
-	private SeedingDeadlineFactory seedingDeadlineFactory;
-	private UnderwritingYearFactory underwritingYearFactory;
-	private GradeModifierFactory gradeModifierFactory;
-	private GradeModifierTypeFactory gradeModifierTypeFactory;
-	private CropVarietyInsurabilityFactory cropVarietyInsurabilityFactory;
-	private CommodityFactory commodityFactory;
-	private YieldMeasUnitConversionFactory yieldMeasUnitConversionFactory;
+	private CommodityTypeCodeRsrcFactory commodityTypeCodeRsrcFactory;
+	private SeedingDeadlineRsrcFactory seedingDeadlineRsrcFactory;
+	private UnderwritingYearRsrcFactory underwritingYearRsrcFactory;
+	private GradeModifierRsrcFactory gradeModifierRsrcFactory;
+	private GradeModifierTypeRsrcFactory gradeModifierTypeRsrcFactory;
+	private CropVarietyInsurabilityRsrcFactory cropVarietyInsurabilityRsrcFactory;
+	private CommodityRsrcFactory commodityRsrcFactory;
+	private YieldMeasUnitConversionRsrcFactory yieldMeasUnitConversionRsrcFactory;
 
 	// daos
 	private CommodityTypeCodeDao commodityTypeCodeDao;
@@ -114,41 +109,37 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 	public void setApplicationProperties(Properties applicationProperties) {
 		this.applicationProperties = applicationProperties;
 	}
-
-	public void setModelValidator(ModelValidator modelValidator) {
-		this.modelValidator = modelValidator;
-	}
 	
-	public void setCommodityTypeCodeFactory(CommodityTypeCodeFactory commodityTypeCodeFactory) {
-		this.commodityTypeCodeFactory = commodityTypeCodeFactory;
+	public void setCommodityTypeCodeRsrcFactory(CommodityTypeCodeRsrcFactory commodityTypeCodeRsrcFactory) {
+		this.commodityTypeCodeRsrcFactory = commodityTypeCodeRsrcFactory;
 	}	
 	
-	public void setSeedingDeadlineFactory(SeedingDeadlineFactory seedingDeadlineFactory) {
-		this.seedingDeadlineFactory = seedingDeadlineFactory;
+	public void setSeedingDeadlineRsrcFactory(SeedingDeadlineRsrcFactory seedingDeadlineRsrcFactory) {
+		this.seedingDeadlineRsrcFactory = seedingDeadlineRsrcFactory;
 	}
 	
-	public void setUnderwritingYearFactory(UnderwritingYearFactory underwritingYearFactory) {
-		this.underwritingYearFactory = underwritingYearFactory;
+	public void setUnderwritingYearRsrcFactory(UnderwritingYearRsrcFactory underwritingYearRsrcFactory) {
+		this.underwritingYearRsrcFactory = underwritingYearRsrcFactory;
 	}
 	
-	public void setGradeModifierFactory(GradeModifierFactory gradeModifierFactory) {
-		this.gradeModifierFactory = gradeModifierFactory;
+	public void setGradeModifierRsrcFactory(GradeModifierRsrcFactory gradeModifierRsrcFactory) {
+		this.gradeModifierRsrcFactory = gradeModifierRsrcFactory;
 	}
 	
-	public void setGradeModifierTypeFactory(GradeModifierTypeFactory gradeModifierTypeFactory) {
-		this.gradeModifierTypeFactory = gradeModifierTypeFactory;
+	public void setGradeModifierTypeRsrcFactory(GradeModifierTypeRsrcFactory gradeModifierTypeRsrcFactory) {
+		this.gradeModifierTypeRsrcFactory = gradeModifierTypeRsrcFactory;
 	}
 	
-	public void setCropVarietyInsurabilityFactory(CropVarietyInsurabilityFactory cropVarietyInsurabilityFactory) {
-		this.cropVarietyInsurabilityFactory = cropVarietyInsurabilityFactory;
+	public void setCropVarietyInsurabilityRsrcFactory(CropVarietyInsurabilityRsrcFactory cropVarietyInsurabilityRsrcFactory) {
+		this.cropVarietyInsurabilityRsrcFactory = cropVarietyInsurabilityRsrcFactory;
 	}
 	
-	public void setCommodityFactory(CommodityFactory commodityFactory) {
-		this.commodityFactory = commodityFactory;
+	public void setCommodityRsrcFactory(CommodityRsrcFactory commodityRsrcFactory) {
+		this.commodityRsrcFactory = commodityRsrcFactory;
 	}
 	
-	public void setYieldMeasUnitConversionFactory(YieldMeasUnitConversionFactory yieldMeasUnitConversionFactory) {
-		this.yieldMeasUnitConversionFactory = yieldMeasUnitConversionFactory;
+	public void setYieldMeasUnitConversionRsrcFactory(YieldMeasUnitConversionRsrcFactory yieldMeasUnitConversionRsrcFactory) {
+		this.yieldMeasUnitConversionRsrcFactory = yieldMeasUnitConversionRsrcFactory;
 	}
 
 	public void setCommodityTypeCodeDao(CommodityTypeCodeDao commodityTypeCodeDao) {
@@ -221,7 +212,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 			
 			List<CommodityTypeCodeDto> dtos = commodityTypeCodeDao.selectByCropCommodityPlan(insurancePlanId);
 			
-			results = commodityTypeCodeFactory.getCommodityTypeCodeList(dtos, insurancePlanId, context, authentication);
+			results = commodityTypeCodeRsrcFactory.getCommodityTypeCodeList(dtos, insurancePlanId, context, authentication);
 			
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);
@@ -295,7 +286,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 			insertSeedingDeadline(seedingDeadline, userId);
 		} else {
 
-			seedingDeadlineFactory.updateDto(dto, seedingDeadline);
+			seedingDeadlineRsrcFactory.updateDto(dto, seedingDeadline);
 
 			seedingDeadlineDao.update(dto, userId);
 		}
@@ -309,7 +300,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		logger.debug("<insertSeedingDeadline");
 
 		SeedingDeadlineDto dto = new SeedingDeadlineDto();
-		seedingDeadlineFactory.updateDto(dto, seedingDeadline);
+		seedingDeadlineRsrcFactory.updateDto(dto, seedingDeadline);
 
 		dto.setSeedingDeadlineGuid(null);
 
@@ -333,7 +324,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		
 		try {
 			List<SeedingDeadlineDto> dtos = seedingDeadlineDao.selectByYear(cropYear);
-			result = seedingDeadlineFactory.getSeedingDeadlineList(dtos, cropYear, factoryContext, authentication);
+			result = seedingDeadlineRsrcFactory.getSeedingDeadlineList(dtos, cropYear, factoryContext, authentication);
 
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);
@@ -364,7 +355,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 			if(dto == null) {
 				
 				dto = new UnderwritingYearDto();
-				underwritingYearFactory.updateDto(dto, underwritingYear);
+				underwritingYearRsrcFactory.updateDto(dto, underwritingYear);
 
 				dto.setUnderwritingYearGuid(null);
 
@@ -406,7 +397,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 				throw new NotFoundException("Did not find underwriting year: " + cropYear);
 			}
 			
-			result = underwritingYearFactory.getUnderwritingYear(dto, factoryContext, authentication);
+			result = underwritingYearRsrcFactory.getUnderwritingYear(dto, factoryContext, authentication);
 			
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);
@@ -451,7 +442,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		
 		try {
 			List<UnderwritingYearDto> dtos = underwritingYearDao.fetchAll();
-			result = underwritingYearFactory.getUnderwritingYearList(dtos, factoryContext, authentication);
+			result = underwritingYearRsrcFactory.getUnderwritingYearList(dtos, factoryContext, authentication);
 
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);
@@ -476,7 +467,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 
 		try {
 			List<GradeModifierDto> dtos = gradeModifierDao.selectByYearPlanCommodity(cropYear, insurancePlanId, cropCommodityId);
-			result = gradeModifierFactory.getGradeModifierList(dtos, cropYear, insurancePlanId, cropCommodityId, context,
+			result = gradeModifierRsrcFactory.getGradeModifierList(dtos, cropYear, insurancePlanId, cropCommodityId, context,
 					authentication);
 
 		} catch (DaoException e) {
@@ -554,7 +545,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 			insertGradeModifier(gradeModifier, userId);
 		} else {
 
-			gradeModifierFactory.updateDto(dto, gradeModifier);
+			gradeModifierRsrcFactory.updateDto(dto, gradeModifier);
 
 			gradeModifierDao.update(dto, userId);
 		}
@@ -568,7 +559,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		logger.debug("<insertGradeModifier");
 
 		GradeModifierDto dto = new GradeModifierDto();
-		gradeModifierFactory.updateDto(dto, gradeModifier);
+		gradeModifierRsrcFactory.updateDto(dto, gradeModifier);
 
 		dto.setGradeModifierGuid(null);
 
@@ -592,7 +583,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 
 		try {
 			List<GradeModifierTypeCodeDto> dtos = gradeModifierTypeCodeDao.select(cropYear);
-			result = gradeModifierTypeFactory.getGradeModifierTypeList(dtos, cropYear, context,
+			result = gradeModifierTypeRsrcFactory.getGradeModifierTypeList(dtos, cropYear, context,
 					authentication);
 
 		} catch (DaoException e) {
@@ -672,7 +663,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 			insertGradeModifierType(gradeModifierType, userId);
 		} else {
 
-			gradeModifierTypeFactory.updateDto(dto, gradeModifierType);
+			gradeModifierTypeRsrcFactory.updateDto(dto, gradeModifierType);
 
 			gradeModifierTypeCodeDao.update(dto, userId);
 		}
@@ -686,7 +677,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		logger.debug("<insertGradeModifierType");
 
 		GradeModifierTypeCodeDto dto = new GradeModifierTypeCodeDto();
-		gradeModifierTypeFactory.updateDto(dto, gradeModifierType);
+		gradeModifierTypeRsrcFactory.updateDto(dto, gradeModifierType);
 
 		gradeModifierTypeCodeDao.insert(dto, userId);
 		
@@ -715,7 +706,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 				validationDtos = cropVarietyInsurabilityDao.selectValidation(insurancePlanId);
 			}
 
-			result = cropVarietyInsurabilityFactory.getCropVarietyInsurabilityList(
+			result = cropVarietyInsurabilityRsrcFactory.getCropVarietyInsurabilityList(
 					cropVarietyInsurabilityDtos, 
 					validationDtos,
 					cropVarietyInsPlantInsXrefDtos,
@@ -817,7 +808,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 			
 			validateInsurabilityChanges(dto, cropVarietyInsurability, validationDtos);
 
-			cropVarietyInsurabilityFactory.updateDto(dto, cropVarietyInsurability);
+			cropVarietyInsurabilityRsrcFactory.updateDto(dto, cropVarietyInsurability);
 
 			cropVarietyInsurabilityDao.update(dto, userId);
 
@@ -930,7 +921,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 						
 					//Insert record if it doesn't exist yet
 					xrefDto = new CropVarietyInsPlantInsXrefDto();
-					commodityFactory.updateDto(xrefDto, plantInsurability);
+					commodityRsrcFactory.updateDto(xrefDto, plantInsurability);
 
 					cropVarietyInsPlantInsXrefDao.insert(xrefDto, userId);
 
@@ -962,7 +953,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		logger.debug("<insertCropVarietyInsurability");
 
 		CropVarietyInsurabilityDto dto = new CropVarietyInsurabilityDto();
-		cropVarietyInsurabilityFactory.updateDto(dto, cropVarietyInsurability);
+		cropVarietyInsurabilityRsrcFactory.updateDto(dto, cropVarietyInsurability);
 
 		cropVarietyInsurabilityDao.insert(dto, userId);
 		
@@ -990,7 +981,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 					srcYieldMeasUnitTypeCode, 
 					targetYieldMeasUnitTypeCode);
 			
-			result = yieldMeasUnitConversionFactory.getYieldMeasUnitConversionList(
+			result = yieldMeasUnitConversionRsrcFactory.getYieldMeasUnitConversionList(
 					yieldMeasUnitConversionDtos, 
 					insurancePlanId,
 					srcYieldMeasUnitTypeCode,
@@ -1092,7 +1083,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 					
 					Double oldConversionFactor = dto.getConversionFactor();
 					
-					yieldMeasUnitConversionFactory.updateDto(dto, yieldMeasUnitConversion);
+					yieldMeasUnitConversionRsrcFactory.updateDto(dto, yieldMeasUnitConversion);
 
 					yieldMeasUnitConversionDao.update(dto, userId);
 					
@@ -1287,7 +1278,7 @@ public class CirrasMaintenanceServiceImpl implements CirrasMaintenanceService {
 		//Only insert if there is a conversion factor
 		if(yieldMeasUnitConversion.getConversionFactor() != null) {
 			YieldMeasUnitConversionDto dto = new YieldMeasUnitConversionDto();
-			yieldMeasUnitConversionFactory.updateDto(dto, yieldMeasUnitConversion);
+			yieldMeasUnitConversionRsrcFactory.updateDto(dto, yieldMeasUnitConversion);
 
 			yieldMeasUnitConversionDao.insert(dto, userId);
 			

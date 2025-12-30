@@ -16,7 +16,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryContractCommodityBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityBerriesDto;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.InventoryContractFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.InventoryContractRsrcFactory;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 
 public class BerriesService {
@@ -26,7 +26,7 @@ public class BerriesService {
 	private InventoryContractCommodityBerriesDao inventoryContractCommodityBerriesDao;
 	private InventoryBerriesDao inventoryBerriesDao;
 
-	private InventoryContractFactory inventoryContractFactory;
+	private InventoryContractRsrcFactory inventoryContractRsrcFactory;
 	
 	public void setInventoryContractCommodityBerriesDao(InventoryContractCommodityBerriesDao inventoryContractCommodityBerriesDao) {
 		this.inventoryContractCommodityBerriesDao = inventoryContractCommodityBerriesDao;
@@ -36,8 +36,8 @@ public class BerriesService {
 		this.inventoryBerriesDao = inventoryBerriesDao;
 	}
 
-	public void setInventoryContractFactory(InventoryContractFactory inventoryContractFactory) {
-		this.inventoryContractFactory = inventoryContractFactory;
+	public void setInventoryContractRsrcFactory(InventoryContractRsrcFactory inventoryContractRsrcFactory) {
+		this.inventoryContractRsrcFactory = inventoryContractRsrcFactory;
 	}
 	
 	public void updateInventoryBerries(InventoryBerries inventoryBerries, String inventoryFieldGuid, String userId)
@@ -57,7 +57,7 @@ public class BerriesService {
 			insertInventoryBerries(inventoryBerries, inventoryFieldGuid, userId);
 		} else {
 
-			inventoryContractFactory.updateDto(dto, inventoryBerries);
+			inventoryContractRsrcFactory.updateDto(dto, inventoryBerries);
 
 			inventoryBerriesDao.update(dto, userId);
 		}
@@ -67,7 +67,7 @@ public class BerriesService {
 			String userId) throws DaoException {
 
 		InventoryBerriesDto dto = new InventoryBerriesDto();
-		inventoryContractFactory.updateDto(dto, inventoryBerries);
+		inventoryContractRsrcFactory.updateDto(dto, inventoryBerries);
 
 		dto.setInventoryBerriesGuid(null);
 		dto.setInventoryFieldGuid(inventoryFieldGuid);
@@ -128,7 +128,7 @@ public class BerriesService {
 				for(InventoryContractCommodityBerries iccb : inventoryContract.getInventoryContractCommodityBerries()) {
 				
 					InventoryContractCommodityBerriesDto dto = new InventoryContractCommodityBerriesDto();
-					inventoryContractFactory.updateDto(dto, iccb);
+					inventoryContractRsrcFactory.updateDto(dto, iccb);
 					inventoryContractCommodityBerriesDao.insert(dto, userId);
 				}
 			}

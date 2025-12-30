@@ -39,8 +39,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.CropCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.GrowerContactDto;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasDataSyncService;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.CirrasDataSyncFactory;
-
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CirrasDataSyncRsrcFactory;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
@@ -64,7 +63,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 	private Properties applicationProperties;
 
 	// factories
-	private CirrasDataSyncFactory cirrasDataSyncFactory;
+	private CirrasDataSyncRsrcFactory cirrasDataSyncRsrcFactory;
 
 	// daos
 	private PolicyStatusCodeDao policyStatusCodeDao;
@@ -92,8 +91,8 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 		this.applicationProperties = applicationProperties;
 	}
 
-	public void setCirrasDataSyncFactory(CirrasDataSyncFactory cirrasDataSyncFactory) {
-		this.cirrasDataSyncFactory = cirrasDataSyncFactory;
+	public void setCirrasDataSyncRsrcFactory(CirrasDataSyncRsrcFactory cirrasDataSyncRsrcFactory) {
+		this.cirrasDataSyncRsrcFactory = cirrasDataSyncRsrcFactory;
 	}
 
 //	public void setCirrasServiceHelper(CirrasServiceHelper cirrasServiceHelper) {
@@ -264,7 +263,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(authentication);
 
-			cirrasDataSyncFactory.updatePolicyStatusCode(dto, resource);
+			cirrasDataSyncRsrcFactory.updatePolicyStatusCode(dto, resource);
 			policyStatusCodeDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -285,7 +284,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(authentication);
 
-			PolicyStatusCodeDto dto = cirrasDataSyncFactory.createPolicyStatusCode(resource);
+			PolicyStatusCodeDto dto = cirrasDataSyncRsrcFactory.createPolicyStatusCode(resource);
 			policyStatusCodeDao.insert(dto, userId);
 
 		} catch (DaoException e) {
@@ -306,7 +305,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 		PolicyStatusCodeDto dto = policyStatusCodeDao.fetch(resource.getUniqueKeyString());
 
 		if (dto != null) {
-			cirrasDataSyncFactory.updatePolicyStatusCodeExpiryDate(dto, resource.getDataSyncTransDate());
+			cirrasDataSyncRsrcFactory.updatePolicyStatusCodeExpiryDate(dto, resource.getDataSyncTransDate());
 			policyStatusCodeDao.update(dto, userId);
 		}
 
@@ -352,7 +351,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(authentication);
 
-			cirrasDataSyncFactory.createOffice(dto, resource);
+			cirrasDataSyncRsrcFactory.createOffice(dto, resource);
 			officeDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -374,7 +373,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			String userId = getUserId(authentication);
 			OfficeDto dto = new OfficeDto();
 
-			cirrasDataSyncFactory.createOffice(dto, resource);
+			cirrasDataSyncRsrcFactory.createOffice(dto, resource);
 			officeDao.insert(dto, userId);
 
 		} catch (DaoException e) {
@@ -423,7 +422,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			GrowerDto dto = growerDao.fetch(growerId);
 
 			if (dto != null) {
-				result = cirrasDataSyncFactory.getGrower(dto);
+				result = cirrasDataSyncRsrcFactory.getGrower(dto);
 			}
 			else {
 				//This method is only used for testing. Return null instead of an error
@@ -475,7 +474,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(authentication);
 
-			cirrasDataSyncFactory.updateGrower(dto, resource);
+			cirrasDataSyncRsrcFactory.updateGrower(dto, resource);
 			growerDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -498,7 +497,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			
 			GrowerDto dto = new GrowerDto();
 
-			cirrasDataSyncFactory.updateGrower(dto, resource);
+			cirrasDataSyncRsrcFactory.updateGrower(dto, resource);
 			growerDao.insert(dto, userId);
 
 		} catch (DaoException e) {
@@ -534,7 +533,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			PolicyDto dto = policyDao.fetch(policyId);
 
 			if (dto != null) {
-				result = cirrasDataSyncFactory.getPolicy(dto);
+				result = cirrasDataSyncRsrcFactory.getPolicy(dto);
 			}
 			else {
 				//This method is only used for testing. Return null instead of an error
@@ -586,7 +585,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(authentication);
 
-			cirrasDataSyncFactory.updatePolicy(dto, resource);
+			cirrasDataSyncRsrcFactory.updatePolicy(dto, resource);
 			policyDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -609,7 +608,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			
 			PolicyDto dto = new PolicyDto();
 
-			cirrasDataSyncFactory.updatePolicy(dto, resource);
+			cirrasDataSyncRsrcFactory.updatePolicy(dto, resource);
 			policyDao.insert(dto, userId);
 
 		} catch (DaoException e) {
@@ -645,7 +644,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			ProductDto dto = productDao.fetch(productId);
 
 			if (dto != null) {
-				result = cirrasDataSyncFactory.getProduct(dto);
+				result = cirrasDataSyncRsrcFactory.getProduct(dto);
 			}
 			else {
 				throw new NotFoundException("Did not find product record: productId: " + productId);
@@ -696,7 +695,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(authentication);
 
-			cirrasDataSyncFactory.updateProduct(dto, resource);
+			cirrasDataSyncRsrcFactory.updateProduct(dto, resource);
 			productDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -719,7 +718,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			
 			ProductDto dto = new ProductDto();
 
-			cirrasDataSyncFactory.updateProduct(dto, resource);
+			cirrasDataSyncRsrcFactory.updateProduct(dto, resource);
 			productDao.insert(dto, userId);
 
 		} catch (DaoException e) {
@@ -800,7 +799,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(webAdeAuthentication);
 
-			CropCommodityDto dto = cirrasDataSyncFactory.createCropCommodity(model);
+			CropCommodityDto dto = cirrasDataSyncRsrcFactory.createCropCommodity(model);
 			cropCommodityDao.insert(dto, userId);
 
 		} catch (DaoException e) {
@@ -821,7 +820,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(webAdeAuthentication);
 
-			cirrasDataSyncFactory.updateCropCommodity(dto, model);
+			cirrasDataSyncRsrcFactory.updateCropCommodity(dto, model);
 			cropCommodityDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -842,7 +841,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(webAdeAuthentication);
 
-			CropVarietyDto dto = cirrasDataSyncFactory.createCropVariety(model);
+			CropVarietyDto dto = cirrasDataSyncRsrcFactory.createCropVariety(model);
 			cropVarietyDao.insert(dto, userId);
 
 		} catch (DaoException e) {
@@ -863,7 +862,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(webAdeAuthentication);
 
-			cirrasDataSyncFactory.updateCropVariety(dto, model);
+			cirrasDataSyncRsrcFactory.updateCropVariety(dto, model);
 			cropVarietyDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -888,14 +887,14 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 		CropVarietyDto dtoVariety = cropVarietyDao.fetch(model.getCropId());
 
 		if (dtoVariety != null) {
-			cirrasDataSyncFactory.updateCropVarietyExpiryDate(dtoVariety, model.getDataSyncTransDate());
+			cirrasDataSyncRsrcFactory.updateCropVarietyExpiryDate(dtoVariety, model.getDataSyncTransDate());
 			cropVarietyDao.update(dtoVariety, userId);
 
 		} else {
 			CropCommodityDto dtoCommodity = cropCommodityDao.fetch(model.getCropId());
 			if (dtoCommodity != null) {
 
-				cirrasDataSyncFactory.updateCropCommodityExpiryDate(dtoCommodity, model.getDataSyncTransDate());
+				cirrasDataSyncRsrcFactory.updateCropCommodityExpiryDate(dtoCommodity, model.getDataSyncTransDate());
 				cropCommodityDao.update(dtoCommodity, userId);
 			}
 		}
@@ -942,13 +941,13 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 				CropVarietyDto dtoVariety = cropVarietyDao.fetch(crptId);
 
 				if (dtoVariety != null) {
-					model = cirrasDataSyncFactory.getSyncCommodityVarietyFromVariety(dtoVariety);
+					model = cirrasDataSyncRsrcFactory.getSyncCommodityVarietyFromVariety(dtoVariety);
 
 				} else {
 					CropCommodityDto dtoCommodity = cropCommodityDao.fetch(crptId);
 					if (dtoCommodity != null) {
 
-						model = cirrasDataSyncFactory.getSyncCommodityVarietyFromCropCommodity(dtoCommodity);
+						model = cirrasDataSyncRsrcFactory.getSyncCommodityVarietyFromCropCommodity(dtoCommodity);
 					} else {
 						// No record found
 						throw new NotFoundException("Did not find a variety nor a commodity with id: " + crptId);
@@ -983,7 +982,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			ContactDto dto = contactDao.fetch(contactId);
 
 			if (dto != null) {
-				result = cirrasDataSyncFactory.getContact(dto);
+				result = cirrasDataSyncRsrcFactory.getContact(dto);
 			}
 			else {
 				//This method is only used for testing. Return null instead of an error
@@ -1034,7 +1033,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(authentication);
 
-			cirrasDataSyncFactory.updateContact(dto, model);
+			cirrasDataSyncRsrcFactory.updateContact(dto, model);
 			contactDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -1057,7 +1056,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			
 			ContactDto dto = new ContactDto();
 
-			cirrasDataSyncFactory.updateContact(dto, model);
+			cirrasDataSyncRsrcFactory.updateContact(dto, model);
 			contactDao.insert(dto, userId);
 
 		} catch (DaoException e) {
@@ -1096,7 +1095,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			GrowerContactDto dto = growerContactDao.fetch(growerContactId);
 
 			if (dto != null) {
-				result = cirrasDataSyncFactory.getGrowerContact(dto);
+				result = cirrasDataSyncRsrcFactory.getGrowerContact(dto);
 			}
 			else {
 				//This method is only used for testing. Return null instead of an error
@@ -1148,7 +1147,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(authentication);
 
-			cirrasDataSyncFactory.updateGrowerContact(dto, model);
+			cirrasDataSyncRsrcFactory.updateGrowerContact(dto, model);
 			growerContactDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -1171,7 +1170,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			
 			GrowerContactDto dto = new GrowerContactDto();
 
-			cirrasDataSyncFactory.updateGrowerContact(dto, model);
+			cirrasDataSyncRsrcFactory.updateGrowerContact(dto, model);
 			growerContactDao.insert(dto, userId);
 
 		} catch (DaoException e) {
@@ -1210,7 +1209,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			ContactEmailDto dto = contactEmailDao.fetch(contactEmailId);
 
 			if (dto != null) {
-				result = cirrasDataSyncFactory.getContactEmail(dto);
+				result = cirrasDataSyncRsrcFactory.getContactEmail(dto);
 			}
 			else {
 				//This method is only used for testing. Return null instead of an error
@@ -1266,7 +1265,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(authentication);
 
-			cirrasDataSyncFactory.updateContactEmail(dto, model);
+			cirrasDataSyncRsrcFactory.updateContactEmail(dto, model);
 			contactEmailDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -1289,7 +1288,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			
 			ContactEmailDto dto = new ContactEmailDto();
 
-			cirrasDataSyncFactory.updateContactEmail(dto, model);
+			cirrasDataSyncRsrcFactory.updateContactEmail(dto, model);
 			contactEmailDao.insert(dto, userId);
 
 		} catch (DaoException e) {
@@ -1328,7 +1327,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			ContactPhoneDto dto = contactPhoneDao.fetch(contactPhoneId);
 
 			if (dto != null) {
-				result = cirrasDataSyncFactory.getContactPhone(dto);
+				result = cirrasDataSyncRsrcFactory.getContactPhone(dto);
 			}
 			else {
 				//This method is only used for testing. Return null instead of an error
@@ -1389,7 +1388,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(authentication);
 
-			cirrasDataSyncFactory.updateContactPhone(dto, model);
+			cirrasDataSyncRsrcFactory.updateContactPhone(dto, model);
 			contactPhoneDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -1412,7 +1411,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			
 			ContactPhoneDto dto = new ContactPhoneDto();
 
-			cirrasDataSyncFactory.updateContactPhone(dto, model);
+			cirrasDataSyncRsrcFactory.updateContactPhone(dto, model);
 			contactPhoneDao.insert(dto, userId);
 
 		} catch (DaoException e) {
@@ -1452,7 +1451,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			CommodityTypeCodeDto dto = commodityTypeCodeDao.fetch(commodityTypeCode);
 
 			if (dto != null) {
-				result = cirrasDataSyncFactory.getCommodityTypeCode(dto);
+				result = cirrasDataSyncRsrcFactory.getCommodityTypeCode(dto);
 			}
 			else {
 				//This method is only used for testing. Return null instead of an error
@@ -1503,7 +1502,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 
 			String userId = getUserId(authentication);
 
-			cirrasDataSyncFactory.updateCommodityTypeCode(dto, model);
+			cirrasDataSyncRsrcFactory.updateCommodityTypeCode(dto, model);
 			commodityTypeCodeDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -1526,7 +1525,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			
 			CommodityTypeCodeDto dto = new CommodityTypeCodeDto();
 
-			cirrasDataSyncFactory.updateCommodityTypeCode(dto, model);
+			cirrasDataSyncRsrcFactory.updateCommodityTypeCode(dto, model);
 			commodityTypeCodeDao.insert(dto, userId);
 
 		} catch (DaoException e) {
@@ -1547,7 +1546,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 		CommodityTypeCodeDto dto = commodityTypeCodeDao.fetch(model.getCommodityTypeCode());
 
 		if (dto != null) {
-			cirrasDataSyncFactory.updateCommodityTypeCodeExpiryDate(dto, model.getDataSyncTransDate());
+			cirrasDataSyncRsrcFactory.updateCommodityTypeCodeExpiryDate(dto, model.getDataSyncTransDate());
 			commodityTypeCodeDao.update(dto, userId);
 		}
 
@@ -1583,7 +1582,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			CommodityTypeVarietyXrefDto dto = commodityTypeVarietyXrefDao.fetch(commodityTypeCode, cropVarietyId);
 
 			if (dto != null) {
-				result = cirrasDataSyncFactory.getCommodityTypeVarietyXref(dto);
+				result = cirrasDataSyncRsrcFactory.getCommodityTypeVarietyXref(dto);
 			}
 			else {
 				//This method is only used for testing. Return null instead of an error
@@ -1634,7 +1633,7 @@ public class CirrasDataSyncServiceImpl implements CirrasDataSyncService {
 			
 			CommodityTypeVarietyXrefDto dto = new CommodityTypeVarietyXrefDto();
 
-			cirrasDataSyncFactory.updateCommodityTypeVarietyXref(dto, model);
+			cirrasDataSyncRsrcFactory.updateCommodityTypeVarietyXref(dto, model);
 			commodityTypeVarietyXrefDao.insert(dto, userId);
 
 		} catch (DaoException e) {

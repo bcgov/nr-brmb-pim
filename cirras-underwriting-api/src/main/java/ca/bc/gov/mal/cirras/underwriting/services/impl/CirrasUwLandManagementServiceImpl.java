@@ -13,7 +13,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
 import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandRiskArea;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.FieldDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.LegalLandDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.LegalLandFieldXrefDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.LegalLandRiskAreaXrefDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.RiskAreaDao;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.RiskAreaDto;
@@ -30,9 +29,9 @@ import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasUwLandManagementService;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.LegalLandFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.LegalLandRiskAreaXrefFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.RiskAreaFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandRiskAreaXrefRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.RiskAreaRsrcFactory;
 
 public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagementService {
 
@@ -41,9 +40,9 @@ public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagement
 	private Properties applicationProperties;
 
 	// factories
-	private LegalLandFactory legalLandFactory;
-	private RiskAreaFactory riskAreaFactory; 
-	private LegalLandRiskAreaXrefFactory legalLandRiskAreaXrefFactory;
+	private LegalLandRsrcFactory legalLandRsrcFactory;
+	private RiskAreaRsrcFactory riskAreaRsrcFactory; 
+	private LegalLandRiskAreaXrefRsrcFactory legalLandRiskAreaXrefRsrcFactory;
 
 	// daos
 	private LegalLandDao legalLandDao;
@@ -59,16 +58,16 @@ public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagement
 		this.applicationProperties = applicationProperties;
 	}
 
-	public void setRiskAreaFactory(RiskAreaFactory riskAreaFactory) {
-		this.riskAreaFactory = riskAreaFactory;
+	public void setRiskAreaRsrcFactory(RiskAreaRsrcFactory riskAreaRsrcFactory) {
+		this.riskAreaRsrcFactory = riskAreaRsrcFactory;
 	}
 
-	public void setLegalLandFactory(LegalLandFactory legalLandFactory) {
-		this.legalLandFactory = legalLandFactory;
+	public void setLegalLandRsrcFactory(LegalLandRsrcFactory legalLandRsrcFactory) {
+		this.legalLandRsrcFactory = legalLandRsrcFactory;
 	}
 
-	public void setLegalLandRiskAreaXrefFactory(LegalLandRiskAreaXrefFactory legalLandRiskAreaXrefFactory) {
-		this.legalLandRiskAreaXrefFactory = legalLandRiskAreaXrefFactory;
+	public void setLegalLandRiskAreaXrefRsrcFactory(LegalLandRiskAreaXrefRsrcFactory legalLandRiskAreaXrefRsrcFactory) {
+		this.legalLandRiskAreaXrefRsrcFactory = legalLandRiskAreaXrefRsrcFactory;
 	}
 
 	public void setLegalLandDao(LegalLandDao legalLandDao) {
@@ -100,7 +99,7 @@ public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagement
 			
 			LegalLandDto dto = new LegalLandDto();
 
-			legalLandFactory.updateLegalLand(dto, legalLand);
+			legalLandRsrcFactory.updateLegalLand(dto, legalLand);
 			
 			legalLandDao.insert(dto, userId);
 			
@@ -143,7 +142,7 @@ public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagement
 				throw new NotFoundException("Did not find the legal land: " + legalLandId);
 			}
 	
-			legalLandFactory.updateLegalLand(dto, legalLand);
+			legalLandRsrcFactory.updateLegalLand(dto, legalLand);
 			legalLandDao.update(dto, userId);
 			
 			saveLegalLandRiskAreas(legalLand, userId, authentication);
@@ -190,7 +189,7 @@ public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagement
 		if (dto == null) {
 			// Insert if it doesn't exist
 			dto = new LegalLandRiskAreaXrefDto();
-			legalLandRiskAreaXrefFactory.createLegalLandRiskAreaXref(dto, riskArea);
+			legalLandRiskAreaXrefRsrcFactory.createLegalLandRiskAreaXref(dto, riskArea);
 			
 			dto.setLegalLandId(legalLandId);
 			
@@ -198,7 +197,7 @@ public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagement
 			
 		} else {
 
-			legalLandRiskAreaXrefFactory.createLegalLandRiskAreaXref(dto, riskArea);
+			legalLandRiskAreaXrefRsrcFactory.createLegalLandRiskAreaXref(dto, riskArea);
 
 			legalLandRiskAreaXrefDao.update(dto, userId);
 		}
@@ -247,7 +246,7 @@ public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagement
 			//Load Associated Fields
 			loadFields(dto);
 			
-			result = legalLandFactory.getLegalLand(dto, factoryContext, authentication);
+			result = legalLandRsrcFactory.getLegalLand(dto, factoryContext, authentication);
 			
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);
@@ -311,7 +310,7 @@ public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagement
 		
 		try {
 			List<RiskAreaDto> dtos = riskAreaDao.select(insurancePlanId);
-			result = riskAreaFactory.getRiskAreaList(dtos, insurancePlanId, context, authentication);
+			result = riskAreaRsrcFactory.getRiskAreaList(dtos, insurancePlanId, context, authentication);
 
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);

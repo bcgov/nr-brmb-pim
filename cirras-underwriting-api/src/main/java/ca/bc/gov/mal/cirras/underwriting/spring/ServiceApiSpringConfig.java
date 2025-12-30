@@ -29,30 +29,30 @@ import ca.bc.gov.mal.cirras.underwriting.services.impl.CirrasInventoryServiceImp
 import ca.bc.gov.mal.cirras.underwriting.services.impl.CirrasMaintenanceServiceImpl;
 import ca.bc.gov.mal.cirras.underwriting.services.impl.CirrasUwLandManagementServiceImpl;
 import ca.bc.gov.mal.cirras.underwriting.services.impl.CirrasVerifiedYieldServiceImpl;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.CommodityFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.CommodityTypeCodeFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.ContractedFieldDetailFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.CropVarietyInsurabilityFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.DopYieldContractFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.FieldFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.GradeModifierFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.GradeModifierTypeFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.AnnualFieldDetailFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.AnnualFieldFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.CirrasDataSyncFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.InventoryContractFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.LandDataSyncFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.LegalLandFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.LegalLandFieldXrefFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.LegalLandRiskAreaXrefFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.RiskAreaFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.SeedingDeadlineFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.UnderwritingYearFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.UserSettingFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.UwContractFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.VerifiedYieldContractFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.YieldMeasUnitConversionFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.YieldMeasUnitTypeCodeFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityTypeCodeRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.ContractedFieldDetailRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CropVarietyInsurabilityRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.FieldRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.GradeModifierRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.GradeModifierTypeRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.AnnualFieldDetailRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.AnnualFieldRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CirrasDataSyncRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.InventoryContractRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LandDataSyncRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandFieldXrefRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandRiskAreaXrefRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.RiskAreaRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.SeedingDeadlineRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UnderwritingYearRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UserSettingRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UwContractRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.VerifiedYieldContractRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.YieldMeasUnitConversionRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.YieldMeasUnitTypeCodeRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.services.reports.JasperReportService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.UnderwritingServiceHelper;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.BerriesService;
@@ -83,30 +83,30 @@ public class ServiceApiSpringConfig {
 	@Autowired CirrasPolicyService cirrasPolicyService;
 	
     // Beans provided by ResourceFactorySpringConfig
-	@Autowired AnnualFieldFactory annualFieldFactory;
-	@Autowired InventoryContractFactory inventoryContractFactory;
-	@Autowired UwContractFactory uwContractFactory;
-	@Autowired CommodityFactory commodityFactory;
-	@Autowired CirrasDataSyncFactory cirrasDataSyncFactory;
-	@Autowired LandDataSyncFactory landDataSyncFactory;
-	@Autowired LegalLandFactory legalLandFactory;
-	@Autowired FieldFactory fieldFactory;
-	@Autowired LegalLandFieldXrefFactory legalLandFieldXrefFactory;
-	@Autowired AnnualFieldDetailFactory annualFieldDetailFactory;
-	@Autowired ContractedFieldDetailFactory contractedFieldDetailFactory;
-	@Autowired DopYieldContractFactory dopYieldContractFactory;
-	@Autowired YieldMeasUnitTypeCodeFactory yieldMeasUnitTypeCodeFactory;
-	@Autowired GradeModifierFactory gradeModifierFactory;
-	@Autowired GradeModifierTypeFactory gradeModifierTypeFactory;
-	@Autowired RiskAreaFactory riskAreaFactory;
-	@Autowired LegalLandRiskAreaXrefFactory legalLandRiskAreaXrefFactory;
-	@Autowired CommodityTypeCodeFactory commodityTypeCodeFactory;
-	@Autowired SeedingDeadlineFactory seedingDeadlineFactory;
-	@Autowired UnderwritingYearFactory underwritingYearFactory;
-	@Autowired CropVarietyInsurabilityFactory cropVarietyInsurabilityFactory;
-	@Autowired YieldMeasUnitConversionFactory yieldMeasUnitConversionFactory;
-	@Autowired VerifiedYieldContractFactory verifiedYieldContractFactory;
-	@Autowired UserSettingFactory userSettingFactory;
+	@Autowired AnnualFieldRsrcFactory annualFieldRsrcFactory;
+	@Autowired InventoryContractRsrcFactory inventoryContractRsrcFactory;
+	@Autowired UwContractRsrcFactory uwContractRsrcFactory;
+	@Autowired CommodityRsrcFactory commodityRsrcFactory;
+	@Autowired CirrasDataSyncRsrcFactory cirrasDataSyncRsrcFactory;
+	@Autowired LandDataSyncRsrcFactory landDataSyncRsrcFactory;
+	@Autowired LegalLandRsrcFactory legalLandRsrcFactory;
+	@Autowired FieldRsrcFactory fieldRsrcFactory;
+	@Autowired LegalLandFieldXrefRsrcFactory legalLandFieldXrefRsrcFactory;
+	@Autowired AnnualFieldDetailRsrcFactory annualFieldDetailRsrcFactory;
+	@Autowired ContractedFieldDetailRsrcFactory contractedFieldDetailRsrcFactory;
+	@Autowired DopYieldContractRsrcFactory dopYieldContractRsrcFactory;
+	@Autowired YieldMeasUnitTypeCodeRsrcFactory yieldMeasUnitTypeCodeRsrcFactory;
+	@Autowired GradeModifierRsrcFactory gradeModifierRsrcFactory;
+	@Autowired GradeModifierTypeRsrcFactory gradeModifierTypeRsrcFactory;
+	@Autowired RiskAreaRsrcFactory riskAreaRsrcFactory;
+	@Autowired LegalLandRiskAreaXrefRsrcFactory legalLandRiskAreaXrefRsrcFactory;
+	@Autowired CommodityTypeCodeRsrcFactory commodityTypeCodeRsrcFactory;
+	@Autowired SeedingDeadlineRsrcFactory seedingDeadlineRsrcFactory;
+	@Autowired UnderwritingYearRsrcFactory underwritingYearRsrcFactory;
+	@Autowired CropVarietyInsurabilityRsrcFactory cropVarietyInsurabilityRsrcFactory;
+	@Autowired YieldMeasUnitConversionRsrcFactory yieldMeasUnitConversionRsrcFactory;
+	@Autowired VerifiedYieldContractRsrcFactory verifiedYieldContractRsrcFactory;
+	@Autowired UserSettingRsrcFactory userSettingRsrcFactory;
 	
 	// Imported Spring Config
 	@Autowired CodeTableSpringConfig codeTableSpringConfig;
@@ -141,7 +141,7 @@ public class ServiceApiSpringConfig {
 		result.setInventoryContractCommodityBerriesDao(persistenceSpringConfig.inventoryContractCommodityBerriesDao());
 		result.setInventoryBerriesDao(persistenceSpringConfig.inventoryBerriesDao());
 		
-		result.setInventoryContractFactory(inventoryContractFactory);
+		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
 
 		return result;
 	}
@@ -159,18 +159,13 @@ public class ServiceApiSpringConfig {
 		result = new CirrasUnderwritingServiceImpl();
 		result.setApplicationProperties(applicationProperties);
 
-		result.setAnnualFieldFactory(annualFieldFactory);
-		result.setUwContractFactory(uwContractFactory);
-		result.setUserSettingFactory(userSettingFactory);
+		result.setAnnualFieldRsrcFactory(annualFieldRsrcFactory);
+		result.setUwContractRsrcFactory(uwContractRsrcFactory);
+		result.setUserSettingRsrcFactory(userSettingRsrcFactory);
 
 		result.setFieldDao(persistenceSpringConfig.fieldDao());
 		result.setPolicyDao(persistenceSpringConfig.policyDao());
-		result.setLegalLandDao(persistenceSpringConfig.legalLandDao());
 		result.setUserSettingDao(persistenceSpringConfig.userSettingDao());
-		
-		result.setUnderwritingServiceHelper(underwritingServiceHelper());
-		
-		result.setOutOfSync(outOfSync());
 		
 		return result;
 	}
@@ -182,14 +177,14 @@ public class ServiceApiSpringConfig {
 		result = new CirrasInventoryServiceImpl();
 		result.setApplicationProperties(applicationProperties);
 
-		result.setInventoryContractFactory(inventoryContractFactory);
-		result.setAnnualFieldFactory(annualFieldFactory);
-		result.setLegalLandFactory(legalLandFactory);
-		result.setFieldFactory(fieldFactory);
-		result.setLegalLandFieldXrefFactory(legalLandFieldXrefFactory);
-		result.setAnnualFieldDetailFactory(annualFieldDetailFactory);
-		result.setContractedFieldDetailFactory(contractedFieldDetailFactory);
-		result.setUwContractFactory(uwContractFactory);
+		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
+		result.setAnnualFieldRsrcFactory(annualFieldRsrcFactory);
+		result.setLegalLandRsrcFactory(legalLandRsrcFactory);
+		result.setFieldRsrcFactory(fieldRsrcFactory);
+		result.setLegalLandFieldXrefRsrcFactory(legalLandFieldXrefRsrcFactory);
+		result.setAnnualFieldDetailRsrcFactory(annualFieldDetailRsrcFactory);
+		result.setContractedFieldDetailRsrcFactory(contractedFieldDetailRsrcFactory);
+		result.setUwContractRsrcFactory(uwContractRsrcFactory);
 
 		result.setInventoryContractCommodityDao(persistenceSpringConfig.inventoryContractCommodityDao());
 		result.setInventoryCoverageTotalForageDao(persistenceSpringConfig.inventoryCoverageTotalForageDao());
@@ -221,8 +216,6 @@ public class ServiceApiSpringConfig {
 		result.setUnderwritingServiceHelper(underwritingServiceHelper());
 		result.setBerriesService(berriesService());
 		
-		result.setOutOfSync(outOfSync());
-		
 		return result;
 	}
 	
@@ -234,7 +227,7 @@ public class ServiceApiSpringConfig {
 		result = new CirrasCommodityServiceImpl();
 		result.setApplicationProperties(applicationProperties);
 
-		result.setCommodityFactory(commodityFactory);
+		result.setCommodityRsrcFactory(commodityRsrcFactory);
 
 		result.setCropCommodityDao(persistenceSpringConfig.cropCommodityDao());
 		result.setCropVarietyDao(persistenceSpringConfig.cropVarietyDao());
@@ -251,7 +244,7 @@ public class ServiceApiSpringConfig {
 		result = new CirrasDataSyncServiceImpl();
 		result.setApplicationProperties(applicationProperties);
 
-		result.setCirrasDataSyncFactory(cirrasDataSyncFactory);
+		result.setCirrasDataSyncRsrcFactory(cirrasDataSyncRsrcFactory);
 
 		result.setPolicyStatusCodeDao(persistenceSpringConfig.policyStatusCodeDao());
 		result.setGrowerDao(persistenceSpringConfig.growerDao());
@@ -277,10 +270,10 @@ public class ServiceApiSpringConfig {
 		result = new LandDataSyncServiceImpl();
 		result.setApplicationProperties(applicationProperties);
 
-		result.setLandDataSyncFactory(landDataSyncFactory);
-		result.setInventoryContractFactory(inventoryContractFactory);
-		result.setAnnualFieldDetailFactory(annualFieldDetailFactory);
-		result.setContractedFieldDetailFactory(contractedFieldDetailFactory);
+		result.setLandDataSyncRsrcFactory(landDataSyncRsrcFactory);
+		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
+		result.setAnnualFieldDetailRsrcFactory(annualFieldDetailRsrcFactory);
+		result.setContractedFieldDetailRsrcFactory(contractedFieldDetailRsrcFactory);
 
 		result.setLegalLandDao(persistenceSpringConfig.legalLandDao());
 		result.setFieldDao(persistenceSpringConfig.fieldDao());
@@ -317,9 +310,9 @@ public class ServiceApiSpringConfig {
 		result = new CirrasDopYieldServiceImpl();
 		result.setApplicationProperties(applicationProperties);
 
-		result.setInventoryContractFactory(inventoryContractFactory);
-		result.setDopYieldContractFactory(dopYieldContractFactory);
-		result.setYieldMeasUnitTypeCodeFactory(yieldMeasUnitTypeCodeFactory);
+		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
+		result.setDopYieldContractRsrcFactory(dopYieldContractRsrcFactory);
+		result.setYieldMeasUnitTypeCodeRsrcFactory(yieldMeasUnitTypeCodeRsrcFactory);
 
 		result.setPolicyDao(persistenceSpringConfig.policyDao());
 		result.setYieldMeasUnitTypeCodeDao(persistenceSpringConfig.yieldMeasUnitTypeCodeDao());
@@ -356,9 +349,9 @@ public class ServiceApiSpringConfig {
 		result.setLegalLandRiskAreaXrefDao(persistenceSpringConfig.legalLandRiskAreaXrefDao());
 		result.setFieldDao(persistenceSpringConfig.fieldDao());
 		
-		result.setLegalLandFactory(legalLandFactory);
-		result.setRiskAreaFactory(riskAreaFactory);
-		result.setLegalLandRiskAreaXrefFactory(legalLandRiskAreaXrefFactory);
+		result.setLegalLandRsrcFactory(legalLandRsrcFactory);
+		result.setRiskAreaRsrcFactory(riskAreaRsrcFactory);
+		result.setLegalLandRiskAreaXrefRsrcFactory(legalLandRiskAreaXrefRsrcFactory);
 		
 		return result;
 	}
@@ -370,14 +363,14 @@ public class ServiceApiSpringConfig {
 		result = new CirrasMaintenanceServiceImpl();
 		result.setApplicationProperties(applicationProperties);
 
-		result.setCommodityTypeCodeFactory(commodityTypeCodeFactory);
-		result.setSeedingDeadlineFactory(seedingDeadlineFactory);
-		result.setUnderwritingYearFactory(underwritingYearFactory);
-		result.setGradeModifierFactory(gradeModifierFactory);
-		result.setGradeModifierTypeFactory(gradeModifierTypeFactory);
-		result.setCropVarietyInsurabilityFactory(cropVarietyInsurabilityFactory);
-		result.setCommodityFactory(commodityFactory);
-		result.setYieldMeasUnitConversionFactory(yieldMeasUnitConversionFactory);
+		result.setCommodityTypeCodeRsrcFactory(commodityTypeCodeRsrcFactory);
+		result.setSeedingDeadlineRsrcFactory(seedingDeadlineRsrcFactory);
+		result.setUnderwritingYearRsrcFactory(underwritingYearRsrcFactory);
+		result.setGradeModifierRsrcFactory(gradeModifierRsrcFactory);
+		result.setGradeModifierTypeRsrcFactory(gradeModifierTypeRsrcFactory);
+		result.setCropVarietyInsurabilityRsrcFactory(cropVarietyInsurabilityRsrcFactory);
+		result.setCommodityRsrcFactory(commodityRsrcFactory);
+		result.setYieldMeasUnitConversionRsrcFactory(yieldMeasUnitConversionRsrcFactory);
 
 		result.setCommodityTypeCodeDao(persistenceSpringConfig.commodityTypeCodeDao());
 		result.setSeedingDeadlineDao(persistenceSpringConfig.seedingDeadlineDao());
@@ -404,8 +397,8 @@ public class ServiceApiSpringConfig {
 		result = new CirrasVerifiedYieldServiceImpl();
 		result.setApplicationProperties(applicationProperties);
 
-		result.setVerifiedYieldContractFactory(verifiedYieldContractFactory);
-		result.setInventoryContractFactory(inventoryContractFactory);
+		result.setVerifiedYieldContractRsrcFactory(verifiedYieldContractRsrcFactory);
+		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
 
 		result.setPolicyDao(persistenceSpringConfig.policyDao());
 		result.setInventoryFieldDao(persistenceSpringConfig.inventoryFieldDao());

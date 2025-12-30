@@ -13,7 +13,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualFieldDetail;
 import ca.bc.gov.mal.cirras.underwriting.data.models.ContractedFieldDetail;
 import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
 import ca.bc.gov.mal.cirras.underwriting.data.models.GrowerContractYear;
-import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.AnnualFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.ContractedFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityDao;
@@ -76,13 +75,11 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 
 	private Properties applicationProperties;
 
-	//private ModelValidator modelValidator;
-
 	// factories
-	private LandDataSyncFactory landDataSyncFactory;
-	private InventoryContractFactory inventoryContractFactory;
-	private AnnualFieldDetailFactory annualFieldDetailFactory; 
-	private ContractedFieldDetailFactory contractedFieldDetailFactory; 
+	private LandDataSyncRsrcFactory landDataSyncRsrcFactory;
+	private InventoryContractRsrcFactory inventoryContractRsrcFactory;
+	private AnnualFieldDetailRsrcFactory annualFieldDetailRsrcFactory; 
+	private ContractedFieldDetailRsrcFactory contractedFieldDetailRsrcFactory; 
 
 	// daos
 	private LegalLandDao legalLandDao;
@@ -121,20 +118,20 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 		this.applicationProperties = applicationProperties;
 	}
 
-	public void setLandDataSyncFactory(LandDataSyncFactory landDataSyncFactory) {
-		this.landDataSyncFactory = landDataSyncFactory;
+	public void setLandDataSyncRsrcFactory(LandDataSyncRsrcFactory landDataSyncRsrcFactory) {
+		this.landDataSyncRsrcFactory = landDataSyncRsrcFactory;
 	}
 
-	public void setInventoryContractFactory(InventoryContractFactory inventoryContractFactory) {
-		this.inventoryContractFactory = inventoryContractFactory;
+	public void setInventoryContractRsrcFactory(InventoryContractRsrcFactory inventoryContractRsrcFactory) {
+		this.inventoryContractRsrcFactory = inventoryContractRsrcFactory;
 	}
 
-	public void setAnnualFieldDetailFactory(AnnualFieldDetailFactory annualFieldDetailFactory) {
-		this.annualFieldDetailFactory = annualFieldDetailFactory;
+	public void setAnnualFieldDetailRsrcFactory(AnnualFieldDetailRsrcFactory annualFieldDetailRsrcFactory) {
+		this.annualFieldDetailRsrcFactory = annualFieldDetailRsrcFactory;
 	}
 
-	public void setContractedFieldDetailFactory(ContractedFieldDetailFactory contractedFieldDetailFactory) {
-		this.contractedFieldDetailFactory = contractedFieldDetailFactory;
+	public void setContractedFieldDetailRsrcFactory(ContractedFieldDetailRsrcFactory contractedFieldDetailRsrcFactory) {
+		this.contractedFieldDetailRsrcFactory = contractedFieldDetailRsrcFactory;
 	}
 	
 	public void setLegalLandDao(LegalLandDao legalLandDao) {
@@ -258,7 +255,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 			LegalLandDto dto = legalLandDao.fetch(legalLandId);
 
 			if (dto != null) {
-				result = landDataSyncFactory.getLegalLandSync(dto);
+				result = landDataSyncRsrcFactory.getLegalLandSync(dto);
 			}
 			else {
 				//This method is only used for testing. Return null instead of an error
@@ -310,7 +307,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 
 			String userId = getUserId(authentication);
 
-			landDataSyncFactory.updateLegalLand(dto, model);
+			landDataSyncRsrcFactory.updateLegalLand(dto, model);
 			legalLandDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -333,7 +330,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 			
 			LegalLandDto dto = new LegalLandDto();
 
-			landDataSyncFactory.updateLegalLand(dto, model);
+			landDataSyncRsrcFactory.updateLegalLand(dto, model);
 			legalLandDao.insertDataSync(dto, userId);
 
 		} catch (DaoException e) {
@@ -373,7 +370,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 			FieldDto dto = fieldDao.fetch(fieldId);
 
 			if (dto != null) {
-				result = landDataSyncFactory.getField(dto);
+				result = landDataSyncRsrcFactory.getField(dto);
 			}
 			else {
 				//This method is only used for testing. Return null instead of an error
@@ -425,7 +422,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 
 			String userId = getUserId(authentication);
 
-			landDataSyncFactory.updateField(dto, model);
+			landDataSyncRsrcFactory.updateField(dto, model);
 			fieldDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -448,7 +445,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 			
 			FieldDto dto = new FieldDto();
 
-			landDataSyncFactory.updateField(dto, model);
+			landDataSyncRsrcFactory.updateField(dto, model);
 			fieldDao.insertDataSync(dto, userId);
 
 		} catch (DaoException e) {
@@ -501,7 +498,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 			LegalLandFieldXrefDto dto = legalLandFieldXrefDao.fetch(legalLandId, fieldId);
 			
 			if (dto != null) {
-				result = landDataSyncFactory.getLegalLandFieldXrefSync(dto);
+				result = landDataSyncRsrcFactory.getLegalLandFieldXrefSync(dto);
 			}
 			else {
 				throw new NotFoundException("Did not find legal land field xref record: legalLandId: " + legalLandId);
@@ -552,7 +549,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 		
 		LegalLandFieldXrefDto dto = new LegalLandFieldXrefDto();
 		
-		landDataSyncFactory.updateLegalLandFieldXref(dto, model);
+		landDataSyncRsrcFactory.updateLegalLandFieldXref(dto, model);
 		legalLandFieldXrefDao.insert(dto, userId);
 		
 		} catch (DaoException e) {
@@ -595,7 +592,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 			AnnualFieldDetailDto dto = annualFieldDetailDao.fetch(annualFieldDetailId);
 		
 			if (dto != null) {
-				result = landDataSyncFactory.getAnnualFieldDetail(dto);
+				result = landDataSyncRsrcFactory.getAnnualFieldDetail(dto);
 			}
 			else {
 				//This method is only used for testing. Return null instead of an error
@@ -647,7 +644,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 		
 			String userId = getUserId(authentication);
 			
-			landDataSyncFactory.updateAnnualFieldDetail(dto, model);
+			landDataSyncRsrcFactory.updateAnnualFieldDetail(dto, model);
 			annualFieldDetailDao.update(dto, userId);
 			
 		} catch (DaoException e) {
@@ -670,7 +667,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 			
 			AnnualFieldDetailDto dto = new AnnualFieldDetailDto();
 			
-			landDataSyncFactory.updateAnnualFieldDetail(dto, model);
+			landDataSyncRsrcFactory.updateAnnualFieldDetail(dto, model);
 			annualFieldDetailDao.insertDataSync(dto, userId);
 		
 		} catch (DaoException e) {
@@ -711,7 +708,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 			GrowerContractYearDto dto = growerContractYearDao.fetch(growerContractYearId);
 
 			if (dto != null) {
-				result = landDataSyncFactory.getGrowerContractYear(dto);
+				result = landDataSyncRsrcFactory.getGrowerContractYear(dto);
 			}
 			else {
 				//This method is only used for testing. Return null instead of an error
@@ -764,7 +761,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 
 			String userId = getUserId(authentication);
 
-			landDataSyncFactory.updateGrowerContractYear(dto, model);
+			landDataSyncRsrcFactory.updateGrowerContractYear(dto, model);
 			growerContractYearDao.update(dto, userId);
 
 		} catch (DaoException e) {
@@ -787,7 +784,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 			
 			GrowerContractYearDto dto = new GrowerContractYearDto();
 
-			landDataSyncFactory.updateGrowerContractYear(dto, model);
+			landDataSyncRsrcFactory.updateGrowerContractYear(dto, model);
 			growerContractYearDao.insert(dto, userId);
 
 		} catch (DaoException e) {
@@ -858,13 +855,13 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 									
 									// No AnnualFieldDetail record in current crop year, so create.
 									currAfdDto = new AnnualFieldDetailDto();
-									annualFieldDetailFactory.createRolloverAnnualFieldDetail(currAfdDto, lastCfdDto.getLegalLandId(), lastCfdDto.getFieldId(), currGcyModel.getCropYear());
+									annualFieldDetailRsrcFactory.createRolloverAnnualFieldDetail(currAfdDto, lastCfdDto.getLegalLandId(), lastCfdDto.getFieldId(), currGcyModel.getCropYear());
 									annualFieldDetailDao.insert(currAfdDto, userId);
 								}
 								
 								// Create ContractedFieldDetail record.
 								ContractedFieldDetailDto currCfdDto = new ContractedFieldDetailDto();
-								contractedFieldDetailFactory.createRolloverContractedFieldDetail(currCfdDto, currAfdDto.getAnnualFieldDetailId(), currGcyModel.getGrowerContractYearId(), currDisplayOrder++, lastCfdDto.getIsLeasedInd());
+								contractedFieldDetailRsrcFactory.createRolloverContractedFieldDetail(currCfdDto, currAfdDto.getAnnualFieldDetailId(), currGcyModel.getGrowerContractYearId(), currDisplayOrder++, lastCfdDto.getIsLeasedInd());
 								contractedFieldDetailDao.insert(currCfdDto, userId);
 							}
 						}
@@ -1001,7 +998,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 			ContractedFieldDetailDto dto = contractedFieldDetailDao.fetchSimple(contractedFieldDetailId);
 		
 			if (dto != null) {
-				result = landDataSyncFactory.getContractedFieldDetail(dto);
+				result = landDataSyncRsrcFactory.getContractedFieldDetail(dto);
 			}
 			else {
 				//This method is only used for testing. Return null instead of an error
@@ -1309,7 +1306,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 				ifDto.setInventorySeededForages(inventorySeededForages);				
 			}
 
-			AnnualField field = inventoryContractFactory.createAnnualField(cfdDto, authentication);
+			AnnualField field = inventoryContractRsrcFactory.createAnnualField(cfdDto, authentication);
 
 			List<AnnualField> fields = new ArrayList<AnnualField>();			
 			fields.add(field);
@@ -1336,7 +1333,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 		
 			String userId = getUserId(authentication);
 			
-			landDataSyncFactory.updateContractedFieldDetail(dto, model);
+			landDataSyncRsrcFactory.updateContractedFieldDetail(dto, model);
 			contractedFieldDetailDao.updateSync(dto, userId);
 			
 		} catch (DaoException e) {
@@ -1359,7 +1356,7 @@ public class LandDataSyncServiceImpl implements LandDataSyncService {
 			
 			ContractedFieldDetailDto dto = new ContractedFieldDetailDto();
 			
-			landDataSyncFactory.updateContractedFieldDetail(dto, model);
+			landDataSyncRsrcFactory.updateContractedFieldDetail(dto, model);
 			contractedFieldDetailDao.insertDataSync(dto, userId);
 
 			//Insert inventory field if necessary

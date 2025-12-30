@@ -90,14 +90,14 @@ import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasInventoryService;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.AnnualFieldDetailFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.AnnualFieldFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.ContractedFieldDetailFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.FieldFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.InventoryContractFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.LegalLandFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.LegalLandFieldXrefFactory;
-import ca.bc.gov.mal.cirras.underwriting.services.model.factory.UwContractFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.AnnualFieldDetailRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.AnnualFieldRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.ContractedFieldDetailRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.FieldRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.InventoryContractRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandFieldXrefRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UwContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.services.reports.JasperReportService;
 import ca.bc.gov.mal.cirras.underwriting.services.reports.JasperReportServiceException;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.UnderwritingServiceHelper;
@@ -118,17 +118,14 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	private Properties applicationProperties;
 
 	// factories
-	private InventoryContractFactory inventoryContractFactory;
-	private AnnualFieldFactory annualFieldFactory;
-	private LegalLandFactory legalLandFactory;
-	private FieldFactory fieldFactory; 
-	private LegalLandFieldXrefFactory legalLandFieldXrefFactory;
-	private AnnualFieldDetailFactory annualFieldDetailFactory; 
-	private ContractedFieldDetailFactory contractedFieldDetailFactory; 
-	private UwContractFactory uwContractFactory;
-
-	// utils
-	private OutOfSync outOfSync;
+	private InventoryContractRsrcFactory inventoryContractRsrcFactory;
+	private AnnualFieldRsrcFactory annualFieldRsrcFactory;
+	private LegalLandRsrcFactory legalLandRsrcFactory;
+	private FieldRsrcFactory fieldRsrcFactory; 
+	private LegalLandFieldXrefRsrcFactory legalLandFieldXrefRsrcFactory;
+	private AnnualFieldDetailRsrcFactory annualFieldDetailRsrcFactory; 
+	private ContractedFieldDetailRsrcFactory contractedFieldDetailRsrcFactory; 
+	private UwContractRsrcFactory uwContractRsrcFactory;
 
 	// daos
 	private InventoryContractCommodityDao inventoryContractCommodityDao;
@@ -181,36 +178,36 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		this.applicationProperties = applicationProperties;
 	}
 
-	public void setInventoryContractFactory(InventoryContractFactory inventoryContractFactory) {
-		this.inventoryContractFactory = inventoryContractFactory;
+	public void setInventoryContractRsrcFactory(InventoryContractRsrcFactory inventoryContractRsrcFactory) {
+		this.inventoryContractRsrcFactory = inventoryContractRsrcFactory;
 	}
 
-	public void setAnnualFieldFactory(AnnualFieldFactory annualFieldFactory) {
-		this.annualFieldFactory = annualFieldFactory;
+	public void setAnnualFieldRsrcFactory(AnnualFieldRsrcFactory annualFieldRsrcFactory) {
+		this.annualFieldRsrcFactory = annualFieldRsrcFactory;
 	}
 
-	public void setLegalLandFactory(LegalLandFactory legalLandFactory) {
-		this.legalLandFactory = legalLandFactory;
+	public void setLegalLandRsrcFactory(LegalLandRsrcFactory legalLandRsrcFactory) {
+		this.legalLandRsrcFactory = legalLandRsrcFactory;
 	}
 
-	public void setFieldFactory(FieldFactory fieldFactory) {
-		this.fieldFactory = fieldFactory;
+	public void setFieldRsrcFactory(FieldRsrcFactory fieldRsrcFactory) {
+		this.fieldRsrcFactory = fieldRsrcFactory;
 	}
 
-	public void setLegalLandFieldXrefFactory(LegalLandFieldXrefFactory legalLandFieldXrefFactory) {
-		this.legalLandFieldXrefFactory = legalLandFieldXrefFactory;
+	public void setLegalLandFieldXrefRsrcFactory(LegalLandFieldXrefRsrcFactory legalLandFieldXrefRsrcFactory) {
+		this.legalLandFieldXrefRsrcFactory = legalLandFieldXrefRsrcFactory;
 	}
 
-	public void setAnnualFieldDetailFactory(AnnualFieldDetailFactory annualFieldDetailFactory) {
-		this.annualFieldDetailFactory = annualFieldDetailFactory;
+	public void setAnnualFieldDetailRsrcFactory(AnnualFieldDetailRsrcFactory annualFieldDetailRsrcFactory) {
+		this.annualFieldDetailRsrcFactory = annualFieldDetailRsrcFactory;
 	}
 
-	public void setContractedFieldDetailFactory(ContractedFieldDetailFactory contractedFieldDetailFactory) {
-		this.contractedFieldDetailFactory = contractedFieldDetailFactory;
+	public void setContractedFieldDetailRsrcFactory(ContractedFieldDetailRsrcFactory contractedFieldDetailRsrcFactory) {
+		this.contractedFieldDetailRsrcFactory = contractedFieldDetailRsrcFactory;
 	}
 
-	public void setUwContractFactory(UwContractFactory uwContractFactory) {
-		this.uwContractFactory = uwContractFactory;
+	public void setUwContractRsrcFactory(UwContractRsrcFactory uwContractRsrcFactory) {
+		this.uwContractRsrcFactory = uwContractRsrcFactory;
 	}
 
 	public void setInventoryContractCommodityDao(InventoryContractCommodityDao inventoryContractCommodityDao) {
@@ -299,10 +296,6 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	
 	public void setGrowerContractYearDao(GrowerContractYearDao growerContractYearDao) {
 		this.growerContractYearDao = growerContractYearDao;
-	}
-
-	public void setOutOfSync(OutOfSync outOfSync) {
-		this.outOfSync = outOfSync;
 	}
 
 	public void setCirrasPolicyService(CirrasPolicyService cirrasPolicyService) {
@@ -421,7 +414,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			throws DaoException {
 
 		InventoryContractDto dto = new InventoryContractDto();
-		inventoryContractFactory.updateDto(dto, inventoryContract, userId);
+		inventoryContractRsrcFactory.updateDto(dto, inventoryContract, userId);
 
 		dto.setInventoryContractGuid(null);
 
@@ -439,7 +432,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		updateCalculatedAcres(inventoryContractCommodity, fields);
 
 		InventoryContractCommodityDto dto = new InventoryContractCommodityDto();
-		inventoryContractFactory.updateDto(dto, inventoryContractCommodity);
+		inventoryContractRsrcFactory.updateDto(dto, inventoryContractCommodity);
 
 		dto.setInventoryContractCommodityGuid(null);
 		dto.setInventoryContractGuid(inventoryContractGuid);
@@ -650,7 +643,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	private String insertInventoryField(InventoryField inventoryField, String userId) throws DaoException {
 
 		InventoryFieldDto dto = new InventoryFieldDto();
-		inventoryContractFactory.updateDto(dto, inventoryField);
+		inventoryContractRsrcFactory.updateDto(dto, inventoryField);
 
 		dto.setInventoryFieldGuid(null);
 
@@ -663,7 +656,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			String userId) throws DaoException {
 
 		InventoryUnseededDto dto = new InventoryUnseededDto();
-		inventoryContractFactory.updateDto(dto, inventoryUnseeded);
+		inventoryContractRsrcFactory.updateDto(dto, inventoryUnseeded);
 
 		dto.setInventoryUnseededGuid(null);
 		dto.setInventoryFieldGuid(inventoryFieldGuid);
@@ -677,7 +670,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			String userId) throws DaoException {
 
 		InventorySeededGrainDto dto = new InventorySeededGrainDto();
-		inventoryContractFactory.updateDto(dto, inventorySeededGrain);
+		inventoryContractRsrcFactory.updateDto(dto, inventorySeededGrain);
 
 		dto.setInventorySeededGrainGuid(null);
 		dto.setInventoryFieldGuid(inventoryFieldGuid);
@@ -691,7 +684,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			String userId) throws DaoException {
 
 		InventorySeededForageDto dto = new InventorySeededForageDto();
-		inventoryContractFactory.updateDto(dto, inventorySeededForage);
+		inventoryContractRsrcFactory.updateDto(dto, inventorySeededForage);
 
 		dto.setInventorySeededForageGuid(null);
 		dto.setInventoryFieldGuid(inventoryFieldGuid);
@@ -705,7 +698,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			String userId) throws DaoException {
 
 		UnderwritingCommentDto dto = new UnderwritingCommentDto();
-		inventoryContractFactory.updateDto(dto, underwritingComment);
+		inventoryContractRsrcFactory.updateDto(dto, underwritingComment);
 
 		dto.setUnderwritingCommentGuid(null);
 		dto.setAnnualFieldDetailId(annualFieldDetailId);
@@ -909,7 +902,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 			if (llfxDto == null) {
 				llfxDto = new LegalLandFieldXrefDto();
-				legalLandFieldXrefFactory.createLegalLandFieldXref(llfxDto, annualField);
+				legalLandFieldXrefRsrcFactory.createLegalLandFieldXref(llfxDto, annualField);
 				legalLandFieldXrefDao.insert(llfxDto, userId);
 			}
 		}
@@ -994,7 +987,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	private void updateContractedFieldDetails(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract, 
 			ContractedFieldDetailDto dto, String userId) throws DaoException, NotFoundDaoException {
 		
-		contractedFieldDetailFactory.createContractedFieldDetail(dto, annualField, inventoryContract);
+		contractedFieldDetailRsrcFactory.createContractedFieldDetail(dto, annualField, inventoryContract);
 		contractedFieldDetailDao.update(dto, userId);
 		
 	}
@@ -1094,7 +1087,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 		// Insert Field
 		FieldDto fieldDto = new FieldDto();
-		fieldFactory.createField(fieldDto, annualField);
+		fieldRsrcFactory.createField(fieldDto, annualField);
 		fieldDao.insert(fieldDto, userId);
 		annualField.setFieldId(fieldDto.getFieldId());
 
@@ -1119,7 +1112,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 	private void insertLegalLandFieldXref(AnnualField annualField, String userId) throws DaoException {
 		LegalLandFieldXrefDto legalLandFieldXrefDto = new LegalLandFieldXrefDto();
-		legalLandFieldXrefFactory.createLegalLandFieldXref(legalLandFieldXrefDto, annualField);
+		legalLandFieldXrefRsrcFactory.createLegalLandFieldXref(legalLandFieldXrefDto, annualField);
 		legalLandFieldXrefDao.insert(legalLandFieldXrefDto, userId);
 	}
 
@@ -1136,7 +1129,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			primaryReferenceTypeCode = PrimaryReferenceTypeCode.IDENTIFIER.toString();
 			landIdentifierTypeCode = LandIdentifierTypeCode.PID.toString();
 		}
-		legalLandFactory.createQuickLegalLand(legalLandDto, annualField, primaryReferenceTypeCode, landIdentifierTypeCode);
+		legalLandRsrcFactory.createQuickLegalLand(legalLandDto, annualField, primaryReferenceTypeCode, landIdentifierTypeCode);
 		legalLandDao.insert(legalLandDto, userId);
 		annualField.setLegalLandId(legalLandDto.getLegalLandId());
 	}
@@ -1164,7 +1157,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		logger.debug("<insertAnnualFieldDetail");
 		
 		AnnualFieldDetailDto annualFieldDetailDto = new AnnualFieldDetailDto();
-		annualFieldDetailFactory.createAnnualFieldDetail(annualFieldDetailDto, annualField);
+		annualFieldDetailRsrcFactory.createAnnualFieldDetail(annualFieldDetailDto, annualField);
 		annualFieldDetailDao.insert(annualFieldDetailDto, userId);
 		
 		annualField.setAnnualFieldDetailId(annualFieldDetailDto.getAnnualFieldDetailId());
@@ -1179,7 +1172,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		
 		// Insert Contracted Field Details
 		ContractedFieldDetailDto contractedFieldDetailDto = new ContractedFieldDetailDto();
-		contractedFieldDetailFactory.createContractedFieldDetail(contractedFieldDetailDto, annualField, inventoryContract);
+		contractedFieldDetailRsrcFactory.createContractedFieldDetail(contractedFieldDetailDto, annualField, inventoryContract);
 		contractedFieldDetailDto.setContractedFieldDetailId(null);
 
 		contractedFieldDetailDao.insert(contractedFieldDetailDto, userId);
@@ -1197,7 +1190,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			throw new NotFoundException("Did not find the annual field: " + annualField.getContractedFieldDetailId());
 		}
 
-		annualFieldFactory.updateDto(dto, annualField);
+		annualFieldRsrcFactory.updateDto(dto, annualField);
 
 		contractedFieldDetailDao.update(dto, userId);
 	}
@@ -1256,7 +1249,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				inventoryContractDtos.add(invContractDto);
 			}
 
-			results = inventoryContractFactory.getInventoryContractList(inventoryContractDtos, cropYear,
+			results = inventoryContractRsrcFactory.getInventoryContractList(inventoryContractDtos, cropYear,
 					insurancePlanId, officeId, policyStatusCode, policyNumber, growerInfo, sortColumn,
 					inventoryContractGuids, factoryContext, webAdeAuthentication);
 		}
@@ -1406,7 +1399,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 		loadCommoditiesAndFields(dto, loadCommentsAndAssociatedPolicies);
 
-		return inventoryContractFactory.getInventoryContract(dto, factoryContext, authentication);
+		return inventoryContractRsrcFactory.getInventoryContract(dto, factoryContext, authentication);
 	}
 
 	private void loadCommoditiesAndFields(InventoryContractDto dto, Boolean loadCommentsAndAssociatedPolicies) throws DaoException {
@@ -1752,7 +1745,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		if (dto != null) {
 			// Check that user is authorized to delete this comment.
 			// Note that this could return false if the current user or create user cannot be determined.
-			Boolean userCanDeleteComment = inventoryContractFactory.checkUserCanDeleteComment(dto, authentication);
+			Boolean userCanDeleteComment = inventoryContractRsrcFactory.checkUserCanDeleteComment(dto, authentication);
 			if ( !Boolean.TRUE.equals(userCanDeleteComment) ) {
 				logger.error("User " + userId + " attempted to delete comment " + dto.getUnderwritingCommentGuid() + " created by " + dto.getCreateUser());
 				throw new ServiceException("The current user is not authorized to delete this comment.");
@@ -1778,7 +1771,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			boolean canDelete = true;
 			if ( seededGrains != null) {
 				for (InventorySeededGrain seededGrain : seededGrains) {
-					if (!inventoryContractFactory.checkEmptyInventorySeededGrain(seededGrain) && !Boolean.TRUE.equals(seededGrain.getDeletedByUserInd())) { 
+					if (!inventoryContractRsrcFactory.checkEmptyInventorySeededGrain(seededGrain) && !Boolean.TRUE.equals(seededGrain.getDeletedByUserInd())) { 
 						canDelete = false;
 						break;
 					}
@@ -1814,11 +1807,11 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			if (tryDelete) { 
 				// Check if there is any user-entered unseeded or seeded grain data. If not, then planting can be deleted.
 				boolean canDelete = true;
-				if (unseeded != null && !inventoryContractFactory.checkEmptyInventoryUnseeded(unseeded) && !Boolean.TRUE.equals(unseeded.getDeletedByUserInd()) ) {
+				if (unseeded != null && !inventoryContractRsrcFactory.checkEmptyInventoryUnseeded(unseeded) && !Boolean.TRUE.equals(unseeded.getDeletedByUserInd()) ) {
 					canDelete = false;
 				} else {
 					for (InventorySeededGrain seededGrain : seededGrains) {
-						if (!inventoryContractFactory.checkEmptyInventorySeededGrain(seededGrain) && !Boolean.TRUE.equals(seededGrain.getDeletedByUserInd())) { 
+						if (!inventoryContractRsrcFactory.checkEmptyInventorySeededGrain(seededGrain) && !Boolean.TRUE.equals(seededGrain.getDeletedByUserInd())) { 
 							canDelete = false;
 							break;
 						}
@@ -1975,7 +1968,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 					"Did not find the inventory contract: " + inventoryContract.getInventoryContractGuid());
 		}
 
-		inventoryContractFactory.updateDto(dto, inventoryContract, userId);
+		inventoryContractRsrcFactory.updateDto(dto, inventoryContract, userId);
 
 		inventoryContractDao.update(dto, userId);
 	}
@@ -2070,7 +2063,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		// Calculate calculated acres totals
 		updateCalculatedAcres(inventoryContractCommodity, fields);
 
-		inventoryContractFactory.updateDto(dto, inventoryContractCommodity);
+		inventoryContractRsrcFactory.updateDto(dto, inventoryContractCommodity);
 
 		inventoryContractCommodityDao.update(dto, userId);
 
@@ -2093,7 +2086,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		} else {
 			inventoryFieldGuid = dto.getInventoryFieldGuid();
 
-			inventoryContractFactory.updateDto(dto, inventoryField);
+			inventoryContractRsrcFactory.updateDto(dto, inventoryField);
 
 			inventoryFieldDao.update(dto, userId);
 		}
@@ -2115,7 +2108,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			insertInventoryUnseeded(inventoryUnseeded, inventoryFieldGuid, userId);
 		} else {
 
-			inventoryContractFactory.updateDto(dto, inventoryUnseeded);
+			inventoryContractRsrcFactory.updateDto(dto, inventoryUnseeded);
 
 			inventoryUnseededDao.update(dto, userId);
 		}
@@ -2135,7 +2128,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			insertInventorySeededGrain(inventorySeededGrain, inventoryFieldGuid, userId);
 		} else {
 
-			inventoryContractFactory.updateDto(dto, inventorySeededGrain);
+			inventoryContractRsrcFactory.updateDto(dto, inventorySeededGrain);
 
 			inventorySeededGrainDao.update(dto, userId);
 		}
@@ -2157,7 +2150,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			
 		} else {
 
-			inventoryContractFactory.updateDto(dto, inventorySeededForage);
+			inventoryContractRsrcFactory.updateDto(dto, inventorySeededForage);
 
 			inventorySeededForageDao.update(dto, userId);
 		}
@@ -2232,7 +2225,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 				// Check that user is authorized to edit this comment.
 				// Note that this could return null if the current user or create user cannot be determined.
-				Boolean userCanEditComment = inventoryContractFactory.checkUserCanEditComment(dto, authentication);
+				Boolean userCanEditComment = inventoryContractRsrcFactory.checkUserCanEditComment(dto, authentication);
 				if ( !Boolean.TRUE.equals(userCanEditComment) ) {
 					logger.error("User " + userId + " attempted to edit comment " + underwritingComment.getUnderwritingCommentGuid() + " created by " + dto.getCreateUser());
 					throw new ServiceException("The current user is not authorized to edit this comment.");
@@ -2240,7 +2233,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				
 			}
 			
-			inventoryContractFactory.updateDto(dto, underwritingComment);
+			inventoryContractRsrcFactory.updateDto(dto, underwritingComment);
 
 			underwritingCommentDao.update(dto, userId);
 		}
@@ -2342,7 +2335,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			}
 
 			// Create Inventory Contract
-			result = inventoryContractFactory.createRolloverInventoryContract(policyDto, fields, factoryContext,
+			result = inventoryContractRsrcFactory.createRolloverInventoryContract(policyDto, fields, factoryContext,
 					authentication);
 
 		} catch (DaoException e) {
@@ -2367,7 +2360,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		if (plantings != null && plantings.size() > 0) {
 			// If there is inventory for the current year, Load all associated data for it
 			loadInventoryFieldData(cfdDto, plantings, true);
-			annualField = inventoryContractFactory.createAnnualField(cfdDto, authentication);
+			annualField = inventoryContractRsrcFactory.createAnnualField(cfdDto, authentication);
 		} else {
 			// Get the seeded crop data of the PREVIOUS year
 			List<InventoryFieldDto> prevYearPlantings = inventoryFieldDao.selectForRollover(cfdDto.getFieldId(),
@@ -2403,10 +2396,10 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 					}
 				}
 
-				annualField = inventoryContractFactory.addRolloverAnnualField(insurancePlanId, cfdDto, authentication);
+				annualField = inventoryContractRsrcFactory.addRolloverAnnualField(insurancePlanId, cfdDto, authentication);
 			} else {
 				// Create default planting for the field
-				annualField = inventoryContractFactory.createDefaultAnnualField(insurancePlanId, cfdDto, authentication);
+				annualField = inventoryContractRsrcFactory.createDefaultAnnualField(insurancePlanId, cfdDto, authentication);
 			}
 		}
 		return annualField;
@@ -2519,7 +2512,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 					pageNumber, 
 					pageRowCount);
 
-			results = legalLandFactory.getLegalLandList(
+			results = legalLandRsrcFactory.getLegalLandList(
 					dtos, 
 					legalLocation, 
 					primaryPropertyIdentifier, 
@@ -2665,7 +2658,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				}
 			}
 
-			result = uwContractFactory.getAddFieldValidation(warnings, errors, policyId, fieldId, transferFromPolicyId,
+			result = uwContractRsrcFactory.getAddFieldValidation(warnings, errors, policyId, fieldId, transferFromPolicyId,
 					factoryContext, authentication);
 
 		} catch (DaoException e) {
@@ -2750,7 +2743,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 						// Check if the planting is empty.
 						List<InventoryUnseededDto> inventoryUnseededs = inventoryUnseededDao.select(ifdDto.getInventoryFieldGuid());
 						for (InventoryUnseededDto iuDto : inventoryUnseededs ) {
-							if ( !inventoryContractFactory.checkEmptyInventoryUnseeded(iuDto) ) {
+							if ( !inventoryContractRsrcFactory.checkEmptyInventoryUnseeded(iuDto) ) {
 								isEmpty = false;
 								break;
 							}
@@ -2760,7 +2753,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 						if (isEmpty && ifdDto.getInsurancePlanId().equals(InventoryServiceEnums.InsurancePlans.GRAIN.getInsurancePlanId())) {
 							List<InventorySeededGrainDto> inventorySeededGrains = inventorySeededGrainDao.select(ifdDto.getInventoryFieldGuid());
 							for (InventorySeededGrainDto isgDto : inventorySeededGrains ) {
-								if ( !inventoryContractFactory.checkEmptyInventorySeededGrain(isgDto) ) {
+								if ( !inventoryContractRsrcFactory.checkEmptyInventorySeededGrain(isgDto) ) {
 									isEmpty = false;
 									break;
 								}
@@ -2808,7 +2801,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				}
 			}
 			
-			result = uwContractFactory.getRemoveFieldValidation(
+			result = uwContractRsrcFactory.getRemoveFieldValidation(
 					true, // Remove from Policy is currently always allowed
 					deleteFieldErrors.isEmpty(),  // Delete is allowed if there were no errors.
 					removeFromPolicyWarnings, 
@@ -2952,7 +2945,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				otherLegalData = llDto;
 			}
 
-			result = uwContractFactory.getRenameLegalValidation(isWarningLegalsWithSameLoc, legalsWithSameLocMsg,
+			result = uwContractRsrcFactory.getRenameLegalValidation(isWarningLegalsWithSameLoc, legalsWithSameLocMsg,
 					legalsWithSameLocList.getResults(), isWarningOtherFieldOnPolicy, otherFieldOnPolicyMsg, otherFieldOnPolicyList,
 					isWarningFieldOnOtherPolicy, fieldOnOtherPolicyMsg, fieldOnOtherPolicyList, isWarningOtherLegalData,
 					otherLegalDataMsg, otherLegalData, policyId, annualFieldDetailId, newLegalLocation, primaryPropertyIdentifier, factoryContext,
@@ -3071,7 +3064,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				}
 			}
 
-			result = uwContractFactory.getReplaceLegalValidation(isWarningFieldOnOtherPolicy, fieldOnOtherPolicyMsg,
+			result = uwContractRsrcFactory.getReplaceLegalValidation(isWarningFieldOnOtherPolicy, fieldOnOtherPolicyMsg,
 					isWarningFieldHasOtherLegalLand, fieldHasOtherLegalLandMsg, otherLegalLandOfFieldList,
 					isWarningOtherFieldsOnLegal, otherFieldsOnLegalMsg, otherFieldsOnLegalLandDtos, policyId,
 					annualFieldDetailId, fieldLabel, legalLandId, factoryContext, authentication);
