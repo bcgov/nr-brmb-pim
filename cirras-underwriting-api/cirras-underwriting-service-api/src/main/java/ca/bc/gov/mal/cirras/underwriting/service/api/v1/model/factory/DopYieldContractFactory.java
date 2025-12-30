@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory;
+package ca.bc.gov.mal.cirras.underwriting.services.model.factory;
 
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
@@ -6,25 +6,25 @@ import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 
 import java.util.List;
 
-import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContract;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodity;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldContractCommodityForage;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldForageCut;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldGrain;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollup;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.DopYieldFieldRollupForage;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractCommodityForageDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldContractDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldForageDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldRollupForageDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededForageDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
+import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContract;
+import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityForage;
+import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForageCut;
+import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldGrain;
+import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollup;
+import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollupForage;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityForageDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldForageDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldRollupDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldRollupForageDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededForageDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyDto;
 
 public interface DopYieldContractFactory {
 

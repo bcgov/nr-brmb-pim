@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl;
+package ca.bc.gov.mal.cirras.underwriting.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,23 +7,23 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.model.v1.CropCommodity;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.CropCommodityList;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CommodityTypeCodeDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CropCommodityDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.CommodityTypeCodeDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.CropCommodityDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CropVarietyDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CropVarietyInsPlantInsXrefDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.CropVarietyDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.CropVarietyInsPlantInsXrefDao;
+import ca.bc.gov.mal.cirras.underwriting.data.models.CropCommodity;
+import ca.bc.gov.mal.cirras.underwriting.data.models.CropCommodityList;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeCodeDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CropCommodityDto;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.CommodityTypeCodeDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropCommodityDao;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyInsPlantInsXrefDto;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropVarietyDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropVarietyInsPlantInsXrefDao;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasCommodityService;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.CommodityFactory;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.ModelValidator;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasCommodityService;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.CommodityFactory;
+import ca.bc.gov.mal.cirras.underwriting.services.validation.ModelValidator;
 
 
 public class CirrasCommodityServiceImpl implements CirrasCommodityService {

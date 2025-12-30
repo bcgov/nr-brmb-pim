@@ -1,7 +1,7 @@
-package ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory;
+package ca.bc.gov.mal.cirras.underwriting.services.model.factory;
 
-import ca.bc.gov.mal.cirras.underwriting.model.v1.LegalLandRiskArea;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandRiskAreaXrefDto;
+import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandRiskArea;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandRiskAreaXrefDto;
 
 public interface LegalLandRiskAreaXrefFactory {
 	

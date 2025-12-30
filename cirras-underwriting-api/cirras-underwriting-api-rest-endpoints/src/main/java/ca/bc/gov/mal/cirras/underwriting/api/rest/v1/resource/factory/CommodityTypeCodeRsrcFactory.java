@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory;
+package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -12,14 +12,14 @@ import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFa
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.CommodityTypeCodeListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.CommodityTypeCodeListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SyncCommodityTypeCodeRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.CommodityTypeCode;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.CommodityTypeCodeList;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CommodityTypeCodeDto;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.CommodityTypeCodeFactory;
+import ca.bc.gov.mal.cirras.underwriting.controllers.CommodityTypeCodeListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.CommodityTypeCodeListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeCodeRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
+import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeCode;
+import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeCodeList;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeCodeDto;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.CommodityTypeCodeFactory;
 
 public class CommodityTypeCodeRsrcFactory extends BaseResourceFactory implements CommodityTypeCodeFactory { 
 

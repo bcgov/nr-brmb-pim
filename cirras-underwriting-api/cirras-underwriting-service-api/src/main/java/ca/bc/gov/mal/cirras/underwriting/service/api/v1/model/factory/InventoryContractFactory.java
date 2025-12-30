@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory;
+package ca.bc.gov.mal.cirras.underwriting.services.model.factory;
 
 import java.util.List;
 
@@ -6,31 +6,31 @@ import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryBerries;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContract;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodity;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodityBerries;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractList;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryCoverageTotalForage;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryField;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededForage;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventorySeededGrain;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryUnseeded;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryBerriesDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityBerriesDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractCommodityDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryContractDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryCoverageTotalForageDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryFieldDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededForageDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventorySeededGrainDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.InventoryUnseededDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingCommentDto;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
+import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryBerries;
+import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContract;
+import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodityBerries;
+import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractList;
+import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryCoverageTotalForage;
+import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
+import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededForage;
+import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededGrain;
+import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryUnseeded;
+import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryCoverageTotalForageDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryFieldDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededForageDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededGrainDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryUnseededDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.UnderwritingCommentDto;
 
 public interface InventoryContractFactory {
 

@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory;
+package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -12,19 +12,19 @@ import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFa
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.AnnualFieldListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.AnnualFieldRolloverInvEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualFieldList;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.PolicySimple;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.AnnualFieldFactory;
+import ca.bc.gov.mal.cirras.underwriting.controllers.AnnualFieldListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.AnnualFieldRolloverInvEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
+import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
+import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualFieldList;
+import ca.bc.gov.mal.cirras.underwriting.data.models.PolicySimple;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.FieldDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.AnnualFieldFactory;
 
 public class AnnualFieldRsrcFactory extends BaseResourceFactory implements AnnualFieldFactory { 
 	

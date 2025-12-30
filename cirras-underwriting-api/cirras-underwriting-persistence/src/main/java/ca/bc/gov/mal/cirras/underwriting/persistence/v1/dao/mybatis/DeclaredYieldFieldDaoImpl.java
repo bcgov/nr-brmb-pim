@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis;
+package ca.bc.gov.mal.cirras.underwriting.data.repositories;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.DeclaredYieldFieldDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.mybatis.mapper.DeclaredYieldFieldMapper;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.DeclaredYieldFieldDto;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.mapper.DeclaredYieldFieldMapper;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldDto;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.BaseDao;

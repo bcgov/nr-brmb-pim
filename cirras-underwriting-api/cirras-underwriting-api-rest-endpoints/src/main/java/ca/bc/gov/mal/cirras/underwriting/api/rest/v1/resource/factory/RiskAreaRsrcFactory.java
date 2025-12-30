@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory;
+package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -12,14 +12,14 @@ import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFa
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.RiskAreaListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.RiskAreaListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.RiskAreaRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.RiskArea;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.RiskAreaList;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.RiskAreaDto;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.RiskAreaFactory;
+import ca.bc.gov.mal.cirras.underwriting.controllers.RiskAreaListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.RiskAreaListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.RiskAreaRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
+import ca.bc.gov.mal.cirras.underwriting.data.models.RiskArea;
+import ca.bc.gov.mal.cirras.underwriting.data.models.RiskAreaList;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.RiskAreaDto;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.RiskAreaFactory;
 
 public class RiskAreaRsrcFactory extends BaseResourceFactory implements RiskAreaFactory { 
 

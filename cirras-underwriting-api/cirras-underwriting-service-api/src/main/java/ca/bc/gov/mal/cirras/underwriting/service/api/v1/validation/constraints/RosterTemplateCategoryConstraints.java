@@ -1,8 +1,8 @@
-package ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.constraints;
+package ca.bc.gov.mal.cirras.underwriting.services.validation.constraints;
 
 import org.springframework.format.annotation.NumberFormat;
 
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.Errors;
+import ca.bc.gov.mal.cirras.underwriting.services.validation.Errors;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;

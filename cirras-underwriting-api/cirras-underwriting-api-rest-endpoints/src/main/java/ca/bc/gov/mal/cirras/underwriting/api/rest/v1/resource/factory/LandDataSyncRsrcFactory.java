@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory;
+package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -11,33 +11,33 @@ import java.util.Map;
 import jakarta.ws.rs.core.UriBuilder;
 
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.AnnualFieldDetailEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.ContractedFieldDetailEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.FieldEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.GrowerContractYearSyncEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldDetailRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.ContractedFieldDetailRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.FieldRsrc;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualFieldDetail;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.ContractedFieldDetail;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.Field;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.GrowerContractYear;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.GrowerContractYearSyncRsrc;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.AnnualFieldDetailDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerContractYearDto;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.LegalLandSyncEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandRsrc;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.LegalLand;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandDto;
+import ca.bc.gov.mal.cirras.underwriting.controllers.AnnualFieldDetailEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.ContractedFieldDetailEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.FieldEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.GrowerContractYearSyncEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldDetailRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ContractedFieldDetailRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.FieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualFieldDetail;
+import ca.bc.gov.mal.cirras.underwriting.data.models.ContractedFieldDetail;
+import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
+import ca.bc.gov.mal.cirras.underwriting.data.models.GrowerContractYear;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerContractYearSyncRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.AnnualFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.FieldDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.GrowerContractYearDto;
+import ca.bc.gov.mal.cirras.underwriting.controllers.LegalLandSyncEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandDto;
 
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.LegalLandFieldXrefEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandFieldXrefRsrc;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.LegalLandFieldXref;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandFieldXrefDto;
+import ca.bc.gov.mal.cirras.underwriting.controllers.LegalLandFieldXrefEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandFieldXrefRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandFieldXref;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandFieldXrefDto;
 
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.LandDataSyncFactory;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.LandDataSyncFactory;
 
 public class LandDataSyncRsrcFactory extends BaseResourceFactory implements LandDataSyncFactory { 
 	

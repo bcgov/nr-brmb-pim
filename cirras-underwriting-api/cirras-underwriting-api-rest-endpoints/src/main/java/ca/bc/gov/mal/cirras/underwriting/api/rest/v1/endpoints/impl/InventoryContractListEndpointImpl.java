@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl;
+package ca.bc.gov.mal.cirras.underwriting.controllers.impl;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -16,13 +16,13 @@ import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
 import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
 import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.InventoryContractListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.parameters.PagingQueryParameters;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.parameters.validation.ParameterValidator;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.InventoryContractListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.InventoryContractRsrc;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasInventoryService;
+import ca.bc.gov.mal.cirras.underwriting.controllers.InventoryContractListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.controllers.parameters.PagingQueryParameters;
+import ca.bc.gov.mal.cirras.underwriting.controllers.parameters.validation.ParameterValidator;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasInventoryService;
 
 public class InventoryContractListEndpointImpl extends BaseEndpointsImpl implements InventoryContractListEndpoint {
 

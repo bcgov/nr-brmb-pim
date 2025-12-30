@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.impl;
+package ca.bc.gov.mal.cirras.underwriting.controllers.impl;
 
 import java.net.URI;
 
@@ -13,12 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
 import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UnderwritingYearListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.parameters.validation.ParameterValidator;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UnderwritingYearListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UnderwritingYearRsrc;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasMaintenanceService;
+import ca.bc.gov.mal.cirras.underwriting.controllers.UnderwritingYearListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.controllers.parameters.validation.ParameterValidator;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.UnderwritingYearListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.UnderwritingYearRsrc;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasMaintenanceService;
 
 public class UnderwritingYearListEndpointImpl extends BaseEndpointsImpl implements UnderwritingYearListEndpoint {
 

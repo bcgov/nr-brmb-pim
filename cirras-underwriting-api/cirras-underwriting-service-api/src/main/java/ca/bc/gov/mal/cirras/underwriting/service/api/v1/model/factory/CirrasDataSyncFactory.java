@@ -1,31 +1,31 @@
-package ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory;
+package ca.bc.gov.mal.cirras.underwriting.services.model.factory;
 
 import java.util.Date;
 
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CommodityTypeCodeDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CommodityTypeVarietyXrefDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContactDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContactEmailDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContactPhoneDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CropCommodityDto;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.SyncCommodityVariety;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CropVarietyDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerContactDto;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.CommodityTypeCode;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.CommodityTypeVarietyXref;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.Contact;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.ContactEmail;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.ContactPhone;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.Grower;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.GrowerContact;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.Policy;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.Product;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.SyncCode;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GrowerDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.OfficeDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyStatusCodeDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ProductDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeCodeDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeVarietyXrefDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ContactDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ContactEmailDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ContactPhoneDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CropCommodityDto;
+import ca.bc.gov.mal.cirras.underwriting.data.models.SyncCommodityVariety;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.GrowerContactDto;
+import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeCode;
+import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeVarietyXref;
+import ca.bc.gov.mal.cirras.underwriting.data.models.Contact;
+import ca.bc.gov.mal.cirras.underwriting.data.models.ContactEmail;
+import ca.bc.gov.mal.cirras.underwriting.data.models.ContactPhone;
+import ca.bc.gov.mal.cirras.underwriting.data.models.Grower;
+import ca.bc.gov.mal.cirras.underwriting.data.models.GrowerContact;
+import ca.bc.gov.mal.cirras.underwriting.data.models.Policy;
+import ca.bc.gov.mal.cirras.underwriting.data.models.Product;
+import ca.bc.gov.mal.cirras.underwriting.data.models.SyncCode;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.GrowerDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.OfficeDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyStatusCodeDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ProductDto;
 
 public interface CirrasDataSyncFactory {
 

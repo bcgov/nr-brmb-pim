@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.4.3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_DOP_Forage_Totals" pageWidth="150" pageHeight="40" columnWidth="150" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" uuid="af98ce7b-1e43-42ba-a845-8f6e8ea6fecc">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<parameter name="p_contract_id" class="java.lang.Integer"/>
+	<parameter name="p_crop_year" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select 
+	 case isf.commodity_type_code
+			when 'PERENNIAL' then 1
+			when 'Silage Corn' then 3
+			end as display_order
+	, case isf.commodity_type_code
+			when 'PERENNIAL' then 'Forage - Perennial'
+			else commodity_type_code
+			end as commodity_type
+	, sum(isf.field_acres) as total_acres
+from inventory_seeded_forage isf 
+join inventory_field ifld on ifld.inventory_field_guid = isf.inventory_field_guid
+join annual_field_detail afd on afd.field_id = ifld.field_id and afd.crop_year = ifld.crop_year
+join contracted_field_detail cfd on cfd.annual_field_detail_id = afd.annual_field_detail_id
+join grower_contract_year gcy on gcy.grower_contract_year_id = cfd.grower_contract_year_id
+where isf.commodity_type_code in ('PERENNIAL', 'Silage Corn' )
+and isf.is_quantity_insurable_ind = 'Y'
+and gcy.insurance_plan_id = ifld.insurance_plan_id
+and gcy.contract_id = $P{p_contract_id} 
+and gcy.crop_year = $P{p_crop_year}
+group by commodity_type_code
+having sum(field_acres) > 0
+union
+select 
+	2 as display_order
+	, 'Forage - Annual' as commodity_type
+	, sum(isf.field_acres) as total_acres
+from inventory_seeded_forage isf
+join inventory_field ifld on ifld.inventory_field_guid = isf.inventory_field_guid
+join annual_field_detail afd on afd.field_id = ifld.field_id and afd.crop_year = ifld.crop_year
+join contracted_field_detail cfd on cfd.annual_field_detail_id = afd.annual_field_detail_id
+join grower_contract_year gcy on gcy.grower_contract_year_id = cfd.grower_contract_year_id
+where isf.commodity_type_code in ('Spring Annual', 'Winter Annual' )
+and isf.is_quantity_insurable_ind = 'Y'
+and gcy.insurance_plan_id = ifld.insurance_plan_id
+and gcy.contract_id = $P{p_contract_id} 
+and gcy.crop_year = $P{p_crop_year}
+having sum(field_acres) > 0
+order by display_order]]>
+	</queryString>
+	<field name="display_order" class="java.lang.Short"/>
+	<field name="commodity_type" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="commodity_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="commodity_name"/>
+	</field>
+	<field name="total_acres" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="total_field_acres"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_field_acres"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_coverage_total_forage"/>
+		<fieldDescription><![CDATA[Total Acres is the number of acres for each commodity type]]></fieldDescription>
+	</field>
+	<group name="Group1">
+		<groupHeader>
+			<band height="14">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<staticText>
+					<reportElement x="0" y="0" width="100" height="14" uuid="a6fd31a3-ae8b-4988-9138-60f91e9009d1">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="2">
+						<pen lineWidth="1.0" lineColor="#000000"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Coverage Type]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="100" y="0" width="50" height="14" uuid="0a842ed4-5cd9-4af2-8fc5-418b2ff5270c">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<pen lineWidth="1.0" lineColor="#000000"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Acres]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="0" y="0" width="100" height="14" uuid="0ce68bbb-9faa-4f4e-bcc2-8ef0697f52dc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{commodity_type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="50" height="14" uuid="e3037202-e95e-4517-ab0d-cf7444903cfc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box padding="1">
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_acres} == null ? "" : ((double)$F{total_acres}.intValue() == $F{total_acres}.doubleValue() ? $F{total_acres}.intValue() + "" : $F{total_acres}.toString()  )]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

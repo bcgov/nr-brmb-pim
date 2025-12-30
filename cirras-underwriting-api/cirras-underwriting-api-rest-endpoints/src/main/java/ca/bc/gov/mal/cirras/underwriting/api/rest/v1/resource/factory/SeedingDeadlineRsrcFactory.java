@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory;
+package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -12,14 +12,14 @@ import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFa
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.InventoryContractListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.SeedingDeadlineListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.SeedingDeadlineListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.SeedingDeadline;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.SeedingDeadlineList;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.SeedingDeadlineDto;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.SeedingDeadlineFactory;
+import ca.bc.gov.mal.cirras.underwriting.controllers.InventoryContractListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.SeedingDeadlineListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SeedingDeadlineListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
+import ca.bc.gov.mal.cirras.underwriting.data.models.SeedingDeadline;
+import ca.bc.gov.mal.cirras.underwriting.data.models.SeedingDeadlineList;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.SeedingDeadlineDto;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.SeedingDeadlineFactory;
 
 public class SeedingDeadlineRsrcFactory extends BaseResourceFactory implements SeedingDeadlineFactory { 
 

@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory;
+package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -12,14 +12,14 @@ import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFa
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.YieldMeasUnitConversionListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.YieldMeasUnitConversionListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.YieldMeasUnitConversion;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.YieldMeasUnitConversionList;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.YieldMeasUnitConversionDto;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.YieldMeasUnitConversionFactory;
+import ca.bc.gov.mal.cirras.underwriting.controllers.YieldMeasUnitConversionListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.YieldMeasUnitConversionListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
+import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitConversion;
+import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitConversionList;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.YieldMeasUnitConversionDto;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.YieldMeasUnitConversionFactory;
 
 public class YieldMeasUnitConversionRsrcFactory extends BaseResourceFactory implements YieldMeasUnitConversionFactory { 
 

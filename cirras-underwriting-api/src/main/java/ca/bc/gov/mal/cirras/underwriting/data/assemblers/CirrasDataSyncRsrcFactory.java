@@ -1,0 +1,742 @@
+package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
+
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import jakarta.ws.rs.core.UriBuilder;
+
+import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityVarietyRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.models.SyncCommodityVariety;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.GrowerContactDto;
+import ca.bc.gov.mal.cirras.underwriting.controllers.SyncCommodityVarietyEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeCodeDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeVarietyXrefDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ContactDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ContactEmailDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ContactPhoneDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CropCommodityDto;
+import ca.bc.gov.mal.cirras.underwriting.controllers.ContactEmailEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.ContactEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.ContactPhoneEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.GrowerContactEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.GrowerEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.PolicyEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.ProductEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.SyncCodeEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.SyncCommodityTypeCodeEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.SyncCommodityTypeVarietyXrefEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactEmailRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactPhoneRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerContactRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.PolicyRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ProductRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeCodeRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeVarietyXrefRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeCode;
+import ca.bc.gov.mal.cirras.underwriting.data.models.CommodityTypeVarietyXref;
+import ca.bc.gov.mal.cirras.underwriting.data.models.Contact;
+import ca.bc.gov.mal.cirras.underwriting.data.models.ContactEmail;
+import ca.bc.gov.mal.cirras.underwriting.data.models.ContactPhone;
+import ca.bc.gov.mal.cirras.underwriting.data.models.Grower;
+import ca.bc.gov.mal.cirras.underwriting.data.models.GrowerContact;
+import ca.bc.gov.mal.cirras.underwriting.data.models.Policy;
+import ca.bc.gov.mal.cirras.underwriting.data.models.Product;
+import ca.bc.gov.mal.cirras.underwriting.data.models.SyncCode;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.GrowerDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.OfficeDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyStatusCodeDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ProductDto;
+
+public class CirrasDataSyncRsrcFactory extends BaseResourceFactory { 
+	
+	
+	//======================================================================================================================
+	// Policy Status Code
+	//======================================================================================================================
+
+	
+	public void updatePolicyStatusCodeExpiryDate(PolicyStatusCodeDto dto, Date dataSyncTransDate) {
+		//Don't delete the record but set expiry date to today
+		dto.setExpiryDate(new Date());
+		dto.setDataSyncTransDate(dataSyncTransDate);
+	}
+	
+	
+	public PolicyStatusCodeDto createPolicyStatusCode(SyncCode model) {
+		
+		PolicyStatusCodeDto dto = new PolicyStatusCodeDto();
+		
+		Map<String, Date> dates = calculateDates(model.getIsActive(), new Date(), getMaxExpiryDate());
+		
+		dto.setPolicyStatusCode(model.getUniqueKeyString());
+		dto.setDescription(model.getDescription());
+		dto.setEffectiveDate(dates.get(this.effectiveDateName));
+		dto.setExpiryDate(dates.get(this.expiryDateName));
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+		
+		return dto;
+
+	}
+
+	
+	public void updatePolicyStatusCode(PolicyStatusCodeDto dto, SyncCode model) {
+
+		Map<String, Date> dates = calculateDates(model.getIsActive(), dto.getEffectiveDate(), dto.getExpiryDate());
+		
+		dto.setDescription(model.getDescription());
+		dto.setEffectiveDate(dates.get(this.effectiveDateName));
+		dto.setExpiryDate(dates.get(this.expiryDateName));
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+	}
+	
+	
+	//======================================================================================================================
+	// Grower
+	//======================================================================================================================
+
+	
+	public void updateGrower(GrowerDto dto, Grower model) {
+
+		dto.setGrowerId(model.getGrowerId());
+		dto.setGrowerNumber(model.getGrowerNumber());
+		dto.setGrowerName(model.getGrowerName());
+		dto.setGrowerAddressLine1(model.getGrowerAddressLine1());
+		dto.setGrowerAddressLine2(model.getGrowerAddressLine2());
+		dto.setGrowerPostalCode(model.getGrowerPostalCode());
+		dto.setGrowerCity(model.getGrowerCity());
+		dto.setCityId(model.getCityId());
+		dto.setGrowerProvince(model.getGrowerProvince());
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+		
+	}
+
+	
+	
+	public Grower getGrower(GrowerDto dto) {
+		GrowerRsrc resource = new GrowerRsrc();
+		
+		resource.setGrowerId(dto.getGrowerId());
+		resource.setGrowerNumber(dto.getGrowerNumber());
+		resource.setGrowerName(dto.getGrowerName());
+		resource.setGrowerAddressLine1(dto.getGrowerAddressLine1());
+		resource.setGrowerAddressLine2(dto.getGrowerAddressLine2());
+		resource.setGrowerPostalCode(dto.getGrowerPostalCode());
+		resource.setGrowerCity(dto.getGrowerCity());
+		resource.setCityId(dto.getCityId());
+		resource.setGrowerProvince(dto.getGrowerProvince());
+		resource.setDataSyncTransDate(dto.getDataSyncTransDate());
+
+		return resource;
+	}
+
+	
+	//======================================================================================================================
+	// Policy
+	//======================================================================================================================
+
+	
+	public void updatePolicy(PolicyDto dto, Policy model) {
+
+		dto.setPolicyId(model.getPolicyId());
+		dto.setGrowerId(model.getGrowerId());
+		dto.setInsurancePlanId(model.getInsurancePlanId());
+		dto.setOfficeId(model.getOfficeId());
+		dto.setPolicyStatusCode(model.getPolicyStatusCode());
+		dto.setPolicyNumber(model.getPolicyNumber());
+		dto.setContractNumber(model.getContractNumber());
+		dto.setContractId(model.getContractId());
+		dto.setCropYear(model.getCropYear());
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+		
+	}
+
+	
+	
+	public Policy getPolicy(PolicyDto dto) {
+		PolicyRsrc resource = new PolicyRsrc();
+		
+		resource.setPolicyId(dto.getPolicyId());
+		resource.setGrowerId(dto.getGrowerId());
+		resource.setInsurancePlanId(dto.getInsurancePlanId());
+		resource.setOfficeId(dto.getOfficeId());
+		resource.setPolicyStatusCode(dto.getPolicyStatusCode());
+		resource.setPolicyNumber(dto.getPolicyNumber());
+		resource.setContractNumber(dto.getContractNumber());
+		resource.setContractId(dto.getContractId());
+		resource.setCropYear(dto.getCropYear());
+		resource.setDataSyncTransDate(dto.getDataSyncTransDate());
+
+		return resource;
+	}
+
+	//======================================================================================================================
+	// Product
+	//======================================================================================================================
+
+	
+	public void updateProduct(ProductDto dto, Product model) {
+
+		dto.setCommodityCoverageCode(model.getCommodityCoverageCode());
+		dto.setCropCommodityId(model.getCropCommodityId());
+		dto.setDeductibleLevel(model.getDeductibleLevel());
+		dto.setInsuredByMeasType(model.getInsuredByMeasType());
+		dto.setPolicyId(model.getPolicyId());
+		dto.setProbableYield(model.getProbableYield());
+		dto.setProductId(model.getProductId());
+		dto.setProductionGuarantee(model.getProductionGuarantee());
+		dto.setProductStatusCode(model.getProductStatusCode());
+		dto.setInsurableValueHundredPercent(model.getInsurableValueHundredPercent());
+		dto.setCoverageDollars(model.getCoverageDollars());
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+	}
+
+	
+	
+	public Product getProduct(ProductDto dto) {
+		ProductRsrc resource = new ProductRsrc();
+		
+		resource.setCommodityCoverageCode(dto.getCommodityCoverageCode());
+		resource.setCropCommodityId(dto.getCropCommodityId());
+		resource.setDeductibleLevel(dto.getDeductibleLevel());
+		resource.setInsuredByMeasType(dto.getInsuredByMeasType());
+		resource.setPolicyId(dto.getPolicyId());
+		resource.setProbableYield(dto.getProbableYield());
+		resource.setProductId(dto.getProductId());
+		resource.setProductionGuarantee(dto.getProductionGuarantee());
+		resource.setProductStatusCode(dto.getProductStatusCode());
+		resource.setInsurableValueHundredPercent(dto.getInsurableValueHundredPercent());
+		resource.setCoverageDollars(dto.getCoverageDollars());
+		resource.setDataSyncTransDate(dto.getDataSyncTransDate());
+
+		return resource;
+	}
+	
+	
+	//======================================================================================================================
+	// Crop Commodity
+	//======================================================================================================================
+	
+	
+	public CropCommodityDto createCropCommodity(SyncCommodityVariety model) {
+		CropCommodityDto dto = new CropCommodityDto();
+		
+		dto.setCropCommodityId(model.getCropId());
+		dto.setCommodityName(model.getCropName());
+		dto.setInsurancePlanId(model.getInsurancePlanId());
+		dto.setShortLabel(model.getShortLabel());
+		dto.setPlantDurationTypeCode(model.getPlantDurationTypeCode());
+		dto.setIsInventoryCropInd(model.getIsInventoryCrop());
+		dto.setIsYieldCropInd(model.getIsYieldCrop());
+		dto.setIsUnderwritingCropInd(model.getIsUnderwritingCrop());
+		dto.setIsProductInsurableInd(model.getIsProductInsurableInd());
+		dto.setIsCropInsuranceEligibleInd(model.getIsCropInsuranceEligibleInd());
+		dto.setIsPlantInsuranceEligibleInd(model.getIsPlantInsuranceEligibleInd());
+		dto.setIsOtherInsuranceEligibleInd(model.getIsOtherInsuranceEligibleInd());
+		dto.setYieldMeasUnitTypeCode(model.getYieldMeasUnitTypeCode());
+		dto.setYieldDecimalPrecision(model.getYieldDecimalPrecision());
+		dto.setEffectiveDate(new Date());
+		dto.setExpiryDate(getMaxExpiryDate());
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+		
+		return dto;
+	}
+
+	
+	public void updateCropCommodity(CropCommodityDto dto, SyncCommodityVariety model) {
+
+		dto.setCommodityName(model.getCropName());
+		dto.setInsurancePlanId(model.getInsurancePlanId());
+		dto.setShortLabel(model.getShortLabel());
+		dto.setPlantDurationTypeCode(model.getPlantDurationTypeCode());
+		dto.setIsInventoryCropInd(model.getIsInventoryCrop());
+		dto.setIsYieldCropInd(model.getIsYieldCrop());
+		dto.setIsUnderwritingCropInd(model.getIsUnderwritingCrop());
+		dto.setIsProductInsurableInd(model.getIsProductInsurableInd());
+		dto.setIsCropInsuranceEligibleInd(model.getIsCropInsuranceEligibleInd());
+		dto.setIsPlantInsuranceEligibleInd(model.getIsPlantInsuranceEligibleInd());
+		dto.setIsOtherInsuranceEligibleInd(model.getIsOtherInsuranceEligibleInd());
+		dto.setYieldMeasUnitTypeCode(model.getYieldMeasUnitTypeCode());
+		dto.setYieldDecimalPrecision(model.getYieldDecimalPrecision());
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+		
+	}
+
+	
+	public void updateCropCommodityExpiryDate(CropCommodityDto dto, Date dataSyncTransDate) {
+		//Don't delete the record but set expiry date to today
+		dto.setExpiryDate(new Date());
+		dto.setDataSyncTransDate(dataSyncTransDate);
+
+	}
+
+	
+	public SyncCommodityVariety getSyncCommodityVarietyFromCropCommodity(CropCommodityDto dto) {
+		SyncCommodityVarietyRsrc resource = new SyncCommodityVarietyRsrc();
+		
+		resource.setCropId(dto.getCropCommodityId());
+		resource.setCropName(dto.getCommodityName());
+		resource.setInsurancePlanId(dto.getInsurancePlanId());
+		resource.setShortLabel(dto.getShortLabel());
+		resource.setPlantDurationTypeCode(dto.getPlantDurationTypeCode());
+		resource.setIsYieldCrop(dto.getIsYieldCropInd());
+		resource.setIsUnderwritingCrop(dto.getIsUnderwritingCropInd());
+		resource.setIsProductInsurableInd(dto.getIsProductInsurableInd());
+		resource.setIsCropInsuranceEligibleInd(dto.getIsCropInsuranceEligibleInd());
+		resource.setIsPlantInsuranceEligibleInd(dto.getIsPlantInsuranceEligibleInd());
+		resource.setIsOtherInsuranceEligibleInd(dto.getIsOtherInsuranceEligibleInd());
+		resource.setYieldMeasUnitTypeCode(dto.getYieldMeasUnitTypeCode());
+		resource.setYieldDecimalPrecision(dto.getYieldDecimalPrecision());
+		resource.setIsInventoryCrop(dto.getIsInventoryCropInd());
+		resource.setDataSyncTransDate(dto.getDataSyncTransDate());
+		
+		return resource;
+	}
+	
+
+	//======================================================================================================================
+	// Crop Varieties
+	//======================================================================================================================
+
+	
+	public CropVarietyDto createCropVariety(SyncCommodityVariety model) {
+		CropVarietyDto dto = new CropVarietyDto();
+		
+		dto.setCropVarietyId(model.getCropId());
+		dto.setCropCommodityId(model.getParentCropId());
+		dto.setVarietyName(model.getCropName());
+		dto.setEffectiveDate(new Date());
+		dto.setExpiryDate(getMaxExpiryDate());
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+		
+		return dto;
+	
+	}
+
+	
+	public void updateCropVariety(CropVarietyDto dto, SyncCommodityVariety model) {
+
+		dto.setCropCommodityId(model.getParentCropId());
+		dto.setVarietyName(model.getCropName());
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+		
+	}
+	
+	
+	public void updateCropVarietyExpiryDate(CropVarietyDto dto, Date dataSyncTransDate) {
+		//Don't delete the record but set expiry date to today
+		dto.setExpiryDate(new Date());
+		dto.setDataSyncTransDate(dataSyncTransDate);
+		
+	}
+
+	
+	public SyncCommodityVariety getSyncCommodityVarietyFromVariety(CropVarietyDto dto) {
+		SyncCommodityVarietyRsrc resource = new SyncCommodityVarietyRsrc();
+		
+		resource.setCropId(dto.getCropVarietyId());
+		resource.setParentCropId(dto.getCropCommodityId());
+		resource.setCropName(dto.getVarietyName());
+		resource.setDataSyncTransDate(dto.getDataSyncTransDate());
+
+		return resource;
+	}
+	
+	//======================================================================================================================
+	// Office
+	//======================================================================================================================
+
+	
+	public OfficeDto createOffice(OfficeDto dto, SyncCode model) {
+		
+		dto.setOfficeId(model.getUniqueKeyInteger());
+		dto.setOfficeName(model.getDescription());
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+		
+		return dto;
+
+	}
+	
+	//======================================================================================================================
+	// Contact
+	//======================================================================================================================
+
+	
+	public void updateContact(ContactDto dto, Contact model) {
+
+		dto.setContactId(model.getContactId());
+		dto.setFirstName(model.getFirstName());
+		dto.setLastName(model.getLastName());
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+
+	}
+
+	
+	public Contact getContact(ContactDto dto) {
+
+		ContactRsrc resource = new ContactRsrc();
+		
+		resource.setContactId(dto.getContactId());
+		resource.setFirstName(dto.getFirstName());
+		resource.setLastName(dto.getLastName());
+		resource.setDataSyncTransDate(dto.getDataSyncTransDate());
+		
+		return resource;
+	}
+
+	//======================================================================================================================
+	// Grower Contact
+	//======================================================================================================================
+
+	
+	public void updateGrowerContact(GrowerContactDto dto, GrowerContact model) {
+
+		dto.setGrowerContactId(model.getGrowerContactId());
+		dto.setGrowerId(model.getGrowerId());
+		dto.setContactId(model.getContactId());
+		dto.setIsPrimaryContactInd(model.getIsPrimaryContactInd());
+		dto.setIsActivelyInvolvedInd(model.getIsActivelyInvolvedInd());
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+		
+	}
+
+	
+	public GrowerContact getGrowerContact(GrowerContactDto dto) {
+
+		GrowerContactRsrc resource = new GrowerContactRsrc();
+		
+		resource.setGrowerContactId(dto.getGrowerContactId());
+		resource.setGrowerId(dto.getGrowerId());
+		resource.setContactId(dto.getContactId());
+		resource.setIsPrimaryContactInd(dto.getIsPrimaryContactInd());
+		resource.setIsActivelyInvolvedInd(dto.getIsActivelyInvolvedInd());
+		resource.setDataSyncTransDate(dto.getDataSyncTransDate());
+
+		return resource;
+	}
+
+	//======================================================================================================================
+	// Contact Email
+	//======================================================================================================================
+
+	
+	public void updateContactEmail(ContactEmailDto dto, ContactEmail model) {
+
+		Map<String, Date> dates = calculateDates(model.getIsActive(), dto.getEffectiveDate(), dto.getExpiryDate());
+		
+		dto.setContactEmailId(model.getContactEmailId());
+		dto.setContactId(model.getContactId());
+		dto.setEmailAddress(model.getEmailAddress());
+		dto.setIsPrimaryEmailInd(model.getIsPrimaryEmailInd());
+		dto.setEffectiveDate(dates.get(this.effectiveDateName));
+		dto.setExpiryDate(dates.get(this.expiryDateName));
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+
+		
+	}
+
+	
+	public ContactEmail getContactEmail(ContactEmailDto dto) {
+
+		ContactEmailRsrc resource = new ContactEmailRsrc();
+		
+		resource.setContactEmailId(dto.getContactEmailId());
+		resource.setContactId(dto.getContactId());
+		resource.setEmailAddress(dto.getEmailAddress());
+		resource.setIsPrimaryEmailInd(dto.getIsPrimaryEmailInd());
+		resource.setEffectiveDate(dto.getEffectiveDate());
+		resource.setExpiryDate(dto.getExpiryDate());
+		resource.setDataSyncTransDate(dto.getDataSyncTransDate());
+
+		return resource;
+	}
+
+	//======================================================================================================================
+	// Contact Phone
+	//======================================================================================================================
+
+	
+	public void updateContactPhone(ContactPhoneDto dto, ContactPhone model) {
+
+		Map<String, Date> dates = calculateDates(model.getIsActive(), dto.getEffectiveDate(), dto.getExpiryDate());
+
+		dto.setContactPhoneId(model.getContactPhoneId());
+		dto.setContactId(model.getContactId());
+		dto.setPhoneNumber(model.getPhoneNumber());
+		dto.setExtension(model.getExtension());
+		dto.setIsPrimaryPhoneInd(model.getIsPrimaryPhoneInd());
+		dto.setEffectiveDate(dates.get(this.effectiveDateName));
+		dto.setExpiryDate(dates.get(this.expiryDateName));
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+
+	}
+
+	
+	public ContactPhone getContactPhone(ContactPhoneDto dto) {
+
+		ContactPhoneRsrc resource = new ContactPhoneRsrc();
+
+		resource.setContactPhoneId(dto.getContactPhoneId());
+		resource.setContactId(dto.getContactId());
+		resource.setPhoneNumber(dto.getPhoneNumber());
+		resource.setExtension(dto.getExtension());
+		resource.setIsPrimaryPhoneInd(dto.getIsPrimaryPhoneInd());
+		resource.setEffectiveDate(dto.getEffectiveDate());
+		resource.setExpiryDate(dto.getExpiryDate());
+		resource.setDataSyncTransDate(dto.getDataSyncTransDate());
+
+		return resource;
+	}
+
+	//======================================================================================================================
+	// Commodity Type Code
+	//======================================================================================================================
+	
+	
+	public void updateCommodityTypeCodeExpiryDate(CommodityTypeCodeDto dto, Date dataSyncTransDate) {
+		//Don't delete the record but set expiry date to today
+		dto.setExpiryDate(new Date());
+		dto.setDataSyncTransDate(dataSyncTransDate);
+		
+	}
+
+	
+	public void updateCommodityTypeCode(CommodityTypeCodeDto dto, CommodityTypeCode model) {
+
+		Map<String, Date> dates = calculateDates(model.getIsActive(), dto.getEffectiveDate(), dto.getExpiryDate());
+
+		dto.setCommodityTypeCode(model.getCommodityTypeCode());
+		dto.setCropCommodityId(model.getCropCommodityId());
+		dto.setDescription(model.getDescription());
+		dto.setEffectiveDate(dates.get(this.effectiveDateName));
+		dto.setExpiryDate(dates.get(this.expiryDateName));
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+		
+	}
+
+	
+	public CommodityTypeCode getCommodityTypeCode(CommodityTypeCodeDto dto) {
+		
+		SyncCommodityTypeCodeRsrc resource = new SyncCommodityTypeCodeRsrc();
+		
+		resource.setCommodityTypeCode(dto.getCommodityTypeCode());
+		resource.setCropCommodityId(dto.getCropCommodityId());
+		resource.setDescription(dto.getDescription());
+		resource.setEffectiveDate(dto.getEffectiveDate());
+		resource.setExpiryDate(dto.getExpiryDate());
+		resource.setDataSyncTransDate(dto.getDataSyncTransDate());
+		
+		return resource;
+	}
+
+	//======================================================================================================================
+	// Commodity Type Variety Xref
+	//======================================================================================================================
+
+	
+	public void updateCommodityTypeVarietyXref(CommodityTypeVarietyXrefDto dto, CommodityTypeVarietyXref model) {
+
+		dto.setCommodityTypeCode(model.getCommodityTypeCode());
+		dto.setCropVarietyId(model.getCropVarietyId());
+		dto.setDataSyncTransDate(model.getDataSyncTransDate());
+		
+	}
+
+	
+	public CommodityTypeVarietyXref getCommodityTypeVarietyXref(CommodityTypeVarietyXrefDto dto) {
+
+		SyncCommodityTypeVarietyXrefRsrc resource = new SyncCommodityTypeVarietyXrefRsrc();
+
+		resource.setCommodityTypeCode(dto.getCommodityTypeCode());
+		resource.setCropVarietyId(dto.getCropVarietyId());
+		resource.setDataSyncTransDate(dto.getDataSyncTransDate());
+
+		return resource;
+	}
+	
+	//======================================================================================================================
+	// Self Uris
+	//======================================================================================================================
+	
+	public static String getSyncCodeSelfUri(
+			URI baseUri) {
+
+		String result = UriBuilder.fromUri(baseUri)
+			.path(SyncCodeEndpoint.class)
+			.build()
+			.toString();
+
+		return result;
+	}
+
+	public static String getGrowerSelfUri(
+			URI baseUri) {
+
+		String result = UriBuilder.fromUri(baseUri)
+			.path(GrowerEndpoint.class)
+			.build()
+			.toString();
+
+		return result;
+	}
+
+	public static String getPolicySelfUri(
+			URI baseUri) {
+
+		String result = UriBuilder.fromUri(baseUri)
+			.path(PolicyEndpoint.class)
+			.build()
+			.toString();
+
+		return result;
+	}
+
+	public static String getProductSelfUri(
+			URI baseUri) {
+
+		String result = UriBuilder.fromUri(baseUri)
+			.path(ProductEndpoint.class)
+			.build()
+			.toString();
+
+		return result;
+	}
+	
+	
+	public static String getSyncCommodityVarietySelfUri(
+			URI baseUri) {
+
+		String result = UriBuilder.fromUri(baseUri)
+			.path(SyncCommodityVarietyEndpoint.class)
+			.build()
+			.toString();
+
+		return result;
+	}
+	
+	public static String getContactSelfUri(
+			URI baseUri) {
+
+		String result = UriBuilder.fromUri(baseUri)
+			.path(ContactEndpoint.class)
+			.build()
+			.toString();
+
+		return result;
+	}
+	
+	public static String getGrowerContactSelfUri(
+			URI baseUri) {
+
+		String result = UriBuilder.fromUri(baseUri)
+			.path(GrowerContactEndpoint.class)
+			.build()
+			.toString();
+
+		return result;
+	}
+	
+	public static String getContactEmailSelfUri(
+			URI baseUri) {
+
+		String result = UriBuilder.fromUri(baseUri)
+			.path(ContactEmailEndpoint.class)
+			.build()
+			.toString();
+
+		return result;
+	}
+	
+	public static String getContactPhoneSelfUri(
+			URI baseUri) {
+
+		String result = UriBuilder.fromUri(baseUri)
+			.path(ContactPhoneEndpoint.class)
+			.build()
+			.toString();
+
+		return result;
+	}	
+	
+	public static String getCommodityTypeCodeSelfUri(
+			URI baseUri) {
+
+		String result = UriBuilder.fromUri(baseUri)
+			.path(SyncCommodityTypeCodeEndpoint.class)
+			.build()
+			.toString();
+
+		return result;
+	}	
+	
+	public static String getCommodityTypeVarietyXrefSelfUri(
+			URI baseUri) {
+
+		String result = UriBuilder.fromUri(baseUri)
+			.path(SyncCommodityTypeVarietyXrefEndpoint.class)
+			.build()
+			.toString();
+
+		return result;
+	}
+
+
+	
+	//Sets effective and expiry date according to the isActive flag in CIRRAS
+	private Map<String, Date> calculateDates(Boolean isActive, Date effectiveDate, Date expiryDate) {
+		
+		if (effectiveDate == null) {
+			effectiveDate = new Date();
+		}
+		
+		if (expiryDate == null) {
+			expiryDate = getMaxExpiryDate();
+		}
+		
+		Map<String, Date> dates = new HashMap<>();
+		
+		LocalDateTime currentDate = LocalDateTime.now(ZoneId.systemDefault());
+		LocalDateTime currentExpiryDate = LocalDateTime.ofInstant(expiryDate.toInstant(), ZoneId.systemDefault());
+		
+		//Default
+		Date newEffectiveDate = effectiveDate;
+		Date newExpiryDate = expiryDate;
+		
+		if(isActive && currentDate.isAfter(currentExpiryDate)) {
+			//Set to active
+			//Inactive to Active: set effective date to now and expiry date to max expiry date 
+			newEffectiveDate = new Date();
+			newExpiryDate = getMaxExpiryDate();
+		} else if (isActive == false && currentDate.isBefore(currentExpiryDate)) {
+			//Set to inactive
+			//Active to Inactive: set expiry date to now
+			newExpiryDate = new Date();
+		}
+		
+		dates.put(this.effectiveDateName, newEffectiveDate);
+		dates.put(this.expiryDateName, newExpiryDate);
+		
+		return dates;
+	}
+	
+	final String effectiveDateName = "effectiveDate";
+	final String expiryDateName = "expiryDate";
+	
+	protected static Date getMaxExpiryDate() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(9000,12,31);
+		
+		return cal.getTime();
+		
+	}
+
+}

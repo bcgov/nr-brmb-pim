@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl;
+package ca.bc.gov.mal.cirras.underwriting.services.impl;
 
 import java.util.List;
 import java.util.Properties;
@@ -6,20 +6,20 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.model.v1.RiskArea;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.RiskAreaList;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.Field;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.LegalLand;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.LegalLandRiskArea;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.FieldDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.LegalLandDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.LegalLandFieldXrefDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.LegalLandRiskAreaXrefDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.RiskAreaDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.RiskAreaDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandRiskAreaXrefDto;
+import ca.bc.gov.mal.cirras.underwriting.data.models.RiskArea;
+import ca.bc.gov.mal.cirras.underwriting.data.models.RiskAreaList;
+import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
+import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
+import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandRiskArea;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.FieldDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.LegalLandDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.LegalLandFieldXrefDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.LegalLandRiskAreaXrefDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.RiskAreaDao;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.RiskAreaDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.FieldDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandRiskAreaXrefDto;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.ConflictException;
@@ -29,11 +29,11 @@ import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasUwLandManagementService;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.LegalLandFactory;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.LegalLandRiskAreaXrefFactory;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.RiskAreaFactory;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.ModelValidator;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasUwLandManagementService;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.LegalLandFactory;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.LegalLandRiskAreaXrefFactory;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.RiskAreaFactory;
+import ca.bc.gov.mal.cirras.underwriting.services.validation.ModelValidator;
 
 public class CirrasUwLandManagementServiceImpl implements CirrasUwLandManagementService {
 

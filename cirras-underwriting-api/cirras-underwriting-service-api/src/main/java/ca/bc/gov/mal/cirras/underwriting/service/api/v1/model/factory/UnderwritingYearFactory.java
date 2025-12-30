@@ -1,10 +1,10 @@
-package ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory;
+package ca.bc.gov.mal.cirras.underwriting.services.model.factory;
 
 import java.util.List;
 
-import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingYear;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingYearList;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UnderwritingYearDto;
+import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingYear;
+import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingYearList;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.UnderwritingYearDto;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;

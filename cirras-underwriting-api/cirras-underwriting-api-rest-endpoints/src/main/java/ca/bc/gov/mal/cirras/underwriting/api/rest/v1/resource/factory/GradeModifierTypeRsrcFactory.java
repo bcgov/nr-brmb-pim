@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory;
+package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -12,14 +12,14 @@ import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFa
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.GradeModifierTypeListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.GradeModifierTypeListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.GradeModifierType;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.GradeModifierTypeList;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GradeModifierTypeCodeDto;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.GradeModifierTypeFactory;
+import ca.bc.gov.mal.cirras.underwriting.controllers.GradeModifierTypeListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.GradeModifierTypeListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
+import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifierType;
+import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifierTypeList;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.GradeModifierTypeCodeDto;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.GradeModifierTypeFactory;
 
 public class GradeModifierTypeRsrcFactory extends BaseResourceFactory implements GradeModifierTypeFactory { 
 

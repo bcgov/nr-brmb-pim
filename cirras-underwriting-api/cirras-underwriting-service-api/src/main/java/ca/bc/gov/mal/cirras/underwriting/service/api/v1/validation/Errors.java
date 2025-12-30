@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation;
+package ca.bc.gov.mal.cirras.underwriting.services.validation;
 
 public class Errors {
 	

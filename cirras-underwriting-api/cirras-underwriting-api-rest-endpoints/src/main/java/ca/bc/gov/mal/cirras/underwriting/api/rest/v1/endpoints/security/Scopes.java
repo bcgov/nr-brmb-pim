@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security;
+package ca.bc.gov.mal.cirras.underwriting.controllers.security;
 
 public class Scopes {
 	public static final String GET_TOP_LEVEL = "CIRRAS_UNDERWRITING.GET_TOP_LEVEL";

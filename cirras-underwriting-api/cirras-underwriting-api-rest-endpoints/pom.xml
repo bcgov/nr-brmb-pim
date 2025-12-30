@@ -233,7 +233,7 @@
                     <outputFormat>JSONANDYAML</outputFormat>
                     <configurationFilePath>${project.build.directory}/classes/openapi-configuration.json</configurationFilePath>
                     <resourcePackages>
-                        <package>ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints</package>
+                        <package>ca.bc.gov.mal.cirras.underwriting.controllers</package>
                         <package>ca.bc.gov.nrs.wfone.common.api.rest.code.endpoints</package>
                         <package>ca.bc.gov.nrs.wfone.common.rest.endpoints</package>
                     </resourcePackages>

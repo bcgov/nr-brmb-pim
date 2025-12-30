@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory;
+package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -12,15 +12,15 @@ import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFa
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.GradeModifierListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.GradeModifierListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.GradeModifierRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.GradeModifier;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.GradeModifierList;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.GradeModifierDto;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.GradeModifierFactory;
+import ca.bc.gov.mal.cirras.underwriting.controllers.GradeModifierListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.GradeModifierListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.GradeModifierRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
+import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifier;
+import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifierList;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.GradeModifierDto;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.GradeModifierFactory;
 
 public class GradeModifierRsrcFactory extends BaseResourceFactory implements GradeModifierFactory { 
 

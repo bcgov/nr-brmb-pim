@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory;
+package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -13,16 +13,16 @@ import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFa
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.CropVarietyInsurabilityListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.CropVarietyInsurabilityListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.CropVarietyInsurability;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.CropVarietyInsurabilityList;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.CropVarietyPlantInsurability;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CropVarietyInsPlantInsXrefDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.CropVarietyInsurabilityDto;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.CropVarietyInsurabilityFactory;
+import ca.bc.gov.mal.cirras.underwriting.controllers.CropVarietyInsurabilityListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.CropVarietyInsurabilityListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
+import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyInsurability;
+import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyInsurabilityList;
+import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyPlantInsurability;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyInsPlantInsXrefDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyInsurabilityDto;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.CropVarietyInsurabilityFactory;
 
 public class CropVarietyInsurabilityRsrcFactory extends BaseResourceFactory implements CropVarietyInsurabilityFactory { 
 

@@ -1,11 +1,11 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory;
+package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContract;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetailDto;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.ContractedFieldDetailFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
+import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContract;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.ContractedFieldDetailFactory;
 
 public class ContractedFieldDetailRsrcFactory extends BaseResourceFactory implements ContractedFieldDetailFactory { 
 	

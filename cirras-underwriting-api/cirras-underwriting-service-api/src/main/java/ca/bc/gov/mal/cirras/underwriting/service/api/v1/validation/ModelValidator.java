@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation;
+package ca.bc.gov.mal.cirras.underwriting.services.validation;
 
 
 import java.time.LocalDate;
@@ -8,7 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.CachedCodeTables;
+import ca.bc.gov.mal.cirras.underwriting.services.utils.CachedCodeTables;
 import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.persistence.code.dto.CodeDto;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;

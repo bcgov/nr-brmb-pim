@@ -1,10 +1,10 @@
-package ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory;
+package ca.bc.gov.mal.cirras.underwriting.services.model.factory;
 
 import java.util.List;
 
-import ca.bc.gov.mal.cirras.underwriting.model.v1.YieldMeasUnitTypeCode;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.YieldMeasUnitTypeCodeList;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.YieldMeasUnitTypeCodeDto;
+import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitTypeCode;
+import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitTypeCodeList;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.YieldMeasUnitTypeCodeDto;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 

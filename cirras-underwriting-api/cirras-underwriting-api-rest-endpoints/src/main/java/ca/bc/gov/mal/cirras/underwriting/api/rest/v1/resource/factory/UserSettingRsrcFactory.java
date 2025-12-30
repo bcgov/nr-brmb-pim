@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory;
+package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import java.net.URI;
 
@@ -9,14 +9,14 @@ import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFa
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UserSettingEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UserSettingListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UserSettingRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.UserSetting;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UserSettingDto;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UserSettingFactory;
+import ca.bc.gov.mal.cirras.underwriting.controllers.UserSettingEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.UserSettingListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.UserSettingRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
+import ca.bc.gov.mal.cirras.underwriting.data.models.UserSetting;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.UserSettingDto;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.UserSettingFactory;
 
 public class UserSettingRsrcFactory extends BaseResourceFactory implements UserSettingFactory { 
 

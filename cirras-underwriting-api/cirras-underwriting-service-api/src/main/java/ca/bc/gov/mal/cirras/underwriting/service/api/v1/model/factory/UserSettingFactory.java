@@ -1,11 +1,11 @@
-package ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory;
+package ca.bc.gov.mal.cirras.underwriting.services.model.factory;
 
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 
-import ca.bc.gov.mal.cirras.underwriting.model.v1.UserSetting;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UserSettingDto;
+import ca.bc.gov.mal.cirras.underwriting.data.models.UserSetting;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.UserSettingDto;
 
 public interface UserSettingFactory {
 

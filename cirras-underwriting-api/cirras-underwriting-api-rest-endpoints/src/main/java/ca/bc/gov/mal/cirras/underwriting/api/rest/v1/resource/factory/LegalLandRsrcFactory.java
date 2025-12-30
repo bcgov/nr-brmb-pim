@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory;
+package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -13,22 +13,22 @@ import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFa
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.LegalLandEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.LegalLandListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.FieldRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.Field;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.LegalLand;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.LegalLandList;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.LegalLandRiskArea;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.RiskAreaDto;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.LegalLandFactory;
+import ca.bc.gov.mal.cirras.underwriting.controllers.LegalLandEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.LegalLandListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.FieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
+import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
+import ca.bc.gov.mal.cirras.underwriting.data.models.Field;
+import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLand;
+import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandList;
+import ca.bc.gov.mal.cirras.underwriting.data.models.LegalLandRiskArea;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.FieldDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.RiskAreaDto;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.LegalLandFactory;
 
 public class LegalLandRsrcFactory extends BaseResourceFactory implements LegalLandFactory { 
 	

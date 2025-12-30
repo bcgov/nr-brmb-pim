@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.spring;
+package ca.bc.gov.mal.cirras.underwriting.spring;
 
 import jakarta.servlet.FilterRegistration;
 import jakarta.servlet.ServletContext;

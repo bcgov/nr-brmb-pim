@@ -1,10 +1,10 @@
-package ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao;
+package ca.bc.gov.mal.cirras.underwriting.data.repositories;
 
 
 import java.io.Serializable;
 import java.util.List;
 
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyDto;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.TooManyRecordsException;

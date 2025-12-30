@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.service.api.v1.impl;
+package ca.bc.gov.mal.cirras.underwriting.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,19 +7,19 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualFieldList;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.UserSetting;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContract;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.UwContractList;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.LegalLandDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.UserSettingDto;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.FieldDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.LegalLandDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.PolicyDao;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao.UserSettingDao;
+import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualField;
+import ca.bc.gov.mal.cirras.underwriting.data.models.AnnualFieldList;
+import ca.bc.gov.mal.cirras.underwriting.data.models.UserSetting;
+import ca.bc.gov.mal.cirras.underwriting.data.models.UwContract;
+import ca.bc.gov.mal.cirras.underwriting.data.models.UwContractList;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.FieldDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.UserSettingDto;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.FieldDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.LegalLandDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.PolicyDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.UserSettingDao;
 import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.TooManyRecordsException;
@@ -32,14 +32,14 @@ import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.CirrasUnderwritingService;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.AnnualFieldFactory;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UserSettingFactory;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.UwContractFactory;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.UnderwritingServiceHelper;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.ScreenType;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.OutOfSync;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.ModelValidator;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasUnderwritingService;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.AnnualFieldFactory;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.UserSettingFactory;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.UwContractFactory;
+import ca.bc.gov.mal.cirras.underwriting.services.utils.UnderwritingServiceHelper;
+import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.ScreenType;
+import ca.bc.gov.mal.cirras.underwriting.services.utils.OutOfSync;
+import ca.bc.gov.mal.cirras.underwriting.services.validation.ModelValidator;
 
 
 public class CirrasUnderwritingServiceImpl implements CirrasUnderwritingService {

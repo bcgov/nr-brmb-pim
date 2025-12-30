@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.factory;
+package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -9,13 +9,13 @@ import jakarta.ws.rs.core.UriBuilder;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.YieldMeasUnitTypeCodeListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.YieldMeasUnitTypeCodeListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.YieldMeasUnitTypeCodeRsrc;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.YieldMeasUnitTypeCode;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.YieldMeasUnitTypeCodeList;
-import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.YieldMeasUnitTypeCodeDto;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.YieldMeasUnitTypeCodeFactory;
+import ca.bc.gov.mal.cirras.underwriting.controllers.YieldMeasUnitTypeCodeListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.YieldMeasUnitTypeCodeListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.YieldMeasUnitTypeCodeRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitTypeCode;
+import ca.bc.gov.mal.cirras.underwriting.data.models.YieldMeasUnitTypeCodeList;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.YieldMeasUnitTypeCodeDto;
+import ca.bc.gov.mal.cirras.underwriting.services.model.factory.YieldMeasUnitTypeCodeFactory;
 
 public class YieldMeasUnitTypeCodeRsrcFactory extends BaseResourceFactory implements YieldMeasUnitTypeCodeFactory { 
 

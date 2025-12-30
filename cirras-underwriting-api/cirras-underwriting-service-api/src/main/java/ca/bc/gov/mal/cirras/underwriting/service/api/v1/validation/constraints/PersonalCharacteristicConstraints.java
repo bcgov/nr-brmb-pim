@@ -1,10 +1,10 @@
-package ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.constraints;
+package ca.bc.gov.mal.cirras.underwriting.services.validation.constraints;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.Errors;
+import ca.bc.gov.mal.cirras.underwriting.services.validation.Errors;
 
 public interface PersonalCharacteristicConstraints {
 
