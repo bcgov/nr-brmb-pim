@@ -5,21 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jakarta.ws.rs.core.UriBuilder;
-
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
-import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.mal.cirras.underwriting.controllers.CropCommodityListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.CropCommodityListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.CropCommodityRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeCodeDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CropCommodityDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyInsPlantInsXrefDto;
 import ca.bc.gov.mal.cirras.underwriting.data.models.CropVariety;
 import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyCommodityType;
 import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyPlantInsurability;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyInsPlantInsXrefDto;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.CropCommodityListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.CropCommodityRsrc;
+import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
+import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
+import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
+import jakarta.ws.rs.core.UriBuilder;
 
 public class CommodityRsrcFactory extends BaseResourceFactory { 
 	

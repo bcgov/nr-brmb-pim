@@ -4,19 +4,18 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.ws.rs.core.UriBuilder;
-
+import ca.bc.gov.mal.cirras.underwriting.controllers.CommodityTypeCodeListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeCodeDto;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.CommodityTypeCodeListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeCodeRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
 import ca.bc.gov.nrs.common.wfone.rest.resource.RelLink;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.controllers.CommodityTypeCodeListEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.CommodityTypeCodeListRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeCodeRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeCodeDto;
+import jakarta.ws.rs.core.UriBuilder;
 
 public class CommodityTypeCodeRsrcFactory extends BaseResourceFactory { 
 

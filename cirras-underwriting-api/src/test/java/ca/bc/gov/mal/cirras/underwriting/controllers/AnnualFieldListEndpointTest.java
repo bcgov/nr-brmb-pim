@@ -52,8 +52,8 @@ public class AnnualFieldListEndpointTest extends EndpointsTest {
 
 		EndpointsRsrc topLevelEndpoints = service.getTopLevelEndpoints();
 		Integer legalLandId = 1000013;
-		String cropYear = "2023";
-		String otherLegalDescription = "NW 11 22 33";
+		String cropYear = "2024";
+		String otherLegalDescription = "DL 9715";
 
 		AnnualFieldListRsrc searchResults = service.getAnnualFieldList(
 				topLevelEndpoints, 

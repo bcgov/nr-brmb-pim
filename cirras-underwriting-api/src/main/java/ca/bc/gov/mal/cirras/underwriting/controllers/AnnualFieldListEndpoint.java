@@ -1,21 +1,20 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
-import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
-import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldListRsrc;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+
 import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpoints;
+import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -28,10 +27,21 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasUnderwritingService;
 
+@RestController
 @Path("/annualFields")
-public interface AnnualFieldListEndpoint extends BaseEndpoints {
+public class AnnualFieldListEndpoint extends BaseEndpointsImpl {
+		
+	@Autowired
+	private CirrasUnderwritingService cirrasUnderwritingService;
 	
+	public void setCirrasUnderwritingService(CirrasUnderwritingService cirrasUnderwritingService) {
+		this.cirrasUnderwritingService = cirrasUnderwritingService;
+	}
+
 	@Operation(operationId = "Get list of annual fields.", summary = "Get list of annual fields.", security = @SecurityRequirement(name = "Webade-OAUTH2", scopes = {Scopes.SEARCH_ANNUAL_FIELDS}), extensions = {@Extension(properties = {@ExtensionProperty(name = "auth-type", value = "#{wso2.x-auth-type.none}"), @ExtensionProperty(name = "throttling-tier", value = "Unlimited") })})
 	@Parameters({
 		@Parameter(name = HeaderConstants.REQUEST_ID_HEADER, description = HeaderConstants.REQUEST_ID_HEADER_DESCRIPTION, required = false, schema = @Schema(implementation = String.class), in = ParameterIn.HEADER),
@@ -47,11 +57,54 @@ public interface AnnualFieldListEndpoint extends BaseEndpoints {
 	})
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	Response getAnnualFieldList(
+	public Response getAnnualFieldList(
 			@Parameter(description = "Filter the results by the legal land id") @QueryParam("legalLandId") String legalLandId,
 			@Parameter(description = "Filter the results by the field id") @QueryParam("fieldId") String fieldId,
 			@Parameter(description = "Filter the results by the field location") @QueryParam("fieldLocation") String fieldLocation,
 			@Parameter(description = "Crop year of the policy") @QueryParam("cropYear") String cropYear
-	);
+			) {
+		
+		Response response = null;
+		
+		logRequest();
+		
+		if(!hasAuthority(Scopes.SEARCH_ANNUAL_FIELDS)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		try {
+
+			AnnualFieldListRsrc results = (AnnualFieldListRsrc) cirrasUnderwritingService.getAnnualFieldForLegalLandList(
+					toInteger(legalLandId),
+					toInteger(fieldId),
+					toStringWithoutDecode(fieldLocation),
+					toInteger(cropYear),
+					getFactoryContext(), 
+					getWebAdeAuthentication());
+
+
+
+			GenericEntity<AnnualFieldListRsrc> entity = new GenericEntity<AnnualFieldListRsrc>(results) {
+				/* do nothing */
+			};
+
+			response = Response.ok(entity).tag(results.getUnquotedETag()).build();
+
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+
+		return response;
+	}
 	
+	private static String toStringWithoutDecode(String value) {
+		String result = null;
+		if(value!=null&&value.trim().length()>0) {
+			result = value;
+		}
+		return result;
+	}
+
 }

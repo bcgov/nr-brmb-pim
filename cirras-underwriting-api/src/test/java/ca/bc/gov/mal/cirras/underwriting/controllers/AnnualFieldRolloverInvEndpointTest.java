@@ -111,14 +111,14 @@ public class AnnualFieldRolloverInvEndpointTest extends EndpointsTest {
 	*****************
 	INSERT STATEMENTS FOR PREVIOUS YEAR TESTS
 	*****************
-	INSERT INTO cuws.legal_land(legal_land_id, primary_reference_type_code, legal_description, legal_short_description, other_description, active_from_crop_year, active_to_crop_year, data_sync_trans_date, create_user, create_date, update_user, update_date, primary_property_identifier)
-	VALUES (987654321, 'OTHER', 'Test Legal', 'Test Legal Short', 'Test Other', 1980, null, now(), 'admin', now(), 'admin', now(), '123456723');
+	INSERT INTO cuws.legal_land(legal_land_id, primary_reference_type_code, legal_description, legal_short_description, other_description, active_from_crop_year, active_to_crop_year, create_user, create_date, update_user, update_date, primary_property_identifier)
+	VALUES (987654321, 'OTHER', 'Test Legal', 'Test Legal Short', 'Test Other', 1980, null, 'admin', now(), 'admin', now(), '123456723');
 	 
-	INSERT INTO cuws.field(field_id, field_label, active_from_crop_year, active_to_crop_year, data_sync_trans_date, create_user, create_date, update_user, update_date)
-	VALUES (123456999, 'Test Field', 1980, null, now(), 'admin', now(), 'admin', now());
+	INSERT INTO cuws.field(field_id, field_label, active_from_crop_year, active_to_crop_year, create_user, create_date, update_user, update_date)
+	VALUES (123456999, 'Test Field', 1980, null, 'admin', now(), 'admin', now());
 	
-	INSERT INTO cuws.annual_field_detail(annual_field_detail_id, legal_land_id, field_id, crop_year, data_sync_trans_date, create_user, create_date, update_user, update_date)
-	VALUES (987652365, 987654321, 123456999, 2022, now(), 'admin', now(), 'admin', now());
+	INSERT INTO cuws.annual_field_detail(annual_field_detail_id, legal_land_id, field_id, crop_year, create_user, create_date, update_user, update_date)
+	VALUES (987652365, 987654321, 123456999, 2022, 'admin', now(), 'admin', now());
 	
 	--Inventory Field
 	INSERT INTO cuws.inventory_field(inventory_field_guid, insurance_plan_id, field_id, last_year_crop_commodity_id, crop_year, planting_number, create_user, create_date, update_user, update_date, is_hidden_on_printout_ind)

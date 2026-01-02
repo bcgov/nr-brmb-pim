@@ -4,14 +4,17 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpoints;
-import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.RiskAreaListRsrc;
+import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -24,10 +27,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.RiskAreaListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasUwLandManagementService;
 
+@RestController
 @Path("/riskareas")
-public interface RiskAreaListEndpoint extends BaseEndpoints {
-	
+public class RiskAreaListEndpoint extends BaseEndpointsImpl {
+		
+	@Autowired
+	private CirrasUwLandManagementService cirrasUwLandManagementService;
+
 	@Operation(operationId = "Get a list of risk areas", summary = "Get a list of risk areas", security = @SecurityRequirement(name = "Webade-OAUTH2", scopes = {Scopes.GET_CODE_TABLES}), extensions = {@Extension(properties = {@ExtensionProperty(name = "auth-type", value = "#{wso2.x-auth-type.none}"), @ExtensionProperty(name = "throttling-tier", value = "Unlimited") })})
 	@Parameters({
 		@Parameter(name = HeaderConstants.REQUEST_ID_HEADER, description = HeaderConstants.REQUEST_ID_HEADER_DESCRIPTION, required = false, schema = @Schema(implementation = String.class), in = ParameterIn.HEADER),
@@ -43,7 +53,37 @@ public interface RiskAreaListEndpoint extends BaseEndpoints {
 	})
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	Response getRiskAreaList(
-		@Parameter(description = "Filter the results by the insurance plan") @QueryParam("insurancePlanId") String insurancePlanId
-	);
+	public Response getRiskAreaList(
+			@Parameter(description = "Filter the results by the insurance plan") @QueryParam("insurancePlanId") String insurancePlanId
+			) {
+		
+		Response response = null;
+		
+		logRequest();
+		
+		if(!hasAuthority(Scopes.GET_CODE_TABLES)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		try {
+			RiskAreaListRsrc results = (RiskAreaListRsrc) cirrasUwLandManagementService.getRiskAreaList(
+					toInteger(insurancePlanId),
+					getFactoryContext(), 
+					getWebAdeAuthentication());
+
+			GenericEntity<RiskAreaListRsrc> entity = new GenericEntity<RiskAreaListRsrc>(results) {
+				/* do nothing */
+			};
+
+			response = Response.ok(entity).tag(results.getUnquotedETag()).build();
+			
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+
+		return response;
+	}
+
 }
