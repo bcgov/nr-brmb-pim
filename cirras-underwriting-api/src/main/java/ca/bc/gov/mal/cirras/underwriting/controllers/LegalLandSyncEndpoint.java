@@ -1,36 +1,45 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
 
-import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
-import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpoints;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
+import ca.bc.gov.mal.cirras.underwriting.services.LandDataSyncService;
+import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
+import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
+import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
-import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
+@RestController
 @Path("/legallandsync")
-public interface LegalLandSyncEndpoint extends BaseEndpoints {
+public class LegalLandSyncEndpoint extends BaseEndpointsImpl {
 	
+	private static final Logger logger = LoggerFactory.getLogger(LegalLandSyncEndpoint.class);
+	
+	@Autowired
+	private LandDataSyncService landDataSyncService; 
+
 	@Operation(operationId = "Insert or Update a legal land table record", summary = "Insert or Update a legal land table record", security = @SecurityRequirement(name = "Webade-OAUTH2", scopes = {Scopes.UPDATE_SYNC_UNDERWRITING}),  extensions = {@Extension(properties = {@ExtensionProperty(name = "auth-type", value = "#{wso2.x-auth-type.none}"), @ExtensionProperty(name = "throttling-tier", value = "Unlimited") })})
 	@Parameters({
 		@Parameter(name = HeaderConstants.REQUEST_ID_HEADER, description = HeaderConstants.REQUEST_ID_HEADER_DESCRIPTION, required = false, schema = @Schema(implementation = String.class), in = ParameterIn.HEADER),
@@ -51,9 +60,34 @@ public interface LegalLandSyncEndpoint extends BaseEndpoints {
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response synchronizeLegalLand(
 		@Parameter(name = "legalLand", description = "The legal land resource containing the values from CIRRAS.", required = true) LegalLandRsrc legalLand
-	);
+	){
+		logger.debug("<synchronizeLegalLand");
+		Response response = null;
+		
+		logRequest();
+		
+		if(!hasAuthority(Scopes.UPDATE_SYNC_UNDERWRITING)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
 
-	
+		try {
+			
+			landDataSyncService.synchronizeLegalLand(
+					legalLand, 
+					getFactoryContext(), 
+					getWebAdeAuthentication());
+
+			response = Response.status(204).build();
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+
+		logger.debug(">synchronizeLegalLand " + response);
+		return response;
+	}
+
 	@Operation(operationId = "Delete legal land table record", summary = "Delete legal land table record", security = @SecurityRequirement(name = "Webade-OAUTH2", scopes = {Scopes.DELETE_SYNC_UNDERWRITING}), extensions = {@Extension(properties = {@ExtensionProperty(name = "auth-type", value = "#{wso2.x-auth-type.none}"), @ExtensionProperty(name = "throttling-tier", value = "Unlimited") })})
 	@Parameters({
 		@Parameter(name = HeaderConstants.REQUEST_ID_HEADER, description = HeaderConstants.REQUEST_ID_HEADER_DESCRIPTION, required = false, schema = @Schema(implementation = String.class), in = ParameterIn.HEADER),
@@ -72,6 +106,35 @@ public interface LegalLandSyncEndpoint extends BaseEndpoints {
 	@DELETE
 	public Response deleteLegalLandSync(
 		@Parameter(description = "The id of the legal land in CIRRAS.") @QueryParam("legalLandId") String legalLandId
-	);
+	){
+		logger.debug("<deleteLegalLandSync");
+
+		Response response = null;
+		
+		logRequest();
+		
+		if(!hasAuthority(Scopes.DELETE_SYNC_UNDERWRITING)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+			
+		try {
+			LegalLandRsrc resource = (LegalLandRsrc) landDataSyncService.getLegalLand(
+					toInteger(legalLandId),
+					getFactoryContext(), 
+					getWebAdeAuthentication());
+			
+			if(resource != null) {
+				landDataSyncService.deleteLegalLand(toInteger(legalLandId), getFactoryContext(), getWebAdeAuthentication());
+			}
+			response = Response.status(204).build();
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+
+		logger.debug(">deleteLegalLandSync " + response);
+		return response;
+	}	
 
 }

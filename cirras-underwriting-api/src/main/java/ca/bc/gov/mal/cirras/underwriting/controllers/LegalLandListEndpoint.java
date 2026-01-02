@@ -1,20 +1,24 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+
+import ca.bc.gov.mal.cirras.underwriting.controllers.parameters.PagingQueryParameters;
+import ca.bc.gov.mal.cirras.underwriting.controllers.parameters.validation.ParameterValidator;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasInventoryService;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasUwLandManagementService;
 import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpoints;
+import ca.bc.gov.nrs.wfone.common.model.Message;
+import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
+import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -27,9 +31,37 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.GenericEntity;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
+@RestController
 @Path("/legallands")
-public interface LegalLandListEndpoint extends BaseEndpoints {
+public class LegalLandListEndpoint extends BaseEndpointsImpl {
+		
+	@Autowired
+	private CirrasInventoryService cirrasInventoryService;
+	
+	@Autowired
+	private CirrasUwLandManagementService cirrasUwLandManagementService;
+	
+	@Autowired
+	private ParameterValidator parameterValidator;
+	
+	public void setCirrasInventoryService(CirrasInventoryService cirrasInventoryService) {
+		this.cirrasInventoryService = cirrasInventoryService;
+	}
+
+	public void setParameterValidator(ParameterValidator parameterValidator) {
+		this.parameterValidator = parameterValidator;
+	}
 	
 	@Operation(operationId = "Get list of legal land.", summary = "Get list of legal land.", security = @SecurityRequirement(name = "Webade-OAUTH2", scopes = {Scopes.GET_LEGAL_LAND}), extensions = {@Extension(properties = {@ExtensionProperty(name = "auth-type", value = "#{wso2.x-auth-type.none}"), @ExtensionProperty(name = "throttling-tier", value = "Unlimited") })})
 	@Parameters({
@@ -46,7 +78,7 @@ public interface LegalLandListEndpoint extends BaseEndpoints {
 	})
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	Response getLegalLandList(
+	public Response getLegalLandList(
 		@Parameter(description = "Filter the results by legal location") @QueryParam("legalLocation") String legalLocation,
 		@Parameter(description = "Filter the results by property identifier") @QueryParam("primaryPropertyIdentifier") String primaryPropertyIdentifier,
 		@Parameter(description = "Filter the results by the grower info (Name, Number, Phone, Email") @QueryParam("growerInfo") String growerInfo,
@@ -57,7 +89,62 @@ public interface LegalLandListEndpoint extends BaseEndpoints {
 		@Parameter(description = "Sort direction") @QueryParam("sortDirection") String sortDirection,
 		@Parameter(description = "The page number of the results to be returned.") @QueryParam("pageNumber") String pageNumber,		
 		@Parameter(description = "The number of results per page.") @QueryParam("pageRowCount") String pageRowCount
-	);
+	){
+
+		Response response = null;
+		
+		logRequest();
+		
+		if(!hasAuthority(Scopes.GET_LEGAL_LAND)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		try {
+			
+			PagingQueryParameters parameters = new PagingQueryParameters();
+	
+			parameters.setPageNumber(pageNumber);
+			parameters.setPageRowCount(pageRowCount);
+			
+			List<Message> validation = new ArrayList<>();
+			validation.addAll(this.parameterValidator.validatePagingQueryParameters(parameters));
+			
+			MessageListRsrc validationMessages = new MessageListRsrc(validation);
+
+			if (validationMessages.hasMessages()) {
+				response = Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
+			} else {
+
+				LegalLandListRsrc results = (LegalLandListRsrc) cirrasInventoryService.getLegalLandList(
+						toStringWithoutDecode(legalLocation),
+						toStringWithoutDecode(primaryPropertyIdentifier),
+						toStringWithoutDecode(growerInfo),
+						toStringWithoutDecode(datasetType),
+						toBoolean(isWildCardSearch), 
+						toBoolean(searchByLegalLocOrLegalDesc), 
+						toStringWithoutDecode(sortColumn),
+						toStringWithoutDecode(sortDirection),
+						toInteger(pageNumber),
+						toInteger(pageRowCount),
+						getFactoryContext(), 
+						getWebAdeAuthentication());
+				
+				GenericEntity<LegalLandListRsrc> entity = new GenericEntity<LegalLandListRsrc>(results) {
+					/* do nothing */
+				};
+	
+				response = Response.ok(entity).tag(results.getUnquotedETag()).build();
+			}
+			
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+
+		return response;
+	}
+	
 	
 	@Operation(operationId = "Add a new legal land", security = @SecurityRequirement(name = "Webade-OAUTH2", scopes = {Scopes.CREATE_LEGAL_LAND}), summary = "Add a new legal land", extensions = {@Extension(properties = {@ExtensionProperty(name = "auth-type", value = "#{wso2.x-auth-type.none}"), @ExtensionProperty(name = "throttling-tier", value = "Unlimited") })})
 	@Parameters({
@@ -79,6 +166,43 @@ public interface LegalLandListEndpoint extends BaseEndpoints {
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response createLegalLand(
-		@Parameter(name = "legalLand", description = "The legal land resource containing the new values.", required = true)  LegalLandRsrc legalLand);
+		@Parameter(name = "legalLand", description = "The legal land resource containing the new values.", required = true)  LegalLandRsrc legalLand
+	){
+		
+		logRequest();
+		Response response = null;
+		
+		if(!hasAuthority(Scopes.CREATE_LEGAL_LAND)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		try {
+
+			LegalLandRsrc result = (LegalLandRsrc) cirrasUwLandManagementService.createLegalLand(
+					legalLand, 
+					getFactoryContext(), 
+					getWebAdeAuthentication());
+
+			URI createdUri = URI.create(result.getSelfLink());
+
+			response = Response.created(createdUri).entity(result).tag(result.getUnquotedETag()).build();
+
+		} catch(ValidationFailureException e) {
+			response = Response.status(Status.BAD_REQUEST).entity(new MessageListRsrc(e.getValidationErrors())).build();
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+		
+		return response;
+	}
 	
+	private static String toStringWithoutDecode(String value) {
+		String result = null;
+		if(value!=null&&value.trim().length()>0) {
+			result = value;
+		}
+		return result;
+	}
 }

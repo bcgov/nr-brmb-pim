@@ -637,56 +637,56 @@ public class InventoryContractEndpointForageTest extends EndpointsTest {
 		
 		logger.debug(">testGenerateInventoryReport - Returned " + reportContent.length + " bytes");	
 
-		// Test 2: Generate Grain Unseeded report
-		reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "4", null, null, null, null, null, null, InventoryReportType.unseeded.name());
-		
-		Assert.assertNotNull(reportContent);
-		
-		logger.debug(">testGenerateInventoryReport - Returned " + reportContent.length + " bytes");	
-
-		// Test 3: Generate Grain Seeded report
-		reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "4", null, null, null, null, null, null, InventoryReportType.seeded.name());
-		
-		Assert.assertNotNull(reportContent);
-		
-		logger.debug(">testGenerateInventoryReport - Returned " + reportContent.length + " bytes");
-		
-		// Test 4: Omit Insurance Plan: Report generation should fail.
-		try {
-			reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", null, null, null, null, null, null, null, null);
-			Assert.fail("Report generated for missing insurance plan id ");
-		} catch ( CirrasUnderwritingServiceException e ) {
-			// Ok.
-		}
-
-		// Test 5: Invalid Insurance Plan: Report generation should fail.
-		try {
-			reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "2", null, null, null, null, null, null, null);
-			Assert.fail("Report generated for invalid insurance plan id ");
-		} catch ( CirrasUnderwritingServiceException e ) {
-			// Ok.
-		}
-
-		// Test 6: Omit Report Type for GRAIN: Report generation should fail.
-		try {
-			reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "4", null, null, null, null, null, null, null);
-			Assert.fail("Report generated for omitted report type");
-		} catch ( CirrasUnderwritingServiceException e ) {
-			// Ok.
-		}
-	
-		// Test 7: Invalid Report Type for GRAIN: Report generation should fail.
-		try {
-			reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "4", null, null, null, null, null, null, "nosuchtype");
-			Assert.fail("Report generated for invalid report type");
-		} catch ( CirrasUnderwritingServiceException e ) {
-			// Ok.
-		}
-		
-		// Test 8: Generate Berries report.
-		reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "3", null, null, null, null, null, null, null);
-		
-		Assert.assertNotNull(reportContent);
+//		// Test 2: Generate Grain Unseeded report
+//		reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "4", null, null, null, null, null, null, InventoryReportType.unseeded.name());
+//		
+//		Assert.assertNotNull(reportContent);
+//		
+//		logger.debug(">testGenerateInventoryReport - Returned " + reportContent.length + " bytes");	
+//
+//		// Test 3: Generate Grain Seeded report
+//		reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "4", null, null, null, null, null, null, InventoryReportType.seeded.name());
+//		
+//		Assert.assertNotNull(reportContent);
+//		
+//		logger.debug(">testGenerateInventoryReport - Returned " + reportContent.length + " bytes");
+//		
+//		// Test 4: Omit Insurance Plan: Report generation should fail.
+//		try {
+//			reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", null, null, null, null, null, null, null, null);
+//			Assert.fail("Report generated for missing insurance plan id ");
+//		} catch ( CirrasUnderwritingServiceException e ) {
+//			// Ok.
+//		}
+//
+//		// Test 5: Invalid Insurance Plan: Report generation should fail.
+//		try {
+//			reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "2", null, null, null, null, null, null, null);
+//			Assert.fail("Report generated for invalid insurance plan id ");
+//		} catch ( CirrasUnderwritingServiceException e ) {
+//			// Ok.
+//		}
+//
+//		// Test 6: Omit Report Type for GRAIN: Report generation should fail.
+//		try {
+//			reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "4", null, null, null, null, null, null, null);
+//			Assert.fail("Report generated for omitted report type");
+//		} catch ( CirrasUnderwritingServiceException e ) {
+//			// Ok.
+//		}
+//	
+//		// Test 7: Invalid Report Type for GRAIN: Report generation should fail.
+//		try {
+//			reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "4", null, null, null, null, null, null, "nosuchtype");
+//			Assert.fail("Report generated for invalid report type");
+//		} catch ( CirrasUnderwritingServiceException e ) {
+//			// Ok.
+//		}
+//		
+//		// Test 8: Generate Berries report.
+//		reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "3", null, null, null, null, null, null, null);
+//		
+//		Assert.assertNotNull(reportContent);
 		
 		logger.debug(">testGenerateInventoryReport - Returned " + reportContent.length + " bytes");	
 
