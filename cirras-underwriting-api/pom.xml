@@ -6,7 +6,7 @@
 	<artifactId>cirras-underwriting-api-parent</artifactId>
 	<name>cirras-underwriting-api-parent</name>
 	<version>4.1.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java-source-version>21</java-source-version>
