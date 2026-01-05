@@ -285,6 +285,7 @@ export class AddFieldComponent implements OnInit{
           this.validateFields(self.fieldList.collection[0])
         }
       } else {
+        this.dataToSend.landData.fieldId = -1
         self.showNoFieldMessage = true
         self.showProceedButton = true
       }
