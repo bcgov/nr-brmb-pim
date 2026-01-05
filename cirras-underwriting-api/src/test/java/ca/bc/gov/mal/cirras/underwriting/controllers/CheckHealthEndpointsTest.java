@@ -16,7 +16,6 @@ import ca.bc.gov.nrs.wfone.common.utils.HttpServletRequestHolder;
 import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
 import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.resource.AccessToken;
 import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingService;
-import ca.bc.gov.mal.cirras.underwriting.clients.impl.CirrasUnderwritingServiceImpl;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 
 public class CheckHealthEndpointsTest extends EndpointsTest {
@@ -37,8 +36,8 @@ public class CheckHealthEndpointsTest extends EndpointsTest {
 			return;
 		}
 
-		CirrasUnderwritingService service = new CirrasUnderwritingServiceImpl();
-		((CirrasUnderwritingServiceImpl) service).setTopLevelRestURL(topLevelRestURL);
+		CirrasUnderwritingService service = new CirrasUnderwritingService();
+		((CirrasUnderwritingService) service).setTopLevelRestURL(topLevelRestURL);
 		
 		HealthCheckResponseRsrc healthCheckResponse = service.getHealthCheck("test");
 		
@@ -61,8 +60,8 @@ public class CheckHealthEndpointsTest extends EndpointsTest {
 		tokenService.selectUser("GOV", "C142019F4E3B4E969F148A156F07E8C7", null, null);
 		AccessToken token = tokenService.getToken(WebadeOauth2ClientId, WebadeOauth2ClientSecret, Scope, authorizationCode, Scope);
 
-		CirrasUnderwritingService service = new CirrasUnderwritingServiceImpl("Bearer "+token.getAccessToken());
-		((CirrasUnderwritingServiceImpl) service).setTopLevelRestURL(topLevelRestURL);
+		CirrasUnderwritingService service = new CirrasUnderwritingService("Bearer "+token.getAccessToken());
+		((CirrasUnderwritingService) service).setTopLevelRestURL(topLevelRestURL);
 		
 		HealthCheckResponseRsrc healthCheckResponse = service.getHealthCheck("test");
 		
@@ -83,8 +82,8 @@ public class CheckHealthEndpointsTest extends EndpointsTest {
 		tokenService.selectServiceClient(WebadeOauth2ClientId, WebadeOauth2ClientGuid, Scope);
 		AccessToken token = tokenService.getToken(WebadeOauth2ClientId, WebadeOauth2ClientSecret, Scope);
 
-		CirrasUnderwritingService service = new CirrasUnderwritingServiceImpl("Bearer "+token.getAccessToken());
-		((CirrasUnderwritingServiceImpl) service).setTopLevelRestURL(topLevelRestURL);
+		CirrasUnderwritingService service = new CirrasUnderwritingService("Bearer "+token.getAccessToken());
+		((CirrasUnderwritingService) service).setTopLevelRestURL(topLevelRestURL);
 		
 		HealthCheckResponseRsrc healthCheckResponse = service.getHealthCheck("test");
 		
@@ -102,8 +101,8 @@ public class CheckHealthEndpointsTest extends EndpointsTest {
 			return;
 		}
 
-		CirrasUnderwritingService service = new CirrasUnderwritingServiceImpl("TEST_SERVICE_CLIENT", "password");
-		((CirrasUnderwritingServiceImpl) service).setTopLevelRestURL(topLevelRestURL);
+		CirrasUnderwritingService service = new CirrasUnderwritingService("TEST_SERVICE_CLIENT", "password");
+		((CirrasUnderwritingService) service).setTopLevelRestURL(topLevelRestURL);
 		
 		tokenService.selectServiceClient(WebadeOauth2ClientId, WebadeOauth2ClientGuid, Scope);
 		
@@ -145,8 +144,8 @@ public class CheckHealthEndpointsTest extends EndpointsTest {
 		
 		HttpServletRequestHolder.setHttpServletRequest(httpServletRequest);
 
-		CirrasUnderwritingService service = new CirrasUnderwritingServiceImpl();
-		((CirrasUnderwritingServiceImpl) service).setTopLevelRestURL(topLevelRestURL);
+		CirrasUnderwritingService service = new CirrasUnderwritingService();
+		((CirrasUnderwritingService) service).setTopLevelRestURL(topLevelRestURL);
 		
 		HealthCheckResponseRsrc healthCheckResponse = service.getHealthCheck("test");
 		

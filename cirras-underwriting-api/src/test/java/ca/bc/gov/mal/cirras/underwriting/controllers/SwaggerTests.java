@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
 import ca.bc.gov.nrs.wfone.common.rest.client.RestClientServiceException;
 import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingService;
-import ca.bc.gov.mal.cirras.underwriting.clients.impl.CirrasUnderwritingServiceImpl;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 
@@ -35,8 +34,8 @@ public class SwaggerTests extends EndpointsTest {
 			return;
 		}
 
-		CirrasUnderwritingService service = new CirrasUnderwritingServiceImpl();
-		((CirrasUnderwritingServiceImpl) service).setTopLevelRestURL(topLevelRestURL);
+		CirrasUnderwritingService service = new CirrasUnderwritingService();
+		((CirrasUnderwritingService) service).setTopLevelRestURL(topLevelRestURL);
 		
 		String resource = service.getSwaggerString();
 		logger.debug(resource);

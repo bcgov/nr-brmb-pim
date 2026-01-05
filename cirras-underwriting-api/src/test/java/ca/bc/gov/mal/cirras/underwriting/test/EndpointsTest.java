@@ -22,7 +22,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.clients.ValidationException;
-import ca.bc.gov.mal.cirras.underwriting.clients.impl.CirrasUnderwritingServiceImpl;
 import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.utils.ApplicationContextProvider;
 import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
@@ -116,8 +115,8 @@ public abstract class EndpointsTest {
 		tokenService.selectServiceClient(WebadeOauth2ClientId, WebadeOauth2ClientGuid, scopes);
 		AccessToken token = tokenService.getToken(WebadeOauth2ClientId, WebadeOauth2ClientSecret, scopes);
 
-		CirrasUnderwritingService service = new CirrasUnderwritingServiceImpl("Bearer "+token.getAccessToken());
-		((CirrasUnderwritingServiceImpl) service).setTopLevelRestURL(topLevelRestURL);
+		CirrasUnderwritingService service = new CirrasUnderwritingService("Bearer "+token.getAccessToken());
+		((CirrasUnderwritingService) service).setTopLevelRestURL(topLevelRestURL);
 		return service;
 	}
 	
@@ -132,8 +131,8 @@ public abstract class EndpointsTest {
 		tokenService.selectServiceClient(WebadeOauth2ClientId2, WebadeOauth2ClientGuid2, scopes);
 		AccessToken token = tokenService.getToken(WebadeOauth2ClientId2, WebadeOauth2ClientSecret2, scopes);
 
-		CirrasUnderwritingService service = new CirrasUnderwritingServiceImpl("Bearer "+token.getAccessToken());
-		((CirrasUnderwritingServiceImpl) service).setTopLevelRestURL(topLevelRestURL);
+		CirrasUnderwritingService service = new CirrasUnderwritingService("Bearer "+token.getAccessToken());
+		((CirrasUnderwritingService) service).setTopLevelRestURL(topLevelRestURL);
 		return service;
 	}
 	
