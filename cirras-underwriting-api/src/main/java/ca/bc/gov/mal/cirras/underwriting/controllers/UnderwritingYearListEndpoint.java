@@ -1,19 +1,21 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import java.net.URI;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
+//import ca.bc.gov.mal.cirras.underwriting.controllers.parameters.validation.ParameterValidator;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UnderwritingYearListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UnderwritingYearRsrc;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasMaintenanceService;
 import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpoints;
+import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
+import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -26,10 +28,25 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.GenericEntity;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
+@RestController
 @Path("/underwritingYears")
-public interface UnderwritingYearListEndpoint extends BaseEndpoints {
+public class UnderwritingYearListEndpoint extends BaseEndpointsImpl {
+
+	private static final Logger logger = LoggerFactory.getLogger(UnderwritingYearListEndpoint.class);	
 	
+	@Autowired
+	private CirrasMaintenanceService cirrasMaintenanceService;
+
 	@Operation(operationId = "Add a new underwriting year", security = @SecurityRequirement(name = "Webade-OAUTH2", scopes = {Scopes.CREATE_UNDERWRITING_YEAR}), summary = "Add a new underwriting year", extensions = {@Extension(properties = {@ExtensionProperty(name = "auth-type", value = "#{wso2.x-auth-type.none}"), @ExtensionProperty(name = "throttling-tier", value = "Unlimited") })})
 	@Parameters({
 		@Parameter(name = HeaderConstants.REQUEST_ID_HEADER, description = HeaderConstants.REQUEST_ID_HEADER_DESCRIPTION, required = false, schema = @Schema(implementation = String.class), in = ParameterIn.HEADER),
@@ -50,8 +67,39 @@ public interface UnderwritingYearListEndpoint extends BaseEndpoints {
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response createUnderwritingYear(
-		@Parameter(name = "underwritingYear", description = "The underwriting year resource containing the new values.", required = true) UnderwritingYearRsrc underwritingYear);
-	
+		@Parameter(name = "underwritingYear", description = "The underwriting year resource containing the new values.", required = true) UnderwritingYearRsrc underwritingYear
+	){
+		logger.debug("<createUnderwritingYear");
+		Response response = null;
+		
+		logRequest();
+
+		if(!hasAuthority(Scopes.CREATE_UNDERWRITING_YEAR)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		try {
+
+			UnderwritingYearRsrc result = (UnderwritingYearRsrc) cirrasMaintenanceService.createUnderwritingYear(
+					underwritingYear, 
+					getFactoryContext(), 
+					getWebAdeAuthentication());
+
+			URI createdUri = URI.create(result.getSelfLink());
+
+			response = Response.created(createdUri).entity(result).tag(result.getUnquotedETag()).build();
+
+		} catch(ValidationFailureException e) {
+			response = Response.status(Status.BAD_REQUEST).entity(new MessageListRsrc(e.getValidationErrors())).build();
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+
+		logger.debug(">createUnderwritingYear " + response);
+		return response;
+	}
 
 	@Operation(operationId = "Get list of underwriting years.", summary = "Get list of underwriting years.", security = @SecurityRequirement(name = "Webade-OAUTH2", scopes = {Scopes.GET_UNDERWRITING_YEAR}), extensions = {@Extension(properties = {@ExtensionProperty(name = "auth-type", value = "#{wso2.x-auth-type.none}"), @ExtensionProperty(name = "throttling-tier", value = "Unlimited") })})
 	@Parameters({
@@ -68,5 +116,36 @@ public interface UnderwritingYearListEndpoint extends BaseEndpoints {
 	})
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	Response getUnderwritingYearList();
+	public Response getUnderwritingYearList()
+	{
+		
+		Response response = null;
+		
+		logRequest();
+		
+		if(!hasAuthority(Scopes.GET_UNDERWRITING_YEAR)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		try {
+			
+			UnderwritingYearListRsrc results = (UnderwritingYearListRsrc) cirrasMaintenanceService.getUnderwritingYearList(
+					getFactoryContext(), 
+					getWebAdeAuthentication());
+
+			GenericEntity<UnderwritingYearListRsrc> entity = new GenericEntity<UnderwritingYearListRsrc>(results) {
+					/* do nothing */
+			};
+
+			response = Response.ok(entity).tag(results.getUnquotedETag()).build();
+			
+			
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+
+		return response;
+	}
 }

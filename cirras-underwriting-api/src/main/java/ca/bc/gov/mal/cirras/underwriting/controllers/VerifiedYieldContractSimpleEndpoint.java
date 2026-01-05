@@ -1,18 +1,15 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
 
-import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
-import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpoints;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.VerifiedYieldContractSimpleRsrc;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasVerifiedYieldService;
+import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
+import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
+import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
+import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -25,10 +22,21 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
+@RestController
 @Path("/verifiedYieldContractSimple")
-public interface VerifiedYieldContractSimpleEndpoint extends BaseEndpoints {
-	
+public class VerifiedYieldContractSimpleEndpoint extends BaseEndpointsImpl {
+		
+	@Autowired
+	private CirrasVerifiedYieldService cirrasVerifiedYieldService;
+
 	@Operation(operationId = "Get the verified yield contract simple.", summary = "Get the verified yield contract simple", security = @SecurityRequirement(name = "Webade-OAUTH2", scopes = {Scopes.GET_VERIFIED_YIELD_CONTRACT_SIMPLE}), extensions = {@Extension(properties = {@ExtensionProperty(name = "auth-type", value = "#{wso2.x-auth-type.none}"), @ExtensionProperty(name = "throttling-tier", value = "Unlimited") })})
 	@Parameters({
 		@Parameter(name = HeaderConstants.REQUEST_ID_HEADER, description = HeaderConstants.REQUEST_ID_HEADER_DESCRIPTION, required = false, schema = @Schema(implementation = String.class), in = ParameterIn.HEADER),
@@ -43,7 +51,7 @@ public interface VerifiedYieldContractSimpleEndpoint extends BaseEndpoints {
 		@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = MessageListRsrc.class))) })
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	Response getVerifiedYieldContractSimple(
+	public Response getVerifiedYieldContractSimple(
 			@Parameter(description = "The id of the contract.", required = true) @QueryParam("contractId") String contractId,
 			@Parameter(description = "The crop year of the contract.", required = true) @QueryParam("cropYear") String cropYear,
 			@Parameter(description = "The id of the commodity. Can be null") @QueryParam("commodityId") String commodityId,
@@ -52,5 +60,41 @@ public interface VerifiedYieldContractSimpleEndpoint extends BaseEndpoints {
 			@Parameter(description = "True if the Verified Yield Contract Amendments need to be returned", required = true) @QueryParam("loadVerifiedYieldAmendments") String loadVerifiedYieldAmendments,
 			@Parameter(description = "True if the Verified Yield Contract Summaries need to be returned", required = true) @QueryParam("loadVerifiedYieldSummaries") String loadVerifiedYieldSummaries,
 			@Parameter(description = "True if the Verified Yield Contract Grain Basket needs to be returned", required = true) @QueryParam("loadVerifiedYieldGrainBasket") String loadVerifiedYieldGrainBasket
-	);
+	){
+
+		Response response = null;
+		
+		logRequest();
+		
+		if(!hasAuthority(Scopes.GET_VERIFIED_YIELD_CONTRACT_SIMPLE)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		
+		try {
+			VerifiedYieldContractSimpleRsrc result = (VerifiedYieldContractSimpleRsrc) cirrasVerifiedYieldService.getVerifiedYieldContractSimple(
+					toInteger(contractId),
+					toInteger(cropYear),
+					toInteger(commodityId),
+					toBoolean(isPedigreeInd),
+					toBoolean(loadVerifiedYieldContractCommodities),
+					toBoolean(loadVerifiedYieldAmendments),
+					toBoolean(loadVerifiedYieldSummaries),
+					toBoolean(loadVerifiedYieldGrainBasket),
+					getFactoryContext(), 
+					getWebAdeAuthentication());
+			response = Response.ok(result).tag(result.getUnquotedETag()).build();
+
+		} catch (NotFoundException e) {
+			response = Response.status(Status.NOT_FOUND).build();
+			
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+
+		return response;
+		
+	}
+
 }

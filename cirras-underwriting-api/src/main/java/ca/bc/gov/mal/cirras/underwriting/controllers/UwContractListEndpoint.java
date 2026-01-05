@@ -1,17 +1,20 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+
+import ca.bc.gov.mal.cirras.underwriting.controllers.parameters.PagingQueryParameters;
+import ca.bc.gov.mal.cirras.underwriting.controllers.parameters.validation.ParameterValidator;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasUnderwritingService;
 import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpoints;
+import ca.bc.gov.nrs.wfone.common.model.Message;
+import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -24,10 +27,34 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.GenericEntity;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
+@RestController
 @Path("/uwcontracts")
-public interface UwContractListEndpoint extends BaseEndpoints {
+public class UwContractListEndpoint extends BaseEndpointsImpl {
+		
+	@Autowired
+	private CirrasUnderwritingService cirrasUnderwritingService;
+
+	@Autowired
+	private ParameterValidator parameterValidator;
 	
+	public void setCirrasUnderwritingService(CirrasUnderwritingService cirrasUnderwritingService) {
+		this.cirrasUnderwritingService = cirrasUnderwritingService;
+	}
+
+	public void setParameterValidator(ParameterValidator parameterValidator) {
+		this.parameterValidator = parameterValidator;
+	}
+	
+
 	@Operation(operationId = "Get list of uw contracts.", summary = "Get list of uw contracts.", security = @SecurityRequirement(name = "Webade-OAUTH2", scopes = {Scopes.SEARCH_UWCONTRACTS}), extensions = {@Extension(properties = {@ExtensionProperty(name = "auth-type", value = "#{wso2.x-auth-type.none}"), @ExtensionProperty(name = "throttling-tier", value = "Unlimited") })})
 	@Parameters({
 		@Parameter(name = HeaderConstants.REQUEST_ID_HEADER, description = HeaderConstants.REQUEST_ID_HEADER_DESCRIPTION, required = false, schema = @Schema(implementation = String.class), in = ParameterIn.HEADER),
@@ -43,7 +70,7 @@ public interface UwContractListEndpoint extends BaseEndpoints {
 	})
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	Response getUwContractList(
+	public Response getUwContractList(
 		@Parameter(description = "Filter the results by the year") @QueryParam("cropYear") String cropYear,
 		@Parameter(description = "Filter the results by the insurance plan") @QueryParam("insurancePlanId") String insurancePlanId,
 		@Parameter(description = "Filter the results by the office") @QueryParam("officeId") String officeId,
@@ -55,6 +82,62 @@ public interface UwContractListEndpoint extends BaseEndpoints {
 		@Parameter(description = "Sort direction") @QueryParam("sortDirection") String sortDirection,
 		@Parameter(description = "The page number of the results to be returned.") @QueryParam("pageNumber") String pageNumber,		
 		@Parameter(description = "The number of results per page.") @QueryParam("pageRowCount") String pageRowCount
-	);
-	
+	){
+		
+		Response response = null;
+		
+		logRequest();
+		
+		if(!hasAuthority(Scopes.SEARCH_UWCONTRACTS)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		try {
+			
+			PagingQueryParameters parameters = new PagingQueryParameters();
+
+			parameters.setPageNumber(pageNumber);
+			parameters.setPageRowCount(pageRowCount);
+			
+			List<Message> validation = new ArrayList<>();
+			validation.addAll(this.parameterValidator.validatePagingQueryParameters(parameters));
+
+			MessageListRsrc validationMessages = new MessageListRsrc(validation);
+			if (validationMessages.hasMessages()) {
+				response = Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
+			} else {
+
+				UwContractListRsrc results = (UwContractListRsrc) cirrasUnderwritingService.getUwContractList(
+						toInteger(cropYear),
+						toInteger(insurancePlanId),
+						toInteger(officeId),
+						toString(policyStatusCode),
+						toString(policyNumber),
+						toString(growerInfo),
+						toString(datasetType),
+						toString(sortColumn),
+						toString(sortDirection),
+						toInteger(pageNumber), 
+						toInteger(pageRowCount), 
+						getFactoryContext(), 
+						getWebAdeAuthentication());
+
+
+
+				GenericEntity<UwContractListRsrc> entity = new GenericEntity<UwContractListRsrc>(results) {
+					/* do nothing */
+				};
+
+				response = Response.ok(entity).tag(results.getUnquotedETag()).build();
+			}
+			
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+
+		return response;
+	}
+
 }

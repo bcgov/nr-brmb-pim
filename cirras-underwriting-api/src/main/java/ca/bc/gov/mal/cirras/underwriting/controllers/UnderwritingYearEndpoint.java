@@ -1,18 +1,19 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
 
-import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
-import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpoints;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UnderwritingYearRsrc;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasMaintenanceService;
+import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
+import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
+import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
+import ca.bc.gov.nrs.wfone.common.service.api.ConflictException;
+import ca.bc.gov.nrs.wfone.common.service.api.ForbiddenException;
+import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -25,9 +26,25 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.EntityTag;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.Response.Status;
 
+@RestController
 @Path("/underwritingYear/{cropYear}")
-public interface UnderwritingYearEndpoint extends BaseEndpoints {
+public class UnderwritingYearEndpoint extends BaseEndpointsImpl {
+	
+	private static final Logger logger = LoggerFactory.getLogger(UnderwritingYearEndpoint.class);
+	
+	@Autowired
+	private CirrasMaintenanceService cirrasMaintenanceService;
 	
 	@Operation(operationId = "Get the underwriting year.", summary = "Get the underwriting year", security = @SecurityRequirement(name = "Webade-OAUTH2", scopes = {Scopes.GET_UNDERWRITING_YEAR}), extensions = {@Extension(properties = {@ExtensionProperty(name = "auth-type", value = "#{wso2.x-auth-type.none}"), @ExtensionProperty(name = "throttling-tier", value = "Unlimited") })})
 	@Parameters({
@@ -43,10 +60,38 @@ public interface UnderwritingYearEndpoint extends BaseEndpoints {
 		@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = MessageListRsrc.class))) })
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	Response getUnderwritingYear(
+	public Response getUnderwritingYear(
 		@Parameter(description = "crop year of the underwriting year.") @PathParam("cropYear") String cropYear
-	);
+	){
+		
+		Response response = null;
+		
+		logRequest();
+		
+		if(!hasAuthority(Scopes.GET_UNDERWRITING_YEAR)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		
+		try {
+			UnderwritingYearRsrc result = (UnderwritingYearRsrc) cirrasMaintenanceService.getUnderwritingYear(
+					toInteger(cropYear),
+					getFactoryContext(), 
+					getWebAdeAuthentication());
+			response = Response.ok(result).tag(result.getUnquotedETag()).build();
 
+		} catch (NotFoundException e) {
+			response = Response.status(Status.NOT_FOUND).build();
+			
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+
+		return response;
+	}
+
+	
 	@Operation(operationId = "Delete underwriting year", summary = "Delete underwriting year", security = @SecurityRequirement(name = "Webade-OAUTH2", scopes = {Scopes.DELETE_UNDERWRITING_YEAR}), extensions = {@Extension(properties = {@ExtensionProperty(name = "auth-type", value = "#{wso2.x-auth-type.none}"), @ExtensionProperty(name = "throttling-tier", value = "Unlimited") })})
 	@Parameters({
 		@Parameter(name = HeaderConstants.REQUEST_ID_HEADER, description = HeaderConstants.REQUEST_ID_HEADER_DESCRIPTION, required = false, schema = @Schema(implementation = String.class), in = ParameterIn.HEADER),
@@ -64,5 +109,57 @@ public interface UnderwritingYearEndpoint extends BaseEndpoints {
 		@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = MessageListRsrc.class))) })
 	@DELETE
 	public Response deleteUnderwritingYear(
-		@Parameter(description = "crop year of the resource.") @PathParam("cropYear") String cropYear);
+		@Parameter(description = "crop year of the resource.") @PathParam("cropYear") String cropYear
+	){
+		logger.debug("<deleteUnderwritingYear");
+
+		Response response = null;
+		
+		logRequest();
+		
+		if(!hasAuthority(Scopes.DELETE_UNDERWRITING_YEAR)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+			
+		try {
+			UnderwritingYearRsrc current = (UnderwritingYearRsrc) this.cirrasMaintenanceService.getUnderwritingYear(
+					toInteger(cropYear), 
+					getFactoryContext(), 
+					getWebAdeAuthentication());
+
+			EntityTag currentTag = EntityTag.valueOf(current.getQuotedETag());
+
+			ResponseBuilder responseBuilder = this.evaluatePreconditions(currentTag);
+
+			if (responseBuilder == null) {
+				// Preconditions Are Met
+				
+				String optimisticLock = getIfMatchHeader();
+
+				cirrasMaintenanceService.deleteUnderwritingYear(
+						toInteger(cropYear),
+						optimisticLock, 
+						getWebAdeAuthentication());
+
+				response = Response.status(204).build();
+			} else {
+				// Preconditions Are NOT Met
+
+				response = responseBuilder.tag(currentTag).build();
+			}
+		} catch (ForbiddenException e) {
+			response = Response.status(Status.FORBIDDEN).build();
+		} catch (ConflictException e) {
+			response = Response.status(Status.CONFLICT).entity(e.getMessage()).build();
+		} catch (NotFoundException e) {
+			response = Response.status(Status.NOT_FOUND).build();
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+
+		logger.debug(">deleteUnderwritingYear " + response);
+		return response;
+	}
 }

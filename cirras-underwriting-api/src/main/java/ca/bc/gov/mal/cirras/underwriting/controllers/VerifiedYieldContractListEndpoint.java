@@ -1,17 +1,18 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import java.net.URI;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+
+import ca.bc.gov.mal.cirras.underwriting.controllers.parameters.validation.ParameterValidator;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.VerifiedYieldContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasVerifiedYieldService;
 import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpoints;
+import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
+import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -24,9 +25,31 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
+@RestController
 @Path("/verifiedYieldContracts")
-public interface VerifiedYieldContractListEndpoint extends BaseEndpoints {
+public class VerifiedYieldContractListEndpoint extends BaseEndpointsImpl {
+
+	@Autowired
+	private CirrasVerifiedYieldService cirrasVerifiedYieldService;
+
+	@Autowired
+	private ParameterValidator parameterValidator;
+	
+	public void setCirrasVerifiedYieldService(CirrasVerifiedYieldService cirrasVerifiedYieldService) {
+		this.cirrasVerifiedYieldService = cirrasVerifiedYieldService;
+	}
+
+	public void setParameterValidator(ParameterValidator parameterValidator) {
+		this.parameterValidator = parameterValidator;
+	}
 	
 	@Operation(operationId = "Add a new verified yield contract", security = @SecurityRequirement(name = "Webade-OAUTH2", scopes = {Scopes.CREATE_VERIFIED_YIELD_CONTRACT}), summary = "Add a new verified yield contract", extensions = {@Extension(properties = {@ExtensionProperty(name = "auth-type", value = "#{wso2.x-auth-type.none}"), @ExtensionProperty(name = "throttling-tier", value = "Unlimited") })})
 	@Parameters({
@@ -48,5 +71,36 @@ public interface VerifiedYieldContractListEndpoint extends BaseEndpoints {
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response createVerifiedYieldContract(
-		@Parameter(name = "verifiedYieldContract", description = "The verified yield contract resource containing the new values.", required = true) VerifiedYieldContractRsrc verifiedYieldContract);
+		@Parameter(name = "verifiedYieldContract", description = "The verified yield contract resource containing the new values.", required = true) VerifiedYieldContractRsrc verifiedYieldContract
+	){
+
+		Response response = null;
+		
+		logRequest();
+
+		if(!hasAuthority(Scopes.CREATE_VERIFIED_YIELD_CONTRACT)) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		try {
+
+			VerifiedYieldContractRsrc result = (VerifiedYieldContractRsrc) cirrasVerifiedYieldService.createVerifiedYieldContract(
+					verifiedYieldContract, 
+					getFactoryContext(), 
+					getWebAdeAuthentication());
+
+			URI createdUri = URI.create(result.getSelfLink());
+
+			response = Response.created(createdUri).entity(result).tag(result.getUnquotedETag()).build();
+
+		} catch(ValidationFailureException e) {
+			response = Response.status(Status.BAD_REQUEST).entity(new MessageListRsrc(e.getValidationErrors())).build();
+		} catch (Throwable t) {
+			response = getInternalServerErrorResponse(t);
+		}
+		
+		logResponse(response);
+
+		return response;
+	}
 }
