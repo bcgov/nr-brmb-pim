@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.4.3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_Inv_Berries_Totals" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="bea432ee-9952-4077-91a3-80a924d053a7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
@@ -12,6 +12,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="GlobalDefault" isDefault="true" fontName="Noto Sans"/>
 	<parameter name="p_contract_id" class="java.lang.Integer"/>
 	<parameter name="p_crop_year" class="java.lang.Integer"/>
 	<parameter name="p_commodity_name" class="java.lang.String"/>
@@ -90,7 +91,7 @@ WHERE
 	<detail>
 		<band height="75" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="70" height="15" uuid="6cf76497-8a69-4624-85e5-0ed3ab335b5d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -122,7 +123,7 @@ WHERE
 				</textElement>
 				<textFieldExpression><![CDATA["TOTAL " + $F{commodity_name} + " ACRES"]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="250" y="0" width="40" height="15" uuid="a4a9b776-eeaf-4713-9fb0-758c4425bc99">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -141,7 +142,7 @@ WHERE
 	:
 	(new java.text.DecimalFormat("#,##0.0").format($F{total_acres}.doubleValue()))]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="290" y="0" width="20" height="15" uuid="3a7e8d2b-b255-4c93-9765-5277b7bfd1ca">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -172,7 +173,7 @@ WHERE
 				</textElement>
 				<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? ("TOTAL " + $F{commodity_name} + " PLANTS") : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="485" y="0" width="40" height="15" uuid="f6c5f973-9787-481f-abaa-0fc331cc7dae">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -188,7 +189,7 @@ WHERE
 				</textElement>
 				<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? new java.text.DecimalFormat("#,##0").format($F{total_plants}.longValue()) : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="525" y="0" width="30" height="15" uuid="66f49334-7473-4c92-81e2-defa277ab9fa">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -208,7 +209,7 @@ WHERE
 				<reportElement x="0" y="15" width="555" height="15" isRemoveLineWhenBlank="true" uuid="5dabd9c0-76cb-4c68-81fc-b30fb80d0301">
 					<printWhenExpression><![CDATA[!$F{commodity_name}.equals("STRAWBERRY")]]></printWhenExpression>
 				</reportElement>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="70" height="15" uuid="67edce2b-79e5-4022-8925-99d012101998">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -240,7 +241,7 @@ WHERE
 					</textElement>
 					<textFieldExpression><![CDATA["Uninsured Acres"]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="250" y="0" width="40" height="15" uuid="ba2b838c-f8e4-428d-abfa-c401df02e663">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -259,7 +260,7 @@ WHERE
 	:
 	(new java.text.DecimalFormat("#,##0.0").format($F{total_quantity_uninsured_acres}.doubleValue()))]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="290" y="0" width="20" height="15" uuid="1b384662-63bc-4d1f-a8b1-31c4a91363b7">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -290,7 +291,7 @@ WHERE
 					</textElement>
 					<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? "Uninsured Plants" : ""]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="485" y="0" width="40" height="15" uuid="17a30dff-15ba-4a3b-af73-47413fe2b116">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -306,7 +307,7 @@ WHERE
 					</textElement>
 					<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? new java.text.DecimalFormat("#,##0").format($F{total_uninsured_plants}.longValue()) : ""]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="525" y="0" width="30" height="15" uuid="c917aace-9439-4ab4-96f2-bc0108b2e876">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -329,7 +330,7 @@ WHERE
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[$F{commodity_name}.equals("STRAWBERRY")]]></printWhenExpression>
 				</reportElement>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="70" height="15" uuid="82d50055-6659-43f3-9486-737899beefcb">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -361,7 +362,7 @@ WHERE
 					</textElement>
 					<textFieldExpression><![CDATA["Quantity Insured Acres"]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="250" y="0" width="40" height="15" uuid="c7aba168-8fa1-4512-a804-f974cd024d30">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -380,7 +381,7 @@ WHERE
 	:
 	(new java.text.DecimalFormat("#,##0.0").format($F{total_quantity_insured_acres}.doubleValue()))]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="290" y="0" width="20" height="15" uuid="32464adb-9306-41b7-a442-42a67a10ba60">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -410,7 +411,7 @@ WHERE
 						<font size="8" isBold="true"/>
 					</textElement>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="485" y="0" width="40" height="15" uuid="543b1f90-5445-4a4a-8ddc-94d0c9856864">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -425,7 +426,7 @@ WHERE
 						<font size="8" isBold="true"/>
 					</textElement>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="525" y="0" width="30" height="15" uuid="292b3213-d58b-4d2b-8894-67cce3c5c564">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -448,7 +449,7 @@ WHERE
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[$F{commodity_name}.equals("STRAWBERRY")]]></printWhenExpression>
 				</reportElement>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="70" height="15" uuid="976b38a2-19ef-4008-abc4-b02615866ff1">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -480,7 +481,7 @@ WHERE
 					</textElement>
 					<textFieldExpression><![CDATA["Plant Insured Acres"]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="250" y="0" width="40" height="15" uuid="20f60b2a-20a9-45ed-807b-76e41f6a9d7a">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -499,7 +500,7 @@ WHERE
 	:
 	(new java.text.DecimalFormat("#,##0.0").format($F{total_plant_insured_acres}.doubleValue()))]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="290" y="0" width="20" height="15" uuid="2da2df34-045a-45a9-88e4-4cb69ebfca19">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -529,7 +530,7 @@ WHERE
 						<font size="8" isBold="true"/>
 					</textElement>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="485" y="0" width="40" height="15" uuid="d172d9fd-11ec-49b1-8142-abdeb82de79e">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -544,7 +545,7 @@ WHERE
 						<font size="8" isBold="true"/>
 					</textElement>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement stretchType="ElementGroupHeight" x="525" y="0" width="30" height="15" uuid="d5c7d490-4dac-4aba-b0f8-4aba504197dc">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -561,7 +562,7 @@ WHERE
 					</textElement>
 				</textField>
 			</frame>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="0" y="60" width="70" height="15" uuid="4fdd3661-97aa-40a0-9e3c-5fc84bb18745">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -590,11 +591,11 @@ WHERE
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font fontName="Noto Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["TOTAL INSURED " + $F{commodity_name} + " ACRES"]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="250" y="60" width="40" height="15" uuid="0e9245f5-739a-48f0-81cc-6afec5d93d72">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -607,14 +608,14 @@ WHERE
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font fontName="Noto Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[(double)$F{total_quantity_insured_acres}.intValue() == $F{total_quantity_insured_acres}.doubleValue() ? 
 	(new java.text.DecimalFormat("#,##0").format($F{total_quantity_insured_acres}.doubleValue()))
 	:
 	(new java.text.DecimalFormat("#,##0.0").format($F{total_quantity_insured_acres}.doubleValue()))]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="290" y="60" width="20" height="15" uuid="8bf4922b-e4ad-409a-a1c0-2877fc8ee9b4">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -643,11 +644,11 @@ WHERE
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font fontName="Noto Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? ("TOTAL INSURED " + $F{commodity_name} + " PLANTS") : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="485" y="60" width="40" height="15" uuid="34c9e260-5112-4e7a-be44-dc5f22e1567b">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -660,11 +661,11 @@ WHERE
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font fontName="Noto Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Y".equals($P{p_show_plant_totals_ind}) ? new java.text.DecimalFormat("#,##0").format($F{total_insured_plants}.longValue()) : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="525" y="60" width="30" height="15" uuid="1273efae-b854-49c5-bd0f-76be0c605f8a">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -686,7 +687,7 @@ WHERE
 		<band height="30" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<printWhenExpression><![CDATA["Y".equals($P{p_pad_footer_ind})]]></printWhenExpression>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="70" height="15" uuid="2ca9284b-7230-45ba-a19b-7bdb1795a0c1">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -701,7 +702,7 @@ WHERE
 					<font size="8"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="250" y="0" width="40" height="15" uuid="0f5ff98f-e3a5-4f4f-92be-bc8e70df8935">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -716,7 +717,7 @@ WHERE
 					<font size="8" isBold="true"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="290" y="0" width="20" height="15" uuid="e220d05d-e088-4a31-b924-117ffc1a5506">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -731,7 +732,7 @@ WHERE
 					<font size="8"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="310" y="0" width="175" height="15" uuid="f2165eb4-ab83-4b79-9feb-c574e8014e85">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -746,7 +747,7 @@ WHERE
 					<font size="8" isBold="true"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="485" y="0" width="40" height="15" uuid="49f6d245-65c8-4056-836e-769f8dfbd023">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -761,7 +762,7 @@ WHERE
 					<font size="8" isBold="true"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="525" y="0" width="30" height="15" uuid="33a45031-2d76-44f7-93e4-eae331db74f1">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -777,7 +778,7 @@ WHERE
 					<font size="8"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="0" y="15" width="70" height="15" uuid="090638fc-1672-4508-89a8-17bed47b0d40">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -792,7 +793,7 @@ WHERE
 					<font size="8"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="250" y="15" width="40" height="15" uuid="17cd5a8e-fd16-497d-9b18-8d657f78c50d">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -807,7 +808,7 @@ WHERE
 					<font size="8" isBold="true"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="290" y="15" width="20" height="15" uuid="26ee4a64-33ed-4d42-a53f-bd212c3501d2">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -822,7 +823,7 @@ WHERE
 					<font size="8"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="310" y="15" width="175" height="15" uuid="b4ddb31e-3941-4565-83c0-17f2979b2031">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -837,7 +838,7 @@ WHERE
 					<font size="8" isBold="true"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="485" y="15" width="40" height="15" uuid="a07aa1c4-2161-457c-b17b-e586c442cbe2">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -852,7 +853,7 @@ WHERE
 					<font size="8" isBold="true"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="525" y="15" width="30" height="15" uuid="f08e5c4d-1214-4e70-9578-f82941cf4dcb">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -868,7 +869,7 @@ WHERE
 					<font size="8"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="70" y="0" width="180" height="15" uuid="6be96c54-d5c6-45d9-8f46-a3e819d99206">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -885,7 +886,7 @@ WHERE
 					<font size="8" isBold="true"/>
 				</textElement>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="70" y="15" width="180" height="15" uuid="ecab9a15-5d51-4693-b84f-f516a14f6300">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
