@@ -3,10 +3,10 @@
 <fontFamilies>
 
 	<fontFamily name="Noto Sans">
-		<normal>ca/bc/gov/mal/cirras/underwriting/fonts/notosans/NotoSans-Regular.ttf</normal>
-		<bold>ca/bc/gov/mal/cirras/underwriting/fonts/notosans/NotoSans-Bold.ttf</bold>
-		<italic>ca/bc/gov/mal/cirras/underwriting/fonts/notosans/NotoSans-Italic.ttf</italic>
-		<boldItalic>ca/bc/gov/mal/cirras/underwriting/fonts/notosans/NotoSans-BoldItalic.ttf</boldItalic>
+		<normal>fonts/notosans/NotoSans-Regular.ttf</normal>
+		<bold>fonts/notosans/NotoSans-Bold.ttf</bold>
+		<italic>fonts/notosans/NotoSans-Italic.ttf</italic>
+		<boldItalic>fonts/notosans/NotoSans-BoldItalic.ttf</boldItalic>
 		<pdfEncoding>Identity-H</pdfEncoding>
 		<pdfEmbedded>true</pdfEmbedded>
 		<exportFonts>
