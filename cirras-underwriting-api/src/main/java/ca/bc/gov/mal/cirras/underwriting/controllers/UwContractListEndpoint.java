@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+
 
 import ca.bc.gov.mal.cirras.underwriting.controllers.parameters.PagingQueryParameters;
 import ca.bc.gov.mal.cirras.underwriting.controllers.parameters.validation.ParameterValidator;
@@ -36,7 +36,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-@RestController
+
 @Path("/uwcontracts")
 public class UwContractListEndpoint extends BaseEndpointsImpl {
 		

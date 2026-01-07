@@ -3,8 +3,6 @@ package ca.bc.gov.mal.cirras.underwriting.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactRsrc;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasDataSyncService;
@@ -35,7 +33,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-@RestController
 @Path("/contact")
 public class ContactEndpoint extends BaseEndpointsImpl {
 	

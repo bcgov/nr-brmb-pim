@@ -1,6 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
 import jakarta.ws.rs.GET;
+
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
@@ -10,8 +11,6 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-
 import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
 import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
@@ -31,7 +30,6 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasUnderwritingService;
 
-@RestController
 @Path("/annualFields")
 public class AnnualFieldListEndpoint extends BaseEndpointsImpl {
 		

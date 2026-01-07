@@ -3,7 +3,7 @@ package ca.bc.gov.mal.cirras.underwriting.controllers;
 import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+
 
 import ca.bc.gov.mal.cirras.underwriting.controllers.parameters.validation.ParameterValidator;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
@@ -33,7 +33,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-@RestController
+
 @Path("/verifiedYieldContracts")
 public class VerifiedYieldContractListEndpoint extends BaseEndpointsImpl {
 

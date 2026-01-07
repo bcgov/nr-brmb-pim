@@ -1,7 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.CropCommodityListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasCommodityService;
@@ -28,7 +28,7 @@ import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@RestController
+
 @Path("/cropcommodities")
 public class CropCommodityListEndpoint extends BaseEndpointsImpl {
 		
