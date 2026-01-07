@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.4.3  -->
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.19.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_Inventory_Berries" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dae8acde-d8f2-47e4-9e95-8f4ccdfb0fc5">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -350,7 +350,7 @@ order by sort_column,
 					</textElement>
 					<text><![CDATA[Summary of Berry Field Inventory]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<textField isBlankWhenNull="true">
 					<reportElement x="0" y="85" width="378" height="15" uuid="d3d32e03-2780-4f96-a6a1-14338afc2292">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -448,7 +448,7 @@ order by sort_column,
 					</textElement>
 					<textFieldExpression><![CDATA["Updated: " + new SimpleDateFormat("MMM dd, yyyy").format($F{inv_update_timestamp})]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true">
+				<textField>
 					<reportElement x="0" y="160" width="555" height="30" uuid="4158b9ca-8070-4e07-8594-0afda8dca01b">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -609,7 +609,7 @@ order by sort_column,
 				</textElement>
 				<textFieldExpression><![CDATA["Crop Year: " + $F{crop_year}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="378" height="20" uuid="78361d23-c69c-4fd6-933e-cd78c10ee0f3">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
