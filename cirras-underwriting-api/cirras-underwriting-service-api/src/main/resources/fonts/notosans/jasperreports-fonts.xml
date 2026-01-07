@@ -9,35 +9,6 @@
 		<boldItalic>fonts/notosans/NotoSans-BoldItalic.ttf</boldItalic>
 		<pdfEncoding>Identity-H</pdfEncoding>
 		<pdfEmbedded>true</pdfEmbedded>
-		<exportFonts>
-			<export key="ca.bc.gov.mal.cirras.underwriting.html">'Noto Sans', Arial, Helvetica, sans-serif</export>
-		</exportFonts>
-		<!--
-		<locales>
-			<locale>en_US</locale>
-			<locale>de_DE</locale>
-		</locales>
-		-->
-	</fontFamily>
-
-	<!--
-		Mapping Java logical fonts, for the sake of HTML export only.
-	-->
-	
-	<fontFamily name="SansSerif">
-		<exportFonts>
-			<export key="net.sf.jasperreports.html">'Noto Sans', Arial, Helvetica, sans-serif</export>
-		</exportFonts>
-	</fontFamily>
-	<fontFamily name="Serif">
-		<exportFonts>
-			<export key="net.sf.jasperreports.html">'Noto Serif', 'Times New Roman', Times, serif</export>
-		</exportFonts>
-	</fontFamily>
-	<fontFamily name="Monospaced">
-		<exportFonts>
-			<export key="net.sf.jasperreports.html">'Noto Sans Mono', 'Courier New', Courier, monospace</export>
-		</exportFonts>
 	</fontFamily>
 
 </fontFamilies>
