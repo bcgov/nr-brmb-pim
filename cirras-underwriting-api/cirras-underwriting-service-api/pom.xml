@@ -138,6 +138,7 @@
 				<filtering>true</filtering>
 				<excludes>
 					<exclude>**/*.jrxml</exclude>
+					<exclude>fonts/**</exclude>
 				</excludes>
 			</resource>
 		</resources>
