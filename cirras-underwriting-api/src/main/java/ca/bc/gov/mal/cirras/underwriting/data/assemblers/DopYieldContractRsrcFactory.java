@@ -46,7 +46,7 @@ import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.In
 
 public class DopYieldContractRsrcFactory extends BaseResourceFactory { 
 	
-	
+// TODO: Add BERRIES.
 	public DopYieldContractRsrc getDefaultDopYieldContract(
 			PolicyDto policyDto,
 			String defaultMeasurementUnitCode,

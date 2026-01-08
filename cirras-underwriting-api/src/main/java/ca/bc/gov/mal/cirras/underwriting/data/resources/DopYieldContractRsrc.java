@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollup;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollupForage;
@@ -43,6 +44,7 @@ public class DopYieldContractRsrc extends BaseResource {
 	private List<DopYieldFieldRollup> dopYieldFieldRollupList = new ArrayList<DopYieldFieldRollup>();
 	private List<DopYieldContractCommodity> dopYieldContractCommodities = new ArrayList<DopYieldContractCommodity>();
 	private List<DopYieldContractCommodityForage> dopYieldContractCommodityForageList = new ArrayList<DopYieldContractCommodityForage>();
+	private List<DopYieldContractCommodityBerries> dopYieldContractCommodityBerriesList = new ArrayList<DopYieldContractCommodityBerries>();
 	private List<DopYieldFieldRollupForage> dopYieldFieldRollupForageList = new ArrayList<DopYieldFieldRollupForage>();
 
  	public String getDeclaredYieldContractGuid() {
@@ -186,6 +188,14 @@ public class DopYieldContractRsrc extends BaseResource {
 		this.dopYieldContractCommodityForageList = dopYieldContractCommodityForageList;
 	}	
 	
+	public List<DopYieldContractCommodityBerries> getDopYieldContractCommodityBerriesList() {
+		return dopYieldContractCommodityBerriesList;
+	}
+
+	public void setDopYieldContractCommodityBerriesList(List<DopYieldContractCommodityBerries> dopYieldContractCommodityBerriesList) {
+		this.dopYieldContractCommodityBerriesList = dopYieldContractCommodityBerriesList;
+	}
+
 	public List<DopYieldFieldRollupForage> getDopYieldFieldRollupForageList() {
 		return dopYieldFieldRollupForageList;
 	}

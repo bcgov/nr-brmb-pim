@@ -329,6 +329,7 @@ public class ServiceApiSpringConfig {
 		result.setInventoryContractCommodityDao(persistenceSpringConfig.inventoryContractCommodityDao());
 		result.setInventorySeededForageDao(persistenceSpringConfig.inventorySeededForageDao());
 		result.setUnderwritingCommentDao(persistenceSpringConfig.underwritingCommentDao());
+		result.setInventoryBerriesDao(persistenceSpringConfig.inventoryBerriesDao());
 		
 		result.setJasperReportService(jasperReportService);
 		

@@ -9,6 +9,7 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
+import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldGrain;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
@@ -44,6 +45,8 @@ public class AnnualFieldRsrc extends BaseResource {
 	private List<DopYieldFieldGrain> dopYieldFieldGrainList = new ArrayList<DopYieldFieldGrain>();
 
 	private List<DopYieldFieldForage> dopYieldFieldForageList = new ArrayList<DopYieldFieldForage>();
+
+	private List<DopYieldFieldCommodityBerries> dopYieldFieldCommodityBerriesList = new ArrayList<DopYieldFieldCommodityBerries>();
 	
 	private List<UnderwritingComment> uwComments = new ArrayList<UnderwritingComment>();
 	
@@ -173,7 +176,15 @@ public class AnnualFieldRsrc extends BaseResource {
 
 	public void setDopYieldFieldForageList(List<DopYieldFieldForage> dopYieldFieldForageList) {
 		this.dopYieldFieldForageList = dopYieldFieldForageList;
-	}		
+	}
+	
+	public List<DopYieldFieldCommodityBerries> getDopYieldFieldCommodityBerriesList() {
+		return dopYieldFieldCommodityBerriesList;
+	}
+
+	public void setDopYieldFieldCommodityBerriesList(List<DopYieldFieldCommodityBerries> dopYieldFieldCommodityBerriesList) {
+		this.dopYieldFieldCommodityBerriesList = dopYieldFieldCommodityBerriesList;
+	}
 	
 	public List<UnderwritingComment> getUwComments() {
 		return uwComments;

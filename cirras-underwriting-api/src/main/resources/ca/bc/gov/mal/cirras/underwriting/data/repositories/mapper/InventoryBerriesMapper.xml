@@ -172,6 +172,17 @@
 		where t.inventory_field_guid = #{inventoryFieldGuid}
 		order by t.inventory_berries_guid
 	</select> 
+
+	<select id="selectForDeclaredYield" resultMap="InventoryBerriesDtoMap">
+		<include refid="selectColumns"/>
+		from inventory_berries t
+		join crop_commodity cc on cc.crop_commodity_id = t.crop_commodity_id
+		left join crop_variety cv on cv.crop_variety_id = t.crop_variety_id
+		where t.inventory_field_guid = #{inventoryFieldGuid}
+		  and t.planted_acres <![CDATA[ > ]]> 0
+		order by t.inventory_berries_guid
+	</select>
+
 	
 	<select id="selectForRollover" resultMap="InventoryBerriesDtoMap">
 		<include refid="selectColumns"/>
