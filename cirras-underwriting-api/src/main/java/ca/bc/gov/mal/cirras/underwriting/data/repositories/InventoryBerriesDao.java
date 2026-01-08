@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.mapper.InventoryBerriesMapper;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededGrainDto;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.BaseDao;
@@ -196,7 +197,26 @@ public class InventoryBerriesDao extends BaseDao {
 		return dtos;
 	}
 
-	
+	public List<InventoryBerriesDto> selectForDeclaredYield(String inventoryFieldGuid) throws DaoException {
+		logger.debug("<selectForDeclaredYield");
+
+		List<InventoryBerriesDto> dtos = null;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			
+			parameters.put("inventoryFieldGuid", inventoryFieldGuid);
+
+			dtos = this.mapper.selectForDeclaredYield(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectForDeclaredYield " + dtos);
+		return dtos;
+	}	
+		
 	public InventoryBerriesDto selectForRollover(Integer fieldId, Integer cropYear, Integer insurancePlanId, Integer plantingNumber) throws DaoException {
 		logger.debug("<selectForRollover");
 

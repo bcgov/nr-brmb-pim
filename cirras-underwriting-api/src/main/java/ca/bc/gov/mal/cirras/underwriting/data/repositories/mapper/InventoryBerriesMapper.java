@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededGrainDto;
 
 public interface InventoryBerriesMapper {
 
@@ -23,5 +24,7 @@ public interface InventoryBerriesMapper {
 	
 	List<InventoryBerriesDto> select(Map<String, Object> parameters);
 
+	List<InventoryBerriesDto> selectForDeclaredYield(Map<String, Object> parameters);
+	
 	InventoryBerriesDto selectForRollover(Map<String, Object> parameters);
 }
