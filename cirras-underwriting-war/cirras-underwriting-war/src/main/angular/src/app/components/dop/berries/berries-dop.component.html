@@ -94,7 +94,12 @@
 
             <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
 
-                <!-- TODO: field data -->
+                <!-- TODO: *ngIf="dopYieldContract && dopYieldContract.fields" -->
+                <berries-dop-commodity 
+                    [commodityName]="'Blueberry'"
+                    [fields]="dopYieldContract.fields"
+                    [fieldsFormArray]="getViewModel().formGroup.controls.fields"
+                ></berries-dop-commodity>
     
             </div>
         </form>

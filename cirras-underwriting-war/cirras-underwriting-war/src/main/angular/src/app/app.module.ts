@@ -161,6 +161,9 @@ import { FieldListWithMessageComponent } from "./components/inventory/edit-legal
 import { ReplaceLegalLandComponent } from "./components/inventory/edit-legal-land/replace-legal-land/replace-legal-land.component";
 import { BerriesDopComponent } from "./components/dop/berries/berries-dop.component";
 import { DopSelectorComponent } from "./components/dop/dop-selector/dop-selector.component";
+import { BerriesDopCommodityComponent } from "./components/dop/berries/commodity/commodity.component";
+import { BerriesDopFieldListComponent } from "./components/dop/berries/field-list/field-list.component";
+import { BerriesDopFieldComponent } from "./components/dop/berries/field/field.component";
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -277,6 +280,9 @@ if (!environment.production || !environment.restrict_imports) {
         ForageDopYieldSummaryListComponent,
         ForageDopYieldSummaryComponent,
         BerriesDopComponent,
+        BerriesDopCommodityComponent,
+        BerriesDopFieldListComponent,
+        BerriesDopFieldComponent,
         VerifiedYieldComponent,
         VerifiedYieldContainer,
         VerifiedYieldCommodityListComponent,
