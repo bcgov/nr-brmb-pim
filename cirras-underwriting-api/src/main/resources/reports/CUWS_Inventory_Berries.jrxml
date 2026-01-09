@@ -448,7 +448,7 @@ order by sort_column,
 					</textElement>
 					<textFieldExpression><![CDATA["Updated: " + new SimpleDateFormat("MMM dd, yyyy").format($F{inv_update_timestamp})]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField textAdjust="StretchHeight">
 					<reportElement x="0" y="160" width="555" height="30" uuid="4158b9ca-8070-4e07-8594-0afda8dca01b">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
