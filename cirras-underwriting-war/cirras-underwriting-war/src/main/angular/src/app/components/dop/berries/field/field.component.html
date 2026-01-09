@@ -1,1 +1,47 @@
-<p>field works!</p>
+<div class="plcy-inv-field-box" [formGroup]="fieldFormGroup"  [ngStyle]="setTableHeaderStyle()">
+    
+    <div class="inventory-cell border-left inventory-border" style="width: 115px;">
+        {{ field.fieldId }}
+    </div>
+    
+    <div class="inventory-fill inventory-border" style="width: 280px;">
+        {{ field.fieldLocation }}
+    </div>
+
+    <div class="inventory-cell inventory-border'" style="width: 140px;">
+        {{ field.primaryPropertyIdentifier }}
+    </div>
+
+    <div class="inventory-fill inventory-border" style="width: 80px;">
+        {{ field.isLeasedInd }}
+    </div>
+     
+    <!-- plantings -->
+    <div class="planting-container inventory-border" [ngStyle]="setPlantingStyles()">
+        <!-- <berries-inventory-planting 
+            *ngFor="let planting of field.plantings"
+            [planting]="planting"
+            [plantingFormArray]="fieldFormGroup.value.plantings" 
+            [cropVarietyOptions]="cropVarietyOptions"
+            [selectedCommodity]="selectedCommodity"
+            [numPlantingsToSave]="numPlantingsToSave"
+            [isFieldHiddenOnPrintout]="isFieldHiddenOnPrintout"
+            (recalcNumPlantings)="onRecalcNumPlantings()"
+            (hidePlantingOnPrintout)="setIsFieldHiddenOnPrintout()"
+            style="display: contents;"></berries-inventory-planting> -->
+    </div>
+
+    <!-- buttons -->
+    <div class="inventory-cell inventory-border" style="width: 75px;">
+        <!-- TODO -->
+        <!-- <uw-comments-button
+            [underwritingCommentTypeCode]="'INV'"
+            [annualFieldDetailId]="field.annualFieldDetailId"
+            [fieldId]="field.fieldId"
+            [fieldName]="field.fieldLabel"
+            [legalLocation]="field.otherLegalDescription"
+            [uwComments]="field.uwComments"
+            (onDone)="onInventoryCommentsDone($event)"></uw-comments-button> -->
+    </div>
+</div>
+
