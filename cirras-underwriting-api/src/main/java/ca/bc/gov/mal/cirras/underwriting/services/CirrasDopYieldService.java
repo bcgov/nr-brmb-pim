@@ -379,7 +379,6 @@ public class CirrasDopYieldService {
 	
 	private void loadFields(DeclaredYieldContractDto dto) throws DaoException {
 
-		// TODO: Add BERRIES.
 		List<ContractedFieldDetailDto> fields = contractedFieldDetailDao.selectForDeclaredYield(dto.getContractId(), dto.getCropYear());
 		dto.setFields(fields);
 
@@ -391,7 +390,6 @@ public class CirrasDopYieldService {
 
 	private void loadPlantings(ContractedFieldDetailDto cfdDto, Integer insurancePlanId) throws DaoException {
 
-		// TODO: Add BERRIES.
 		List<InventoryFieldDto> plantings = inventoryFieldDao.selectForDeclaredYield(cfdDto.getFieldId(),
 				cfdDto.getCropYear(), cfdDto.getInsurancePlanId());
 		cfdDto.setPlantings(plantings);
