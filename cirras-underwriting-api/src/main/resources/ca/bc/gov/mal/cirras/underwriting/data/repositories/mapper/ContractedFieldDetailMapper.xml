@@ -35,7 +35,9 @@
 			afd.field_id,
 			afd.legal_land_id,
 			fld.field_label,
+			fld.location as field_location,
 			ll.other_description,
+			ll.primary_property_identifier,
 			cfd.display_order, 
 			cfd.is_leased_ind,
 			gcy.crop_year,
@@ -199,8 +201,6 @@
 	<select id="select" resultMap="ContractedFieldDetailDtoMap">
 		<include refid="selectColumns"/>
 		, ip.insurance_plan_name
-		, fld.location as field_location
-		, ll.primary_property_identifier
 		from contracted_field_detail cfd
 		<include refid="selectAdditionalJoins"/>
 		<include refid="selectWhereClause"/>

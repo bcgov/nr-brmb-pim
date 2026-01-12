@@ -460,6 +460,9 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 						dyfvbModel = createDopYieldFieldVarietyBerries(ifDto);
 						dopYieldFieldVarietyBerriesMap.put(ibDto.getCropVarietyId(), dyfvbModel);
 						dyfcbModel.getDopYieldFieldVarietyBerriesList().add(dyfvbModel);
+					} else {
+						// Add planted acres for this planting to the variety total.
+						updateDopYieldFieldVarietyBerriesFromPlanting(dyfvbModel, ifDto);
 					}
 				}
 			}
@@ -639,7 +642,9 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		if ( ib != null ) {
 			model.setCropVarietyId(ib.getCropVarietyId());
 			model.setCropVarietyName(ib.getCropVarietyName());
+			model.setPlantedAcres(ib.getPlantedAcres());
 		}
+
 		
 		// DeclaredYieldFieldVarietyBerriesDto
 		// TODO: Load from DeclaredYieldFieldVarietyBerriesDto if it exists. Otherwise set default values.
@@ -647,13 +652,28 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		model.setDeclaredYieldFieldCommodityBerriesGuid(null);
 		model.setDeclaredYieldFieldVarietyBerriesGuid(null);
 		model.setIsHiddenOnPrintoutInd(false);
-		model.setPlantedAcres(null);
 		model.setSalesYield(null);
 		model.setSoldShippedYield(null);
 		model.setTotalProduction(null);
 		model.setTotalProductionOverride(null);
 		
 		return model;
+	}
+
+	private void updateDopYieldFieldVarietyBerriesFromPlanting(DopYieldFieldVarietyBerries model, InventoryFieldDto ifDto) {
+		
+		// InventoryBerriesDto
+		InventoryBerriesDto ib = ifDto.getInventoryBerries();
+		if ( ib != null && ib.getPlantedAcres() != null ) {
+			Double dopPlantedAcres = model.getPlantedAcres();
+			if ( dopPlantedAcres == null ) {
+				dopPlantedAcres = ib.getPlantedAcres();
+			} else {
+				dopPlantedAcres += ib.getPlantedAcres();
+			}
+			model.setPlantedAcres(dopPlantedAcres);
+		}
+
 	}
 	
 	

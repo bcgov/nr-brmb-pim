@@ -224,6 +224,80 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertEquals(1, newDyc.getFields().size());
 		Assert.assertNotNull(newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList());
 		Assert.assertEquals(2, newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().size());
+
+		DopYieldContractRsrc expectedDyc = new DopYieldContractRsrc();
+		expectedDyc.setContractId(contractId);
+		expectedDyc.setCropYear(cropYear1);
+		expectedDyc.setDefaultYieldMeasUnitTypeCode("LB");
+		expectedDyc.setGrowerContractYearId(gcyId1);
+		expectedDyc.setInsurancePlanId(insurancePlanId);
+		
+		AnnualFieldRsrc expectedField = new AnnualFieldRsrc();
+		expectedField.setAnnualFieldDetailId(annualFieldDetailId1);
+		expectedField.setContractedFieldDetailId(contractedFieldDetailId1);
+		expectedField.setCropYear(cropYear1);
+		expectedField.setDisplayOrder(1);
+		expectedField.setFieldId(fieldId);
+		expectedField.setFieldLabel("Field Label");
+		expectedField.setFieldLocation(fieldLocation);
+		expectedField.setIsLeasedInd(false);
+		expectedField.setLegalLandId(legalLandId);
+		expectedField.setOtherLegalDescription("TEST LEGAL LOC 123");
+		expectedField.setPrimaryPropertyIdentifier("GF0099999");
+
+		// BLUEBERRY
+		DopYieldFieldCommodityBerries expectedDyfcb = new DopYieldFieldCommodityBerries();
+		expectedDyfcb.setCropCommodityId(10);
+		expectedDyfcb.setCropCommodityName("BLUEBERRY");		
+		expectedDyfcb.setCropYear(cropYear1);
+		expectedDyfcb.setFieldId(fieldId);		
+		expectedDyfcb.setTotalProduction(null);		
+		expectedDyfcb.setTotalProductionOverride(null);
+
+		DopYieldFieldVarietyBerries expectedDyfvb = new DopYieldFieldVarietyBerries();
+		expectedDyfvb.setAbandonmentYield(null);
+		expectedDyfvb.setCropVarietyId(1010689);
+		expectedDyfvb.setCropVarietyName("BLUEJAY");
+		expectedDyfvb.setIsHiddenOnPrintoutInd(false);
+		expectedDyfvb.setPlantedAcres(100.0);
+		expectedDyfvb.setSalesYield(null);
+		expectedDyfvb.setSoldShippedYield(null);
+		expectedDyfvb.setTotalProduction(null);
+		expectedDyfvb.setTotalProductionOverride(null);
+		
+		expectedDyfcb.getDopYieldFieldVarietyBerriesList().add(expectedDyfvb);
+		
+		expectedField.getDopYieldFieldCommodityBerriesList().add(expectedDyfcb);
+
+		// RASPBERRY
+		expectedDyfcb = new DopYieldFieldCommodityBerries();
+		expectedDyfcb.setCropCommodityId(12);
+		expectedDyfcb.setCropCommodityName("RASPBERRY");
+		expectedDyfcb.setCropYear(cropYear1);
+		expectedDyfcb.setFieldId(fieldId);		
+		expectedDyfcb.setTotalProduction(null);		
+		expectedDyfcb.setTotalProductionOverride(null);
+
+		expectedDyfvb = new DopYieldFieldVarietyBerries();
+		expectedDyfvb.setAbandonmentYield(null);
+		expectedDyfvb.setCropVarietyId(1010694);
+		expectedDyfvb.setCropVarietyName("MALAHAT");
+		expectedDyfvb.setIsHiddenOnPrintoutInd(false);
+		expectedDyfvb.setPlantedAcres(200.0);
+		expectedDyfvb.setSalesYield(null);
+		expectedDyfvb.setSoldShippedYield(null);
+		expectedDyfvb.setTotalProduction(null);
+		expectedDyfvb.setTotalProductionOverride(null);
+		
+		expectedDyfcb.getDopYieldFieldVarietyBerriesList().add(expectedDyfvb);
+		
+		expectedField.getDopYieldFieldCommodityBerriesList().add(expectedDyfcb);
+
+		expectedDyc.getFields().add(expectedField);
+		
+		// Check rolled-over DOP.
+		checkDopYieldContract(expectedDyc, newDyc);
+
 		
 		delete();
 		
@@ -509,6 +583,45 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		return expectedTotals;
 	}
 
+	private void checkDopYieldContract(DopYieldContractRsrc expected, DopYieldContractRsrc actual) {
+		Assert.assertEquals(expected.getBalerWagonInfo(), actual.getBalerWagonInfo());
+		Assert.assertEquals(expected.getContractId(), actual.getContractId());
+		Assert.assertEquals(expected.getCropYear(), actual.getCropYear());
+		Assert.assertEquals(expected.getDefaultYieldMeasUnitTypeCode(), actual.getDefaultYieldMeasUnitTypeCode());
+		Assert.assertEquals(expected.getEnteredYieldMeasUnitTypeCode(), actual.getEnteredYieldMeasUnitTypeCode());
+		Assert.assertEquals(expected.getGrainFromOtherSourceInd(), actual.getGrainFromOtherSourceInd());
+		Assert.assertEquals(expected.getGrowerContractYearId(), actual.getGrowerContractYearId());
+		Assert.assertEquals(expected.getInsurancePlanId(), actual.getInsurancePlanId());
+		Assert.assertEquals(expected.getTotalLivestock(), actual.getTotalLivestock());
+		Assert.assertEquals(expected.getDeclarationOfProductionDate(), actual.getDeclarationOfProductionDate());
+
+		Assert.assertEquals(expected.getFields().size(), actual.getFields().size());
+		
+		for ( int i = 0; i < expected.getFields().size(); i++ ) {
+			checkField(expected.getFields().get(i), actual.getFields().get(i));
+		}
+	}
+	
+	private void checkField(AnnualFieldRsrc expected, AnnualFieldRsrc actual) {
+		Assert.assertEquals(expected.getAnnualFieldDetailId(), actual.getAnnualFieldDetailId());
+		Assert.assertEquals(expected.getContractedFieldDetailId(), actual.getContractedFieldDetailId());
+		Assert.assertEquals(expected.getCropYear(), actual.getCropYear());
+		Assert.assertEquals(expected.getDisplayOrder(), actual.getDisplayOrder());
+		Assert.assertEquals(expected.getFieldId(), actual.getFieldId());
+		Assert.assertEquals(expected.getFieldLabel(), actual.getFieldLabel());
+		Assert.assertEquals(expected.getFieldLocation(), actual.getFieldLocation());
+		Assert.assertEquals(expected.getIsLeasedInd(), actual.getIsLeasedInd());
+		Assert.assertEquals(expected.getLegalLandId(), actual.getLegalLandId());
+		Assert.assertEquals(expected.getOtherLegalDescription(), actual.getOtherLegalDescription());
+		Assert.assertEquals(expected.getPrimaryPropertyIdentifier(), actual.getPrimaryPropertyIdentifier());
+
+		Assert.assertEquals(expected.getDopYieldFieldCommodityBerriesList().size(), actual.getDopYieldFieldCommodityBerriesList().size());
+		
+		for ( int i = 0; i < expected.getDopYieldFieldCommodityBerriesList().size(); i++ ) {
+			checkDopYieldFieldCommodityBerries(expected.getDopYieldFieldCommodityBerriesList().get(i), actual.getDopYieldFieldCommodityBerriesList().get(i));
+		}	
+	}
+	
 	private void checkDopYieldFieldCommodityBerries(DopYieldFieldCommodityBerries expected, DopYieldFieldCommodityBerries actual) {
 		Assert.assertEquals(expected.getCropCommodityId(), actual.getCropCommodityId());
 		Assert.assertEquals(expected.getCropCommodityName(), actual.getCropCommodityName());
