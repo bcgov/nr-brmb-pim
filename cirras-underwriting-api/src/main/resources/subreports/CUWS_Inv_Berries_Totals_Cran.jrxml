@@ -12,6 +12,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="GlobalDefault" isDefault="true" fontName="Noto Sans"/>
 	<parameter name="p_contract_id" class="java.lang.Integer"/>
 	<parameter name="p_crop_year" class="java.lang.Integer"/>
 	<parameter name="p_pad_footer_ind" class="java.lang.String"/>
@@ -252,7 +253,7 @@ WHERE
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font fontName="Noto Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Total Harvestable Acres"]]></textFieldExpression>
 			</textField>
@@ -269,7 +270,7 @@ WHERE
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font fontName="Noto Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[(double)$F{total_quantity_insured_acres}.intValue() == $F{total_quantity_insured_acres}.doubleValue() ? 
 	(new java.text.DecimalFormat("#,##0").format($F{total_quantity_insured_acres}.doubleValue()))

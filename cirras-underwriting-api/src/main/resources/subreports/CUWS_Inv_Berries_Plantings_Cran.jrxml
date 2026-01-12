@@ -12,6 +12,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="GlobalDefault" isDefault="true" fontName="Noto Sans"/>
 	<parameter name="p_crop_year" class="java.lang.Integer"/>
 	<parameter name="p_contract_id" class="java.lang.Integer"/>
 	<parameter name="p_show_header_ind" class="java.lang.String"/>
