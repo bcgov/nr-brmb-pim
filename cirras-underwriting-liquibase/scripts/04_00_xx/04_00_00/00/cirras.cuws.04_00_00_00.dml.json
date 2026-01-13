@@ -2,5 +2,5 @@
 {
   "databaseChangeLog": [
 { "changeSet": {"author":"mhostettler","id":"91", "changes": [
-	{"sqlFile": {"relativeToChangelogFile": "true", "path": "dml/cuws.insert.plant_insurability_type_code.sql"}}
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "dml/cuws.insert.plant_insurability_type_code.sql"}}
   ] } }]}
