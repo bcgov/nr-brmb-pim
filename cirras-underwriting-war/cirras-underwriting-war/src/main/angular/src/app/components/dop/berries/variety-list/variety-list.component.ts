@@ -1,4 +1,3 @@
-import { S } from '@angular/cdk/scrolling-module.d-ud2XrbF8';
 import { ChangeDetectionStrategy, Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { DopYieldFieldVarietyBerries } from 'src/app/conversion/models-yield';
@@ -34,18 +33,19 @@ export class BerriesDopVarietyListComponent {
   }
 
   refreshForm(){
+    // TODO I might have to uncomment additional columns when working on save
     this.varietyFormGroup = this.fb.group({
-      declaredYieldFieldVarietyBerriesGuid: [this.dopYieldFieldVarietyBerries.declaredYieldFieldVarietyBerriesGuid],
-      declaredYieldFieldCommodityBerriesGuid: [this.dopYieldFieldVarietyBerries.declaredYieldFieldCommodityBerriesGuid],
-      cropVarietyId: [this.dopYieldFieldVarietyBerries.cropVarietyId],
-      cropVarietyName: [this.dopYieldFieldVarietyBerries.cropVarietyName],
-      plantedAcres: [ this.dopYieldFieldVarietyBerries.plantedAcres],
+      // declaredYieldFieldVarietyBerriesGuid: [this.dopYieldFieldVarietyBerries.declaredYieldFieldVarietyBerriesGuid],
+      // declaredYieldFieldCommodityBerriesGuid: [this.dopYieldFieldVarietyBerries.declaredYieldFieldCommodityBerriesGuid],
+      // cropVarietyId: [this.dopYieldFieldVarietyBerries.cropVarietyId],
+      // cropVarietyName: [this.dopYieldFieldVarietyBerries.cropVarietyName],
+      // plantedAcres: [ this.dopYieldFieldVarietyBerries.plantedAcres],
       soldShippedYield: [ this.dopYieldFieldVarietyBerries.soldShippedYield],
       salesYield: [ this.dopYieldFieldVarietyBerries.salesYield],
       abandonmentYield: [ this.dopYieldFieldVarietyBerries.abandonmentYield],
-      totalProduction: [this.dopYieldFieldVarietyBerries.totalProduction],
+      // totalProduction: [this.dopYieldFieldVarietyBerries.totalProduction],
       totalProductionOverride: [ this.dopYieldFieldVarietyBerries.totalProductionOverride ],
-      isHiddenOnPrintoutInd: [ this.dopYieldFieldVarietyBerries.isHiddenOnPrintoutInd],
+      // isHiddenOnPrintoutInd: [ this.dopYieldFieldVarietyBerries.isHiddenOnPrintoutInd],
     });
     this.dopYieldFieldVarietyBerriesFormArray.push(this.varietyFormGroup);
   }

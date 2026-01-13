@@ -33,14 +33,15 @@ export class BerriesDopCommodityListComponent {
   }
 
   refreshForm(){
+    // TODO: I might need to uncomment additional columns
     this.fieldCommodityFormGroup = this.fb.group({
-      declaredYieldFieldCommodityBerriesGuid: [this.dopYieldFieldCommodityBerries.declaredYieldFieldCommodityBerriesGuid],
-      fieldId: [this.dopYieldFieldCommodityBerries.fieldId],
-      cropCommodityId: [this.dopYieldFieldCommodityBerries.cropCommodityId],
-      cropCommodityName: [this.dopYieldFieldCommodityBerries.cropCommodityName],
-      cropYear: [ this.dopYieldFieldCommodityBerries.cropYear],
-      totalProduction: [this.dopYieldFieldCommodityBerries.totalProduction],
-      totalProductionOverride: [ this.dopYieldFieldCommodityBerries.totalProductionOverride ], 
+      // declaredYieldFieldCommodityBerriesGuid: [this.dopYieldFieldCommodityBerries.declaredYieldFieldCommodityBerriesGuid],
+      // fieldId: [this.dopYieldFieldCommodityBerries.fieldId],
+      // cropCommodityId: [this.dopYieldFieldCommodityBerries.cropCommodityId],
+      // cropCommodityName: [this.dopYieldFieldCommodityBerries.cropCommodityName],
+      // cropYear: [ this.dopYieldFieldCommodityBerries.cropYear],
+      // totalProduction: [this.dopYieldFieldCommodityBerries.totalProduction],
+      // totalProductionOverride: [ this.dopYieldFieldCommodityBerries.totalProductionOverride ], 
       dopYieldFieldVarietyBerriesList: this.fb.array([])
     });
     this.dopYieldFieldCommodityBerriesFormArray.push(this.fieldCommodityFormGroup);

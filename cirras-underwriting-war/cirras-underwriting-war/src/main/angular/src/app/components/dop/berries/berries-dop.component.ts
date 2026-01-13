@@ -108,7 +108,6 @@ export class BerriesDopComponent extends BaseComponent {
 
       })
     }
-    debugger
   }
 
   addCommodityToList(field : AnnualField, crpt){
