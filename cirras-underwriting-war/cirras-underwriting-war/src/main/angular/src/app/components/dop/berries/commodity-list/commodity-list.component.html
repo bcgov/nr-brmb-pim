@@ -9,8 +9,18 @@
 
     </berries-dop-variety-list>
 
+    <div class="plcy-inv-field-box" style="width: 1030px;">
+        <div class="dop-berries-commodity-total border-right" style="width: 760px; padding-right: 4px; justify-content: end;">
+            Total Field Production:
+        </div>
+        <div class="dop-berries-commodity-total border-right" style="width: 100px;">
+           {{ dopYieldFieldCommodityBerries.totalProduction | number:'1.0-3' }}
+        </div> 
+        <div class="dop-berries-commodity-total border-right" style="width: 100px;">
+           {{ dopYieldFieldCommodityBerries.totalProductionOverride | number:'1.0-3' }}
+        </div>
+        <div style="width: 70px;"></div>
+    </div>
 </div>
-<!-- TODO commodity totals rows here -->
-<!-- <div></div>
-     <div></div>  -->
+
 
