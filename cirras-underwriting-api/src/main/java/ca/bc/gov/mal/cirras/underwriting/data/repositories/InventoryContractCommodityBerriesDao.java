@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.mapper.InventoryContractCommodityBerriesMapper;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityDto;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.BaseDao;
@@ -162,5 +163,26 @@ public class InventoryContractCommodityBerriesDao extends BaseDao {
 		logger.debug(">select " + dtos);
 		return dtos;
 	}
+
+	public List<InventoryContractCommodityBerriesDto> selectForDopContract(Integer contractId, Integer cropYear) throws DaoException {
+		logger.debug("<selectForDopContract");
 		
+		List<InventoryContractCommodityBerriesDto> dtos = null;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			
+			parameters.put("contractId", contractId);
+			parameters.put("cropYear", cropYear);
+						
+			dtos = this.mapper.selectForDopContract(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectForDopContract " + dtos);
+		return dtos;
+	}
+	
 }

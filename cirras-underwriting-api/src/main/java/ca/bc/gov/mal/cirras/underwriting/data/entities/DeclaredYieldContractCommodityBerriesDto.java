@@ -1,0 +1,162 @@
+package ca.bc.gov.mal.cirras.underwriting.data.entities;
+
+import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ca.bc.gov.nrs.wfone.common.persistence.dto.BaseDto;
+import ca.bc.gov.nrs.wfone.common.persistence.utils.DtoUtils;
+
+public class DeclaredYieldContractCommodityBerriesDto extends BaseDto<DeclaredYieldContractCommodityBerriesDto> {
+
+	private static final long serialVersionUID = 1L;
+
+	private static final Logger logger = LoggerFactory.getLogger(DeclaredYieldContractCommodityBerriesDto.class);
+
+	private String declaredYieldContractCommodityBerriesGuid;
+	private String declaredYieldContractGuid;
+	private Integer cropCommodityId;
+	private Double totalProduction;
+	private Double totalProductionOverride;
+	private String createUser;
+	private Date createDate;
+	private String updateUser;
+	private Date updateDate;
+	
+	private String cropCommodityName;
+
+	public DeclaredYieldContractCommodityBerriesDto() {
+	}
+	
+	
+	public DeclaredYieldContractCommodityBerriesDto(DeclaredYieldContractCommodityBerriesDto dto) {
+
+		this.declaredYieldContractCommodityBerriesGuid = dto.declaredYieldContractCommodityBerriesGuid;
+		this.declaredYieldContractGuid = dto.declaredYieldContractGuid;
+		this.cropCommodityId = dto.cropCommodityId;
+		this.totalProduction = dto.totalProduction;
+		this.totalProductionOverride = dto.totalProductionOverride;
+		this.createUser = dto.createUser;
+		this.createDate = dto.createDate;
+		this.updateUser = dto.updateUser;
+		this.updateDate = dto.updateDate;
+		
+		this.cropCommodityName = dto.cropCommodityName;
+
+	}
+	
+
+	@Override
+	public boolean equalsBK(DeclaredYieldContractCommodityBerriesDto other) {
+		throw new UnsupportedOperationException("Not Implemented");
+	}
+
+	@Override
+	public boolean equalsAll(DeclaredYieldContractCommodityBerriesDto other) {
+		boolean result = false;
+		
+		if(other!=null) {
+			Integer decimalPrecision = 4; // TODO: Verify.
+			result = true;
+			DtoUtils dtoUtils = new DtoUtils(getLogger());
+			result = result&&dtoUtils.equals("declaredYieldContractCommodityBerriesGuid", declaredYieldContractCommodityBerriesGuid, other.declaredYieldContractCommodityBerriesGuid);
+			result = result&&dtoUtils.equals("declaredYieldContractGuid", declaredYieldContractGuid, other.declaredYieldContractGuid);
+			result = result&&dtoUtils.equals("cropCommodityId", cropCommodityId, other.cropCommodityId);
+			result = result&&dtoUtils.equals("totalProduction", totalProduction, other.totalProduction, decimalPrecision);
+			result = result&&dtoUtils.equals("totalProductionOverride", totalProductionOverride, other.totalProductionOverride, decimalPrecision);
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public Logger getLogger() {
+		return logger;
+	}
+
+	@Override
+	public DeclaredYieldContractCommodityBerriesDto copy() {
+		return new DeclaredYieldContractCommodityBerriesDto(this);
+	}
+	 
+ 	public String getDeclaredYieldContractCommodityBerriesGuid() {
+		return declaredYieldContractCommodityBerriesGuid;
+	}
+
+	public void setDeclaredYieldContractCommodityBerriesGuid(String declaredYieldContractCommodityBerriesGuid) {
+		this.declaredYieldContractCommodityBerriesGuid = declaredYieldContractCommodityBerriesGuid;
+	}
+
+	public String getDeclaredYieldContractGuid() {
+		return declaredYieldContractGuid;
+	}
+
+	public void setDeclaredYieldContractGuid(String declaredYieldContractGuid) {
+		this.declaredYieldContractGuid = declaredYieldContractGuid;
+	}
+
+	public Integer getCropCommodityId() {
+		return cropCommodityId;
+	}
+
+	public void setCropCommodityId(Integer cropCommodityId) {
+		this.cropCommodityId = cropCommodityId;
+	}
+
+	public Double getTotalProduction() {
+		return totalProduction;
+	}
+
+	public void setTotalProduction(Double totalProduction) {
+		this.totalProduction = totalProduction;
+	}
+
+	public Double getTotalProductionOverride() {
+		return totalProductionOverride;
+	}
+
+	public void setTotalProductionOverride(Double totalProductionOverride) {
+		this.totalProductionOverride = totalProductionOverride;
+	}
+
+	public String getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
+ 
+ 	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+ 
+ 	public String getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(String updateUser) {
+		this.updateUser = updateUser;
+	}
+ 
+ 	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+ 
+	public String getCropCommodityName() {
+		return cropCommodityName;
+	}
+
+	public void setCropCommodityName(String cropCommodityName) {
+		this.cropCommodityName = cropCommodityName;
+	}
+}

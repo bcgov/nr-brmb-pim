@@ -26,6 +26,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodity;
+import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForage;
@@ -36,6 +37,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldVarietyBerries
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldGrain;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractDto;
@@ -44,6 +46,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldForageD
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldRollupDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldRollupForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededForageDto;
@@ -114,7 +117,17 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 			resource.setDopYieldFieldRollupForageList(dopYieldFieldRollupForageList);
 		}
 
-		// TODO: Declared Yield Contract Commodity Berries
+		// Declared Yield Contract Commodity Berries
+		if (!dycDto.getDeclaredYieldContractCommodityBerriesList().isEmpty()) {
+			List<DopYieldContractCommodityBerries> dopContractCommoditiesBerries = new ArrayList<DopYieldContractCommodityBerries>();
+
+			for (DeclaredYieldContractCommodityBerriesDto dyccbDto : dycDto.getDeclaredYieldContractCommodityBerriesList()) {
+				DopYieldContractCommodityBerries dyccbModel = createDopYieldContractCommodityBerries(dyccbDto);
+				dopContractCommoditiesBerries.add(dyccbModel);
+			}
+
+			resource.setDopYieldContractCommodityBerriesList(dopContractCommoditiesBerries);
+		}
 
 		
 		String eTag = getEtag(resource);
@@ -305,6 +318,24 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		}
 		return dopCommodities;
 	}
+
+	public List<DeclaredYieldContractCommodityBerriesDto> getDopBerriesCommoditiesFromInventoryBerriesCommodities(
+			List<InventoryContractCommodityBerriesDto> dtos) throws FactoryException {
+		
+		List<DeclaredYieldContractCommodityBerriesDto> dopCommodities = new ArrayList<DeclaredYieldContractCommodityBerriesDto>();
+		for (InventoryContractCommodityBerriesDto iccbDto : dtos) {
+			
+			DeclaredYieldContractCommodityBerriesDto dto = new DeclaredYieldContractCommodityBerriesDto();
+			dto.setCropCommodityId(iccbDto.getCropCommodityId());
+			dto.setCropCommodityName(iccbDto.getCropCommodityName());
+			dto.setDeclaredYieldContractCommodityBerriesGuid(null);
+			dto.setDeclaredYieldContractGuid(null);
+			dto.setTotalProduction(null);
+			dto.setTotalProductionOverride(null);
+			dopCommodities.add(dto);
+		}
+		return dopCommodities;
+	}
 	
 	
 	private void populateResource(DopYieldContractRsrc resource, DeclaredYieldContractDto dto) {
@@ -412,6 +443,19 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		return model;
 	}
 
+	private DopYieldContractCommodityBerries createDopYieldContractCommodityBerries(DeclaredYieldContractCommodityBerriesDto dto) {
+		DopYieldContractCommodityBerries model = new DopYieldContractCommodityBerries();
+
+		model.setCropCommodityId(dto.getCropCommodityId());
+		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setDeclaredYieldContractCommodityBerriesGuid(dto.getDeclaredYieldContractCommodityBerriesGuid());
+		model.setDeclaredYieldContractGuid(dto.getDeclaredYieldContractGuid());
+		model.setTotalProduction(dto.getTotalProduction());
+		model.setTotalProductionOverride(dto.getTotalProductionOverride());
+
+		return model;
+	}
+	
 	// Creates an AnnualFieldRsrc for a DopYieldContract.
 	private AnnualFieldRsrc createAnnualField(ContractedFieldDetailDto dto, WebAdeAuthentication authentication) {
 		AnnualFieldRsrc model = new AnnualFieldRsrc();
@@ -661,7 +705,8 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 	}
 
 	private void updateDopYieldFieldVarietyBerriesFromPlanting(DopYieldFieldVarietyBerries model, InventoryFieldDto ifDto) {
-		
+
+		// TODO: This should only calculate plantedAcres if the DopYieldFieldVarietyBerries record was not loaded from the database.
 		// InventoryBerriesDto
 		InventoryBerriesDto ib = ifDto.getInventoryBerries();
 		if ( ib != null && ib.getPlantedAcres() != null ) {
