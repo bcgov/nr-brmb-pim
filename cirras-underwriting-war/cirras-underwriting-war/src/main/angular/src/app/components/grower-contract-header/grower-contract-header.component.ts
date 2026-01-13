@@ -77,7 +77,8 @@ export class GrowerContractHeaderComponent {
 
     if ( linkType == 'dop' && 
         (routerUrl.indexOf(ResourcesRoutes.DOP_GRAIN) > -1 || 
-        routerUrl.indexOf(ResourcesRoutes.DOP_FORAGE) > -1  )) {
+        routerUrl.indexOf(ResourcesRoutes.DOP_FORAGE) > -1 || 
+        routerUrl.indexOf(ResourcesRoutes.DOP_BERRIES) > -1)) {
       return true
     } 
 
@@ -143,7 +144,8 @@ export class GrowerContractHeaderComponent {
     }
 
     if (routerUrl.indexOf(ResourcesRoutes.DOP_GRAIN) > -1 || 
-        routerUrl.indexOf(ResourcesRoutes.DOP_FORAGE) > -1 ) {
+        routerUrl.indexOf(ResourcesRoutes.DOP_FORAGE) > -1 || 
+        routerUrl.indexOf(ResourcesRoutes.DOP_BERRIES) > -1) {
       styles = {  
         'border': '1px solid #E1CF7B',
         'border-radius': '5px',
