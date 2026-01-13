@@ -1,34 +1,28 @@
-<div class="plcy-inv-field-box" [formGroup]="fieldFormGroup"  [ngStyle]="setTableHeaderStyle()">
+<div *ngIf="fieldHasCommodity()" class="plcy-inv-field-box" [formGroup]="fieldFormGroup" style="width: 1695px;">
     
     <div class="inventory-cell border-left inventory-border" style="width: 115px;">
         {{ field.fieldId }}
     </div>
     
-    <div class="inventory-fill inventory-border" style="width: 280px;">
+    <div class="inventory-cell inventory-border" style="width: 280px;">
         {{ field.fieldLocation }}
     </div>
 
-    <div class="inventory-cell inventory-border'" style="width: 140px;">
-        {{ field.primaryPropertyIdentifier }}
+    <div class="inventory-cell inventory-border" style="width: 140px;">
+       {{ field.primaryPropertyIdentifier }}
     </div>
 
-    <div class="inventory-fill inventory-border" style="width: 80px;">
+    <div class="inventory-cell inventory-border" style="width: 80px;">
         {{ field.isLeasedInd }}
     </div>
      
-    <!-- plantings -->
-    <div class="planting-container inventory-border" [ngStyle]="setPlantingStyles()">
-        <!-- <berries-inventory-planting 
-            *ngFor="let planting of field.plantings"
-            [planting]="planting"
-            [plantingFormArray]="fieldFormGroup.value.plantings" 
-            [cropVarietyOptions]="cropVarietyOptions"
-            [selectedCommodity]="selectedCommodity"
-            [numPlantingsToSave]="numPlantingsToSave"
-            [isFieldHiddenOnPrintout]="isFieldHiddenOnPrintout"
-            (recalcNumPlantings)="onRecalcNumPlantings()"
-            (hidePlantingOnPrintout)="setIsFieldHiddenOnPrintout()"
-            style="display: contents;"></berries-inventory-planting> -->
+    <!-- dopYieldFieldCommodityBerriesList -->
+    <div class="planting-container inventory-border" style="width: 970px;">
+        <berries-dop-commodity-list 
+            *ngFor="let dopYieldFieldCommodityBerries of field.dopYieldFieldCommodityBerriesList"
+            [dopYieldFieldCommodityBerries]="dopYieldFieldCommodityBerries"
+            [dopYieldFieldCommodityBerriesFormArray]="fieldFormGroup.value.dopYieldFieldCommodityBerriesList" 
+            style="display: contents;"></berries-dop-commodity-list>
     </div>
 
     <!-- buttons -->

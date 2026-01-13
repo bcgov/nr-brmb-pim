@@ -12,7 +12,8 @@ import { AnnualField } from 'src/app/conversion/models';
 })
 
 export class BerriesDopCommodityComponent {
-  @Input() commodityName: String;
+  @Input() cropCommodityId: number;
+  @Input() cropCommodityName: String;
 
   @Input() fields: Array<AnnualField>;
   @Input() fieldsFormArray: UntypedFormArray;

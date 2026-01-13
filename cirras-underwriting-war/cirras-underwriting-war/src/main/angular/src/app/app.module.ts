@@ -164,6 +164,8 @@ import { DopSelectorComponent } from "./components/dop/dop-selector/dop-selector
 import { BerriesDopCommodityComponent } from "./components/dop/berries/commodity/commodity.component";
 import { BerriesDopFieldListComponent } from "./components/dop/berries/field-list/field-list.component";
 import { BerriesDopFieldComponent } from "./components/dop/berries/field/field.component";
+import { BerriesDopCommodityListComponent } from "./components/dop/berries/commodity-list/commodity-list.component";
+import { BerriesDopVarietyListComponent } from "./components/dop/berries/variety-list/variety-list.component";
 
 /**
  * Function that initializes the Configuration injector with the application base url from the app config service.
@@ -282,6 +284,8 @@ if (!environment.production || !environment.restrict_imports) {
         BerriesDopComponent,
         BerriesDopCommodityComponent,
         BerriesDopFieldListComponent,
+        BerriesDopCommodityListComponent,
+        BerriesDopVarietyListComponent,
         BerriesDopFieldComponent,
         VerifiedYieldComponent,
         VerifiedYieldContainer,

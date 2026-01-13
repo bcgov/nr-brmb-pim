@@ -13,17 +13,6 @@ import { AnnualField } from 'src/app/conversion/models';
 export class BerriesDopFieldListComponent {
   @Input() fields: Array<AnnualField>;
   @Input() fieldsFormArray: UntypedFormArray;
-
-  setInnerWrapperStyle() {
-    return {
-        'width': `1535px`
-    };  
-  }
-
-  setTableHeaderStyle() {
-    return {
-    'width': `1520px`
-    };
-  }
+  @Input() cropCommodityId: number;
 
 }

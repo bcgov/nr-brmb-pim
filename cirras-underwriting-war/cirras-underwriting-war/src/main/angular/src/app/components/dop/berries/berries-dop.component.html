@@ -94,8 +94,10 @@
 
             <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
 
-                <berries-dop-commodity *ngIf="dopYieldContract && dopYieldContract.fields"
-                    [commodityName]="'Blueberry'"
+                <!-- *ngIf="dopYieldContract && dopYieldContract.fields" -->
+                <berries-dop-commodity *ngFor="let commodity of policyCommoditiesList" 
+                    [cropCommodityId]="commodity.cropCommodityId"
+                    [cropCommodityName]="commodity.cropCommodityName"
                     [fields]="dopYieldContract.fields"
                     [fieldsFormArray]="getViewModel().formGroup.controls.fields"
                 ></berries-dop-commodity>
