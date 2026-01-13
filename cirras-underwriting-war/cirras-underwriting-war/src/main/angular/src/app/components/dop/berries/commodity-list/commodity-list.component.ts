@@ -14,6 +14,7 @@ import { DopYieldFieldCommodityBerries } from 'src/app/conversion/models-yield';
 export class BerriesDopCommodityListComponent {
   @Input() dopYieldFieldCommodityBerries: DopYieldFieldCommodityBerries
   @Input() dopYieldFieldCommodityBerriesFormArray: UntypedFormArray
+  @Input() filterByCropCommodityId: number;
 
   fieldCommodityFormGroup: UntypedFormGroup;
 
@@ -43,5 +44,13 @@ export class BerriesDopCommodityListComponent {
       dopYieldFieldVarietyBerriesList: this.fb.array([])
     });
     this.dopYieldFieldCommodityBerriesFormArray.push(this.fieldCommodityFormGroup);
+  }
+
+  isSelectedCommodity() {
+    if (this.dopYieldFieldCommodityBerries.cropCommodityId == this.filterByCropCommodityId) {
+      return true
+    } else {
+      return false
+    }
   }
 }

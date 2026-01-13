@@ -1,19 +1,14 @@
-
-<!-- ??? style="width: 1520px;" -->
-<div class="plcy-inv-field-box" [formGroup]="fieldCommodityFormGroup" style="width: 970px;">
+<div *ngIf="isSelectedCommodity()" class="plcy-inv-field-box" [formGroup]="fieldCommodityFormGroup" style="display: grid; width: 1030px;">
     
-    <!-- variety list -->
-    <!-- ??? style="width: 1520px;" -->
-    <!-- <div class="planting-container inventory-border"> -->
-        <berries-dop-variety-list 
-            *ngFor="let dopYieldFieldVarietyBerries of dopYieldFieldCommodityBerries.dopYieldFieldVarietyBerriesList"
-            [dopYieldFieldVarietyBerries]="dopYieldFieldVarietyBerries"
-            [dopYieldFieldVarietyBerriesFormArray]="fieldCommodityFormGroup.value.dopYieldFieldVarietyBerriesList" 
-            [cropCommodityName]="fieldCommodityFormGroup.value.cropCommodityName"
-            style="display: contents;">
+    <berries-dop-variety-list 
+        *ngFor="let dopYieldFieldVarietyBerries of dopYieldFieldCommodityBerries.dopYieldFieldVarietyBerriesList"
+        [dopYieldFieldVarietyBerries]="dopYieldFieldVarietyBerries"
+        [dopYieldFieldVarietyBerriesFormArray]="fieldCommodityFormGroup.value.dopYieldFieldVarietyBerriesList" 
+        [cropCommodityName]="fieldCommodityFormGroup.value.cropCommodityName"
+        style="display: contents;">
 
-        </berries-dop-variety-list>
-    <!-- </div> -->
+    </berries-dop-variety-list>
+
 </div>
 <!-- TODO commodity totals rows here -->
 <!-- <div></div>

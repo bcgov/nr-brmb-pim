@@ -161,7 +161,6 @@ import { FieldListWithMessageComponent } from "./components/inventory/edit-legal
 import { ReplaceLegalLandComponent } from "./components/inventory/edit-legal-land/replace-legal-land/replace-legal-land.component";
 import { BerriesDopComponent } from "./components/dop/berries/berries-dop.component";
 import { DopSelectorComponent } from "./components/dop/dop-selector/dop-selector.component";
-import { BerriesDopCommodityComponent } from "./components/dop/berries/commodity/commodity.component";
 import { BerriesDopFieldListComponent } from "./components/dop/berries/field-list/field-list.component";
 import { BerriesDopFieldComponent } from "./components/dop/berries/field/field.component";
 import { BerriesDopCommodityListComponent } from "./components/dop/berries/commodity-list/commodity-list.component";
@@ -282,7 +281,6 @@ if (!environment.production || !environment.restrict_imports) {
         ForageDopYieldSummaryListComponent,
         ForageDopYieldSummaryComponent,
         BerriesDopComponent,
-        BerriesDopCommodityComponent,
         BerriesDopFieldListComponent,
         BerriesDopCommodityListComponent,
         BerriesDopVarietyListComponent,

@@ -15,7 +15,7 @@ import { AnnualField } from 'src/app/conversion/models';
 export class BerriesDopFieldComponent {
   @Input() field: AnnualField;
   @Input() fieldsFormArray: UntypedFormArray;
-  @Input() cropCommodityId: number;
+  @Input() filterByCropCommodityId: number;
 
   fieldFormGroup: UntypedFormGroup;
 
@@ -50,7 +50,7 @@ export class BerriesDopFieldComponent {
   }
 
   fieldHasCommodity() {
-    let el = this.field.dopYieldFieldCommodityBerriesList.find(x => x.cropCommodityId == this.cropCommodityId) 
+    let el = this.field.dopYieldFieldCommodityBerriesList.find(x => x.cropCommodityId == this.filterByCropCommodityId) 
     if ( el ) {
       return true
     } else {

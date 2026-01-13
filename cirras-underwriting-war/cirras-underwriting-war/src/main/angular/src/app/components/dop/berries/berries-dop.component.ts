@@ -100,17 +100,30 @@ export class BerriesDopComponent extends BaseComponent {
     if (this.dopYieldContract && this.dopYieldContract.fields) {
 
       this.dopYieldContract.fields.forEach ((field: AnnualField) => {
-        field.dopYieldFieldCommodityBerriesList.forEach(crpt => {
+        // commodities on the screen should be ordered as: Blueberry, Raspberry, Strawberry, Cranberry
+        self.addCommodityToList(field, BERRY_COMMODITY.Blueberry)
+        self.addCommodityToList(field, BERRY_COMMODITY.Raspberry)
+        self.addCommodityToList(field, BERRY_COMMODITY.Strawberry)
+        self.addCommodityToList(field, BERRY_COMMODITY.Cranberry)
 
-          if (crpt.cropCommodityId && !self.policyCommoditiesList.find( a => a.cropCommodityId == crpt.cropCommodityId )) {
-
-            self.policyCommoditiesList.push({
-              cropCommodityId: crpt.cropCommodityId,
-              cropCommodityName: crpt.cropCommodityName
-            })
-          } 
-        })
       })
+    }
+    debugger
+  }
+
+  addCommodityToList(field : AnnualField, crpt){
+
+    let el = field.dopYieldFieldCommodityBerriesList.find( x => x.cropCommodityId == crpt)
+
+    // if there is a field which has the desired commodity 
+    // then add it to the list of commodities to display on the screen,
+    // assuming it was not added before
+    if (el && !this.policyCommoditiesList.find( a => a.cropCommodityId == crpt )) {
+
+       this.policyCommoditiesList.push({
+              cropCommodityId: el.cropCommodityId,
+              cropCommodityName: el.cropCommodityName
+            })
     }
   }
 

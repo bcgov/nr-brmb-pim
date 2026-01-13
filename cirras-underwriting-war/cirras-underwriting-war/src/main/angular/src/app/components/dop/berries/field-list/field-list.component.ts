@@ -13,6 +13,6 @@ import { AnnualField } from 'src/app/conversion/models';
 export class BerriesDopFieldListComponent {
   @Input() fields: Array<AnnualField>;
   @Input() fieldsFormArray: UntypedFormArray;
-  @Input() cropCommodityId: number;
+  @Input() filterByCropCommodityId: number;
 
 }

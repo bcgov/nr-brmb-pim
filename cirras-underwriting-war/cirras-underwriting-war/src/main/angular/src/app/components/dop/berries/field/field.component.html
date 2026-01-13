@@ -1,4 +1,4 @@
-<div *ngIf="fieldHasCommodity()" class="plcy-inv-field-box" [formGroup]="fieldFormGroup" style="width: 1695px;">
+<div *ngIf="fieldHasCommodity()" class="plcy-inv-field-box" [formGroup]="fieldFormGroup" style="width: 1720px;">
     
     <div class="inventory-cell border-left inventory-border" style="width: 115px;">
         {{ field.fieldId }}
@@ -13,15 +13,15 @@
     </div>
 
     <div class="inventory-cell inventory-border" style="width: 80px;">
-        {{ field.isLeasedInd }}
+        {{ field.isLeasedInd ? "Y" : "N" }}
     </div>
      
-    <!-- dopYieldFieldCommodityBerriesList -->
-    <div class="planting-container inventory-border" style="width: 970px;">
+    <div class="planting-container inventory-border" style="width: 1030px;">
         <berries-dop-commodity-list 
             *ngFor="let dopYieldFieldCommodityBerries of field.dopYieldFieldCommodityBerriesList"
             [dopYieldFieldCommodityBerries]="dopYieldFieldCommodityBerries"
             [dopYieldFieldCommodityBerriesFormArray]="fieldFormGroup.value.dopYieldFieldCommodityBerriesList" 
+            [filterByCropCommodityId]="filterByCropCommodityId"
             style="display: contents;"></berries-dop-commodity-list>
     </div>
 

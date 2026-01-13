@@ -2,6 +2,7 @@ import { S } from '@angular/cdk/scrolling-module.d-ud2XrbF8';
 import { ChangeDetectionStrategy, Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { DopYieldFieldVarietyBerries } from 'src/app/conversion/models-yield';
+import { makeNumberOnly } from 'src/app/utils';
 
 @Component({
   selector: 'berries-dop-variety-list',
@@ -15,7 +16,7 @@ export class BerriesDopVarietyListComponent {
   @Input() dopYieldFieldVarietyBerries: DopYieldFieldVarietyBerries
   @Input() dopYieldFieldVarietyBerriesFormArray: UntypedFormArray
   @Input() cropCommodityName: String
-  
+
   varietyFormGroup: UntypedFormGroup;
 
   constructor(private fb: UntypedFormBuilder) {}
@@ -49,5 +50,23 @@ export class BerriesDopVarietyListComponent {
     this.dopYieldFieldVarietyBerriesFormArray.push(this.varietyFormGroup);
   }
 
+  numberOnly(event): boolean {
+    return makeNumberOnly(event)
+  }
 
+  updateSoldShippedYield() {
+    // TODO on save
+  }
+
+  updateSalesYield() {
+    // TODO on save
+  }
+
+  updateAbandonmentYield() {
+    // TODO on save 
+  }
+
+  updatetotalProductionOverride() {
+    // TODO on save
+  }
 }
