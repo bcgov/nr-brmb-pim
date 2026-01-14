@@ -25,15 +25,22 @@
             [filterByCropCommodityId]="filterByCropCommodityId"
         ></berries-dop-field>
 
-        <div class="plcy-inv-field-box" style="width: 1720px;">
+        <div class="plcy-inv-field-box" [formGroup]="fieldsFormGroup" style="width: 1720px;">
             <div class="dop-berries-field-total inventory-border" style="width: 1375px; padding-right: 4px; justify-content: end;">
-                Total Crop Production:
+                Total {{ filteredCropCommodityName | titlecase }} Production:
             </div>
             <div class="dop-berries-field-total inventory-border" style="width: 100px;">
-                {{ 0 | number:'1.0-3' }}
+                {{ (contractCommodityTotals && contractCommodityTotals.totalProduction ? contractCommodityTotals.totalProduction : "") | number:'1.0-3' }}
             </div> 
-            <div class="dop-berries-field-total inventory-border" style="width: 100px;">
-                {{ 0 | number:'1.0-3' }}
+            <div class="inventory-fill dop-berries-field-total inventory-border" style="width: 100px;">
+                <mat-form-field appearance="fill" style="width: 100px;">
+                    <input matInput matInputCommified type="text"
+                            formControlName="totalProductionOverride"
+                            maxlength="14"
+                            (keypress)="numberOnly($event)" 
+                            (blur)="updatetotalProductionOverride()">
+                    </mat-form-field>  
+                    <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Total Production Override is writeable">edit</mat-icon>
             </div>
             <div class="dop-berries-field-total inventory-border"  style="width: 70px;"></div>
             <div class="dop-berries-field-total inventory-border"  style="width: 75px;"></div>

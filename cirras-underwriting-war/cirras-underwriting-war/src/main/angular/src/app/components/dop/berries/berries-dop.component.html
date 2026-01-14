@@ -98,7 +98,9 @@
                     *ngFor="let commodity of policyCommoditiesList" 
                     [fields]="dopYieldContract.fields"
                     [fieldsFormArray]="getViewModel().formGroup.controls.fields"
-                    [filterByCropCommodityId]="commodity.cropCommodityId"></berries-dop-field-list>
+                    [filterByCropCommodityId]="commodity.cropCommodityId"
+                    [filteredCropCommodityName]="commodity.cropCommodityName"
+                    [contractCommodityTotals]="getFarmTotalsForCommodity(commodity.cropCommodityId)"></berries-dop-field-list>
     
             </div>
         </form>

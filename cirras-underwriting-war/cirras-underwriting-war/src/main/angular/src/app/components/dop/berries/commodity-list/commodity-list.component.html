@@ -16,8 +16,15 @@
         <div class="dop-berries-commodity-total border-right" style="width: 100px;">
            {{ dopYieldFieldCommodityBerries.totalProduction | number:'1.0-3' }}
         </div> 
-        <div class="dop-berries-commodity-total border-right" style="width: 100px;">
-           {{ dopYieldFieldCommodityBerries.totalProductionOverride | number:'1.0-3' }}
+        <div class="inventory-fill dop-berries-commodity-total border-right" style="width: 100px;">
+           <mat-form-field appearance="fill" style="width: 100px;">
+            <input matInput matInputCommified type="text"
+                    formControlName="totalProductionOverride"
+                    maxlength="14"
+                    (keypress)="numberOnly($event)" 
+                    (blur)="updatetotalProductionOverride()">
+            </mat-form-field>  
+            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Total Production Override is writeable">edit</mat-icon>
         </div>
         <div style="width: 70px;"></div>
     </div>

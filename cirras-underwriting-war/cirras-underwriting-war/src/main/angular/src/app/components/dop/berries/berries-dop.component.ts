@@ -126,6 +126,10 @@ export class BerriesDopComponent extends BaseComponent {
     }
   }
 
+  getFarmTotalsForCommodity(crpt) {
+    return this.dopYieldContract.dopYieldContractCommodityBerriesList.find(x => x.cropCommodityId == crpt)
+  }
+
   setFormStyles(){
     return {
       'grid-template-columns':  'auto 186px 146px 12px 155px'
