@@ -258,7 +258,24 @@
 						)
 					)
 				)
-
+				or
+			  	(
+					ifd.insurance_plan_id = 3 --Berries
+					and 
+					(
+						exists (select 1
+							from inventory_berries ib
+							where ib.inventory_field_guid = ifd.inventory_field_guid
+							  and ib.crop_commodity_id is not null
+							  and ib.planted_acres <![CDATA[ > ]]> 0
+						)
+						or exists (select 1
+							from declared_yield_field_commodity_berries dyfcb
+							where dyfcb.field_id = ifd.field_id
+							  and dyfcb.crop_year = ifd.crop_year
+						)
+					)
+				)
 			)
 		order by ifd.planting_number,
 			ifd.inventory_field_guid

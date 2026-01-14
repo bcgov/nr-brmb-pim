@@ -28,6 +28,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldDao
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldForageDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldRollupDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldRollupForageDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryBerriesDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryContractCommodityBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventorySeededForageDao;
@@ -40,6 +42,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.YieldMeasUnitTypeCodeListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractDto;
@@ -47,6 +50,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldRollupDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldRollupForageDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededForageDto;
@@ -105,6 +110,8 @@ public class CirrasDopYieldService {
 	private InventoryContractCommodityDao inventoryContractCommodityDao;
 	private InventorySeededForageDao inventorySeededForageDao;
 	private UnderwritingCommentDao underwritingCommentDao;
+	private InventoryBerriesDao inventoryBerriesDao;
+	private InventoryContractCommodityBerriesDao inventoryContractCommodityBerriesDao;
 
 	// Jasper Reports
 	private JasperReportService jasperReportService;
@@ -194,6 +201,15 @@ public class CirrasDopYieldService {
 		this.jasperReportService = jasperReportService;
 	}
 
+	public void setInventoryBerriesDao(InventoryBerriesDao inventoryBerriesDao) {
+		this.inventoryBerriesDao = inventoryBerriesDao;
+	}
+
+	public void setInventoryContractCommodityBerriesDao(InventoryContractCommodityBerriesDao inventoryContractCommodityBerriesDao) {
+		this.inventoryContractCommodityBerriesDao = inventoryContractCommodityBerriesDao;
+	}
+	
+	
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public DopYieldContractRsrc rolloverDopYieldContract(Integer policyId,
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
@@ -322,8 +338,14 @@ public class CirrasDopYieldService {
 				List<DeclaredYieldFieldRollupForageDto> dopForageRollup = declaredYieldFieldRollupForageDao.selectForDeclaredYieldContract(dto.getDeclaredYieldContractGuid());
 				dto.setDeclaredYieldFieldRollupForageList(dopForageRollup);
 			}
+		} else if ( InsurancePlans.BERRIES.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
+			if (dto.getDeclaredYieldContractGuid() == null) {
+				getInventoryContractCommodityBerries(dto);
+			} else {
+				// TODO
+			}
 		} else {
-			throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
+			throw new ServiceException("Insurance Plan must be GRAIN, FORAGE or BERRIES");
 		}
 	}
 	
@@ -355,6 +377,13 @@ public class CirrasDopYieldService {
 
 	}
 
+	private void getInventoryContractCommodityBerries(DeclaredYieldContractDto dto) throws DaoException {
+
+		List<InventoryContractCommodityBerriesDto> dtos = inventoryContractCommodityBerriesDao.selectForDopContract(dto.getContractId(), dto.getCropYear());
+		List<DeclaredYieldContractCommodityBerriesDto> dopCommodities = dopYieldContractRsrcFactory.getDopBerriesCommoditiesFromInventoryBerriesCommodities(dtos);
+		dto.setDeclaredYieldContractCommodityBerriesList(dopCommodities);
+	}
+	
 	private void loadFields(DeclaredYieldContractDto dto) throws DaoException {
 
 		List<ContractedFieldDetailDto> fields = contractedFieldDetailDao.selectForDeclaredYield(dto.getContractId(), dto.getCropYear());
@@ -367,7 +396,7 @@ public class CirrasDopYieldService {
 	}
 
 	private void loadPlantings(ContractedFieldDetailDto cfdDto, Integer insurancePlanId) throws DaoException {
-		
+
 		List<InventoryFieldDto> plantings = inventoryFieldDao.selectForDeclaredYield(cfdDto.getFieldId(),
 				cfdDto.getCropYear(), cfdDto.getInsurancePlanId());
 		cfdDto.setPlantings(plantings);
@@ -382,10 +411,12 @@ public class CirrasDopYieldService {
 				loadSeededForage(ifDto);
 				loadDeclaredYieldFieldForage(ifDto);
 				
+			} else if ( InsurancePlans.BERRIES.getInsurancePlanId().equals(cfdDto.getInsurancePlanId()) ) {
+				loadInventoryBerries(ifDto);
+				// TODO: Load DeclaredYieldFieldCommodityBerries and DeclaredYieldFieldVarietyBerries
 			} else {
-				throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
+				throw new ServiceException("Insurance Plan must be GRAIN, FORAGE or BERRIES");
 			}			
-
 		}
 	}
 
@@ -418,6 +449,15 @@ public class CirrasDopYieldService {
 		ifDto.setDeclaredYieldFieldForageList(dyffDtoList);
 	}
 
+	private void loadInventoryBerries(InventoryFieldDto ifDto) throws DaoException {
+
+		List<InventoryBerriesDto> inventoryBerries = inventoryBerriesDao.selectForDeclaredYield(ifDto.getInventoryFieldGuid());
+		if (inventoryBerries.size() > 0) {
+			ifDto.setInventoryBerries(inventoryBerries.get(0));
+		}
+	}
+	
+	
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public byte[] generateDopReport(Integer cropYear, Integer insurancePlanId, Integer officeId, String policyStatusCode,
 			String policyNumber, String growerInfo, String sortColumn, String policyIds, FactoryContext factoryContext,

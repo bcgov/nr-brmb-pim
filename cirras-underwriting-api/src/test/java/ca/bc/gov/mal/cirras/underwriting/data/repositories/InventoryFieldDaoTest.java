@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.FieldDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededGrainDto;
@@ -74,6 +75,9 @@ public class InventoryFieldDaoTest {
 			InventorySeededForageDao invSeededForageDao = persistenceSpringConfig.inventorySeededForageDao();
 			invSeededForageDao.deleteForField(fieldId);
 
+			InventoryBerriesDao invBerriesDao = persistenceSpringConfig.inventoryBerriesDao();
+			invBerriesDao.deleteForField(fieldId);			
+			
 			invFieldDao.deleteForField(fieldId);
 			dao.delete(fieldId);
 		}
@@ -913,6 +917,111 @@ public class InventoryFieldDaoTest {
 		FieldDto deletedDto = fldDao.fetch(fieldId2);
 		Assert.assertNull(deletedDto);
 	}
+
+	@Test 
+	public void testSelectForDeclaredYieldBerries() throws Exception {
+
+		String userId = "JUNIT_TEST";
+
+		//INSERT Field
+		createField(userId);
+		
+		//Add inventory field
+		Integer cropYear = 2020;
+		Integer insurancePlanId = 3;
+		
+		InventoryFieldDao invFieldDao = persistenceSpringConfig.inventoryFieldDao();
+
+		// INSERT inventory field
+		InventoryFieldDto invFieldDto = new InventoryFieldDto();
+
+		invFieldDto.setCropYear(cropYear);
+		invFieldDto.setFieldId(fieldId2);
+		invFieldDto.setInsurancePlanId(insurancePlanId);
+		invFieldDto.setLastYearCropCommodityId(null);
+		invFieldDto.setLastYearCropCommodityName(null);
+		invFieldDto.setLastYearCropVarietyId(null);
+		invFieldDto.setLastYearCropVarietyName(null);
+		invFieldDto.setIsHiddenOnPrintoutInd(false);
+		invFieldDto.setUnderseededAcres(null);
+		invFieldDto.setUnderseededCropVarietyId(null);
+		invFieldDto.setUnderseededCropVarietyName(null);
+		invFieldDto.setPlantingNumber(1);
+		
+		invFieldDao.insert(invFieldDto, userId);
+
+		String inventoryFieldGuid1 = invFieldDto.getInventoryFieldGuid();
+		
+		//Add second record
+		InventoryFieldDto invField2Dto = new InventoryFieldDto();
+
+		invField2Dto.setCropYear(cropYear);
+		invField2Dto.setFieldId(fieldId2);
+		invField2Dto.setInsurancePlanId(insurancePlanId);
+		invField2Dto.setLastYearCropCommodityId(null);
+		invField2Dto.setLastYearCropCommodityName(null);
+		invField2Dto.setLastYearCropVarietyId(null);
+		invField2Dto.setLastYearCropVarietyName(null);
+		invField2Dto.setIsHiddenOnPrintoutInd(false);
+		invField2Dto.setUnderseededAcres(null);
+		invField2Dto.setUnderseededCropVarietyId(null);
+		invField2Dto.setUnderseededCropVarietyName(null);
+		invField2Dto.setPlantingNumber(2);
+		invFieldDao.insert(invField2Dto, userId);
+
+		String inventoryFieldGuid2 = invField2Dto.getInventoryFieldGuid();
+		
+		
+		//SELECT
+		List<InventoryFieldDto> dtos = invFieldDao.selectForDeclaredYield(fieldId2, cropYear, insurancePlanId);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size()); // Empty, because the plantings have no berries inventory.
+		
+		//INSERT
+		//Add berries to inv field 1
+		createInventoryBerries(12, 1010694, inventoryFieldGuid1, 12.34, userId);
+
+		//Add berries to inv field 2
+		createInventoryBerries(12, 1010694, inventoryFieldGuid2, 0.0, userId);
+				
+		//SELECT
+		dtos = invFieldDao.selectForDeclaredYield(fieldId2, cropYear, insurancePlanId);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(1, dtos.size());
+		
+		InventoryFieldDto ifYieldDto = dtos.get(0);
+		Assert.assertEquals("InventoryFieldGuid", invFieldDto.getInventoryFieldGuid(), ifYieldDto.getInventoryFieldGuid());
+		Assert.assertEquals("CropYear", invFieldDto.getCropYear(), ifYieldDto.getCropYear());
+		Assert.assertEquals("FieldId", invFieldDto.getFieldId(), ifYieldDto.getFieldId());
+		Assert.assertEquals("InsurancePlanId", invFieldDto.getInsurancePlanId(), ifYieldDto.getInsurancePlanId());
+		Assert.assertEquals("LastYearCropCommodityId", invFieldDto.getLastYearCropCommodityId(), ifYieldDto.getLastYearCropCommodityId());
+		Assert.assertEquals("LastYearCropCommodityName", invFieldDto.getLastYearCropCommodityName(), ifYieldDto.getLastYearCropCommodityName());
+		Assert.assertEquals("LastYearCropVarietyId", invFieldDto.getLastYearCropVarietyId(), ifYieldDto.getLastYearCropVarietyId());
+		Assert.assertEquals("LastYearCropVarietyName", invFieldDto.getLastYearCropVarietyName(), ifYieldDto.getLastYearCropVarietyName());
+		Assert.assertEquals("IsHiddenOnPrintoutInd", invFieldDto.getIsHiddenOnPrintoutInd(), ifYieldDto.getIsHiddenOnPrintoutInd());
+		Assert.assertEquals("UnderseededAcres", invFieldDto.getUnderseededAcres(), ifYieldDto.getUnderseededAcres());
+		Assert.assertEquals("UnderseededCropVarietyId", invFieldDto.getUnderseededCropVarietyId(), ifYieldDto.getUnderseededCropVarietyId());
+		Assert.assertEquals("UnderseededCropVarietyName", invFieldDto.getUnderseededCropVarietyName(), ifYieldDto.getUnderseededCropVarietyName());
+		Assert.assertEquals("PlantingNumber", invFieldDto.getPlantingNumber(), ifYieldDto.getPlantingNumber());
+		
+		//Delete all inventory berries records for field
+		InventoryBerriesDao invBerriesDao = persistenceSpringConfig.inventoryBerriesDao();
+		invBerriesDao.deleteForField(fieldId2);
+		
+		//Delete all inventory field records for field
+		invFieldDao.deleteForField(fieldId2);
+		List<InventoryFieldDto> invFieldDtos = invFieldDao.select(fieldId2, cropYear, insurancePlanId);
+		Assert.assertTrue("inventory field records not deleted", invFieldDtos == null || invFieldDtos.size() == 0);
+		
+		//DELETE
+		FieldDao fldDao = persistenceSpringConfig.fieldDao();
+		fldDao.delete(fieldId2);
+
+		//FETCH
+		FieldDto deletedDto = fldDao.fetch(fieldId2);
+		Assert.assertNull(deletedDto);
+	}
+	
 	
 	private String createInventoryField(
 			Integer cropYear,
@@ -1011,6 +1120,37 @@ public class InventoryFieldDaoTest {
 
 	}
 
+	private void createInventoryBerries(
+			Integer cropCommodityId, 
+			Integer cropVarietyId, 
+			String inventoryFieldGuid, 
+			Double plantedAcres, 
+			String userId
+		) throws DaoException {
+		
+		InventoryBerriesDao invBerriesDao = persistenceSpringConfig.inventoryBerriesDao();
+		InventoryBerriesDto newDto = new InventoryBerriesDto();
+
+		newDto.setBogId(null);
+		newDto.setBogMowedDate(null);
+		newDto.setBogRenovatedDate(null);
+		newDto.setCropCommodityId(cropCommodityId);
+		newDto.setCropVarietyId(cropVarietyId);
+		newDto.setInventoryFieldGuid(inventoryFieldGuid);
+		newDto.setIsHarvestedInd(false);
+		newDto.setIsPlantInsurableInd(true);
+		newDto.setIsQuantityInsurableInd(true);
+		newDto.setPlantedAcres(plantedAcres);
+		newDto.setPlantedYear(2015);
+		newDto.setPlantInsurabilityTypeCode(null);
+		newDto.setPlantSpacing(null);
+		newDto.setRowSpacing(null);
+		newDto.setTotalPlants(null);
+		
+		invBerriesDao.insert(newDto, userId);
+	}
+	
+	
 	private void createField(String userId) throws DaoException {
 		// INSERT FIELD
 		

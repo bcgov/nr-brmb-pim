@@ -23,5 +23,7 @@ public interface InventoryBerriesMapper {
 	
 	List<InventoryBerriesDto> select(Map<String, Object> parameters);
 
+	List<InventoryBerriesDto> selectForDeclaredYield(Map<String, Object> parameters);
+	
 	InventoryBerriesDto selectForRollover(Map<String, Object> parameters);
 }

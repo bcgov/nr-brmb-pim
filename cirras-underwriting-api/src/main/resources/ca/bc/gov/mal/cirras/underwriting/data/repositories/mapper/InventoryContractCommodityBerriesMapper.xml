@@ -112,5 +112,20 @@
 		where t.inventory_contract_guid = #{inventoryContractGuid}
 		order by cc.commodity_name
 	</select> 
+
+	<select id="selectForDopContract" resultMap="InventoryContractCommodityBerriesDtoMap">
+		<include refid="selectColumns"/>
+		FROM inventory_contract ic
+		JOIN inventory_contract_commodity_berries t ON t.inventory_contract_guid = ic.inventory_contract_guid
+		JOIN crop_commodity cc ON cc.crop_commodity_id = t.crop_commodity_id
+		WHERE ic.contract_id = #{contractId}
+		AND ic.crop_year = #{cropYear}
+		AND (t.total_quantity_insured_acres <![CDATA[ > ]]> 0
+		     OR t.total_quantity_uninsured_acres <![CDATA[ > ]]> 0
+		     OR t.total_plant_insured_acres <![CDATA[ > ]]> 0
+		     OR t.total_plant_uninsured_acres <![CDATA[ > ]]> 0
+		    )
+		ORDER BY cc.commodity_name
+	</select> 
 	
 </mapper>

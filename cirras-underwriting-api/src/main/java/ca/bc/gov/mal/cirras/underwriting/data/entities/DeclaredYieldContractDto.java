@@ -35,6 +35,7 @@ public class DeclaredYieldContractDto extends BaseDto<DeclaredYieldContractDto> 
 	private List<UnderwritingCommentDto> uwComments = new ArrayList<UnderwritingCommentDto>();
 	private List<DeclaredYieldContractCommodityForageDto> declaredYieldContractCommodityForageList = new ArrayList<DeclaredYieldContractCommodityForageDto>();
 	private List<DeclaredYieldFieldRollupForageDto> declaredYieldFieldRollupForageList = new ArrayList<DeclaredYieldFieldRollupForageDto>();
+	private List<DeclaredYieldContractCommodityBerriesDto> declaredYieldContractCommodityBerriesList = new ArrayList<DeclaredYieldContractCommodityBerriesDto>();
 	
 	private String createUser;
 	private Date createDate;
@@ -102,6 +103,14 @@ public class DeclaredYieldContractDto extends BaseDto<DeclaredYieldContractDto> 
 				this.declaredYieldFieldRollupForageList.add(dyccfDto.copy());
 			}
 		}	
+
+		if ( dto.declaredYieldContractCommodityBerriesList != null ) {			
+			this.declaredYieldContractCommodityBerriesList = new ArrayList<DeclaredYieldContractCommodityBerriesDto>();
+			
+			for ( DeclaredYieldContractCommodityBerriesDto dyccbDto : dto.declaredYieldContractCommodityBerriesList ) {
+				this.declaredYieldContractCommodityBerriesList.add(dyccbDto.copy());
+			}
+		}
 		
 		if ( dto.uwComments != null ) {			
 			this.uwComments = new ArrayList<>();
@@ -317,6 +326,13 @@ public class DeclaredYieldContractDto extends BaseDto<DeclaredYieldContractDto> 
 	}
 	public void setDeclaredYieldFieldRollupForageList(List<DeclaredYieldFieldRollupForageDto> declaredYieldFieldRollupForageList) {
 		this.declaredYieldFieldRollupForageList = declaredYieldFieldRollupForageList;
+	}
+
+	public List<DeclaredYieldContractCommodityBerriesDto> getDeclaredYieldContractCommodityBerriesList() {
+		return declaredYieldContractCommodityBerriesList;
+	}
+	public void setDeclaredYieldContractCommodityBerriesList(List<DeclaredYieldContractCommodityBerriesDto> declaredYieldContractCommodityBerriesList) {
+		this.declaredYieldContractCommodityBerriesList = declaredYieldContractCommodityBerriesList;
 	}
 
 	public Integer getGrowerContractYearId() {
