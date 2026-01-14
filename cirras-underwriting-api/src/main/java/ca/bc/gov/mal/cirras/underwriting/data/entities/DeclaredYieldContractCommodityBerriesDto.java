@@ -57,7 +57,7 @@ public class DeclaredYieldContractCommodityBerriesDto extends BaseDto<DeclaredYi
 		boolean result = false;
 		
 		if(other!=null) {
-			Integer decimalPrecision = 4; // TODO: Verify.
+			Integer decimalPrecision = 4;
 			result = true;
 			DtoUtils dtoUtils = new DtoUtils(getLogger());
 			result = result&&dtoUtils.equals("declaredYieldContractCommodityBerriesGuid", declaredYieldContractCommodityBerriesGuid, other.declaredYieldContractCommodityBerriesGuid);

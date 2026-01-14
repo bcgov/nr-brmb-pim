@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.mapper.InventoryContractCommodityBerriesMapper;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityBerriesDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityDto;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.BaseDao;

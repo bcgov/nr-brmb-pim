@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededGrainDto;
 
 public interface InventoryBerriesMapper {
 
