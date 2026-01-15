@@ -115,6 +115,11 @@ public class InventoryBerriesDaoTest {
 		List<InventoryBerriesDto> dtos = invBerriesDao.select(inventoryFieldGuid);
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(1, dtos.size());
+
+		//SELECT for DOP
+		dtos = invBerriesDao.selectForDeclaredYield(inventoryFieldGuid);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(1, dtos.size());		
 		
 		//FETCH
 		InventoryBerriesDto fetchedDto = invBerriesDao.fetch(inventoryBerriesGuid);
@@ -180,6 +185,15 @@ public class InventoryBerriesDaoTest {
 		Assert.assertEquals("BogRenovatedDate", fetchedDto.getBogRenovatedDate(), updatedDto.getBogRenovatedDate());
 		Assert.assertEquals("IsHarvestedInd", fetchedDto.getIsHarvestedInd(), updatedDto.getIsHarvestedInd());
 
+		//UPDATE
+		updatedDto.setPlantedAcres(0.0);
+		invBerriesDao.update(updatedDto, userId);
+		
+		//SELECT for DOP
+		dtos = invBerriesDao.selectForDeclaredYield(inventoryFieldGuid);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size());		
+		
 		//DELETE
 		invBerriesDao.delete(inventoryBerriesGuid);
 		

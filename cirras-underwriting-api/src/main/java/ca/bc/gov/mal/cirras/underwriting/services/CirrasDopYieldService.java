@@ -29,6 +29,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldFor
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldRollupDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldRollupForageDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryBerriesDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryContractCommodityBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventorySeededForageDao;
@@ -41,6 +42,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.YieldMeasUnitTypeCodeListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractDto;
@@ -109,6 +111,7 @@ public class CirrasDopYieldService {
 	private InventorySeededForageDao inventorySeededForageDao;
 	private UnderwritingCommentDao underwritingCommentDao;
 	private InventoryBerriesDao inventoryBerriesDao;
+	private InventoryContractCommodityBerriesDao inventoryContractCommodityBerriesDao;
 
 	// Jasper Reports
 	private JasperReportService jasperReportService;
@@ -201,6 +204,11 @@ public class CirrasDopYieldService {
 	public void setInventoryBerriesDao(InventoryBerriesDao inventoryBerriesDao) {
 		this.inventoryBerriesDao = inventoryBerriesDao;
 	}
+
+	public void setInventoryContractCommodityBerriesDao(InventoryContractCommodityBerriesDao inventoryContractCommodityBerriesDao) {
+		this.inventoryContractCommodityBerriesDao = inventoryContractCommodityBerriesDao;
+	}
+	
 	
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public DopYieldContractRsrc rolloverDopYieldContract(Integer policyId,
@@ -370,11 +378,10 @@ public class CirrasDopYieldService {
 	}
 
 	private void getInventoryContractCommodityBerries(DeclaredYieldContractDto dto) throws DaoException {
-// TODO
-//		List<InventoryContractCommodityBerriesDto> dtos = inventoryContractCommodityBerriesDao.selectForDopContract(dto.getContractId(), dto.getCropYear());
-//		List<DeclaredYieldContractCommodityBerriesDto> dopCommodities = dopYieldContractRsrcFactory.getDopCommodityBerriesFromInventoryCommodityBerries(dtos);
-//		dto.setDeclaredYieldContractCommodityBerries(dopCommodities);
 
+		List<InventoryContractCommodityBerriesDto> dtos = inventoryContractCommodityBerriesDao.selectForDopContract(dto.getContractId(), dto.getCropYear());
+		List<DeclaredYieldContractCommodityBerriesDto> dopCommodities = dopYieldContractRsrcFactory.getDopBerriesCommoditiesFromInventoryBerriesCommodities(dtos);
+		dto.setDeclaredYieldContractCommodityBerriesList(dopCommodities);
 	}
 	
 	private void loadFields(DeclaredYieldContractDto dto) throws DaoException {
