@@ -1,5 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.data.repositories;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.After;
@@ -16,6 +18,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.AnnualFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.FieldDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.GrowerContractYearDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededGrainDto;
@@ -33,6 +37,10 @@ public class ContractedFieldDetailDaoTest {
 	@Autowired 
 	private PersistenceSpringConfig persistenceSpringConfig;
 
+	private Integer growerContractYearId = 99999999;
+	private Integer contractId = 888888888;
+	private Integer cropYear = 2024;
+	
 	private Integer contractedFieldDetailId = 999199876;
 	private Integer legalLandId = 99199999;
 	private Integer fieldId = 99999299;
@@ -63,6 +71,8 @@ public class ContractedFieldDetailDaoTest {
 			invSeededGrainDao.deleteForField(fieldId);
 			InventorySeededForageDao invSeededForageDao = persistenceSpringConfig.inventorySeededForageDao();
 			invSeededForageDao.deleteForField(fieldId);
+			InventoryBerriesDao invBerriesDao = persistenceSpringConfig.inventoryBerriesDao();
+			invBerriesDao.deleteForField(fieldId);
 			InventoryFieldDao invFieldDao = persistenceSpringConfig.inventoryFieldDao();
 			invFieldDao.deleteForField(fieldId);
 		}
@@ -103,7 +113,13 @@ public class ContractedFieldDetailDaoTest {
 			legalLandDao.delete(legalLandId);
 		}
 
-	}
+		GrowerContractYearDao gcyDao = persistenceSpringConfig.growerContractYearDao();
+		GrowerContractYearDto gcyDto = gcyDao.fetch(growerContractYearId);
+		if (gcyDto != null) {
+			gcyDao.delete(growerContractYearId);
+		}
+		
+	}	
 	
 	@Test 
 	public void testContractedFieldDetail() throws Exception {
@@ -518,6 +534,136 @@ public class ContractedFieldDetailDaoTest {
 		deleteContractedFieldDetail();
 
 	}
+
+	@Test 
+	public void testSelectForDeclaredYieldBerries() throws Exception {
+
+		LegalLandDao legalLandDao = persistenceSpringConfig.legalLandDao();
+		LegalLandDto newlegalLandDto = new LegalLandDto();
+		
+		FieldDao fieldDao = persistenceSpringConfig.fieldDao();
+		FieldDto newFieldDto = new FieldDto();
+		
+		AnnualFieldDetailDao annualFieldDetailDao = persistenceSpringConfig.annualFieldDetailDao();
+		AnnualFieldDetailDto newAnnualFieldDetailDto = new AnnualFieldDetailDto();
+		
+		ContractedFieldDetailDao dao = persistenceSpringConfig.contractedFieldDetailDao();
+		ContractedFieldDetailDto newDto = new ContractedFieldDetailDto();
+
+		InventoryFieldDao ifDao = persistenceSpringConfig.inventoryFieldDao();
+		InventoryFieldDto ifDto = new InventoryFieldDto();
+		
+		InventoryBerriesDao ibDao = persistenceSpringConfig.inventoryBerriesDao();
+		InventoryBerriesDto ibDto = new InventoryBerriesDto();
+				
+		Integer insurancePlanId = 3;
+		Integer displayOrder = 1;
+
+		String userId = "JUNIT_TEST";
+
+		createGrowerContractYear(insurancePlanId);
+		
+		//INSERT Legal Land
+		newlegalLandDto.setLegalLandId(legalLandId);
+		newlegalLandDto.setPrimaryReferenceTypeCode("OTHER");
+		newlegalLandDto.setLegalDescription("Legal Description");
+		newlegalLandDto.setLegalShortDescription("Short Legal");
+		newlegalLandDto.setOtherDescription("Other Description");
+		newlegalLandDto.setActiveFromCropYear(2011);
+		newlegalLandDto.setActiveToCropYear(2022);
+
+		legalLandDao.insertDataSync(newlegalLandDto, userId);
+
+		// INSERT FIELD
+		newFieldDto.setFieldId(fieldId);
+		newFieldDto.setFieldLabel("Field Label");
+		newFieldDto.setActiveFromCropYear(2012);
+		newFieldDto.setActiveToCropYear(2022);
+
+		fieldDao.insertDataSync(newFieldDto, userId);
+		
+		//INSERT Annual Field Detail record
+		newAnnualFieldDetailDto.setAnnualFieldDetailId(annualFieldDetailId);
+		newAnnualFieldDetailDto.setLegalLandId(legalLandId);
+		newAnnualFieldDetailDto.setFieldId(fieldId);
+		newAnnualFieldDetailDto.setCropYear(cropYear);
+
+		annualFieldDetailDao.insertDataSync(newAnnualFieldDetailDto, userId);
+		
+		//INSERT Contracted Field Detail record
+		newDto.setContractedFieldDetailId(contractedFieldDetailId);
+		newDto.setAnnualFieldDetailId(annualFieldDetailId);
+		newDto.setDisplayOrder(displayOrder);
+		newDto.setIsLeasedInd(false);
+		newDto.setGrowerContractYearId(growerContractYearId);
+		
+		dao.insertDataSync(newDto, userId);
+						
+
+		// selectForDeclaredYield
+		List<ContractedFieldDetailDto> dtos = dao.selectForDeclaredYield(contractId, cropYear);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size()); // Empty, because none of them have berries inventory.
+
+		// Create inventory_field
+		ifDto.setCropYear(cropYear);
+		ifDto.setFieldId(fieldId);
+		ifDto.setInsurancePlanId(insurancePlanId);
+		ifDto.setIsHiddenOnPrintoutInd(false);
+		ifDto.setPlantingNumber(1);
+		
+		ifDao.insert(ifDto, userId);
+		ifDto = ifDao.fetch(ifDto.getInventoryFieldGuid());
+		Assert.assertNotNull(ifDto);
+		inventoryFieldGuid = ifDto.getInventoryFieldGuid();
+		
+		// Create inventory_berries
+		ibDto.setInventoryFieldGuid(ifDto.getInventoryFieldGuid());
+		ibDto.setCropCommodityId(10);
+		ibDto.setCropCommodityName("BLUEBERRY");
+		ibDto.setCropVarietyId(1010689);
+		ibDto.setCropVarietyName("BLUEJAY");
+		ibDto.setPlantInsurabilityTypeCode(null);
+		ibDto.setPlantedYear(2015);
+		ibDto.setPlantedAcres(0.0);
+		ibDto.setRowSpacing(10);
+		ibDto.setPlantSpacing(5.3);
+		ibDto.setTotalPlants(0);
+		ibDto.setIsQuantityInsurableInd(true);
+		ibDto.setIsPlantInsurableInd(false);
+		ibDto.setBogId(null);
+		ibDto.setBogMowedDate(null);
+		ibDto.setBogRenovatedDate(null);
+		ibDto.setIsHarvestedInd(false);
+		
+		ibDao.insert(ibDto, userId);
+				
+		dtos = dao.selectForDeclaredYield(contractId, cropYear);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size()); // Empty, because none of them have inventory with acres > 0.
+		
+		ibDto.setPlantedAcres(11.22);
+		ibDto.setTotalPlants(5000);
+		ibDao.update(ibDto, userId);
+		
+		dtos = dao.selectForDeclaredYield(contractId, cropYear);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(1, dtos.size()); // Only 1 record returned
+		ContractedFieldDetailDto cfdYieldDto = dtos.get(0);
+
+		Assert.assertEquals(contractedFieldDetailId, cfdYieldDto.getContractedFieldDetailId());
+		
+		//DELETE
+		ibDao.delete(ibDto.getInventoryBerriesGuid());
+		ifDao.delete(ifDto.getInventoryFieldGuid());
+		inventoryFieldGuid = null;
+		
+		dao.delete(newDto.getContractedFieldDetailId());
+		
+		//clean up 
+		deleteContractedFieldDetail();
+	}
+	
 	
 	@Test 
 	public void testSelectForVerifiedYield() throws Exception {
@@ -633,5 +779,29 @@ public class ContractedFieldDetailDaoTest {
 
 		cfdDao.insertDataSync(cfdDto, userId);
 	}		
+
+	private void createGrowerContractYear(Integer insurancePlanId) throws DaoException {
+		GrowerContractYearDao dao = persistenceSpringConfig.growerContractYearDao();
+		GrowerContractYearDto newDto = new GrowerContractYearDto();
+		
+		Integer growerId = 525593;
+
+		//Date and Time without millisecond
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		Date dateTime = cal.getTime();
+		
+		String userId = "JUNIT_TEST";
+
+		//INSERT
+		newDto.setGrowerContractYearId(growerContractYearId);
+		newDto.setContractId(contractId);
+		newDto.setGrowerId(growerId);
+		newDto.setInsurancePlanId(insurancePlanId);
+		newDto.setCropYear(cropYear);
+		newDto.setDataSyncTransDate(dateTime);
+		
+		dao.insert(newDto, userId);
+	}
 	
 }

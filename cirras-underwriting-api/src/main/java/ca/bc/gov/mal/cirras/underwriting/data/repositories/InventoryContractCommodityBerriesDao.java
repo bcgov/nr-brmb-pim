@@ -162,5 +162,26 @@ public class InventoryContractCommodityBerriesDao extends BaseDao {
 		logger.debug(">select " + dtos);
 		return dtos;
 	}
+
+	public List<InventoryContractCommodityBerriesDto> selectForDopContract(Integer contractId, Integer cropYear) throws DaoException {
+		logger.debug("<selectForDopContract");
 		
+		List<InventoryContractCommodityBerriesDto> dtos = null;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			
+			parameters.put("contractId", contractId);
+			parameters.put("cropYear", cropYear);
+						
+			dtos = this.mapper.selectForDopContract(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectForDopContract " + dtos);
+		return dtos;
+	}
+	
 }

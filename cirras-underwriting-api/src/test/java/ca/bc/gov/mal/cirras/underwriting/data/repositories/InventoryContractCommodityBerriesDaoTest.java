@@ -170,6 +170,62 @@ public class InventoryContractCommodityBerriesDaoTest {
 
 	}
 
+	@Test 
+	public void selectForDopContract() throws Exception {
+
+		String inventoryContractCommodityBerriesGuid;
+		String userId = "UNITTEST";
+
+		createGrowerContractYear();
+		createInventoryContract(userId);
+
+		InventoryContractCommodityBerriesDao invContractCommodityBerriesDao = persistenceSpringConfig.inventoryContractCommodityBerriesDao();
+
+		// INSERT
+		InventoryContractCommodityBerriesDto newDto = new InventoryContractCommodityBerriesDto();
+		newDto.setInventoryContractGuid(inventoryContractGuid);
+		newDto.setCropCommodityId(10);
+		newDto.setCropCommodityName("BLUEBERRY");
+		newDto.setTotalInsuredPlants(0);
+		newDto.setTotalUninsuredPlants(0);
+		newDto.setTotalQuantityInsuredAcres(0.0);
+		newDto.setTotalQuantityUninsuredAcres(0.0);
+		newDto.setTotalPlantInsuredAcres(0.0);
+		newDto.setTotalPlantUninsuredAcres(0.0);
+
+		invContractCommodityBerriesDao.insert(newDto, userId);
+		Assert.assertNotNull(newDto.getInventoryContractCommodityBerriesGuid());
+		inventoryContractCommodityBerriesGuid = newDto.getInventoryContractCommodityBerriesGuid();
+		
+		//SELECT
+		List<InventoryContractCommodityBerriesDto> dtos = invContractCommodityBerriesDao.selectForDopContract(contractId, cropYear);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(0, dtos.size());   // Because the total acres are all 0.
+		
+		//UPDATE
+		newDto.setTotalInsuredPlants(5001);
+		newDto.setTotalUninsuredPlants(201);
+		newDto.setTotalQuantityInsuredAcres((double)1001);
+		newDto.setTotalQuantityUninsuredAcres((double)101);
+		newDto.setTotalPlantInsuredAcres((double)2001);
+		newDto.setTotalPlantUninsuredAcres((double)201);
+		
+		invContractCommodityBerriesDao.update(newDto, userId);
+
+		//SELECT
+		dtos = invContractCommodityBerriesDao.selectForDopContract(contractId, cropYear);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(1, dtos.size());
+		
+		//DELETE
+		invContractCommodityBerriesDao.delete(inventoryContractCommodityBerriesGuid);
+				
+		//DELETE InventoryContract
+		InventoryContractDao invContractDao = persistenceSpringConfig.inventoryContractDao();
+		invContractDao.delete(inventoryContractGuid);
+	}
+	
+	
 	private void createInventoryContract(String userId) throws DaoException {
 
 		//Date without time
