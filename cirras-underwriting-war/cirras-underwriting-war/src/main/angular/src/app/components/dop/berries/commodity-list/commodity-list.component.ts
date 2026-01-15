@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { DopYieldFieldCommodityBerries } from 'src/app/conversion/models-yield';
+import { makeNumberOnly } from 'src/app/utils';
 
 @Component({
   selector: 'berries-dop-commodity-list',
@@ -41,7 +42,7 @@ export class BerriesDopCommodityListComponent {
       // cropCommodityName: [this.dopYieldFieldCommodityBerries.cropCommodityName],
       // cropYear: [ this.dopYieldFieldCommodityBerries.cropYear],
       // totalProduction: [this.dopYieldFieldCommodityBerries.totalProduction],
-      // totalProductionOverride: [ this.dopYieldFieldCommodityBerries.totalProductionOverride ], 
+      totalProductionOverride: [ this.dopYieldFieldCommodityBerries.totalProductionOverride ], 
       dopYieldFieldVarietyBerriesList: this.fb.array([])
     });
     this.dopYieldFieldCommodityBerriesFormArray.push(this.fieldCommodityFormGroup);
@@ -54,4 +55,13 @@ export class BerriesDopCommodityListComponent {
       return false
     }
   }
+
+  numberOnly(event): boolean {
+    return makeNumberOnly(event)
+  }
+
+  updatetotalProductionOverride() {
+    // TODO on save
+  }
+  
 }
