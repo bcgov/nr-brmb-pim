@@ -12,7 +12,7 @@ export class BerriesDopComponentModel extends BaseComponentModel {
         super(sanitizer);
         
         this.formGroup = this.fb.group({
-            fields: new UntypedFormArray([]), // subform responsible for the field / commodity/estimated yield grid 
+            fields: new UntypedFormArray([]), // subform responsible for the fields grid 
         });
     }
 

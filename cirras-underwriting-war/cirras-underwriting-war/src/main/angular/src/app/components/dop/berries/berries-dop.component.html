@@ -94,7 +94,11 @@
 
             <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
 
-                <!-- TODO: field data -->
+                <berries-dop-field-list
+                    *ngFor="let commodity of policyCommoditiesList" 
+                    [fields]="dopYieldContract.fields"
+                    [fieldsFormArray]="getViewModel().formGroup.controls.fields"
+                    [filterByCropCommodityId]="commodity.cropCommodityId"></berries-dop-field-list>
     
             </div>
         </form>
