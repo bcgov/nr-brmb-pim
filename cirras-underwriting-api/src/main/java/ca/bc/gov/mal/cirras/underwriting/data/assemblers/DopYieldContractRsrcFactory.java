@@ -235,6 +235,18 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 
 			resource.setDopYieldFieldRollupForageList(dopYieldFieldRollupForageList);
 		}
+
+		// Declared Yield Contract Commodity Berries
+		if (!dto.getDeclaredYieldContractCommodityBerriesList().isEmpty()) {
+			List<DopYieldContractCommodityBerries> dopYieldContractCommodityBerriesList = new ArrayList<DopYieldContractCommodityBerries>();
+
+			for (DeclaredYieldContractCommodityBerriesDto dyccbDto : dto.getDeclaredYieldContractCommodityBerriesList()) {
+				DopYieldContractCommodityBerries dyccbModel = createDopYieldContractCommodityBerries(dyccbDto);
+				dopYieldContractCommodityBerriesList.add(dyccbModel);
+			}
+
+			resource.setDopYieldContractCommodityBerriesList(dopYieldContractCommodityBerriesList);
+		}
 		
 		String eTag = getEtag(resource);
 		resource.setETag(eTag);
@@ -812,6 +824,14 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 	}
 	
 
+	public void updateDto(DeclaredYieldContractCommodityBerriesDto dto, DopYieldContractCommodityBerries model) {
+		dto.setCropCommodityId(model.getCropCommodityId());
+		dto.setCropCommodityName(model.getCropCommodityName());
+		dto.setDeclaredYieldContractCommodityBerriesGuid(model.getDeclaredYieldContractCommodityBerriesGuid());
+		dto.setDeclaredYieldContractGuid(model.getDeclaredYieldContractGuid());
+		dto.setTotalProduction(model.getTotalProduction());
+		dto.setTotalProductionOverride(model.getTotalProductionOverride());
+	}
 	
 	static void setSelfLink(String declaredYieldContractGuid, DopYieldContractRsrc resource, URI baseUri) {
 		if (declaredYieldContractGuid != null) {
