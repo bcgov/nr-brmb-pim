@@ -39,6 +39,8 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 	
 	private List<InventoryFieldDto> plantings = new ArrayList<InventoryFieldDto>();
 
+	private List<DeclaredYieldFieldCommodityBerriesDto> declaredYieldFieldCommodityBerriesList = new ArrayList<DeclaredYieldFieldCommodityBerriesDto>();
+	
 	private List<UnderwritingCommentDto> uwComments = new ArrayList<UnderwritingCommentDto>();
 	
 	private List<PolicyDto> policies = new ArrayList<PolicyDto>();
@@ -79,6 +81,14 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 			}
 		}		
 
+		if ( dto.declaredYieldFieldCommodityBerriesList != null ) {			
+			this.declaredYieldFieldCommodityBerriesList = new ArrayList<>();
+			
+			for ( DeclaredYieldFieldCommodityBerriesDto dyfcbDto : dto.declaredYieldFieldCommodityBerriesList ) {
+				this.declaredYieldFieldCommodityBerriesList.add(dyfcbDto.copy());
+			}
+		}
+		
 		if ( dto.uwComments != null ) {			
 			this.uwComments = new ArrayList<>();
 			
@@ -248,6 +258,13 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 	}
 	public void setPlantings(List<InventoryFieldDto> plantings) {
 		this.plantings = plantings;
+	}
+
+	public List<DeclaredYieldFieldCommodityBerriesDto> getDeclaredYieldFieldCommodityBerriesList() {
+		return declaredYieldFieldCommodityBerriesList;
+	}
+	public void setDeclaredYieldFieldCommodityBerriesList(List<DeclaredYieldFieldCommodityBerriesDto> declaredYieldFieldCommodityBerriesList) {
+		this.declaredYieldFieldCommodityBerriesList = declaredYieldFieldCommodityBerriesList;
 	}
 
 	public List<UnderwritingCommentDto> getUwComments() {

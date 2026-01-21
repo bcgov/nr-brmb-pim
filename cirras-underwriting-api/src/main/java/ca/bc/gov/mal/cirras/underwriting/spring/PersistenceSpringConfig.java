@@ -35,6 +35,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContract
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityForageDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldCommodityBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldForageDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldRollupDao;
@@ -333,6 +334,11 @@ public class PersistenceSpringConfig {
 		return new DeclaredYieldFieldRollupDao(); 
 	}
 
+	@Bean
+	public DeclaredYieldFieldCommodityBerriesDao declaredYieldFieldCommodityBerriesDao() { 
+		return new DeclaredYieldFieldCommodityBerriesDao(); 
+	}
+	
 	@Bean
 	public DeclaredYieldContractCommodityDao declaredYieldContractCommodityDao() { 
 		return new DeclaredYieldContractCommodityDao(); 
