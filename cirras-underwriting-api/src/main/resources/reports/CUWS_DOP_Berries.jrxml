@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DOP_Berries" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e5bab596-1236-4394-bffe-7563f9e7b19c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="377"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="613"/>
+	<parameter name="p_crop_year" class="java.lang.Integer"/>
+	<parameter name="p_insurance_plan_id" class="java.lang.Integer"/>
+	<parameter name="p_office_id" class="java.lang.Integer"/>
+	<parameter name="p_policy_status_code" class="java.lang.String"/>
+	<parameter name="p_policy_number" class="java.lang.String"/>
+	<parameter name="p_grower_info" class="java.lang.String"/>
+	<parameter name="p_grower_phone_number" class="java.lang.String"/>
+	<parameter name="p_sort_column" class="java.lang.String"/>
+	<parameter name="p_policy_ids" class="java.lang.String"/>
+	<parameter name="p_top_planing_limit" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select t.policy_id
+	, t.contract_id
+	, t.policy_number
+	, t.crop_year
+	, t.grower_number
+	, t.grower_name
+	, t.crop_commodity_id
+	, t.commodity_name
+	, count(*) as total_rows_per_commodity
+	, case when $P{p_sort_column} = 'growerName' then t.grower_name
+	       when $P{p_sort_column} = 'policyNumber' then t.policy_number
+	       else t.policy_number
+           end as sort_column 
+from (
+	select distinct p.policy_id
+		, p.contract_id
+		, p.policy_number
+		, p.crop_year
+		, g.grower_number
+		, g.grower_name		
+		, ib.crop_commodity_id
+		, UPPER(cc.commodity_name) as commodity_name
+		, ifd.field_id
+		, ib.crop_variety_id
+	from policy p
+	join grower g on g.grower_id = p.grower_id
+	join grower_contract_year gcy on gcy.contract_id = p.contract_id 
+								 and gcy.crop_year = p.crop_year
+	join inventory_contract ic on ic.contract_id = gcy.contract_id
+							  and ic.crop_year = gcy.crop_year
+	join contracted_field_detail cfd on cfd.grower_contract_year_id = gcy.grower_contract_year_id
+	join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+	join field f on afd.field_id = f.field_id
+	left join legal_land ll on ll.legal_land_id = afd.legal_land_id
+	join inventory_field ifd on ifd.field_id = f.field_id
+							and ifd.insurance_plan_id = gcy.insurance_plan_id
+							and ifd.crop_year = afd.crop_year
+	join inventory_berries ib on ib.inventory_field_guid = ifd.inventory_field_guid
+	join crop_commodity cc on cc.crop_commodity_id = ib.crop_commodity_id
+	where $P{p_policy_ids} is not null and char_length($P{p_policy_ids}) > 0
+		and p.policy_id::text in (select regexp_split_to_table($P{p_policy_ids}, ','))
+	union
+	--POLICY AND FIELDS WITH FILTER
+	select distinct p.policy_id
+		, p.contract_id
+		, p.policy_number
+		, p.crop_year
+		, g.grower_number
+		, g.grower_name		
+		, ib.crop_commodity_id
+		, UPPER(cc.commodity_name) as commodity_name
+		, ifd.field_id
+		, ib.crop_variety_id
+	from policy p
+	join grower g on g.grower_id = p.grower_id
+	join grower_contract_year gcy on gcy.contract_id = p.contract_id 
+								 and gcy.crop_year = p.crop_year
+	join inventory_contract ic on ic.contract_id = gcy.contract_id
+							  and ic.crop_year = gcy.crop_year
+	join contracted_field_detail cfd on cfd.grower_contract_year_id = gcy.grower_contract_year_id
+	join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+	join field f on afd.field_id = f.field_id
+	left join legal_land ll on ll.legal_land_id = afd.legal_land_id
+	join inventory_field ifd on ifd.field_id = f.field_id
+							and ifd.insurance_plan_id = gcy.insurance_plan_id
+							and ifd.crop_year = afd.crop_year
+	join inventory_berries ib on ib.inventory_field_guid = ifd.inventory_field_guid
+	join crop_commodity cc on cc.crop_commodity_id = ib.crop_commodity_id
+	left join grower_contact gc on gc.grower_id = g.grower_id 
+	left join contact c on c.contact_id = gc.contact_id
+	left join contact_email ce on ce.contact_id = c.contact_id
+	left join contact_phone cp on cp.contact_id = c.contact_id
+	where ($P{p_policy_ids} is null or char_length($P{p_policy_ids}) = 0)
+		and
+		(
+			case
+				when $P{p_crop_year} is not null then p.crop_year = $P{p_crop_year}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_insurance_plan_id} is not null then p.insurance_plan_id = $P{p_insurance_plan_id}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_policy_status_code} is not null and char_length($P{p_policy_status_code}) > 0 then p.policy_status_code = $P{p_policy_status_code}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_office_id} is not null then p.office_id = $P{p_office_id}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_policy_number} is not null and char_length($P{p_policy_number}) > 0 then p.policy_number like $P{p_policy_number}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_grower_info} is not null and char_length($P{p_grower_info}) > 0 
+				then 
+					g.grower_number::text like $P{p_grower_info}
+					or upper(g.grower_name) like $P{p_grower_info}
+					or upper(ce.email_address) like $P{p_grower_info}
+					or
+					(
+						case
+						when $P{p_grower_phone_number} is not null and char_length($P{p_grower_phone_number}) > 0 
+						then 
+							cp.phone_number like $P{p_grower_phone_number}
+						else false
+					end
+					)
+				else true
+			end
+		)
+) t
+group by t.policy_id
+	   , t.contract_id
+	   , t.policy_number
+	   , t.crop_year
+	   , t.grower_number
+	   , t.grower_name
+	   , t.crop_commodity_id
+	   , t.commodity_name
+order by sort_column,
+	     t.policy_number]]>
+	</queryString>
+	<field name="policy_id" class="java.lang.Integer"/>
+	<field name="contract_id" class="java.lang.Integer"/>
+	<field name="policy_number" class="java.lang.String"/>
+	<field name="crop_year" class="java.lang.Integer"/>
+	<field name="grower_number" class="java.lang.Integer"/>
+	<field name="grower_name" class="java.lang.String"/>
+	<field name="crop_commodity_id" class="java.lang.Integer"/>
+	<field name="commodity_name" class="java.lang.String"/>
+	<field name="total_rows_per_commodity" class="java.lang.Integer"/>
+	<field name="sort_column" class="java.lang.String"/>
+	<group name="Group1">
+		<groupExpression><![CDATA[$F{policy_id} + $F{contract_id} + $F{policy_number} + $F{crop_year} + $F{grower_number} + $F{grower_name} + $F{crop_commodity_id} + $F{commodity_name} + $F{total_rows_per_commodity} + $F{sort_column}]]></groupExpression>
+		<groupHeader>
+			<band height="159">
+				<textField>
+					<reportElement x="0" y="10" width="164" height="42" uuid="fdab4917-8820-42ae-afd1-81491a840d2d">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="SansSerif" size="12" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Production Insurance"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="41" width="164" height="15" uuid="aa60576c-e7a3-4776-9b4d-d7f1887adf98">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="SansSerif"/>
+					</textElement>
+					<text><![CDATA[Ministry of Agriculture and Food]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="150" y="60" width="270" height="25" uuid="fd5d7dbd-cde8-4964-ae4e-f5734c1b56b2">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="SansSerif" size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Schedule D14]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="100" y="85" width="320" height="25" uuid="1ba51ebe-d0a5-4453-baca-7d59abe91103">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="SansSerif" size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Declaration of Production - ]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="370" y="85" width="100" height="25" uuid="d803b257-4956-4b79-8cb1-2db5e8fe4408"/>
+					<textFieldExpression><![CDATA[$F{commodity_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="28" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 2]]></printWhenExpression>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<subreport>
+				<reportElement x="10" y="50" width="555" height="75" uuid="dda197e2-c53c-4885-937e-69c1f8b28691">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="p_crop_year">
+					<subreportParameterExpression><![CDATA[$F{crop_year}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_contract_id">
+					<subreportParameterExpression><![CDATA[$F{contract_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_crop_commodity_id">
+					<subreportParameterExpression><![CDATA[$F{crop_commodity_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subreports/CUWS_DOP_Berries_Field_Variety.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
