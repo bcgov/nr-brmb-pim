@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { roundUpDecimal } from 'src/app/components/inventory/inventory-common';
 import { AnnualField } from 'src/app/conversion/models';
 import { DopYieldContractCommodityBerries } from 'src/app/conversion/models-yield';
+import { RootState } from 'src/app/store';
+import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
+import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { makeNumberOnly } from 'src/app/utils';
 
 @Component({
@@ -21,7 +26,9 @@ export class BerriesDopFieldListComponent {
 
   fieldsFormGroup: UntypedFormGroup;
 
-  constructor(private fb: UntypedFormBuilder) {}
+  constructor(private fb: UntypedFormBuilder,
+              private store: Store<RootState>,
+  ) {}
 
   ngOnInit() {
     this.refreshForm()
@@ -36,7 +43,7 @@ export class BerriesDopFieldListComponent {
   }
 
   refreshForm(){
-    // hmm... may need to change on Save - untroducing another subform 
+    
     this.fieldsFormGroup = this.fb.group({
       totalProductionOverride: [ (this.contractCommodityTotals && this.contractCommodityTotals.totalProductionOverride) ? this.contractCommodityTotals.totalProductionOverride : "" ], 
       fields: this.fb.array([])
@@ -44,14 +51,17 @@ export class BerriesDopFieldListComponent {
     this.fieldsFormArray.push(this.fieldsFormGroup);
   }
 
-
-
   numberOnly(event): boolean {
     return makeNumberOnly(event)
   }
   
   updatetotalProductionOverride() {
-    // TODO on save: figure out the correct object and value to update
+    const totalProductionOverride = this.fieldsFormGroup.value.totalProductionOverride
+    const roundUpTotalProductionOverride = roundUpDecimal(totalProductionOverride, 2)
+    
+    this.fieldsFormGroup.controls['totalProductionOverride'].setValue(roundUpTotalProductionOverride) 
+    this.contractCommodityTotals.totalProductionOverride = this.fieldsFormGroup.value.totalProductionOverride
+    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true))
   }
 
 }
