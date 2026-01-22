@@ -10,6 +10,7 @@ import { BERRY_COMMODITY, SCREEN_TYPE } from 'src/app/utils/constants';
 import { AddNewDopYieldContract, LoadDopYieldContract, RolloverDopYieldContract, UpdateDopYieldContract } from 'src/app/store/dop/dop.actions';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { getInsurancePlanName } from 'src/app/utils';
+import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 
 @Component({
   selector: 'berries-dop',
@@ -172,4 +173,15 @@ export class BerriesDopComponent extends BaseComponent {
     this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, false ));
   }
 
+  onCancel(){
+
+    if ( confirm("Are you sure you want to clear all unsaved changes on the screen? There is no way to undo this action.") ) {
+          // reload the page
+          this.loadPage()
+    
+          this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, false ));
+    
+          displaySuccessSnackbar(this.snackbarService, "Unsaved changes have been cleared successfully.")
+        }
+    }
 }
