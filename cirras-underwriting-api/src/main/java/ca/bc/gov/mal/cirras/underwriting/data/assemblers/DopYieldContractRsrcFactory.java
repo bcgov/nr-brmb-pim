@@ -39,6 +39,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractComm
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldRollupDto;
@@ -72,7 +73,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 			List<AnnualFieldRsrc> fields = new ArrayList<AnnualFieldRsrc>();
 
 			for (ContractedFieldDetailDto cfdDto : dycDto.getFields()) {
-				AnnualFieldRsrc afModel = createAnnualField(cfdDto, authentication);
+				AnnualFieldRsrc afModel = createAnnualField(cfdDto, authentication, true);
 				fields.add(afModel);
 			}
 
@@ -168,7 +169,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 			List<AnnualFieldRsrc> fields = new ArrayList<AnnualFieldRsrc>();
 
 			for (ContractedFieldDetailDto cfdDto : dto.getFields()) {
-				AnnualFieldRsrc afModel = createAnnualField(cfdDto, authentication);
+				AnnualFieldRsrc afModel = createAnnualField(cfdDto, authentication, false);
 				fields.add(afModel);
 			}
 
@@ -467,7 +468,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 	}
 	
 	// Creates an AnnualFieldRsrc for a DopYieldContract.
-	private AnnualFieldRsrc createAnnualField(ContractedFieldDetailDto dto, WebAdeAuthentication authentication) {
+	private AnnualFieldRsrc createAnnualField(ContractedFieldDetailDto dto, WebAdeAuthentication authentication, boolean isRollover) {
 		AnnualFieldRsrc model = new AnnualFieldRsrc();
 
 		AnnualFieldRsrcFactory.populateResource(model, dto);
@@ -494,57 +495,23 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		}
 		
 		// DopYieldFieldCommodityBerries and DopYieldFieldVarietyBerries
-		if (!dto.getPlantings().isEmpty() && InsurancePlans.BERRIES.getInsurancePlanId().equals(dto.getInsurancePlanId())) {
+		if ( !dto.getDeclaredYieldFieldCommodityBerriesList().isEmpty() ) {
 
-			Map<Integer, DopYieldFieldCommodityBerries> dopYieldFieldCommodityBerriesMap = new HashMap<Integer, DopYieldFieldCommodityBerries>();
-			Map<Integer, DopYieldFieldVarietyBerries> dopYieldFieldVarietyBerriesMap = new HashMap<Integer, DopYieldFieldVarietyBerries>();
-			
-			for (InventoryFieldDto ifDto : dto.getPlantings()) {
-
-				InventoryBerriesDto ibDto = ifDto.getInventoryBerries();
-				if (ibDto != null && ibDto.getCropVarietyId() != null) {
-					DopYieldFieldCommodityBerries dyfcbModel = dopYieldFieldCommodityBerriesMap.get(ibDto.getCropCommodityId());
-					if ( dyfcbModel == null ) {
-						dyfcbModel = createDopYieldFieldCommodityBerries(ifDto);
-						dopYieldFieldCommodityBerriesMap.put(ibDto.getCropCommodityId(), dyfcbModel);
-					}
-					
-					DopYieldFieldVarietyBerries dyfvbModel = dopYieldFieldVarietyBerriesMap.get(ibDto.getCropVarietyId());
-					if ( dyfvbModel == null ) {
-						dyfvbModel = createDopYieldFieldVarietyBerries(ifDto);
-						dopYieldFieldVarietyBerriesMap.put(ibDto.getCropVarietyId(), dyfvbModel);
-						dyfcbModel.getDopYieldFieldVarietyBerriesList().add(dyfvbModel);
-					} else {
-						// Add planted acres for this planting to the variety total.
-						updateDopYieldFieldVarietyBerriesFromPlanting(dyfvbModel, ifDto);
-					}
-				}
-			}
-			
 			List<DopYieldFieldCommodityBerries> dopYieldFieldCommodityBerriesList = new ArrayList<DopYieldFieldCommodityBerries>();
 
-			if (!dopYieldFieldCommodityBerriesMap.isEmpty() ) {
-				dopYieldFieldCommodityBerriesList.addAll(dopYieldFieldCommodityBerriesMap.values());
-				dopYieldFieldCommodityBerriesList.sort(new Comparator<DopYieldFieldCommodityBerries>() {
-					@Override
-					public int compare(DopYieldFieldCommodityBerries o1, DopYieldFieldCommodityBerries o2) {
-						return o1.getCropCommodityName().compareTo(o2.getCropCommodityName());
-					}
-				});
-				
-				for (DopYieldFieldCommodityBerries dyfcb : dopYieldFieldCommodityBerriesList) {
-					dyfcb.getDopYieldFieldVarietyBerriesList().sort(new Comparator<DopYieldFieldVarietyBerries>() {
-						@Override
-						public int compare(DopYieldFieldVarietyBerries o1, DopYieldFieldVarietyBerries o2) {
-							return o1.getCropVarietyName().compareTo(o2.getCropVarietyName());
-						}
-					});
-				}
+			for (DeclaredYieldFieldCommodityBerriesDto dyfcbDto : dto.getDeclaredYieldFieldCommodityBerriesList()) {
+				DopYieldFieldCommodityBerries dyfcbModel = createDopYieldFieldCommodityBerries(dyfcbDto);
+				dopYieldFieldCommodityBerriesList.add(dyfcbModel);
 			}
 
 			model.setDopYieldFieldCommodityBerriesList(dopYieldFieldCommodityBerriesList);
+
+		} else if (isRollover && !dto.getPlantings().isEmpty() && InsurancePlans.BERRIES.getInsurancePlanId().equals(dto.getInsurancePlanId())) {
+
+			// Rollover from Inventory
+			List<DopYieldFieldCommodityBerries> dopYieldFieldCommodityBerriesList = createDopYieldFieldCommodityBerriesListFromPlantings(dto);
+			model.setDopYieldFieldCommodityBerriesList(dopYieldFieldCommodityBerriesList);
 		}
-		
 		
 		// UnderwritingComment
 		if (!dto.getUwComments().isEmpty()) {
@@ -663,7 +630,59 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		return model;
 	}
 
-	private DopYieldFieldCommodityBerries createDopYieldFieldCommodityBerries(InventoryFieldDto ifDto) {
+	// Rollover DopYieldFieldCommodityBerries and DopYieldFieldVarietyBerries from Inventory.
+	private List<DopYieldFieldCommodityBerries> createDopYieldFieldCommodityBerriesListFromPlantings(ContractedFieldDetailDto dto) {
+
+		Map<Integer, DopYieldFieldCommodityBerries> dopYieldFieldCommodityBerriesMap = new HashMap<Integer, DopYieldFieldCommodityBerries>();
+		Map<Integer, DopYieldFieldVarietyBerries> dopYieldFieldVarietyBerriesMap = new HashMap<Integer, DopYieldFieldVarietyBerries>();
+		
+		for (InventoryFieldDto ifDto : dto.getPlantings()) {
+
+			InventoryBerriesDto ibDto = ifDto.getInventoryBerries();
+			if (ibDto != null && ibDto.getCropVarietyId() != null) {
+				DopYieldFieldCommodityBerries dyfcbModel = dopYieldFieldCommodityBerriesMap.get(ibDto.getCropCommodityId());
+				if ( dyfcbModel == null ) {
+					dyfcbModel = createDopYieldFieldCommodityBerriesFromPlanting(ifDto);
+					dopYieldFieldCommodityBerriesMap.put(ibDto.getCropCommodityId(), dyfcbModel);
+				}
+				
+				DopYieldFieldVarietyBerries dyfvbModel = dopYieldFieldVarietyBerriesMap.get(ibDto.getCropVarietyId());
+				if ( dyfvbModel == null ) {
+					dyfvbModel = createDopYieldFieldVarietyBerriesFromPlanting(ifDto);
+					dopYieldFieldVarietyBerriesMap.put(ibDto.getCropVarietyId(), dyfvbModel);
+					dyfcbModel.getDopYieldFieldVarietyBerriesList().add(dyfvbModel);
+				} else {
+					// Add planted acres for this planting to the variety total.
+					updateDopYieldFieldVarietyBerriesFromPlanting(dyfvbModel, ifDto);
+				}
+			}
+		}
+		
+		List<DopYieldFieldCommodityBerries> dopYieldFieldCommodityBerriesList = new ArrayList<DopYieldFieldCommodityBerries>();
+
+		if (!dopYieldFieldCommodityBerriesMap.isEmpty() ) {
+			dopYieldFieldCommodityBerriesList.addAll(dopYieldFieldCommodityBerriesMap.values());
+			dopYieldFieldCommodityBerriesList.sort(new Comparator<DopYieldFieldCommodityBerries>() {
+				@Override
+				public int compare(DopYieldFieldCommodityBerries o1, DopYieldFieldCommodityBerries o2) {
+					return o1.getCropCommodityName().compareTo(o2.getCropCommodityName());
+				}
+			});
+			
+			for (DopYieldFieldCommodityBerries dyfcb : dopYieldFieldCommodityBerriesList) {
+				dyfcb.getDopYieldFieldVarietyBerriesList().sort(new Comparator<DopYieldFieldVarietyBerries>() {
+					@Override
+					public int compare(DopYieldFieldVarietyBerries o1, DopYieldFieldVarietyBerries o2) {
+						return o1.getCropVarietyName().compareTo(o2.getCropVarietyName());
+					}
+				});
+			}
+		}
+
+		return dopYieldFieldCommodityBerriesList;
+	}
+	
+	private DopYieldFieldCommodityBerries createDopYieldFieldCommodityBerriesFromPlanting(InventoryFieldDto ifDto) {
 		
 		DopYieldFieldCommodityBerries model = new DopYieldFieldCommodityBerries();
 
@@ -678,16 +697,31 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 			model.setCropCommodityName(ib.getCropCommodityName());
 		}
 		
-		// DeclaredYieldFieldCommodityBerriesDto
-		// TODO: Load from DeclaredYieldFieldCommodityBerriesDto if it exists. Otherwise default to null.
 		model.setDeclaredYieldFieldCommodityBerriesGuid(null);
 		model.setTotalProduction(null);
 		model.setTotalProductionOverride(null);
 		
 		return model;
 	}
+
+	private DopYieldFieldCommodityBerries createDopYieldFieldCommodityBerries(DeclaredYieldFieldCommodityBerriesDto dto) {
+		
+		DopYieldFieldCommodityBerries model = new DopYieldFieldCommodityBerries();
+
+		model.setCropYear(dto.getCropYear());
+		model.setFieldId(dto.getFieldId());
+		model.setCropCommodityId(dto.getCropCommodityId());
+		model.setCropCommodityName(dto.getCropCommodityName());
+		model.setDeclaredYieldFieldCommodityBerriesGuid(dto.getDeclaredYieldFieldCommodityBerriesGuid());
+		model.setTotalProduction(dto.getTotalProduction());
+		model.setTotalProductionOverride(dto.getTotalProductionOverride());
+
+		// TODO: Load DopYieldFieldVarietyBerries
+		
+		return model;
+	}
 	
-	private DopYieldFieldVarietyBerries createDopYieldFieldVarietyBerries(InventoryFieldDto ifDto) {
+	private DopYieldFieldVarietyBerries createDopYieldFieldVarietyBerriesFromPlanting(InventoryFieldDto ifDto) {
 		
 		DopYieldFieldVarietyBerries model = new DopYieldFieldVarietyBerries();
 
@@ -700,8 +734,6 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		}
 
 		
-		// DeclaredYieldFieldVarietyBerriesDto
-		// TODO: Load from DeclaredYieldFieldVarietyBerriesDto if it exists. Otherwise set default values.
 		model.setAbandonmentYield(null);
 		model.setDeclaredYieldFieldCommodityBerriesGuid(null);
 		model.setDeclaredYieldFieldVarietyBerriesGuid(null);
@@ -716,7 +748,6 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 
 	private void updateDopYieldFieldVarietyBerriesFromPlanting(DopYieldFieldVarietyBerries model, InventoryFieldDto ifDto) {
 
-		// TODO: This should only calculate plantedAcres if the DopYieldFieldVarietyBerries record was not loaded from the database.
 		// InventoryBerriesDto
 		InventoryBerriesDto ib = ifDto.getInventoryBerries();
 		if ( ib != null && ib.getPlantedAcres() != null ) {
@@ -798,6 +829,16 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 	
 	}
 	
+	public void updateDto(DeclaredYieldFieldCommodityBerriesDto dto, DopYieldFieldCommodityBerries model) {
+
+		dto.setCropCommodityId(model.getCropCommodityId());
+		dto.setCropCommodityName(model.getCropCommodityName());
+		dto.setCropYear(model.getCropYear());
+		dto.setDeclaredYieldFieldCommodityBerriesGuid(model.getDeclaredYieldFieldCommodityBerriesGuid());
+		dto.setFieldId(model.getFieldId());
+		dto.setTotalProduction(model.getTotalProduction());
+		dto.setTotalProductionOverride(model.getTotalProductionOverride());
+	}
 	
 	public void updateDto(DeclaredYieldFieldRollupDto dto, DopYieldFieldRollup model) {
 		dto.setDeclaredYieldFieldRollupGuid(model.getDeclaredYieldFieldRollupGuid());
