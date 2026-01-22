@@ -3,6 +3,7 @@ import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular
 import { Store } from '@ngrx/store';
 import { roundUpDecimal } from 'src/app/components/inventory/inventory-common';
 import { DopYieldFieldVarietyBerries } from 'src/app/conversion/models-yield';
+import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { RootState } from 'src/app/store';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
@@ -25,6 +26,7 @@ export class BerriesDopVarietyListComponent {
 
   constructor(private fb: UntypedFormBuilder,
               private store: Store<RootState>,
+              public securityUtilService: SecurityUtilService,  
   ) {}
 
   ngOnInit() {
@@ -86,6 +88,20 @@ export class BerriesDopVarietyListComponent {
         
     this.varietyFormGroup.controls['totalProductionOverride'].setValue(roundUpTotalProductionOverride) 
     this.dopYieldFieldVarietyBerries.totalProductionOverride = this.varietyFormGroup.value.totalProductionOverride
+    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true))
+  }
+
+  onDeleteRowValues() {
+    this.dopYieldFieldVarietyBerries.soldShippedYield = 0
+    this.dopYieldFieldVarietyBerries.salesYield = 0
+    this.dopYieldFieldVarietyBerries.abandonmentYield = 0
+    this.dopYieldFieldVarietyBerries.totalProductionOverride = 0
+
+    this.varietyFormGroup.controls['soldShippedYield'].setValue(null)
+    this.varietyFormGroup.controls['salesYield'].setValue(null)
+    this.varietyFormGroup.controls['abandonmentYield'].setValue(null)
+    this.varietyFormGroup.controls['totalProductionOverride'].setValue(null)
+
     this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true))
   }
 }
