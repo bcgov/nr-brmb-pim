@@ -47,8 +47,7 @@
     ></cirras-grower-contract-header>  
 
     <!-- The policy has yield message -->
-    <!-- TODO -->
-    <!-- <div *ngIf="hasYieldData == true" class="message-container">
+    <div *ngIf="hasYieldData == true" class="message-container">
         
         <div class="has-yield-warning">
             <mat-icon>warning</mat-icon>            
@@ -56,7 +55,7 @@
                 Inventory edits are not permitted when a policy has DOP data.  
                 If you need to update the inventory, delete the DOP data first.</span> 
         </div>
-    </div> -->
+    </div>
     <form [formGroup]="getViewModel().formGroup" (keydown.enter)="$event.preventDefault()">
 
         <div class="plcy-inv-form-header" [ngStyle]="setFormSeededStyles()">
