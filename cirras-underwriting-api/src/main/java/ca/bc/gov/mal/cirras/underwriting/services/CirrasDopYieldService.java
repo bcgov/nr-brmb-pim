@@ -1665,6 +1665,8 @@ public class CirrasDopYieldService {
 
 		} else if ( InsurancePlans.BERRIES.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
 
+			// TODO: Delete Declared Yield Field Variety Berries
+			declaredYieldFieldCommodityBerriesDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
 			declaredYieldContractCommodityBerriesDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
 			
 		} else {
