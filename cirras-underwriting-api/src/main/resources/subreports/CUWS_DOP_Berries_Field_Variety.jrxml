@@ -216,8 +216,8 @@ ORDER BY  f.location,
 					</textElement>
 					<text><![CDATA[LEGAL DESCRIPTION]]></text>
 				</staticText>
-				<staticText>
-					<reportElement mode="Transparent" x="58" y="0" width="90" height="35" backcolor="#FFFFFF" uuid="2468e022-aadc-4d03-8d98-9fd9f8f08df1">
+				<textField>
+					<reportElement mode="Transparent" x="58" y="0" width="90" height="35" backcolor="#FFFFFF" uuid="c586b6cd-ce33-4f85-a32b-72564858180f">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -233,8 +233,8 @@ ORDER BY  f.location,
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Noto Sans" size="8" isBold="true"/>
 					</textElement>
-					<text><![CDATA[STREET ADDRESS]]></text>
-				</staticText>
+					<textFieldExpression><![CDATA[($P{p_crop_commodity_id} == 11 ? "BOG NAME" : "STREET ADDRESS")]]></textFieldExpression>
+				</textField>
 				<staticText>
 					<reportElement mode="Transparent" x="148" y="0" width="40" height="35" backcolor="#FFFFFF" uuid="16f626db-985a-4b6e-8cba-c4f43bd73b6f">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -501,7 +501,7 @@ ORDER BY  f.location,
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Noto Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{p_crop_commodity_id} == 11 ? $F{field_label} : $F{location})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ContainerHeight" x="0" y="0" width="58" height="20" uuid="d2359f20-1300-4cad-a08b-4c9271eff2aa">
