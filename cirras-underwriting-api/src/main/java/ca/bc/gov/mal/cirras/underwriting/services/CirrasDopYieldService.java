@@ -21,6 +21,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForageCut;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldGrain;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollup;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollupForage;
+import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldVarietyBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.ContractedFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityBerriesDao;
@@ -32,6 +33,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldDao
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldForageDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldRollupDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldRollupForageDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldVarietyBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryContractCommodityBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryContractCommodityDao;
@@ -55,6 +57,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldRollupDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldRollupForageDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldVarietyBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityDto;
@@ -119,6 +122,7 @@ public class CirrasDopYieldService {
 	private InventoryContractCommodityBerriesDao inventoryContractCommodityBerriesDao;
 	private DeclaredYieldContractCommodityBerriesDao declaredYieldContractCommodityBerriesDao;
 	private DeclaredYieldFieldCommodityBerriesDao declaredYieldFieldCommodityBerriesDao;
+	private DeclaredYieldFieldVarietyBerriesDao declaredYieldFieldVarietyBerriesDao;
 
 	// Jasper Reports
 	private JasperReportService jasperReportService;
@@ -222,6 +226,10 @@ public class CirrasDopYieldService {
 	
 	public void setDeclaredYieldFieldCommodityBerriesDao(DeclaredYieldFieldCommodityBerriesDao declaredYieldFieldCommodityBerriesDao) {
 		this.declaredYieldFieldCommodityBerriesDao = declaredYieldFieldCommodityBerriesDao;
+	}
+
+	public void setDeclaredYieldFieldVarietyBerriesDao(DeclaredYieldFieldVarietyBerriesDao declaredYieldFieldVarietyBerriesDao) {
+		this.declaredYieldFieldVarietyBerriesDao = declaredYieldFieldVarietyBerriesDao;
 	}
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -407,7 +415,6 @@ public class CirrasDopYieldService {
 		for (ContractedFieldDetailDto cfdDto : dto.getFields()) {
 			loadPlantings(cfdDto, dto.getInsurancePlanId());
 			loadDeclaredYieldFieldCommodityBerries(cfdDto);
-			// TODO: Load DeclaredYieldFieldVarietyBerries
 			loadUwComments(cfdDto);
 		}
 	}
@@ -476,6 +483,15 @@ public class CirrasDopYieldService {
 	private void loadDeclaredYieldFieldCommodityBerries(ContractedFieldDetailDto cfdDto) throws DaoException {
 		List<DeclaredYieldFieldCommodityBerriesDto> dyfcbDtoList = declaredYieldFieldCommodityBerriesDao.select(cfdDto.getFieldId(), cfdDto.getCropYear());
 		cfdDto.setDeclaredYieldFieldCommodityBerriesList(dyfcbDtoList);
+
+		for ( DeclaredYieldFieldCommodityBerriesDto dyfcbDto : dyfcbDtoList ) {
+			loadDeclaredYieldFieldVarietyBerries(dyfcbDto);
+		}	
+	}
+
+	private void loadDeclaredYieldFieldVarietyBerries(DeclaredYieldFieldCommodityBerriesDto dyfcbDto) throws DaoException {
+		List<DeclaredYieldFieldVarietyBerriesDto> dyfvbDtoList = declaredYieldFieldVarietyBerriesDao.select(dyfcbDto.getDeclaredYieldFieldCommodityBerriesGuid());
+		dyfcbDto.setDeclaredYieldFieldVarietyBerriesList(dyfvbDtoList);
 	}
 	
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -666,6 +682,7 @@ public class CirrasDopYieldService {
 						if (dopYieldFieldCommodityBerriesList != null && !dopYieldFieldCommodityBerriesList.isEmpty()) {
 							for (DopYieldFieldCommodityBerries dyfcb : dopYieldFieldCommodityBerriesList) {
 								updateDeclaredYieldFieldCommodityBerries(dyfcb, userId);
+								updateDeclaredYieldFieldVarietyBerriesList(dyfcb.getDopYieldFieldVarietyBerriesList(), userId);
 							}
 						}
 					}
@@ -1157,6 +1174,18 @@ public class CirrasDopYieldService {
 
 		return dto.getDeclaredYieldFieldCommodityBerriesGuid();
 	}
+
+	private String insertDeclaredYieldFieldVarietyBerries(DopYieldFieldVarietyBerries dopYieldFieldVarietyBerries, String userId) throws DaoException {
+
+		DeclaredYieldFieldVarietyBerriesDto dto = new DeclaredYieldFieldVarietyBerriesDto();
+		dopYieldContractRsrcFactory.updateDto(dto, dopYieldFieldVarietyBerries);
+
+		dto.setDeclaredYieldFieldVarietyBerriesGuid(null);
+		
+		declaredYieldFieldVarietyBerriesDao.insert(dto, userId);
+
+		return dto.getDeclaredYieldFieldVarietyBerriesGuid();
+	}
 	
 	private String insertDeclaredYieldFieldForage(DopYieldFieldForageCut dopYieldFieldForage, String userId) throws DaoException {
 
@@ -1475,6 +1504,48 @@ public class CirrasDopYieldService {
 
 		return declaredYieldFieldCommodityBerriesGuid;
 	}
+
+	private void updateDeclaredYieldFieldVarietyBerriesList(List<DopYieldFieldVarietyBerries> dopYieldFieldVarietyBerriesList, String userId) throws DaoException {
+
+		logger.debug("<updateDeclaredYieldFieldVarietyBerriesList");
+
+		if (dopYieldFieldVarietyBerriesList != null && !dopYieldFieldVarietyBerriesList.isEmpty()) {
+			for (DopYieldFieldVarietyBerries dyfcb : dopYieldFieldVarietyBerriesList) {
+				updateDeclaredYieldFieldVarietyBerries(dyfcb, userId);
+			}
+		}
+
+		logger.debug(">updateDeclaredYieldFieldVarietyBerriesList");
+	
+	}
+
+	private String updateDeclaredYieldFieldVarietyBerries(DopYieldFieldVarietyBerries dopYieldFieldVarietyBerries, String userId) throws DaoException {
+
+		logger.debug("<updateDeclaredYieldFieldVarietyBerries");
+
+		DeclaredYieldFieldVarietyBerriesDto dto = null;
+
+		if (dopYieldFieldVarietyBerries.getDeclaredYieldFieldVarietyBerriesGuid() != null) {
+			dto = declaredYieldFieldVarietyBerriesDao.fetch(dopYieldFieldVarietyBerries.getDeclaredYieldFieldVarietyBerriesGuid());
+		}
+
+		String declaredYieldFieldVarietyBerriesGuid = null;
+
+		if (dto == null) {
+			// Insert if it doesn't exist
+			declaredYieldFieldVarietyBerriesGuid = insertDeclaredYieldFieldVarietyBerries(dopYieldFieldVarietyBerries, userId);
+		} else {
+			declaredYieldFieldVarietyBerriesGuid = dto.getDeclaredYieldFieldVarietyBerriesGuid();
+			dopYieldContractRsrcFactory.updateDto(dto, dopYieldFieldVarietyBerries);
+
+			declaredYieldFieldVarietyBerriesDao.update(dto, userId);
+		}
+		
+		logger.debug(">updateDeclaredYieldFieldVarietyBerries");
+
+		return declaredYieldFieldVarietyBerriesGuid;
+	}
+	
 	
 	private void updateDeclaredYieldFieldRollup(String declaredYieldContractGuid,
 			DopYieldContractRsrc dopYieldContract, String userId,
@@ -1665,7 +1736,7 @@ public class CirrasDopYieldService {
 
 		} else if ( InsurancePlans.BERRIES.getInsurancePlanId().equals(dto.getInsurancePlanId()) ) {
 
-			// TODO: Delete Declared Yield Field Variety Berries
+			declaredYieldFieldVarietyBerriesDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
 			declaredYieldFieldCommodityBerriesDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
 			declaredYieldContractCommodityBerriesDao.deleteForDeclaredYieldContract(declaredYieldContractGuid);
 			

@@ -1,6 +1,8 @@
 package ca.bc.gov.mal.cirras.underwriting.data.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,8 @@ public class DeclaredYieldFieldCommodityBerriesDto extends BaseDto<DeclaredYield
 	private Integer cropYear;
 	private Double totalProduction;
 	private Double totalProductionOverride;
+
+	private List<DeclaredYieldFieldVarietyBerriesDto> declaredYieldFieldVarietyBerriesList = new ArrayList<DeclaredYieldFieldVarietyBerriesDto>();
 	
 	private String createUser;
 	private Date createDate;
@@ -27,7 +31,7 @@ public class DeclaredYieldFieldCommodityBerriesDto extends BaseDto<DeclaredYield
 	private Date updateDate;
 	
 	private String cropCommodityName;
-
+	
 	public DeclaredYieldFieldCommodityBerriesDto() {
 	}
 	
@@ -40,13 +44,22 @@ public class DeclaredYieldFieldCommodityBerriesDto extends BaseDto<DeclaredYield
 		this.cropYear = dto.cropYear;
 		this.totalProduction = dto.totalProduction;
 		this.totalProductionOverride = dto.totalProductionOverride;
+
+		if ( dto.declaredYieldFieldVarietyBerriesList != null ) {			
+			this.declaredYieldFieldVarietyBerriesList = new ArrayList<>();
+			
+			for ( DeclaredYieldFieldVarietyBerriesDto dyfvbDto : dto.declaredYieldFieldVarietyBerriesList ) {
+				this.declaredYieldFieldVarietyBerriesList.add(dyfvbDto.copy());
+			}
+		}
+		
 		this.createUser = dto.createUser;
 		this.createDate = dto.createDate;
 		this.updateUser = dto.updateUser;
 		this.updateDate = dto.updateDate;
 		
 		this.cropCommodityName = dto.cropCommodityName;
-
+		
 	}
 	
 
@@ -132,6 +145,14 @@ public class DeclaredYieldFieldCommodityBerriesDto extends BaseDto<DeclaredYield
 
 	public void setTotalProductionOverride(Double totalProductionOverride) {
 		this.totalProductionOverride = totalProductionOverride;
+	}
+
+	public List<DeclaredYieldFieldVarietyBerriesDto> getDeclaredYieldFieldVarietyBerriesList() {
+		return declaredYieldFieldVarietyBerriesList;
+	}
+
+	public void setDeclaredYieldFieldVarietyBerriesList(List<DeclaredYieldFieldVarietyBerriesDto> declaredYieldFieldVarietyBerriesList) {
+		this.declaredYieldFieldVarietyBerriesList = declaredYieldFieldVarietyBerriesList;
 	}
 
 	public String getCreateUser() {

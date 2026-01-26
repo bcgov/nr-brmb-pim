@@ -44,6 +44,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldRollupDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldRollupForageDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldVarietyBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityDto;
@@ -716,7 +717,17 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		model.setTotalProduction(dto.getTotalProduction());
 		model.setTotalProductionOverride(dto.getTotalProductionOverride());
 
-		// TODO: Load DopYieldFieldVarietyBerries
+		// Load DopYieldFieldVarietyBerries
+		if (!dto.getDeclaredYieldFieldVarietyBerriesList().isEmpty() ) {
+			List<DopYieldFieldVarietyBerries> dopYieldFieldVarietyBerriesList = new ArrayList<DopYieldFieldVarietyBerries>();
+
+			for (DeclaredYieldFieldVarietyBerriesDto dyfvbDto : dto.getDeclaredYieldFieldVarietyBerriesList()) {
+				DopYieldFieldVarietyBerries dyfvbModel = createDopYieldFieldVarietyBerries(dyfvbDto);
+				dopYieldFieldVarietyBerriesList.add(dyfvbModel);
+			}
+
+			model.setDopYieldFieldVarietyBerriesList(dopYieldFieldVarietyBerriesList);
+		}
 		
 		return model;
 	}
@@ -761,7 +772,25 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		}
 
 	}
-	
+
+	private DopYieldFieldVarietyBerries createDopYieldFieldVarietyBerries(DeclaredYieldFieldVarietyBerriesDto dto) {
+		
+		DopYieldFieldVarietyBerries model = new DopYieldFieldVarietyBerries();
+
+		model.setCropVarietyId(dto.getCropVarietyId());
+		model.setCropVarietyName(dto.getCropVarietyName());
+		model.setPlantedAcres(dto.getPlantedAcres());
+		model.setAbandonmentYield(dto.getAbandonmentYield());
+		model.setDeclaredYieldFieldCommodityBerriesGuid(dto.getDeclaredYieldFieldCommodityBerriesGuid());
+		model.setDeclaredYieldFieldVarietyBerriesGuid(dto.getDeclaredYieldFieldVarietyBerriesGuid());
+		model.setIsHiddenOnPrintoutInd(false);   // TODO: Will be removed in a future ticket.
+		model.setSalesYield(dto.getSalesYield());
+		model.setSoldShippedYield(dto.getSoldShippedYield());
+		model.setTotalProduction(dto.getTotalProduction());
+		model.setTotalProductionOverride(dto.getTotalProductionOverride());
+
+		return model;
+	}
 	
 	public void updateDto(DeclaredYieldContractDto dto, DopYieldContractRsrc model, String userId) {
 
@@ -838,6 +867,21 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		dto.setFieldId(model.getFieldId());
 		dto.setTotalProduction(model.getTotalProduction());
 		dto.setTotalProductionOverride(model.getTotalProductionOverride());
+	}
+
+	public void updateDto(DeclaredYieldFieldVarietyBerriesDto dto, DopYieldFieldVarietyBerries model) {
+
+		dto.setAbandonmentYield(model.getAbandonmentYield());
+		dto.setCropVarietyId(model.getCropVarietyId());
+		dto.setCropVarietyName(model.getCropVarietyName());
+		dto.setDeclaredYieldFieldCommodityBerriesGuid(model.getDeclaredYieldFieldCommodityBerriesGuid());
+		dto.setDeclaredYieldFieldVarietyBerriesGuid(model.getDeclaredYieldFieldVarietyBerriesGuid());
+		dto.setPlantedAcres(model.getPlantedAcres());
+		dto.setSalesYield(model.getSalesYield());
+		dto.setSoldShippedYield(model.getSoldShippedYield());
+		dto.setTotalProduction(model.getTotalProduction());
+		dto.setTotalProductionOverride(model.getTotalProductionOverride());
+
 	}
 	
 	public void updateDto(DeclaredYieldFieldRollupDto dto, DopYieldFieldRollup model) {
