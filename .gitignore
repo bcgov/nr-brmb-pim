@@ -3,7 +3,6 @@
 compose.yaml
 local-config
 cirras-underwriting-api/src/test/resources/static.properties
-cirras-underwriting-war/cirras-underwriting-war/src/main/angular/package-lock.json
 cirras-underwriting-ngclient-lib/cirras-underwriting-ngclient-lib/src/main/angular/package-lock.json
 package-lock.json
 cirras-underwriting-war/settings.xml
