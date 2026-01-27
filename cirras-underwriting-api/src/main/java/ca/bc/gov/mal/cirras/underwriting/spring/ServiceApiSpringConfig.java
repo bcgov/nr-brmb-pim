@@ -10,24 +10,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
-import ca.bc.gov.mal.cirras.underwriting.spring.PersistenceSpringConfig;
-import ca.bc.gov.mal.cirras.underwriting.services.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.services.LandDataSyncService;
-import ca.bc.gov.mal.cirras.underwriting.services.LandDataSyncService;
-import ca.bc.gov.mal.cirras.underwriting.services.CirrasCommodityService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasCommodityService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasDataSyncService;
-import ca.bc.gov.mal.cirras.underwriting.services.CirrasDataSyncService;
-import ca.bc.gov.mal.cirras.underwriting.services.CirrasDopYieldService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasDopYieldService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasInventoryService;
-import ca.bc.gov.mal.cirras.underwriting.services.CirrasInventoryService;
-import ca.bc.gov.mal.cirras.underwriting.services.CirrasMaintenanceService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasMaintenanceService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasUwLandManagementService;
-import ca.bc.gov.mal.cirras.underwriting.services.CirrasUwLandManagementService;
-import ca.bc.gov.mal.cirras.underwriting.services.CirrasVerifiedYieldService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasVerifiedYieldService;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityTypeCodeRsrcFactory;
@@ -56,6 +46,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.assemblers.YieldMeasUnitTypeCodeRs
 import ca.bc.gov.mal.cirras.underwriting.services.reports.JasperReportService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.UnderwritingServiceHelper;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.BerriesService;
+import ca.bc.gov.mal.cirras.underwriting.services.utils.FieldService;
+import ca.bc.gov.mal.cirras.underwriting.services.utils.GrainForageService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.OutOfSync;
 
 import ca.bc.gov.mal.cirras.policies.api.rest.client.v1.CirrasPolicyService;
@@ -142,6 +134,32 @@ public class ServiceApiSpringConfig {
 		result.setInventoryBerriesDao(persistenceSpringConfig.inventoryBerriesDao());
 		
 		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
+
+		return result;
+	}	
+	
+	@Bean
+	public GrainForageService grainForageService() {
+		GrainForageService result = new GrainForageService();
+		
+		result.setInventorySeededGrainDao(persistenceSpringConfig.inventorySeededGrainDao());
+		result.setInventorySeededForageDao(persistenceSpringConfig.inventorySeededForageDao());
+		result.setVerifiedYieldGrainBasketDao(persistenceSpringConfig.verifiedYieldGrainBasketDao());
+		result.setProductDao(persistenceSpringConfig.productDao());
+
+		result.setVerifiedYieldContractRsrcFactory(verifiedYieldContractRsrcFactory);
+
+		return result;
+	}
+	
+	@Bean
+	public FieldService fieldService() {
+		FieldService result = new FieldService();
+		
+		result.setContractedFieldDetailDao(persistenceSpringConfig.contractedFieldDetailDao());
+		result.setInventoryFieldDao(persistenceSpringConfig.inventoryFieldDao());
+
+		result.setGrainForageService(grainForageService());
 
 		return result;
 	}
@@ -405,10 +423,6 @@ public class ServiceApiSpringConfig {
 		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
 
 		result.setPolicyDao(persistenceSpringConfig.policyDao());
-		result.setInventoryFieldDao(persistenceSpringConfig.inventoryFieldDao());
-		result.setInventorySeededGrainDao(persistenceSpringConfig.inventorySeededGrainDao());
-		result.setInventorySeededForageDao(persistenceSpringConfig.inventorySeededForageDao());
-		result.setContractedFieldDetailDao(persistenceSpringConfig.contractedFieldDetailDao());
 		result.setDeclaredYieldContractDao(persistenceSpringConfig.declaredYieldContractDao());
 		result.setDeclaredYieldContractCommodityDao(persistenceSpringConfig.declaredYieldContractCommodityDao());
 		result.setDeclaredYieldContractCommodityForageDao(persistenceSpringConfig.declaredYieldContractCommodityForageDao());
@@ -420,6 +434,9 @@ public class ServiceApiSpringConfig {
 		result.setVerifiedYieldGrainBasketDao(persistenceSpringConfig.verifiedYieldGrainBasketDao());
 		result.setProductDao(persistenceSpringConfig.productDao());
 		result.setUnderwritingCommentDao(persistenceSpringConfig.underwritingCommentDao());
+		
+		result.setGrainForageService(grainForageService());
+		result.setFieldService(fieldService());
 		
 		return result;
 	}	
