@@ -120,6 +120,9 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 	
 	private void delete() throws CirrasUnderwritingServiceException {
 
+		deleteDopYieldContract(policyNumber1);
+		deleteDopYieldContract(policyNumber2);
+		
 		deleteInventoryContract(policyNumber1);
 		deleteInventoryContract(policyNumber2);
 
@@ -161,6 +164,18 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		}
 	}
 
+	private void deleteDopYieldContract(String policyNumber) throws CirrasUnderwritingServiceException {
+		
+		UwContractRsrc uwContract = getUwContract(policyNumber, service, topLevelEndpoints);
+		
+		if ( uwContract != null ) {
+			
+			if ( uwContract.getDeclaredYieldContractGuid() != null ) { 
+				DopYieldContractRsrc dopYieldContract = service.getDopYieldContract(uwContract);
+				service.deleteDopYieldContract(dopYieldContract);
+			}
+		}
+	}
 	
 	@Test
 	public void testDopYieldRolloverBerries() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
@@ -347,6 +362,249 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		logger.debug(">testDopYieldRolloverBerries");
 	}
 		
+	@Test
+	public void testInsertUpdateDeleteDopYieldBerriesContract() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
+		logger.debug("<testInsertUpdateDeleteDopYieldBerriesContract");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+
+		createGrower();
+		createPolicy(policyId1, policyNumber1, cropYear1);
+		createGrowerContractYear(gcyId1, cropYear1);
+
+		createLegalLand();
+		createField();
+		createAnnualFieldDetail(annualFieldDetailId1, cropYear1);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, gcyId1, false);
+		
+		UwContractRsrc uwContractRsrc = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContractRsrc);
+		Assert.assertNull(uwContractRsrc.getInventoryContractGuid());
+		
+		InventoryContractRsrc invContract = service.rolloverInventoryContract(uwContractRsrc);
+		Assert.assertNotNull(invContract);
+		Assert.assertNotNull(invContract.getFields());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings());
+		Assert.assertNotNull(invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries());
+
+		// Remove default planting.
+		AnnualFieldRsrc field = invContract.getFields().get(0);
+		field.getPlantings().remove(0);
+
+		createPlanting(field, 1, cropYear1);
+		createInventoryBerries(field.getPlantings().get(0), 10, "BLUEBERRY", 1010689, "BLUEJAY", 100.0, 10, 5.3, true, true, null, 2020, null, null, null, false);
+
+		createPlanting(field, 2, cropYear1);
+		createInventoryBerries(field.getPlantings().get(1), 10, "BLUEBERRY", 1010689, "BLUEJAY", 300.0, 9, 11.0, false, false, null, 2018, null, null, null, false);
+		
+		createPlanting(field, 3, cropYear1);
+		createInventoryBerries(field.getPlantings().get(2), 12, "RASPBERRY", 1010694, "MALAHAT", 200.0, null, null, true, false, null, 2021, null, null, null, false);
+
+		createPlanting(field, 4, cropYear1);
+		createInventoryBerries(field.getPlantings().get(3), 12, "RASPBERRY", 1010695, "MEEKER", 500.0, null, null, true, false, null, 2021, null, null, null, false);
+
+		// Planting with 0 acres will be excluded from DOP rollover.
+		createPlanting(field, 5, cropYear1);
+		createInventoryBerries(field.getPlantings().get(4), 13, "STRAWBERRY", 1010702, "HOOD", 0.0, null, null, true, true, null, 2021, null, null, null, false);
+		
+		
+		//Create inventory contract
+		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
+
+		Assert.assertNotNull(fetchedInvContract);
+		Assert.assertNotNull(fetchedInvContract.getFields());
+		Assert.assertNotNull(fetchedInvContract.getFields().get(0).getPlantings());
+		Assert.assertEquals(5, fetchedInvContract.getFields().get(0).getPlantings().size());
+		
+		uwContractRsrc = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContractRsrc);
+		Assert.assertNotNull(uwContractRsrc.getInventoryContractGuid());
+		Assert.assertNull(uwContractRsrc.getDeclaredYieldContractGuid());
+		
+		DopYieldContractRsrc newDyc = service.rolloverDopYieldContract(uwContractRsrc);
+
+		Assert.assertNotNull(newDyc);
+		Assert.assertNull(newDyc.getDeclaredYieldContractGuid());
+		Assert.assertNotNull(newDyc.getFields());
+		Assert.assertEquals(1, newDyc.getFields().size());
+		Assert.assertNotNull(newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList());
+		Assert.assertEquals(2, newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().size());
+
+		// Expected values
+		// Dop Yield Contract
+		DopYieldContractRsrc expectedDyc = new DopYieldContractRsrc();
+		expectedDyc.setContractId(contractId);
+		expectedDyc.setCropYear(cropYear1);
+		expectedDyc.setDefaultYieldMeasUnitTypeCode("LB");
+		expectedDyc.setGrowerContractYearId(gcyId1);
+		expectedDyc.setInsurancePlanId(insurancePlanId);
+
+		// Fields
+		AnnualFieldRsrc expectedField = new AnnualFieldRsrc();
+		expectedField.setAnnualFieldDetailId(annualFieldDetailId1);
+		expectedField.setContractedFieldDetailId(contractedFieldDetailId1);
+		expectedField.setCropYear(cropYear1);
+		expectedField.setDisplayOrder(1);
+		expectedField.setFieldId(fieldId);
+		expectedField.setFieldLabel("Field Label");
+		expectedField.setFieldLocation(fieldLocation);
+		expectedField.setIsLeasedInd(false);
+		expectedField.setLegalLandId(legalLandId);
+		expectedField.setOtherLegalDescription("TEST LEGAL LOC 123");
+		expectedField.setPrimaryPropertyIdentifier("GF0099999");
+
+		// BLUEBERRY
+		DopYieldFieldCommodityBerries expectedDyfcb = new DopYieldFieldCommodityBerries();
+		expectedDyfcb.setCropCommodityId(10);
+		expectedDyfcb.setCropCommodityName("BLUEBERRY");		
+		expectedDyfcb.setCropYear(cropYear1);
+		expectedDyfcb.setFieldId(fieldId);		
+		expectedDyfcb.setTotalProduction(null);		
+		expectedDyfcb.setTotalProductionOverride(null);
+
+		DopYieldFieldVarietyBerries expectedDyfvb = new DopYieldFieldVarietyBerries();
+		expectedDyfvb.setAbandonmentYield(null);
+		expectedDyfvb.setCropVarietyId(1010689);
+		expectedDyfvb.setCropVarietyName("BLUEJAY");
+		expectedDyfvb.setIsHiddenOnPrintoutInd(false);
+		expectedDyfvb.setPlantedAcres(400.0);
+		expectedDyfvb.setSalesYield(null);
+		expectedDyfvb.setSoldShippedYield(null);
+		expectedDyfvb.setTotalProduction(null);
+		expectedDyfvb.setTotalProductionOverride(null);
+		
+		expectedDyfcb.getDopYieldFieldVarietyBerriesList().add(expectedDyfvb);
+		
+		expectedField.getDopYieldFieldCommodityBerriesList().add(expectedDyfcb);
+
+		// RASPBERRY
+		expectedDyfcb = new DopYieldFieldCommodityBerries();
+		expectedDyfcb.setCropCommodityId(12);
+		expectedDyfcb.setCropCommodityName("RASPBERRY");
+		expectedDyfcb.setCropYear(cropYear1);
+		expectedDyfcb.setFieldId(fieldId);		
+		expectedDyfcb.setTotalProduction(null);		
+		expectedDyfcb.setTotalProductionOverride(null);
+
+		expectedDyfvb = new DopYieldFieldVarietyBerries();
+		expectedDyfvb.setAbandonmentYield(null);
+		expectedDyfvb.setCropVarietyId(1010694);
+		expectedDyfvb.setCropVarietyName("MALAHAT");
+		expectedDyfvb.setIsHiddenOnPrintoutInd(false);
+		expectedDyfvb.setPlantedAcres(200.0);
+		expectedDyfvb.setSalesYield(null);
+		expectedDyfvb.setSoldShippedYield(null);
+		expectedDyfvb.setTotalProduction(null);
+		expectedDyfvb.setTotalProductionOverride(null);
+		
+		expectedDyfcb.getDopYieldFieldVarietyBerriesList().add(expectedDyfvb);
+
+		expectedDyfvb = new DopYieldFieldVarietyBerries();
+		expectedDyfvb.setAbandonmentYield(null);
+		expectedDyfvb.setCropVarietyId(1010695);
+		expectedDyfvb.setCropVarietyName("MEEKER");
+		expectedDyfvb.setIsHiddenOnPrintoutInd(false);
+		expectedDyfvb.setPlantedAcres(500.0);
+		expectedDyfvb.setSalesYield(null);
+		expectedDyfvb.setSoldShippedYield(null);
+		expectedDyfvb.setTotalProduction(null);
+		expectedDyfvb.setTotalProductionOverride(null);
+		
+		expectedDyfcb.getDopYieldFieldVarietyBerriesList().add(expectedDyfvb);
+		
+		expectedField.getDopYieldFieldCommodityBerriesList().add(expectedDyfcb);
+
+		expectedDyc.getFields().add(expectedField);
+
+		
+		// Dop Yield Contract Commodity Berries
+		DopYieldContractCommodityBerries expectedDyccb = new DopYieldContractCommodityBerries();
+		expectedDyccb.setCropCommodityId(10);
+		expectedDyccb.setCropCommodityName("BLUEBERRY");
+		expectedDyccb.setTotalProduction(null);
+		expectedDyccb.setTotalProductionOverride(null);
+		
+		expectedDyc.getDopYieldContractCommodityBerriesList().add(expectedDyccb);
+		
+		expectedDyccb = new DopYieldContractCommodityBerries();
+		expectedDyccb.setCropCommodityId(12);
+		expectedDyccb.setCropCommodityName("RASPBERRY");
+		expectedDyccb.setTotalProduction(null);
+		expectedDyccb.setTotalProductionOverride(null);
+		
+		expectedDyc.getDopYieldContractCommodityBerriesList().add(expectedDyccb);
+
+		
+		// Check rolled-over DOP.
+		checkDopYieldContract(expectedDyc, newDyc);
+
+		// Insert DOP
+		newDyc.setEnteredYieldMeasUnitTypeCode("LB");
+		newDyc.setGrainFromOtherSourceInd(false);
+
+		expectedDyc.setEnteredYieldMeasUnitTypeCode("LB");
+		expectedDyc.setGrainFromOtherSourceInd(false);
+		
+		// TODO: Add Dop Yield Field Commodity Berries and Dop Yield Field Variety Berries
+		newDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(11.22);
+		newDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(33.44);
+		
+		newDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(55.66);
+		newDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(77.88);
+
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(11.22);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(33.44);
+		
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(55.66);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(77.88);
+
+		DopYieldContractRsrc fetchedDyc = service.createDopYieldContract(topLevelEndpoints, newDyc);
+		checkDopYieldContract(expectedDyc, fetchedDyc);
+		
+		// Fetch DOP
+		uwContractRsrc = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContractRsrc);
+		Assert.assertNotNull(uwContractRsrc.getInventoryContractGuid());
+		Assert.assertNotNull(uwContractRsrc.getDeclaredYieldContractGuid());
+
+		fetchedDyc = service.getDopYieldContract(uwContractRsrc);
+		checkDopYieldContract(expectedDyc, fetchedDyc);
+		
+		// Update DOP
+		// TODO: Add Dop Yield Field Commodity Berries and Dop Yield Field Variety Berries
+		fetchedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(12.34);
+		fetchedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(56.78);
+		
+		fetchedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(98.76);
+		fetchedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(54.32);
+
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(12.34);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(56.78);
+		
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(98.76);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(54.32);
+		
+		DopYieldContractRsrc updatedDyc = service.updateDopYieldContract(fetchedDyc);
+		checkDopYieldContract(expectedDyc, updatedDyc);
+
+		//Delete DOP
+		service.deleteDopYieldContract(updatedDyc);
+		
+		// Fetch DOP
+		uwContractRsrc = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContractRsrc);
+		Assert.assertNotNull(uwContractRsrc.getInventoryContractGuid());
+		Assert.assertNull(uwContractRsrc.getDeclaredYieldContractGuid());
+		
+		delete();
+		
+		logger.debug(">testInsertUpdateDeleteDopYieldBerriesContract");
+	}
+
+	
 	
 	private UwContractRsrc getUwContract(String policyNumber,
 			CirrasUnderwritingService service, 
