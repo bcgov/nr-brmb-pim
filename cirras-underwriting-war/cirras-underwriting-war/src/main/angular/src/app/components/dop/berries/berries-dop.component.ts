@@ -7,9 +7,9 @@ import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { ParamMap } from '@angular/router';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
 import { BERRY_COMMODITY, SCREEN_TYPE } from 'src/app/utils/constants';
-import { AddNewDopYieldContract, LoadDopYieldContract, RolloverDopYieldContract, UpdateDopYieldContract } from 'src/app/store/dop/dop.actions';
+import { AddNewDopYieldContract, GetDopReport, LoadDopYieldContract, RolloverDopYieldContract, UpdateDopYieldContract } from 'src/app/store/dop/dop.actions';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
-import { getInsurancePlanName } from 'src/app/utils';
+import { getInsurancePlanName, replaceNonAlphanumericCharacters } from 'src/app/utils';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 
 @Component({
@@ -184,4 +184,10 @@ export class BerriesDopComponent extends BaseComponent {
           displaySuccessSnackbar(this.snackbarService, "Unsaved changes have been cleared successfully.")
         }
     }
+
+  onPrint() {
+    let reportName = replaceNonAlphanumericCharacters(this.growerContract.growerName) + "-DOP" 
+    this.store.dispatch(GetDopReport(reportName, this.policyId, "", this.insurancePlanId, "", "", "", "", ""));
+  }
+
 }
