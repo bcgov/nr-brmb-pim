@@ -681,8 +681,8 @@ public class CirrasDopYieldService {
 						List<DopYieldFieldCommodityBerries> dopYieldFieldCommodityBerriesList = field.getDopYieldFieldCommodityBerriesList();
 						if (dopYieldFieldCommodityBerriesList != null && !dopYieldFieldCommodityBerriesList.isEmpty()) {
 							for (DopYieldFieldCommodityBerries dyfcb : dopYieldFieldCommodityBerriesList) {
-								updateDeclaredYieldFieldCommodityBerries(dyfcb, userId);
-								updateDeclaredYieldFieldVarietyBerriesList(dyfcb.getDopYieldFieldVarietyBerriesList(), userId);
+								String declaredYieldFieldCommodityBerriesGuid = updateDeclaredYieldFieldCommodityBerries(dyfcb, userId);
+								updateDeclaredYieldFieldVarietyBerriesList(declaredYieldFieldCommodityBerriesGuid, dyfcb.getDopYieldFieldVarietyBerriesList(), userId);
 							}
 						}
 					}
@@ -1175,12 +1175,13 @@ public class CirrasDopYieldService {
 		return dto.getDeclaredYieldFieldCommodityBerriesGuid();
 	}
 
-	private String insertDeclaredYieldFieldVarietyBerries(DopYieldFieldVarietyBerries dopYieldFieldVarietyBerries, String userId) throws DaoException {
+	private String insertDeclaredYieldFieldVarietyBerries(String declaredYieldFieldCommodityBerriesGuid, DopYieldFieldVarietyBerries dopYieldFieldVarietyBerries, String userId) throws DaoException {
 
 		DeclaredYieldFieldVarietyBerriesDto dto = new DeclaredYieldFieldVarietyBerriesDto();
 		dopYieldContractRsrcFactory.updateDto(dto, dopYieldFieldVarietyBerries);
 
 		dto.setDeclaredYieldFieldVarietyBerriesGuid(null);
+		dto.setDeclaredYieldFieldCommodityBerriesGuid(declaredYieldFieldCommodityBerriesGuid);
 		
 		declaredYieldFieldVarietyBerriesDao.insert(dto, userId);
 
@@ -1505,13 +1506,13 @@ public class CirrasDopYieldService {
 		return declaredYieldFieldCommodityBerriesGuid;
 	}
 
-	private void updateDeclaredYieldFieldVarietyBerriesList(List<DopYieldFieldVarietyBerries> dopYieldFieldVarietyBerriesList, String userId) throws DaoException {
+	private void updateDeclaredYieldFieldVarietyBerriesList(String declaredYieldFieldCommodityBerriesGuid, List<DopYieldFieldVarietyBerries> dopYieldFieldVarietyBerriesList, String userId) throws DaoException {
 
 		logger.debug("<updateDeclaredYieldFieldVarietyBerriesList");
 
 		if (dopYieldFieldVarietyBerriesList != null && !dopYieldFieldVarietyBerriesList.isEmpty()) {
-			for (DopYieldFieldVarietyBerries dyfcb : dopYieldFieldVarietyBerriesList) {
-				updateDeclaredYieldFieldVarietyBerries(dyfcb, userId);
+			for (DopYieldFieldVarietyBerries dyfvb : dopYieldFieldVarietyBerriesList) {
+				updateDeclaredYieldFieldVarietyBerries(declaredYieldFieldCommodityBerriesGuid, dyfvb, userId);
 			}
 		}
 
@@ -1519,7 +1520,7 @@ public class CirrasDopYieldService {
 	
 	}
 
-	private String updateDeclaredYieldFieldVarietyBerries(DopYieldFieldVarietyBerries dopYieldFieldVarietyBerries, String userId) throws DaoException {
+	private String updateDeclaredYieldFieldVarietyBerries(String declaredYieldFieldCommodityBerriesGuid, DopYieldFieldVarietyBerries dopYieldFieldVarietyBerries, String userId) throws DaoException {
 
 		logger.debug("<updateDeclaredYieldFieldVarietyBerries");
 
@@ -1533,7 +1534,7 @@ public class CirrasDopYieldService {
 
 		if (dto == null) {
 			// Insert if it doesn't exist
-			declaredYieldFieldVarietyBerriesGuid = insertDeclaredYieldFieldVarietyBerries(dopYieldFieldVarietyBerries, userId);
+			declaredYieldFieldVarietyBerriesGuid = insertDeclaredYieldFieldVarietyBerries(declaredYieldFieldCommodityBerriesGuid, dopYieldFieldVarietyBerries, userId);
 		} else {
 			declaredYieldFieldVarietyBerriesGuid = dto.getDeclaredYieldFieldVarietyBerriesGuid();
 			dopYieldContractRsrcFactory.updateDto(dto, dopYieldFieldVarietyBerries);
