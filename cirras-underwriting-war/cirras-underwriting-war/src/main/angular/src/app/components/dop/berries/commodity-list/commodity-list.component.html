@@ -4,7 +4,7 @@
         *ngFor="let dopYieldFieldVarietyBerries of dopYieldFieldCommodityBerries.dopYieldFieldVarietyBerriesList"
         [dopYieldFieldVarietyBerries]="dopYieldFieldVarietyBerries"
         [dopYieldFieldVarietyBerriesFormArray]="fieldCommodityFormGroup.value.dopYieldFieldVarietyBerriesList" 
-        [cropCommodityName]="fieldCommodityFormGroup.value.cropCommodityName"
+        [cropCommodityName]="dopYieldFieldCommodityBerries.cropCommodityName"
         style="display: contents;">
 
     </berries-dop-variety-list>

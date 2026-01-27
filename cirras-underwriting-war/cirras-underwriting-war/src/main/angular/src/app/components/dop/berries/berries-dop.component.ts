@@ -94,35 +94,59 @@ export class BerriesDopComponent extends BaseComponent {
   }
 
   setUpCommoditiesList(){
+    // commodities on the screen should be ordered as: Blueberry, Raspberry, Strawberry, Cranberry
     this.policyCommoditiesList = []
 
-    var self = this
     if (this.dopYieldContract && this.dopYieldContract.fields) {
+      let hasBlueberry = false
+      let hasRaspberry = false
+      let hasStrawberry = false
+      let hasCranberry = false
 
       this.dopYieldContract.fields.forEach ((field: AnnualField) => {
-        // commodities on the screen should be ordered as: Blueberry, Raspberry, Strawberry, Cranberry
-        self.addCommodityToList(field, BERRY_COMMODITY.Blueberry)
-        self.addCommodityToList(field, BERRY_COMMODITY.Raspberry)
-        self.addCommodityToList(field, BERRY_COMMODITY.Strawberry)
-        self.addCommodityToList(field, BERRY_COMMODITY.Cranberry)
+
+        if (field.dopYieldFieldCommodityBerriesList.find( x => x.cropCommodityId == BERRY_COMMODITY.Blueberry)) {
+          hasBlueberry = true
+        }
+        
+        if (field.dopYieldFieldCommodityBerriesList.find( x => x.cropCommodityId == BERRY_COMMODITY.Raspberry)) {
+          hasRaspberry = true
+        }
+
+        if (field.dopYieldFieldCommodityBerriesList.find( x => x.cropCommodityId == BERRY_COMMODITY.Strawberry)) {
+          hasStrawberry = true
+        }
+
+        if (field.dopYieldFieldCommodityBerriesList.find( x => x.cropCommodityId == BERRY_COMMODITY.Cranberry)) {
+          hasCranberry = true
+        }
 
       })
-    }
-  }
 
-  addCommodityToList(field : AnnualField, crpt){
-
-    let el = field.dopYieldFieldCommodityBerriesList.find( x => x.cropCommodityId == crpt)
-
-    // if there is a field which has the desired commodity 
-    // then add it to the list of commodities to display on the screen,
-    // assuming it was not added before
-    if (el && !this.policyCommoditiesList.find( a => a.cropCommodityId == crpt )) {
-
-       this.policyCommoditiesList.push({
-              cropCommodityId: el.cropCommodityId,
-              cropCommodityName: el.cropCommodityName
+      if (hasBlueberry) {
+        this.policyCommoditiesList.push({
+              cropCommodityId: BERRY_COMMODITY.Blueberry,
+              cropCommodityName: "Blueberry"
             })
+      }     
+      if (hasRaspberry) {
+        this.policyCommoditiesList.push({
+              cropCommodityId: BERRY_COMMODITY.Raspberry,
+              cropCommodityName: "Raspberry"
+            })
+      }
+      if (hasStrawberry) {
+        this.policyCommoditiesList.push({
+              cropCommodityId: BERRY_COMMODITY.Strawberry,
+              cropCommodityName: "Strawberry"
+            })
+      }
+      if (hasCranberry) {
+        this.policyCommoditiesList.push({
+              cropCommodityId: BERRY_COMMODITY.Cranberry,
+              cropCommodityName: "Cranberry"
+            })
+      }
     }
   }
 
