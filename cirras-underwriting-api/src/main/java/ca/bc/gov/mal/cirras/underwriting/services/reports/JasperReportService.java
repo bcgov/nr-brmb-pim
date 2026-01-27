@@ -12,6 +12,8 @@ public interface JasperReportService
 
 	byte[] generateDopForageReport(Map<String, Object> paramMap) throws JasperReportServiceException;
 	
+	byte[] generateDopBerriesReport(Map<String, Object> paramMap) throws JasperReportServiceException;
+	
 	byte[] generateInvForageReport(Map<String, Object> paramMap) throws JasperReportServiceException;
 
 	byte[] generateUnseededGrainReport(Map<String, Object> paramMap) throws JasperReportServiceException;

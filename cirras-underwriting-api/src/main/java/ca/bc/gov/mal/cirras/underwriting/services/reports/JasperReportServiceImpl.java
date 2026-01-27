@@ -57,6 +57,11 @@ public class JasperReportServiceImpl implements JasperReportService
 		return reportContent;
 	}
 	
+	@Override
+	public byte[] generateDopBerriesReport(Map<String, Object> paramMap) throws JasperReportServiceException {
+		byte[] reportContent = generateJasperReportInMemory("CUWS_DOP_Berries", paramMap);		
+		return reportContent;
+	}
 	
 	@Override
 	public byte[] generateInvForageReport(Map<String, Object> paramMap) throws JasperReportServiceException {
