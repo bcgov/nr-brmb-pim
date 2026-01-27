@@ -197,7 +197,6 @@ export interface DopYieldFieldVarietyBerries {
     abandonmentYield?: number;
     totalProduction?: number;
     totalProductionOverride?: number;
-    isHiddenOnPrintoutInd?: boolean;
 }
 
 export interface DopYieldContractCommodityBerries {
