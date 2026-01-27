@@ -162,6 +162,8 @@ export class BerriesDopComponent extends BaseComponent {
   }
 
   onSave() {
+    // set up units
+    this.dopYieldContract.enteredYieldMeasUnitTypeCode = this.dopYieldContract.defaultYieldMeasUnitTypeCode
 
     if (this.dopYieldContract.declaredYieldContractGuid) {
       this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract, this.policyId))
