@@ -284,7 +284,6 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setAbandonmentYield(null);
 		expectedDyfvb.setCropVarietyId(1010689);
 		expectedDyfvb.setCropVarietyName("BLUEJAY");
-		expectedDyfvb.setIsHiddenOnPrintoutInd(false);
 		expectedDyfvb.setPlantedAcres(400.0);
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
@@ -308,7 +307,6 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setAbandonmentYield(null);
 		expectedDyfvb.setCropVarietyId(1010694);
 		expectedDyfvb.setCropVarietyName("MALAHAT");
-		expectedDyfvb.setIsHiddenOnPrintoutInd(false);
 		expectedDyfvb.setPlantedAcres(200.0);
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
@@ -321,7 +319,6 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setAbandonmentYield(null);
 		expectedDyfvb.setCropVarietyId(1010695);
 		expectedDyfvb.setCropVarietyName("MEEKER");
-		expectedDyfvb.setIsHiddenOnPrintoutInd(false);
 		expectedDyfvb.setPlantedAcres(500.0);
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
@@ -469,7 +466,6 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setAbandonmentYield(null);
 		expectedDyfvb.setCropVarietyId(1010689);
 		expectedDyfvb.setCropVarietyName("BLUEJAY");
-		expectedDyfvb.setIsHiddenOnPrintoutInd(false);
 		expectedDyfvb.setPlantedAcres(400.0);
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
@@ -493,7 +489,6 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setAbandonmentYield(null);
 		expectedDyfvb.setCropVarietyId(1010694);
 		expectedDyfvb.setCropVarietyName("MALAHAT");
-		expectedDyfvb.setIsHiddenOnPrintoutInd(false);
 		expectedDyfvb.setPlantedAcres(200.0);
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
@@ -506,7 +501,6 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setAbandonmentYield(null);
 		expectedDyfvb.setCropVarietyId(1010695);
 		expectedDyfvb.setCropVarietyName("MEEKER");
-		expectedDyfvb.setIsHiddenOnPrintoutInd(false);
 		expectedDyfvb.setPlantedAcres(500.0);
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
@@ -863,7 +857,6 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertEquals(expected.getAbandonmentYield(), actual.getAbandonmentYield());
 		Assert.assertEquals(expected.getCropVarietyId(), actual.getCropVarietyId());
 		Assert.assertEquals(expected.getCropVarietyName(), actual.getCropVarietyName());
-		Assert.assertEquals(expected.getIsHiddenOnPrintoutInd(), actual.getIsHiddenOnPrintoutInd());
 		Assert.assertEquals(expected.getPlantedAcres(), actual.getPlantedAcres());
 		Assert.assertEquals(expected.getSalesYield(), actual.getSalesYield());
 		Assert.assertEquals(expected.getSoldShippedYield(), actual.getSoldShippedYield());
