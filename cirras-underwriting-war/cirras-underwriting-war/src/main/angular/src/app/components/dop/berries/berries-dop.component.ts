@@ -11,6 +11,7 @@ import { AddNewDopYieldContract, DeleteDopYieldContract, GetDopReport, LoadDopYi
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { getInsurancePlanName, replaceNonAlphanumericCharacters } from 'src/app/utils';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
+import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 
 @Component({
   selector: 'berries-dop',
@@ -204,6 +205,11 @@ export class BerriesDopComponent extends BaseComponent {
 
       } 
     }
+  }
+
+  onDopCommentsDone(uwComments: UnderwritingComment[]) {
+    this.dopYieldContract.uwComments = uwComments;
+    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
   }
 
 }
