@@ -7,7 +7,7 @@ import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { ParamMap } from '@angular/router';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
 import { BERRY_COMMODITY, SCREEN_TYPE } from 'src/app/utils/constants';
-import { AddNewDopYieldContract, GetDopReport, LoadDopYieldContract, RolloverDopYieldContract, UpdateDopYieldContract } from 'src/app/store/dop/dop.actions';
+import { AddNewDopYieldContract, DeleteDopYieldContract, GetDopReport, LoadDopYieldContract, RolloverDopYieldContract, UpdateDopYieldContract } from 'src/app/store/dop/dop.actions';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { getInsurancePlanName, replaceNonAlphanumericCharacters } from 'src/app/utils';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
@@ -190,6 +190,20 @@ export class BerriesDopComponent extends BaseComponent {
   onPrint() {
     let reportName = replaceNonAlphanumericCharacters(this.growerContract.growerName) + "-DOP" 
     this.store.dispatch(GetDopReport(reportName, this.policyId, "", this.insurancePlanId, "", "", "", "", ""));
+  }
+
+
+  onDeleteDop() {
+
+    //Ask for confirmation before deleting all DOP data
+    if ( confirm("You are about to delete all DOP data for the policy. Do you want to continue?") ) {
+
+      if (this.dopYieldContract.declaredYieldContractGuid) {
+        //Delete dop contract
+        this.store.dispatch(DeleteDopYieldContract(DOP_COMPONENT_ID, this.policyId, this.dopYieldContract))
+
+      } 
+    }
   }
 
 }
