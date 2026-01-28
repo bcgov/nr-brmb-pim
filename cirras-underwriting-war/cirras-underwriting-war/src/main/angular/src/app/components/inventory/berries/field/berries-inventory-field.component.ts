@@ -43,6 +43,10 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
               protected dialog: MatDialog,
               protected cdr: ChangeDetectorRef) {}
 
+  get currentInsurancePlanId(): number {
+    return INSURANCE_PLAN.BERRIES
+  }
+
   ngOnInit() {
     this.refreshForm()
   }

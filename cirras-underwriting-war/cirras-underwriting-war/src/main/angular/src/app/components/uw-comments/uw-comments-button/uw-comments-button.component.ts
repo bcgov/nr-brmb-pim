@@ -4,12 +4,15 @@ import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 import { UwCommentsDialogComponent } from "../uw-comments-dialog/uw-comments-dialog.component";
 
 export interface DialogData {
+    insurancePlanId: number;
     underwritingCommentTypeCode: string;
     // Inventory and DOP field data
     annualFieldDetailId: number;
     fieldId: number;
-    fieldName: string;
-    legalLocation: string;
+    fieldName?: string;
+    fieldLocation?: string;
+    legalLocation?: string;
+    primaryPropertyIdentifier?: string;
     // DOP policy data
     growerContractYearId: number;
     declaredYieldContractGuid: string;
@@ -30,6 +33,7 @@ export interface DialogData {
     standalone: false
 })
 export class UwCommentsButtonComponent {
+    @Input() insurancePlanId: number;
     @Input() underwritingCommentTypeCode: string;
     @Input() annualFieldDetailId: number;
     @Input() growerContractYearId: number;
@@ -39,7 +43,9 @@ export class UwCommentsButtonComponent {
     @Input() growerNumber: string;
     @Input() fieldId: number;
     @Input() fieldName: string;
+    @Input() fieldLocation: string;
     @Input() legalLocation: string;
+    @Input() primaryPropertyIdentifier: string;
     @Input() verifiedYieldSummaryGuid: string;
     @Input() commodityName: string;
     @Input() uwComments: UnderwritingComment[];
@@ -65,6 +71,7 @@ export class UwCommentsButtonComponent {
 
     get data(): DialogData {
         return {
+            insurancePlanId: this.insurancePlanId,
             underwritingCommentTypeCode: this.underwritingCommentTypeCode,
             annualFieldDetailId: this.annualFieldDetailId,
             growerContractYearId: this.growerContractYearId,
@@ -74,7 +81,9 @@ export class UwCommentsButtonComponent {
             growerNumber: this.growerNumber,
             fieldId: this.fieldId,
             fieldName: this.fieldName,
+            fieldLocation: this.fieldLocation,
             legalLocation: this.legalLocation,
+            primaryPropertyIdentifier: this.primaryPropertyIdentifier,
             verifiedYieldSummaryGuid: this.verifiedYieldSummaryGuid,
             commodityName: this.commodityName,
             uwComments: this.uwCommentsForDialog
