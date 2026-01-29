@@ -364,7 +364,7 @@ order by sort_column
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Noto Sans" size="16"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Schedule D-14: Declaration of Production - " + $F{commodity_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Schedule D-14: Declaration of Production - " + $F{commodity_name} ]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
