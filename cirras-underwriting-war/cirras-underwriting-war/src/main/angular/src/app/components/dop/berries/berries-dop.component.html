@@ -57,8 +57,8 @@
                     <p>Last Updated: {{ ((dopYieldContract && dopYieldContract.dopUpdateTimestamp) ? dopYieldContract.dopUpdateTimestamp : "" ) | date }}</p>
                 </div>            
                 
-                <div> <!-- TODO: -->
-                    <!-- <uw-comments-button
+                <div>
+                    <uw-comments-button
                         [underwritingCommentTypeCode]="'DOP'"
                         [growerContractYearId]="dopYieldContract?.growerContractYearId"
                         [declaredYieldContractGuid]="dopYieldContract?.declaredYieldContractGuid"
@@ -66,7 +66,7 @@
                         [growerName]="growerContract?.growerName"
                         [growerNumber]="growerContract?.growerNumber"
                         [uwComments]="dopYieldContract?.uwComments"
-                        (onDone)="onDopCommentsDone($event)"></uw-comments-button> -->
+                        (onDone)="onDopCommentsDone($event)"></uw-comments-button>
                 </div>
                 <div> <!-- TODO: -->
                     <button *ngIf="!hasVerifiedYieldData"
