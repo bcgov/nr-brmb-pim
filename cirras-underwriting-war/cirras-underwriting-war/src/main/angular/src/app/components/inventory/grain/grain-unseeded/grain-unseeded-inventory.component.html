@@ -299,6 +299,7 @@
                             class="inventory-cell" style="width:90px"
                             [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border-exclude-printout  border-right-exclude-printout' : 'inventory-border'" >
                             <uw-comments-button
+                                [insurancePlanId]="currentInsurancePlanId"
                                 [underwritingCommentTypeCode]="'INV'"
                                 [annualFieldDetailId]="field.value.annualFieldDetailId"
                                 [fieldId]="field.value.fieldId"

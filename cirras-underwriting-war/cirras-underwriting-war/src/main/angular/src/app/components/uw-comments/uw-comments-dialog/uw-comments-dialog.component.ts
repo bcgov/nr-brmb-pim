@@ -5,7 +5,7 @@ import { DIALOG_TYPE } from "../../dialogs/base-dialog/base-dialog.component";
 import { SecurityUtilService } from "src/app/services/security-util.service";
 import { UntypedFormArray } from "@angular/forms";
 import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
-import { UW_COMMENT_TYPE_CODE } from "src/app/utils/constants";
+import { INSURANCE_PLAN, UW_COMMENT_TYPE_CODE } from "src/app/utils/constants";
 
 @Component({
     selector: 'uw-comments-dialog',
@@ -33,6 +33,64 @@ export class UwCommentsDialogComponent {
                 return "Underwriting Comments";
         }
     }
+
+    get legalDescriptionLabel(): string {
+        switch (this.data.insurancePlanId) {
+            case INSURANCE_PLAN.GRAIN:
+            case INSURANCE_PLAN.FORAGE:
+                return "Legal Location";
+            case INSURANCE_PLAN.BERRIES:
+                return "Legal Description"
+            default:
+                return "";
+        }
+    }
+
+    get legalDescription(): string {
+        switch (this.data.insurancePlanId) {
+            case INSURANCE_PLAN.GRAIN:
+            case INSURANCE_PLAN.FORAGE:
+                return this.data.legalLocation;
+
+            case INSURANCE_PLAN.BERRIES:
+                return this.data.primaryPropertyIdentifier;
+            default:
+                return "";
+        }
+    }
+
+    get fieldLabel(): string {
+        switch (this.data.insurancePlanId) {
+            case INSURANCE_PLAN.GRAIN:
+            case INSURANCE_PLAN.FORAGE:
+                return "Field Name";
+            case INSURANCE_PLAN.BERRIES:
+                if (this.data.fieldLocation) {
+                    return "Field Address"
+                } else {
+                    return "Bog Name" 
+                }
+            default:
+                return "";
+        }
+    }
+
+    get fieldNameOrAddress(): string {
+        switch (this.data.insurancePlanId) {
+            case INSURANCE_PLAN.GRAIN:
+            case INSURANCE_PLAN.FORAGE:
+                return this.data.fieldName;
+            case INSURANCE_PLAN.BERRIES:
+                if (this.data.fieldLocation) {
+                    return this.data.fieldLocation  
+                } else {
+                    return this.data.fieldName
+                }
+            default:
+                return "";
+        }
+    }
+
 
     hasComments(): boolean {
         return this.data.uwComments.filter(uwComment => !uwComment.deletedByUserInd).length > 0;

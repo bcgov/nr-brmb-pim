@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
+import { Store } from '@ngrx/store';
 import { AnnualField } from 'src/app/conversion/models';
+import { RootState } from 'src/app/store';
+import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
+import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
+import { INSURANCE_PLAN } from 'src/app/utils/constants';
 
 @Component({
   selector: 'berries-dop-field',
@@ -18,7 +23,13 @@ export class BerriesDopFieldComponent {
 
   fieldFormGroup: UntypedFormGroup;
 
-  constructor(private fb: UntypedFormBuilder) {}
+  constructor(private fb: UntypedFormBuilder,
+              private store: Store<RootState>
+  ) {}
+
+  get currentInsurancePlanId(): number {
+    return INSURANCE_PLAN.BERRIES
+  }
 
   ngOnInit() {
     this.refreshForm()
@@ -48,12 +59,11 @@ export class BerriesDopFieldComponent {
     }
     
   }
-  onInventoryCommentsDone(uwComments: UnderwritingComment[]) {
-    // TODO
-    // this.field.uwComments = uwComments;
-    // this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
-  }
 
+  onInventoryCommentsDone(uwComments: UnderwritingComment[]) {
+    this.field.uwComments = uwComments;
+    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
+  }
 
   setTableHeaderStyle() {
     return {
