@@ -61,6 +61,20 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    
+    if ( changes.growerContract && this.growerContract ) {
+
+      this.hasYieldData = false
+
+      // check for yield data
+      for (let i = 0; i< this.growerContract.links.length; i++ ) {
+
+        if ( this.growerContract.links[i].href.toLocaleLowerCase().indexOf("dopyieldcontracts") > -1  ) {
+          this.hasYieldData = true
+          break
+        } 
+      }
+    }
 
     // populate commodity and variety lists
     if (changes.cropCommodityList && this.cropCommodityList && this.cropCommodityList.collection && this.cropCommodityList.collection.length ) {
