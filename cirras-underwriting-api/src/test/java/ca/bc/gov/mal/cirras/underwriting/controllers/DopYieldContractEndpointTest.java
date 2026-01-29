@@ -1449,6 +1449,13 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		
 		logger.debug(">testGenerateDopReport - Returned " + reportContent.length + " bytes");	
 		
+		// Test 3: Generate Berries report
+		reportContent = service.generateDopReport(topLevelEndpoints, "2026", "3", null, null, null, null, null, null);
+		
+		Assert.assertNotNull(reportContent);
+		
+		logger.debug(">testGenerateDopReport - Returned " + reportContent.length + " bytes");	
+		
 		// Test 3: Omit Insurance Plan: Report generation should fail.
 		try {
 			reportContent = service.generateDopReport(topLevelEndpoints, "2024", null, null, null, null, null, null, null);

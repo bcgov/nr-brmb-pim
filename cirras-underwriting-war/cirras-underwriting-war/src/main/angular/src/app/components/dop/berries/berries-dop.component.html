@@ -18,10 +18,10 @@
                 </div>
             </div>
             <div matTooltip="Changes must be saved before download is possible.">
-                <!-- <button mat-raised-button class="secondary button-large-text" [disabled]="isUnsaved"
+                <button mat-raised-button class="secondary button-large-text" [disabled]="isUnsaved"
                 (click)="onPrint()">
                     <mat-icon class="button-mat-icon">download</mat-icon>Download
-                </button> -->
+                </button>
             </div>
             <div>
                 <button 
@@ -79,15 +79,15 @@
                     </button>
                 </div>
                 <div class="vertical-line"></div>
-                <div> <!-- TODO: -->
-                    <!-- <button *ngIf="securityUtilService.canDeleteDop() && !hasVerifiedYieldData &&
+                <div>
+                    <button *ngIf="securityUtilService.canDeleteDop() && !hasVerifiedYieldData &&
                                     dopYieldContract && 
                                     dopYieldContract.declaredYieldContractGuid" 
                                     mat-raised-button 
                                     class="secondary header-button-red" 
                                     (click)="onDeleteDop()">
                         <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset DOP
-                    </button> -->
+                    </button>
                 </div>
             </div>
 

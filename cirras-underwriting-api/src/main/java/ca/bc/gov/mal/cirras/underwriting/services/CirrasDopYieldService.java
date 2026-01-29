@@ -550,9 +550,12 @@ public class CirrasDopYieldService {
 
 			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(insurancePlanId) ) {
 				result = jasperReportService.generateDopForageReport(queryParams);
+				
+			} else if ( InsurancePlans.BERRIES.getInsurancePlanId().equals(insurancePlanId) ) {
+				result = jasperReportService.generateDopBerriesReport(queryParams);
 			
 			} else {
-				throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
+				throw new ServiceException("Insurance Plan must be GRAIN, FORAGE or BERRIES");
 			}
 			
 			
