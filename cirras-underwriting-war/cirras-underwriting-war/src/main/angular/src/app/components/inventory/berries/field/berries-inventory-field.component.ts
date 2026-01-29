@@ -191,15 +191,18 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
     return setTableHeaderStyleForBerries(this.selectedCommodity)
   }
 
+  //Hide on printout is not used by berries at the moment; should always be false
   setIsFieldHiddenOnPrintout() {
-    
-    let elem = this.field.plantings.filter(x => x.isHiddenOnPrintoutInd !== true)
 
-    if (elem.length == 0) {
-      this.isFieldHiddenOnPrintout = true // all plantings are hidden
-    } else {
-      this.isFieldHiddenOnPrintout = false // at least one planting is not hidden
-    } 
+    this.isFieldHiddenOnPrintout = false
+    
+    // let elem = this.field.plantings.filter(x => x.isHiddenOnPrintoutInd !== true)
+
+    // if (elem.length == 0) {
+    //   this.isFieldHiddenOnPrintout = true // all plantings are hidden
+    // } else {
+    //   this.isFieldHiddenOnPrintout = false // at least one planting is not hidden
+    // } 
   }
 
   isCranberry() {
