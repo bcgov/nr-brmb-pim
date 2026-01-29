@@ -82,8 +82,10 @@ public class DopYieldContractReportEndpoint extends BaseEndpointsImpl {
 				outputFileName = "dop_grain.pdf";
 			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().toString().equals(toString(insurancePlanId)) ) {
 				outputFileName = "dop_forage.pdf";				
+			} else if ( InsurancePlans.BERRIES.getInsurancePlanId().toString().equals(toString(insurancePlanId)) ) {
+				outputFileName = "dop_berries.pdf";				
 			} else {
-				throw new ServiceException("Insurance Plan must be GRAIN or FORAGE");
+				throw new ServiceException("Insurance Plan must be GRAIN, FORAGE or BERRIES");
 			}
 			
 			
