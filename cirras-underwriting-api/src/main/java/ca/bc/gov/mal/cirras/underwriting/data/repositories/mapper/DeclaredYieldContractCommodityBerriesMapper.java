@@ -19,6 +19,4 @@ public interface DeclaredYieldContractCommodityBerriesMapper {
     
     List<DeclaredYieldContractCommodityBerriesDto> selectForDeclaredYieldContract(Map<String, Object> parameters);
 
-    List<DeclaredYieldContractCommodityBerriesDto> selectToRecalculate(Map<String, Object> parameters);
-
 }

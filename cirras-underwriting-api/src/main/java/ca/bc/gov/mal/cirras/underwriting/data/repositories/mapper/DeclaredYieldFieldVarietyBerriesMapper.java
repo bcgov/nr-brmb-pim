@@ -23,10 +23,4 @@ public interface DeclaredYieldFieldVarietyBerriesMapper {
     
     List<DeclaredYieldFieldVarietyBerriesDto> select(Map<String, Object> parameters);
 
-// TODO
-//	int getTotalDopRecordsWithYield(Map<String, Object> parameters);
-  
-// TODO
-//    List<DeclaredYieldFieldVarietyBerriesDto> selectToRecalculate(Map<String, Object> parameters);
-
 }

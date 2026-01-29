@@ -165,35 +165,5 @@ public class DeclaredYieldContractCommodityBerriesDao extends BaseDao {
 		logger.debug(">selectForDeclaredYieldContract " + dtos);
 		return dtos;
 	}
-	
-	
-	public  List<DeclaredYieldContractCommodityBerriesDto> selectToRecalculate(
-	    		Integer cropCommodityId,
-	    		String enteredYieldMeasUnitTypeCode,
-	    		Integer effectiveCropYear,
-	    		Integer expiryCropYear
-				) throws DaoException {
-
-		logger.debug("<selectToRecalculate");
-
-		List<DeclaredYieldContractCommodityBerriesDto> dtos = null;
-
-		try {
-			Map<String, Object> parameters = new HashMap<String, Object>();
-			
-			parameters.put("cropCommodityId", cropCommodityId);
-			parameters.put("enteredYieldMeasUnitTypeCode", enteredYieldMeasUnitTypeCode);
-			parameters.put("effectiveCropYear", effectiveCropYear);
-			parameters.put("expiryCropYear", expiryCropYear);
-						
-			dtos = this.mapper.selectToRecalculate(parameters);
-
-		} catch (RuntimeException e) {
-			handleException(e);
-		}
-
-		logger.debug(">selectToRecalculate " + dtos);
-		return dtos;
-	}
 			
 }
