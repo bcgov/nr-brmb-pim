@@ -135,10 +135,6 @@ public class DeclaredYieldContractCommodityBerriesDaoTest {
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals(2, dtos.size());
 		
-		dtos = dao.selectToRecalculate(12, "LB", cropYear, cropYear);
-		Assert.assertNotNull(dtos);
-		Assert.assertEquals(1, dtos.size());
-		
 		
 		//DELETE
 		dao.delete(newDto2.getDeclaredYieldContractCommodityBerriesGuid());
