@@ -64,25 +64,25 @@ export class BerriesInventoryPlantingComponent implements OnChanges {
     
     if (this.selectedCommodity == BERRY_COMMODITY.Blueberry ) {
       return {
-          'width': `790px`
+          'width': `830px`
       };
     }
 
     if (this.selectedCommodity == BERRY_COMMODITY.Raspberry ) {
       return {
-          'width': `470px`
+          'width': `510px`
       };
     }
 
     if (this.selectedCommodity == BERRY_COMMODITY.Strawberry ) {
       return {
-          'width': `610px`
+          'width': `650px`
       };
     }
 
     if (this.selectedCommodity == BERRY_COMMODITY.Cranberry ) {
       return {
-          'width': `870px`
+          'width': `910px`
       };
     }
 
@@ -96,6 +96,7 @@ export class BerriesInventoryPlantingComponent implements OnChanges {
     }
   }
 
+  //Hide on printout is not used by berries at the moment
   toggleHiddenOnPrintout() {
     this.planting.isHiddenOnPrintoutInd = !this.planting.isHiddenOnPrintoutInd
 

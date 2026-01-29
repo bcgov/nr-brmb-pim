@@ -475,17 +475,18 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     }
   }
 
+  //Hide on printout is not used by berries at the moment; should always be false
   onCheckForHiddenPlantingsInTotals() {
 
     this.isHiddenPlantingInTotals = false
 
-    for (let field of  this.inventoryContract.fields) {
-      for (let planting of field.plantings) {
-        if (planting.isHiddenOnPrintoutInd && planting.inventoryBerries.plantedAcres > 0 ) {
-          this.isHiddenPlantingInTotals = true
-        }
-      }
-    }
+    // for (let field of  this.inventoryContract.fields) {
+    //   for (let planting of field.plantings) {
+    //     if (planting.isHiddenOnPrintoutInd && planting.inventoryBerries.plantedAcres > 0 ) {
+    //       this.isHiddenPlantingInTotals = true
+    //     }
+    //   }
+    // }
   }
 
   onPrint() {
