@@ -24,14 +24,14 @@
                 </button> -->
             </div>
             <div>
-                <!-- <button 
+                <button 
                     *ngIf="securityUtilService.canEditDop() && !hasVerifiedYieldData" 
                     mat-raised-button 
                     class="primary button-large-text" 
                     [disabled]="!isUnsaved" 
                     (click)="onSave()">
                         Save
-                </button> -->
+                </button>
             </div>
         </div>        
             
@@ -69,14 +69,14 @@
                         (onDone)="onDopCommentsDone($event)"></uw-comments-button> -->
                 </div>
                 <div> <!-- TODO: -->
-                    <!-- <button *ngIf="!hasVerifiedYieldData"
+                    <button *ngIf="!hasVerifiedYieldData"
                         mat-raised-button 
                         class="secondary" 
                         class="header-button"  
                         matTooltip="Clear unsaved changes"
                         (click)="onCancel()">
                         Clear Changes
-                    </button> -->
+                    </button>
                 </div>
                 <div class="vertical-line"></div>
                 <div> <!-- TODO: -->
