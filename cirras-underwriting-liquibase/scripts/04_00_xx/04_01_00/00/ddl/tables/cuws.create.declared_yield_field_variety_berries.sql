@@ -8,7 +8,6 @@ CREATE TABLE cuws.declared_yield_field_variety_berries(
     abandonment_yield                              numeric(14, 4),
     total_production                               numeric(14, 4),
     total_production_override                      numeric(14, 4),
-    is_hidden_on_printout_ind                      varchar(1)        NOT NULL,
     create_user                                    varchar(64)       NOT NULL,
     create_date                                    timestamp(0)      NOT NULL,
     update_user                                    varchar(64)       NOT NULL,
@@ -35,8 +34,6 @@ COMMENT ON COLUMN cuws.declared_yield_field_variety_berries.abandonment_yield IS
 COMMENT ON COLUMN cuws.declared_yield_field_variety_berries.total_production IS 'Total Production is the calculated total pounds of yield by variety and field'
 ;
 COMMENT ON COLUMN cuws.declared_yield_field_variety_berries.total_production_override IS 'Total Production Override is the manually entered total pounds of yield by variety and field'
-;
-COMMENT ON COLUMN cuws.declared_yield_field_variety_berries.is_hidden_on_printout_ind IS 'Is Hidden On Printout Ind determines if the planting is displayed on the printout (N) or not (Y)'
 ;
 COMMENT ON COLUMN cuws.declared_yield_field_variety_berries.create_user IS 'Create User is the user id of the user that created the record'
 ;
