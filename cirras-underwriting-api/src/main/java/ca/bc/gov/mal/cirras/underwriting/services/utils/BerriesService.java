@@ -7,15 +7,26 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityBerries;
+import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldCommodityBerries;
+import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldVarietyBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityBerriesDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldCommodityBerriesDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldVarietyBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryContractCommodityBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldCommodityBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldVarietyBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.InventoryContractRsrcFactory;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 
@@ -23,10 +34,18 @@ public class BerriesService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BerriesService.class);
 
+	//Daos
 	private InventoryContractCommodityBerriesDao inventoryContractCommodityBerriesDao;
 	private InventoryBerriesDao inventoryBerriesDao;
 
+	private DeclaredYieldContractCommodityBerriesDao declaredYieldContractCommodityBerriesDao;
+	private DeclaredYieldFieldCommodityBerriesDao declaredYieldFieldCommodityBerriesDao;
+	private DeclaredYieldFieldVarietyBerriesDao declaredYieldFieldVarietyBerriesDao;
+	
+	//Factories
 	private InventoryContractRsrcFactory inventoryContractRsrcFactory;
+	private DopYieldContractRsrcFactory dopYieldContractRsrcFactory;
+
 	
 	public void setInventoryContractCommodityBerriesDao(InventoryContractCommodityBerriesDao inventoryContractCommodityBerriesDao) {
 		this.inventoryContractCommodityBerriesDao = inventoryContractCommodityBerriesDao;
@@ -36,8 +55,24 @@ public class BerriesService {
 		this.inventoryBerriesDao = inventoryBerriesDao;
 	}
 
+	public void setDeclaredYieldContractCommodityBerriesDao(DeclaredYieldContractCommodityBerriesDao declaredYieldContractCommodityBerriesDao) {
+		this.declaredYieldContractCommodityBerriesDao = declaredYieldContractCommodityBerriesDao;
+	}
+	
+	public void setDeclaredYieldFieldCommodityBerriesDao(DeclaredYieldFieldCommodityBerriesDao declaredYieldFieldCommodityBerriesDao) {
+		this.declaredYieldFieldCommodityBerriesDao = declaredYieldFieldCommodityBerriesDao;
+	}
+
+	public void setDeclaredYieldFieldVarietyBerriesDao(DeclaredYieldFieldVarietyBerriesDao declaredYieldFieldVarietyBerriesDao) {
+		this.declaredYieldFieldVarietyBerriesDao = declaredYieldFieldVarietyBerriesDao;
+	}
+	
 	public void setInventoryContractRsrcFactory(InventoryContractRsrcFactory inventoryContractRsrcFactory) {
 		this.inventoryContractRsrcFactory = inventoryContractRsrcFactory;
+	}
+
+	public void setDopYieldContractRsrcFactory(DopYieldContractRsrcFactory dopYieldContractRsrcFactory) {
+		this.dopYieldContractRsrcFactory = dopYieldContractRsrcFactory;
 	}
 	
 	public void updateInventoryBerries(InventoryBerries inventoryBerries, String inventoryFieldGuid, String userId)
@@ -213,6 +248,154 @@ public class BerriesService {
 		inventoryContract.setInventoryContractCommodityBerries(iccbList);
 	}
 
+	public void updateDeclaredYieldContractCommodityBerriesList(String declaredYieldContractGuid, DopYieldContractRsrc dopYieldContract, String userId) throws DaoException {
+
+		logger.debug("<updateDeclaredYieldContractCommodityBerriesList");
+
+		List<DopYieldContractCommodityBerries> dopYieldContractCommodityBerriesList = dopYieldContract.getDopYieldContractCommodityBerriesList();
+		if (dopYieldContractCommodityBerriesList != null && !dopYieldContractCommodityBerriesList.isEmpty()) {
+			for (DopYieldContractCommodityBerries dopYieldContractCommodityBerries : dopYieldContractCommodityBerriesList) {
+				updateDeclaredYieldContractCommodityBerries(declaredYieldContractGuid, dopYieldContract, dopYieldContractCommodityBerries, userId);
+			}
+		}
+		
+		logger.debug(">updateDeclaredYieldContractCommodityBerriesList");
+	}
+	
+	private void updateDeclaredYieldContractCommodityBerries(String declaredYieldContractGuid, DopYieldContractRsrc dopYieldContract, 
+			DopYieldContractCommodityBerries dopContractCommodityBerries, String userId) throws DaoException {
+
+		logger.debug("<updateDeclaredYieldContractCommodityBerries");
+
+		DeclaredYieldContractCommodityBerriesDto dto = null;
+
+		if (dopContractCommodityBerries.getDeclaredYieldContractCommodityBerriesGuid() != null) {
+			dto = declaredYieldContractCommodityBerriesDao.fetch(dopContractCommodityBerries.getDeclaredYieldContractCommodityBerriesGuid());
+		}
+
+		if (dto == null) {
+			// Insert if it doesn't exist
+			insertDeclaredYieldContractCommodityBerries(declaredYieldContractGuid, dopContractCommodityBerries, userId);
+		} else {
+			dopYieldContractRsrcFactory.updateDto(dto, dopContractCommodityBerries);
+
+			declaredYieldContractCommodityBerriesDao.update(dto, userId);
+		}
+
+		logger.debug(">updateDeclaredYieldContractCommodityBerries");
+	}
+	
+	private void insertDeclaredYieldContractCommodityBerries(String declaredYieldContractGuid,
+			DopYieldContractCommodityBerries dopContractCommodityBerries, String userId) throws DaoException {
+
+		logger.debug("<insertDeclaredYieldContractCommodityBerries");
+
+		DeclaredYieldContractCommodityBerriesDto dto = new DeclaredYieldContractCommodityBerriesDto();
+
+		dopYieldContractRsrcFactory.updateDto(dto, dopContractCommodityBerries);
+
+		dto.setDeclaredYieldContractCommodityBerriesGuid(null);
+		dto.setDeclaredYieldContractGuid(declaredYieldContractGuid);
+
+		declaredYieldContractCommodityBerriesDao.insert(dto, userId);
+
+		logger.debug(">insertDeclaredYieldContractCommodityBerries");
+	}	
+	
+	public String updateDeclaredYieldFieldCommodityBerries(DopYieldFieldCommodityBerries dopYieldFieldCommodityBerries, String userId) throws DaoException {
+
+		logger.debug("<updateDeclaredYieldFieldCommodityBerries");
+
+		DeclaredYieldFieldCommodityBerriesDto dto = null;
+
+		if (dopYieldFieldCommodityBerries.getDeclaredYieldFieldCommodityBerriesGuid() != null) {
+			dto = declaredYieldFieldCommodityBerriesDao.fetch(dopYieldFieldCommodityBerries.getDeclaredYieldFieldCommodityBerriesGuid());
+		}
+
+		String declaredYieldFieldCommodityBerriesGuid = null;
+
+		if (dto == null) {
+			// Insert if it doesn't exist
+			declaredYieldFieldCommodityBerriesGuid = insertDeclaredYieldFieldCommodityBerries(dopYieldFieldCommodityBerries, userId);
+		} else {
+			declaredYieldFieldCommodityBerriesGuid = dto.getDeclaredYieldFieldCommodityBerriesGuid();
+			dopYieldContractRsrcFactory.updateDto(dto, dopYieldFieldCommodityBerries);
+
+			declaredYieldFieldCommodityBerriesDao.update(dto, userId);
+		}
+		
+		logger.debug(">updateDeclaredYieldFieldCommodityBerries");
+
+		return declaredYieldFieldCommodityBerriesGuid;
+	}	
+	
+	private String insertDeclaredYieldFieldCommodityBerries(DopYieldFieldCommodityBerries dopYieldFieldCommodityBerries, String userId) throws DaoException {
+
+		DeclaredYieldFieldCommodityBerriesDto dto = new DeclaredYieldFieldCommodityBerriesDto();
+		dopYieldContractRsrcFactory.updateDto(dto, dopYieldFieldCommodityBerries);
+
+		dto.setDeclaredYieldFieldCommodityBerriesGuid(null);
+
+		declaredYieldFieldCommodityBerriesDao.insert(dto, userId);
+
+		return dto.getDeclaredYieldFieldCommodityBerriesGuid();
+	}
+
+	public void updateDeclaredYieldFieldVarietyBerriesList(String declaredYieldFieldCommodityBerriesGuid, List<DopYieldFieldVarietyBerries> dopYieldFieldVarietyBerriesList, String userId) throws DaoException {
+
+		logger.debug("<updateDeclaredYieldFieldVarietyBerriesList");
+
+		if (dopYieldFieldVarietyBerriesList != null && !dopYieldFieldVarietyBerriesList.isEmpty()) {
+			for (DopYieldFieldVarietyBerries dyfvb : dopYieldFieldVarietyBerriesList) {
+				updateDeclaredYieldFieldVarietyBerries(declaredYieldFieldCommodityBerriesGuid, dyfvb, userId);
+			}
+		}
+
+		logger.debug(">updateDeclaredYieldFieldVarietyBerriesList");
+	
+	}
+	
+	private String updateDeclaredYieldFieldVarietyBerries(String declaredYieldFieldCommodityBerriesGuid, DopYieldFieldVarietyBerries dopYieldFieldVarietyBerries, String userId) throws DaoException {
+
+		logger.debug("<updateDeclaredYieldFieldVarietyBerries");
+
+		DeclaredYieldFieldVarietyBerriesDto dto = null;
+
+		if (dopYieldFieldVarietyBerries.getDeclaredYieldFieldVarietyBerriesGuid() != null) {
+			dto = declaredYieldFieldVarietyBerriesDao.fetch(dopYieldFieldVarietyBerries.getDeclaredYieldFieldVarietyBerriesGuid());
+		}
+
+		String declaredYieldFieldVarietyBerriesGuid = null;
+
+		if (dto == null) {
+			// Insert if it doesn't exist
+			declaredYieldFieldVarietyBerriesGuid = insertDeclaredYieldFieldVarietyBerries(declaredYieldFieldCommodityBerriesGuid, dopYieldFieldVarietyBerries, userId);
+		} else {
+			declaredYieldFieldVarietyBerriesGuid = dto.getDeclaredYieldFieldVarietyBerriesGuid();
+			dopYieldContractRsrcFactory.updateDto(dto, dopYieldFieldVarietyBerries);
+
+			declaredYieldFieldVarietyBerriesDao.update(dto, userId);
+		}
+		
+		logger.debug(">updateDeclaredYieldFieldVarietyBerries");
+
+		return declaredYieldFieldVarietyBerriesGuid;
+	}	
+	
+	private String insertDeclaredYieldFieldVarietyBerries(String declaredYieldFieldCommodityBerriesGuid, DopYieldFieldVarietyBerries dopYieldFieldVarietyBerries, String userId) throws DaoException {
+
+		DeclaredYieldFieldVarietyBerriesDto dto = new DeclaredYieldFieldVarietyBerriesDto();
+		dopYieldContractRsrcFactory.updateDto(dto, dopYieldFieldVarietyBerries);
+
+		dto.setDeclaredYieldFieldVarietyBerriesGuid(null);
+		dto.setDeclaredYieldFieldCommodityBerriesGuid(declaredYieldFieldCommodityBerriesGuid);
+		
+		declaredYieldFieldVarietyBerriesDao.insert(dto, userId);
+
+		return dto.getDeclaredYieldFieldVarietyBerriesGuid();
+	}
+	
+	
 	private Integer notNull(Integer value, Integer defaultValue) {
 		return (value == null) ? defaultValue : value;
 	}

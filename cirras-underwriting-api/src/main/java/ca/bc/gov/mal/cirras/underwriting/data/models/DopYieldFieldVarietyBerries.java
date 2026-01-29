@@ -20,7 +20,6 @@ public class DopYieldFieldVarietyBerries implements Serializable {
 	private Double abandonmentYield;
 	private Double totalProduction;
 	private Double totalProductionOverride;
-	private Boolean isHiddenOnPrintoutInd;
 
 	public String getDeclaredYieldFieldVarietyBerriesGuid() {
 		return declaredYieldFieldVarietyBerriesGuid;
@@ -90,13 +89,6 @@ public class DopYieldFieldVarietyBerries implements Serializable {
 	}
 	public void setTotalProductionOverride(Double totalProductionOverride) {
 		this.totalProductionOverride = totalProductionOverride;
-	}
-
-	public Boolean getIsHiddenOnPrintoutInd() {
-		return isHiddenOnPrintoutInd;
-	}
-	public void setIsHiddenOnPrintoutInd(Boolean isHiddenOnPrintoutInd) {
-		this.isHiddenOnPrintoutInd = isHiddenOnPrintoutInd;
 	}
 
 }
