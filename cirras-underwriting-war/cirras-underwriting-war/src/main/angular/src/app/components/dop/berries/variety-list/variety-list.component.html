@@ -1,4 +1,4 @@
-<div class="plcy-inv-field-box" [formGroup]="varietyFormGroup" style="width: 1030px;">
+<div class="plcy-inv-field-box" [formGroup]="varietyFormGroup" style="width: 1020px;">
     
     <div class="inventory-cell inventory-border" style="width: 100px;">
         {{ dopYieldFieldVarietyBerries.plantedAcres | number:'1.0-1' }}
@@ -61,7 +61,11 @@
     </div>
 
     <!-- buttons -->
-    <div class="inventory-cell inventory-border" style="width: 70px;">
-        <!-- TODO -->
+    <div class="inventory-cell inventory-border" style="width: 60px;">
+        <mat-icon *ngIf="securityUtilService.canEditInventory()"
+                matTooltip="Clear Variety Values" 
+                style="margin-left: 4px; margin-right: 4px;"
+                (click)="onDeleteRowValues()"
+                svgIcon="cancel"></mat-icon>
     </div>
 </div>
