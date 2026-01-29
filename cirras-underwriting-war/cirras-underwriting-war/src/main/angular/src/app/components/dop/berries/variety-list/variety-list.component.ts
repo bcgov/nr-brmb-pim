@@ -1,6 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { roundUpDecimal } from 'src/app/components/inventory/inventory-common';
 import { DopYieldFieldVarietyBerries } from 'src/app/conversion/models-yield';
+import { RootState } from 'src/app/store';
+import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
+import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { makeNumberOnly } from 'src/app/utils';
 
 @Component({
@@ -18,7 +23,9 @@ export class BerriesDopVarietyListComponent {
 
   varietyFormGroup: UntypedFormGroup;
 
-  constructor(private fb: UntypedFormBuilder) {}
+  constructor(private fb: UntypedFormBuilder,
+              private store: Store<RootState>,
+  ) {}
 
   ngOnInit() {
     this.refreshForm()
@@ -33,19 +40,11 @@ export class BerriesDopVarietyListComponent {
   }
 
   refreshForm(){
-    // TODO I might have to uncomment additional columns when working on save
     this.varietyFormGroup = this.fb.group({
-      // declaredYieldFieldVarietyBerriesGuid: [this.dopYieldFieldVarietyBerries.declaredYieldFieldVarietyBerriesGuid],
-      // declaredYieldFieldCommodityBerriesGuid: [this.dopYieldFieldVarietyBerries.declaredYieldFieldCommodityBerriesGuid],
-      // cropVarietyId: [this.dopYieldFieldVarietyBerries.cropVarietyId],
-      // cropVarietyName: [this.dopYieldFieldVarietyBerries.cropVarietyName],
-      // plantedAcres: [ this.dopYieldFieldVarietyBerries.plantedAcres],
       soldShippedYield: [ this.dopYieldFieldVarietyBerries.soldShippedYield],
       salesYield: [ this.dopYieldFieldVarietyBerries.salesYield],
       abandonmentYield: [ this.dopYieldFieldVarietyBerries.abandonmentYield],
-      // totalProduction: [this.dopYieldFieldVarietyBerries.totalProduction],
       totalProductionOverride: [ this.dopYieldFieldVarietyBerries.totalProductionOverride ],
-      // isHiddenOnPrintoutInd: [ this.dopYieldFieldVarietyBerries.isHiddenOnPrintoutInd],
     });
     this.dopYieldFieldVarietyBerriesFormArray.push(this.varietyFormGroup);
   }
@@ -55,18 +54,38 @@ export class BerriesDopVarietyListComponent {
   }
 
   updateSoldShippedYield() {
-    // TODO on save
+    const soldShippedYield = this.varietyFormGroup.value.soldShippedYield
+    const roundUpSoldShippedYield = roundUpDecimal(soldShippedYield, 2)
+    
+    this.varietyFormGroup.controls['soldShippedYield'].setValue(roundUpSoldShippedYield) 
+    this.dopYieldFieldVarietyBerries.soldShippedYield = this.varietyFormGroup.value.soldShippedYield
+    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true))
   }
 
   updateSalesYield() {
-    // TODO on save
+    const salesYield = this.varietyFormGroup.value.salesYield
+    const roundUpSalesYield = roundUpDecimal(salesYield, 2)
+    
+    this.varietyFormGroup.controls['salesYield'].setValue(roundUpSalesYield) 
+    this.dopYieldFieldVarietyBerries.salesYield = this.varietyFormGroup.value.salesYield
+    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true))
   }
 
   updateAbandonmentYield() {
-    // TODO on save 
+    const abandonmentYield = this.varietyFormGroup.value.abandonmentYield
+    const roundUpAbandonmentYield = roundUpDecimal(abandonmentYield, 2)
+    
+    this.varietyFormGroup.controls['abandonmentYield'].setValue(roundUpAbandonmentYield) 
+    this.dopYieldFieldVarietyBerries.abandonmentYield = this.varietyFormGroup.value.abandonmentYield
+    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true))
   }
 
-  updatetotalProductionOverride() {
-    // TODO on save
+  updateTotalProductionOverride() {
+    const totalProductionOverride = this.varietyFormGroup.value.totalProductionOverride
+    const roundUpTotalProductionOverride = roundUpDecimal(totalProductionOverride, 2)
+        
+    this.varietyFormGroup.controls['totalProductionOverride'].setValue(roundUpTotalProductionOverride) 
+    this.dopYieldFieldVarietyBerries.totalProductionOverride = this.varietyFormGroup.value.totalProductionOverride
+    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true))
   }
 }

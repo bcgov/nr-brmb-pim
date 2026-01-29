@@ -1,6 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { roundUpDecimal } from 'src/app/components/inventory/inventory-common';
 import { DopYieldFieldCommodityBerries } from 'src/app/conversion/models-yield';
+import { RootState } from 'src/app/store';
+import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
+import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { makeNumberOnly } from 'src/app/utils';
 
 @Component({
@@ -19,7 +24,9 @@ export class BerriesDopCommodityListComponent {
 
   fieldCommodityFormGroup: UntypedFormGroup;
 
-  constructor(private fb: UntypedFormBuilder) {}
+  constructor(private fb: UntypedFormBuilder,
+              private store: Store<RootState>,
+  ) {}
 
   ngOnInit() {
     this.refreshForm()
@@ -34,14 +41,8 @@ export class BerriesDopCommodityListComponent {
   }
 
   refreshForm(){
-    // TODO: I might need to uncomment additional columns
+    
     this.fieldCommodityFormGroup = this.fb.group({
-      // declaredYieldFieldCommodityBerriesGuid: [this.dopYieldFieldCommodityBerries.declaredYieldFieldCommodityBerriesGuid],
-      // fieldId: [this.dopYieldFieldCommodityBerries.fieldId],
-      // cropCommodityId: [this.dopYieldFieldCommodityBerries.cropCommodityId],
-      // cropCommodityName: [this.dopYieldFieldCommodityBerries.cropCommodityName],
-      // cropYear: [ this.dopYieldFieldCommodityBerries.cropYear],
-      // totalProduction: [this.dopYieldFieldCommodityBerries.totalProduction],
       totalProductionOverride: [ this.dopYieldFieldCommodityBerries.totalProductionOverride ], 
       dopYieldFieldVarietyBerriesList: this.fb.array([])
     });
@@ -61,7 +62,12 @@ export class BerriesDopCommodityListComponent {
   }
 
   updatetotalProductionOverride() {
-    // TODO on save
+    const totalProductionOverride = this.fieldCommodityFormGroup.value.totalProductionOverride
+    const roundUpTotalProductionOverride = roundUpDecimal(totalProductionOverride, 2)
+    
+    this.fieldCommodityFormGroup.controls['totalProductionOverride'].setValue(roundUpTotalProductionOverride) 
+    this.dopYieldFieldCommodityBerries.totalProductionOverride = this.fieldCommodityFormGroup.value.totalProductionOverride
+    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true))
   }
   
 }

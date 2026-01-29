@@ -7,7 +7,7 @@ import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { ParamMap } from '@angular/router';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
 import { BERRY_COMMODITY, SCREEN_TYPE } from 'src/app/utils/constants';
-import { LoadDopYieldContract, RolloverDopYieldContract } from 'src/app/store/dop/dop.actions';
+import { AddNewDopYieldContract, LoadDopYieldContract, RolloverDopYieldContract, UpdateDopYieldContract } from 'src/app/store/dop/dop.actions';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { getInsurancePlanName } from 'src/app/utils';
 
@@ -158,6 +158,20 @@ export class BerriesDopComponent extends BaseComponent {
     return {
       'grid-template-columns':  'auto 186px 146px 12px 155px'
     }
+  }
+
+  onSave() {
+    // set up units
+    this.dopYieldContract.enteredYieldMeasUnitTypeCode = this.dopYieldContract.defaultYieldMeasUnitTypeCode
+
+    if (this.dopYieldContract.declaredYieldContractGuid) {
+      this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract, this.policyId))
+    } else {
+      // add new
+      this.store.dispatch(AddNewDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract, this.policyId))
+    }
+
+    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, false ));
   }
 
 }

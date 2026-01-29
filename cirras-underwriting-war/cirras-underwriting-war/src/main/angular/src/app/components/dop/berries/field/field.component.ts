@@ -33,18 +33,8 @@ export class BerriesDopFieldComponent {
   }
 
   refreshForm(){
-    // TODO: how many of these fields do I actually need?
-    // I will understand this when I start working on save
     this.fieldFormGroup = this.fb.group({
-        // annualFieldDetailId: [this.field.annualFieldDetailId],
-        // displayOrder: [this.field.displayOrder],
-        // fieldId: [this.field.fieldId],
-        // fieldLabel: [this.field.fieldLabel],
-        // fieldLocation: [ this.field.fieldLocation],
-        // primaryPropertyIdentifier: [this.field.primaryPropertyIdentifier],
-        // isLeasedInd: [ this.field.isLeasedInd ], 
         dopYieldFieldCommodityBerriesList: this.fb.array([]),
-        // uwComments: [this.field.uwComments],
     });
     this.fieldsFormArray.push(this.fieldFormGroup);
   }
