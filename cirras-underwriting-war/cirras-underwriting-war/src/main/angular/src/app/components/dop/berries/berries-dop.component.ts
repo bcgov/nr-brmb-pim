@@ -7,9 +7,11 @@ import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { ParamMap } from '@angular/router';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
 import { BERRY_COMMODITY, SCREEN_TYPE } from 'src/app/utils/constants';
-import { LoadDopYieldContract, RolloverDopYieldContract } from 'src/app/store/dop/dop.actions';
+import { AddNewDopYieldContract, DeleteDopYieldContract, GetDopReport, LoadDopYieldContract, RolloverDopYieldContract, UpdateDopYieldContract } from 'src/app/store/dop/dop.actions';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
-import { getInsurancePlanName } from 'src/app/utils';
+import { getInsurancePlanName, replaceNonAlphanumericCharacters } from 'src/app/utils';
+import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
+import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 
 @Component({
   selector: 'berries-dop',
@@ -158,6 +160,56 @@ export class BerriesDopComponent extends BaseComponent {
     return {
       'grid-template-columns':  'auto 186px 146px 12px 155px'
     }
+  }
+
+  onSave() {
+    // set up units
+    this.dopYieldContract.enteredYieldMeasUnitTypeCode = this.dopYieldContract.defaultYieldMeasUnitTypeCode
+
+    if (this.dopYieldContract.declaredYieldContractGuid) {
+      this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract, this.policyId))
+    } else {
+      // add new
+      this.store.dispatch(AddNewDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract, this.policyId))
+    }
+
+    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, false ));
+  }
+
+  onCancel(){
+
+    if ( confirm("Are you sure you want to clear all unsaved changes on the screen? There is no way to undo this action.") ) {
+          // reload the page
+          this.loadPage()
+    
+          this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, false ));
+    
+          displaySuccessSnackbar(this.snackbarService, "Unsaved changes have been cleared successfully.")
+        }
+    }
+
+  onPrint() {
+    let reportName = replaceNonAlphanumericCharacters(this.growerContract.growerName) + "-DOP" 
+    this.store.dispatch(GetDopReport(reportName, this.policyId, "", this.insurancePlanId, "", "", "", "", ""));
+  }
+
+
+  onDeleteDop() {
+
+    //Ask for confirmation before deleting all DOP data
+    if ( confirm("You are about to delete all DOP data for the policy. Do you want to continue?") ) {
+
+      if (this.dopYieldContract.declaredYieldContractGuid) {
+        //Delete dop contract
+        this.store.dispatch(DeleteDopYieldContract(DOP_COMPONENT_ID, this.policyId, this.dopYieldContract))
+
+      } 
+    }
+  }
+
+  onDopCommentsDone(uwComments: UnderwritingComment[]) {
+    this.dopYieldContract.uwComments = uwComments;
+    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
   }
 
 }

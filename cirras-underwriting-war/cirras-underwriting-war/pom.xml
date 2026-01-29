@@ -184,7 +184,7 @@
 									<goal>npm</goal>
 								</goals>
 								<configuration>
-									<arguments>install -no-package-lock --registry=${npm.url} --force</arguments>
+									<arguments>clean-install --registry=${npm.url} --force</arguments>
 								</configuration>
 							</execution>
 							<execution>
