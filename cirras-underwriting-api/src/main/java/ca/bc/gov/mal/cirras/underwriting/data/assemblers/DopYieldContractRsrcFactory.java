@@ -748,7 +748,6 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		model.setAbandonmentYield(null);
 		model.setDeclaredYieldFieldCommodityBerriesGuid(null);
 		model.setDeclaredYieldFieldVarietyBerriesGuid(null);
-		model.setIsHiddenOnPrintoutInd(false);
 		model.setSalesYield(null);
 		model.setSoldShippedYield(null);
 		model.setTotalProduction(null);
@@ -783,7 +782,6 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		model.setAbandonmentYield(dto.getAbandonmentYield());
 		model.setDeclaredYieldFieldCommodityBerriesGuid(dto.getDeclaredYieldFieldCommodityBerriesGuid());
 		model.setDeclaredYieldFieldVarietyBerriesGuid(dto.getDeclaredYieldFieldVarietyBerriesGuid());
-		model.setIsHiddenOnPrintoutInd(false);   // TODO: Will be removed in a future ticket.
 		model.setSalesYield(dto.getSalesYield());
 		model.setSoldShippedYield(dto.getSoldShippedYield());
 		model.setTotalProduction(dto.getTotalProduction());

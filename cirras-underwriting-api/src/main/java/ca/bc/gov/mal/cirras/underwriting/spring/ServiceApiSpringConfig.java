@@ -141,8 +141,13 @@ public class ServiceApiSpringConfig {
 		result.setInventoryContractCommodityBerriesDao(persistenceSpringConfig.inventoryContractCommodityBerriesDao());
 		result.setInventoryBerriesDao(persistenceSpringConfig.inventoryBerriesDao());
 		
-		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
+		result.setDeclaredYieldContractCommodityBerriesDao(persistenceSpringConfig.declaredYieldContractCommodityBerriesDao());
+		result.setDeclaredYieldFieldCommodityBerriesDao(persistenceSpringConfig.declaredYieldFieldCommodityBerriesDao());
+		result.setDeclaredYieldFieldVarietyBerriesDao(persistenceSpringConfig.declaredYieldFieldVarietyBerriesDao());
 
+		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
+		result.setDopYieldContractRsrcFactory(dopYieldContractRsrcFactory);
+		
 		return result;
 	}
 	
@@ -336,6 +341,7 @@ public class ServiceApiSpringConfig {
 		result.setDeclaredYieldFieldVarietyBerriesDao(persistenceSpringConfig.declaredYieldFieldVarietyBerriesDao());
 		
 		result.setJasperReportService(jasperReportService);
+		result.setBerriesService(berriesService());
 		
 		return result;
 	}
