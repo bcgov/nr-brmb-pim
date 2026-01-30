@@ -248,6 +248,47 @@ public class BerriesService {
 		inventoryContract.setInventoryContractCommodityBerries(iccbList);
 	}
 
+	public void calculateDeclaredYieldContractCommodityBerriesList(DopYieldContractRsrc dopYieldContract) {
+
+		logger.debug("<calculateDeclaredYieldContractCommodityBerriesList");
+
+		List<DopYieldContractCommodityBerries> dopYieldContractCommodityBerriesList = dopYieldContract.getDopYieldContractCommodityBerriesList();
+		if (dopYieldContractCommodityBerriesList != null && !dopYieldContractCommodityBerriesList.isEmpty()) {
+			for (DopYieldContractCommodityBerries dopYieldContractCommodityBerries : dopYieldContractCommodityBerriesList) {
+				calculateDeclaredYieldContractCommodityBerries(dopYieldContract, dopYieldContractCommodityBerries);
+			}
+		}
+		
+		logger.debug(">calculateDeclaredYieldContractCommodityBerriesList");
+	}
+	
+	private void calculateDeclaredYieldContractCommodityBerries(DopYieldContractRsrc dopYieldContract, DopYieldContractCommodityBerries dopContractCommodityBerries) {
+
+		logger.debug("<calculateDeclaredYieldContractCommodityBerries");
+
+		Double totalProduction = 0.0;
+
+		List<AnnualFieldRsrc> fields = dopYieldContract.getFields();
+		if (fields != null && !fields.isEmpty()) {
+
+			for (AnnualFieldRsrc field : fields) {
+				List<DopYieldFieldCommodityBerries> dopYieldFieldCommodityBerriesList = field.getDopYieldFieldCommodityBerriesList();
+				if (dopYieldFieldCommodityBerriesList != null && !dopYieldFieldCommodityBerriesList.isEmpty()) {
+
+					for (DopYieldFieldCommodityBerries dyfcb : dopYieldFieldCommodityBerriesList) {
+						if ( dyfcb.getCropCommodityId().equals(dopContractCommodityBerries.getCropCommodityId()) ) {
+							totalProduction += notNull(dyfcb.getTotalProductionOverride(), dyfcb.getTotalProduction());
+						}
+					}
+				}
+			}
+		}
+
+		dopContractCommodityBerries.setTotalProduction(totalProduction);
+
+		logger.debug(">calculateDeclaredYieldContractCommodityBerries");
+	}
+	
 	public void updateDeclaredYieldContractCommodityBerriesList(String declaredYieldContractGuid, DopYieldContractRsrc dopYieldContract, String userId) throws DaoException {
 
 		logger.debug("<updateDeclaredYieldContractCommodityBerriesList");
@@ -301,6 +342,23 @@ public class BerriesService {
 
 		logger.debug(">insertDeclaredYieldContractCommodityBerries");
 	}	
+
+	public void calculateDeclaredYieldFieldCommodityBerries(DopYieldFieldCommodityBerries dopYieldFieldCommodityBerries) {
+
+		logger.debug("<calculateDeclaredYieldFieldCommodityBerries");
+
+		Double totalProduction = 0.0;
+		List<DopYieldFieldVarietyBerries> dyfvbList = dopYieldFieldCommodityBerries.getDopYieldFieldVarietyBerriesList();
+		if (dyfvbList != null && !dyfvbList.isEmpty()) {
+			for (DopYieldFieldVarietyBerries dyfvb : dyfvbList) {
+				totalProduction += notNull(dyfvb.getTotalProductionOverride(), dyfvb.getTotalProduction());
+			}
+		}
+		
+		dopYieldFieldCommodityBerries.setTotalProduction(totalProduction);
+		
+		logger.debug(">calculateDeclaredYieldFieldCommodityBerries");
+	}
 	
 	public String updateDeclaredYieldFieldCommodityBerries(DopYieldFieldCommodityBerries dopYieldFieldCommodityBerries, String userId) throws DaoException {
 
@@ -341,6 +399,35 @@ public class BerriesService {
 		return dto.getDeclaredYieldFieldCommodityBerriesGuid();
 	}
 
+	public void calculateDeclaredYieldFieldVarietyBerriesList(List<DopYieldFieldVarietyBerries> dopYieldFieldVarietyBerriesList) {
+
+		logger.debug("<calculateDeclaredYieldFieldVarietyBerriesList");
+
+		if (dopYieldFieldVarietyBerriesList != null && !dopYieldFieldVarietyBerriesList.isEmpty()) {
+			for (DopYieldFieldVarietyBerries dyfvb : dopYieldFieldVarietyBerriesList) {
+				calculateDeclaredYieldFieldVarietyBerries(dyfvb);
+			}
+		}
+
+		logger.debug(">calculateDeclaredYieldFieldVarietyBerriesList");
+	}
+	
+	private void calculateDeclaredYieldFieldVarietyBerries(DopYieldFieldVarietyBerries dopYieldFieldVarietyBerries) {
+
+		logger.debug("<calculateDeclaredYieldFieldVarietyBerries");
+
+		Double abandonmentYield = notNull(dopYieldFieldVarietyBerries.getAbandonmentYield(), 0.0);
+		Double salesYield = notNull(dopYieldFieldVarietyBerries.getSalesYield(), 0.0);
+		Double soldShippedYield = notNull(dopYieldFieldVarietyBerries.getSoldShippedYield(), 0.0);
+		
+		Double totalProduction = abandonmentYield + salesYield + soldShippedYield;
+		
+		dopYieldFieldVarietyBerries.setTotalProduction(totalProduction);
+		
+		logger.debug(">calculateDeclaredYieldFieldVarietyBerries");
+	}	
+	
+	
 	public void updateDeclaredYieldFieldVarietyBerriesList(String declaredYieldFieldCommodityBerriesGuid, List<DopYieldFieldVarietyBerries> dopYieldFieldVarietyBerriesList, String userId) throws DaoException {
 
 		logger.debug("<updateDeclaredYieldFieldVarietyBerriesList");
