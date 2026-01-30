@@ -8,19 +8,15 @@ import jakarta.ws.rs.core.UriBuilder;
 
 import ca.bc.gov.nrs.common.wfone.rest.resource.RelLink;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dto.PagedDtos;
 import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.AnnualFieldListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.AnnualFieldRolloverInvEndpoint;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.UwContractRolloverInvEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PolicyRsrc;
-import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualFieldList;
@@ -29,7 +25,6 @@ import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.ContractedFieldDetai
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.FieldDto;
 import ca.bc.gov.mal.cirras.underwriting.persistence.v1.dto.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.AnnualFieldFactory;
-import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 
 public class AnnualFieldRsrcFactory extends BaseResourceFactory implements AnnualFieldFactory { 
 	
@@ -115,8 +110,10 @@ public class AnnualFieldRsrcFactory extends BaseResourceFactory implements Annua
 
 		resource.setFieldId(dto.getFieldId());
 		resource.setFieldLabel(dto.getFieldLabel());
+		resource.setFieldLocation(dto.getLocation());
 		resource.setOtherLegalDescription(dto.getOtherLegalDescription());
 		resource.setLegalLandId(dto.getLegalLandId());
+		resource.setPrimaryPropertyIdentifier(dto.getPrimaryPropertyIdentifier());
 	}
 
 	static void populateResource(AnnualFieldRsrc resource, ContractedFieldDetailDto dto) {
@@ -128,12 +125,16 @@ public class AnnualFieldRsrcFactory extends BaseResourceFactory implements Annua
 		resource.setFieldLabel(dto.getFieldLabel());
 		resource.setLegalLandId(dto.getLegalLandId());
 		resource.setOtherLegalDescription(dto.getOtherLegalDescription());
+		resource.setIsLeasedInd(dto.getIsLeasedInd());
+		resource.setFieldLocation(dto.getFieldLocation());
+		resource.setPrimaryPropertyIdentifier(dto.getPrimaryPropertyIdentifier()); 
 	}
 
 	// Only supports updates to members that are editable on the Inventory screen.
 	@Override
 	public void updateDto(ContractedFieldDetailDto dto, AnnualField model) {
 		dto.setDisplayOrder(model.getDisplayOrder());
+		dto.setIsLeasedInd(model.getIsLeasedInd());
 	}
 	
 	public static String getAnnualFieldListSelfUri(

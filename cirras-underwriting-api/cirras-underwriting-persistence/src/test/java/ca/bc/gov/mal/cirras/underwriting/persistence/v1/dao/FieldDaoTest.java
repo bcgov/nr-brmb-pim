@@ -3,6 +3,7 @@ package ca.bc.gov.mal.cirras.underwriting.persistence.v1.dao;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -93,6 +94,7 @@ public class FieldDaoTest {
 		
 		
 		String fieldLabel = "Test Field Label";
+		String location = "location a";
 		Integer activeFromCropYear = 2011;
 		Integer activeToCropYear = 2022;
 
@@ -101,6 +103,7 @@ public class FieldDaoTest {
 		//INSERT
 		newDto.setFieldId(null);
 		newDto.setFieldLabel(fieldLabel);
+		newDto.setLocation(location);
 		newDto.setActiveFromCropYear(activeFromCropYear);
 		newDto.setActiveToCropYear(activeToCropYear);
 
@@ -111,11 +114,13 @@ public class FieldDaoTest {
 
 		Assert.assertEquals("FieldId", newDto.getFieldId(), fetchedDto.getFieldId());
 		Assert.assertEquals("FieldLabel", newDto.getFieldLabel(), fetchedDto.getFieldLabel());
+		Assert.assertEquals("Location", newDto.getLocation(), fetchedDto.getLocation());
 		Assert.assertEquals("ActiveFromCropYear", newDto.getActiveFromCropYear(), fetchedDto.getActiveFromCropYear());
 		Assert.assertEquals("ActiveToCropYear", newDto.getActiveToCropYear(), fetchedDto.getActiveToCropYear());
 		
 		//UPDATE
 		fieldLabel = "Test Field Label 2";
+		location = "location b";
 		activeFromCropYear = 2000;
 		activeToCropYear = 2012;
 		
@@ -129,6 +134,7 @@ public class FieldDaoTest {
 		FieldDto updatedDto = dao.fetch(fetchedDto.getFieldId());
 
 		Assert.assertEquals("FieldLabel", fetchedDto.getFieldLabel(), updatedDto.getFieldLabel());
+		Assert.assertEquals("Location", newDto.getLocation(), fetchedDto.getLocation());
 		Assert.assertEquals("ActiveFromCropYear", fetchedDto.getActiveFromCropYear(), updatedDto.getActiveFromCropYear());
 		Assert.assertEquals("ActiveToCropYear", fetchedDto.getActiveToCropYear(), updatedDto.getActiveToCropYear());
 		
@@ -140,9 +146,82 @@ public class FieldDaoTest {
 		Assert.assertNull(deletedDto);
 
 	}
-	
+
 	@Test 
 	public void testselectForLegalLandOrField() throws Exception {
+		// Create test data
+		Integer cropYear = 2022;
+
+		//Legal Land
+		LegalLandDto legalLandDto1 = createLegalLand(legalLandId, cropYear, "legal desc 1", "short legal desc 1", "other legal desc 1", "111-222-333");
+
+		// Fields
+		FieldDto field1 = createField(fieldId1, "LOT 1", cropYear, "TEST Location 16159");
+		FieldDto field2 = createField(fieldId2, "LOT 2", cropYear, "TEST Location 29943");
+		
+		createAnnualFieldDetail(afdId1, fieldId1, cropYear, legalLandId);
+		createAnnualFieldDetail(afdId2, fieldId2, cropYear, legalLandId);
+		
+		FieldDao dao = persistenceSpringConfig.fieldDao();
+		
+		//Get by legal land id
+		List<FieldDto> dtos = dao.selectForLegalLandOrField(legalLandId, null, null, cropYear);
+
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals("dtos size 1", 2, dtos.size());
+		
+		checkAddFieldFields(field1, legalLandDto1, getFieldById(fieldId1, dtos));
+		checkAddFieldFields(field2, legalLandDto1, getFieldById(fieldId2, dtos));
+		
+		//Get by field id
+		dtos = dao.selectForLegalLandOrField(null, fieldId1, null, cropYear);
+		
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals("dtos size 2 field", 1, dtos.size());
+
+		checkAddFieldFields(field1, legalLandDto1, getFieldById(fieldId1, dtos));
+		
+		//Get by field location (Partial Search): TEST Location - Expect 2 fields
+		dtos = dao.selectForLegalLandOrField(null, null, "test location", cropYear);
+		
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals("dtos size 3 field location", 2, dtos.size());
+
+		checkAddFieldFields(field1, legalLandDto1, getFieldById(fieldId1, dtos));
+		checkAddFieldFields(field2, legalLandDto1, getFieldById(fieldId2, dtos));
+		
+		//Get by field location: Expect 1 field
+		dtos = dao.selectForLegalLandOrField(null, null, "test location 29943", cropYear);
+		
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals("dtos size 4 field location", 1, dtos.size());
+
+		checkAddFieldFields(field2, legalLandDto1, getFieldById(fieldId2, dtos));
+		
+		delete();
+	}
+	
+	private FieldDto getFieldById(Integer fieldId, List<FieldDto> fields) {
+		
+		List<FieldDto> filteredList = fields.stream().filter(x -> x.getFieldId().equals(fieldId)) 
+				.collect(Collectors.toList());
+		
+		Assert.assertEquals(1, filteredList.size());
+		
+		return filteredList.get(0);
+	}
+
+	private void checkAddFieldFields(FieldDto expectedField, LegalLandDto expectedLegalLand, FieldDto actualField) {
+		Assert.assertEquals("FieldId", expectedField.getFieldId(), actualField.getFieldId());
+		Assert.assertEquals("FieldLabel", expectedField.getFieldLabel(), actualField.getFieldLabel());
+		Assert.assertEquals("Location", expectedField.getLocation(), actualField.getLocation());
+		Assert.assertEquals("PrimaryPropertyIdentifier", expectedLegalLand.getPrimaryPropertyIdentifier(), actualField.getPrimaryPropertyIdentifier());
+		Assert.assertEquals("LegalLandId", expectedLegalLand.getLegalLandId(), actualField.getLegalLandId());
+		Assert.assertEquals("OtherLegalDescription", expectedLegalLand.getOtherDescription(), actualField.getOtherLegalDescription());
+	}
+	
+	@Test 
+	public void testselectForLegalLandOrField_OLD() throws Exception {
 		
 		//Pre-Conditions:
 		//Legal Land needs 2 fields in the first cropYear and 1 field in the second cropYear
@@ -155,7 +234,7 @@ public class FieldDaoTest {
 		String otherLegalDescription = "PCLA(SEE 60255I) OF PCLB(SEE 16200I) L 5 DL 812 PL 730A EXC PT INCL IN SRW PL 13512";
 		
 		//Get by legal land id
-		List<FieldDto> dtos = dao.selectForLegalLandOrField(legalLandId, null, cropYear);
+		List<FieldDto> dtos = dao.selectForLegalLandOrField(legalLandId, null, null, cropYear);
 		
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals("dtos size 1", 2, dtos.size());
@@ -167,7 +246,7 @@ public class FieldDaoTest {
 		}
 
 		//Get by field id
-		dtos = dao.selectForLegalLandOrField(null, fieldId, cropYear);
+		dtos = dao.selectForLegalLandOrField(null, fieldId, null, cropYear);
 		
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals("dtos size 1 field", 1, dtos.size());
@@ -182,7 +261,7 @@ public class FieldDaoTest {
 		cropYear = 2023;
 		
 		//Get by legal land id
-		dtos = dao.selectForLegalLandOrField(legalLandId, null, cropYear);
+		dtos = dao.selectForLegalLandOrField(legalLandId, null, null, cropYear);
 		
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals("dtos size 2", 1, dtos.size());
@@ -194,7 +273,7 @@ public class FieldDaoTest {
 		}
 		
 		//Get by field id
-		dtos = dao.selectForLegalLandOrField(null, fieldId, cropYear);
+		dtos = dao.selectForLegalLandOrField(null, fieldId, null, cropYear);
 		Assert.assertNotNull(dtos);
 		Assert.assertEquals("dtos size 2 field", 1, dtos.size());
 		
@@ -221,12 +300,12 @@ public class FieldDaoTest {
 		createLegalLand(legalLandId, cropYear, "legal desc", "short legal desc", "other legal desc", "111-222-333");
 
 		// Field 1
-		createField(fieldId1, "LOT 1", cropYear);
+		createField(fieldId1, "LOT 1", cropYear, "location 1");
 		createAnnualFieldDetail(afdId1, fieldId1, cropYear, legalLandId);
 		createContractedFieldDetail(cfdId1, afdId1, gcyId);
 
 		// Field 2
-		createField(fieldId2, "LOT 2", cropYear);
+		createField(fieldId2, "LOT 2", cropYear, "location 2");
 		createAnnualFieldDetail(afdId2, fieldId2, cropYear, legalLandId);
 		createContractedFieldDetail(cfdId2, afdId2, gcyId);
 		
@@ -241,10 +320,12 @@ public class FieldDaoTest {
 		
 		Assert.assertEquals(fieldId1, dtos.get(0).getFieldId());
 		Assert.assertEquals("LOT 1", dtos.get(0).getFieldLabel());
+		Assert.assertEquals("location 1", dtos.get(0).getLocation());
 		Assert.assertEquals(cropYear, dtos.get(0).getMaxCropYear());
 		
 		Assert.assertEquals(fieldId2, dtos.get(1).getFieldId());
 		Assert.assertEquals("LOT 2", dtos.get(1).getFieldLabel());
+		Assert.assertEquals("location 2", dtos.get(1).getLocation());
 		Assert.assertEquals(cropYear, dtos.get(1).getMaxCropYear());
 
 		// 1B. Newer year.
@@ -255,10 +336,12 @@ public class FieldDaoTest {
 		
 		Assert.assertEquals(fieldId1, dtos.get(0).getFieldId());
 		Assert.assertEquals("LOT 1", dtos.get(0).getFieldLabel());
+		Assert.assertEquals("location 1", dtos.get(0).getLocation());
 		Assert.assertEquals(cropYear, dtos.get(0).getMaxCropYear());
 		
 		Assert.assertEquals(fieldId2, dtos.get(1).getFieldId());
 		Assert.assertEquals("LOT 2", dtos.get(1).getFieldLabel());
+		Assert.assertEquals("location 2", dtos.get(1).getLocation());
 		Assert.assertEquals(cropYear, dtos.get(1).getMaxCropYear());
 		
 		// 1C. Older year.
@@ -275,10 +358,12 @@ public class FieldDaoTest {
 		
 		Assert.assertEquals(fieldId1, dtos.get(0).getFieldId());
 		Assert.assertEquals("LOT 1", dtos.get(0).getFieldLabel());
+		Assert.assertEquals("location 1", dtos.get(0).getLocation());
 		Assert.assertEquals(cropYear, dtos.get(0).getMaxCropYear());
 		
 		Assert.assertEquals(fieldId2, dtos.get(1).getFieldId());
 		Assert.assertEquals("LOT 2", dtos.get(1).getFieldLabel());
+		Assert.assertEquals("location 2", dtos.get(1).getLocation());
 		Assert.assertEquals(cropYear, dtos.get(1).getMaxCropYear());
 		
 		// Test 3: excludeContractId filter.
@@ -295,6 +380,7 @@ public class FieldDaoTest {
 				
 		Assert.assertEquals(fieldId2, dtos.get(0).getFieldId());
 		Assert.assertEquals("LOT 2", dtos.get(0).getFieldLabel());
+		Assert.assertEquals("location 2", dtos.get(0).getLocation());
 		Assert.assertEquals(cropYear, dtos.get(0).getMaxCropYear());
 		
 	}	
@@ -308,10 +394,10 @@ public class FieldDaoTest {
 		createLegalLand(legalLandId, cropYear, "legal desc", "short legal desc", "other legal desc", "111-222-333");
 
 		// Field 1
-		createField(fieldId1, "LOT 1", cropYear);
+		createField(fieldId1, "LOT 1", cropYear, null);
 
 		// Field 2
-		createField(fieldId2, "LOT 2", cropYear);
+		createField(fieldId2, "LOT 2", cropYear, null);
 		
 		// Add Legal Land Field XREF
 		createLegalLandFieldXref(fieldId1, legalLandId);
@@ -341,8 +427,8 @@ public class FieldDaoTest {
 		createLegalLand(legalLandId2, cropYear, "legal desc", "short legal desc", "other legal desc", "111-222-333");
 
 		// Field 1
-		createField(fieldId1, "LOT 1", cropYear);
-		createField(fieldId2, "LOT 2", cropYear);
+		createField(fieldId1, "LOT 1", cropYear, null);
+		createField(fieldId2, "LOT 2", cropYear, null);
 
 		// Add Legal Land Field XREF
 		createLegalLandFieldXref(fieldId1, legalLandId);
@@ -378,10 +464,11 @@ public class FieldDaoTest {
 		
 	}	
 	
-	private void createField(
+	private FieldDto createField(
 			Integer fieldId, 
 			String fieldLabel, 
-			Integer cropYear) throws DaoException {
+			Integer cropYear,
+			String location) throws DaoException {
 		String userId = "JUNIT_TEST";
 
 		// Field
@@ -392,8 +479,11 @@ public class FieldDaoTest {
 		fieldDto.setFieldLabel(fieldLabel);
 		fieldDto.setActiveFromCropYear(1980);
 		fieldDto.setActiveToCropYear(cropYear);
+		fieldDto.setLocation(location);
 		
 		fieldDao.insertDataSync(fieldDto, userId);
+		
+		return fieldDto;
 	}
 
 	private void deleteField(Integer fieldId) throws DaoException{
@@ -405,7 +495,7 @@ public class FieldDaoTest {
 	}
 	
 	
-	private void createLegalLand(
+	private LegalLandDto createLegalLand(
 			Integer legalLandId, 
 			Integer cropYear, 
 			String legalDesc, 
@@ -432,6 +522,8 @@ public class FieldDaoTest {
 
 
 		llDao.insertDataSync(llDto, userId);
+		
+		return llDto;
 	}
 
 	private void deleteLegalLand(Integer legalLandId) throws DaoException {
@@ -595,6 +687,7 @@ public class FieldDaoTest {
 		cfdDto.setAnnualFieldDetailId(annualFieldDetailId);
 		cfdDto.setContractedFieldDetailId(contractedFieldDetailId);
 		cfdDto.setDisplayOrder(1);
+		cfdDto.setIsLeasedInd(false);
 		cfdDto.setGrowerContractYearId(growerContractYearId);
 
 		cfdDao.insertDataSync(cfdDto, userId);

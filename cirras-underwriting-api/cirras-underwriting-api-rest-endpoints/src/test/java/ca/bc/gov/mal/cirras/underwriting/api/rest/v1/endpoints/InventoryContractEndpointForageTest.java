@@ -682,6 +682,14 @@ public class InventoryContractEndpointForageTest extends EndpointsTest {
 		} catch ( CirrasUnderwritingServiceException e ) {
 			// Ok.
 		}
+		
+		// Test 8: Generate Berries report.
+		reportContent = service.generateInventoryReport(topLevelEndpoints, "2023", "3", null, null, null, null, null, null, null);
+		
+		Assert.assertNotNull(reportContent);
+		
+		logger.debug(">testGenerateInventoryReport - Returned " + reportContent.length + " bytes");	
+
 	}	
 	
 	public void checkInventoryCoverageTotalForage(InventoryCoverageTotalForage expected, InventoryCoverageTotalForage actual) {

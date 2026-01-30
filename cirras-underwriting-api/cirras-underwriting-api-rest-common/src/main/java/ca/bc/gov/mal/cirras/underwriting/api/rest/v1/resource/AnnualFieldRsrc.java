@@ -32,8 +32,11 @@ public class AnnualFieldRsrc extends BaseResource implements AnnualField {
 	private Integer legalLandId;
 	private String fieldLabel;
 	private String otherLegalDescription;
+	private String primaryPropertyIdentifier;
+	private String fieldLocation;
 	private Integer displayOrder;
 	private Integer cropYear;
+	private Boolean isLeasedInd;
 	private String landUpdateType;
 	private Integer transferFromGrowerContractYearId;
 
@@ -92,6 +95,22 @@ public class AnnualFieldRsrc extends BaseResource implements AnnualField {
 	public void setOtherLegalDescription(String otherLegalDescription) {
 		this.otherLegalDescription = otherLegalDescription;
 	}
+	
+	public String getPrimaryPropertyIdentifier() {
+		return primaryPropertyIdentifier;
+	}
+
+	public void setPrimaryPropertyIdentifier(String primaryPropertyIdentifier) {
+		this.primaryPropertyIdentifier = primaryPropertyIdentifier;
+	}
+	
+	public String getFieldLocation() {
+		return fieldLocation;
+	}
+
+	public void setFieldLocation(String fieldLocation) {
+		this.fieldLocation = fieldLocation;
+	}
 
 	public Integer getDisplayOrder() {
 		return displayOrder;
@@ -107,6 +126,14 @@ public class AnnualFieldRsrc extends BaseResource implements AnnualField {
 		this.cropYear = cropYear;
 	}
 
+	public Boolean getIsLeasedInd() {
+		return isLeasedInd;
+	}
+
+	public void setIsLeasedInd(Boolean isLeasedInd) {
+		this.isLeasedInd = isLeasedInd;
+	}
+	
 	@Override
 	public String getLandUpdateType() {
 		return landUpdateType;

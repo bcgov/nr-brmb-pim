@@ -101,48 +101,6 @@
           "options": {
             "buildTarget": "cirras-underwriting:build"
           }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "codeCoverageExclude": [
-              "src/app/test/**",
-              "src/app/store/**",
-              "src/app/directives/**",
-              "src/app/interceptors/**",
-              "src/app/conversion/**",
-              "src/app/utils/**",
-              "src/app/containers/application-root/**",
-              "src/app/services/**",
-              "src/app/containers/**",
-              "src/app/components/unauthorized-page/*.ts",
-              "src/app/components/sign-out-page/*.ts",
-              "src/app/components/group-detail/sections/group-detail-rosters/*.ts",
-              "src/app/components/group-detail/sections/group-detail-deployments/*.ts",
-              "src/app/components/personnel-detail/sections/personnel-detail-certifications/*.ts",
-              "src/app/components/personnel-detail/sections/personnel-detail-deployments/*.ts",
-              "src/app/components/personnel-detail/sections/personnel-detail-rosters/*.ts"
-            ],
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles/main.scss",
-              "node_modules/@busacca/ng-pick-datetime/assets/style/picker.scss",
-              "node_modules/multiple-select/dist/multiple-select.css"
-            ],
-            "scripts": [
-              "node_modules/jquery/dist/jquery.slim.js",
-              "node_modules/multiple-select/dist/multiple-select.js"
-            ],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/manifest.json",
-              "src/refresh-token.html"
-            ]
-          }
         }
       }
     }

@@ -100,6 +100,10 @@ export class OtherYearPolicyComponent implements OnInit, OnChanges  {
       return ResourcesRoutes.INVENTORY_FORAGE
     } 
 
+    if (routerUrl.lastIndexOf(ResourcesRoutes.INVENTORY_BERRIES) > -1 ) {
+      return ResourcesRoutes.INVENTORY_BERRIES
+    } 
+
     if (routerUrl.lastIndexOf(ResourcesRoutes.DOP_GRAIN) > -1 ) {
       return ResourcesRoutes.DOP_GRAIN
     } 

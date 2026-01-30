@@ -88,7 +88,8 @@ public interface UwContractFactory {
 			LegalLandDto otherLegalData,
 			Integer policyId,
 			Integer annualFieldDetailId,
-			String newLegalLocation,
+			String newLegalLocation, 
+			String primaryPropertyIdentifier,
 			FactoryContext context, 
 			WebAdeAuthentication authentication
 		) throws FactoryException;

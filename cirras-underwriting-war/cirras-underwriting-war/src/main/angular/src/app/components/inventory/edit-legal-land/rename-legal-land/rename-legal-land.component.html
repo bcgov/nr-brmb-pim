@@ -1,0 +1,35 @@
+    <!-- Warning #1 -->
+    <p *ngIf="showNewLegalLandMessage" class="location-warning">
+        <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
+        This {{ legalLandSearchBy }} does not currently exist. If you continue, a new legal land will be created.
+    </p>
+
+    <!-- Warning #2 -->
+    <legal-land-list-with-message *ngIf="renameLegalLandList?.isWarningLegalsWithSameLoc"
+        [legalLandList]="renameLegalLandList.legalsWithSameLocList"
+        [message]="renameLegalLandList.legalsWithSameLocMsg.message"
+        [insurancePlanId]="insurancePlanId"
+        [displayShortLegalDescription]="false">
+    </legal-land-list-with-message>
+
+    <!-- Warning #3 -->
+    <field-list-with-message *ngIf="renameLegalLandList?.isWarningFieldOnOtherPolicy"
+        [fieldList]="renameLegalLandList.fieldOnOtherPolicyList"
+        [message]="renameLegalLandList.fieldOnOtherPolicyMsg.message"
+        [insurancePlanId]="insurancePlanId">
+    </field-list-with-message>
+
+    <!-- Warning #4 -->
+     <field-list-with-message *ngIf="renameLegalLandList?.isWarningOtherFieldOnPolicy"
+        [fieldList]="renameLegalLandList.otherFieldOnPolicyList"
+        [message]="renameLegalLandList.otherFieldOnPolicyMsg.message"
+        [insurancePlanId]="insurancePlanId">
+    </field-list-with-message>
+
+    <!-- Warning #5 -->
+    <legal-land-list-with-message *ngIf="renameLegalLandList?.isWarningOtherLegalData"
+        [legalLandList]="otherLegalData"
+        [message]="renameLegalLandList.otherLegalDataMsg.message"
+        [insurancePlanId]="insurancePlanId"
+        [displayShortLegalDescription]="true">
+    </legal-land-list-with-message>

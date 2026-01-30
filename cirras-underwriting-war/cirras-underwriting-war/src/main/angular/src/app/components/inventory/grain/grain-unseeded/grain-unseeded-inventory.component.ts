@@ -3,7 +3,7 @@ import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { isBaseCommodity, makeTitleCase } from 'src/app/utils';
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { GrainInventoryComponent } from "../grain-inventory.component";
-import { CropCommodityVarietyOptionsType, roundUpDecimalAcres } from '../../inventory-common';
+import { CropCommodityVarietyOptionsType, roundUpDecimal } from '../../inventory-common';
 import {ViewEncapsulation } from '@angular/core';
 
 @Component({
@@ -247,7 +247,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
      
     let acres = pltg.controls['acresToBeSeeded'].value
 
-    pltg.controls['acresToBeSeeded'].setValue(roundUpDecimalAcres(acres))
+    pltg.controls['acresToBeSeeded'].setValue(roundUpDecimal(acres,1))
 
     this.isMyFormDirty()
   }
@@ -258,7 +258,7 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
 
     let acres = frmCmdty['controls']['totalUnseededAcresOverride'].value
 
-    frmCmdty.controls['totalUnseededAcresOverride'].setValue(roundUpDecimalAcres(acres))
+    frmCmdty.controls['totalUnseededAcresOverride'].setValue(roundUpDecimal(acres,1))
 
     this.isMyFormDirty()
   }

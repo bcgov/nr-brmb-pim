@@ -157,8 +157,10 @@ export class LandingPageComponent implements OnInit {
 
       if (uwContract.insurancePlanId == INSURANCE_PLAN.GRAIN) {
         resourcesRoute = ResourcesRoutes.INVENTORY_GRAIN_UNSEEDED
-      } else {
+      } else if (uwContract.insurancePlanId == INSURANCE_PLAN.FORAGE){
         resourcesRoute = ResourcesRoutes.INVENTORY_FORAGE
+      } else if (uwContract.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+        resourcesRoute = ResourcesRoutes.INVENTORY_BERRIES
       }
 
       let inventoryLink = "/" + resourcesRoute + 

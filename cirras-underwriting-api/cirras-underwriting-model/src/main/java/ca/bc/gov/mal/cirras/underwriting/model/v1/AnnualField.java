@@ -23,6 +23,9 @@ public interface AnnualField extends Serializable {
 
 	public String getOtherLegalDescription();
 	public void setOtherLegalDescription(String otherLegalDescription);
+	
+	public String getPrimaryPropertyIdentifier();
+	public void setPrimaryPropertyIdentifier(String primaryPropertyIdentifier);
 
 	public Integer getDisplayOrder();
 	public void setDisplayOrder(Integer displayOrder);
@@ -30,12 +33,18 @@ public interface AnnualField extends Serializable {
 	public Integer getCropYear();
 	public void setCropYear(Integer cropYear);
 	
+	public Boolean getIsLeasedInd();
+	public void setIsLeasedInd(Boolean isLeasedInd);
+
+	public String getFieldLocation();
+	public void setFieldLocation(String fieldLocation);
+	
 	public String getLandUpdateType();
 	public void setLandUpdateType(String landUpdateType);
 	
 	public Integer getTransferFromGrowerContractYearId();
 	public void setTransferFromGrowerContractYearId(Integer growerTransferFromContractYearId);
-
+	
 	public List<InventoryField> getPlantings();
 	public void setPlantings(List<InventoryField> plantings);
 

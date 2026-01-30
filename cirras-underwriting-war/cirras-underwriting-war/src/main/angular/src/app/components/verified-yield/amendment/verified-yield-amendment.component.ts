@@ -8,7 +8,7 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
 import { makeNumberOnly, makeTitleCase } from 'src/app/utils';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
-import { roundUpDecimalAcres, roundUpDecimalYield } from '../../inventory/inventory-common';
+import { roundUpDecimal } from '../../inventory/inventory-common';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 
 @Component({
@@ -93,7 +93,7 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
     if (this.amendmentFormGroup.value.yieldPerAcre == "") {
       yieldPerAcre = null
     } else {
-      yieldPerAcre = roundUpDecimalYield(this.amendmentFormGroup.value.yieldPerAcre, 3)
+      yieldPerAcre = roundUpDecimal(this.amendmentFormGroup.value.yieldPerAcre, 3)
     }
 
     this.amendment.yieldPerAcre = yieldPerAcre
@@ -103,7 +103,7 @@ export class VerifiedYieldAmendmentComponent implements OnChanges {
   }
 
   updateAcres() {
-    let acres = roundUpDecimalAcres(this.amendmentFormGroup.value.acres) 
+    let acres = roundUpDecimal(this.amendmentFormGroup.value.acres, 1) 
     this.amendment.acres = parseFloat(acres.toString()) || null;
     this.amendmentFormGroup.controls['acres'].setValue(acres)
 

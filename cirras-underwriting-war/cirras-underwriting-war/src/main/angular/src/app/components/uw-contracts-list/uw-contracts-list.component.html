@@ -195,7 +195,7 @@
                             </a> 
 
                             <a *ngIf="userCanAccessInventory(item)" (click)="goToLink(item, 'seeded')">
-                                <mat-icon title="Seeded Inventory" svgIcon="seeded"></mat-icon>
+                                <mat-icon title="{{ item.insurancePlanId == 4 ? 'Seeded Inventory' : 'Inventory' }}" svgIcon="seeded"></mat-icon>
                             </a> 
 
                             <a *ngIf="userCanAccessDop(item)" (click)="goToLink(item, 'dop')">

@@ -1,14 +1,14 @@
 import { ChangeDetectorRef } from "@angular/core"
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl } from "@angular/forms"
-import { InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
+import { AnnualFieldRsrc, InventoryBerries, InventoryField, InventorySeededForage, InventorySeededGrain, InventoryUnseeded, UnderwritingComment } from "@cirras/cirras-underwriting-api"
 import { AnnualField, CropVarietyCommodityType } from "src/app/conversion/models"
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from "src/app/utils/constants"
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
-import { AddLandComponent, AddLandPopupData } from "./add-land/add-land.component";
 import { MatDialog } from "@angular/material/dialog";
-import { EditLandComponent } from "./edit-land/edit-land.component";
-import { addUwCommentsObject, getUniqueKey } from 'src/app/utils';
+import { EditLegalLandInInventoryComponent } from "./edit-legal-land/edit-legal-land.component";
+import { addUwCommentsObject, getUniqueKey, makeTitleCase } from 'src/app/utils';
 import { RemoveFieldComponent, RemoveFieldPopupData } from "./remove-field/remove-field.component"
+import { AddFieldComponent, AddLandPopupData } from "./add-field/add-field.component"
 
 export interface CropVarietyOptionsType {
   cropCommodityId: string;
@@ -64,9 +64,12 @@ export function addAnnualFieldObject (field: AnnualField, fldPlantings: UntypedF
     displayOrder:          [ field.displayOrder ],
     fieldId:               [ field.fieldId ],
     fieldLabel:            [ field.fieldLabel ],
+    fieldLocation:         [ field.fieldLocation],
     landUpdateType:        [],
     legalLandId:           [ field.legalLandId ],
     otherLegalDescription: [ field.otherLegalDescription ],
+    primaryPropertyIdentifier:  [field.primaryPropertyIdentifier ], 
+    isLeasedInd:                [ field.isLeasedInd ], 
     transferFromGrowerContractYearId: [],
     plantings:             [ fldPlantings ],
     uwComments:            [ fldComments ],
@@ -161,26 +164,9 @@ export function getInventorySeededForagesObjForSave(inventorySeededForageGuid, i
   }
 }
 
-export function roundUpDecimalAcres(acres) {
-  
-  if (isNaN(parseFloat(acres))) {
-    //alert ("Acres must be a valid number" )
-    return ""
-  } else {
-
-    if (parseFloat(acres) % 1 == 0 ) {
-      // return integer if it's an integer, no zeros after the decimal point
-      return parseInt(acres)
-    }
-    
-    return parseFloat(acres).toFixed(1)
-  }
-}
-
-export function roundUpDecimalYield(numberToRound, precision) {
+export function roundUpDecimal(numberToRound, precision) {
 
   if (isNaN(parseFloat(numberToRound))) {
-    // alert ("Yield must be a valid number" )
     return ""
   } else {
 
@@ -259,8 +245,9 @@ export function updateComments(fieldId: number, uwComments: UnderwritingComment[
   })
 }
 
-export function deleteNewFormField(field, flds) {
-  if (field.value.isNewFieldUI) {
+//export function deleteNewFormField(field, flds) {
+export function deleteNewFormField(fieldId: number, isNewFieldUI: boolean, flds) {
+  if (isNewFieldUI) {
 
     let removedFieldDisplOrder = 99999;
     let indexToSplice = -1
@@ -272,7 +259,7 @@ export function deleteNewFormField(field, flds) {
 
       let dispOrder = flds['controls'][i].get("displayOrder").value
 
-      if (flds['controls'][i].get("fieldId").value  ==  field.value.fieldId) {
+      if (flds['controls'][i].get("fieldId").value  ==  fieldId) {
         
         removedFieldDisplOrder = flds['controls'][i].get("displayOrder").value
         indexToSplice = i;
@@ -353,11 +340,25 @@ export function AddNewFormField(fb: UntypedFormBuilder, flds: UntypedFormArray, 
       const dataToSend : AddLandPopupData = {
           fieldId: minFieldId - 1,
           fieldLabel: "",
+          fieldLocation: "",
           cropYear: cropYear,
           policyId: policyId,
           insurancePlanId: insurancePlanId,
           annualFieldDetailId: null,
-          otherLegalDescription: ""
+          otherLegalDescription: "",
+          primaryPropertyIdentifier: null,
+          landData: {
+            fieldId: null,
+            legalLandId: null,
+            fieldLabel: null,
+            fieldLocation: null,
+            primaryPropertyIdentifier: null,
+            otherLegalDescription: null,
+            landUpdateType: null,
+            transferFromGrowerContractYearId : null,
+            plantings: [],
+            uwComments: []
+          }
         }
   
       openAddEditLandPopup(fb, flds, dialog, dataToSend, maxDisplayOrder + 1, true, cdr)
@@ -379,14 +380,14 @@ export function openAddEditLandPopup(fb: UntypedFormBuilder, flds: UntypedFormAr
 
   if (isNewFieldUI) {
 
-    dialogRef = dialog.open(AddLandComponent , {
+    dialogRef = dialog.open(AddFieldComponent , {
       width: '800px',
       data: dataToSend
     });
 
   } else {
 
-    dialogRef = dialog.open(EditLandComponent, {
+    dialogRef = dialog.open(EditLegalLandInInventoryComponent, {
       width: '1110px',
       data: dataToSend,
       autoFocus: false // if you remove this line of code then the first radio button would be selected
@@ -557,6 +558,7 @@ export function replaceLegalLand(flds: UntypedFormArray, fieldId, landData, cdr:
 
   for (let i = 0 ; i < flds.length; i++) {
     if (flds['controls'][i].get("fieldId").value  ==  fieldId) {
+      flds.controls[i].get('primaryPropertyIdentifier').setValue(landData.primaryPropertyIdentifier);
       flds.controls[i].get('otherLegalDescription').setValue(landData.otherLegalDescription);
       flds.controls[i].get('legalLandId').setValue(landData.legalLandId);
       flds.controls[i].get('landUpdateType').setValue(landData.landUpdateType);
@@ -743,4 +745,175 @@ export function linkedPlantingTooltipCommon(fieldId, inventoryFieldGuid, invento
     }
   }
   return tooltip
+}
+
+export function addSimplePlantingObject(pltg: InventoryField, deletedByUserInd,
+                                        inventoryUnseeded: UntypedFormArray,
+                                        inventoryBerries: UntypedFormArray, 
+                                        inventorySeededForages: UntypedFormArray,
+                                        inventorySeededGrains: UntypedFormArray) {
+
+  return {
+    inventoryFieldGuid:                     [ pltg.inventoryFieldGuid ],
+    insurancePlanId:                        [ pltg.insurancePlanId ],
+    fieldId:                                [ pltg.fieldId ],
+    lastYearCropCommodityId:                [ pltg.lastYearCropCommodityId ],
+    lastYearCropCommodityName:              [ pltg.lastYearCropCommodityName ],
+    lastYearCropVarietyId:                  [ pltg.lastYearCropVarietyId ],
+    lastYearCropVarietyName:                [ pltg.lastYearCropVarietyName ],
+    cropYear:                               [ pltg.cropYear ],
+    plantingNumber:                         [ pltg.plantingNumber ],
+    isHiddenOnPrintoutInd:                  [ pltg.isHiddenOnPrintoutInd ],
+    underseededCropVarietyId:               [ pltg.underseededCropVarietyId ],
+    underseededCropVarietyName:             [ pltg.underseededCropVarietyName ],
+    underseededAcres:                       [ pltg.underseededAcres ],
+    underseededInventorySeededForageGuid:   [ pltg.underseededInventorySeededForageGuid ],
+    inventoryUnseeded:                      [ inventoryUnseeded ],
+    inventoryBerries:                       [ inventoryBerries ],
+    inventorySeededForages:                 [ inventorySeededForages ],
+    inventorySeededGrains:                  [ inventorySeededGrains ],
+    linkedPlanting:                         [ pltg.linkedPlanting ],
+    deletedByUserInd:                       [ deletedByUserInd ]
+  }
+}
+
+
+export function addBerriesObject(inventoryFieldGuid, inventoryBerries: InventoryBerries) {
+  return {
+    inventoryBerriesGuid: [ (inventoryBerries && inventoryBerries.inventoryBerriesGuid ) ? 
+                                  inventoryBerries.inventoryBerriesGuid : 
+                                  "newGUID_" + getUniqueKey().toString() ] , // create a local unique key which won't be sent to the backend
+    inventoryFieldGuid:       [ (inventoryBerries && inventoryBerries.inventoryFieldGuid) ? inventoryBerries.inventoryFieldGuid : inventoryFieldGuid ],
+    cropCommodityId:          [ (inventoryBerries && inventoryBerries.cropCommodityId) ? inventoryBerries.cropCommodityId : CROP_COMMODITY_UNSPECIFIED.ID ],
+    cropVarietyCtrl:          [ { 
+                                  cropVarietyId: ( inventoryBerries && inventoryBerries.cropVarietyId) ? inventoryBerries.cropVarietyId : CROP_COMMODITY_UNSPECIFIED.ID, 
+                                  varietyName: ( inventoryBerries && inventoryBerries.cropVarietyName) ? inventoryBerries.cropVarietyName : CROP_COMMODITY_UNSPECIFIED.NAME
+                                } ],
+    plantedYear:              [ (inventoryBerries && inventoryBerries.plantedYear) ? inventoryBerries.plantedYear : null],
+    plantedAcres:             [ (inventoryBerries && inventoryBerries.plantedAcres) ? inventoryBerries.plantedAcres : null],
+    rowSpacing:               [ (inventoryBerries && inventoryBerries.rowSpacing) ? inventoryBerries.rowSpacing : null],
+    plantSpacing:             [ (inventoryBerries && inventoryBerries.plantSpacing) ? inventoryBerries.plantSpacing : null],
+    totalPlants:              [ (inventoryBerries && inventoryBerries.totalPlants) ? inventoryBerries.totalPlants : null],
+    isQuantityInsurableInd:   [ (!inventoryBerries || inventoryBerries.isQuantityInsurableInd == null) ? false : inventoryBerries.isQuantityInsurableInd ],  // defaults to false
+    isPlantInsurableInd:      [ (!inventoryBerries || inventoryBerries.isPlantInsurableInd == null) ? false : inventoryBerries.isPlantInsurableInd ],  // defaults to false
+    plantInsurabilityTypeCode: [ (inventoryBerries && inventoryBerries.plantInsurabilityTypeCode) ? inventoryBerries.plantInsurabilityTypeCode : null],
+    bogId:                    [ (inventoryBerries && inventoryBerries.bogId) ? inventoryBerries.bogId : null],
+    bogMowedDate:             [ (inventoryBerries && inventoryBerries.bogMowedDate) ? getMonthAndYear(inventoryBerries.bogMowedDate) : null ],
+    bogRenovatedDate:         [ (inventoryBerries && inventoryBerries.bogRenovatedDate) ? getMonthAndYear(inventoryBerries.bogRenovatedDate) : null ],
+    isHarvestedInd:           [ (!inventoryBerries || inventoryBerries.isHarvestedInd == null) ? false : inventoryBerries.isHarvestedInd ], 
+    deletedByUserInd:         [false]
+  }
+}
+
+export function getMonthAndYear(myDateStr) {
+
+  let myDate  = new Date(myDateStr)
+
+  let month = (myDate.getMonth() + 1).toString()
+
+  if (month.length < 2 ){
+    month = "0" + month
+  }
+
+  let year = ((myDate.getFullYear()).toString()).slice(-2)
+
+  return month + "/" + year
+}
+
+export function getDefaultInventoryBerries(inventoryBerriesGuid, inventoryFieldGuid, selectedCommodity) {
+  return {
+        inventoryBerriesGuid: inventoryBerriesGuid,
+        inventoryFieldGuid: inventoryFieldGuid,
+        cropCommodityId: selectedCommodity,
+        cropVarietyId: null,
+        plantedYear: null,
+        plantedAcres: null,
+        rowSpacing: null,
+        plantSpacing: null,
+        totalPlants: null,
+        isQuantityInsurableInd: false,
+        isPlantInsurableInd: false,
+        plantInsurabilityTypeCode: null,
+        bogId:          null,
+        bogMowedDate:    null,
+        bogRenovatedDate: null,
+        isHarvestedInd:  false, 
+        cropCommodityName: null,
+        cropVarietyName: null,
+        deletedByUserInd: false
+      }
+}
+
+export function getDefaultPlanting(inventoryFieldGuid, insurancePlanId, fieldId, cropYear, plantingNumber, inventoryBerries, inventorySeededGrains, inventorySeededForages) {
+  return {
+        inventoryFieldGuid: inventoryFieldGuid,
+        insurancePlanId: insurancePlanId,
+        fieldId: fieldId,
+        lastYearCropCommodityId: null,
+        lastYearCropCommodityName: null,
+        lastYearCropVarietyId: null,
+        lastYearCropVarietyName: null,
+        cropYear: cropYear,
+        plantingNumber: plantingNumber, 
+        isHiddenOnPrintoutInd: false, 
+        underseededCropVarietyId: null, 
+        underseededCropVarietyName: null, 
+        underseededAcres: null,
+        underseededInventorySeededForageGuid: null,
+        inventoryUnseeded: null,
+        inventoryBerries: inventoryBerries,
+        linkedPlanting: null,
+        inventorySeededGrains: inventorySeededGrains,
+        inventorySeededForages: inventorySeededForages
+      }
+    }
+    
+export function createNewAnnualFieldObject(fieldId, legalLandId, fieldLabel, otherLegalDescription, primaryPropertyIdentifier,
+                                        fieldLocation, displayOrder, cropYear, isLeasedInd, landUpdateType, transferFromGrowerContractYearId,
+                                        plantings, uwComments) {
+  return {
+    links: [],
+    contractedFieldDetailId: null,
+    annualFieldDetailId: null,
+    fieldId: fieldId,
+    legalLandId: legalLandId,
+    fieldLabel: fieldLabel, 
+    otherLegalDescription: otherLegalDescription,
+    primaryPropertyIdentifier: primaryPropertyIdentifier,
+    fieldLocation: fieldLocation, 
+    displayOrder: displayOrder, 
+    cropYear: cropYear,
+    isLeasedInd: isLeasedInd, 
+    landUpdateType: landUpdateType,
+    transferFromGrowerContractYearId: transferFromGrowerContractYearId,
+    plantings: plantings,
+    dopYieldFieldGrainList: [],
+    dopYieldFieldForageList: [],
+    uwComments: uwComments, 
+    policies: [],
+    verifiableCommodities: [],
+    verifiableVarieties: [],
+    etag: '',
+    type: '',
+    isNewFieldUI: true,
+    deletedByUserInd: false
+  }
+
+}
+
+export function getThePolicyAndPlan(field: AnnualFieldRsrc){
+    let policyAndPlan = ""
+
+    if (field && field.policies) {
+
+      field.policies.forEach(policy => {
+
+        if ( policyAndPlan.length > 0 ) {
+          policyAndPlan = policyAndPlan + "\n" // add a line break
+        }
+        policyAndPlan = policyAndPlan + policy.policyNumber + " (" + makeTitleCase(policy.insurancePlanName) + ")"
+      })
+    } 
+
+    return policyAndPlan
 }

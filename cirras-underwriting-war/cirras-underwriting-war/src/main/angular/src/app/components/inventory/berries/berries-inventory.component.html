@@ -1,0 +1,185 @@
+<div class="base-container bg-color-lightblue">
+    <div class="base-container flex-y"> 
+
+        <div class="policy-header-container" style="display: grid; grid-template-columns: auto 298px 170px 80px;">
+            <div class="grower-header">
+                {{ ( (growerContract && growerContract.growerName) ? growerContract.growerName : "" ) | titlecase}} 
+                ({{ ((inventoryContract && inventoryContract.insurancePlanName) ? inventoryContract.insurancePlanName : "" ) | titlecase }})
+                {{ (growerContract && growerContract.policyNumber) ? growerContract.policyNumber : "" }}   
+            </div>
+            <div style="display: grid; grid-template-columns: 28px 270px; ">
+                <!-- unsaved messages -->
+                <div *ngIf="isUnsaved">
+                    <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
+                </div>
+                <div *ngIf="isUnsaved" class="unsaved-changes">
+                    Unsaved Changes 
+                </div>
+                
+                <!-- hidden totals warning -->
+                <div *ngIf="isHiddenPlantingInTotals">
+                    <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
+                </div>
+                <div *ngIf="isHiddenPlantingInTotals" class="unsaved-changes">
+                    Hidden fields are included in the totals
+                </div>
+            </div>
+            <div matTooltip="Changes must be saved before download is possible.">
+                <button mat-raised-button class="secondary button-large-text" [disabled]="isUnsaved == true || !inventoryContract || !inventoryContract.inventoryContractGuid"
+                (click)="onPrint()">
+                    <mat-icon class="button-mat-icon">download</mat-icon>Download
+                </button>
+            </div>
+            <div>
+                <button 
+                    *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
+                    mat-raised-button 
+                    class="primary button-large-text" 
+                    [disabled]="!isUnsaved && inventoryContract?.inventoryContractGuid" 
+                    (click)="onSave()">
+                        Save
+                </button>
+            </div>
+        </div>
+
+    <cirras-grower-contract-header
+    [growerContract]="growerContract"
+    ></cirras-grower-contract-header>  
+
+    <!-- The policy has yield message -->
+    <!-- TODO -->
+    <!-- <div *ngIf="hasYieldData == true" class="message-container">
+        
+        <div class="has-yield-warning">
+            <mat-icon>warning</mat-icon>            
+            <span class="warning-message">
+                Inventory edits are not permitted when a policy has DOP data.  
+                If you need to update the inventory, delete the DOP data first.</span> 
+        </div>
+    </div> -->
+    <form [formGroup]="getViewModel().formGroup" (keydown.enter)="$event.preventDefault()">
+
+        <div class="plcy-inv-form-header" [ngStyle]="setFormSeededStyles()">
+            <div>
+                <h2>Berries Inventory</h2>
+                <p>Last Updated: {{ ((inventoryContract && inventoryContract.invUpdateTimestamp) ? inventoryContract.invUpdateTimestamp : "" ) | date }}</p>
+            </div>
+            <div class="plcy-frm-hdr-dropdown" [matTooltip]="selectedCommodityTooltip">
+                <!-- Commodities: -->
+                <mat-form-field appearance="outline" style="width: 150px;"
+                [ngStyle]="{'background-color': shouldHighlightCommodity() ? 'yellow' : '' }" >
+                    <mat-select formControlName="selectedCommodity" hideSingleSelectionIndicator="true" 
+                        (selectionChange)="commoditySelectionChanged()">
+                        <mat-option *ngFor="let option of cropCommodityOptions" [value]="option.cropCommodityId"
+                        >{{ option.commodityName | titlecase }}</mat-option>
+                    </mat-select>
+                    </mat-form-field>
+            </div>
+            <div><!-- empty div --></div>
+            <div matTooltip="Please select a commodity to add field">
+                <button *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
+                mat-raised-button class="secondary header-button"  
+                (click)="onAddNewField()"
+                [disabled]="!selectedCommodity">
+                    <mat-icon class="button-mat-icon">add</mat-icon>Add Field
+                </button>
+            </div>
+            <div>
+                <button *ngIf="!hasYieldData" 
+                    mat-raised-button 
+                    class="secondary header-button"  
+                    matTooltip="Clear unsaved changes"
+                    (click)="onCancel()">
+                    Clear Changes
+                </button>
+            </div>
+            <div class="vertical-line"></div>
+            <div>
+                <button *ngIf="securityUtilService.canDeleteInventory() && 
+                                inventoryContract && inventoryContract.inventoryContractGuid &&
+                                hasYieldData == false"  
+                    mat-raised-button 
+                    class="secondary header-button-red"  
+                    (click)="onDeleteInventory()">
+                    <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset Inventory
+                </button>
+            </div>
+        </div>
+
+        <!-- warning message - fields with no commodities -->
+        <div *ngIf="fieldsWithNoCommoditiesArray && fieldsWithNoCommoditiesArray.length > 0"  
+            class="field-with-no-cmdty-warnings-container" style="margin-bottom: 10px;">
+
+            <div class="field-with-no-cmdty-warning-messages" style="margin-bottom: 10px; margin-top: 10px;">
+                <div><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+                <div>
+                    The following fields have no commodities assigned to them. 
+                    They will be assigned Blueberry commodity as default commodity. 
+                    Please review these fields and change their commodities if needed, 
+                    using the Add Field and/or Remove Field → Remove commodity functionality.
+                </div>
+            </div>
+            <div class="field-with-no-cmdty-warnings-grid" style="margin-bottom: 10px;">
+                <div class="header border-left">Field ID</div>
+                <div class="header">Field Address</div>
+                <div class="header">Field / Bog Name</div>
+
+                <div *ngFor="let field of fieldsWithNoCommoditiesArray" style="display:contents">
+                    <div class="cell border-left">{{ field.fieldId }}</div>
+                    <div class="cell">{{ field.fieldLocation }}</div>
+                    <div class="cell">{{ field.fieldLabel }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
+
+            <berries-inventory-field-list
+                *ngIf="inventoryContract && inventoryContract.fields"
+                [fields]="inventoryContract.fields"
+                [fieldsFormArray]="getViewModel().formGroup.controls.fields"
+                [cropVarietyOptions]="cropVarietyOptions"
+                [selectedCommodity]="selectedCommodity"
+                [numComponentReloads]="numComponentReloads"
+                [policyId]="policyId">
+            </berries-inventory-field-list>
+
+        </div>
+
+        <!-- totals -->
+        <div *ngIf="inventoryContract && inventoryContract.inventoryContractCommodityBerries && inventoryContract.inventoryContractCommodityBerries.length > 0"
+            class="plcy-inv-cntrct" style="grid-template-columns: 500px 400px;">
+            
+            <div *ngIf="isUnsaved" class="message-container">
+                <div class="has-yield-warning">
+                    <mat-icon>warning</mat-icon>            
+                    <span class="warning-message">
+                        All Totals are calculated on save.</span> 
+                </div>
+            </div>
+            <div *ngIf="isUnsaved"></div>
+            
+            <div>
+                <berries-inventory-commodity-totals 
+                    *ngIf="showQuantityTotals()"
+                    [insurabilityType]="'quantity'"
+                    [inventoryContractCommodityBerries]="getBerryCommodityTotals()" 
+                    [selectedCommodity]="selectedCommodity">
+                </berries-inventory-commodity-totals>
+            </div>
+            <div>
+                <berries-inventory-commodity-totals 
+                    *ngIf="showPlantTotals()"
+                    [insurabilityType]="'plant'"
+                    [inventoryContractCommodityBerries]="getBerryCommodityTotals()" 
+                    [selectedCommodity]="selectedCommodity">
+                </berries-inventory-commodity-totals>
+            </div>
+        </div>
+
+       
+
+    </form>
+</div>
+</div>
+

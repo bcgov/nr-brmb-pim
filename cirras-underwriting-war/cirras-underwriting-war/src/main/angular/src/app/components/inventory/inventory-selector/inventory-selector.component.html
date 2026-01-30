@@ -20,4 +20,11 @@
       [cropCommodityList]="cropCommodityList"
     ></forage-inventory> 
 
+    <berries-inventory *ngIf="getInventoryType() == 'berries'"
+      [inventoryContract]="inventoryContract"
+      [growerContract]="growerContract"
+      [cropCommodityList]="cropCommodityList"
+      [isUnsaved]="isUnsaved"
+    ></berries-inventory> 
+
 </base-wrapper>

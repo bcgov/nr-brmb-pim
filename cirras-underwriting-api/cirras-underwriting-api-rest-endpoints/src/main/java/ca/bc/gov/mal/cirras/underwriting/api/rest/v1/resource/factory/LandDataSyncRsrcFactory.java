@@ -93,6 +93,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory implements Land
 
 		dto.setFieldId(model.getFieldId());
 		dto.setFieldLabel(model.getFieldLabel());
+		dto.setLocation(model.getFieldLocation());
 		dto.setActiveFromCropYear(model.getActiveFromCropYear());
 		dto.setActiveToCropYear(model.getActiveToCropYear());
 
@@ -104,6 +105,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory implements Land
 		
 		resource.setFieldId(dto.getFieldId());
 		resource.setFieldLabel(dto.getFieldLabel());
+		resource.setFieldLocation(dto.getLocation());
 		resource.setActiveFromCropYear(dto.getActiveFromCropYear());
 		resource.setActiveToCropYear(dto.getActiveToCropYear());
 
@@ -202,7 +204,12 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory implements Land
 		dto.setAnnualFieldDetailId(model.getAnnualFieldDetailId());
 		dto.setGrowerContractYearId(model.getGrowerContractYearId());
 		dto.setDisplayOrder(model.getDisplayOrder());
+		dto.setIsLeasedInd(notNull(model.getIsLeasedInd(), false));
 
+	}
+	
+	private Boolean notNull(Boolean value, Boolean defaultValue) {
+		return (value == null) ? defaultValue : value;
 	}
 
 	@Override
@@ -213,6 +220,7 @@ public class LandDataSyncRsrcFactory extends BaseResourceFactory implements Land
 		resource.setAnnualFieldDetailId(dto.getAnnualFieldDetailId());
 		resource.setGrowerContractYearId(dto.getGrowerContractYearId());
 		resource.setDisplayOrder(dto.getDisplayOrder());
+		resource.setIsLeasedInd(dto.getIsLeasedInd());
 
 		return resource;
 	}

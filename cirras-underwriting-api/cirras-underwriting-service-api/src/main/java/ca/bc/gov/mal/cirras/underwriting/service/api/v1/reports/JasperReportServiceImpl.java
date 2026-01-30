@@ -76,6 +76,12 @@ public class JasperReportServiceImpl implements JasperReportService
 		return reportContent;
 	}
 	
+	@Override
+	public byte[] generateInvBerriesReport(Map<String, Object> paramMap) throws JasperReportServiceException {
+		byte[] reportContent = generateJasperReportInMemory("CUWS_Inventory_Berries", paramMap);		
+		return reportContent;
+	}
+	
 	private byte[] generateJasperReportInMemory(String reportName, Map<String, Object> paramMap) throws JasperReportServiceException
 	{
 		// Check config settings.

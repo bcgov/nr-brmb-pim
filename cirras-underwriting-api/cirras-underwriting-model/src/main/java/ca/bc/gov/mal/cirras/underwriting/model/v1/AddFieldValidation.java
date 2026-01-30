@@ -9,7 +9,7 @@ public interface AddFieldValidation<M extends Message> extends Serializable {
 
 	// Errors
 	public static final String FIELD_ALREADY_ON_POLICY_MSG = "This Field is already on this Policy. Please add a new planting instead.";
-	public static final String FIELD_ON_INCOMPATIBLE_PLAN_MSG = "This Field is associated with another plan other than Grain or Forage.";
+	public static final String FIELD_ON_INCOMPATIBLE_PLAN_MSG = "This Field is associated with another plan other than [insurancePlans].";
 	public static final String TRANSFER_POLICY_ID_NOT_EMPTY_MSG = "This Field is not on another Policy of the same plan in this year, but a Transfer From policy has been specified.";
 	public static final String TRANSFER_POLICY_ID_INCORRECT_MSG = "This Field is on another Policy of the same plan in this year, but the specified Transfer From policy does not match the expected policy.";
 	public static final String TRANSFER_POLICY_HAS_DOP_MSG = "This Field is on another Policy of the same plan in the same year with DOP data, please remove the DOP data associated with this field to allow the transfer to proceed.";

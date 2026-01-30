@@ -745,6 +745,7 @@ public class InventorySeededForageDaoTest {
 		newContractedFieldDetailDto.setContractedFieldDetailId(contractedFieldDetailId);
 		newContractedFieldDetailDto.setAnnualFieldDetailId(annualFieldDetailId);
 		newContractedFieldDetailDto.setDisplayOrder(1);
+		newContractedFieldDetailDto.setIsLeasedInd(false);
 		newContractedFieldDetailDto.setGrowerContractYearId(growerContractYearId);
 
 		ContractedFieldDetailDao contractedFieldDetailDao = persistenceSpringConfig.contractedFieldDetailDao();

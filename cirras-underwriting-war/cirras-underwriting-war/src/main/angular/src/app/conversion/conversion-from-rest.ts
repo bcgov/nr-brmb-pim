@@ -11,10 +11,12 @@ import {
   LegalLand,
   InventoryContractList,
   RiskArea,
-  RiskAreaList
+  RiskAreaList,
+  AnnualField
 } from "./models";
 
-import { CropCommodityListRsrc, CropCommodityRsrc, InventoryContractListRsrc, InventoryContractRsrc, LegalLandListRsrc, LegalLandRsrc, RiskAreaListRsrc, RiskAreaRsrc, UwContractListRsrc, UwContractRsrc } from "@cirras/cirras-underwriting-api";
+import { AnnualFieldRsrc, CropCommodityListRsrc, CropCommodityRsrc, InventoryContractListRsrc, InventoryContractRsrc, LegalLandListRsrc, LegalLandRsrc, RiskAreaListRsrc, RiskAreaRsrc, UwContractListRsrc, UwContractRsrc } from "@cirras/cirras-underwriting-api";
+import { convertToAnnualFieldRsrc } from "./conversion-to-rest";
 
 const EMPTY_ARRAY = [];
 
@@ -168,7 +170,8 @@ export function convertToUwContract(uwContract: any): UwContract {
 
       commodities: invContract.commodities,
       inventoryCoverageTotalForages: invContract.inventoryCoverageTotalForages,
-      fields: invContract.fields,
+      inventoryContractCommodityBerries: invContract.inventoryContractCommodityBerries,
+      fields: invContract.fields && invContract.fields.length > 0 ? invContract.fields.map(item => convertToAnnualField(item)) : EMPTY_ARRAY,
 
       etag: etag, //invContract.etag,
       type: invContract.type         
@@ -176,6 +179,17 @@ export function convertToUwContract(uwContract: any): UwContract {
     return ret;
   }
   
+export function convertToAnnualField (field: AnnualFieldRsrc) : AnnualField {
+    let fld = <AnnualFieldRsrc>field;
+  
+    let res: AnnualField = {
+      ...fld,
+      deletedByUserInd: false, // these two properties are only used in the ui
+      isNewFieldUI: false
+    }
+    
+    return res
+}
 
   
 export function convertToCropCommodityList(CropCommodityListRes: CropCommodityListRsrc): CropCommodityList {

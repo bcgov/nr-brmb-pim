@@ -29,10 +29,13 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 	private String fieldLabel;
 	private String otherLegalDescription;
 	private Integer displayOrder;
+	private Boolean isLeasedInd;
 	private Integer cropYear;
 	private Integer insurancePlanId;
 	
 	private String insurancePlanName;
+	private String primaryPropertyIdentifier;
+	private String fieldLocation;
 	
 	private List<InventoryFieldDto> plantings = new ArrayList<InventoryFieldDto>();
 
@@ -61,9 +64,12 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 		this.fieldLabel = dto.fieldLabel;
 		this.otherLegalDescription = dto.otherLegalDescription;
 		this.displayOrder = dto.displayOrder;
+		this.isLeasedInd = dto.isLeasedInd;
 		this.cropYear = dto.cropYear;
 		this.insurancePlanId = dto.insurancePlanId;
 		this.insurancePlanName = dto.insurancePlanName;
+		this.fieldLocation = dto.fieldLocation;
+		this.primaryPropertyIdentifier = dto.primaryPropertyIdentifier;
 
 		if ( dto.plantings != null ) {			
 			this.plantings = new ArrayList<>();
@@ -112,7 +118,7 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 			result = result&&dtoUtils.equals("annualFieldDetailId", annualFieldDetailId, other.annualFieldDetailId);
 			result = result&&dtoUtils.equals("growerContractYearId", growerContractYearId, other.growerContractYearId);
 			result = result&&dtoUtils.equals("displayOrder", displayOrder, other.displayOrder);
-			
+			result = result&&dtoUtils.equals("isLeasedInd", isLeasedInd, other.isLeasedInd);
 		}
 		
 		return result;
@@ -191,6 +197,14 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 		this.displayOrder = displayOrder;
 	}
 
+	public Boolean getIsLeasedInd() {
+		return isLeasedInd;
+	}
+
+	public void setIsLeasedInd(Boolean isLeasedInd) {
+		this.isLeasedInd = isLeasedInd;
+	}
+
 	public Integer getCropYear() {
 		return cropYear;
 	}
@@ -211,6 +225,22 @@ public class ContractedFieldDetailDto extends BaseDto<ContractedFieldDetailDto> 
 
 	public void setInsurancePlanName(String insurancePlanName) {
 		this.insurancePlanName = insurancePlanName;
+	}
+	
+	public String getFieldLocation() {
+		return fieldLocation;
+	}
+
+	public void setFieldLocation(String fieldLocation) {
+		this.fieldLocation = fieldLocation;
+	}
+	
+	public String getPrimaryPropertyIdentifier() {
+		return primaryPropertyIdentifier;
+	}
+
+	public void setPrimaryPropertyIdentifier(String primaryPropertyIdentifier) {
+		this.primaryPropertyIdentifier = primaryPropertyIdentifier;
 	}
 
 	public List<InventoryFieldDto> getPlantings() {

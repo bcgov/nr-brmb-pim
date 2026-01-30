@@ -61,6 +61,7 @@ public class AnnualFieldRolloverInvEndpointTest extends EndpointsTest {
 				topLevelEndpoints, 
 				legalLandId, 
 				null, //fieldId
+				null,
 				cropYear);
 
 		Assert.assertNotNull(searchResults);
@@ -189,6 +190,7 @@ public class AnnualFieldRolloverInvEndpointTest extends EndpointsTest {
 				topLevelEndpoints, 
 				legalLandId, 
 				null, //fieldId
+				null,
 				cropYear);
 
 		Assert.assertNotNull(searchResults);

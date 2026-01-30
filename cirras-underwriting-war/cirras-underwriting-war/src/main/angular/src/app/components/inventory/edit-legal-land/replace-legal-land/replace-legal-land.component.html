@@ -1,0 +1,66 @@
+        <!-- Warning #1 -->
+        <p *ngIf="showNewLegalLandMessage" class="location-warning">
+            <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
+            This {{ legalLandSearchBy }} does not exist but the system will create it.
+        </p>
+
+        <!-- Warning #2 -->
+        <p *ngIf="replaceLegalLandList?.isWarningFieldOnOtherPolicy" class="location-warning">
+            <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
+            {{ replaceLegalLandList.fieldOnOtherPolicyMsg.message }}
+        </p>
+
+        <!-- Warning #3 -->
+        <p *ngIf="legalLandList?.collection?.length > 0" class="location-warning">
+            Select an existing {{ legalLandSearchBy }} or choose to replace the {{ legalLandSearchBy }} with a new legal land.
+        </p>
+        <form [formGroup]="replaceLegalLandForm">
+            <mat-radio-group formControlName="legalLandIdSelected">
+                <div *ngIf="legalLandList?.collection?.length > 0" class="legal-land-container legal-land-info">
+                    <div class="border-left header border-top border-bottom padding"></div>
+                    <div class="border-left header border-top border-bottom padding">Legal Location</div>
+                    <div class="border-left header border-top border-bottom padding">Primary Identifier</div>
+                    <div class="border-left header border-top border-bottom border-right padding">Legal
+                        Description
+                    </div>
+                    <ng-container *ngFor="let element of legalLandList.collection">
+                        <div class="border-left border-bottom justify-center padding">
+                            <mat-radio-button [value]="element.legalLandId"
+                                (click)="sendLegalLandId(element.legalLandId, element.primaryPropertyIdentifier, element.otherDescription)"></mat-radio-button>
+                        </div>
+                        <div class="border-left border-bottom padding">
+                            {{ element.otherDescription }}
+                        </div>
+                        <div class="border-left border-bottom padding">
+                            {{ element.primaryPropertyIdentifier }}
+                        </div>
+                        <div class="border-left border-bottom border-right padding">
+                            {{ element.legalDescription }}
+                        </div>
+                    </ng-container>
+                    <div class="border-left border-bottom justify-center padding">
+                        <mat-radio-button [value]="-1"
+                            (click)="sendLegalLandId(-1, '', '')"></mat-radio-button>
+                    </div>
+                    <div class="border-left border-bottom border-right padding"
+                        style="grid-column-start:2; grid-column-end: 5;">
+                        Replace with new Legal Land
+                    </div>
+                </div>
+            </mat-radio-group>
+        </form>
+
+        <!-- Warning #4 -->
+        <field-list-with-message *ngIf="replaceLegalLandList?.isWarningOtherFieldsOnLegal && replaceLegalLandList?.otherFieldsOnLegalLandList?.length > 0"
+            [fieldList]="replaceLegalLandList.otherFieldsOnLegalLandList"
+            [message]="replaceLegalLandList.otherFieldsOnLegalMsg.message"
+            [insurancePlanId]="insurancePlanId">
+        </field-list-with-message>
+
+        <!-- Warning #5 -->
+        <legal-land-list-with-message *ngIf="replaceLegalLandList?.isWarningFieldHasOtherLegalLand"
+            [legalLandList]="replaceLegalLandList.otherLegalLandOfFieldList"
+            [message]="replaceLegalLandList.fieldHasOtherLegalLandMsg.message"
+            [insurancePlanId]="insurancePlanId"
+            [displayShortLegalDescription]="true">
+        </legal-land-list-with-message>

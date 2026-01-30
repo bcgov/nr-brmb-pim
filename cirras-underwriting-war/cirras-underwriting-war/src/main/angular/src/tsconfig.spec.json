@@ -5,13 +5,10 @@
     "module": "commonjs",
     "experimentalDecorators": true,
     "types": [
-      "jasmine",
-      "node",
-      "karma-viewport"
+      "node"
     ]
   },
   "files": [
-    "test.ts",
     "polyfills.ts"
   ],
   "include": [

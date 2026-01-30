@@ -491,6 +491,10 @@ export function setHttpHeaders(authToken) {
 
           resourceRoute = ResourcesRoutes.INVENTORY_FORAGE
           
+        } else if (item.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+
+          resourceRoute = ResourcesRoutes.INVENTORY_BERRIES
+          
         }
         
         router.navigate([resourceRoute, 
@@ -615,3 +619,11 @@ export function setHttpHeaders(authToken) {
   export function replaceNonAlphanumericCharacters(str: string) : string {
     return str.replace(/[^a-zA-Z0-9]/g, ' ').trim()
   }
+  
+  export function isInt(value) {
+    if (isNaN(value)) {
+      return false;
+    }
+    var x = parseFloat(value);
+    return (x | 0) === x;
+}

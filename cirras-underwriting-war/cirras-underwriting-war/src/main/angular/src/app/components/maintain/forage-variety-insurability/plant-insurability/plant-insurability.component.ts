@@ -16,7 +16,7 @@ export class PlantInsurabilityComponent implements OnInit {
   dataReceived: any;
   varietyPlantInsForm: UntypedFormGroup;
 
-  plantInsurabilityOptions = getCodeOptions("plant_insurability_type_code");  
+  plantInsurabilityOptions = getCodeOptions("forage_plant_insurability_type_code");  
 
   get titleLabel() {
     return `Edit Plant Insurability for ${this.dataReceived?.varietyName}`;

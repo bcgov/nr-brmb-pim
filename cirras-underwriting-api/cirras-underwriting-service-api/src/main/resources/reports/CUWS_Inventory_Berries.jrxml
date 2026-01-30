@@ -1,0 +1,891 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_Inventory_Berries" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dae8acde-d8f2-47e4-9e95-8f4ccdfb0fc5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="p_crop_year" class="java.lang.Integer"/>
+	<parameter name="p_insurance_plan_id" class="java.lang.Integer"/>
+	<parameter name="p_office_id" class="java.lang.Integer"/>
+	<parameter name="p_policy_status_code" class="java.lang.String"/>
+	<parameter name="p_policy_number" class="java.lang.String"/>
+	<parameter name="p_grower_info" class="java.lang.String"/>
+	<parameter name="p_grower_phone_number" class="java.lang.String"/>
+	<parameter name="p_sort_column" class="java.lang.String"/>
+	<parameter name="p_policy_ids" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select t.policy_id
+	, t.contract_id
+	, t.policy_number
+	, t.crop_year
+	, t.grower_number
+	, t.grower_name
+	, t.grower_address_line1
+	, t.grower_address_line2
+	, t.grower_city
+	, t.grower_province
+	, t.grower_postal_code
+	, t.grower_primary_name
+	, t.grower_primary_phone
+	, t.grower_primary_email
+	, t.inventory_contract_guid
+	, t.inv_update_timestamp
+	, count(case when t.commodity_name = 'BLUEBERRY' then t.inventory_field_guid else null end) as total_blueberry_plantings
+	, count(case when t.commodity_name = 'RASPBERRY' then t.inventory_field_guid else null end) as total_raspberry_plantings
+	, count(case when t.commodity_name = 'STRAWBERRY' then t.inventory_field_guid else null end) as total_strawberry_plantings
+	, count(case when t.commodity_name = 'CRANBERRY' then t.inventory_field_guid else null end) as total_cranberry_plantings
+	, count(t.inventory_field_guid) as total_plantings
+    , case when $P{p_sort_column} = 'growerName' then t.grower_name
+	       when $P{p_sort_column} = 'policyNumber' then t.policy_number
+	       else t.policy_number
+      end as sort_column
+from (
+	select p.policy_id
+		, p.contract_id
+		, p.policy_number
+		, p.crop_year
+		, g.grower_number
+		, g.grower_name
+		, g.grower_address_line1
+		, g.grower_address_line2
+		, g.grower_city
+		, g.grower_province
+		, g.grower_postal_code
+		, prim_contact.grower_primary_name
+		, prim_contact.grower_primary_phone
+		, prim_contact.grower_primary_email
+		, ic.inventory_contract_guid
+		, ic.inv_update_timestamp
+		, ifd.inventory_field_guid
+		, ib.crop_commodity_id
+		, cc.commodity_name
+	from policy p
+	join grower g on g.grower_id = p.grower_id
+	left join (select pgc.grower_id,
+			  pc.first_name || ' ' || pc.last_name as grower_primary_name,
+			  pcp.phone_number as grower_primary_phone,
+			  pce.email_address as grower_primary_email
+		   from grower_contact pgc
+		   join contact pc ON pc.contact_id = pgc.contact_id
+		   left join contact_email pce on pce.contact_id = pc.contact_id
+					     and pce.is_primary_email_ind = 'Y'
+					     and now() between pce.effective_date and pce.expiry_date
+		   left join contact_phone pcp on pcp.contact_id = pc.contact_id
+					     and pcp.is_primary_phone_ind = 'Y'
+					     and now() between pcp.effective_date and pcp.expiry_date
+		   where pgc.is_primary_contact_ind = 'Y'
+        ) prim_contact on prim_contact.grower_id = g.grower_id
+	join grower_contract_year gcy on gcy.contract_id = p.contract_id 
+								 and gcy.crop_year = p.crop_year
+	join inventory_contract ic on ic.contract_id = gcy.contract_id
+							  and ic.crop_year = gcy.crop_year
+	join contracted_field_detail cfd on cfd.grower_contract_year_id = gcy.grower_contract_year_id
+	join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+	join field f on afd.field_id = f.field_id
+	left join legal_land ll on ll.legal_land_id = afd.legal_land_id
+	join inventory_field ifd on ifd.field_id = f.field_id
+							and ifd.insurance_plan_id = gcy.insurance_plan_id
+							and ifd.crop_year = afd.crop_year
+	join inventory_berries ib on ib.inventory_field_guid = ifd.inventory_field_guid
+	join crop_commodity cc on cc.crop_commodity_id = ib.crop_commodity_id
+	where ifd.is_hidden_on_printout_ind = 'N'
+	  and $P{p_policy_ids} is not null and char_length($P{p_policy_ids}) > 0
+	  and p.policy_id::text in (select regexp_split_to_table($P{p_policy_ids}, ','))  
+	union
+	--POLICY AND FIELDS WITH FILTER
+	select distinct p.policy_id
+		, p.contract_id
+		, p.policy_number
+		, p.crop_year
+		, g.grower_number
+		, g.grower_name
+		, g.grower_address_line1
+		, g.grower_address_line2
+		, g.grower_city
+		, g.grower_province
+		, g.grower_postal_code
+		, prim_contact.grower_primary_name
+		, prim_contact.grower_primary_phone
+		, prim_contact.grower_primary_email
+		, ic.inventory_contract_guid
+		, ic.inv_update_timestamp
+		, ifd.inventory_field_guid
+		, ib.crop_commodity_id
+		, cc.commodity_name
+	from policy p
+	join grower g on g.grower_id = p.grower_id
+	left join (select pgc.grower_id,
+			  pc.first_name || ' ' || pc.last_name as grower_primary_name,
+			  pcp.phone_number as grower_primary_phone,
+			  pce.email_address as grower_primary_email
+		   from grower_contact pgc
+		   join contact pc ON pc.contact_id = pgc.contact_id
+		   left join contact_email pce on pce.contact_id = pc.contact_id
+					     and pce.is_primary_email_ind = 'Y'
+					     and now() between pce.effective_date and pce.expiry_date
+		   left join contact_phone pcp on pcp.contact_id = pc.contact_id
+					     and pcp.is_primary_phone_ind = 'Y'
+					     and now() between pcp.effective_date and pcp.expiry_date
+		   where pgc.is_primary_contact_ind = 'Y'
+        ) prim_contact on prim_contact.grower_id = g.grower_id
+	join grower_contract_year gcy on gcy.contract_id = p.contract_id 
+								 and gcy.crop_year = p.crop_year
+	join inventory_contract ic on ic.contract_id = gcy.contract_id
+							  and ic.crop_year = gcy.crop_year
+	join contracted_field_detail cfd on cfd.grower_contract_year_id = gcy.grower_contract_year_id
+	join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+	join field f on afd.field_id = f.field_id
+	left join legal_land ll on ll.legal_land_id = afd.legal_land_id
+	join inventory_field ifd on ifd.field_id = f.field_id
+							and ifd.insurance_plan_id = gcy.insurance_plan_id
+							and ifd.crop_year = afd.crop_year
+	join inventory_berries ib on ib.inventory_field_guid = ifd.inventory_field_guid
+	join crop_commodity cc on cc.crop_commodity_id = ib.crop_commodity_id
+	left join grower_contact gc on gc.grower_id = g.grower_id 
+	left join contact c on c.contact_id = gc.contact_id
+	left join contact_email ce on ce.contact_id = c.contact_id
+	left join contact_phone cp on cp.contact_id = c.contact_id
+	where ifd.is_hidden_on_printout_ind = 'N'
+	and ($P{p_policy_ids} is null or char_length($P{p_policy_ids}) = 0)
+		and
+		(
+			case
+				when $P{p_crop_year} is not null then p.crop_year = $P{p_crop_year}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_insurance_plan_id} is not null then p.insurance_plan_id = $P{p_insurance_plan_id}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_policy_status_code} is not null and char_length($P{p_policy_status_code}) > 0 then p.policy_status_code = $P{p_policy_status_code}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_office_id} is not null then p.office_id = $P{p_office_id}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_policy_number} is not null and char_length($P{p_policy_number}) > 0 then p.policy_number like $P{p_policy_number}
+				else true
+			end
+		) 
+		and 
+		(
+			case
+				when $P{p_grower_info} is not null and char_length($P{p_grower_info}) > 0
+				then 
+					g.grower_number::text like $P{p_grower_info}
+					or upper(g.grower_name) like $P{p_grower_info}
+					or upper(ce.email_address) like $P{p_grower_info}
+					or
+					(
+						case
+						when $P{p_grower_phone_number} is not null and char_length($P{p_grower_phone_number}) > 0
+						then 
+							cp.phone_number like $P{p_grower_phone_number}
+						else false
+					end
+					)
+				else true
+			end
+		) 
+) t
+group by t.policy_id
+	   , t.contract_id
+	   , t.policy_number
+	   , t.crop_year
+	   , t.grower_number
+	   , t.grower_name
+	   , t.grower_address_line1
+	   , t.grower_address_line2
+	   , t.grower_city
+	   , t.grower_province
+	   , t.grower_postal_code
+	   , t.grower_primary_name
+	   , t.grower_primary_phone
+	   , t.grower_primary_email
+	   , t.inventory_contract_guid
+	   , t.inv_update_timestamp
+order by sort_column,
+         t.policy_number]]>
+	</queryString>
+	<field name="policy_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="policy_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="policy_id"/>
+	</field>
+	<field name="contract_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="contract_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="contract_id"/>
+	</field>
+	<field name="policy_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="policy_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="policy_number"/>
+	</field>
+	<field name="crop_year" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="crop_year"/>
+		<property name="com.jaspersoft.studio.field.label" value="crop_year"/>
+	</field>
+	<field name="grower_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="grower_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_number"/>
+	</field>
+	<field name="grower_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_name"/>
+	</field>
+	<field name="grower_address_line1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_address_line1"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_address_line1"/>
+	</field>
+	<field name="grower_address_line2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_address_line2"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_address_line2"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="grower_city" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_city"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_city"/>
+	</field>
+	<field name="grower_province" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_province"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_province"/>
+	</field>
+	<field name="grower_postal_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_postal_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_postal_code"/>
+	</field>
+	<field name="grower_primary_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_primary_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_primary_name"/>
+	</field>
+	<field name="grower_primary_phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_primary_phone"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_primary_phone"/>
+	</field>
+	<field name="grower_primary_email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grower_primary_email"/>
+		<property name="com.jaspersoft.studio.field.label" value="grower_primary_email"/>
+	</field>
+	<field name="inventory_contract_guid" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inventory_contract_guid"/>
+		<property name="com.jaspersoft.studio.field.label" value="inventory_contract_guid"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="inv_update_timestamp" class="java.util.Date">
+		<property name="com.jaspersoft.studio.field.name" value="inv_update_timestamp"/>
+		<property name="com.jaspersoft.studio.field.label" value="inv_update_timestamp"/>
+	</field>
+	<field name="total_blueberry_plantings" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="total_blueberry_plantings"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_blueberry_plantings"/>
+	</field>
+	<field name="total_raspberry_plantings" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="total_raspberry_plantings"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_raspberry_plantings"/>
+	</field>
+	<field name="total_strawberry_plantings" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="total_strawberry_plantings"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_strawberry_plantings"/>
+	</field>
+	<field name="total_cranberry_plantings" class="java.lang.Integer"/>
+	<field name="total_plantings" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="total_plantings"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_plantings"/>
+	</field>
+	<field name="sort_column" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sort_column"/>
+		<property name="com.jaspersoft.studio.field.label" value="sort_column"/>
+	</field>
+	<group name="Group1" isStartNewPage="true" isResetPageNumber="true" keepTogether="true">
+		<groupExpression><![CDATA[$F{policy_id} + $F{contract_id} + $F{policy_number} + $F{crop_year} + $F{grower_number} + $F{grower_name} + $F{grower_address_line1}  + $F{grower_address_line2} + $F{grower_city} + $F{grower_province} + $F{grower_postal_code} + $F{grower_primary_name} + $F{grower_primary_phone} + $F{grower_primary_email} + $F{inventory_contract_guid} + $F{inv_update_timestamp} + $F{total_blueberry_plantings} + $F{total_raspberry_plantings} + $F{total_strawberry_plantings} + $F{total_plantings} + $F{sort_column}]]></groupExpression>
+		<groupHeader>
+			<band height="220">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<staticText>
+					<reportElement x="0" y="5" width="180" height="30" uuid="8b1039e3-68dd-4fee-a509-473586d7acf0"/>
+					<textElement verticalAlignment="Bottom">
+						<font fontName="SansSerif" size="16"/>
+					</textElement>
+					<text><![CDATA[Production Insurance]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="35" width="220" height="15" uuid="db02de1f-c69a-4d57-a87c-88ffe7f842f3">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<text><![CDATA[BC Ministry of Agriculture and Food]]></text>
+				</staticText>
+				<image>
+					<reportElement x="229" y="8" width="320" height="43" uuid="16ba5262-6bd1-4ca7-83b9-373352bf6ad0">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<imageExpression><![CDATA["images/SCAP_BCID_Can_Lockup.png"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement x="99" y="54" width="350" height="25" uuid="ae39bc47-93f8-4815-9fcb-03001d82ec4e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="16" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Summary of Berry Field Inventory]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="85" width="378" height="15" uuid="d3d32e03-2780-4f96-a6a1-14338afc2292">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Grower: " + $F{grower_name}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="100" width="378" height="15" uuid="79c7ebf6-1747-40aa-90a9-5e8ba3efb495">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Mailing Address: " + 
+	($F{grower_address_line1} != null ? $F{grower_address_line1}: "") +  
+	($F{grower_address_line2} != null ? " " + $F{grower_address_line2} : "") + 
+	($F{grower_city} != null ? " " + $F{grower_city}  : "") + 
+	($F{grower_province} != null ? " " + $F{grower_province}  : "") + 
+	($F{grower_postal_code} != null ? " " + $F{grower_postal_code} : "")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="115" width="378" height="15" uuid="6ed93671-4957-4dc6-8ac8-d3f17cb8c070">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Phone: " + (
+	$F{grower_primary_phone} != null ? 
+		($F{grower_primary_phone}.length() == 10 ? 
+			($F{grower_primary_phone}.substring(0, 3) + "-" + $F{grower_primary_phone}.substring(3, 6) + "-" + $F{grower_primary_phone}.substring(6, 10)) : 
+			$F{grower_primary_phone}
+		) : 
+	""
+)]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="130" width="378" height="15" uuid="b8c60ad6-d584-4fd4-89fa-5b48a52ad197">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA["E-Mail: " + ($F{grower_primary_email} != null ? $F{grower_primary_email} : "")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="145" width="378" height="15" uuid="d85e7cb6-2b0e-462f-aeee-0dac6664edc3">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Contact: " + ($F{grower_primary_name} != null ? $F{grower_primary_name} : "")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="419" y="85" width="136" height="15" uuid="b21cbc27-34b1-4301-99ff-56ca3f5a8433">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Policy: " + $F{policy_number}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="455" y="100" width="100" height="15" uuid="e7ff485d-7ce4-46bb-aa99-92dd7bb4cdcd">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Crop Year: " + $F{crop_year}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="419" y="115" width="136" height="15" uuid="db2bc2c6-d8e4-42fa-bd0b-6350df3af88b">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Updated: " + new SimpleDateFormat("MMM dd, yyyy").format($F{inv_update_timestamp})]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="StretchHeight">
+					<reportElement x="0" y="160" width="555" height="30" uuid="4158b9ca-8070-4e07-8594-0afda8dca01b">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Bottom">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA["The following information is submitted in support of the Continuous Production Insurance contract and is effective for the crop year commencing:"]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="190" width="555" height="15" uuid="a87edb68-6b63-4597-b816-b55ea88de7b4">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA["November 1, " + ($F{crop_year} - 1) + " Raspberry, Blueberry, Cranberry Crop, and Strawberry Plant"]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="23" y="205" width="532" height="15" uuid="7e538ab0-f265-4cbb-9dbf-cbc8c2b6414c">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA["April 1, " + $F{crop_year} + " Strawberry Crop"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="74" splitType="Prevent">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<property name="com.jaspersoft.studio.layout"/>
+				<rectangle radius="1">
+					<reportElement x="0" y="0" width="555" height="74" uuid="562b0582-0569-4724-bc02-690bdbf1616f">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="2" y="2" width="55" height="15" uuid="4b1fc641-fd35-46b6-9cb3-8e862d14a7c4">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Declaration]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="57" y="2" width="498" height="15" uuid="be046b39-6f2a-4afa-96b1-5aefeb5d596b">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font size="8" isBold="false" isItalic="true"/>
+					</textElement>
+					<text><![CDATA[(you must offer for insurance all of each crop you wish to insure)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="2" y="17" width="553" height="30" uuid="f2839b4d-b4b9-4056-bb8c-cb4b96dc3e27">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement markup="none">
+						<font size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[All information provided is, to the best of my knowledge and belief, true and correct. I have an insurable interest in the subject matter and agree to abide by the terms of the contract of which this application forms a part.]]></text>
+				</staticText>
+				<line>
+					<reportElement x="2" y="57" width="100" height="1" uuid="fed5bc4b-694f-4b1d-b1c8-158fc81e0afc">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+				</line>
+				<staticText>
+					<reportElement x="2" y="59" width="100" height="15" uuid="033d8aae-6910-4825-bea1-faf69e702c8e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[DATE]]></text>
+				</staticText>
+				<line>
+					<reportElement x="122" y="57" width="225" height="1" uuid="35dcd5e5-3c50-487f-a886-acc4995cbb90">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+				</line>
+				<staticText>
+					<reportElement x="122" y="59" width="225" height="15" uuid="44d4a520-babe-4a60-8c74-25155a6fe51c">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[PRINT NAME OF APPLICANT]]></text>
+				</staticText>
+				<line>
+					<reportElement x="400" y="57" width="155" height="1" uuid="6d0bc01d-b80e-4851-b16c-a9aad7b747c3">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+				</line>
+				<staticText>
+					<reportElement x="400" y="59" width="155" height="15" uuid="c98cbda4-108d-4279-b3c5-cb67abaf0f05">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[SIGNATURE OF APPLICANT]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<pageHeader>
+		<band height="55">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="22" width="100" height="20" uuid="3a2163a2-d8ed-4920-8b73-166b051bbea6">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Crop Year: " + $F{crop_year}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="378" height="20" uuid="78361d23-c69c-4fd6-933e-cd78c10ee0f3">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Grower: " + $F{grower_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="419" y="0" width="136" height="20" uuid="bdbc7d5a-d973-460a-8853-fa5a7bd304f8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Policy: " + $F{policy_number}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="419" y="22" width="136" height="20" uuid="0adcdda6-8f8b-47b3-b470-d2ce8a282846"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Updated: " + new SimpleDateFormat("MMM dd, yyyy").format($F{inv_update_timestamp})]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="160" splitType="Immediate">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="0" width="555" height="15" isRemoveLineWhenBlank="true" uuid="c9707c9c-690b-4eb4-918f-8370d4157aae">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{total_blueberry_plantings} > 0]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="p_crop_year">
+					<subreportParameterExpression><![CDATA[$F{crop_year}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_contract_id">
+					<subreportParameterExpression><![CDATA[$F{contract_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_commodity_name">
+					<subreportParameterExpression><![CDATA["BLUEBERRY"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_show_header_ind">
+					<subreportParameterExpression><![CDATA["Y"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Plantings.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="15" width="555" height="15" isRemoveLineWhenBlank="true" uuid="c10c4933-19b3-4288-986d-1af8cef55708">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$F{total_blueberry_plantings} > 0]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="p_crop_year">
+					<subreportParameterExpression><![CDATA[$F{crop_year}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_contract_id">
+					<subreportParameterExpression><![CDATA[$F{contract_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_commodity_name">
+					<subreportParameterExpression><![CDATA["BLUEBERRY"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_show_plant_totals_ind">
+					<subreportParameterExpression><![CDATA["Y"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_pad_footer_ind">
+					<subreportParameterExpression><![CDATA[($F{total_raspberry_plantings} > 0 || $F{total_strawberry_plantings} > 0) ? "Y" : "N"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Totals.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="30" width="555" height="15" isRemoveLineWhenBlank="true" uuid="695803e3-1259-4f0f-9abb-8b6bed09e31d">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$F{total_raspberry_plantings} > 0]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="p_crop_year">
+					<subreportParameterExpression><![CDATA[$F{crop_year}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_contract_id">
+					<subreportParameterExpression><![CDATA[$F{contract_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_commodity_name">
+					<subreportParameterExpression><![CDATA["RASPBERRY"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_show_header_ind">
+					<subreportParameterExpression><![CDATA[$F{total_blueberry_plantings} == 0 ? "Y" : "N"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Plantings.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="45" width="555" height="15" isRemoveLineWhenBlank="true" uuid="4afd68db-7494-4ee1-939e-09d0cd69ab87">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$F{total_raspberry_plantings} > 0]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="p_crop_year">
+					<subreportParameterExpression><![CDATA[$F{crop_year}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_contract_id">
+					<subreportParameterExpression><![CDATA[$F{contract_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_commodity_name">
+					<subreportParameterExpression><![CDATA["RASPBERRY"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_show_plant_totals_ind">
+					<subreportParameterExpression><![CDATA["N"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_pad_footer_ind">
+					<subreportParameterExpression><![CDATA[$F{total_strawberry_plantings} > 0 ? "Y" : "N"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Totals.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="60" width="555" height="15" isRemoveLineWhenBlank="true" uuid="41954f59-cb62-4107-9d4c-e2cf332520f4">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$F{total_strawberry_plantings} > 0]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="p_crop_year">
+					<subreportParameterExpression><![CDATA[$F{crop_year}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_contract_id">
+					<subreportParameterExpression><![CDATA[$F{contract_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_commodity_name">
+					<subreportParameterExpression><![CDATA["STRAWBERRY"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_show_header_ind">
+					<subreportParameterExpression><![CDATA[$F{total_blueberry_plantings} == 0 && $F{total_raspberry_plantings} == 0 ? "Y" : "N"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Plantings.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="75" width="555" height="15" isRemoveLineWhenBlank="true" uuid="bf9525ca-c910-487d-ad90-3dc6c32d0431">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$F{total_strawberry_plantings} > 0]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="p_crop_year">
+					<subreportParameterExpression><![CDATA[$F{crop_year}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_contract_id">
+					<subreportParameterExpression><![CDATA[$F{contract_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_commodity_name">
+					<subreportParameterExpression><![CDATA["STRAWBERRY"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_show_plant_totals_ind">
+					<subreportParameterExpression><![CDATA["N"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_pad_footer_ind">
+					<subreportParameterExpression><![CDATA["N"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Totals.jasper"]]></subreportExpression>
+			</subreport>
+			<frame>
+				<reportElement positionType="Float" x="0" y="90" width="555" height="20" isRemoveLineWhenBlank="true" uuid="c9d674d3-c4ce-4257-9af9-9d16fda53f33">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[($F{total_blueberry_plantings} > 0 || $F{total_raspberry_plantings} > 0 || $F{total_strawberry_plantings} > 0) && $F{total_cranberry_plantings} > 0]]></printWhenExpression>
+				</reportElement>
+			</frame>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="110" width="70" height="20" isRemoveLineWhenBlank="true" uuid="d71de549-5c9d-4e0b-9eba-961b3a1d37fe">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<printWhenExpression><![CDATA[$F{total_cranberry_plantings} > 0]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Cranberry]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="130" width="555" height="15" isRemoveLineWhenBlank="true" uuid="56e4bd0c-0232-45ce-9bfe-91e2328f242b">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$F{total_cranberry_plantings} > 0]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="p_crop_year">
+					<subreportParameterExpression><![CDATA[$F{crop_year}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_contract_id">
+					<subreportParameterExpression><![CDATA[$F{contract_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_show_header_ind">
+					<subreportParameterExpression><![CDATA["Y"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Plantings_Cran.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="145" width="555" height="15" isRemoveLineWhenBlank="true" uuid="a75a0592-1c1e-46c0-a5dd-37448f4070b8">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$F{total_cranberry_plantings} > 0]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="p_crop_year">
+					<subreportParameterExpression><![CDATA[$F{crop_year}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_contract_id">
+					<subreportParameterExpression><![CDATA[$F{contract_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_pad_footer_ind">
+					<subreportParameterExpression><![CDATA["N"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subreports/CUWS_Inv_Berries_Totals_Cran.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="490" y="0" width="30" height="20" uuid="82b1b3bc-3be3-49c5-b7ff-73e00bfb5bfa">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER} + "/"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="Group1">
+				<reportElement x="520" y="0" width="34" height="20" uuid="8e5b75cb-bb69-4f43-bd40-54a2626942c5">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="30">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="99" y="5" width="350" height="25" uuid="d1db5f37-d567-42ee-8eb9-02dbebaed696">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="16" isBold="false"/>
+				</textElement>
+				<text><![CDATA[No visible plantings to print]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

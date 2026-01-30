@@ -27,6 +27,7 @@ export class InventorySelectorComponent implements OnInit{
   @Input() underSeededCropCommodityList: CropCommodityList;
   @Input() loadState: LoadState;
   @Input() errorState: ErrorState[];
+  @Input() isUnsaved: boolean;
 
   policyId: string;
   inventoryContractGuid: string;
@@ -102,6 +103,10 @@ export class InventorySelectorComponent implements OnInit{
 
     if (currentUrlPath.indexOf ( ResourcesRoutes.INVENTORY_FORAGE) > -1 ) {
       return("forage" )
+    }
+
+    if (currentUrlPath.indexOf ( ResourcesRoutes.INVENTORY_BERRIES) > -1 ) {
+      return("berries" )
     }
 
   }

@@ -1774,6 +1774,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 				topLevelEndpoints, 
 				null, 
 				"222222222", //fieldId
+				null, 
 				cropYear.toString());
 
 		Assert.assertNotNull(fieldList);
@@ -2022,9 +2023,11 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		
 		String newFieldLabel = originalFieldLabel + " NEW";
 		String newOtherDescription = originalOtherDescription + " NEW";
+		String newPrimaryPropertyIdentifier = "XXX-XXX-XXX";
 		
 		field.setFieldLabel(newFieldLabel);
 		field.setOtherLegalDescription(newOtherDescription);
+		field.setPrimaryPropertyIdentifier(newPrimaryPropertyIdentifier);	
 		field.setLandUpdateType(LandUpdateTypes.RENAME_LEGAL_LOCATION);
 		
 		//------------------------------------------
@@ -2054,6 +2057,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		
 		Assert.assertEquals("Field Label New",  newFieldLabel, field.getFieldLabel());
 		Assert.assertEquals("Other Description New",  newOtherDescription, field.getOtherLegalDescription());
+		Assert.assertEquals("PID New",  newPrimaryPropertyIdentifier, field.getPrimaryPropertyIdentifier());
 		//////////////////////////////
 		//Check Data in CIRRAS as well
 		//////////////////////////////
@@ -3253,6 +3257,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 				topLevelEndpoints, 
 				legalLandId, 
 				null, //fieldId
+				null, 
 				cropYear.toString());
 
 		Assert.assertNotNull(searchResults);

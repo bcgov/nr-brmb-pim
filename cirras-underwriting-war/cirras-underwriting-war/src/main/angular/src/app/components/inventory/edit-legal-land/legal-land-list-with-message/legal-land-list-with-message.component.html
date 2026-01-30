@@ -1,0 +1,27 @@
+<div *ngIf="message?.length > 0" class="row-group-left">
+    <p *ngIf="message?.length > 0" class="location-warning">
+        <mat-icon [ngStyle]="{'color':'orange', 'margin-right':'8px'}">warning</mat-icon>
+        {{ message }}
+    </p>
+
+    <div *ngIf="legalLandList?.length > 0" class="legal-land-container" [ngStyle]="setStyles()">
+        <div *ngIf="displayPID()" class="border-left header border-top border-bottom border-right padding">Primary Identifier</div>
+        <div *ngIf="displayOtherDescription()" class="border-left header border-top border-bottom border-right padding">Other Description</div>
+        <div class="header border-top border-bottom border-right padding">Legal Description</div>
+        <div *ngIf="displayShortLegalDescription" class="header border-top border-bottom border-right padding">Short Legal Description</div>
+        <ng-container *ngFor="let element of legalLandList">
+            <div *ngIf="displayPID()" class="border-left border-bottom border-right padding">
+                {{ element.primaryPropertyIdentifier }}
+            </div>
+            <div *ngIf="displayOtherDescription()" class="border-left border-bottom border-right padding">
+                {{ element.otherDescription }}
+            </div>
+            <div class="border-bottom border-right padding">
+                {{ element.legalDescription }}
+            </div>
+            <div *ngIf="displayShortLegalDescription" class="border-bottom border-right padding">
+                {{ element.legalShortDescription }}
+            </div>
+        </ng-container>
+    </div>
+</div>

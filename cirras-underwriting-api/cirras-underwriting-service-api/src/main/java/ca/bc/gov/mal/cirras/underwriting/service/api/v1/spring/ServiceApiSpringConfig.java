@@ -55,6 +55,7 @@ import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.YieldMeasU
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.model.factory.YieldMeasUnitTypeCodeFactory;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.reports.JasperReportService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.UnderwritingServiceHelper;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.BerriesService;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.OutOfSync;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.ModelValidator;
 
@@ -135,6 +136,18 @@ public class ServiceApiSpringConfig {
 	}
 	
 	@Bean
+	public BerriesService berriesService() {
+		BerriesService result = new BerriesService();
+		
+		result.setInventoryContractCommodityBerriesDao(persistenceSpringConfig.inventoryContractCommodityBerriesDao());
+		result.setInventoryBerriesDao(persistenceSpringConfig.inventoryBerriesDao());
+		
+		result.setInventoryContractFactory(inventoryContractFactory);
+
+		return result;
+	}
+	
+	@Bean
 	public OutOfSync outOfSync() {
 		OutOfSync result = new OutOfSync();
 		return result;
@@ -154,6 +167,7 @@ public class ServiceApiSpringConfig {
 
 		result.setFieldDao(persistenceSpringConfig.fieldDao());
 		result.setPolicyDao(persistenceSpringConfig.policyDao());
+		result.setLegalLandDao(persistenceSpringConfig.legalLandDao());
 		result.setUserSettingDao(persistenceSpringConfig.userSettingDao());
 		
 		result.setUnderwritingServiceHelper(underwritingServiceHelper());
@@ -182,11 +196,13 @@ public class ServiceApiSpringConfig {
 
 		result.setInventoryContractCommodityDao(persistenceSpringConfig.inventoryContractCommodityDao());
 		result.setInventoryCoverageTotalForageDao(persistenceSpringConfig.inventoryCoverageTotalForageDao());
+		result.setInventoryContractCommodityBerriesDao(persistenceSpringConfig.inventoryContractCommodityBerriesDao());
 		result.setInventoryContractDao(persistenceSpringConfig.inventoryContractDao());
 		result.setInventoryFieldDao(persistenceSpringConfig.inventoryFieldDao());
 		result.setInventorySeededGrainDao(persistenceSpringConfig.inventorySeededGrainDao());
 		result.setInventoryUnseededDao(persistenceSpringConfig.inventoryUnseededDao());
 		result.setInventorySeededForageDao(persistenceSpringConfig.inventorySeededForageDao());
+		result.setInventoryBerriesDao(persistenceSpringConfig.inventoryBerriesDao());
 		result.setPolicyDao(persistenceSpringConfig.policyDao());
 		result.setUnderwritingCommentDao(persistenceSpringConfig.underwritingCommentDao());
 		result.setLegalLandDao(persistenceSpringConfig.legalLandDao());
@@ -206,6 +222,7 @@ public class ServiceApiSpringConfig {
 		result.setJasperReportService(jasperReportService);
 		
 		result.setUnderwritingServiceHelper(underwritingServiceHelper());
+		result.setBerriesService(berriesService());
 		
 		result.setOutOfSync(outOfSync());
 		
@@ -281,6 +298,7 @@ public class ServiceApiSpringConfig {
 		result.setInventoryUnseededDao(persistenceSpringConfig.inventoryUnseededDao());
 		result.setInventorySeededGrainDao(persistenceSpringConfig.inventorySeededGrainDao());
 		result.setInventorySeededForageDao(persistenceSpringConfig.inventorySeededForageDao());
+		result.setInventoryBerriesDao(persistenceSpringConfig.inventoryBerriesDao());
 		result.setUnderwritingCommentDao(persistenceSpringConfig.underwritingCommentDao());
 		result.setInventoryContractDao(persistenceSpringConfig.inventoryContractDao());
 		result.setInventoryContractCommodityDao(persistenceSpringConfig.inventoryContractCommodityDao());

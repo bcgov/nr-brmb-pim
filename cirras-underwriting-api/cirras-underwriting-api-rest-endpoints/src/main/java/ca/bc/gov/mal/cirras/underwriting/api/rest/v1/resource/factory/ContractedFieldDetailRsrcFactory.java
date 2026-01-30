@@ -15,15 +15,23 @@ public class ContractedFieldDetailRsrcFactory extends BaseResourceFactory implem
 		dto.setAnnualFieldDetailId(model.getAnnualFieldDetailId());
 		dto.setGrowerContractYearId(inventoryContract.getGrowerContractYearId());
 		dto.setDisplayOrder(model.getDisplayOrder());
+		///Not all plans use the flag and it might be not set
+		dto.setIsLeasedInd(notNull(model.getIsLeasedInd(), false));
 
 	}
-	
+
 	@Override
-	public void createRolloverContractedFieldDetail(ContractedFieldDetailDto dto, Integer annualFieldDetailId, Integer growerContractYearId, Integer displayOrder) {		
+	public void createRolloverContractedFieldDetail(ContractedFieldDetailDto dto, Integer annualFieldDetailId, Integer growerContractYearId, Integer displayOrder, Boolean isLeasedInd) {		
 		dto.setContractedFieldDetailId(null);
 		dto.setAnnualFieldDetailId(annualFieldDetailId);
 		dto.setGrowerContractYearId(growerContractYearId);
 		dto.setDisplayOrder(displayOrder);
+		///Not all plans use the flag and it might be null at this point
+		dto.setIsLeasedInd(notNull(isLeasedInd, false));
 	}
 	
+	private Boolean notNull(Boolean value, Boolean defaultValue) {
+		return (value == null) ? defaultValue : value;
+	}
+
 }

@@ -501,23 +501,23 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		}
 
 		// These must be set to a real policy in CIRRAS. Crop Year must match other test data.
-		String policyNumberWithProducts = "140913-24";
-		Integer fieldIdOnPolicyWithProducts = 23688;
+		String policyNumberWithProducts = "140467-20";
+		Integer fieldIdOnPolicyWithProducts = 21610;
 		
 		//Date and Time without millisecond
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 because they are not set in the database
 		Date transactionDate = cal.getTime();
 		Date createTransactionDate = addSeconds(transactionDate, -1);
 
 		createGrower(growerId, 999888, "grower name", createTransactionDate);
-		createPolicy(policyId1, growerId, 4, policyNumber1, contractNumber1, contractId1, 2020, createTransactionDate);
-		createGrowerContractYear(growerContractYearId1, contractId1, growerId, 2020, 4, createTransactionDate);
+		createPolicy(policyId1, growerId, InsurancePlans.GRAIN.getInsurancePlanId(), policyNumber1, contractNumber1, contractId1, 2020, createTransactionDate);
+		createGrowerContractYear(growerContractYearId1, contractId1, growerId, 2020, InsurancePlans.GRAIN.getInsurancePlanId(), createTransactionDate);
 
 		createField(fieldId1, "LOT 1", 1980, null);
 		
-		Integer pageNumber = new Integer(1);
-		Integer pageRowCount = new Integer(20);
+		Integer pageNumber = 1;
+		Integer pageRowCount = 20;
 
 		UwContractListRsrc searchResults = service.getUwContractList(
 				topLevelEndpoints, 
@@ -554,13 +554,15 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 
 		
 		// Test 3: AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG
-		createPolicy(policyId2, growerId, 2, policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
-		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2020, 2, createTransactionDate);
+		createPolicy(policyId2, growerId, InsurancePlans.TREEFRUITS.getInsurancePlanId(), policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
+		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2020, InsurancePlans.TREEFRUITS.getInsurancePlanId(), createTransactionDate);
 		createAnnualFieldDetail(annualFieldDetailId1, null, fieldId1, 2020);
 		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId2, 1);
 
+		String insurancePlans = "Grain or Forage";
+		
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), null);
-		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG });
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]", insurancePlans) });
 		
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
 		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId2.toString());
@@ -568,9 +570,10 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		service.deletePolicy(topLevelEndpoints, policyId2.toString());
 
 		// Test 4a: AddFieldValidation.TRANSFER_POLICY_ID_NOT_EMPTY_MSG (No Policy Association in crop year)
-		createPolicy(policyId2, growerId, 5, policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
-		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2020, 5, createTransactionDate);
-
+		createPolicy(policyId2, growerId, InsurancePlans.FORAGE.getInsurancePlanId(), policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
+		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2020, InsurancePlans.FORAGE.getInsurancePlanId(), createTransactionDate);
+		
+		
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), policyId2.toString());
 		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.TRANSFER_POLICY_ID_NOT_EMPTY_MSG });
 		
@@ -592,8 +595,8 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		
 
 		// Test 6: AddFieldValidation.TRANSFER_POLICY_ID_INCORRECT_MSG
-		createPolicy(policyId2, growerId, 4, policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
-		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2020, 4, createTransactionDate);
+		createPolicy(policyId2, growerId, InsurancePlans.GRAIN.getInsurancePlanId(), policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
+		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2020, InsurancePlans.GRAIN.getInsurancePlanId(), createTransactionDate);
 		createAnnualFieldDetail(annualFieldDetailId1, null, fieldId1, 2020);
 		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId2, 1);
 
@@ -660,13 +663,10 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		Date createTransactionDate = addSeconds(transactionDate, -1);
 
 		createGrower(growerId, 999888, "grower name", createTransactionDate);
-		createPolicy(policyId1, growerId, 5, policyNumber1, contractNumber1, contractId1, 2020, createTransactionDate);
-		createGrowerContractYear(growerContractYearId1, contractId1, growerId, 2020, 5, createTransactionDate);
+		createPolicy(policyId1, growerId, InsurancePlans.FORAGE.getInsurancePlanId(), policyNumber1, contractNumber1, contractId1, 2020, createTransactionDate);
+		createGrowerContractYear(growerContractYearId1, contractId1, growerId, 2020, InsurancePlans.FORAGE.getInsurancePlanId(), createTransactionDate);
 
 		createField(fieldId1, "LOT 1", 1980, null);
-		
-		Integer pageNumber = new Integer(1);
-		Integer pageRowCount = new Integer(20);
 
 		UwContractListRsrc searchResults = service.getUwContractList(
 				topLevelEndpoints, 
@@ -679,7 +679,7 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 				null, 
 				null, 
 				null, 
-				pageNumber, pageRowCount);
+				1, 20);
 
 		Assert.assertNotNull(searchResults);
 		Assert.assertEquals(1, searchResults.getCollection().size());
@@ -691,8 +691,8 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		checkAddFieldValidation(addFieldValidation, null, null);
 		
 		// Test 2: AddFieldValidation.TRANSFER_POLICY_HAS_DOP_MSG.
-		createPolicy(policyId2, growerId, 5, policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
-		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2020, 5, createTransactionDate);
+		createPolicy(policyId2, growerId, InsurancePlans.FORAGE.getInsurancePlanId(), policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
+		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2020, InsurancePlans.FORAGE.getInsurancePlanId(), createTransactionDate);
 		createAnnualFieldDetail(annualFieldDetailId1, null, fieldId1, 2020);
 		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId2, 1);
 
@@ -712,6 +712,69 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		
 
 		logger.debug(">testValidateAddFieldForage");
+	}	
+	
+	//Additional berries specific tests	
+	@Test
+	public void testValidateAddFieldBerries() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException, DaoException {
+		logger.debug("<testValidateAddFieldBerries");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+		
+		//Date and Time without millisecond
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 becauce they are not set in the database
+		Date transactionDate = cal.getTime();
+		Date createTransactionDate = addSeconds(transactionDate, -1);
+
+		createGrower(growerId, 999888, "grower name", createTransactionDate);
+		createPolicy(policyId1, growerId, InsurancePlans.BERRIES.getInsurancePlanId(), policyNumber1, contractNumber1, contractId1, 2020, createTransactionDate);
+		createGrowerContractYear(growerContractYearId1, contractId1, growerId, 2020, InsurancePlans.BERRIES.getInsurancePlanId(), createTransactionDate);
+
+		createField(fieldId1, "LOT 1", 1980, null);
+
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber1,
+				null,
+				null, 
+				null, 
+				null, 
+				1, 20);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+
+		// Test 1: No errors, no warnings.
+		AddFieldValidationRsrc addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), null);
+		checkAddFieldValidation(addFieldValidation, null, null);
+
+		// Test 2: AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG
+		createPolicy(policyId2, growerId, InsurancePlans.GRAIN.getInsurancePlanId(), policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
+		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2020, InsurancePlans.GRAIN.getInsurancePlanId(), createTransactionDate);
+		createAnnualFieldDetail(annualFieldDetailId1, null, fieldId1, 2020);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId2, 1);
+
+		String insurancePlans = "Berries";
+		
+		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), null);
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]", insurancePlans) });
+		
+		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
+		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId2.toString());
+		service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId1.toString());
+		service.deletePolicy(topLevelEndpoints, policyId2.toString());
+
+		logger.debug(">testValidateAddFieldBerries");
 	}	
 	
 	private void checkAddFieldValidation(AddFieldValidationRsrc resource,  String[] expectedWarnings, String[] expectedErrors) {

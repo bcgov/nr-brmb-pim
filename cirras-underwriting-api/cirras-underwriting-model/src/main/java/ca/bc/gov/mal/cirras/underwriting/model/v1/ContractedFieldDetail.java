@@ -15,6 +15,9 @@ public interface ContractedFieldDetail extends Serializable {
 	
  	public Integer getDisplayOrder();
 	public void setDisplayOrder(Integer displayOrder);	
+	
+	public Boolean getIsLeasedInd();
+	public void setIsLeasedInd(Boolean isLeasedInd);
 
 	public String getTransactionType();
 	public void setTransactionType(String transactionType);

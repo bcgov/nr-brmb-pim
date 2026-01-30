@@ -14,6 +14,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.client.v1.ValidationException;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.endpoints.security.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.ReplaceLegalValidationRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldDetailRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.ContractedFieldDetailRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.EndpointsRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.FieldRsrc;
@@ -90,11 +91,11 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 		service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId2.toString());
 		service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId3.toString());
 
-		service.deleteLegalLandFieldXref(topLevelEndpoints, legalLandId.toString(), fieldId.toString());
-		service.deleteLegalLandFieldXref(topLevelEndpoints, legalLandId2.toString(), fieldId.toString());
-		service.deleteLegalLandFieldXref(topLevelEndpoints, legalLandId3.toString(), fieldId.toString());
-		service.deleteLegalLandFieldXref(topLevelEndpoints, legalLandId2.toString(), fieldId2.toString());
-		service.deleteLegalLandFieldXref(topLevelEndpoints, legalLandId2.toString(), fieldId3.toString());
+		deleteLegalLandFieldXref(legalLandId, fieldId);
+		deleteLegalLandFieldXref(legalLandId2, fieldId);
+		deleteLegalLandFieldXref(legalLandId3, fieldId);
+		deleteLegalLandFieldXref(legalLandId2, fieldId2);
+		deleteLegalLandFieldXref(legalLandId2, fieldId3);
 
 		service.deleteField(topLevelEndpoints, fieldId.toString());
 		service.deleteField(topLevelEndpoints, fieldId2.toString());
@@ -104,6 +105,15 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 		service.deleteLegalLandSync(topLevelEndpoints, legalLandId2.toString());
 		service.deleteLegalLandSync(topLevelEndpoints, legalLandId3.toString());
 		
+	}
+	
+	private void deleteLegalLandFieldXref(Integer legalLandId, Integer fieldId) throws CirrasUnderwritingServiceException {
+		// delete legal land - field xref
+		LegalLandFieldXrefRsrc llfx = service.getLegalLandFieldXref(topLevelEndpoints, legalLandId.toString(), fieldId.toString());
+		if ( llfx != null ) { 
+			service.deleteLegalLandFieldXref(topLevelEndpoints, legalLandId.toString(), fieldId.toString());
+		}
+
 	}
 
 	private void createLegalLand(String legalLocation, String legalDescription, String primaryPropertyIdentifier, String legalShortDescription, Integer llId) throws CirrasUnderwritingServiceException, ValidationException {
@@ -130,12 +140,13 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 
 	}
 	
-	private void createField( Integer fieldId, String fieldLabel, Integer activeFromCropYear, Integer activeToCropYear) throws CirrasUnderwritingServiceException, ValidationException {
+	private void createField( Integer fieldId, String fieldLabel, Integer activeFromCropYear, Integer activeToCropYear, String fieldLocation) throws CirrasUnderwritingServiceException, ValidationException {
 
 		FieldRsrc resource = new FieldRsrc();
 		
 		resource.setFieldId(fieldId);
 		resource.setFieldLabel(fieldLabel);
+		resource.setFieldLocation(fieldLocation);
 		resource.setActiveFromCropYear(activeFromCropYear);
 		resource.setActiveToCropYear(activeToCropYear);
 		resource.setTransactionType(LandManagementEventTypes.FieldCreated);
@@ -187,8 +198,8 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 	}
 	
 	@Test
-	public void testValidateReplaceLegal() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
-		logger.debug("<testValidateReplaceLegal");
+	public void testValidateReplaceLegalGrainForage() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
+		logger.debug("<testValidateReplaceLegalGrainForage");
 		
 		if(skipTests) {
 			logger.warn("Skipping tests");
@@ -204,18 +215,16 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 		Integer gcyId2 = 95123;
 
 		String fieldLabel = "Field Label";
+		String fieldLocation = "field location 1";
 		String legalLocation2 = "test legal 1234 22";
-		
+		String legalLocationOrPid = "Legal Location";
 		
 		//Create a field and associate it with a policy
 		createLegalLand("TEST LEGAL LOC 123", null, "GF0099999", null, legalLandId);
-		createField( fieldId, fieldLabel, 2011, 2022);
+		createField( fieldId, fieldLabel, 2011, 2022, fieldLocation);
 		createLegalLandFieldXref(fieldId, legalLandId);
 		createAnnualFieldDetail(annualFieldDetailId, legalLandId, fieldId, 2022);
 		createContractedFieldDetail(contractedFieldDetailId, annualFieldDetailId, gcyId1, 1);
-		
-		Integer pageNumber = new Integer(1);
-		Integer pageRowCount = new Integer(20);
 		
 		UwContractListRsrc searchResults = service.getUwContractList(
 				topLevelEndpoints, 
@@ -228,7 +237,7 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 				null, 
 				null, 
 				null, 
-				pageNumber, pageRowCount);
+				1, 20);
 
 		Assert.assertNotNull(searchResults);
 		Assert.assertEquals(1, searchResults.getCollection().size());
@@ -239,11 +248,11 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId, gcyId2, 1);
 		
 		// 1. Field on multiple policies
-		ReplaceLegalValidationRsrc replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), fieldLabel, legalLandId.toString());
+		ReplaceLegalValidationRsrc replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), fieldLabel, legalLandId.toString(), null);
 		Assert.assertNotNull(replaceLegalValidation);
 
 		String fieldOnOtherPolicyMsg = ReplaceLegalValidation.FIELD_ON_OTHER_POLICY_MSG
-				.replace("[fieldLabel]", fieldLabel)
+				.replace("[fieldLocationOrfieldLabel]", fieldLabel)
 				.replace("[fieldId]", fieldId.toString())
 				.replace("[policyNumber]", policyNumber2);
 
@@ -256,11 +265,12 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 		createLegalLandFieldXref(fieldId, legalLandId2);
 		createLegalLandFieldXref(fieldId, legalLandId3);
 
-		replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), fieldLabel, legalLandId.toString());
+		replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), fieldLabel, legalLandId.toString(), null);
 		Assert.assertNotNull(replaceLegalValidation);
 		
 		String fieldHasOtherLegalLandMsg = ReplaceLegalValidation.FIELD_HAS_OTHER_LEGAL_MSG
-				.replace("[fieldLabel]", fieldLabel)
+				.replace("[legalLocationOrPid]", legalLocationOrPid)
+				.replace("[fieldLocationOrfieldLabel]", fieldLabel)
 				.replace("[fieldId]", fieldId.toString());
 		
 		Assert.assertEquals(true, replaceLegalValidation.getIsWarningFieldHasOtherLegalLand());
@@ -271,16 +281,18 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 		Assert.assertEquals(legalLandId3, replaceLegalValidation.getOtherLegalLandOfFieldList().get(1).getLegalLandId());
 		
 		// 3. Multiple fields on legal land
-		createField( fieldId2, "Field Label 2", 2011, 2022);
-		createField( fieldId3, "Field Label 3", 2011, 2022);
+		createField( fieldId2, "Field Label 2", 2011, 2022, "Field Location 2");
+		createField( fieldId3, "Field Label 3", 2011, 2022, "Field Location 3");
 		createLegalLandFieldXref(fieldId2, legalLandId2);
 		createLegalLandFieldXref(fieldId3, legalLandId2);
 		
-		replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), fieldLabel, legalLandId2.toString());
+		replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), fieldLabel, legalLandId2.toString(), null);
 		Assert.assertNotNull(replaceLegalValidation);
 
-		String otherFieldsOnLegalMsg = ReplaceLegalValidation.OTHER_FIELD_ON_LEGAL_MSG.replace("[otherDescription]", legalLocation2);
-
+		String otherFieldsOnLegalMsg = ReplaceLegalValidation.OTHER_FIELD_ON_LEGAL_MSG
+											.replace("[legalLocationOrPid]", legalLocationOrPid)
+											.replace("[otherDescriptionOrPid]", legalLocation2);
+		
 		Assert.assertEquals(true, replaceLegalValidation.getIsWarningOtherFieldsOnLegal());
 		Assert.assertEquals(otherFieldsOnLegalMsg, replaceLegalValidation.getOtherFieldsOnLegalMsg().getMessage());
 		Assert.assertEquals(2, replaceLegalValidation.getOtherFieldsOnLegalLandList().size());
@@ -289,7 +301,7 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 		Assert.assertEquals(fieldId3, replaceLegalValidation.getOtherFieldsOnLegalLandList().get(1).getFieldId());
 
 		// 4. new legal land  (no check on other fields on legal land) - endpoint accepts null/empty string
-		replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), fieldLabel, "");
+		replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), fieldLabel, "", null);
 		Assert.assertNotNull(replaceLegalValidation);
 
 		Assert.assertEquals(false, replaceLegalValidation.getIsWarningOtherFieldsOnLegal());
@@ -298,7 +310,131 @@ public class UwContractValidateReplaceLegalEndpointTest extends EndpointsTest {
 		
 		delete();
 
-		logger.debug(">testValidateReplaceLegal");
+		logger.debug(">testValidateReplaceLegalGrainForage");
+	}
+	
+	@Test
+	public void testValidateReplaceLegalBerries() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
+		logger.debug("<testValidateReplaceLegalBerries");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+		
+		// Main Policy
+		String policyNumber1 = "126334-22";
+		Integer gcyId1 = 93912;
+
+		// Same Contract as Main Policy, but prior crop year.
+		String policyNumber2 = "126334-21";
+		Integer gcyId2 = 90408;
+
+
+		String fieldLocation = "field location 1";
+		String pid = "125-943-844";
+		String legalLocationOrPid = "PID";
+		
+		//Create a field and associate it with a policy
+		createLegalLand("TEST LEGAL LOC 123", null, "GF0099999", null, legalLandId);
+		createField( fieldId, "Field Label 1", 2011, 2022, fieldLocation);
+		createLegalLandFieldXref(fieldId, legalLandId);
+		createAnnualFieldDetail(annualFieldDetailId, legalLandId, fieldId, 2022);
+		createContractedFieldDetail(contractedFieldDetailId, annualFieldDetailId, gcyId1, 1);
+		
+		UwContractListRsrc searchResults = service.getUwContractList(
+				topLevelEndpoints, 
+				null, 
+				null, 
+				null,
+				null,
+				policyNumber1,
+				null,
+				null, 
+				null, 
+				null, 
+				1, 20);
+
+		Assert.assertNotNull(searchResults);
+		Assert.assertEquals(1, searchResults.getCollection().size());
+
+		UwContractRsrc referrer = searchResults.getCollection().get(0);
+
+		//Associate field with a second policy 
+		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId, gcyId2, 1);
+		
+		// 1. Field on multiple policies
+		ReplaceLegalValidationRsrc replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), null, legalLandId.toString(), fieldLocation);
+		Assert.assertNotNull(replaceLegalValidation);
+
+		String fieldOnOtherPolicyMsg = ReplaceLegalValidation.FIELD_ON_OTHER_POLICY_MSG
+				.replace("[fieldLocationOrfieldLabel]", fieldLocation)
+				.replace("[fieldId]", fieldId.toString())
+				.replace("[policyNumber]", policyNumber2);
+
+		Assert.assertEquals(true, replaceLegalValidation.getIsWarningFieldOnOtherPolicy());
+		Assert.assertEquals(fieldOnOtherPolicyMsg, replaceLegalValidation.getFieldOnOtherPolicyMsg().getMessage());
+
+		// 2. Multiple legal location associated with the field
+		createLegalLand("test legal 55", "Legal Description", pid, "Short Legal", legalLandId2);
+		createLegalLand("test legal 1234", "Legal Description 2", pid, "Short Legal", legalLandId3);
+		createLegalLandFieldXref(fieldId, legalLandId2);
+		createLegalLandFieldXref(fieldId, legalLandId3);
+
+		replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), null, legalLandId.toString(), fieldLocation);
+		Assert.assertNotNull(replaceLegalValidation);
+		
+		String fieldHasOtherLegalLandMsg = ReplaceLegalValidation.FIELD_HAS_OTHER_LEGAL_MSG
+				.replace("[legalLocationOrPid]", legalLocationOrPid)
+				.replace("[fieldLocationOrfieldLabel]", fieldLocation)
+				.replace("[fieldId]", fieldId.toString());
+		
+		Assert.assertEquals(true, replaceLegalValidation.getIsWarningFieldHasOtherLegalLand());
+		Assert.assertEquals(fieldHasOtherLegalLandMsg, replaceLegalValidation.getFieldHasOtherLegalLandMsg().getMessage());
+		Assert.assertEquals(2, replaceLegalValidation.getOtherLegalLandOfFieldList().size());
+		
+		Assert.assertEquals(legalLandId2, replaceLegalValidation.getOtherLegalLandOfFieldList().get(0).getLegalLandId());
+		Assert.assertEquals(legalLandId3, replaceLegalValidation.getOtherLegalLandOfFieldList().get(1).getLegalLandId());
+		
+		// 3. Multiple fields on legal land
+		String fieldLocation2 = "field location 2";
+		String fieldLocation3 = "field location 3";
+
+		createField( fieldId2, "Field Label 2", 2011, 2022, fieldLocation2);
+		createField( fieldId3, "Field Label 3", 2011, 2022, fieldLocation3);
+		createLegalLandFieldXref(fieldId2, legalLandId2);
+		createLegalLandFieldXref(fieldId3, legalLandId2);
+		
+		replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), null, legalLandId2.toString(), fieldLocation);
+		Assert.assertNotNull(replaceLegalValidation);
+
+		String otherFieldsOnLegalMsg = ReplaceLegalValidation.OTHER_FIELD_ON_LEGAL_MSG
+											.replace("[legalLocationOrPid]", legalLocationOrPid)
+											.replace("[otherDescriptionOrPid]", pid);
+		
+		Assert.assertEquals(true, replaceLegalValidation.getIsWarningOtherFieldsOnLegal());
+		Assert.assertEquals(otherFieldsOnLegalMsg, replaceLegalValidation.getOtherFieldsOnLegalMsg().getMessage());
+		Assert.assertEquals(2, replaceLegalValidation.getOtherFieldsOnLegalLandList().size());
+		
+		for (AnnualFieldRsrc field : replaceLegalValidation.getOtherFieldsOnLegalLandList()) {
+			//Make sure field location is not empty
+			Assert.assertNotNull(field.getFieldLocation());
+		}
+		
+		Assert.assertEquals(fieldId2, replaceLegalValidation.getOtherFieldsOnLegalLandList().get(0).getFieldId());
+		Assert.assertEquals(fieldId3, replaceLegalValidation.getOtherFieldsOnLegalLandList().get(1).getFieldId());
+
+		// 4. new legal land  (no check on other fields on legal land) - endpoint accepts null/empty string
+		replaceLegalValidation = service.validateReplaceLegal(referrer, annualFieldDetailId.toString(), null, "", fieldLocation);
+		Assert.assertNotNull(replaceLegalValidation);
+
+		Assert.assertEquals(false, replaceLegalValidation.getIsWarningOtherFieldsOnLegal());
+		Assert.assertNull(replaceLegalValidation.getOtherFieldsOnLegalMsg());
+		Assert.assertNull(replaceLegalValidation.getOtherFieldsOnLegalLandList());
+		
+		delete();
+
+		logger.debug(">testValidateReplaceLegalBerries");
 	}
 
 }

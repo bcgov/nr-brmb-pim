@@ -185,6 +185,10 @@
       border-right: 1px solid #DDDDDD;  
       border-bottom: 1px solid #DDDDDD;
     }
+
+    .inventory-border-right {
+      border-right: 1px solid #DDDDDD;  
+    }
   
     .inventory-border-bottom {
       border-bottom: 1px solid #DDDDDD;
@@ -203,10 +207,7 @@
   
     .inventory-fill {
       justify-content: center;  
-  
-      & > * {
-        flex-grow: 1;
-      }
+      align-items: center; 
     }
   
     .planting-container {
@@ -299,15 +300,14 @@
       display: flex; 
       justify-content:flex-start; 
       align-items: center; 
-      margin-right: 20px; 
+      margin-right: 10px; 
       //border: 2px solid #C10B0B; 
       border-radius: 5px;
       background-color: #FEF0F0;
 
       .mat-icon{
-        margin: 4px 20px 4px 10px;
+        margin: 4px 10px 4px 10px;
         color: #C10B0B;
-        width: 20px;
       }
 
       .warning-message{

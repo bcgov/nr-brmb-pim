@@ -18,6 +18,8 @@ public interface JasperReportService
 
 	byte[] generateSeededGrainReport(Map<String, Object> paramMap) throws JasperReportServiceException;
 	
+	byte[] generateInvBerriesReport(Map<String, Object> paramMap) throws JasperReportServiceException;
+
 	void setReportServiceUrl(String reportServiceUrl);
 
 	void setReportServicePassword(String reportServicePassword);

@@ -51,6 +51,7 @@ public interface CirrasUnderwritingService {
 	AnnualFieldList<? extends AnnualField> getAnnualFieldForLegalLandList(
 			Integer legalLandId, 
 			Integer fieldId, 
+			String fieldLocation,
 			Integer cropYear,
 			FactoryContext context, 
 			WebAdeAuthentication authentication

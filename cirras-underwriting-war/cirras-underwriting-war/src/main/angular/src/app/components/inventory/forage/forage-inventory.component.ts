@@ -8,15 +8,15 @@ import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN, PLANT_DURATION, PLANT_INSURABILITY_TYPE_CODE } from 'src/app/utils/constants';
 import { CropVarietyCommodityType, InventorySeededForage, InventoryUnseeded, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { addUwCommentsObject, areDatesNotEqual, areNotEqual, makeNumberOnly, makeTitleCase, replaceNonAlphanumericCharacters } from 'src/app/utils';
-import { AddNewFormField, CropVarietyOptionsType, addAnnualFieldObject, addPlantingObject, addSeededForagesObject, deleteFormField, deleteNewFormField, dragField, fieldHasInventory, getInventorySeededForagesObjForSave, isLinkedFieldCommon, isLinkedPlantingCommon, isThereAnyCommentForField, linkedFieldTooltipCommon, linkedPlantingTooltipCommon, navigateUpDownTextbox, openAddEditLandPopup, roundUpDecimalAcres, updateComments } from '../inventory-common';
+import { AddNewFormField, CropVarietyOptionsType, addAnnualFieldObject, addPlantingObject, addSeededForagesObject, deleteFormField, deleteNewFormField, dragField, fieldHasInventory, getInventorySeededForagesObjForSave, isLinkedFieldCommon, isLinkedPlantingCommon, isThereAnyCommentForField, linkedFieldTooltipCommon, linkedPlantingTooltipCommon, navigateUpDownTextbox, openAddEditLandPopup, roundUpDecimal, updateComments } from '../inventory-common';
 import { AddNewInventoryContract, DeleteInventoryContract, GetInventoryReport, LoadInventoryContract, RolloverInventoryContract, UpdateInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { AddLandPopupData } from '../add-land/add-land.component';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { RemoveFieldPopupData } from '../remove-field/remove-field.component';
 import {ViewEncapsulation } from '@angular/core';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { asapScheduler } from 'rxjs';
+import { AddLandPopupData } from '../add-field/add-field.component';
 
 @Component({
     selector: 'forage-inventory',
@@ -43,7 +43,6 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   hasDataChanged = false;
   hasYieldData = false;
 
-  //plantInsurabilityOptions = getCodeOptions("plant_insurability_type_code");
   plantInsurabilityOptions = []
 
   isHiddenFieldInTotals = false;
@@ -725,7 +724,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
     let acres = invSeeded.controls['fieldAcres'].value
 
-    invSeeded.controls['fieldAcres'].setValue(roundUpDecimalAcres(acres))
+    invSeeded.controls['fieldAcres'].setValue(roundUpDecimal(acres,1))
 
     this.isMyFormDirty()
   }
@@ -737,7 +736,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
 
     let acres = invSeeded.controls['acresToBeSeeded'].value
 
-    invSeeded.controls['acresToBeSeeded'].setValue(roundUpDecimalAcres(acres))
+    invSeeded.controls['acresToBeSeeded'].setValue(roundUpDecimal(acres,1))
 
     this.isMyFormDirty()
   }
@@ -847,7 +846,7 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
   deleteNewField(field) {
 
     const flds: UntypedFormArray = this.viewModel.formGroup.controls.fields as UntypedFormArray
-    deleteNewFormField(field, flds)
+    deleteNewFormField(field.value.fieldId, field.value.isNewFieldUI, flds)
     
     this.isMyFormDirty()
   }
@@ -866,11 +865,25 @@ export class ForageInventoryComponent extends BaseComponent implements OnChanges
       const dataToSend : AddLandPopupData = {
         fieldId: field.value.fieldId,
         fieldLabel: field.value.fieldLabel,
+        fieldLocation: "",
         cropYear: this.cropYear,
         policyId: this.policyId,
         insurancePlanId: this.insurancePlanId,
         annualFieldDetailId: field.value.annualFieldDetailId,
-        otherLegalDescription: field.value.otherLegalDescription
+        otherLegalDescription: field.value.otherLegalDescription,
+        primaryPropertyIdentifier: null,
+        landData: {
+          fieldId: null,
+          legalLandId: null,
+          fieldLabel: null,
+          fieldLocation: null,
+          primaryPropertyIdentifier: null,
+          otherLegalDescription: null,
+          landUpdateType: null,
+          transferFromGrowerContractYearId : null,
+          plantings: [],
+          uwComments: []
+        }
       }
 
       openAddEditLandPopup(this.fb, flds, this.dialog, dataToSend, field.value.maxDisplayOrder, false, this.cdr)

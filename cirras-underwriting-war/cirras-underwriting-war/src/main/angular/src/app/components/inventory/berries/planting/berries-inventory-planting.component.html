@@ -1,0 +1,22 @@
+
+<div [formGroup]="plantingFormGroup">  
+    <div [ngStyle]="setWidth()"
+        [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-bottom' : ( planting.isHiddenOnPrintoutInd ? 'inventory-border-exclude-printout border-left-exclude-printout' :  'inventory-border-bottom' )">
+        <berries-inventory-inventory-berry *ngIf="plantingHasCommodity() && planting.inventoryBerries.deletedByUserInd !== true"
+            [inventoryBerry]="planting.inventoryBerries" 
+            [cropVarietyOptions]="cropVarietyOptions"
+            [selectedCommodity]="selectedCommodity"
+            [numPlantingsToSave]="numPlantingsToSave"
+            (recalcNumPlantings)="onNumPlantingsChanged()"
+            ></berries-inventory-inventory-berry>  
+    </div>
+    <div class="action-icons border-bottom border-right" style="width:40px"
+        [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border' : ( planting.isHiddenOnPrintoutInd ? 'inventory-border-exclude-printout border-right-exclude-printout' :  'inventory-border' )">
+        
+        <mat-icon *ngIf="plantingHasCommodity() && planting.inventoryBerries.deletedByUserInd !== true"
+            matTooltip="Hide on printout" 
+            svgIcon="{{ planting.isHiddenOnPrintoutInd ? 'visibility_off' : 'visibility' }}" 
+            (click)="toggleHiddenOnPrintout();"></mat-icon>
+    </div>
+        
+</div>

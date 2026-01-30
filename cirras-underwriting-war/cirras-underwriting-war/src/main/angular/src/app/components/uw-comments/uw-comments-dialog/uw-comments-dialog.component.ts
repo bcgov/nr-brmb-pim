@@ -64,7 +64,7 @@ export class UwCommentsDialogComponent {
 
     onDone() {
         // check if any comments are empty
-        if (this.data.uwComments.some(uwComment => !uwComment.underwritingComment)) {
+        if (this.data.uwComments.some(uwComment => ( !uwComment.underwritingComment && !uwComment.deletedByUserInd))) {
             alert("Please enter a valid comment");
             return;
         }

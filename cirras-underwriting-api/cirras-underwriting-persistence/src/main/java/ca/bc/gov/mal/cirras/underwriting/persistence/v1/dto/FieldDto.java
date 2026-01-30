@@ -18,6 +18,7 @@ public class FieldDto extends BaseDto<FieldDto> {
 
 	private Integer fieldId;
 	private String fieldLabel;
+	private String location;
 	private Integer activeFromCropYear;
 	private Integer activeToCropYear;
 	private String createUser;
@@ -29,6 +30,8 @@ public class FieldDto extends BaseDto<FieldDto> {
 	private String otherLegalDescription;
 	private Integer legalLandId;
 	private Integer totalLegalLand;
+	
+	private String primaryPropertyIdentifier;
 
 	private List<PolicyDto> policies = new ArrayList<PolicyDto>();
 
@@ -41,6 +44,7 @@ public class FieldDto extends BaseDto<FieldDto> {
 
 		this.fieldId = dto.fieldId;
 		this.fieldLabel = dto.fieldLabel;
+		this.location = dto.location;
 		this.activeFromCropYear = dto.activeFromCropYear;
 		this.activeToCropYear = dto.activeToCropYear;
 		this.createUser = dto.createUser;
@@ -53,6 +57,8 @@ public class FieldDto extends BaseDto<FieldDto> {
 		this.otherLegalDescription = dto.otherLegalDescription;
 		this.totalLegalLand = dto.totalLegalLand;
 		
+		this.primaryPropertyIdentifier = dto.primaryPropertyIdentifier;
+		
 		if ( dto.policies != null ) {			
 			this.policies = new ArrayList<>();
 			
@@ -60,7 +66,7 @@ public class FieldDto extends BaseDto<FieldDto> {
 				this.policies.add(ifDto.copy());
 			}
 		}	
-
+		
 	}
 	
 
@@ -78,6 +84,7 @@ public class FieldDto extends BaseDto<FieldDto> {
 			DtoUtils dtoUtils = new DtoUtils(getLogger());
 			result = result&&dtoUtils.equals("fieldId", fieldId, other.fieldId);
 			result = result&&dtoUtils.equals("fieldLabel", fieldLabel, other.fieldLabel);
+			result = result&&dtoUtils.equals("location", location, other.location);
 			result = result&&dtoUtils.equals("activeFromCropYear", activeFromCropYear, other.activeFromCropYear);
 			result = result&&dtoUtils.equals("activeToCropYear", activeToCropYear, other.activeToCropYear);
 		}
@@ -109,6 +116,14 @@ public class FieldDto extends BaseDto<FieldDto> {
 
 	public void setFieldLabel(String fieldLabel) {
 		this.fieldLabel = fieldLabel;
+	}
+	
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
  	public Integer getActiveFromCropYear() {
@@ -198,5 +213,12 @@ public class FieldDto extends BaseDto<FieldDto> {
 	public void setTotalLegalLand(Integer totalLegalLand) {
 		this.totalLegalLand = totalLegalLand;
 	}
+	
+	public String getPrimaryPropertyIdentifier() {
+		return primaryPropertyIdentifier;
+	}
 
+	public void setPrimaryPropertyIdentifier(String primaryPropertyIdentifier) {
+		this.primaryPropertyIdentifier = primaryPropertyIdentifier;
+	}
 }
