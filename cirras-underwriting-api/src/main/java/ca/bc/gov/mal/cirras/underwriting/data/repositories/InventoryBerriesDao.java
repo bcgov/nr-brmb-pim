@@ -196,7 +196,26 @@ public class InventoryBerriesDao extends BaseDao {
 		return dtos;
 	}
 
-	
+	public List<InventoryBerriesDto> selectForDeclaredYield(String inventoryFieldGuid) throws DaoException {
+		logger.debug("<selectForDeclaredYield");
+
+		List<InventoryBerriesDto> dtos = null;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			
+			parameters.put("inventoryFieldGuid", inventoryFieldGuid);
+
+			dtos = this.mapper.selectForDeclaredYield(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectForDeclaredYield " + dtos);
+		return dtos;
+	}	
+		
 	public InventoryBerriesDto selectForRollover(Integer fieldId, Integer cropYear, Integer insurancePlanId, Integer plantingNumber) throws DaoException {
 		logger.debug("<selectForRollover");
 

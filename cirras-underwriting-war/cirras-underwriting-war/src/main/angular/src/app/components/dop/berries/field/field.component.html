@@ -1,0 +1,42 @@
+<div *ngIf="fieldHasCommodity()" class="plcy-inv-field-box" [formGroup]="fieldFormGroup" style="width: 1695px;">
+    
+    <div class="inventory-cell border-left inventory-border" style="width: 115px;">
+        {{ field.fieldId }}
+    </div>
+    
+    <div class="inventory-cell inventory-border" style="width: 280px;">
+        {{ field.fieldLocation }}
+    </div>
+
+    <div class="inventory-cell inventory-border" style="width: 140px;">
+       {{ field.primaryPropertyIdentifier }}
+    </div>
+
+    <div class="inventory-cell inventory-border" style="width: 80px;">
+        {{ field.isLeasedInd ? "Y" : "N" }}
+    </div>
+     
+    <div class="planting-container inventory-border" style="width: 1020px;">
+        <berries-dop-commodity-list 
+            *ngFor="let dopYieldFieldCommodityBerries of field.dopYieldFieldCommodityBerriesList"
+            [dopYieldFieldCommodityBerries]="dopYieldFieldCommodityBerries"
+            [dopYieldFieldCommodityBerriesFormArray]="fieldFormGroup.value.dopYieldFieldCommodityBerriesList" 
+            [filterByCropCommodityId]="filterByCropCommodityId"
+            style="display: contents;"></berries-dop-commodity-list>
+    </div>
+
+    <!-- buttons -->
+    <div class="inventory-cell inventory-border" style="width: 60px;">
+        <uw-comments-button
+            [insurancePlanId]="currentInsurancePlanId"
+            [underwritingCommentTypeCode]="'INV'"
+            [annualFieldDetailId]="field.annualFieldDetailId"
+            [fieldId]="field.fieldId"
+            [fieldName]="field.fieldLabel"
+            [fieldLocation]="field.fieldLocation"
+            [primaryPropertyIdentifier]="field.primaryPropertyIdentifier"
+            [uwComments]="field.uwComments"
+            (onDone)="onInventoryCommentsDone($event)"></uw-comments-button>
+    </div>
+</div>
+

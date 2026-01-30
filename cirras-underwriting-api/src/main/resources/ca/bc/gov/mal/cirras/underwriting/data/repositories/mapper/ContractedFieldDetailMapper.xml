@@ -35,7 +35,9 @@
 			afd.field_id,
 			afd.legal_land_id,
 			fld.field_label,
+			fld.location as field_location,
 			ll.other_description,
+			ll.primary_property_identifier,
 			cfd.display_order, 
 			cfd.is_leased_ind,
 			gcy.crop_year,
@@ -199,8 +201,6 @@
 	<select id="select" resultMap="ContractedFieldDetailDtoMap">
 		<include refid="selectColumns"/>
 		, ip.insurance_plan_name
-		, fld.location as field_location
-		, ll.primary_property_identifier
 		from contracted_field_detail cfd
 		<include refid="selectAdditionalJoins"/>
 		<include refid="selectWhereClause"/>
@@ -254,6 +254,27 @@
 									 	or dyf.declared_yield_field_guid is not null
 									)
 							)
+				)
+				or
+			 	(
+					gcy.insurance_plan_id = 3 --Berries
+			 		and exists 
+			 				(
+			 				  select 1
+							  from inventory_field invf
+							  left join inventory_berries ib on ib.inventory_field_guid = invf.inventory_field_guid
+							  left join declared_yield_field_commodity_berries dyfcb on dyfcb.field_id = invf.field_id
+							                                                        and dyfcb.crop_year = invf.crop_year
+							  where invf.field_id = afd.field_id
+								and invf.crop_year = gcy.crop_year
+								and invf.insurance_plan_id = gcy.insurance_plan_id
+								and ((ib.inventory_berries_guid is not null
+									 and ib.crop_commodity_id is not null
+									 and ib.planted_acres <![CDATA[ > ]]> 0
+									 )
+									 or dyfcb.declared_yield_field_commodity_berries_guid is not null
+									)
+							)							
 				)
 			)		  
 		<include refid="selectOrderBy"/>

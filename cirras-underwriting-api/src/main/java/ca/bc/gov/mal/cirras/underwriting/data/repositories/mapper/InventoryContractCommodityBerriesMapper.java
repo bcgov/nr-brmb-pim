@@ -18,4 +18,6 @@ public interface InventoryContractCommodityBerriesMapper {
 	int deleteForInventoryContract(Map<String, Object> parameters);
 	
 	List<InventoryContractCommodityBerriesDto> select(Map<String, Object> parameters);
+
+	List<InventoryContractCommodityBerriesDto> selectForDopContract(Map<String, Object> parameters);
 }

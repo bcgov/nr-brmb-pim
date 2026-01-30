@@ -1,0 +1,71 @@
+<div class="plcy-inv-field-box" [formGroup]="varietyFormGroup" style="width: 1020px;">
+    
+    <div class="inventory-cell inventory-border" style="width: 100px;">
+        {{ dopYieldFieldVarietyBerries.plantedAcres | number:'1.0-1' }}
+    </div>
+    
+    <div class="inventory-cell inventory-border" style="width: 180px;">
+        {{ cropCommodityName | titlecase }}
+    </div>
+
+    <div class="inventory-cell inventory-border" style="width: 180px;">
+       {{ dopYieldFieldVarietyBerries.cropVarietyName | titlecase }}
+    </div>
+
+    <div class="inventory-fill inventory-border" style="width: 100px;">
+        <mat-form-field appearance="fill" style="width: 100px;">
+            <input matInput matInputCommified type="text"
+                    formControlName="soldShippedYield"
+                    maxlength="14"
+                    (keypress)="numberOnly($event)" 
+                    (blur)="updateSoldShippedYield()">
+        </mat-form-field>  
+        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Sold/Shipped Yield is writeable">edit</mat-icon>
+    </div>
+
+    <div class="inventory-fill inventory-border" style="width: 100px;">
+        <mat-form-field appearance="fill" style="width: 100px;">
+            <input matInput matInputCommified type="text"
+                    formControlName="salesYield"
+                    maxlength="14"
+                    (keypress)="numberOnly($event)" 
+                    (blur)="updateSalesYield()">
+        </mat-form-field>  
+        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Abandonment Yield is writeable">edit</mat-icon>
+    </div>
+
+    <div class="inventory-fill inventory-border" style="width: 100px;">
+        <mat-form-field appearance="fill" style="width: 100px;">
+            <input matInput matInputCommified type="text"
+                    formControlName="abandonmentYield"
+                    maxlength="14"
+                    (keypress)="numberOnly($event)" 
+                    (blur)="updateAbandonmentYield()">
+        </mat-form-field>  
+        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Abandonment Yield is writeable">edit</mat-icon>
+    </div>
+
+    <div class="inventory-cell inventory-border" style="width: 100px;">
+        {{ dopYieldFieldVarietyBerries.totalProduction | number:'1.0-3'}}
+    </div>
+
+     <div class="inventory-fill inventory-border" style="width: 100px;">
+        <mat-form-field appearance="fill" style="width: 100px;">
+            <input matInput matInputCommified type="text"
+                    formControlName="totalProductionOverride"
+                    maxlength="14"
+                    (keypress)="numberOnly($event)" 
+                    (blur)="updateTotalProductionOverride()">
+        </mat-form-field>  
+        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Total Production Override is writeable">edit</mat-icon>
+    </div>
+
+    <!-- buttons -->
+    <div class="inventory-cell inventory-border" style="width: 60px;">
+        <mat-icon *ngIf="securityUtilService.canEditInventory()"
+                matTooltip="Clear Variety Values" 
+                style="margin-left: 4px; margin-right: 4px;"
+                (click)="onDeleteRowValues()"
+                svgIcon="cancel"></mat-icon>
+    </div>
+</div>
