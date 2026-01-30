@@ -92,10 +92,10 @@ export class BerriesDopVarietyListComponent {
   }
 
   onDeleteRowValues() {
-    this.dopYieldFieldVarietyBerries.soldShippedYield = 0
-    this.dopYieldFieldVarietyBerries.salesYield = 0
-    this.dopYieldFieldVarietyBerries.abandonmentYield = 0
-    this.dopYieldFieldVarietyBerries.totalProductionOverride = 0
+    this.dopYieldFieldVarietyBerries.soldShippedYield = null
+    this.dopYieldFieldVarietyBerries.salesYield = null
+    this.dopYieldFieldVarietyBerries.abandonmentYield = null
+    this.dopYieldFieldVarietyBerries.totalProductionOverride = null
 
     this.varietyFormGroup.controls['soldShippedYield'].setValue(null)
     this.varietyFormGroup.controls['salesYield'].setValue(null)
