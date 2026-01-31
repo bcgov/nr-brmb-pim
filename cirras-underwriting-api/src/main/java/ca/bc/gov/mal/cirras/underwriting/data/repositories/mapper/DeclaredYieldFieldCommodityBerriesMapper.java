@@ -23,4 +23,6 @@ public interface DeclaredYieldFieldCommodityBerriesMapper {
     
     List<DeclaredYieldFieldCommodityBerriesDto> select(Map<String, Object> parameters);
 
+	int getTotalDopRecordsWithYield(Map<String, Object> parameters);
+
 }

@@ -37,6 +37,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.AnnualFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.ContractedFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldCommodityBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldForageDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.FieldDao;
@@ -144,6 +145,7 @@ public class CirrasInventoryService {
 	private DeclaredYieldFieldForageDao declaredYieldFieldForageDao;
 	private DeclaredYieldContractDao declaredYieldContractDao;
 	private CropCommodityDao cropCommodityDao;
+	private DeclaredYieldFieldCommodityBerriesDao declaredYieldFieldCommodityBerriesDao;
 
 	// services
 	private CirrasPolicyService cirrasPolicyService;
@@ -286,6 +288,10 @@ public class CirrasInventoryService {
 
 	public void setCropCommodityDao(CropCommodityDao cropCommodityDao) {
 		this.cropCommodityDao = cropCommodityDao;
+	}
+	
+	public void setDeclaredYieldFieldCommodityBerriesDao(DeclaredYieldFieldCommodityBerriesDao declaredYieldFieldCommodityBerriesDao) {
+		this.declaredYieldFieldCommodityBerriesDao = declaredYieldFieldCommodityBerriesDao;
 	}
 
 	public void setCirrasPolicyService(CirrasPolicyService cirrasPolicyService) {
@@ -2630,6 +2636,8 @@ public class CirrasInventoryService {
 							totalDopRecords = declaredYieldFieldDao.getTotalDopRecordsWithYield(fieldId, destPolicyDto.getCropYear(), destPolicyDto.getInsurancePlanId());
 						} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(destPolicyDto.getInsurancePlanId()) ) {
 							totalDopRecords = declaredYieldFieldForageDao.getTotalDopRecordsWithYield(fieldId, destPolicyDto.getCropYear(), destPolicyDto.getInsurancePlanId());
+						} else if ( InsurancePlans.BERRIES.getInsurancePlanId().equals(destPolicyDto.getInsurancePlanId()) ) {
+							totalDopRecords = declaredYieldFieldCommodityBerriesDao.getTotalDopRecordsWithYield(fieldId, destPolicyDto.getCropYear());
 						}
 
 						if (totalDopRecords > 0) {
