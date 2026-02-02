@@ -28,12 +28,10 @@ export class ReportsDownloadButtonComponent {
 
     isPrintDisabled(): boolean {
         
-        if (Number(this.insurancePlanId) == INSURANCE_PLAN.GRAIN || Number(this.insurancePlanId) == INSURANCE_PLAN.FORAGE) {
-            return false
-        }
-
-        if (Number(this.insurancePlanId) == INSURANCE_PLAN.BERRIES && this.reportChoice == REPORT_CHOICES.INVENTORY) {
-            // only the inventory report for berries is ready; the DOP report is not ready yet
+        if (Number(this.insurancePlanId) == INSURANCE_PLAN.GRAIN 
+            || Number(this.insurancePlanId) == INSURANCE_PLAN.FORAGE 
+            || Number(this.insurancePlanId) == INSURANCE_PLAN.BERRIES ) {
+                
             return false
         }
 

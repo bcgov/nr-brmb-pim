@@ -31,13 +31,16 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropVarietyDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropVarietyInsPlantInsXrefDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropVarietyInsurabilityDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityForageDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldCommodityBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldForageDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldRollupDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldRollupForageDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldVarietyBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.FieldDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.GradeModifierDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.GradeModifierTypeCodeDao;
@@ -333,8 +336,23 @@ public class PersistenceSpringConfig {
 	}
 
 	@Bean
+	public DeclaredYieldFieldCommodityBerriesDao declaredYieldFieldCommodityBerriesDao() { 
+		return new DeclaredYieldFieldCommodityBerriesDao(); 
+	}
+
+	@Bean
+	public DeclaredYieldFieldVarietyBerriesDao declaredYieldFieldVarietyBerriesDao() { 
+		return new DeclaredYieldFieldVarietyBerriesDao(); 
+	}
+	
+	@Bean
 	public DeclaredYieldContractCommodityDao declaredYieldContractCommodityDao() { 
 		return new DeclaredYieldContractCommodityDao(); 
+	}
+
+	@Bean
+	public DeclaredYieldContractCommodityBerriesDao declaredYieldContractCommodityBerriesDao() { 
+		return new DeclaredYieldContractCommodityBerriesDao(); 
 	}
 	
 	@Bean

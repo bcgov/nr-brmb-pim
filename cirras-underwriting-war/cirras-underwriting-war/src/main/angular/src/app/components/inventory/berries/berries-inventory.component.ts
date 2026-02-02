@@ -61,6 +61,20 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    
+    if ( changes.growerContract && this.growerContract ) {
+
+      this.hasYieldData = false
+
+      // check for yield data
+      for (let i = 0; i< this.growerContract.links.length; i++ ) {
+
+        if ( this.growerContract.links[i].href.toLocaleLowerCase().indexOf("dopyieldcontracts") > -1  ) {
+          this.hasYieldData = true
+          break
+        } 
+      }
+    }
 
     // populate commodity and variety lists
     if (changes.cropCommodityList && this.cropCommodityList && this.cropCommodityList.collection && this.cropCommodityList.collection.length ) {
@@ -461,17 +475,18 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     }
   }
 
+  //Hide on printout is not used by berries at the moment; should always be false
   onCheckForHiddenPlantingsInTotals() {
 
     this.isHiddenPlantingInTotals = false
 
-    for (let field of  this.inventoryContract.fields) {
-      for (let planting of field.plantings) {
-        if (planting.isHiddenOnPrintoutInd && planting.inventoryBerries.plantedAcres > 0 ) {
-          this.isHiddenPlantingInTotals = true
-        }
-      }
-    }
+    // for (let field of  this.inventoryContract.fields) {
+    //   for (let planting of field.plantings) {
+    //     if (planting.isHiddenOnPrintoutInd && planting.inventoryBerries.plantedAcres > 0 ) {
+    //       this.isHiddenPlantingInTotals = true
+    //     }
+    //   }
+    // }
   }
 
   onPrint() {

@@ -18,20 +18,20 @@
                 </div>
             </div>
             <div matTooltip="Changes must be saved before download is possible.">
-                <!-- <button mat-raised-button class="secondary button-large-text" [disabled]="isUnsaved"
+                <button mat-raised-button class="secondary button-large-text" [disabled]="isUnsaved"
                 (click)="onPrint()">
                     <mat-icon class="button-mat-icon">download</mat-icon>Download
-                </button> -->
+                </button>
             </div>
             <div>
-                <!-- <button 
+                <button 
                     *ngIf="securityUtilService.canEditDop() && !hasVerifiedYieldData" 
                     mat-raised-button 
                     class="primary button-large-text" 
                     [disabled]="!isUnsaved" 
                     (click)="onSave()">
                         Save
-                </button> -->
+                </button>
             </div>
         </div>        
             
@@ -57,8 +57,8 @@
                     <p>Last Updated: {{ ((dopYieldContract && dopYieldContract.dopUpdateTimestamp) ? dopYieldContract.dopUpdateTimestamp : "" ) | date }}</p>
                 </div>            
                 
-                <div> <!-- TODO: -->
-                    <!-- <uw-comments-button
+                <div>
+                    <uw-comments-button
                         [underwritingCommentTypeCode]="'DOP'"
                         [growerContractYearId]="dopYieldContract?.growerContractYearId"
                         [declaredYieldContractGuid]="dopYieldContract?.declaredYieldContractGuid"
@@ -66,28 +66,28 @@
                         [growerName]="growerContract?.growerName"
                         [growerNumber]="growerContract?.growerNumber"
                         [uwComments]="dopYieldContract?.uwComments"
-                        (onDone)="onDopCommentsDone($event)"></uw-comments-button> -->
+                        (onDone)="onDopCommentsDone($event)"></uw-comments-button>
                 </div>
                 <div> <!-- TODO: -->
-                    <!-- <button *ngIf="!hasVerifiedYieldData"
+                    <button *ngIf="!hasVerifiedYieldData"
                         mat-raised-button 
                         class="secondary" 
                         class="header-button"  
                         matTooltip="Clear unsaved changes"
                         (click)="onCancel()">
                         Clear Changes
-                    </button> -->
+                    </button>
                 </div>
                 <div class="vertical-line"></div>
-                <div> <!-- TODO: -->
-                    <!-- <button *ngIf="securityUtilService.canDeleteDop() && !hasVerifiedYieldData &&
+                <div>
+                    <button *ngIf="securityUtilService.canDeleteDop() && !hasVerifiedYieldData &&
                                     dopYieldContract && 
                                     dopYieldContract.declaredYieldContractGuid" 
                                     mat-raised-button 
                                     class="secondary header-button-red" 
                                     (click)="onDeleteDop()">
                         <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset DOP
-                    </button> -->
+                    </button>
                 </div>
             </div>
 
