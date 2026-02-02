@@ -137,7 +137,7 @@ ORDER BY  f.location,
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
-					<textElement>
+					<textElement verticalAlignment="Top" rotation="None">
 						<font fontName="Noto Sans" size="7"/>
 						<paragraph leftIndent="2"/>
 					</textElement>

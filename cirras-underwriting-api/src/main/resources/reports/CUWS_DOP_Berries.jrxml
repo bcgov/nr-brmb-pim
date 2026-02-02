@@ -205,10 +205,6 @@ order by sort_column
 	<field name="commodity_name" class="java.lang.String"/>
 	<field name="date_printed" class="java.sql.Date"/>
 	<field name="sort_column" class="java.lang.String"/>
-	<variable name="V_TOTAL_PAGES" class="java.lang.Integer">
-		<variableDescription><![CDATA[Total Pages]]></variableDescription>
-		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
-	</variable>
 	<group name="Group1" isStartNewPage="true" isResetPageNumber="true">
 		<groupExpression><![CDATA[$F{policy_id} + $F{contract_id} + $F{policy_number} + $F{crop_year} + $F{grower_number} + $F{grower_name} +$F{grower_address_line1}  + $F{grower_address_line2}  + $F{grower_city} +$F{grower_province} + $F{grower_postal_code} + $F{grower_primary_name} + $F{grower_primary_phone} + $F{grower_primary_email} + $F{crop_commodity_id} + $F{commodity_name}  +$F{date_printed}  + $F{sort_column}]]></groupExpression>
 		<groupHeader>
@@ -368,7 +364,7 @@ order by sort_column
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Noto Sans" size="16"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Schedule D-14: Declaration of Production - " + $F{commodity_name} ]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Schedule D-14: Declaration of Production - " + $F{commodity_name}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -488,13 +484,7 @@ order by sort_column
 					<reportElement x="0" y="100" width="99" height="1" uuid="38533213-6482-4e18-b449-7e33fed550f0"/>
 				</break>
 				<subreport>
-					<reportElement x="0" y="102" width="554" height="30" printWhenGroupChanges="Group1" uuid="791f8975-e1ea-4b51-a0bb-ea67adf6f401"/>
-					<subreportParameter name="p_grower_name">
-						<subreportParameterExpression><![CDATA[$F{grower_name}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter name="p_policy_number">
-						<subreportParameterExpression><![CDATA[$F{policy_number}]]></subreportParameterExpression>
-					</subreportParameter>
+					<reportElement x="0" y="102" width="554" height="30" uuid="791f8975-e1ea-4b51-a0bb-ea67adf6f401"/>
 					<subreportParameter name="p_commodity_name">
 						<subreportParameterExpression><![CDATA[$F{commodity_name}]]></subreportParameterExpression>
 					</subreportParameter>
@@ -507,7 +497,7 @@ order by sort_column
 	<pageHeader>
 		<band height="55">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} >= 2 ]]></printWhenExpression>
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} >= 2]]></printWhenExpression>
 			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="378" height="20" uuid="36239f0e-5b31-4bf1-8b53-72d877ed8cfa">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -546,7 +536,7 @@ order by sort_column
 		<band height="39" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<subreport>
-				<reportElement x="0" y="0" width="555" height="39" printWhenGroupChanges="Group1" uuid="dda197e2-c53c-4885-937e-69c1f8b28691">
+				<reportElement style="GlobalDefault" x="0" y="0" width="555" height="39" uuid="dda197e2-c53c-4885-937e-69c1f8b28691">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
