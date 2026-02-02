@@ -84,7 +84,8 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 	private Integer cropYear2 = 2022;
 
 	private Integer legalLandId = 90000015;
-	private Integer fieldId = 90000016;
+	private Integer fieldId1 = 90000016;
+	private Integer fieldId2 = 90000019;
 	
 	private Integer annualFieldDetailId1 = 90000017;
 	private Integer contractedFieldDetailId1 = 90000018;
@@ -141,7 +142,8 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 			annualFieldDetailId3 = null;
 		}
 
-		service.deleteField(topLevelEndpoints, fieldId.toString());
+		service.deleteField(topLevelEndpoints, fieldId1.toString());
+		service.deleteField(topLevelEndpoints, fieldId2.toString());
 		service.deleteLegalLandSync(topLevelEndpoints, legalLandId.toString());
 		
 		service.deleteGrowerContractYear(topLevelEndpoints, gcyId1.toString());
@@ -191,9 +193,9 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		createGrowerContractYear(gcyId1, cropYear1);
 
 		createLegalLand();
-		createField();
-		createAnnualFieldDetail(annualFieldDetailId1, cropYear1);
-		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, gcyId1, false);
+		createField(fieldId1);
+		createAnnualFieldDetail(annualFieldDetailId1, cropYear1, fieldId1);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, gcyId1, false, 1);
 		
 		UwContractRsrc uwContractRsrc = getUwContract(policyNumber1, service, topLevelEndpoints);
 		Assert.assertNotNull(uwContractRsrc);
@@ -263,7 +265,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedField.setContractedFieldDetailId(contractedFieldDetailId1);
 		expectedField.setCropYear(cropYear1);
 		expectedField.setDisplayOrder(1);
-		expectedField.setFieldId(fieldId);
+		expectedField.setFieldId(fieldId1);
 		expectedField.setFieldLabel("Field Label");
 		expectedField.setFieldLocation(fieldLocation);
 		expectedField.setIsLeasedInd(false);
@@ -276,7 +278,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfcb.setCropCommodityId(10);
 		expectedDyfcb.setCropCommodityName("BLUEBERRY");		
 		expectedDyfcb.setCropYear(cropYear1);
-		expectedDyfcb.setFieldId(fieldId);		
+		expectedDyfcb.setFieldId(fieldId1);		
 		expectedDyfcb.setTotalProduction(null);		
 		expectedDyfcb.setTotalProductionOverride(null);
 
@@ -299,7 +301,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfcb.setCropCommodityId(12);
 		expectedDyfcb.setCropCommodityName("RASPBERRY");
 		expectedDyfcb.setCropYear(cropYear1);
-		expectedDyfcb.setFieldId(fieldId);		
+		expectedDyfcb.setFieldId(fieldId1);		
 		expectedDyfcb.setTotalProduction(null);		
 		expectedDyfcb.setTotalProductionOverride(null);
 
@@ -373,9 +375,14 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		createGrowerContractYear(gcyId1, cropYear1);
 
 		createLegalLand();
-		createField();
-		createAnnualFieldDetail(annualFieldDetailId1, cropYear1);
-		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, gcyId1, false);
+
+		createField(fieldId1);
+		createAnnualFieldDetail(annualFieldDetailId1, cropYear1, fieldId1);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, gcyId1, false, 1);
+
+		createField(fieldId2);
+		createAnnualFieldDetail(annualFieldDetailId2, cropYear1, fieldId2);
+		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId2, gcyId1, false, 2);		
 		
 		UwContractRsrc uwContractRsrc = getUwContract(policyNumber1, service, topLevelEndpoints);
 		Assert.assertNotNull(uwContractRsrc);
@@ -387,6 +394,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNotNull(invContract.getFields().get(0).getPlantings());
 		Assert.assertNotNull(invContract.getFields().get(0).getPlantings().get(0).getInventoryBerries());
 
+		// Field 1
 		// Remove default planting.
 		AnnualFieldRsrc field = invContract.getFields().get(0);
 		field.getPlantings().remove(0);
@@ -406,7 +414,14 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		// Planting with 0 acres will be excluded from DOP rollover.
 		createPlanting(field, 5, cropYear1);
 		createInventoryBerries(field.getPlantings().get(4), 13, "STRAWBERRY", 1010702, "HOOD", 0.0, null, null, true, true, null, 2021, null, null, null, false);
-		
+
+		// Field 2
+		// Remove default planting.
+		field = invContract.getFields().get(1);
+		field.getPlantings().remove(0);
+
+		createPlanting(field, 1, cropYear1);
+		createInventoryBerries(field.getPlantings().get(0), 10, "BLUEBERRY", 1010689, "BLUEJAY", 600.0, 10, 5.3, true, true, null, 2020, null, null, null, false);
 		
 		//Create inventory contract
 		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
@@ -426,9 +441,11 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNotNull(newDyc);
 		Assert.assertNull(newDyc.getDeclaredYieldContractGuid());
 		Assert.assertNotNull(newDyc.getFields());
-		Assert.assertEquals(1, newDyc.getFields().size());
+		Assert.assertEquals(2, newDyc.getFields().size());
 		Assert.assertNotNull(newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList());
 		Assert.assertEquals(2, newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().size());
+		Assert.assertNotNull(newDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList());
+		Assert.assertEquals(1, newDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().size());
 
 		// Expected values
 		// Dop Yield Contract
@@ -440,12 +457,13 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyc.setInsurancePlanId(insurancePlanId);
 
 		// Fields
+		// Field 1
 		AnnualFieldRsrc expectedField = new AnnualFieldRsrc();
 		expectedField.setAnnualFieldDetailId(annualFieldDetailId1);
 		expectedField.setContractedFieldDetailId(contractedFieldDetailId1);
 		expectedField.setCropYear(cropYear1);
 		expectedField.setDisplayOrder(1);
-		expectedField.setFieldId(fieldId);
+		expectedField.setFieldId(fieldId1);
 		expectedField.setFieldLabel("Field Label");
 		expectedField.setFieldLocation(fieldLocation);
 		expectedField.setIsLeasedInd(false);
@@ -458,7 +476,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfcb.setCropCommodityId(10);
 		expectedDyfcb.setCropCommodityName("BLUEBERRY");		
 		expectedDyfcb.setCropYear(cropYear1);
-		expectedDyfcb.setFieldId(fieldId);		
+		expectedDyfcb.setFieldId(fieldId1);		
 		expectedDyfcb.setTotalProduction(null);		
 		expectedDyfcb.setTotalProductionOverride(null);
 
@@ -481,7 +499,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfcb.setCropCommodityId(12);
 		expectedDyfcb.setCropCommodityName("RASPBERRY");
 		expectedDyfcb.setCropYear(cropYear1);
-		expectedDyfcb.setFieldId(fieldId);		
+		expectedDyfcb.setFieldId(fieldId1);		
 		expectedDyfcb.setTotalProduction(null);		
 		expectedDyfcb.setTotalProductionOverride(null);
 
@@ -513,6 +531,45 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 
 		expectedDyc.getFields().add(expectedField);
 
+		// Field 2
+		expectedField = new AnnualFieldRsrc();
+		expectedField.setAnnualFieldDetailId(annualFieldDetailId2);
+		expectedField.setContractedFieldDetailId(contractedFieldDetailId2);
+		expectedField.setCropYear(cropYear1);
+		expectedField.setDisplayOrder(2);
+		expectedField.setFieldId(fieldId2);
+		expectedField.setFieldLabel("Field Label");
+		expectedField.setFieldLocation(fieldLocation);
+		expectedField.setIsLeasedInd(false);
+		expectedField.setLegalLandId(legalLandId);
+		expectedField.setOtherLegalDescription("TEST LEGAL LOC 123");
+		expectedField.setPrimaryPropertyIdentifier("GF0099999");
+
+		// BLUEBERRY
+		expectedDyfcb = new DopYieldFieldCommodityBerries();
+		expectedDyfcb.setCropCommodityId(10);
+		expectedDyfcb.setCropCommodityName("BLUEBERRY");		
+		expectedDyfcb.setCropYear(cropYear1);
+		expectedDyfcb.setFieldId(fieldId2);		
+		expectedDyfcb.setTotalProduction(null);		
+		expectedDyfcb.setTotalProductionOverride(null);
+
+		expectedDyfvb = new DopYieldFieldVarietyBerries();
+		expectedDyfvb.setAbandonmentYield(null);
+		expectedDyfvb.setCropVarietyId(1010689);
+		expectedDyfvb.setCropVarietyName("BLUEJAY");
+		expectedDyfvb.setPlantedAcres(600.0);
+		expectedDyfvb.setSalesYield(null);
+		expectedDyfvb.setSoldShippedYield(null);
+		expectedDyfvb.setTotalProduction(null);
+		expectedDyfvb.setTotalProductionOverride(null);
+		
+		expectedDyfcb.getDopYieldFieldVarietyBerriesList().add(expectedDyfvb);
+		
+		expectedField.getDopYieldFieldCommodityBerriesList().add(expectedDyfcb);
+
+		expectedDyc.getFields().add(expectedField);
+		
 		
 		// Dop Yield Contract Commodity Berries
 		DopYieldContractCommodityBerries expectedDyccb = new DopYieldContractCommodityBerries();
@@ -544,32 +601,29 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		
 		// Dop Yield Contract Commodity Berries
 		// BLUEBERRY
-		newDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(11.22);
 		newDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(33.44);
 
-		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(11.22);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(22.88);   // Calculated
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(33.44);
 		
 		// RASPBERRY
-		newDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(55.66);
 		newDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(77.88);
-		
-		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(55.66);
+
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(44.66);  // Calculated
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(77.88);
 
+		// Field 1
 		// Dop Yield Field Commodity Berries
 		// BLUEBERRY
-		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProduction(11.99);
 		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProductionOverride(22.88);
 
-		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProduction(11.99);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProduction(55.99);   // Calculated
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProductionOverride(22.88);
 		
 		// RASPBERRY
-		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).setTotalProduction(33.77);
 		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).setTotalProductionOverride(44.66);
-		
-		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).setTotalProduction(33.77);
+	
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).setTotalProduction(00.44); // Calculated
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).setTotalProductionOverride(44.66);
 		
 
@@ -578,27 +632,46 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(11.55);
 		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(22.66);
 		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(33.77);
-		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProduction(44.88);
 		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(55.99);
 		
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(11.55);
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(22.66);
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(33.77);
-		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProduction(44.88);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProduction(11.55 + 22.66 + 33.77);  // Calculated
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(55.99);
+
+		// RASPBERRY - MALAHAT
+		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(null);
+		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(null);
+		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(null);
+		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(null);
+		
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(null);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(null);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(null);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setTotalProduction(0.0);  // Calculated
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(null);
 		
 		// RASPBERRY - MEEKER
 		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setAbandonmentYield(66.00);
 		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setSalesYield(77.11);
 		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setSoldShippedYield(88.22);
-		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setTotalProduction(99.33);
 		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setTotalProductionOverride(00.44);
 		
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setAbandonmentYield(66.00);
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setSalesYield(77.11);
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setSoldShippedYield(88.22);
-		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setTotalProduction(99.33);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setTotalProduction(66.00 + 77.11 + 88.22);  // Calculated
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setTotalProductionOverride(00.44);
+
+		// Field 2
+		// Dop Yield Field Commodity Berries
+		// BLUEBERRY
+		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).setTotalProduction(0.0);   // Calculated
+		
+		// Dop Yield Field Variety Berries
+		// BLUEBERRY - BLUEJAY
+		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProduction(0.0);  // Calculated
 		
 		DopYieldContractRsrc fetchedDyc = service.createDopYieldContract(topLevelEndpoints, newDyc);
 		checkDopYieldContract(expectedDyc, fetchedDyc);
@@ -615,32 +688,29 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		// Update DOP
 		// Dop Yield Contract Commodity Berries
 		// BLUEBERRY
-		fetchedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(null);
 		fetchedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(null);
 
-		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(null);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(88.22);  // Calculated
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(null);
 
 		// RASPBERRY
-		fetchedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(98.76);
 		fetchedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(54.32);
-		
-		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(98.76);
+
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(44.00);  // Calculated
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(54.32);
 
+		// Field 1
 		// Dop Yield Field Commodity Berries
 		// BLUEBERRY
-		fetchedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProduction(99.11);
 		fetchedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProductionOverride(88.22);
 
-		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProduction(99.11);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProduction(0.0);  // Calculated
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProductionOverride(88.22);
 		
 		// RASPBERRY
-		fetchedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).setTotalProduction(null);
 		fetchedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).setTotalProductionOverride(null);
-		
-		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).setTotalProduction(null);
+
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).setTotalProduction(44.00);  // Calculated
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).setTotalProductionOverride(null);
 		
 		// Dop Yield Field Variety Berries
@@ -648,31 +718,120 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		fetchedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(null);
 		fetchedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(null);
 		fetchedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(null);
-		fetchedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProduction(null);
 		fetchedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(null);
 		
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(null);
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(null);
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(null);
-		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProduction(null);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProduction(0.0);  // Calculated
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(null);
 		
 		// RASPBERRY - MEEKER
 		fetchedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setAbandonmentYield(00.66);
 		fetchedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setSalesYield(11.77);
 		fetchedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setSoldShippedYield(22.88);
-		fetchedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setTotalProduction(33.99);
 		fetchedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setTotalProductionOverride(44.00);
 		
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setAbandonmentYield(00.66);
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setSalesYield(11.77);
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setSoldShippedYield(22.88);
-		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setTotalProduction(33.99);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setTotalProduction(00.66 + 11.77 + 22.88);  // Calculated
 		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setTotalProductionOverride(44.00);
 		
 		DopYieldContractRsrc updatedDyc = service.updateDopYieldContract(fetchedDyc);
 		checkDopYieldContract(expectedDyc, updatedDyc);
 
+		// Update DOP - Test Calculations
+		// Dop Yield Contract Commodity Berries
+		// BLUEBERRY
+		updatedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(null);
+
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(81.55);  // Calculated: 67.98 + 13.57
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(null);
+
+		// RASPBERRY
+		updatedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(null);
+
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(132.84);  // Calculated: 35.31 + 97.53
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(null);
+
+		// Field 1
+		// Dop Yield Field Commodity Berries
+		// BLUEBERRY
+		updatedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProductionOverride(null);
+
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProduction(67.98);  // Calculated
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProductionOverride(null);
+		
+		// RASPBERRY
+		updatedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).setTotalProductionOverride(null);
+
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).setTotalProduction(132.84);  // Calculated: 35.31 + 97.53
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).setTotalProductionOverride(null);
+		
+		// Dop Yield Field Variety Berries
+		// BLUEBERRY - BLUEJAY
+		updatedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(11.55);
+		updatedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(22.66);
+		updatedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(33.77);
+		updatedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(null);
+		
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(11.55);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(22.66);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(33.77);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProduction(67.98);  // Calculated: 11.55 + 22.66 + 33.77
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(null);
+
+		// RASPBERRY - MALAHAT
+		updatedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(null);
+		updatedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(null);
+		updatedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(null);
+		updatedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(97.53);
+		
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(null);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(null);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(null);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setTotalProduction(0.0);  // Calculated
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(97.53);
+		
+		// RASPBERRY - MEEKER
+		updatedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setAbandonmentYield(00.66);
+		updatedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setSalesYield(11.77);
+		updatedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setSoldShippedYield(22.88);
+		updatedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setTotalProductionOverride(null);
+		
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setAbandonmentYield(00.66);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setSalesYield(11.77);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setSoldShippedYield(22.88);
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setTotalProduction(35.31);  // Calculated: 00.66 + 11.77 + 22.88
+		expectedDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(1).getDopYieldFieldVarietyBerriesList().get(1).setTotalProductionOverride(null);
+
+		
+		
+		// Field 2
+		// Dop Yield Field Commodity Berries
+		// BLUEBERRY
+		updatedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).setTotalProductionOverride(13.57);
+
+		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).setTotalProduction(0.0);  // Calculated
+		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).setTotalProductionOverride(13.57);
+				
+		// Dop Yield Field Variety Berries
+		// BLUEBERRY - BLUEJAY
+		updatedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(null);
+		updatedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(null);
+		updatedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(null);
+		updatedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(null);
+		
+		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(null);
+		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(null);
+		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(null);
+		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProduction(0.0);  // Calculated
+		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(null);
+		
+		updatedDyc = service.updateDopYieldContract(updatedDyc);
+		checkDopYieldContract(expectedDyc, updatedDyc);
+		
 		//Delete DOP
 		service.deleteDopYieldContract(updatedDyc);
 		
@@ -966,7 +1125,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 
 	}
 	
-	private void createField() throws CirrasUnderwritingServiceException, ValidationException {
+	private void createField(Integer fieldId) throws CirrasUnderwritingServiceException, ValidationException {
 
 		FieldRsrc resource = new FieldRsrc();
 		
@@ -980,7 +1139,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		service.synchronizeField(resource);
 	}
 	
-	private void createAnnualFieldDetail(Integer annualFieldDetailId, Integer cropYear) throws CirrasUnderwritingServiceException, ValidationException {
+	private void createAnnualFieldDetail(Integer annualFieldDetailId, Integer cropYear, Integer fieldId) throws CirrasUnderwritingServiceException, ValidationException {
 
 		AnnualFieldDetailRsrc resource = new AnnualFieldDetailRsrc();
 		
@@ -993,14 +1152,14 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		service.synchronizeAnnualFieldDetail(resource);
 	}
 
-	private void createContractedFieldDetail(Integer contractedFieldDetailId, Integer annualFieldDetailId, Integer gcyId, Boolean isLeased) throws CirrasUnderwritingServiceException, ValidationException {
+	private void createContractedFieldDetail(Integer contractedFieldDetailId, Integer annualFieldDetailId, Integer gcyId, Boolean isLeased, Integer displayOrder) throws CirrasUnderwritingServiceException, ValidationException {
 		
 		ContractedFieldDetailRsrc resource = new ContractedFieldDetailRsrc();
 		
 		resource.setContractedFieldDetailId(contractedFieldDetailId);
 		resource.setAnnualFieldDetailId(annualFieldDetailId);
 		resource.setGrowerContractYearId(gcyId);
-		resource.setDisplayOrder(1);
+		resource.setDisplayOrder(displayOrder);
 		resource.setIsLeasedInd(isLeased);
 		resource.setTransactionType(LandManagementEventTypes.ContractedFieldDetailCreated);
 	
