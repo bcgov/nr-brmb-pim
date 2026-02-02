@@ -143,6 +143,10 @@ public class DeclaredYieldFieldCommodityBerriesDaoTest {
 
 		createDeclaredYieldContract(userId, cropYear1);
 
+		//Check dop yield field record = expected 0
+		int totalDopWithYield = declaredYieldFieldCommodityBerriesDao.getTotalDopRecordsWithYield(fieldId1, cropYear1);
+		Assert.assertEquals("totalDopWithYield 0", 0, totalDopWithYield);
+
 		//INSERT
 		DeclaredYieldFieldCommodityBerriesDto newDto = new DeclaredYieldFieldCommodityBerriesDto();
 
@@ -157,6 +161,10 @@ public class DeclaredYieldFieldCommodityBerriesDaoTest {
 		declaredYieldFieldCommodityBerriesDao.insert(newDto, userId);
 		Assert.assertNotNull(newDto.getDeclaredYieldFieldCommodityBerriesGuid());
 		declaredYieldFieldCommodityBerriesGuid = newDto.getDeclaredYieldFieldCommodityBerriesGuid();
+		
+		//Check dop yield field record = expected 1
+		totalDopWithYield = declaredYieldFieldCommodityBerriesDao.getTotalDopRecordsWithYield(fieldId1, cropYear1);
+		Assert.assertEquals("totalDopWithYield 1", 1, totalDopWithYield);
 		
 		//GET BY FIELD
 		List<DeclaredYieldFieldCommodityBerriesDto> dtos = declaredYieldFieldCommodityBerriesDao.select(fieldId1, cropYear1);

@@ -230,6 +230,7 @@ public class ServiceApiSpringConfig {
 		result.setDeclaredYieldFieldForageDao(persistenceSpringConfig.declaredYieldFieldForageDao());
 		result.setDeclaredYieldContractDao(persistenceSpringConfig.declaredYieldContractDao());
 		result.setCropCommodityDao(persistenceSpringConfig.cropCommodityDao());
+		result.setDeclaredYieldFieldCommodityBerriesDao(persistenceSpringConfig.declaredYieldFieldCommodityBerriesDao());
 
 		result.setCirrasPolicyService(cirrasPolicyService);
 
