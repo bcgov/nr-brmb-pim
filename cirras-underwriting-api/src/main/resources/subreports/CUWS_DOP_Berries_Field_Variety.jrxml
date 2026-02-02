@@ -137,7 +137,7 @@ ORDER BY  f.location,
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
-					<textElement>
+					<textElement verticalAlignment="Top" rotation="None">
 						<font fontName="Noto Sans" size="7"/>
 						<paragraph leftIndent="2"/>
 					</textElement>
@@ -536,7 +536,10 @@ ORDER BY  f.location,
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Noto Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{planted_acres} == null ? "" : ((double)$F{planted_acres}.intValue() == $F{planted_acres}.doubleValue() ? $F{planted_acres}.intValue() + "" : $F{planted_acres}.toString() )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(double)$F{planted_acres}.intValue() == $F{planted_acres}.doubleValue() ? 
+	(new java.text.DecimalFormat("#,##0").format($F{planted_acres}.doubleValue()))
+	:
+	(new java.text.DecimalFormat("#,##0.0").format($F{planted_acres}.doubleValue()))]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ContainerHeight" x="188" y="0" width="70" height="20" uuid="33930eec-0f04-4d7f-904d-e0c7d13a7201">
