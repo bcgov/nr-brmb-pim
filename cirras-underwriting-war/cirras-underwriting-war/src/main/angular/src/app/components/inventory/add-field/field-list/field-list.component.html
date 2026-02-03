@@ -64,8 +64,9 @@
                 <div class="border-left justify-center border-bottom" >
                     <input 
                         type="radio" 
-                        [value]="-1" 
-                        formControlName="fieldIdSelected" />
+                        [value]="'-1'" 
+                        formControlName="fieldIdSelected" 
+                        (click)="sendNewField()"/>
                 </div>
 
                 <div class="fill justify-left border-bottom border-right" [ngStyle]="setNewFieldStyles()">
@@ -73,13 +74,13 @@
                     &nbsp;&nbsp; &nbsp;
                     <mat-form-field *ngIf="isNewFieldLocationVisible()" appearance="fill">
                         <input style="width: 100px;" matInput formControlName="fieldLocation" 
-                                maxlength="128" (keyup)="checkLength()">
+                                maxlength="128" (keyup)="sendNewField()">
                         <mat-hint>Address</mat-hint>
                     </mat-form-field> 
                     &nbsp;&nbsp; &nbsp;
                     <mat-form-field *ngIf="isNewFieldLabelVisible()" appearance="fill">
                         <input style="width: 100px;" matInput formControlName="fieldLabel" 
-                                maxlength="128" (keyup)="checkLength()">
+                                maxlength="128" (keyup)="sendNewField()">
                         <mat-hint>{{ getNewFieldNameHint() }} </mat-hint>
                     </mat-form-field> 
                 </div>
