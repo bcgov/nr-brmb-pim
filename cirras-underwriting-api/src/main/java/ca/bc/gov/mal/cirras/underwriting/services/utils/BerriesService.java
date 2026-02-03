@@ -266,7 +266,7 @@ public class BerriesService {
 
 		logger.debug("<calculateDeclaredYieldContractCommodityBerries");
 
-		Double totalProduction = 0.0;
+		Double totalProduction = null;
 
 		List<AnnualFieldRsrc> fields = dopYieldContract.getFields();
 		if (fields != null && !fields.isEmpty()) {
@@ -277,7 +277,8 @@ public class BerriesService {
 
 					for (DopYieldFieldCommodityBerries dyfcb : dopYieldFieldCommodityBerriesList) {
 						if ( dyfcb.getCropCommodityId().equals(dopContractCommodityBerries.getCropCommodityId()) ) {
-							totalProduction += notNull(dyfcb.getTotalProductionOverride(), dyfcb.getTotalProduction());
+							Double currTotalProduction = notNull(dyfcb.getTotalProductionOverride(), dyfcb.getTotalProduction());
+							totalProduction = safeAdd(totalProduction, currTotalProduction);
 						}
 					}
 				}
@@ -347,11 +348,12 @@ public class BerriesService {
 
 		logger.debug("<calculateDeclaredYieldFieldCommodityBerries");
 
-		Double totalProduction = 0.0;
+		Double totalProduction = null;
 		List<DopYieldFieldVarietyBerries> dyfvbList = dopYieldFieldCommodityBerries.getDopYieldFieldVarietyBerriesList();
 		if (dyfvbList != null && !dyfvbList.isEmpty()) {
 			for (DopYieldFieldVarietyBerries dyfvb : dyfvbList) {
-				totalProduction += notNull(dyfvb.getTotalProductionOverride(), dyfvb.getTotalProduction());
+				Double currTotalProduction = notNull(dyfvb.getTotalProductionOverride(), dyfvb.getTotalProduction());
+				totalProduction = safeAdd(totalProduction, currTotalProduction);
 			}
 		}
 		
@@ -416,11 +418,11 @@ public class BerriesService {
 
 		logger.debug("<calculateDeclaredYieldFieldVarietyBerries");
 
-		Double abandonmentYield = notNull(dopYieldFieldVarietyBerries.getAbandonmentYield(), 0.0);
-		Double salesYield = notNull(dopYieldFieldVarietyBerries.getSalesYield(), 0.0);
-		Double soldShippedYield = notNull(dopYieldFieldVarietyBerries.getSoldShippedYield(), 0.0);
-		
-		Double totalProduction = abandonmentYield + salesYield + soldShippedYield;
+		Double totalProduction = null;
+
+		totalProduction = safeAdd(totalProduction, dopYieldFieldVarietyBerries.getAbandonmentYield());
+		totalProduction = safeAdd(totalProduction, dopYieldFieldVarietyBerries.getSalesYield());
+		totalProduction = safeAdd(totalProduction, dopYieldFieldVarietyBerries.getSoldShippedYield());
 		
 		dopYieldFieldVarietyBerries.setTotalProduction(totalProduction);
 		
@@ -489,6 +491,17 @@ public class BerriesService {
 
 	private Double notNull(Double value, Double defaultValue) {
 		return (value == null) ? defaultValue : value;
+	}
+
+	// Add op1 and op2, handling null specially.
+	private Double safeAdd(Double op1, Double op2) {
+		if ( op1 == null ) {
+			return op2;
+		} else if ( op2 == null ) {
+			return op1;
+		} else {
+			return op1 + op2;			
+		}
 	}
 	
 }
