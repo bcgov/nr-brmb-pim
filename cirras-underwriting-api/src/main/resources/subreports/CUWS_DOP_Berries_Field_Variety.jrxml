@@ -20,6 +20,7 @@
 	, sum (ib.planted_acres) AS planted_acres
 	, cfd.display_order -- for order by purposes, to keep fields ordered the same way as in inventory report
 	, cfd.contracted_field_detail_id
+	, ib.crop_commodity_id
 FROM grower_contract_year gcy
 	join inventory_contract ic ON 
 	 ic.contract_id = gcy.contract_id 
@@ -54,6 +55,7 @@ GROUP BY gcy.contract_id
 	, cv.variety_name
 	, cfd.display_order
 	, cfd.contracted_field_detail_id
+	, ib.crop_commodity_id
 ORDER BY  f.location, 
   f.field_label,
   cfd.display_order,
@@ -102,6 +104,7 @@ ORDER BY  f.location,
 	</field>
 	<field name="display_order" class="java.lang.Integer"/>
 	<field name="contracted_field_detail_id" class="java.lang.Integer"/>
+	<field name="crop_commodity_id" class="java.lang.Integer"/>
 	<variable name="sum_planted_acres" class="java.lang.Double" resetType="Group" resetGroup="Group1" calculation="Sum">
 		<variableExpression><![CDATA[$F{planted_acres}]]></variableExpression>
 	</variable>
@@ -109,7 +112,7 @@ ORDER BY  f.location,
 		<variableExpression><![CDATA[$F{planted_acres}]]></variableExpression>
 	</variable>
 	<group name="Group2" isStartNewPage="true" isReprintHeaderOnEachPage="true" keepTogether="true">
-		<groupExpression><![CDATA[$P{p_crop_commodity_id}]]></groupExpression>
+		<groupExpression><![CDATA[ $P{p_contract_id} + $P{p_crop_year} +$P{p_crop_commodity_id}]]></groupExpression>
 		<groupHeader>
 			<band height="80">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -533,7 +536,7 @@ ORDER BY  f.location,
 		</groupFooter>
 	</group>
 	<group name="Group1" keepTogether="true">
-		<groupExpression><![CDATA[$F{location} + $F{field_label}]]></groupExpression>
+		<groupExpression><![CDATA[$F{contract_id} + $F{crop_year} + $F{crop_commodity_id} + $F{location} + $F{field_label}]]></groupExpression>
 		<groupHeader>
 			<band height="1">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
