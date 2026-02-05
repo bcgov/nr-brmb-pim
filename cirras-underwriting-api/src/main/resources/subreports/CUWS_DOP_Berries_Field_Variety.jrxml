@@ -20,6 +20,7 @@
 	, sum (ib.planted_acres) AS planted_acres
 	, cfd.display_order -- for order by purposes, to keep fields ordered the same way as in inventory report
 	, cfd.contracted_field_detail_id
+	, ib.crop_commodity_id
 FROM grower_contract_year gcy
 	join inventory_contract ic ON 
 	 ic.contract_id = gcy.contract_id 
@@ -54,8 +55,8 @@ GROUP BY gcy.contract_id
 	, cv.variety_name
 	, cfd.display_order
 	, cfd.contracted_field_detail_id
-ORDER BY  f.location, 
-  f.field_label,
+	, ib.crop_commodity_id
+ORDER BY 
   cfd.display_order,
   cfd.contracted_field_detail_id,
   cv.variety_name]]>
@@ -102,7 +103,15 @@ ORDER BY  f.location,
 	</field>
 	<field name="display_order" class="java.lang.Integer"/>
 	<field name="contracted_field_detail_id" class="java.lang.Integer"/>
-	<group name="Group2" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+	<field name="crop_commodity_id" class="java.lang.Integer"/>
+	<variable name="sum_planted_acres" class="java.lang.Double" resetType="Group" resetGroup="Group1" calculation="Sum">
+		<variableExpression><![CDATA[$F{planted_acres}]]></variableExpression>
+	</variable>
+	<variable name="total_planted_acres" class="java.lang.Double" resetType="Group" resetGroup="Group2" calculation="Sum">
+		<variableExpression><![CDATA[$F{planted_acres}]]></variableExpression>
+	</variable>
+	<group name="Group2" isStartNewPage="true" isReprintHeaderOnEachPage="true" keepTogether="true">
+		<groupExpression><![CDATA[$F{contract_id} + $F{crop_year} + $F{inventory_contract_guid} + $F{crop_commodity_id}]]></groupExpression>
 		<groupHeader>
 			<band height="80">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -456,7 +465,42 @@ ORDER BY  f.location,
 			<band height="20">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<staticText>
-					<reportElement x="0" y="0" width="430" height="20" uuid="77c7c198-f152-4f1a-8f70-85d9754f6468">
+					<reportElement x="0" y="0" width="148" height="20" uuid="77c7c198-f152-4f1a-8f70-85d9754f6468">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+						<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+					</textElement>
+					<text><![CDATA[Grand Total]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="148" y="0" width="40" height="20" uuid="fe6b2d48-52ff-456c-ba1d-df35e24953e0"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[(double)$V{total_planted_acres}.intValue() == $V{total_planted_acres}.doubleValue() ? 
+	(new java.text.DecimalFormat("#,##0").format($V{total_planted_acres}.doubleValue()))
+	:
+	(new java.text.DecimalFormat("#,##0.0").format($V{total_planted_acres}.doubleValue()))]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="188" y="0" width="242" height="20" uuid="7da05598-09de-4b4a-8428-f6a175ba22f8">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
@@ -469,26 +513,112 @@ ORDER BY  f.location,
 						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+						<paragraph leftIndent="0" rightIndent="2" spacingAfter="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="430" y="0" width="56" height="20" uuid="1f62b1d8-b378-42b4-b3cf-322862d9756e">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="486" y="0" width="68" height="20" uuid="97675708-4494-4293-98e0-17c8e524a611">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+				</rectangle>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Group1" keepTogether="true">
+		<groupExpression><![CDATA[$F{contract_id} + $F{crop_year} +$F{inventory_contract_guid} + $F{crop_commodity_id} + $F{location} + $F{field_label} + $F{legal_description} +$F{display_order} +$F{contracted_field_detail_id}]]></groupExpression>
+		<groupHeader>
+			<band height="1">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="28">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<staticText>
+					<reportElement x="0" y="0" width="148" height="20" uuid="f0c0657e-db59-4f19-8859-d2d42f4825d5">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+						<paragraph leftIndent="2" rightIndent="2" spacingAfter="0"/>
+					</textElement>
+					<text><![CDATA[Total ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="188" y="0" width="242" height="20" uuid="7fba6dd1-748c-47b5-9941-8bff6d19ffd6">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font isBold="false"/>
 						<paragraph leftIndent="0" rightIndent="2" spacingAfter="0"/>
 					</textElement>
-					<text><![CDATA[GRAND TOTAL   ]]></text>
+					<text><![CDATA[]]></text>
 				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="Group1">
+					<reportElement x="148" y="0" width="40" height="20" uuid="66de771d-710a-47a6-a55c-a6f392c0f480"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[(double)$V{sum_planted_acres}.intValue() == $V{sum_planted_acres}.doubleValue() ? 
+	(new java.text.DecimalFormat("#,##0").format($V{sum_planted_acres}.doubleValue()))
+	:
+	(new java.text.DecimalFormat("#,##0.0").format($V{sum_planted_acres}.doubleValue()))]]></textFieldExpression>
+				</textField>
 				<rectangle>
-					<reportElement x="430" y="0" width="124" height="20" uuid="1f62b1d8-b378-42b4-b3cf-322862d9756e">
+					<reportElement x="430" y="0" width="56" height="20" uuid="dd17804c-42b1-40dd-98c2-3ae66db27368">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="486" y="0" width="68" height="20" uuid="12624ad6-1aff-4521-b348-60c6ff1985ef">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 				</rectangle>
 			</band>
 		</groupFooter>
 	</group>
 	<detail>
-		<band height="20" splitType="Prevent">
+		<band height="15" splitType="Prevent">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="ContainerHeight" x="58" y="0" width="90" height="20" uuid="b4dc0682-f213-442d-936e-9d9becf92cd9">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<reportElement stretchType="ContainerHeight" x="58" y="0" width="90" height="15" uuid="b4dc0682-f213-442d-936e-9d9becf92cd9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -504,7 +634,7 @@ ORDER BY  f.location,
 				<textFieldExpression><![CDATA[($P{p_crop_commodity_id} == 11 ? $F{field_label} : $F{location})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="ContainerHeight" x="0" y="0" width="58" height="20" uuid="d2359f20-1300-4cad-a08b-4c9271eff2aa">
+				<reportElement stretchType="ContainerHeight" x="0" y="0" width="58" height="15" uuid="d2359f20-1300-4cad-a08b-4c9271eff2aa">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -521,8 +651,7 @@ ORDER BY  f.location,
 				<textFieldExpression><![CDATA[$F{legal_description}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="ContainerHeight" x="148" y="0" width="40" height="20" uuid="e8623bb0-167b-4baf-a0e6-aed733c67b64">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<reportElement stretchType="ContainerHeight" x="148" y="0" width="40" height="15" uuid="e8623bb0-167b-4baf-a0e6-aed733c67b64">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -542,8 +671,7 @@ ORDER BY  f.location,
 	(new java.text.DecimalFormat("#,##0.0").format($F{planted_acres}.doubleValue()))]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="ContainerHeight" x="188" y="0" width="70" height="20" uuid="33930eec-0f04-4d7f-904d-e0c7d13a7201">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<reportElement stretchType="ContainerHeight" x="188" y="0" width="70" height="15" uuid="33930eec-0f04-4d7f-904d-e0c7d13a7201">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -560,55 +688,50 @@ ORDER BY  f.location,
 				<textFieldExpression><![CDATA[$F{variety_name}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement stretchType="ContainerHeight" x="330" y="0" width="50" height="20" uuid="2c00e75b-5119-47e4-b448-30696eef953c">
+				<reportElement stretchType="ContainerHeight" x="330" y="0" width="50" height="15" uuid="2c00e75b-5119-47e4-b448-30696eef953c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<graphicElement>
 					<pen lineWidth="0.75"/>
 				</graphicElement>
 			</rectangle>
 			<rectangle>
-				<reportElement stretchType="ContainerHeight" x="380" y="0" width="50" height="20" uuid="30500fb6-d6af-49a5-aba4-14b7b8d9c381">
+				<reportElement stretchType="ContainerHeight" x="380" y="0" width="50" height="15" uuid="30500fb6-d6af-49a5-aba4-14b7b8d9c381">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<graphicElement>
 					<pen lineWidth="0.75"/>
 				</graphicElement>
 			</rectangle>
 			<rectangle>
-				<reportElement stretchType="ContainerHeight" x="430" y="0" width="56" height="20" uuid="ff37dceb-b17d-4e87-b746-f88f3aa2eb01">
+				<reportElement stretchType="ContainerHeight" x="430" y="0" width="56" height="15" uuid="ff37dceb-b17d-4e87-b746-f88f3aa2eb01">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<graphicElement>
 					<pen lineWidth="0.75"/>
 				</graphicElement>
 			</rectangle>
 			<rectangle>
-				<reportElement stretchType="ContainerHeight" x="486" y="0" width="68" height="20" uuid="ef47ba4c-a7bc-4788-834c-0171d99dbb7f">
+				<reportElement stretchType="ContainerHeight" x="486" y="0" width="68" height="15" uuid="ef47ba4c-a7bc-4788-834c-0171d99dbb7f">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<graphicElement>
 					<pen lineWidth="0.75"/>
 				</graphicElement>
 			</rectangle>
 			<rectangle>
-				<reportElement stretchType="ContainerHeight" x="258" y="0" width="72" height="20" uuid="069a58a3-a6e7-4614-ae4a-169a8f365e88">
+				<reportElement stretchType="ContainerHeight" x="258" y="0" width="72" height="15" uuid="069a58a3-a6e7-4614-ae4a-169a8f365e88">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<graphicElement>
 					<pen lineWidth="0.75"/>
