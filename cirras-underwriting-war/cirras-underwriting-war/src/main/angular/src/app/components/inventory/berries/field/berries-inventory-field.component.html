@@ -51,8 +51,8 @@
     <!-- end cranberry specific -->
      
     <!-- plantings -->
-    <div class="planting-container" [ngStyle]="setPlantingStyles()"
-        [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout' : 'inventory-border'">
+    <div class="planting-container inventory-border-right" [ngStyle]="setPlantingStyles()">
+        <!-- [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout' : 'inventory-border'" -->
         <berries-inventory-planting 
             *ngFor="let planting of field.plantings"
             [planting]="planting"

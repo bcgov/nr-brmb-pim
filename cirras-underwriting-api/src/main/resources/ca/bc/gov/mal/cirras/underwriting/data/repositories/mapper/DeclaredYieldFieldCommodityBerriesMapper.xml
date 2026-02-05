@@ -123,4 +123,11 @@
 		order by cc.commodity_name
 	</select>
 
+	<select id="getTotalDopRecordsWithYield" resultType="int">
+		select count(t.declared_yield_field_commodity_berries_guid)
+		from declared_yield_field_commodity_berries t
+		where t.field_id = #{fieldId}
+		and t.crop_year = #{cropYear}
+		and (COALESCE(t.total_production, 0) > 0 or COALESCE(t.total_production_override, 0) > 0)
+	</select>
 </mapper>

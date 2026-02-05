@@ -191,4 +191,25 @@ public class DeclaredYieldFieldCommodityBerriesDao extends BaseDao {
 		logger.debug(">select " + dtos);
 		return dtos;
 	}
+
+	public int getTotalDopRecordsWithYield(Integer fieldId, Integer cropYear)
+			throws DaoException, NotFoundDaoException {
+		logger.debug("<getTotalDopRecordsWithYield");
+
+		int result = 0;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("fieldId", fieldId);
+			parameters.put("cropYear", cropYear);
+
+			result = this.mapper.getTotalDopRecordsWithYield(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">getTotalDopRecordsWithYield: " + result);
+		return result;	
+	}
 }

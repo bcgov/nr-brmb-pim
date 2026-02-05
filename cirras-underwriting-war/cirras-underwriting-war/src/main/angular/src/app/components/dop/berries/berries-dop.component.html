@@ -55,8 +55,14 @@
                 <div>
                     <h2>Declaration of Production</h2>
                     <p>Last Updated: {{ ((dopYieldContract && dopYieldContract.dopUpdateTimestamp) ? dopYieldContract.dopUpdateTimestamp : "" ) | date }}</p>
-                </div>            
-                
+                </div>    
+                <div class="message-container">        
+                    <div class="has-yield-warning">
+                        <mat-icon *ngIf="isUnsaved  && !hasVerifiedYieldData">warning</mat-icon>            
+                        <span  *ngIf="isUnsaved  && !hasVerifiedYieldData" class="warning-message">
+                            All Total Values are calculated on Save.</span> 
+                    </div>
+                </div>
                 <div>
                     <uw-comments-button
                         [underwritingCommentTypeCode]="'DOP'"
@@ -68,7 +74,7 @@
                         [uwComments]="dopYieldContract?.uwComments"
                         (onDone)="onDopCommentsDone($event)"></uw-comments-button>
                 </div>
-                <div> <!-- TODO: -->
+                <div>
                     <button *ngIf="!hasVerifiedYieldData"
                         mat-raised-button 
                         class="secondary" 

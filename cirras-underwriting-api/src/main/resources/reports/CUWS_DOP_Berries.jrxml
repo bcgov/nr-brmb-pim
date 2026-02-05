@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DOP_Berries" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e5bab596-1236-4394-bffe-7563f9e7b19c">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DOP_Berries" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isTitleNewPage="true" uuid="e5bab596-1236-4394-bffe-7563f9e7b19c">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="643"/>
@@ -364,12 +364,12 @@ order by sort_column
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Noto Sans" size="16"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Schedule D-14: Declaration of Production - " + $F{commodity_name} ]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Declaration of Production - " + $F{commodity_name}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="103">
+			<band height="135">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<textField>
 					<reportElement x="0" y="4" width="520" height="16" uuid="ed1ec32b-fe7c-4b0c-8553-8b244fe87fb5">
@@ -483,16 +483,21 @@ order by sort_column
 				<break>
 					<reportElement x="0" y="100" width="99" height="1" uuid="38533213-6482-4e18-b449-7e33fed550f0"/>
 				</break>
+				<subreport>
+					<reportElement x="0" y="102" width="554" height="30" uuid="791f8975-e1ea-4b51-a0bb-ea67adf6f401"/>
+					<subreportParameter name="p_commodity_name">
+						<subreportParameterExpression><![CDATA[$F{commodity_name}]]></subreportParameterExpression>
+					</subreportParameter>
+					<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource(17)]]></dataSourceExpression>
+					<subreportExpression><![CDATA["subreports/CUWS_DOP_Berries_Details.jasper"]]></subreportExpression>
+				</subreport>
 			</band>
 		</groupFooter>
 	</group>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
 	<pageHeader>
 		<band height="55">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 2]]></printWhenExpression>
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} >= 2]]></printWhenExpression>
 			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="378" height="20" uuid="36239f0e-5b31-4bf1-8b53-72d877ed8cfa">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -528,9 +533,10 @@ order by sort_column
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="42" splitType="Stretch">
+		<band height="39" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<subreport>
-				<reportElement x="0" y="0" width="555" height="39" uuid="dda197e2-c53c-4885-937e-69c1f8b28691">
+				<reportElement style="GlobalDefault" x="0" y="0" width="555" height="39" uuid="dda197e2-c53c-4885-937e-69c1f8b28691">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -550,21 +556,19 @@ order by sort_column
 			</subreport>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="45" splitType="Stretch"/>
-	</columnFooter>
 	<pageFooter>
-		<band height="20" splitType="Stretch">
+		<band height="15" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="512" y="0" width="17" height="15" uuid="28f48488-0432-4a07-bbfb-3bd3effa1f07">
+				<reportElement x="533" y="0" width="12" height="15" uuid="28f48488-0432-4a07-bbfb-3bd3effa1f07">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
+				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER} + "/"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Group" evaluationGroup="Group1">
-				<reportElement x="529" y="0" width="25" height="15" uuid="4c919862-4de8-4489-a369-2b1415f1aa3d">
+				<reportElement x="545" y="0" width="10" height="15" uuid="4c919862-4de8-4489-a369-2b1415f1aa3d">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -572,7 +576,21 @@ order by sort_column
 			</textField>
 		</band>
 	</pageFooter>
-	<summary>
-		<band height="42" splitType="Stretch"/>
-	</summary>
+	<noData>
+		<band height="30">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="99" y="5" width="350" height="25" uuid="2b0ad02a-29ef-447b-888e-adbc73beb0a2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Noto Sans" size="16" isBold="false"/>
+				</textElement>
+				<text><![CDATA[No visible plantings to print]]></text>
+			</staticText>
+		</band>
+	</noData>
 </jasperReport>

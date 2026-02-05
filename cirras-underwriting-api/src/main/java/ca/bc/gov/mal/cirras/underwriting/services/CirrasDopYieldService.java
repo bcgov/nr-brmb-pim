@@ -621,8 +621,7 @@ public class CirrasDopYieldService {
 				updateDeclaredYieldFieldRollupForage(declaredYieldContractGuid, dopYieldContract, userId);
 
 			} else if ( InsurancePlans.BERRIES.getInsurancePlanId().equals(dopYieldContract.getInsurancePlanId()) ) {
-				// TODO: Calculate Declared Yield Contract Commodity Berries.
-				
+				berriesService.calculateDeclaredYieldContractCommodityBerriesList(dopYieldContract);
 				berriesService.updateDeclaredYieldContractCommodityBerriesList(declaredYieldContractGuid, dopYieldContract, userId);
 			} else {
 				throw new ServiceException("Insurance Plan must be GRAIN, FORAGE or BERRIES");
@@ -692,6 +691,11 @@ public class CirrasDopYieldService {
 						List<DopYieldFieldCommodityBerries> dopYieldFieldCommodityBerriesList = field.getDopYieldFieldCommodityBerriesList();
 						if (dopYieldFieldCommodityBerriesList != null && !dopYieldFieldCommodityBerriesList.isEmpty()) {
 							for (DopYieldFieldCommodityBerries dyfcb : dopYieldFieldCommodityBerriesList) {
+								// Calculate
+								berriesService.calculateDeclaredYieldFieldVarietyBerriesList(dyfcb.getDopYieldFieldVarietyBerriesList());
+								berriesService.calculateDeclaredYieldFieldCommodityBerries(dyfcb);
+
+								// Save
 								String declaredYieldFieldCommodityBerriesGuid = berriesService.updateDeclaredYieldFieldCommodityBerries(dyfcb, userId);
 								berriesService.updateDeclaredYieldFieldVarietyBerriesList(declaredYieldFieldCommodityBerriesGuid, dyfcb.getDopYieldFieldVarietyBerriesList(), userId);
 							}
@@ -1218,8 +1222,7 @@ public class CirrasDopYieldService {
 				updateDeclaredYieldFieldRollupForage(declaredYieldContractGuid, dopYieldContract, userId);
 
 			} else if ( InsurancePlans.BERRIES.getInsurancePlanId().equals(dopYieldContract.getInsurancePlanId()) ) {
-				// TODO: Calculate Declared Yield Contract Commodity Berries.
-				
+				berriesService.calculateDeclaredYieldContractCommodityBerriesList(dopYieldContract);
 				berriesService.updateDeclaredYieldContractCommodityBerriesList(declaredYieldContractGuid, dopYieldContract, userId);
 			} else {
 				throw new ServiceException("Insurance Plan must be GRAIN, FORAGE or BERRIES");

@@ -34,6 +34,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForageCut;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldGrain;
+import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededGrain;
@@ -398,6 +399,75 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		}
 	}
 	
+	private InventoryBerries createInventoryBerries(String policyNumber) throws CirrasUnderwritingServiceException, ValidationException {
+
+		UwContractRsrc uwContractRsrc = getUwContract(policyNumber, service, topLevelEndpoints);
+		Assert.assertNull(uwContractRsrc.getInventoryContractGuid());
+
+		InventoryContractRsrc invContract = service.rolloverInventoryContract(uwContractRsrc);
+		
+		// Remove default planting.
+		AnnualFieldRsrc field = invContract.getFields().get(0);
+		field.getPlantings().remove(0);
+		
+		createPlanting(field, 1, uwContractRsrc.getCropYear(), uwContractRsrc.getInsurancePlanId());
+
+		InventoryBerries ib = new InventoryBerries();
+
+		ib.setCropCommodityId(10);
+		ib.setCropCommodityName(null);
+		ib.setCropVarietyId(1010689);
+		ib.setCropVarietyName(null);
+		ib.setPlantInsurabilityTypeCode(null);
+		ib.setPlantedYear(2020);
+		ib.setPlantedAcres(100.0);
+		ib.setRowSpacing(11);
+		ib.setPlantSpacing(7.0);
+		ib.setTotalPlants(null);
+		ib.setIsQuantityInsurableInd(true);
+		ib.setIsPlantInsurableInd(true);
+		ib.setBogId(null);
+		ib.setBogMowedDate(null);
+		ib.setBogRenovatedDate(null);
+		ib.setIsHarvestedInd(false);
+		
+		field.getPlantings().get(0).setInventoryBerries(ib);
+		
+		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
+		
+		uwContractRsrc = getUwContract(policyNumber, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContractRsrc);
+		Assert.assertNotNull(uwContractRsrc.getInventoryContractGuid());
+
+		invContract = service.getInventoryContract(uwContractRsrc);
+		Assert.assertNotNull(invContract.getFields());
+		Assert.assertEquals(1, invContract.getFields().size());
+
+		return ib;
+	}
+	
+	private InventoryField createPlanting(AnnualFieldRsrc field, Integer plantingNumber, Integer cropYear, Integer insurancePlanId) {
+		InventoryField planting = new InventoryField();
+
+		planting.setCropYear(cropYear);
+		planting.setFieldId(field.getFieldId());
+		planting.setInsurancePlanId(insurancePlanId);
+		planting.setInventoryFieldGuid(null);
+		planting.setLastYearCropCommodityId(null);
+		planting.setLastYearCropCommodityName(null);
+		planting.setLastYearCropVarietyId(null);
+		planting.setLastYearCropVarietyName(null);
+		planting.setIsHiddenOnPrintoutInd(false);
+		planting.setPlantingNumber(plantingNumber);
+		planting.setUnderseededAcres(null);
+		planting.setUnderseededCropVarietyId(null);
+		planting.setUnderseededCropVarietyName(null);
+		
+		field.getPlantings().add(planting);
+
+		return planting;
+	}
+	
 	private void createDopYieldContract(String policyNumber, Integer insurancePlanId) throws ValidationException, CirrasUnderwritingServiceException {
 
 		boolean addedYieldGrain = false;
@@ -487,6 +557,75 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		} else if ( insurancePlanId.equals(InsurancePlans.FORAGE.getInsurancePlanId()) ) {
 			Assert.assertTrue(addedYieldForage);
 		}
+	}
+	
+	private void createDopYieldContractBerries(String policyNumber) throws ValidationException, CirrasUnderwritingServiceException {
+
+		
+		UwContractRsrc uwContractRsrc = getUwContract(policyNumber, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContractRsrc.getInventoryContractGuid());
+		Assert.assertNull(uwContractRsrc.getDeclaredYieldContractGuid());
+
+		DopYieldContractRsrc newDyc = service.rolloverDopYieldContract(uwContractRsrc);
+		
+		Assert.assertNotNull(newDyc);
+		Assert.assertNull(newDyc.getDeclaredYieldContractGuid());
+		Assert.assertNotNull(newDyc.getFields());
+		Assert.assertEquals(1, newDyc.getFields().size());
+
+		// Insert DOP
+		newDyc.setEnteredYieldMeasUnitTypeCode("LB");
+		newDyc.setGrainFromOtherSourceInd(false);
+
+		newDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(11.22);
+		newDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(33.44);
+
+		// BLUEBERRY - Variety
+		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(11.55);
+		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(22.66);
+		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(33.77);
+		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProduction(44.88);
+		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(55.99);
+
+		// BLUEBERRY - Commodity -> Should not be necessary once field variety is rolling up to field commodity 
+		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProduction(11.99);
+		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).setTotalProductionOverride(22.88);
+		
+		service.createDopYieldContract(topLevelEndpoints, newDyc);
+		
+		uwContractRsrc = getUwContract(policyNumber, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContractRsrc);
+		Assert.assertNotNull(uwContractRsrc.getInventoryContractGuid());
+		Assert.assertNotNull(uwContractRsrc.getDeclaredYieldContractGuid());
+
+	}
+	
+	private UwContractRsrc getUwContract(String policyNumber,
+			CirrasUnderwritingService service, 
+			EndpointsRsrc topLevelEndpoints) throws CirrasUnderwritingServiceException {
+
+		UwContractListRsrc searchResults = service.getUwContractList(
+		topLevelEndpoints, 
+		null, 
+		null, 
+		null,
+		null,
+		policyNumber,
+		null,
+		null, 
+		null, 
+		null, 
+		1, 
+		20);
+
+		Assert.assertNotNull(searchResults);
+
+		if ( searchResults.getCollection() != null && searchResults.getCollection().size() == 1 ) {
+			UwContractRsrc uwContract = searchResults.getCollection().get(0);
+			return uwContract;
+		}
+
+		return null;
 	}
 
 	
@@ -735,23 +874,7 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 
 		createField(fieldId1, "LOT 1", 1980, null);
 
-		UwContractListRsrc searchResults = service.getUwContractList(
-				topLevelEndpoints, 
-				null, 
-				null, 
-				null,
-				null,
-				policyNumber1,
-				null,
-				null, 
-				null, 
-				null, 
-				1, 20);
-
-		Assert.assertNotNull(searchResults);
-		Assert.assertEquals(1, searchResults.getCollection().size());
-
-		UwContractRsrc referrer = searchResults.getCollection().get(0);
+		UwContractRsrc referrer = getUwContract(policyNumber1, service, topLevelEndpoints);
 
 		// Test 1: No errors, no warnings.
 		AddFieldValidationRsrc addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), null);
@@ -768,6 +891,26 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), null);
 		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidationRsrc.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]", insurancePlans) });
 		
+		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
+		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId2.toString());
+		service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId1.toString());
+		service.deletePolicy(topLevelEndpoints, policyId2.toString());
+		
+		// Test 3: AddFieldValidation.TRANSFER_POLICY_HAS_DOP_MSG.
+		createPolicy(policyId2, growerId, InsurancePlans.BERRIES.getInsurancePlanId(), policyNumber2, contractNumber2, contractId2, 2020, createTransactionDate);
+		createGrowerContractYear(growerContractYearId2, contractId2, growerId, 2020, InsurancePlans.BERRIES.getInsurancePlanId(), createTransactionDate);
+		createAnnualFieldDetail(annualFieldDetailId1, null, fieldId1, 2020);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, growerContractYearId2, 1);
+
+		createInventoryBerries(policyNumber2);
+		createDopYieldContractBerries(policyNumber2);
+
+		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), policyId2.toString());
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidationRsrc.TRANSFER_POLICY_HAS_DOP_MSG });
+		
+		deleteDopYieldContract(policyNumber2);
+		deleteInventoryContract(policyNumber2);
+				
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
 		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId2.toString());
 		service.deleteAnnualFieldDetail(topLevelEndpoints, annualFieldDetailId1.toString());
