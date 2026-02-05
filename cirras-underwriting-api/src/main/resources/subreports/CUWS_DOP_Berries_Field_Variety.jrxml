@@ -56,8 +56,7 @@ GROUP BY gcy.contract_id
 	, cfd.display_order
 	, cfd.contracted_field_detail_id
 	, ib.crop_commodity_id
-ORDER BY  f.location, 
-  f.field_label,
+ORDER BY 
   cfd.display_order,
   cfd.contracted_field_detail_id,
   cv.variety_name]]>
@@ -112,7 +111,7 @@ ORDER BY  f.location,
 		<variableExpression><![CDATA[$F{planted_acres}]]></variableExpression>
 	</variable>
 	<group name="Group2" isStartNewPage="true" isReprintHeaderOnEachPage="true" keepTogether="true">
-		<groupExpression><![CDATA[ $P{p_contract_id} + $P{p_crop_year} +$P{p_crop_commodity_id}]]></groupExpression>
+		<groupExpression><![CDATA[$F{contract_id} + $F{crop_year} + $F{inventory_contract_guid} + $F{crop_commodity_id}]]></groupExpression>
 		<groupHeader>
 			<band height="80">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -495,10 +494,10 @@ ORDER BY  f.location,
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[(double)$V{sum_planted_acres}.intValue() == $V{sum_planted_acres}.doubleValue() ? 
-	(new java.text.DecimalFormat("#,##0").format($V{sum_planted_acres}.doubleValue()))
+					<textFieldExpression><![CDATA[(double)$V{total_planted_acres}.intValue() == $V{total_planted_acres}.doubleValue() ? 
+	(new java.text.DecimalFormat("#,##0").format($V{total_planted_acres}.doubleValue()))
 	:
-	(new java.text.DecimalFormat("#,##0.0").format($V{sum_planted_acres}.doubleValue()))]]></textFieldExpression>
+	(new java.text.DecimalFormat("#,##0.0").format($V{total_planted_acres}.doubleValue()))]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="188" y="0" width="242" height="20" uuid="7da05598-09de-4b4a-8428-f6a175ba22f8">
@@ -536,7 +535,7 @@ ORDER BY  f.location,
 		</groupFooter>
 	</group>
 	<group name="Group1" keepTogether="true">
-		<groupExpression><![CDATA[$F{contract_id} + $F{crop_year} + $F{crop_commodity_id} + $F{location} + $F{field_label}]]></groupExpression>
+		<groupExpression><![CDATA[$F{contract_id} + $F{crop_year} +$F{inventory_contract_guid} + $F{crop_commodity_id} + $F{location} + $F{field_label} + $F{legal_description} +$F{display_order} +$F{contracted_field_detail_id}]]></groupExpression>
 		<groupHeader>
 			<band height="1">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
