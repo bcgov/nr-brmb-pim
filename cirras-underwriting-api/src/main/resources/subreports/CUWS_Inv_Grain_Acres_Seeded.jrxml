@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.4.3  -->
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_Inv_Grain_Acres_Seeded" pageWidth="124" pageHeight="842" columnWidth="124" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="bea432ee-9952-4077-91a3-80a924d053a7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
+	<style name="GlobalDefault" isDefault="true" fontName="Noto Sans"/>
 	<parameter name="p_contract_id" class="java.lang.Integer"/>
 	<parameter name="p_crop_year" class="java.lang.Integer"/>
 	<queryString language="SQL">
@@ -48,8 +49,7 @@ where (seeded_inv.num_seedings is null or seeded_inv.num_seedings = 0)
   and cc.insurance_plan_id = 4
   and cc.is_crop_insurance_eligible_ind = 'Y'
   and cc.is_inventory_crop_ind = 'Y'
-order by commodity_name, is_pedigree_ind
-]]>
+order by commodity_name, is_pedigree_ind]]>
 	</queryString>
 	<field name="commodity_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="commodity_name"/>
