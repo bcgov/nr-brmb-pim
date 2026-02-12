@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.4.3  -->
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_Sdd_Grain_Plantings" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="dae8acde-d8f2-47e4-9e95-8f4ccdfb0fc5">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -12,6 +12,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="GlobalDefault" isDefault="true" fontName="Noto Sans"/>
 	<parameter name="p_crop_year" class="java.lang.Integer"/>
 	<parameter name="p_contract_id" class="java.lang.Integer"/>
 	<parameter name="p_record_limit" class="java.lang.Integer">
@@ -692,7 +693,7 @@ offset $P{p_record_offset}]]>
 	<detail>
 		<band height="15" splitType="Prevent">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="60" height="15" uuid="ae3d58a5-a070-43ba-b975-a8c0ea02ef87">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -707,7 +708,7 @@ offset $P{p_record_offset}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{field_label}.equals("UNSPECIFIED") ? "" :  $F{field_label}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="60" y="0" width="82" height="15" uuid="0b2a956b-3f38-4b36-aa49-d283c48c7ed4"/>
 				<box leftPadding="1">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -720,7 +721,7 @@ offset $P{p_record_offset}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{legal_description}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="192" y="0" width="40" height="15" uuid="50df0157-848c-47c8-ba24-df806ae2ea6a"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -741,7 +742,7 @@ offset $P{p_record_offset}]]>
 	 	(new java.text.DecimalFormat("#,##0.0").format($F{acres_to_be_seeded}.doubleValue()))
 )]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="142" y="0" width="50" height="15" uuid="6fb0c695-0d5e-4abe-90cf-23b8dab48cd3"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -754,7 +755,7 @@ offset $P{p_record_offset}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{last_year_commodity_variety_name}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="333" y="0" width="60" height="15" uuid="0cb1f41c-38ed-422a-a025-84d334183e88"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -767,7 +768,7 @@ offset $P{p_record_offset}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{seeded_variety_name}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="285" y="0" width="48" height="15" uuid="f284778c-e7de-4f2d-ad90-fb1ad2dda3f0"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -782,7 +783,7 @@ offset $P{p_record_offset}]]>
   $F{seeded_commodity_name} + "-P" : 
   $F{seeded_commodity_name}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="232" y="0" width="48" height="15" uuid="7008e798-9964-4d38-808e-9b1c038cb054"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -795,7 +796,7 @@ offset $P{p_record_offset}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{unseeded_commodity_variety_name}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="475" y="0" width="35" height="15" uuid="810d9c2e-93b0-442f-bf69-b711cb5e5eff"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -816,7 +817,7 @@ $F{underseeded_variety_name}.substring( $F{underseeded_variety_name}.indexOf( "/
 
 : $F{underseeded_variety_name}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="435" y="0" width="40" height="15" uuid="0448c4dc-c1c3-4e29-81d5-f2b8b8914264"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -829,7 +830,7 @@ $F{underseeded_variety_name}.substring( $F{underseeded_variety_name}.indexOf( "/
 				</textElement>
 				<textFieldExpression><![CDATA[new SimpleDateFormat("MMM d").format($F{seeding_date})]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="393" y="0" width="42" height="15" uuid="028c7f57-6be4-4f68-9a86-3bdf5139b633"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -850,7 +851,7 @@ $F{underseeded_variety_name}.substring( $F{underseeded_variety_name}.indexOf( "/
 	 	(new java.text.DecimalFormat("#,##0.0").format($F{seeded_acres}.doubleValue()))
 )]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" x="510" y="0" width="45" height="15" uuid="267e7a21-16c6-450c-a9d9-8d4c077e908d">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
