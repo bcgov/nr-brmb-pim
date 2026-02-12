@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.4.3  -->
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_DOP_Forage_Plantings" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="50100802-6b63-4521-9855-0feecd4e6a17">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="484"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="511"/>
+	<style name="GlobalDefault" isDefault="true" fontName="Noto Sans"/>
 	<parameter name="p_crop_year" class="java.lang.Integer"/>
 	<parameter name="p_contract_id" class="java.lang.Integer"/>
 	<parameter name="p_record_limit" class="java.lang.Integer">
@@ -172,7 +173,7 @@ offset $P{p_record_offset}]]>
 						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="true"/>
+						<font fontName="Noto Sans" size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Field Name]]></text>
 				</staticText>
@@ -191,7 +192,7 @@ offset $P{p_record_offset}]]>
 						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="true"/>
+						<font fontName="Noto Sans" size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Legal Description]]></text>
 				</staticText>
@@ -210,7 +211,7 @@ offset $P{p_record_offset}]]>
 						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="true"/>
+						<font fontName="Noto Sans" size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Acres]]></text>
 				</staticText>
@@ -229,7 +230,7 @@ offset $P{p_record_offset}]]>
 						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="true"/>
+						<font fontName="Noto Sans" size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Plant Cove-rage]]></text>
 				</staticText>
@@ -248,7 +249,7 @@ offset $P{p_record_offset}]]>
 						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="true"/>
+						<font fontName="Noto Sans" size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Type Seeded]]></text>
 				</staticText>
@@ -274,7 +275,7 @@ offset $P{p_record_offset}]]>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Top">
-						<font fontName="SansSerif" size="8" isBold="true"/>
+						<font fontName="Noto Sans" size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Cut #]]></text>
 				</staticText>
@@ -301,7 +302,7 @@ offset $P{p_record_offset}]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="true"/>
+						<font fontName="Noto Sans" size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[# Bales /Loads]]></text>
 				</staticText>
@@ -320,7 +321,7 @@ offset $P{p_record_offset}]]>
 						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="true"/>
+						<font fontName="Noto Sans" size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Weight (lbs)]]></text>
 				</staticText>
@@ -339,7 +340,7 @@ offset $P{p_record_offset}]]>
 						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="true"/>
+						<font fontName="Noto Sans" size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[% Moisture]]></text>
 				</staticText>
@@ -365,7 +366,7 @@ offset $P{p_record_offset}]]>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Top">
-						<font fontName="SansSerif" size="8" isBold="true"/>
+						<font fontName="Noto Sans" size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Cut #]]></text>
 				</staticText>
@@ -392,7 +393,7 @@ offset $P{p_record_offset}]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="true"/>
+						<font fontName="Noto Sans" size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[# Bales /Loads]]></text>
 				</staticText>
@@ -411,7 +412,7 @@ offset $P{p_record_offset}]]>
 						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="true"/>
+						<font fontName="Noto Sans" size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Weight (lbs)]]></text>
 				</staticText>
@@ -430,7 +431,7 @@ offset $P{p_record_offset}]]>
 						<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="true"/>
+						<font fontName="Noto Sans" size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[% Moisture]]></text>
 				</staticText>
@@ -440,7 +441,7 @@ offset $P{p_record_offset}]]>
 	<detail>
 		<band height="15" splitType="Prevent">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ContainerHeight" x="0" y="0" width="90" height="15" uuid="b4dc0682-f213-442d-936e-9d9becf92cd9">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -452,11 +453,11 @@ offset $P{p_record_offset}]]>
 					<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="8"/>
+					<font fontName="Noto Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["UNSPECIFIED".equals($F{field_label}) ? "" : $F{field_label}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ContainerHeight" x="90" y="0" width="80" height="15" uuid="d2359f20-1300-4cad-a08b-4c9271eff2aa">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -469,11 +470,11 @@ offset $P{p_record_offset}]]>
 					<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="8"/>
+					<font fontName="Noto Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{legal_description}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ContainerHeight" x="240" y="0" width="40" height="15" uuid="e8623bb0-167b-4baf-a0e6-aed733c67b64">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -487,11 +488,11 @@ offset $P{p_record_offset}]]>
 					<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="8"/>
+					<font fontName="Noto Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{field_acres} == null ? "" : ((double)$F{field_acres}.intValue() == $F{field_acres}.doubleValue() ? $F{field_acres}.intValue() + "" : $F{field_acres}.toString()  )]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ContainerHeight" x="280" y="0" width="35" height="15" uuid="e2ce0cd5-ce91-43d9-964f-28dce3455e4d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -505,11 +506,11 @@ offset $P{p_record_offset}]]>
 					<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="8"/>
+					<font fontName="Noto Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{plant_insurability_type_desc}.replace("Establishment", "Est")).replace("Winter Survival", "WS")]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ContainerHeight" x="170" y="0" width="70" height="15" uuid="33930eec-0f04-4d7f-904d-e0c7d13a7201">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -523,7 +524,7 @@ offset $P{p_record_offset}]]>
 					<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="8"/>
+					<font fontName="Noto Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{variety_name}]]></textFieldExpression>
 			</textField>

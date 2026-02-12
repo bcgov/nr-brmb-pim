@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.4.3  -->
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_Unseeded_Grain" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dae8acde-d8f2-47e4-9e95-8f4ccdfb0fc5">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS.jrdax"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="GlobalDefault" isDefault="true" fontName="Noto Sans"/>
 	<parameter name="p_crop_year" class="java.lang.Integer"/>
 	<parameter name="p_insurance_plan_id" class="java.lang.Integer"/>
 	<parameter name="p_office_id" class="java.lang.Integer"/>
@@ -261,7 +262,7 @@ order by sort_column,
 				<staticText>
 					<reportElement x="0" y="5" width="180" height="30" uuid="8b1039e3-68dd-4fee-a509-473586d7acf0"/>
 					<textElement verticalAlignment="Bottom">
-						<font fontName="SansSerif" size="16"/>
+						<font fontName="Noto Sans" size="16"/>
 					</textElement>
 					<text><![CDATA[Production Insurance]]></text>
 				</staticText>
@@ -270,7 +271,7 @@ order by sort_column,
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement>
-						<font fontName="SansSerif" size="9"/>
+						<font fontName="Noto Sans" size="9"/>
 					</textElement>
 					<text><![CDATA[BC Ministry of Agriculture and Food]]></text>
 				</staticText>
@@ -288,7 +289,7 @@ order by sort_column,
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Center">
-						<font fontName="SansSerif" size="16" isBold="true"/>
+						<font fontName="Noto Sans" size="16" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Schedule F6: Grain & Oilseed]]></text>
 				</staticText>
@@ -299,7 +300,7 @@ order by sort_column,
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Center">
-						<font fontName="SansSerif" size="16" isBold="true"/>
+						<font fontName="Noto Sans" size="16" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Field Inventory and Seeded Crop Report]]></text>
 				</staticText>
@@ -308,7 +309,7 @@ order by sort_column,
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" size="9"/>
+						<font fontName="Noto Sans" size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Grower: " + $F{grower_name}]]></textFieldExpression>
 				</textField>
@@ -317,21 +318,21 @@ order by sort_column,
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" size="9"/>
+						<font fontName="Noto Sans" size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Crop Year: " + $F{crop_year}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="419" y="110" width="136" height="20" uuid="b21cbc27-34b1-4301-99ff-56ca3f5a8433"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="9"/>
+						<font fontName="Noto Sans" size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Policy: " + $F{policy_number}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="419" y="132" width="136" height="20" uuid="db2bc2c6-d8e4-42fa-bd0b-6350df3af88b"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="9"/>
+						<font fontName="Noto Sans" size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Updated: " + new SimpleDateFormat("MMM dd, yyyy").format($F{inv_update_timestamp})]]></textFieldExpression>
 				</textField>
@@ -933,7 +934,7 @@ order by sort_column,
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="9"/>
+					<font fontName="Noto Sans" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Crop Year: " + $F{crop_year}]]></textFieldExpression>
 			</textField>
@@ -942,21 +943,21 @@ order by sort_column,
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="9"/>
+					<font fontName="Noto Sans" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Grower: " + $F{grower_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="419" y="0" width="136" height="20" uuid="bdbc7d5a-d973-460a-8853-fa5a7bd304f8"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="9"/>
+					<font fontName="Noto Sans" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Policy: " + $F{policy_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="419" y="22" width="136" height="20" uuid="0adcdda6-8f8b-47b3-b470-d2ce8a282846"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="9"/>
+					<font fontName="Noto Sans" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Updated: " + new SimpleDateFormat("MMM dd, yyyy").format($F{inv_update_timestamp})]]></textFieldExpression>
 			</textField>
@@ -1002,7 +1003,7 @@ order by sort_column,
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="10" isBold="false"/>
+					<font fontName="Noto Sans" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER} + "/"]]></textFieldExpression>
 			</textField>
@@ -1011,7 +1012,7 @@ order by sort_column,
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
-					<font fontName="SansSerif" size="10" isBold="false"/>
+					<font fontName="Noto Sans" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
