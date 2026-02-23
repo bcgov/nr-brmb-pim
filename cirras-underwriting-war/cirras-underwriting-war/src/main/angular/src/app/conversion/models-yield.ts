@@ -43,6 +43,7 @@ export interface DopYieldContract {
     dopYieldFieldRollupList?: Array<DopYieldFieldRollup>;
     dopYieldContractCommodities?: Array<DopYieldContractCommodity>;
     dopYieldContractCommodityForageList?: Array<DopYieldContractCommodityForage>;
+    dopYieldContractCommodityBerriesList?: Array<DopYieldContractCommodityBerries>;
     dopYieldFieldRollupForageList?: Array<DopYieldFieldRollupForage>;
     etag?: string;
     type: string;
@@ -174,6 +175,38 @@ export interface DopYieldContractCommodityForage {
     plantDurationTypeCode?: string;
 }
 
+export interface DopYieldFieldCommodityBerries {
+    declaredYieldFieldCommodityBerriesGuid?: string;
+    fieldId?: number;
+    cropCommodityId?: number;
+    cropCommodityName?: string;
+    cropYear?: number;
+    totalProduction?: number;
+    totalProductionOverride?: number;
+    dopYieldFieldVarietyBerriesList?: Array<DopYieldFieldVarietyBerries>;
+}
+
+export interface DopYieldFieldVarietyBerries {
+    declaredYieldFieldVarietyBerriesGuid?: string;
+    declaredYieldFieldCommodityBerriesGuid?: string;
+    cropVarietyId?: number;
+    cropVarietyName?: string;
+    plantedAcres?: number;
+    soldShippedYield?: number;
+    salesYield?: number;
+    abandonmentYield?: number;
+    totalProduction?: number;
+    totalProductionOverride?: number;
+}
+
+export interface DopYieldContractCommodityBerries {
+    declaredYieldContractCommodityBerriesGuid?: string;
+    declaredYieldContractGuid?: string;
+    cropCommodityId?: number;
+    cropCommodityName?: string;
+    totalProduction?: number;
+    totalProductionOverride?: number;
+}
 
 export interface VerifiedYieldContract {
     links?: Array<RelLink>;

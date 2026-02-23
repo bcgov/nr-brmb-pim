@@ -284,10 +284,14 @@ export class AddFieldComponent implements OnInit{
 
           this.validateFields(self.fieldList.collection[0])
         }
-      } else {
-        this.dataToSend.landData.fieldId = -1
-        self.showNoFieldMessage = true
-        self.showProceedButton = true
+      } else { // if we search for legal land but the legal land doesn't have fields then show Done button
+        if (this.addFieldForm.controls.choiceSelected.value == 'searchLegalLocation' || this.addFieldForm.controls.choiceSelected.value == 'searchPID') {
+          this.dataToSend.landData.fieldId = -1
+          self.showProceedButton = true
+        }
+        if (this.addFieldForm.controls.choiceSelected.value == 'searchFieldId') {
+          self.showNoFieldMessage = true
+        }
       }
     })
   }

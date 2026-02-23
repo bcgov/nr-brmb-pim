@@ -21,6 +21,10 @@ export class GrainUnseededInventoryComponent extends GrainInventoryComponent {
   filteredCommodityVarietyOptions: CropCommodityVarietyOptionsType[];
   isHiddenFieldInTotals = false;
 
+  get currentInsurancePlanId(): number {
+    return INSURANCE_PLAN.GRAIN
+  }
+  
   ngOnInit(): void {
     super.ngOnInit()
     this.setOtherChangesComment();

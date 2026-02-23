@@ -81,6 +81,16 @@ const routesDesktop: Routes = [
       ] 
     },
 
+    { path: R.DOP_BERRIES, 
+      children: [
+      { 
+        path: ':insurancePlanId/:cropYear/:policyId/:declaredYieldContractGuid', component: ForageDopContainer, data: {scopes: [ROUTE_SCOPES.DOP]},
+        canActivate: [ResourcesAuthGuard],
+        canDeactivate: [DeactivateGuard]
+      },
+      ] 
+    },
+
     // grain verified yield
     { path: R.VERIFIED_YIELD, 
       children: [

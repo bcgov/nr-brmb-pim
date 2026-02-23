@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ca.bc.gov.mal.cirras.underwriting.data.repositories.mapper.DeclaredYieldFieldCommodityBerriesMapper">
+
+	<resultMap id="DeclaredYieldFieldCommodityBerriesDtoMap" type="ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldCommodityBerriesDto">
+
+		<id property="declaredYieldFieldCommodityBerriesGuid" column="declared_yield_field_commodity_berries_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+
+		<result property="fieldId" column="field_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="cropCommodityId" column="crop_commodity_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+		<result property="cropYear" column="crop_year" javaType="java.lang.Integer" jdbcType="NUMERIC" />
+
+		<result property="totalProduction" column="total_production" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="totalProductionOverride" column="total_production_override" javaType="java.lang.Double" jdbcType="NUMERIC" />
+
+		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result property="updateUser" column="update_user" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		
+		<result property="cropCommodityName" column="crop_commodity_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	
+	
+    <sql id="selectColumns">
+		select t.declared_yield_field_commodity_berries_guid, 
+			t.field_id, 
+			t.crop_commodity_id, 
+			t.crop_year, 
+			t.total_production, 
+			t.total_production_override, 
+			t.create_user, 
+			t.create_date, 
+			t.update_user, 
+			t.update_date
+    </sql>
+    
+    
+	<select id="fetch" resultMap="DeclaredYieldFieldCommodityBerriesDtoMap">
+		<include refid="selectColumns"/>,
+			cc.commodity_name as crop_commodity_name
+		from declared_yield_field_commodity_berries t
+		join crop_commodity cc on cc.crop_commodity_id = t.crop_commodity_id
+		where t.declared_yield_field_commodity_berries_guid = #{declaredYieldFieldCommodityBerriesGuid}
+	</select>
+
+	<insert id="insert">
+		<selectKey keyProperty="declaredYieldFieldCommodityBerriesGuid" resultType="java.lang.String" order="BEFORE"> 
+			select replace(cast(gen_random_uuid() as text), '-', '')
+		</selectKey>
+
+		insert into declared_yield_field_commodity_berries(
+			declared_yield_field_commodity_berries_guid,
+			field_id,
+			crop_commodity_id,
+			crop_year,
+			total_production,
+			total_production_override,
+			create_user,
+			create_date,
+			update_user,
+			update_date
+		) values (
+			#{declaredYieldFieldCommodityBerriesGuid},
+			#{dto.fieldId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.cropCommodityId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.cropYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalProduction, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalProductionOverride, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now(),
+			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
+			now()
+		)
+	</insert> 
+
+	<update id="update">
+		update declared_yield_field_commodity_berries
+		set total_production = #{dto.totalProduction, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			total_production_override = #{dto.totalProductionOverride, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
+			update_date = now()
+		where declared_yield_field_commodity_berries_guid = #{dto.declaredYieldFieldCommodityBerriesGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}
+	</update> 
+
+	<delete id="delete">
+		delete from declared_yield_field_commodity_berries where declared_yield_field_commodity_berries_guid = #{declaredYieldFieldCommodityBerriesGuid}
+	</delete>
+
+	<delete id="deleteForField">
+		delete from declared_yield_field_commodity_berries dyfcb
+		where dyfcb.field_id = #{fieldId}
+	</delete>
+	
+	<delete id="deleteForFieldAndYear">
+		delete from declared_yield_field_commodity_berries dyfcb
+		where dyfcb.field_id = #{fieldId}
+		  and dyfcb.crop_year = #{cropYear}
+	</delete>
+
+	<delete id="deleteForDeclaredYieldContract">
+		delete from declared_yield_field_commodity_berries t
+		where t.declared_yield_field_commodity_berries_guid in (select dyfcb.declared_yield_field_commodity_berries_guid
+		 								 						from declared_yield_contract dyc
+										 						join grower_contract_year gcy on gcy.contract_id = dyc.contract_id and gcy.crop_year = dyc.crop_year
+										 						join contracted_field_detail cfd on cfd.grower_contract_year_id = gcy.grower_contract_year_id
+										 						join annual_field_detail afd on afd.annual_field_detail_id = cfd.annual_field_detail_id
+										 						join declared_yield_field_commodity_berries dyfcb on dyfcb.field_id = afd.field_id 
+					         						                                                             and dyfcb.crop_year = afd.crop_year 
+										 						where dyc.declared_yield_contract_guid = #{declaredYieldContractGuid}
+															   )
+	</delete>
+
+	<select id="select" resultMap="DeclaredYieldFieldCommodityBerriesDtoMap">
+		<include refid="selectColumns"/>,
+			cc.commodity_name as crop_commodity_name
+		from declared_yield_field_commodity_berries t
+		join crop_commodity cc on cc.crop_commodity_id = t.crop_commodity_id
+		where t.field_id = #{fieldId}
+		  and t.crop_year = #{cropYear}
+		order by cc.commodity_name
+	</select>
+
+	<select id="getTotalDopRecordsWithYield" resultType="int">
+		select count(t.declared_yield_field_commodity_berries_guid)
+		from declared_yield_field_commodity_berries t
+		where t.field_id = #{fieldId}
+		and t.crop_year = #{cropYear}
+		and (COALESCE(t.total_production, 0) > 0 or COALESCE(t.total_production_override, 0) > 0)
+	</select>
+</mapper>

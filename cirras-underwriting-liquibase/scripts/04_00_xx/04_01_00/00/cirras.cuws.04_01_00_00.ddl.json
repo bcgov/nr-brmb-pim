@@ -1,0 +1,12 @@
+
+{
+    "databaseChangeLog": [
+{ "changeSet": {"author":"mhostettler","id":"56","changes": [
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_field_commodity_berries.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_field_variety_berries.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_contract_commodity_berries.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.declared_yield_contract.sql"}},
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
+] } }]}
+
+

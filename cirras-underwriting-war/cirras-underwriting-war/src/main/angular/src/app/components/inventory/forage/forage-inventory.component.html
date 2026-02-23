@@ -413,6 +413,7 @@
                             [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border-exclude-printout  border-right-exclude-printout' : 'inventory-border'" 
                             style="width:90px">
                             <uw-comments-button
+                                [insurancePlanId]="insurancePlanId"
                                 [underwritingCommentTypeCode]="'INV'"
                                 [annualFieldDetailId]="field.value.annualFieldDetailId"
                                 [fieldId]="field.value.fieldId"
