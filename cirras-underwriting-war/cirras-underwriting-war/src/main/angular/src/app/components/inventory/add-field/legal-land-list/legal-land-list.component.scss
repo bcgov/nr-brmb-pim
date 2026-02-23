@@ -1,0 +1,61 @@
+
+
+  .legal-land-container {
+    display: grid;
+    grid-auto-rows: minmax( 2em, auto );
+
+    &.legal-land-info {
+      grid-template-columns: 1fr 2fr 2fr 5fr;
+    }
+
+    &.field-info {
+      grid-template-columns: 1fr 2fr 2fr 3fr;
+    }
+
+    &.error-messages {
+      grid-template-columns: 1fr 20fr;
+    }
+
+    div {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .center {
+        justify-content: center;
+    }
+
+    .header {
+        font-weight: bold;            
+    }
+
+    .border-right {
+        border-right: 1px solid #ccc;          
+    }
+
+    .border-top {
+        border-top: 1px solid #ccc;          
+    }
+
+    .border-left {
+        border-left: 1px solid #ccc;          
+    }
+
+    .justify-center {
+        justify-content: center;   
+    }
+
+    .border-bottom {
+        border-bottom: 1px solid #ccc;
+    }
+  }
+
+  .cuw-table-wrapper {
+    max-height: 200px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    width: 770px;
+    overflow-y: auto;
+  }
+

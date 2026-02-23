@@ -22,7 +22,6 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AddFieldValidation;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.AnnualField;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.Field;
-import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContract;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.InventoryContractList;
@@ -107,6 +106,8 @@ import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnu
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InventoryCalculationType;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.InventoryReportType;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.LandIdentifierTypeCode;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.PrimaryReferenceTypeCode;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandUpdateTypes;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.OutOfSync;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.validation.ModelValidator;
@@ -749,7 +750,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				bUpdateContractedFieldDetails = true;
 				break;
 			case LandUpdateTypes.REPLACE_LEGAL_LOCATION_NEW:
-				replaceLegalLocationNew(annualField, userId);
+				replaceLegalLocationNew(annualField, inventoryContract, userId);
 				bUpdateContractedFieldDetails = true;
 				break;
 			case LandUpdateTypes.REMOVE_FIELD_FROM_POLICY:
@@ -799,6 +800,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		inventorySeededForageDao.deleteForField(fieldId);
 		inventorySeededGrainDao.deleteForField(fieldId);
 		inventoryUnseededDao.deleteForField(fieldId);
+		inventoryBerriesDao.deleteForField(fieldId);
 		inventoryFieldDao.deleteForField(fieldId);
 		
 		underwritingCommentDao.deleteForField(fieldId);
@@ -872,7 +874,13 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			throw new NotFoundException("Did not find the legal land: " + annualField.getLegalLandId());
 		}
 
-		// Updates other description in cuws database and CIRRAS if it's different.
+		// Updates pid and other description in cuws database and CIRRAS if it's different.
+		if (!notNull(dto.getPrimaryPropertyIdentifier(), "").equals(notNull(annualField.getPrimaryPropertyIdentifier(), ""))) {
+			
+			dto.setPrimaryPropertyIdentifier(annualField.getPrimaryPropertyIdentifier());
+			legalLandDao.update(dto, userId);
+		}
+		
 		if (!notNull(dto.getOtherDescription(), "").equals(notNull(annualField.getOtherLegalDescription(), ""))) {
 
 			dto.setOtherDescription(annualField.getOtherLegalDescription());
@@ -925,7 +933,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		}
 	}
 
-	private void replaceLegalLocationNew(AnnualField annualField, String userId)
+	private void replaceLegalLocationNew(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract, String userId)
 			throws DaoException, NotFoundException {
 
 		AnnualFieldDetailDto afdDto = annualFieldDetailDao.fetch(annualField.getAnnualFieldDetailId());
@@ -939,7 +947,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		}
 
 		//Insert legal land
-		insertQuickLegalLand(annualField, userId);
+		insertQuickLegalLand(annualField, inventoryContract, userId);
 
 		//Update annual field detail
 		afdDto.setLegalLandId(annualField.getLegalLandId());
@@ -1089,7 +1097,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		// Legal Land doesn't have to be added if only a new field is added
 		if (annualField.getLandUpdateType().equals(LandUpdateTypes.NEW_LAND)) {
 			// Insert Legal Land
-			insertQuickLegalLand(annualField, userId);
+			insertQuickLegalLand(annualField, inventoryContract, userId);
 		}
 
 		// Insert Field
@@ -1123,10 +1131,20 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		legalLandFieldXrefDao.insert(legalLandFieldXrefDto, userId);
 	}
 
-	private void insertQuickLegalLand(AnnualField annualField, String userId) throws DaoException {
+	private void insertQuickLegalLand(AnnualField annualField, InventoryContract<? extends AnnualField> inventoryContract, String userId) throws DaoException {
 		LegalLandDto legalLandDto = new LegalLandDto();
-		String newPid = generatePID();
-		legalLandFactory.createQuickLegalLand(legalLandDto, annualField, newPid);
+		if(annualField.getPrimaryPropertyIdentifier() == null || annualField.getPrimaryPropertyIdentifier().isEmpty()) {
+			annualField.setPrimaryPropertyIdentifier(generatePID());
+		}
+		
+		String primaryReferenceTypeCode = PrimaryReferenceTypeCode.OTHER.toString();
+		String landIdentifierTypeCode = LandIdentifierTypeCode.OTHER.toString();
+		
+		if(InsurancePlans.BERRIES.getInsurancePlanId().equals(inventoryContract.getInsurancePlanId())) {
+			primaryReferenceTypeCode = PrimaryReferenceTypeCode.IDENTIFIER.toString();
+			landIdentifierTypeCode = LandIdentifierTypeCode.PID.toString();
+		}
+		legalLandFactory.createQuickLegalLand(legalLandDto, annualField, primaryReferenceTypeCode, landIdentifierTypeCode);
 		legalLandDao.insert(legalLandDto, userId);
 		annualField.setLegalLandId(legalLandDto.getLegalLandId());
 	}
@@ -1879,6 +1897,12 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				inventorySeededForage.getSeedingDate() == null;
 	}
 	
+	private boolean checkEmptyInventoryBerries(InventoryBerriesDto inventoryBerries) {
+		return inventoryBerries.getCropVarietyId() == null && 
+				inventoryBerries.getPlantedYear() == null &&
+				inventoryBerries.getPlantedAcres() == null;
+	}
+	
 	// Returns a set of inventoryFieldGuid for plantings that are to be deleted, if any.
 	public Set<String> handleDeletedPlantings(AnnualField field) throws ServiceException {
 
@@ -2310,6 +2334,12 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			// For each field
 			for (ContractedFieldDetailDto cfdDto : fieldDtos) {
 				
+				//Get contracted field record from previous year to update isLeasedInd if necessary
+				ContractedFieldDetailDto previousYearCfdDto = contractedFieldDetailDao.selectForFieldYearAndContract(cfdDto.getFieldId(), cfdDto.getCropYear() -1, cfdDto.getContractId());
+				if(previousYearCfdDto != null) {
+					cfdDto.setIsLeasedInd(previousYearCfdDto.getIsLeasedInd());
+				}
+				
 				//Get associated policies
 				loadAssociatedPolicies(policyDto.getContractId(), cfdDto);
 
@@ -2571,7 +2601,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				
 				for (InsurancePlanDto assocPlanDto : assocPlans) {
 					if (!validPlans.contains(assocPlanDto.getInsurancePlanName())) {
-						errors.add(AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]]", insurancePlans));
+						errors.add(AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]", insurancePlans));
 						break;
 					}
 				}
@@ -2756,7 +2786,18 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 								}
 							}
 						}
-						
+
+						//Berries Inventory
+						if (isEmpty && ifdDto.getInsurancePlanId().equals(InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId())) {
+							List<InventoryBerriesDto> inventoryBerries = inventoryBerriesDao.select(ifdDto.getInventoryFieldGuid());
+							for (InventoryBerriesDto ibDto : inventoryBerries ) {
+								if ( !checkEmptyInventoryBerries(ibDto) ) {
+									isEmpty = false;
+									break;
+								}
+							}
+						}
+
 						if ( !isEmpty ) {
 							deleteFieldErrors.add(RemoveFieldValidation.FIELD_HAS_OTHER_INVENTORY_MSG);
 							break;
@@ -2799,7 +2840,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 	
 	@Override
 	public RenameLegalValidation<? extends Message, ? extends LegalLand<? extends Field>, ? extends AnnualField> validateRenameLegal(
-			Integer policyId, Integer annualFieldDetailId, String newLegalLocation, FactoryContext factoryContext,
+			Integer policyId, Integer annualFieldDetailId, String newLegalLocation, String primaryPropertyIdentifier, FactoryContext factoryContext,
 			WebAdeAuthentication authentication) throws ServiceException, NotFoundException {
 
 		logger.debug("<validateRenameLegal");
@@ -2807,11 +2848,19 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 		RenameLegalValidation<? extends Message, ? extends LegalLand<? extends Field>, ? extends AnnualField> result = null;
 
 		try {
-
+			
 			PolicyDto policyDto = policyDao.fetch(policyId);
 
 			if (policyDto == null) {
 				throw new NotFoundException("Did not find the policy: " + policyId);
+			}
+
+			//Select correct wording for warnings
+			String legalLocationOrPid = "Legal Location"; //Default
+			String pidOrLegalLocation = "PID"; //Default
+			if(InsurancePlans.BERRIES.getInsurancePlanId().equals(policyDto.getInsurancePlanId())){
+				legalLocationOrPid = "PID";
+				pidOrLegalLocation = "Legal Location";
 			}
 
 			AnnualFieldDetailDto afdDto = annualFieldDetailDao.fetch(annualFieldDetailId);
@@ -2827,11 +2876,18 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			// LegalsWithSameLoc
 			Boolean isWarningLegalsWithSameLoc = false;
 			String legalsWithSameLocMsg = null;
-			PagedDtos<LegalLandDto> legalsWithSameLocList = legalLandDao.select(newLegalLocation, null, null, null, false, false, null, null, DefaultMaximumResults, null, null);
+			PagedDtos<LegalLandDto> legalsWithSameLocList = new PagedDtos<LegalLandDto>();
+			//Search by PID if it's provided
+			if(primaryPropertyIdentifier != null) {
+				legalsWithSameLocList = legalLandDao.select(null, primaryPropertyIdentifier, null, null, false, false, null, null, DefaultMaximumResults, null, null);
+			} else {
+				legalsWithSameLocList = legalLandDao.select(newLegalLocation, null, null, null, false, false, null, null, DefaultMaximumResults, null, null);
+			}
 
 			if (legalsWithSameLocList.getResults().size() > 0) {
 				isWarningLegalsWithSameLoc = true;
-				legalsWithSameLocMsg = RenameLegalValidation.LEGALS_WITH_SAME_LOC_MSG;
+				legalsWithSameLocMsg = RenameLegalValidation.LEGALS_WITH_SAME_LOC_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
+
 			}
 
 			// OtherFieldOnPolicy
@@ -2850,7 +2906,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				}
 
 				isWarningOtherFieldOnPolicy = true;
-				otherFieldOnPolicyMsg = RenameLegalValidation.OTHER_FIELD_ON_POLICY_MSG;
+				otherFieldOnPolicyMsg = RenameLegalValidation.OTHER_FIELD_ON_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
 				otherFieldOnPolicyList = samePolicyFieldDtos;
 			}
 
@@ -2870,7 +2926,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 				}
 
 				isWarningFieldOnOtherPolicy = true;
-				fieldOnOtherPolicyMsg = RenameLegalValidation.FIELD_ON_OTHER_POLICY_MSG;
+				fieldOnOtherPolicyMsg = RenameLegalValidation.FIELD_ON_OTHER_POLICY_MSG.replace("[LegalLocationOrPID]", legalLocationOrPid);
 				fieldOnOtherPolicyList = diffPolicyFieldDtos;
 			}
 
@@ -2879,21 +2935,36 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			String otherLegalDataMsg = null;
 			LegalLandDto otherLegalData = null;
 
-			// For GRAIN or FORAGE Fields added by CUWS, the Primary PID defaults to GF0N,
-			// where N is zero-padded.
-			if (llDto.getLegalDescription() != null || llDto.getLegalShortDescription() != null
-					|| (llDto.getPrimaryPropertyIdentifier() != null
-							&& !llDto.getPrimaryPropertyIdentifier().matches("GF\\d+"))) {
+			if(InsurancePlans.BERRIES.getInsurancePlanId().equals(policyDto.getInsurancePlanId())){
+				// For Berries Fields. Check if data that wasn't saved when creating quick legal land has values
+				if (llDto.getLegalDescription() != null 
+						|| llDto.getLegalShortDescription() != null
+						|| llDto.getOtherDescription() != null) {
 
-				isWarningOtherLegalData = true;
-				otherLegalDataMsg = RenameLegalValidation.OTHER_LEGAL_DATA_MSG;
+					isWarningOtherLegalData = true;
+				}
+			} else {
+				// For GRAIN or FORAGE Fields added by CUWS, the Primary PID defaults to GF0N,
+				// where N is zero-padded.
+				if (llDto.getLegalDescription() != null || llDto.getLegalShortDescription() != null
+						|| (llDto.getPrimaryPropertyIdentifier() != null
+								&& !llDto.getPrimaryPropertyIdentifier().matches("GF\\d+"))) {
+
+					isWarningOtherLegalData = true;
+				}
+			}
+			
+			if(isWarningOtherLegalData) {
+				otherLegalDataMsg = RenameLegalValidation.OTHER_LEGAL_DATA_MSG
+						.replace("[PidOrLegalLocation]", pidOrLegalLocation)
+						.replace("[LegalLocationOrPID]", legalLocationOrPid);
 				otherLegalData = llDto;
 			}
 
 			result = uwContractFactory.getRenameLegalValidation(isWarningLegalsWithSameLoc, legalsWithSameLocMsg,
 					legalsWithSameLocList.getResults(), isWarningOtherFieldOnPolicy, otherFieldOnPolicyMsg, otherFieldOnPolicyList,
 					isWarningFieldOnOtherPolicy, fieldOnOtherPolicyMsg, fieldOnOtherPolicyList, isWarningOtherLegalData,
-					otherLegalDataMsg, otherLegalData, policyId, annualFieldDetailId, newLegalLocation, factoryContext,
+					otherLegalDataMsg, otherLegalData, policyId, annualFieldDetailId, newLegalLocation, primaryPropertyIdentifier, factoryContext,
 					authentication);
 
 		} catch (DaoException e) {
@@ -2908,7 +2979,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 
 	@Override
 	public ReplaceLegalValidation<? extends Message, ? extends LegalLand<? extends Field>, ? extends AnnualField> validateReplaceLegal(
-			Integer policyId, Integer annualFieldDetailId, String fieldLabel, Integer legalLandId,
+			Integer policyId, Integer annualFieldDetailId, String fieldLabel, Integer legalLandId, String fieldLocation, 
 			FactoryContext factoryContext, WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException {
 
@@ -2928,6 +2999,18 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			if (afdDto == null) {
 				throw new NotFoundException("Did not find the annual field detail: " + annualFieldDetailId);
 			}
+			
+			//Select correct wording for warnings
+			String legalLocationOrPid = "Legal Location"; //Default
+			if(InsurancePlans.BERRIES.getInsurancePlanId().equals(policyDto.getInsurancePlanId())){
+				legalLocationOrPid = "PID";
+			}
+			
+			//Show field location if it's not null
+			String fieldLocationOrfieldLabel = fieldLabel; //Default
+			if(fieldLocation != null) {
+				fieldLocationOrfieldLabel = fieldLocation;
+			}
 
 			// FieldOnOtherPolicy
 			Boolean isWarningFieldOnOtherPolicy = false;
@@ -2940,7 +3023,7 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 					if (!assocPolicyDto.getPolicyId().equals(policyId)) {
 						isWarningFieldOnOtherPolicy = true;
 						fieldOnOtherPolicyMsg = ReplaceLegalValidation.FIELD_ON_OTHER_POLICY_MSG
-								.replace("[fieldLabel]", fieldLabel)
+								.replace("[fieldLocationOrfieldLabel]", fieldLocationOrfieldLabel)
 								.replace("[fieldId]", afdDto.getFieldId().toString())
 								.replace("[policyNumber]", assocPolicyDto.getPolicyNumber());
 					}
@@ -2956,7 +3039,9 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 			if (!otherLegalLandOfFieldList.isEmpty()) {
 				isWarningFieldHasOtherLegalLand = true;
 				fieldHasOtherLegalLandMsg = ReplaceLegalValidation.FIELD_HAS_OTHER_LEGAL_MSG
-						.replace("[fieldLabel]", fieldLabel).replace("[fieldId]", afdDto.getFieldId().toString());
+						.replace("[legalLocationOrPid]", legalLocationOrPid)
+						.replace("[fieldLocationOrfieldLabel]", fieldLocationOrfieldLabel)
+						.replace("[fieldId]", afdDto.getFieldId().toString());
 			}
 
 			// Other fields associated with legal land
@@ -2982,10 +3067,16 @@ public class CirrasInventoryServiceImpl implements CirrasInventoryService {
 								fDto.getMaxCropYear());
 						fDto.setPolicies(policies);
 					}
+					
+					String otherDescriptionOrPid = llDto.getOtherDescription();
+					if(InsurancePlans.BERRIES.getInsurancePlanId().equals(policyDto.getInsurancePlanId())){
+						otherDescriptionOrPid = llDto.getPrimaryPropertyIdentifier();
+					}
 
 					isWarningOtherFieldsOnLegal = true;
 					otherFieldsOnLegalMsg = ReplaceLegalValidation.OTHER_FIELD_ON_LEGAL_MSG
-							.replace("[otherDescription]", llDto.getOtherDescription());
+							.replace("[legalLocationOrPid]", legalLocationOrPid)
+							.replace("[otherDescriptionOrPid]", otherDescriptionOrPid);
 				}
 			}
 

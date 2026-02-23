@@ -64,10 +64,6 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
   }
 
   setDefaultValuesForCommodity() {
-    // TODO when Add Field is ready
-    // if (this.inventoryBerry.cropCommodityId == null) {
-    //     this.inventoryBerry.cropCommodityId = this.selectedCommodity  
-    // }
 
     // deletedByUserInd should be false by default
     if (this.inventoryBerry.deletedByUserInd == null) {
@@ -159,7 +155,6 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
   }
 
   updateCropVariety() {
-    this.inventoryBerry.cropCommodityId = this.inventoryBerriesFormGroup.controls['cropVarietyCtrl'].value.cropCommodityId
     this.inventoryBerry.cropVarietyId = this.inventoryBerriesFormGroup.controls['cropVarietyCtrl'].value.cropVarietyId
     this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true))
   }

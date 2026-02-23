@@ -56,4 +56,6 @@ public interface ContractedFieldDetailDao extends Serializable {
     List<ContractedFieldDetailDto> selectForYearAndField(Integer cropYear, Integer fieldId) throws DaoException;
 
     List<ContractedFieldDetailDto> selectForField(Integer fieldId) throws DaoException;
+    
+    ContractedFieldDetailDto selectForFieldYearAndContract(Integer fieldId, Integer cropYear, Integer contractId) throws DaoException;
 }

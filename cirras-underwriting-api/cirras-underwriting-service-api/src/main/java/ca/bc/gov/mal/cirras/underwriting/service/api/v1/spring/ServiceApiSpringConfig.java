@@ -298,6 +298,7 @@ public class ServiceApiSpringConfig {
 		result.setInventoryUnseededDao(persistenceSpringConfig.inventoryUnseededDao());
 		result.setInventorySeededGrainDao(persistenceSpringConfig.inventorySeededGrainDao());
 		result.setInventorySeededForageDao(persistenceSpringConfig.inventorySeededForageDao());
+		result.setInventoryBerriesDao(persistenceSpringConfig.inventoryBerriesDao());
 		result.setUnderwritingCommentDao(persistenceSpringConfig.underwritingCommentDao());
 		result.setInventoryContractDao(persistenceSpringConfig.inventoryContractDao());
 		result.setInventoryContractCommodityDao(persistenceSpringConfig.inventoryContractCommodityDao());

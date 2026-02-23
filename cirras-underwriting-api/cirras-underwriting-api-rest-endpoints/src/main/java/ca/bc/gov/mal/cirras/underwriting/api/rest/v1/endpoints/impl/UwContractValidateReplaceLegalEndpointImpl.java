@@ -19,7 +19,7 @@ public class UwContractValidateReplaceLegalEndpointImpl extends BaseEndpointsImp
 	
 
 	@Override
-	public Response validateReplaceLegal(String policyId, String annualFieldDetailId, String fieldLabel, String legalLandId) {
+	public Response validateReplaceLegal(String policyId, String annualFieldDetailId, String fieldLabel, String legalLandId, String fieldLocation) {
 		
 		Response response = null;
 		
@@ -33,8 +33,9 @@ public class UwContractValidateReplaceLegalEndpointImpl extends BaseEndpointsImp
 			ReplaceLegalValidationRsrc result = (ReplaceLegalValidationRsrc) cirrasInventoryService.validateReplaceLegal(
 					toInteger(policyId),
 					toInteger(annualFieldDetailId),
-					fieldLabel,
+					toStringWithoutDecode(fieldLabel),
 					toInteger(legalLandId),
+					toStringWithoutDecode(fieldLocation),
 					getFactoryContext(), 
 					getWebAdeAuthentication());
 
@@ -50,6 +51,14 @@ public class UwContractValidateReplaceLegalEndpointImpl extends BaseEndpointsImp
 		logResponse(response);
 
 		return response;
+	}
+	
+	private static String toStringWithoutDecode(String value) {
+		String result = null;
+		if(value!=null&&value.trim().length()>0) {
+			result = value;
+		}
+		return result;
 	}
 	
 	

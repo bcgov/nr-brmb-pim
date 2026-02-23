@@ -8,10 +8,10 @@ import ca.bc.gov.nrs.wfone.common.model.Message;
 public interface ReplaceLegalValidation<M extends Message, L extends LegalLand<? extends Field>, A extends AnnualField> extends Serializable {
 
 	// Warnings.
-	public static final String FIELD_ON_OTHER_POLICY_MSG = "The field [fieldLabel] (ID: [fieldId]) is also on another policy [policyNumber] in this crop year.";
-	public static final String FIELD_HAS_OTHER_LEGAL_MSG = "There are other legal locations associated with the field [fieldLabel] (ID: [fieldId]).";
-	public static final String OTHER_FIELD_ON_LEGAL_MSG = "The Legal Location [otherDescription] is associated with other field(s).";
-	
+	public static final String FIELD_ON_OTHER_POLICY_MSG = "The field [fieldLocationOrfieldLabel] (ID: [fieldId]) is also on another policy [policyNumber] in this crop year.";
+	public static final String FIELD_HAS_OTHER_LEGAL_MSG = "There are other [legalLocationOrPid]s associated with the field [fieldLocationOrfieldLabel] (ID: [fieldId]).";
+	public static final String OTHER_FIELD_ON_LEGAL_MSG = "The [legalLocationOrPid] [otherDescriptionOrPid] is associated with other field(s).";
+
 	//Field on other policy
 	public Boolean getIsWarningFieldOnOtherPolicy();
 	public void setIsWarningFieldOnOtherPolicy(Boolean isWarningFieldOnOtherPolicy);

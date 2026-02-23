@@ -42,6 +42,7 @@ public class ContractedFieldDetailDaoTest {
 	private String inventorySeededGrainGuid = null;
 	private String declaredYieldFieldGuid = null;
 	
+	private Integer contractedFieldDetailId2 = null; 
 
 	@Before
 	public void prepareTests() throws NotFoundDaoException, DaoException{
@@ -70,8 +71,15 @@ public class ContractedFieldDetailDaoTest {
 		ContractedFieldDetailDto dto = dao.fetchSimple(contractedFieldDetailId);
 		
 		if (dto != null) {
-			
 			dao.delete(contractedFieldDetailId);
+		}
+		
+		if(contractedFieldDetailId2 != null) {
+			ContractedFieldDetailDto dto2 = dao.fetchSimple(contractedFieldDetailId2);
+			if (dto2 != null) {
+				dao.delete(contractedFieldDetailId2);
+			}
+			contractedFieldDetailId2 = null;
 		}
 		
 		//Delete annual field detail data
@@ -282,6 +290,8 @@ public class ContractedFieldDetailDaoTest {
 		newDto.setGrowerContractYearId(growerContractYearId);
 		
 		dao.insert(newDto, userId);
+		
+		contractedFieldDetailId2 = newDto.getContractedFieldDetailId();
 
 		// SELECT - 1 result.
 		cfdDtos = dao.selectForYearAndField(2022, fieldId);
@@ -293,6 +303,11 @@ public class ContractedFieldDetailDaoTest {
 		Assert.assertNotNull(cfdDtos);
 		Assert.assertEquals(1, cfdDtos.size());
 		Assert.assertEquals(newDto.getContractedFieldDetailId(), cfdDtos.get(0).getContractedFieldDetailId());
+		
+		//Select for Field, Year and Contract
+		ContractedFieldDetailDto cfdDto = dao.selectForFieldYearAndContract(fieldId, 2022, contractId);
+		Assert.assertNotNull(cfdDto);
+		Assert.assertEquals(newDto.getContractedFieldDetailId(), cfdDto.getContractedFieldDetailId());
 		
 		//Select For Rollover
 		ContractedFieldDetailDto forRolloverDto = dao.selectForFieldRollover(fieldId, 2022, 4);

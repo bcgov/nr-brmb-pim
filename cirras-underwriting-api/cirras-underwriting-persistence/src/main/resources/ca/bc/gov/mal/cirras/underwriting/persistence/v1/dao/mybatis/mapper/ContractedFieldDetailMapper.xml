@@ -340,5 +340,14 @@
 		order by gcy.crop_year, cfd.contracted_field_detail_id
 	</select>
 
+	<select id="selectForFieldYearAndContract" resultMap="ContractedFieldDetailDtoMap">
+		<include refid="selectSimpleColumns"/>
+		from annual_field_detail afd
+		join contracted_field_detail cfd on cfd.annual_field_detail_id = afd.annual_field_detail_id
+		join grower_contract_year gcy on gcy.grower_contract_year_id = cfd.grower_contract_year_id
+		where afd.crop_year = #{cropYear}
+		and afd.field_id = #{fieldId}
+		and gcy.contract_id = #{contractId}
+	</select>
 
 </mapper>

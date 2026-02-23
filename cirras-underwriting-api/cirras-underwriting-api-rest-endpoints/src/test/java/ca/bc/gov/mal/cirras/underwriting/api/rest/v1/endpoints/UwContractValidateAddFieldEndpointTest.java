@@ -562,7 +562,7 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		String insurancePlans = "Grain or Forage";
 		
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), null);
-		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]]", insurancePlans) });
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]", insurancePlans) });
 		
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
 		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId2.toString());
@@ -767,7 +767,7 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 		String insurancePlans = "Berries";
 		
 		addFieldValidation = service.validateAddField(referrer, fieldId1.toString(), null);
-		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]]", insurancePlans) });
+		checkAddFieldValidation(addFieldValidation, null, new String[] { AddFieldValidation.FIELD_ON_INCOMPATIBLE_PLAN_MSG.replace("[insurancePlans]", insurancePlans) });
 		
 		service.deleteContractedFieldDetail(topLevelEndpoints, contractedFieldDetailId1.toString());
 		service.deleteGrowerContractYear(topLevelEndpoints, growerContractYearId2.toString());

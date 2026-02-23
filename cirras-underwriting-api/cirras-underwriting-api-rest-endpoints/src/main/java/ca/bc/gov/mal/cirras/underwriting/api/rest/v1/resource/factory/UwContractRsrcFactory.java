@@ -367,7 +367,7 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 			resource.getLinks().add(new RelLink(ResourceTypes.REMOVE_FIELD_VALIDATION, result, "GET"));
 			
 			// Check for warnings or errors that would result from renaming the legal location for a field on this policy.
-			result = getRenameLegalValidationSelfUri(resource.getPolicyId(), null, null, baseUri);
+			result = getRenameLegalValidationSelfUri(resource.getPolicyId(), null, null, null, baseUri);
 			resource.getLinks().add(new RelLink(ResourceTypes.RENAME_LEGAL_VALIDATION, result, "GET"));
 
 			// Check for warnings that would result from replacing the legal location for a field on this policy.
@@ -600,7 +600,7 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 		Boolean isWarningOtherFieldOnPolicy, String otherFieldOnPolicyMsg, List<FieldDto> otherFieldOnPolicyList,
 		Boolean isWarningFieldOnOtherPolicy, String fieldOnOtherPolicyMsg, List<FieldDto> fieldOnOtherPolicyList,
 		Boolean isWarningOtherLegalData, String otherLegalDataMsg, LegalLandDto otherLegalData, 
-		Integer policyId, Integer annualFieldDetailId, String newLegalLocation, 
+		Integer policyId, Integer annualFieldDetailId, String newLegalLocation, String primaryPropertyIdentifier, 
 		FactoryContext context, WebAdeAuthentication authentication) throws FactoryException {
 
 		RenameLegalValidationRsrc resource = new RenameLegalValidationRsrc();
@@ -688,7 +688,7 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 		resource.setETag(eTag);
 
 		URI baseUri = getBaseURI(context);
-		setSelfLink(policyId, annualFieldDetailId, newLegalLocation, resource, baseUri);
+		setSelfLink(policyId, annualFieldDetailId, newLegalLocation, primaryPropertyIdentifier, resource, baseUri);
 		
 		return resource;
 		
@@ -819,18 +819,19 @@ public class UwContractRsrcFactory extends BaseResourceFactory implements UwCont
 	}
 	
 	
-	static void setSelfLink(Integer policyId, Integer annualFieldDetailId, String newLegalLocation, RenameLegalValidationRsrc resource, URI baseUri) {
+	static void setSelfLink(Integer policyId, Integer annualFieldDetailId, String newLegalLocation, String primaryPropertyIdentifier, RenameLegalValidationRsrc resource, URI baseUri) {
 		if (policyId != null && annualFieldDetailId != null && newLegalLocation != null) {
-			String selfUri = getRenameLegalValidationSelfUri(policyId, annualFieldDetailId, newLegalLocation, baseUri);
+			String selfUri = getRenameLegalValidationSelfUri(policyId, annualFieldDetailId, newLegalLocation, primaryPropertyIdentifier, baseUri);
 			resource.getLinks().add(new RelLink(ResourceTypes.SELF, selfUri, "GET"));
 		}
 	}
 	
-	public static String getRenameLegalValidationSelfUri(Integer policyId, Integer annualFieldDetailId, String newLegalLocation, URI baseUri) {
+	public static String getRenameLegalValidationSelfUri(Integer policyId, Integer annualFieldDetailId, String newLegalLocation, String primaryPropertyIdentifier, URI baseUri) {
 		String result = UriBuilder.fromUri(baseUri)
 				.path(UwContractValidateRenameLegalEndpoint.class)
 				.queryParam("annualFieldDetailId", nvl(toString(annualFieldDetailId), ""))
 				.queryParam("newLegalLocation", nvl(newLegalLocation, ""))
+				.queryParam("primaryPropertyIdentifier", nvl(primaryPropertyIdentifier, ""))
 				.build(policyId)
 				.toString();		
 		return result;

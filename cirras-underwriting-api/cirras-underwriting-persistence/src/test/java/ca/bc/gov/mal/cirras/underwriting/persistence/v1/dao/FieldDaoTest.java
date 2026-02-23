@@ -300,12 +300,12 @@ public class FieldDaoTest {
 		createLegalLand(legalLandId, cropYear, "legal desc", "short legal desc", "other legal desc", "111-222-333");
 
 		// Field 1
-		createField(fieldId1, "LOT 1", cropYear, null);
+		createField(fieldId1, "LOT 1", cropYear, "location 1");
 		createAnnualFieldDetail(afdId1, fieldId1, cropYear, legalLandId);
 		createContractedFieldDetail(cfdId1, afdId1, gcyId);
 
 		// Field 2
-		createField(fieldId2, "LOT 2", cropYear, null);
+		createField(fieldId2, "LOT 2", cropYear, "location 2");
 		createAnnualFieldDetail(afdId2, fieldId2, cropYear, legalLandId);
 		createContractedFieldDetail(cfdId2, afdId2, gcyId);
 		
@@ -320,10 +320,12 @@ public class FieldDaoTest {
 		
 		Assert.assertEquals(fieldId1, dtos.get(0).getFieldId());
 		Assert.assertEquals("LOT 1", dtos.get(0).getFieldLabel());
+		Assert.assertEquals("location 1", dtos.get(0).getLocation());
 		Assert.assertEquals(cropYear, dtos.get(0).getMaxCropYear());
 		
 		Assert.assertEquals(fieldId2, dtos.get(1).getFieldId());
 		Assert.assertEquals("LOT 2", dtos.get(1).getFieldLabel());
+		Assert.assertEquals("location 2", dtos.get(1).getLocation());
 		Assert.assertEquals(cropYear, dtos.get(1).getMaxCropYear());
 
 		// 1B. Newer year.
@@ -334,10 +336,12 @@ public class FieldDaoTest {
 		
 		Assert.assertEquals(fieldId1, dtos.get(0).getFieldId());
 		Assert.assertEquals("LOT 1", dtos.get(0).getFieldLabel());
+		Assert.assertEquals("location 1", dtos.get(0).getLocation());
 		Assert.assertEquals(cropYear, dtos.get(0).getMaxCropYear());
 		
 		Assert.assertEquals(fieldId2, dtos.get(1).getFieldId());
 		Assert.assertEquals("LOT 2", dtos.get(1).getFieldLabel());
+		Assert.assertEquals("location 2", dtos.get(1).getLocation());
 		Assert.assertEquals(cropYear, dtos.get(1).getMaxCropYear());
 		
 		// 1C. Older year.
@@ -354,10 +358,12 @@ public class FieldDaoTest {
 		
 		Assert.assertEquals(fieldId1, dtos.get(0).getFieldId());
 		Assert.assertEquals("LOT 1", dtos.get(0).getFieldLabel());
+		Assert.assertEquals("location 1", dtos.get(0).getLocation());
 		Assert.assertEquals(cropYear, dtos.get(0).getMaxCropYear());
 		
 		Assert.assertEquals(fieldId2, dtos.get(1).getFieldId());
 		Assert.assertEquals("LOT 2", dtos.get(1).getFieldLabel());
+		Assert.assertEquals("location 2", dtos.get(1).getLocation());
 		Assert.assertEquals(cropYear, dtos.get(1).getMaxCropYear());
 		
 		// Test 3: excludeContractId filter.
@@ -374,6 +380,7 @@ public class FieldDaoTest {
 				
 		Assert.assertEquals(fieldId2, dtos.get(0).getFieldId());
 		Assert.assertEquals("LOT 2", dtos.get(0).getFieldLabel());
+		Assert.assertEquals("location 2", dtos.get(0).getLocation());
 		Assert.assertEquals(cropYear, dtos.get(0).getMaxCropYear());
 		
 	}	

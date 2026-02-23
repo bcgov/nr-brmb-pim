@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
     appMenu: RouterLink[] = [];
 
     applicationConfig: WfApplicationConfiguration = {
-        title: "CIRRAS GRAIN AND FORAGE UNDERWRITING",
+        title: "PRODUCTION INSURANCE UNDERWRITING",
         device: DEVICE,
         userName: "",
         version: {

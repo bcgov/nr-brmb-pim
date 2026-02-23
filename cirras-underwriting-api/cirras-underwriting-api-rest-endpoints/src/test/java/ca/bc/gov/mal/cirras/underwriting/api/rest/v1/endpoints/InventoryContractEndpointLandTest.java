@@ -28,6 +28,7 @@ import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.FieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.GrowerContractYearSyncRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.GrowerRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.InventoryContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.PolicyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.v1.resource.UwContractListRsrc;
@@ -42,6 +43,8 @@ import ca.bc.gov.mal.cirras.underwriting.model.v1.PolicySimple;
 import ca.bc.gov.mal.cirras.underwriting.model.v1.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.LandUpdateTypes;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.LandIdentifierTypeCode;
+import ca.bc.gov.mal.cirras.underwriting.service.api.v1.util.InventoryServiceEnums.PrimaryReferenceTypeCode;
 import ca.bc.gov.mal.cirras.underwriting.api.rest.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
@@ -102,6 +105,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 
 	private Integer insurancePlanIdForage = 5;
 	private Integer insurancePlanIdGrain = 4;
+	private Integer insurancePlanIdBerries = 3;
 	
 	private CirrasUnderwritingService service;
 	private EndpointsRsrc topLevelEndpoints;
@@ -1601,14 +1605,159 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 		logger.debug(">testDeleteInventoryContractWithLinkedPlantings");
 	}
 	
+	@Test
+	public void testInventoryContractAddNewLandGrainForage() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
+		logger.debug("<testInventoryContractAddNewLandGrainForage");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+
+		createGrower();
+		createPolicy(insurancePlanIdForage, policyId1, policyNumber1, contractNumber1, contractId1);
+		createGrowerContractYear(insurancePlanIdForage, gcyId1, contractId1);
+	
+		CirrasUnderwritingService service = getService(SCOPES);
+
+		EndpointsRsrc topLevelEndpoints = service.getTopLevelEndpoints();
+
+		
+		UwContractRsrc uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNull(uwContract.getInventoryContractGuid());
+		
+		InventoryContractRsrc invContract = service.rolloverInventoryContract(uwContract);
+		Assert.assertEquals(0, invContract.getFields().size());
+		
+		//Add new legal land with a new field
+		List<AnnualFieldRsrc> fields = new ArrayList<AnnualFieldRsrc>();
+		AnnualFieldRsrc field = new AnnualFieldRsrc();
+		field.setLandUpdateType(LandUpdateTypes.NEW_LAND);
+		field.setCropYear(2021);
+		field.setDisplayOrder(88);
+		field.setFieldLabel("Unit Test");
+		field.setOtherLegalDescription("Other Description");
+		
+		fields.add(field);
+
+		invContract.setFields(fields);
+		
+		//Create contract
+		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
+		Assert.assertEquals(1, fetchedInvContract.getFields().size());
+		
+		AnnualFieldRsrc fetchedField = fetchedInvContract.getFields().get(0);
+		
+		Assert.assertEquals("FieldLabel", field.getFieldLabel(), fetchedField.getFieldLabel());
+		Assert.assertEquals("Location", fetchedField.getFieldLocation(), null); //Not set for grain and forage
+		Assert.assertNotNull("LegalLandId", fetchedField.getLegalLandId());
+		Assert.assertEquals("OtherLegalDescription", field.getOtherLegalDescription(), fetchedField.getOtherLegalDescription());
+		Assert.assertEquals("DisplayOrder", field.getDisplayOrder(), fetchedField.getDisplayOrder());
+		Assert.assertEquals("CropYear", field.getCropYear(), fetchedField.getCropYear());
+		//Auto generated PID needs to start with GF for grain and forage
+		Assert.assertEquals("First letters of PID not correct", "GF", fetchedField.getPrimaryPropertyIdentifier().substring(0, 2));
+
+		//Get legal land to check remaining legal land fields
+		LegalLandRsrc legalLand = service.getLegalLand(findLegalLandResource(fetchedField.getPrimaryPropertyIdentifier())); 
+		Assert.assertEquals("LegalLandId", fetchedField.getLegalLandId(), legalLand.getLegalLandId());
+		Assert.assertEquals("PrimaryPropertyIdentifier", fetchedField.getPrimaryPropertyIdentifier(), legalLand.getPrimaryPropertyIdentifier());		
+		Assert.assertEquals("OtherDescription", field.getOtherLegalDescription(), legalLand.getOtherDescription());
+		//Both set to OTHER for grain and forage
+		Assert.assertEquals("PrimaryReferenceTypeCode", PrimaryReferenceTypeCode.OTHER.toString(), legalLand.getPrimaryReferenceTypeCode());
+		Assert.assertEquals("PrimaryLandIdentifierTypeCode", LandIdentifierTypeCode.OTHER.toString(), legalLand.getPrimaryLandIdentifierTypeCode());
+		Assert.assertNull("LegalDescription", legalLand.getLegalDescription());
+		Assert.assertNull("LegalShortDescription", legalLand.getLegalShortDescription());
+		Assert.assertEquals("ActiveFromCropYear", field.getCropYear(), legalLand.getActiveFromCropYear());
+		
+		delete();
+		
+		logger.debug(">testInventoryContractAddNewLandGrainForage");
+	}
+		
+	@Test
+	public void testInventoryContractAddNewLandBerries() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
+		logger.debug("<testInventoryContractAddNewLandBerries");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+
+		createGrower();
+		createPolicy(insurancePlanIdBerries, policyId1, policyNumber1, contractNumber1, contractId1);
+		createGrowerContractYear(insurancePlanIdBerries, gcyId1, contractId1);
+	
+		CirrasUnderwritingService service = getService(SCOPES);
+
+		EndpointsRsrc topLevelEndpoints = service.getTopLevelEndpoints();
+
+		
+		UwContractRsrc uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNull(uwContract.getInventoryContractGuid());
+		
+		InventoryContractRsrc invContract = service.rolloverInventoryContract(uwContract);
+		Assert.assertEquals(0, invContract.getFields().size());
+		
+		//Add new legal land with a new field
+		List<AnnualFieldRsrc> fields = new ArrayList<AnnualFieldRsrc>();
+		AnnualFieldRsrc field = new AnnualFieldRsrc();
+		field.setLandUpdateType(LandUpdateTypes.NEW_LAND);
+		field.setCropYear(2021);
+		field.setDisplayOrder(88);
+		field.setFieldLabel("Unit Test");
+		field.setFieldLocation("field location");
+		field.setPrimaryPropertyIdentifier("012-222-951");
+		
+		fields.add(field);
+
+		invContract.setFields(fields);
+		
+		//Create contract
+		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
+		Assert.assertEquals(1, fetchedInvContract.getFields().size());
+		
+		AnnualFieldRsrc fetchedField = fetchedInvContract.getFields().get(0);
+		
+		Assert.assertEquals("FieldLabel", field.getFieldLabel(), fetchedField.getFieldLabel());
+		Assert.assertEquals("Location", field.getFieldLocation(), fetchedField.getFieldLocation());
+		Assert.assertNotNull("LegalLandId", fetchedField.getLegalLandId());
+		Assert.assertEquals("OtherLegalDescription", null, fetchedField.getOtherLegalDescription());
+		Assert.assertEquals("DisplayOrder", field.getDisplayOrder(), fetchedField.getDisplayOrder());
+		Assert.assertEquals("CropYear", field.getCropYear(), fetchedField.getCropYear());
+		//PID is set for Berries
+		Assert.assertEquals("PrimaryPropertyIdentifier", field.getPrimaryPropertyIdentifier(), fetchedField.getPrimaryPropertyIdentifier());		
+
+		//Get legal land to check remaining legal land fields
+		LegalLandRsrc legalLand = service.getLegalLand(findLegalLandResource(fetchedField.getPrimaryPropertyIdentifier())); 
+		Assert.assertEquals("LegalLandId", fetchedField.getLegalLandId(), legalLand.getLegalLandId());
+		Assert.assertEquals("PrimaryPropertyIdentifier", fetchedField.getPrimaryPropertyIdentifier(), legalLand.getPrimaryPropertyIdentifier());
+		//Set to Identifier for berries
+		Assert.assertEquals("PrimaryReferenceTypeCode", PrimaryReferenceTypeCode.IDENTIFIER.toString(), legalLand.getPrimaryReferenceTypeCode());
+		//Set to PID for berries
+		Assert.assertEquals("PrimaryLandIdentifierTypeCode", LandIdentifierTypeCode.PID.toString(), legalLand.getPrimaryLandIdentifierTypeCode());
+		Assert.assertEquals("OtherDescription", field.getOtherLegalDescription(), legalLand.getOtherDescription());
+		Assert.assertNull("LegalDescription", legalLand.getLegalDescription());
+		Assert.assertNull("LegalShortDescription", legalLand.getLegalShortDescription());
+		Assert.assertEquals("ActiveFromCropYear", field.getCropYear(), legalLand.getActiveFromCropYear());
+		
+		delete();
+		
+		logger.debug(">testInventoryContractAddNewLandBerries");
+	}
+	
+	public LegalLandRsrc findLegalLandResource(String primaryPropertyIdentifier)
+			throws CirrasUnderwritingServiceException {
+		LegalLandListRsrc legalLandList = service.getLegalLandList(topLevelEndpoints, null, primaryPropertyIdentifier, null, null, "false", "false", null, null, null, null);
+		Assert.assertNotNull(legalLandList);
+		Assert.assertEquals("Legal Land Returned Records (exact)", 1, legalLandList.getCollection().size());
+		return legalLandList.getCollection().get(0);
+	}
+	
 	
 	public UwContractRsrc getUwContract(String policyNumber,
 										CirrasUnderwritingService service, 
 										EndpointsRsrc topLevelEndpoints) throws CirrasUnderwritingServiceException {
 		
-		Integer pageNumber = new Integer(1);
-		Integer pageRowCount = new Integer(20);
-
 		UwContractListRsrc searchResults = service.getUwContractList(
 				topLevelEndpoints, 
 				null, 
@@ -1620,8 +1769,8 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 				null, 
 				null, 
 				null, 
-				pageNumber, 
-				pageRowCount);
+				1, 
+				20);
 		
 		Assert.assertNotNull(searchResults);
 		Assert.assertTrue(searchResults.getCollection().size() == 1);

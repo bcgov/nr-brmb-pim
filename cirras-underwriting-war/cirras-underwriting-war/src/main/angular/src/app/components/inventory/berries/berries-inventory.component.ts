@@ -9,6 +9,9 @@ import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { isInt, replaceNonAlphanumericCharacters } from 'src/app/utils';
+import { AddFieldComponent, AddLandPopupData } from '../add-field/add-field.component';
+import { createNewAnnualFieldObject, getDefaultInventoryBerries, getDefaultPlanting } from '../inventory-common';
+import { AnnualFieldRsrc, InventoryBerries, InventoryField } from '@cirras/cirras-underwriting-api';
 
 @Component({
   selector: 'berries-inventory',
@@ -27,7 +30,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   BERRY_COMMODITY = BERRY_COMMODITY
 
   selectedCommodity 
-
+  selectedCommodityTooltip = "Select a commodity"
   policyId
   cropCommodityOptions = [];
   cropVarietyOptions = [];
@@ -35,7 +38,9 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   isHiddenPlantingInTotals = false; 
   hasYieldData = false; // TODO
 
+  numComponentReloads = 0 // the field-list, etc..  components are not loaded for whatever reason, so I have to go thru an external variable to make it reload
 
+  fieldsWithNoCommoditiesArray = []
 
   initModels() {
     this.viewModel = new BerriesInventoryComponentModel(this.sanitizer, this.fb, this.inventoryContract);
@@ -59,14 +64,8 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
     // populate commodity and variety lists
     if (changes.cropCommodityList && this.cropCommodityList && this.cropCommodityList.collection && this.cropCommodityList.collection.length ) {
-      this.populateCropAndVarietyOptions()
 
-      // find out what commodities are on the policy and assign the default commodity to one them
-      // TODO: if there are no commodities on the policy then show blank commodity in the commodity dropdown
-      if (!this.selectedCommodity) {
-        this.selectedCommodity = BERRY_COMMODITY.Blueberry // set as default for now otherwise no fields will show up
-        this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)  
-      }
+      this.populateCropAndVarietyOptions()
     }
 
     if (changes.inventoryContract) {
@@ -75,26 +74,104 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       if (this.inventoryContract && this.inventoryContract.fields && this.inventoryContract.fields.length > 0) {
         this.onCheckForHiddenPlantingsInTotals() // check for values that don't show in the report but are included in the totals
 
-        for (let i = 0; i < this.inventoryContract.fields.length; i++){
+        if (!this.fieldsWithoutCommoditiesExist() ) {
+          this.setCommodityDropdown()
+        }
 
-          if (this.inventoryContract.fields[i].plantings && this.inventoryContract.fields[i].plantings.length > 0) {
-            
-            for (let j = 0; j < this.inventoryContract.fields[i].plantings.length; j++){
-              
-              let pltg = this.inventoryContract.fields[i].plantings[j]
+        // if the commodity has not been set up then show blank commodity in the commodity dropdown
+        if (!this.selectedCommodity) {
+          // Add empty commodity
+          this.cropCommodityOptions = [
+            {
+              cropCommodityId: CROP_COMMODITY_UNSPECIFIED.ID,
+			        commodityName: CROP_COMMODITY_UNSPECIFIED.NAME
+            },
+            ...this.cropCommodityOptions
+          ]
 
-              if( pltg.inventoryBerries && pltg.inventoryBerries.cropCommodityId ) {
-
-                this.selectedCommodity = pltg.inventoryBerries.cropCommodityId
-                this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)
-
-                return
-              }
-
-            }
-          }
+          this.selectedCommodity = CROP_COMMODITY_UNSPECIFIED.ID // set as default for now otherwise no fields will show up
+          this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)  
         }
       }      
+    }
+  }
+
+  fieldsWithoutCommoditiesExist() {
+
+    let fieldWithoutCommodity = false
+
+    this.fieldsWithNoCommoditiesArray = []
+
+    for (let i = 0; i < this.inventoryContract.fields.length; i++){
+      for (let k = 0; k < this.inventoryContract.fields[i].plantings.length; k++){
+        let pltg = this.inventoryContract.fields[i].plantings[k]
+
+        if ( !pltg.inventoryBerries.cropCommodityId ) {
+          // write the empty fields in an array in order to display them on the screen
+          this.fieldsWithNoCommoditiesArray.push({
+            fieldId: this.inventoryContract.fields[i].fieldId,
+            fieldLabel: this.inventoryContract.fields[i].fieldLabel,
+            fieldLocation: this.inventoryContract.fields[i].fieldLocation
+          })
+          
+          // set BLUEBERRY as default commodity for plantings with no commodities
+          pltg.inventoryBerries.cropCommodityId = BERRY_COMMODITY.Blueberry
+          fieldWithoutCommodity =  true
+        }
+      }
+    }
+
+    if (fieldWithoutCommodity) {
+      // set BLUEBERRY as default commodity in the dropdown
+      this.selectedCommodity = BERRY_COMMODITY.Blueberry
+      this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)
+    }
+
+    return fieldWithoutCommodity
+  }
+
+  setCommodityDropdown(){
+    // check if the selectedCommodity is already set, if yes, then check if the inventoryContract has fields with the same commodity
+    // if yes, then no need to change the selected commodity, 
+    // otherwise find out what commodities are on the policy and assign the selected commodity to one them
+
+    let shouldSetCommodity = true
+
+    if (this.selectedCommodity) {
+      for (let i = 0; i < this.inventoryContract.fields.length; i++){
+
+        if (this.inventoryContract.fields[i].plantings && this.inventoryContract.fields[i].plantings.length > 0) {
+
+          let pltg = this.inventoryContract.fields[i].plantings.find(x => x.inventoryBerries.cropCommodityId == this.selectedCommodity)
+
+          if (pltg) {
+            shouldSetCommodity = false
+            break
+          }
+        }
+      }
+    }
+
+    if (shouldSetCommodity) {
+      for (let i = 0; i < this.inventoryContract.fields.length; i++){
+
+        if (this.inventoryContract.fields[i].plantings && this.inventoryContract.fields[i].plantings.length > 0) {
+          
+          for (let j = 0; j < this.inventoryContract.fields[i].plantings.length; j++){
+            
+            let pltg = this.inventoryContract.fields[i].plantings[j]
+
+            if( pltg.inventoryBerries && pltg.inventoryBerries.cropCommodityId ) {
+
+              this.selectedCommodity = pltg.inventoryBerries.cropCommodityId
+              this.getViewModel().formGroup.controls.selectedCommodity.setValue(this.selectedCommodity)
+
+              return
+            }
+
+          }
+        }
+      }
     }
   }
 
@@ -130,7 +207,6 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       })
     }
 
-
   setFormSeededStyles(){
     return {
       'grid-template-columns':  '250px 200px auto  140px 150px 12px 190px'
@@ -161,7 +237,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       return
     }
 
-    this.setselectedCommodityForEmptyPlantings()
+    this.manageNewFields()
 
     if (this.inventoryContract.inventoryContractGuid) {
       this.store.dispatch(UpdateInventoryContract(INVENTORY_COMPONENT_ID, this.policyId, this.inventoryContract))
@@ -191,24 +267,33 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
   isFormValid() {
 
     for (let field of  this.inventoryContract.fields) {
-      for (let planting of field.plantings) {
-        let plantedYear = planting.inventoryBerries.plantedYear
-        let rowSpacing = planting.inventoryBerries.rowSpacing
-        
-        if (this.hasPartialData(field.fieldId, planting)) {
-          return false
-        }
+      //Don't check fields that are deleted
+      if (field.deletedByUserInd != true ) {
+        for (let planting of field.plantings) {
 
-        // Planted Year: 4-digit positive integers are allowed
-        if ( plantedYear && (!isInt(plantedYear) || plantedYear < 1000 || plantedYear > 9999 ) ) {
-          alert("Planted Year for Field Id " + field.fieldId + " should be a 4-digit positive integer.")
-          return false
-        }
+          if (planting && planting.inventoryBerries && planting.inventoryBerries.cropCommodityId == this.selectedCommodity) {
+            let plantedYear = planting.inventoryBerries.plantedYear
+            let rowSpacing = planting.inventoryBerries.rowSpacing
+            
+            if (this.hasPartialData(field, planting)) {
+              return false
+            }
 
-        // Row Spacing: only 0 and positive integer values up to 4 digits are accepted.
-        if ( rowSpacing && (!isInt(rowSpacing) || rowSpacing < 0 || rowSpacing > 9999 )) {
-          alert("Row Spacing for Field Id " + field.fieldId + " should be a positive integer.")
-          return false
+            //Field identifier for message
+            let fieldIdentifier = this.getFieldIdentifierForMessage(field);
+
+            // Planted Year: 4-digit positive integers are allowed
+            if ( plantedYear && (!isInt(plantedYear) || plantedYear < 1000 || plantedYear > 9999 ) ) {
+              alert("Planted Year for " + fieldIdentifier + " should be a 4-digit positive integer.")
+              return false
+            }
+
+            // Row Spacing: only 0 and positive integer values up to 4 digits are accepted.
+            if ( rowSpacing && (!isInt(rowSpacing) || rowSpacing < 0 || rowSpacing > 9999 )) {
+              alert("Row Spacing for " + fieldIdentifier + " should be a positive integer.")
+              return false
+            }
+          }
         }
       }
     }
@@ -216,7 +301,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     return true // all checks have passed successfully
   }
 
-  hasPartialData(fieldId, planting) {
+  hasPartialData(field, planting) {
     let plantedYear = planting.inventoryBerries.plantedYear
     let plantedAcres = planting.inventoryBerries.plantedAcres
     let variety = planting.inventoryBerries.cropVarietyId
@@ -229,8 +314,11 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     let bogRenovatedDate = planting.inventoryBerries.bogRenovatedDate // optional
     let isHarvestedInd = planting.inventoryBerries.isHarvestedInd
 
+    //Field identifier for message
+    let fieldIdentifier = this.getFieldIdentifierForMessage(field);
+
     // All user entered fields are mandatory: if at least one field has a value or one of the checkboxes is checked then all should have a value
-    let message = "Partial data entry is not accepted. Please fill in all values for field ID " + fieldId + " or none of them."
+    let message = "Partial data entry is not accepted. Please fill in all values for " + fieldIdentifier + " or none of them."
     
     // Blueberry
     if (this.selectedCommodity == BERRY_COMMODITY.Blueberry) {
@@ -287,7 +375,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     }
 
     message = "Partial data entry is not accepted. Bog Id, Planted Year, Planted Acres and Variety are mandatory for Cranberries. " +
-      "Please fill in these values for field ID " + fieldId + " or clear all planting values for that field."
+      "Please fill in these values for " + fieldIdentifier + " or clear all planting values for that field."
     
     if (this.selectedCommodity == BERRY_COMMODITY.Cranberry) {
       if (plantedYear && (!bogId || !plantedAcres || !variety ) ) {
@@ -309,14 +397,40 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     return false
   }
 
-  setselectedCommodityForEmptyPlantings() {
-    // it allows us to save empty plantings
-    // TODO: remove this check after add field is ready
-    for (let field of  this.inventoryContract.fields) {
-      for (let planting of field.plantings) {
-        if ( planting.inventoryBerries.cropCommodityId == null ) {
-          planting.inventoryBerries.cropCommodityId = this.selectedCommodity
+  private getFieldIdentifierForMessage(field: any) {
+    //Default fieldId, if user entered a field address, show the address else the PID
+    let fieldIdentifier = "field ID " + field.fieldId;
+    if (field.fieldId < 0) {
+      if (field.fieldLocation && field.fieldLocation.length > 0) {
+        fieldIdentifier = "Field Address " + field.fieldLocation;
+      } else {
+        fieldIdentifier = "Legal Description " + field.primaryPropertyIdentifier;
+      }
+    }
+    return fieldIdentifier;
+  }
+
+  manageNewFields(){
+
+    for (let i = 0; i < this.inventoryContract.fields.length; i++) {
+      let field = this.inventoryContract.fields[i]
+
+      // sets the new field ids to null
+      if (field.isNewFieldUI == true && field.deletedByUserInd !== true) {
+
+        if (field.fieldId < 0) {
+          field.fieldId = null
         }
+
+        if (field.legalLandId < 0) {
+          field.legalLandId = null
+        }
+      }
+
+      // don't send the deleted new fields to the API 
+      if (field.isNewFieldUI == true && field.deletedByUserInd == true ) {
+        this.inventoryContract.fields.splice(i, 1)
+        i--
       }
     }
   }
@@ -338,7 +452,13 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
 
   commoditySelectionChanged(){
-    this.selectedCommodity = this.getViewModel().formGroup.controls.selectedCommodity.value
+    if (this.isUnsaved) {
+      alert("There are unsaved changes on the screen. Please Save or Clear Changes before switching commodities.")
+      // prevent default behaviour
+      this.getViewModel().formGroup.controls.selectedCommodity.setValue (this.selectedCommodity)
+    } else {
+      this.selectedCommodity = this.getViewModel().formGroup.controls.selectedCommodity.value
+    }
   }
 
   onCheckForHiddenPlantingsInTotals() {
@@ -361,4 +481,234 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
   }
   
+
+  getCurrentFieldsAndCommodities() {
+    let result = []
+  
+    for (let field of  this.inventoryContract.fields) {
+
+      let cmdties = []
+
+      for (let planting of field.plantings) {
+
+        if (planting.inventoryBerries.cropCommodityId) {
+          cmdties.push (planting.inventoryBerries.cropCommodityId)
+        }
+      }
+
+      result.push ({
+        fieldId: field.fieldId,
+        commodities: cmdties
+      })
+    }
+    return result
+  }
+
+  // BEGIN LAND MANAGEMENT
+
+  pltgsWithSelectedCommodityExist(pltgs) {
+    // are there any existing plantings for the selected commodity 
+    if (!pltgs || pltgs.length == 0) {
+      return false
+    } 
+
+    let el = pltgs.find(x => x.inventoryBerries.cropCommodityId == this.selectedCommodity)
+
+    if (el) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  getMaxPlantingNumber(pltgs){
+    let maxNum = 0
+
+    pltgs.forEach((pltg: InventoryField) => {
+      if (pltg.plantingNumber > maxNum ) {
+        maxNum = pltg.plantingNumber
+      }
+    })
+
+    return maxNum
+  }
+
+  getPlantings(landData) {
+    let pltgs: Array<InventoryField> = []
+    if ( landData.plantings && landData.plantings.length > 0 ) {
+      for ( let i=0; i < landData.plantings.length; i++) {
+        if ( landData.plantings[i].inventoryBerries && landData.plantings[i].inventoryBerries.cropCommodityId) {
+          pltgs.push(landData.plantings[i]) // get the existing plantings with non-null commodities
+        }
+      }
+    }
+  
+    // - if no plantings with the selected commodity exist then add one, so it's visible on the screen
+    if ( !landData.plantings || landData.plantings.length == 0 || !this.pltgsWithSelectedCommodityExist(landData.plantings)) {
+
+      let inventoryBerries: InventoryBerries = getDefaultInventoryBerries(null, null, this.selectedCommodity)
+
+      pltgs.push( getDefaultPlanting(null, INSURANCE_PLAN.BERRIES, (landData.fieldId > 0 ? landData.fieldId : null),  
+                this.inventoryContract.cropYear, this.getMaxPlantingNumber(landData.plantings) + 1, inventoryBerries, [], []))
+
+    } 
+
+    return pltgs
+  }
+
+  populateNewLand(landData) {
+
+    // find the max display_order
+    let maxDisplayOrder = 0; // field order should start with 1
+    let minFieldId = 0; // new fields should have negative field ids
+
+    this.inventoryContract.fields.forEach( function(fld : AnnualFieldRsrc) {
+  
+      if (fld.displayOrder > maxDisplayOrder) {
+        maxDisplayOrder = fld.displayOrder
+      }
+
+      if (fld.fieldId < minFieldId) {
+        minFieldId = fld.fieldId
+      }
+    });
+    
+    const fld = this.inventoryContract.fields.find (field => field.fieldId == landData.fieldId)
+
+    if (fld && fld.fieldId > 0 ) {
+      // if the field is already on the policy then
+      // remove empty plantings, they aren't visible anyway
+      if (fld.plantings) {
+        for (let i = 0; i < fld.plantings.length; i++){
+          if (fld.plantings[i].inventoryBerries && fld.plantings[i].inventoryBerries.cropCommodityId == null ) {
+            fld.plantings.splice (i, 1)
+            i--
+          }
+        }
+      }
+
+      // add a planting with the selected commodity but only for the existing fields
+      let inventoryBerries: InventoryBerries = getDefaultInventoryBerries(null, null, this.selectedCommodity)
+
+      fld.plantings.push(getDefaultPlanting(null, INSURANCE_PLAN.BERRIES, fld.fieldId,  
+        this.inventoryContract.cropYear, this.getMaxPlantingNumber(fld.plantings) + 1, inventoryBerries, [], []))
+
+    } else {
+
+      // get the plantings for the added field from landdata and create a new planting with the selected commodity
+      let pltgs: Array<InventoryField> = this.getPlantings(landData)
+
+      this.inventoryContract.fields.push( createNewAnnualFieldObject( (landData.fieldId > -1 ? landData.fieldId : (minFieldId - 1)), 
+                                    (landData.legalLandId > -1 ? landData.legalLandId : null), 
+                                    landData.fieldLabel, landData.otherLegalDescription, landData.primaryPropertyIdentifier,
+                                    landData.fieldLocation, maxDisplayOrder + 1, this.inventoryContract.cropYear, false, 
+                                    landData.landUpdateType, landData.transferFromGrowerContractYearId, 
+                                    pltgs, landData.uwComments) )
+    }
+
+    this.numComponentReloads = this.numComponentReloads + 1 // to reload the field component
+
+    this.store.dispatch(setFormStateUnsaved(INVENTORY_COMPONENT_ID, true));
+  }
+
+  onAddNewField() {
+
+    if (this.inventoryContract && this.inventoryContract.fields) {
+
+      // for now I am only setting the variables that I need for Berries Add Field
+      const dataToSend : AddLandPopupData = {
+        fieldId: null,  
+        fieldLabel: null,
+        fieldLocation: null,
+        cropYear: this.inventoryContract.cropYear,
+        policyId: this.policyId,
+        insurancePlanId: this.inventoryContract.insurancePlanId,
+        annualFieldDetailId: null,
+        otherLegalDescription : null,
+        primaryPropertyIdentifier: null,
+        landData: {
+          fieldId: null,
+          legalLandId: null,
+          fieldLabel: null,
+          fieldLocation: null,
+          primaryPropertyIdentifier: null,
+          otherLegalDescription: null,
+          landUpdateType: null,
+          transferFromGrowerContractYearId : null,
+          plantings: [],
+          uwComments: []
+        },
+        berries: {
+          selectedCommodity: this.selectedCommodity,
+          fields: this.getCurrentFieldsAndCommodities()
+        }
+      }
+
+      // open up the popup
+      let dialogRef = this.dialog.open(AddFieldComponent , {
+          width: '800px',
+          data: dataToSend
+        });
+      
+      dialogRef.afterClosed().subscribe(result => {
+        if (result && result.event == 'AddLand'){
+          
+          // add new land
+          if (result.data && result.data.landData) {
+            this.populateNewLand(result.data.landData) 
+          }
+          this.cdr.detectChanges()
+        } else if (result && result.event == 'Cancel'){
+          // do nothing
+        }
+      });
+    }
+  }
+
+  // END LAND MANAGEMENT
+
+  shouldHighlightCommodity() {
+    if (this.selectedCommodity) {
+      this.selectedCommodityTooltip = "Select a commodity"
+      return false // if a commodity is selected 
+    } else {
+      this.selectedCommodityTooltip = "Select a commodity then add field(s) and save"
+      return true
+    }
+  }
+
+  showQuantityTotals() {
+    if (this.inventoryContract && this.inventoryContract.inventoryContractCommodityBerries.length > 0 ) {
+
+      let el = this.inventoryContract.inventoryContractCommodityBerries.find(x => x.cropCommodityId == this.selectedCommodity)
+      if (el) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  showPlantTotals() {
+    if ((this.selectedCommodity == BERRY_COMMODITY.Blueberry || this.selectedCommodity == BERRY_COMMODITY.Strawberry) &&
+        this.inventoryContract && this.inventoryContract.inventoryContractCommodityBerries.length > 0) {
+
+      let el = this.inventoryContract.inventoryContractCommodityBerries.find(x => x.cropCommodityId == this.selectedCommodity)
+      if (el) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  // inventoryContract.inventoryContractCommodityBerries[0]
+  getBerryCommodityTotals(){
+    if (this.inventoryContract && this.inventoryContract.inventoryContractCommodityBerries){
+      let contractCommoditiy = this.inventoryContract.inventoryContractCommodityBerries.find (x => x.cropCommodityId == this.selectedCommodity)
+
+      return contractCommoditiy
+    } 
+
+  }
 }

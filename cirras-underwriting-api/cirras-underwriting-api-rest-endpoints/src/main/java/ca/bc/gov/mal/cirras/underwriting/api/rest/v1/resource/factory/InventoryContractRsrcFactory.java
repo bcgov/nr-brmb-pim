@@ -721,7 +721,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory implements
 		model.setBogId(dto.getBogId());
 		model.setBogMowedDate(dto.getBogMowedDate());
 		model.setBogRenovatedDate(dto.getBogRenovatedDate());
-		model.setIsHarvestedInd(dto.getIsHarvestedInd());
+		model.setIsHarvestedInd(false); //Is Harvested is always set to false on rollover
 
 		return model;
 	}

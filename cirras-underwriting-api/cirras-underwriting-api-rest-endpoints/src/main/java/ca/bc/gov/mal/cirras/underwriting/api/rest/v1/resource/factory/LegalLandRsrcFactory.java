@@ -348,17 +348,17 @@ public class LegalLandRsrcFactory extends BaseResourceFactory implements LegalLa
 	}
 	
 	@Override
-	public void createQuickLegalLand(LegalLandDto dto, AnnualField model, String pid) {
+	public void createQuickLegalLand(LegalLandDto dto, AnnualField model, String primaryReferenceTypeCode, String landIdentifierTypeCode) {
 
 		dto.setLegalLandId(null);
-		dto.setPrimaryReferenceTypeCode("OTHER");
+		dto.setPrimaryReferenceTypeCode(primaryReferenceTypeCode);
 		dto.setLegalDescription(null);
 		dto.setLegalShortDescription(null);
 		dto.setOtherDescription(model.getOtherLegalDescription());
 		dto.setActiveFromCropYear(model.getCropYear());
 		dto.setActiveToCropYear(null);
-		dto.setPrimaryPropertyIdentifier(pid);
-		dto.setPrimaryLandIdentifierTypeCode("OTHER");
+		dto.setPrimaryPropertyIdentifier(model.getPrimaryPropertyIdentifier());
+		dto.setPrimaryLandIdentifierTypeCode(landIdentifierTypeCode);
 		dto.setTotalAcres(null);
 
 	}
