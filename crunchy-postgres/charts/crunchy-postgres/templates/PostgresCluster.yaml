@@ -80,7 +80,10 @@ spec:
                     postgres-operator.crunchydata.com/cluster:
                       {{ template "crunchy-postgres.fullname" . }}
                     postgres-operator.crunchydata.com/instance-set: {{ .Values.instances.name }}-ha
-  
+
+  replicaService:
+    type: NodePort
+
   users:
     - name: {{ template "crunchy-postgres.fullname" . }}
       databases:
