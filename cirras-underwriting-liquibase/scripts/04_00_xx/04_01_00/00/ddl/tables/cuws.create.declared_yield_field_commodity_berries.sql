@@ -5,6 +5,8 @@ CREATE TABLE cuws.declared_yield_field_commodity_berries(
     crop_year                                      numeric(4, 0)     NOT NULL,
     total_production                               numeric(14, 4),
     total_production_override                      numeric(14, 4),
+    total_planted_acres                            numeric(10, 4)    NOT NULL,
+    total_mature_equivalent_acres                  numeric(10, 4)    NOT NULL,
     create_user                                    varchar(64)       NOT NULL,
     create_date                                    timestamp(0)      NOT NULL,
     update_user                                    varchar(64)       NOT NULL,
@@ -25,6 +27,10 @@ COMMENT ON COLUMN cuws.declared_yield_field_commodity_berries.crop_year IS 'Crop
 COMMENT ON COLUMN cuws.declared_yield_field_commodity_berries.total_production IS 'Total Production is the calculated total pounds of yield by commdity and field'
 ;
 COMMENT ON COLUMN cuws.declared_yield_field_commodity_berries.total_production_override IS 'Total Production Override is the manually entered total pounds of yield by commodity and field'
+;
+COMMENT ON COLUMN cuws.declared_yield_field_commodity_berries.total_planted_acres IS 'Total Planted Acres are the calculated total planted acres from field variety'
+;
+COMMENT ON COLUMN cuws.declared_yield_field_commodity_berries.total_mature_equivalent_acres IS 'Total Mature Equivalent Acres are the calculated total ME acres from field variety'
 ;
 COMMENT ON COLUMN cuws.declared_yield_field_commodity_berries.create_user IS 'Create User is the user id of the user that created the record'
 ;
@@ -60,5 +66,3 @@ ALTER TABLE cuws.declared_yield_field_commodity_berries ADD CONSTRAINT fk_dyfcb_
     FOREIGN KEY (crop_commodity_id)
     REFERENCES cuws.crop_commodity(crop_commodity_id)
 ;
-
-
