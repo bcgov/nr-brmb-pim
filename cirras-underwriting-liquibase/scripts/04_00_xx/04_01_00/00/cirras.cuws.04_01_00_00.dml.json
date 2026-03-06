@@ -2,5 +2,6 @@
   "databaseChangeLog": [
     { "changeSet": {"author":"mhostettler","id":"57","changes": [
       {"sqlFile": {"relativeToChangelogFile": "true", "path": "dml/cuws.insert.yield_meas_unit_plan_xref.sql"}},
-      {"sqlFile": {"relativeToChangelogFile": "true", "path": "dml/cuws.update.inventory_field.sql"}}
+      {"sqlFile": {"relativeToChangelogFile": "true", "path": "dml/cuws.update.inventory_field.sql"}},
+      {"sqlFile": {"relativeToChangelogFile": "true", "path": "dml/cuws.insert.commodity_maturity_scale.sql"}}
   ] } }]}
