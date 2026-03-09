@@ -4,17 +4,25 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.LandManagementEventTypes;
+import ca.bc.gov.mal.cirras.underwriting.spring.PersistenceSpringConfig;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.PoliciesSyncEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingServiceException;
@@ -32,14 +40,19 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.PolicyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityMaturityScaleDto;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.CommodityMaturityScaleDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.TestConfig;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes= {TestConfig.class, PersistenceSpringConfig.class})
 public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 	private static final Logger logger = LoggerFactory.getLogger(InventoryContractEndpointBerriesTest.class);
 
@@ -99,6 +112,10 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 	
 	private CirrasUnderwritingService service;
 	private EndpointsRsrc topLevelEndpoints;
+	
+	@Autowired 
+	private PersistenceSpringConfig persistenceSpringConfig;
+
 
 	@Before
 	public void prepareTests() throws CirrasUnderwritingServiceException, Oauth2ClientException, NotFoundDaoException, DaoException{
@@ -267,9 +284,23 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		logger.debug(">testInsertUpdateDeleteInventoryBerries");
 	}
 	
+	private List<CommodityMaturityScaleDto> loadBerriesScaleTable(Integer insurancePlanId, Integer cropYear)
+			throws DaoException {
+
+		CommodityMaturityScaleDao dao = persistenceSpringConfig.commodityMaturityScaleDao();
+
+		List<CommodityMaturityScaleDto> scaleDto = null;
+		if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId())) {
+			//Load scale table
+			scaleDto = dao.selectByYear(cropYear);
+		}
+		return scaleDto;
+	}
+
+	
 	@Test
 	public void testInsertUpdateDeleteInventoryCranBerries() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
-		logger.debug("<testInsertUpdateDeleteInventoryCranBerries");
+		logger.debug("<testCommodityMeasurementScale");
 		
 		if(skipTests) {
 			logger.warn("Skipping tests");
@@ -1013,6 +1044,161 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		logger.debug(">testInventoryContractCommodityBerries");
 	}
 	
+	@Test
+	public void testInventoryBerriesMEAcres() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException, DaoException {
+		logger.debug("<testInventoryBerriesMEAcres");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+
+		Integer cropYear = 2026;
+		
+		createGrower();
+		createPolicy(policyId1, policyNumber1, cropYear);
+		createGrowerContractYear(gcyId1, cropYear);
+
+		createLegalLand();
+		createField();
+		createAnnualFieldDetail(annualFieldDetailId1, cropYear);
+		createContractedFieldDetail(contractedFieldDetailId1, annualFieldDetailId1, gcyId1, false);
+		
+		List<CommodityMaturityScaleDto> scalesDto = loadBerriesScaleTable(3, cropYear);
+		
+		CirrasUnderwritingService service = getService(SCOPES);
+		Map<Integer, Double> expectedMeaList = new HashMap<>();
+		
+		EndpointsRsrc topLevelEndpoints = service.getTopLevelEndpoints();
+
+		UwContractRsrc uwContract = getUwContract(policyNumber1, service, topLevelEndpoints);
+		Assert.assertNotNull(uwContract);
+		Assert.assertNull(uwContract.getInventoryContractGuid());
+		
+		InventoryContractRsrc invContract = service.rolloverInventoryContract(uwContract);
+		
+		Assert.assertNotNull(invContract.getInventoryContractCommodityBerries());
+		Assert.assertEquals(0, invContract.getInventoryContractCommodityBerries().size());
+
+		AnnualFieldRsrc field = invContract.getFields().get(0);
+
+		// Remove default planting.
+		field.getPlantings().remove(0);
+		
+		// Blueberry 0 years - 10 acres
+		InventoryField planting = createPlanting(field, 1, cropYear);
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010689, "BLUEJAY", (double)10, 10, 5.3, true, true, null, 2026, null, null, null, false);
+		Double mea = calculateMEAcres(10, (double)10, 2026, cropYear, scalesDto);
+		expectedMeaList.put(1, mea);
+		
+		// Blueberry 7 years - 20 acres
+		planting = createPlanting(field, 2, cropYear);
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010691, "ELLIOTT", (double)20, 5, 4.9, true, false, null, 2019, null, null, null, false);
+		mea = calculateMEAcres(10, (double)20, 2019, cropYear, scalesDto);
+		expectedMeaList.put(2, mea);
+				
+		// Blueberry 8 years - 30 acres
+		planting = createPlanting(field, 3, cropYear);
+		createInventoryBerries(planting, 10, "BLUEBERRY", 1010690, "LEGACY", (double)30, null, null, false, true, null, 2018, null, null, null, false);
+		mea = calculateMEAcres(10, (double)30, 2018, cropYear, scalesDto);
+		expectedMeaList.put(3, mea);
+
+		// Raspberry 0 years - 10 acres
+		planting = createPlanting(field, 4, cropYear);
+		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)10, null, null, true, true, null, 2026, null, null, null, false);
+		mea = calculateMEAcres(12, (double)10, 2026, cropYear, scalesDto);
+		expectedMeaList.put(4, mea);
+		
+		// Raspberry 1 year - 20 acres
+		planting = createPlanting(field, 5, cropYear);
+		createInventoryBerries(planting, 12, "RASPBERRY", 1010694, "MALAHAT", (double)20, null, null, true, true, null, 2025, null, null, null, false);
+		mea = calculateMEAcres(12, (double)20, 2025, cropYear, scalesDto);
+		expectedMeaList.put(5, mea);
+		
+		// Cranberry 0 years - 15 acres
+		planting = createPlanting(field, 6, cropYear);
+		createInventoryBerries(planting, 11, "CRANBERRY", 1010703, "HONEOYE", (double)15, null, null, true, false, null, 2026, null, null, null, false);
+		mea = calculateMEAcres(11, (double)15, 2026, cropYear, scalesDto);
+		expectedMeaList.put(6, mea);
+		
+		// Cranberry 3 years - 20 acres
+		planting = createPlanting(field, 7, cropYear);
+		createInventoryBerries(planting, 11, "CRANBERRY", 1010705, "VALLEY RED", (double)20, null, null, false, true, null, 2023, null, null, null, false);
+		mea = calculateMEAcres(11, (double)20, 2023, cropYear, scalesDto);
+		expectedMeaList.put(7, mea);
+
+		// Cranberry 4 years - 20 acres
+		planting = createPlanting(field, 8, cropYear);
+		createInventoryBerries(planting, 11, "CRANBERRY", 1010705, "VALLEY RED", (double)20, null, null, false, true, null, 2022, null, null, null, false);
+		mea = calculateMEAcres(11, (double)20, 2022, cropYear, scalesDto);
+		expectedMeaList.put(8, mea);
+
+		// Strawberry 1 year - 10 acres
+		planting = createPlanting(field, 9, cropYear);
+		createInventoryBerries(planting, 13, "STRAWBERRY", 1010702, "HOOD", (double)10, null, null, true, true, "ST1", 2025, null, null, null, false);
+		mea = calculateMEAcres(13, (double)10, 2025, cropYear, scalesDto);
+		expectedMeaList.put(9, mea);
+
+		// Blueberry - Empty planting to test if calculation fails
+		planting = createPlanting(field, 10, cropYear);
+		createInventoryBerries(planting, 10, "BLUEBERRY", null, null, null, null, null, true, true, null, null, null, null, null, false);
+		expectedMeaList.put(10, (double)-1); //expect null
+		
+		InventoryContractRsrc fetchedInvContract = service.createInventoryContract(topLevelEndpoints, invContract);
+
+		List<InventoryField> plantings = fetchedInvContract.getFields().get(0).getPlantings();
+		
+		Assert.assertEquals(10, plantings.size());
+		
+		for (InventoryField inventoryField : plantings) {
+
+			double expectedMea = expectedMeaList.get(inventoryField.getPlantingNumber());
+			
+			if(expectedMea == -1) {
+				Assert.assertNull("Wrong MEA for planting number: " + inventoryField.getPlantingNumber(), inventoryField.getInventoryBerries().getMatureEquivalentAcres());
+			} else {
+				Assert.assertEquals("Wrong MEA for planting number: " + inventoryField.getPlantingNumber(), expectedMea, inventoryField.getInventoryBerries().getMatureEquivalentAcres().doubleValue(), 0.0005);
+			}
+			
+		}	
+		
+		delete();
+
+		logger.debug(">testInventoryBerriesMEAcres");
+	}
+	
+	private double calculateMEAcres(
+			Integer cropCommodityId,
+			double plantedAcres, 
+			Integer plantedYear, 
+			Integer cropYear,
+			List<CommodityMaturityScaleDto> scaleDto) {
+		//Default = planted acres
+		double meAcres = plantedAcres;
+
+		Assert.assertNotNull(scaleDto);
+		Assert.assertTrue("No scale records found", scaleDto.size() > 1);
+
+		//Calculate ME Acres if plants are not fully matured
+		
+		Integer plantAge = cropYear - plantedYear;
+		
+		List<CommodityMaturityScaleDto> filteredScales = scaleDto.stream()
+					.filter(x -> x.getCropCommodityId().equals(cropCommodityId)
+							&& x.getPlantAge().equals(plantAge))
+					.collect(Collectors.toList());
+
+		Assert.assertNotNull(filteredScales);
+		Assert.assertTrue("More than one scale found: " + filteredScales.size(), filteredScales.size() <= 1);
+		
+		if(filteredScales.size() == 1) {
+			meAcres = filteredScales.get(0).getScale() * plantedAcres;
+		}
+		
+		return meAcres;
+	}	
+	
+	
 	private InventoryContractCommodityBerries getInventoryContractCommodityBerries(Integer cropCommodityId, List<InventoryContractCommodityBerries> iccbList) {
 		
 		InventoryContractCommodityBerries iccb = null;
@@ -1360,7 +1546,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		resource.setLegalShortDescription(null);
 		resource.setOtherDescription("TEST LEGAL LOC 123");
 		resource.setActiveFromCropYear(2011);
-		resource.setActiveToCropYear(2022);
+		resource.setActiveToCropYear(2099);
 		resource.setTransactionType(LandManagementEventTypes.LegalLandCreated);
 		
 		service.synchronizeLegalLand(resource);
@@ -1375,7 +1561,7 @@ public class InventoryContractEndpointBerriesTest extends EndpointsTest {
 		resource.setFieldLabel("Field Label");
 		resource.setFieldLocation(fieldLocation );
 		resource.setActiveFromCropYear(2011);
-		resource.setActiveToCropYear(2022);
+		resource.setActiveToCropYear(2099);
 		resource.setTransactionType(LandManagementEventTypes.FieldCreated);
 		
 		service.synchronizeField(resource);

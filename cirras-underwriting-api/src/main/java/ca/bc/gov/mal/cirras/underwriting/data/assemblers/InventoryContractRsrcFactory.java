@@ -453,6 +453,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory {
 		model.setPlantInsurabilityTypeCode(dto.getPlantInsurabilityTypeCode());
 		model.setPlantedYear(dto.getPlantedYear());
 		model.setPlantedAcres(dto.getPlantedAcres());
+		model.setMatureEquivalentAcres(dto.getMatureEquivalentAcres());
 		model.setRowSpacing(dto.getRowSpacing());
 		model.setPlantSpacing(dto.getPlantSpacing());
 		model.setTotalPlants(dto.getTotalPlants());
@@ -709,6 +710,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory {
 		model.setPlantInsurabilityTypeCode(dto.getPlantInsurabilityTypeCode());
 		model.setPlantedYear(dto.getPlantedYear());
 		model.setPlantedAcres(dto.getPlantedAcres());
+		model.setMatureEquivalentAcres(dto.getMatureEquivalentAcres());
 		model.setRowSpacing(dto.getRowSpacing());
 		model.setPlantSpacing(dto.getPlantSpacing());
 		model.setTotalPlants(dto.getTotalPlants());
@@ -1049,6 +1051,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory {
 			dto.setPlantInsurabilityTypeCode(null);
 			dto.setPlantedYear(null);
 			dto.setPlantedAcres(null);
+			dto.setMatureEquivalentAcres(null);
 			dto.setRowSpacing(null);
 			dto.setPlantSpacing(null);
 			dto.setTotalPlants(null);
@@ -1067,6 +1070,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory {
 			dto.setPlantInsurabilityTypeCode(model.getPlantInsurabilityTypeCode());
 			dto.setPlantedYear(model.getPlantedYear());
 			dto.setPlantedAcres(model.getPlantedAcres());
+			dto.setMatureEquivalentAcres(model.getMatureEquivalentAcres());
 			dto.setRowSpacing(model.getRowSpacing());
 			dto.setPlantSpacing(model.getPlantSpacing());
 			dto.setTotalPlants(model.getTotalPlants());

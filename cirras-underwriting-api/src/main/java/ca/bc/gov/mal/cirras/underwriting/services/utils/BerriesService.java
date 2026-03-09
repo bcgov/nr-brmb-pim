@@ -21,6 +21,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryContractComm
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityMaturityScaleDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldVarietyBerriesDto;
@@ -29,6 +30,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodit
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.InventoryContractRsrcFactory;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
+import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 
 public class BerriesService {
 
@@ -75,7 +77,12 @@ public class BerriesService {
 		this.dopYieldContractRsrcFactory = dopYieldContractRsrcFactory;
 	}
 	
-	public void updateInventoryBerries(InventoryBerries inventoryBerries, String inventoryFieldGuid, String userId)
+	public void updateInventoryBerries(
+			InventoryBerries inventoryBerries, 
+			String inventoryFieldGuid, 
+			List<CommodityMaturityScaleDto> scaleDto, 
+			Integer cropYear,
+			String userId)
 			throws DaoException {
 
 		// inventoryUnseeded.getInventoryUnseededGuid() might be null if it's a new crop
@@ -86,6 +93,9 @@ public class BerriesService {
 		
 		//Calculates and sets total plants
 		calculateTotalPlants(inventoryBerries);
+		
+		//Calculates ME Acres
+		calculateMEAcres(inventoryBerries, scaleDto, cropYear);
 
 		if (dto == null) {
 			// Insert if it doesn't exist
@@ -111,6 +121,32 @@ public class BerriesService {
 
 		return dto.getInventoryBerriesGuid();
 	}
+	
+	private void calculateMEAcres(InventoryBerries inventoryBerries, List<CommodityMaturityScaleDto> scaleDto, Integer cropYear) {
+		//Default = planted acres
+		inventoryBerries.setMatureEquivalentAcres(inventoryBerries.getPlantedAcres());
+		
+		if(inventoryBerries.getPlantedAcres() != null 
+				&& inventoryBerries.getPlantedYear() != null 
+				&& inventoryBerries.getCropCommodityId() != null
+				&& scaleDto != null && scaleDto.size() > 0) {
+			//Calculate ME Acres if plants are not fully matured
+			
+			Integer plantAge = cropYear - inventoryBerries.getPlantedYear();
+			
+			List<CommodityMaturityScaleDto> filteredScales = scaleDto.stream()
+						.filter(x -> x.getCropCommodityId().equals(inventoryBerries.getCropCommodityId())
+								&& x.getPlantAge().equals(plantAge))
+						.collect(Collectors.toList());
+			
+			if(filteredScales != null && filteredScales.size() == 1){
+				double calculatedMea = filteredScales.get(0).getScale() * inventoryBerries.getPlantedAcres();
+				inventoryBerries.setMatureEquivalentAcres(calculatedMea);
+			} else if (filteredScales.size() > 1) {
+				throw new ServiceException("Too many scale records found for commodityId " + inventoryBerries.getCropCommodityId() + ": " + filteredScales.size());
+			}
+		}
+	}	
 	
 	private void calculateTotalPlants(InventoryBerries inventoryBerries) {
 		//Default
