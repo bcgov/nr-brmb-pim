@@ -94,8 +94,7 @@
 	<select id="selectByYear" resultMap="commodityMaturityScaleDtoMap">
 		<include refid="selectColumns"/>
 		from commodity_maturity_scale t
-		where t.crop_year = #{cropYear}
-		WHERE #{cropYear} BETWEEN t.effective_crop_year AND t.expiry_crop_year
+		where #{cropYear} BETWEEN t.effective_crop_year AND t.expiry_crop_year
 		order by t.crop_commodity_id, t.plant_age asc
 	</select>
 	

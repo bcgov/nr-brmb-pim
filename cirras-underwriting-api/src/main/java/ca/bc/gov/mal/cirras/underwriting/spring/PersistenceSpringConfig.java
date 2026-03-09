@@ -21,6 +21,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.AnnualFieldDetailDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.CommodityMaturityScaleDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CommodityTypeCodeDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CommodityTypeVarietyXrefDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.ContactDao;
@@ -163,6 +164,11 @@ public class PersistenceSpringConfig {
 	@Bean
 	public InventoryFieldDao inventoryFieldDao() { 
 		return new InventoryFieldDao(); 
+	}
+
+	@Bean
+	public CommodityMaturityScaleDao commodityMaturityScaleDao() { 
+		return new CommodityMaturityScaleDao(); 
 	}
 	
 	@Bean
