@@ -64,16 +64,16 @@ export class BerriesInventoryPlantingComponent implements OnChanges {
     
     if (this.selectedCommodity == BERRY_COMMODITY.Blueberry ) {
       return {
-          'width': `830px`
+          'width': `930px`
       };
     }
 
     if (this.selectedCommodity == BERRY_COMMODITY.Raspberry ) {
       return {
-          'width': `510px`
+          'width': `610px`
       };
     }
-
+    // No ME acres
     if (this.selectedCommodity == BERRY_COMMODITY.Strawberry ) {
       return {
           'width': `650px`
@@ -82,7 +82,7 @@ export class BerriesInventoryPlantingComponent implements OnChanges {
 
     if (this.selectedCommodity == BERRY_COMMODITY.Cranberry ) {
       return {
-          'width': `910px`
+          'width': `1010px`
       };
     }
 

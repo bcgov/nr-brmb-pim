@@ -38,16 +38,16 @@ export function showIsPlantInsuredForBerries(cmdty) {
 export function setTableHeaderStyleForBerries(cmdty) {
   if (cmdty == BERRY_COMMODITY.Blueberry ) {
     return {
-      'width': `1520px`
+      'width': `1620px`
     };
   }
   
   if (cmdty == BERRY_COMMODITY.Raspberry) {
     return {
-      'width': `1200px`
+      'width': `1300px`
     };
   }
-
+  // no MEA acres
   if (cmdty == BERRY_COMMODITY.Strawberry) {
     return {
       'width': `1340px`
@@ -56,7 +56,7 @@ export function setTableHeaderStyleForBerries(cmdty) {
 
   if (cmdty == BERRY_COMMODITY.Cranberry) {
     return {
-      'width': `1750px`
+      'width': `1850px`
     };
   }
 
@@ -105,16 +105,16 @@ export class BerriesInventoryFieldListComponent {
   setInnerWrapperStyle() {
     if (this.selectedCommodity == BERRY_COMMODITY.Blueberry ) {
       return {
-          'width': `1535px`
+          'width': `1635px`
       };
     }
 
     if (this.selectedCommodity == BERRY_COMMODITY.Raspberry ) {
       return {
-          'width': `1215px` 
+          'width': `1315px` 
       };
     }  
-
+    // No ME acres
     if (this.selectedCommodity == BERRY_COMMODITY.Strawberry) {
       return {
           'width': `1355px` 
@@ -123,7 +123,7 @@ export class BerriesInventoryFieldListComponent {
 
     if (this.selectedCommodity == BERRY_COMMODITY.Cranberry) {
       return {
-          'width': `1765px` 
+          'width': `1865px` 
       };
     }  
 
@@ -147,6 +147,14 @@ export class BerriesInventoryFieldListComponent {
 
   isCranberry() {
     if(this.selectedCommodity == BERRY_COMMODITY.Cranberry ) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  isStrawberry() {
+    if(this.selectedCommodity == BERRY_COMMODITY.Strawberry ) {
       return true
     } else {
       return false
