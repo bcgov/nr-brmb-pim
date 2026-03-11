@@ -15,6 +15,7 @@ public class DopYieldFieldVarietyBerries implements Serializable {
 	private Integer cropVarietyId;
 	private String cropVarietyName;
 	private Double plantedAcres;
+	private Double matureEquivalentAcres;
 	private Double soldShippedYield;
 	private Double salesYield;
 	private Double abandonmentYield;
@@ -56,6 +57,14 @@ public class DopYieldFieldVarietyBerries implements Serializable {
 		this.plantedAcres = plantedAcres;
 	}
 
+	public Double getMatureEquivalentAcres() {
+		return matureEquivalentAcres;
+	}
+	
+	public void setMatureEquivalentAcres(Double matureEquivalentAcres) {
+		this.matureEquivalentAcres = matureEquivalentAcres;
+	}
+	
 	public Double getSoldShippedYield() {
 		return soldShippedYield;
 	}

@@ -1,10 +1,10 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -36,7 +36,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityBe
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldVarietyBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryBerries;
-import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
@@ -236,6 +235,18 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNotNull(fetchedInvContract.getFields().get(0).getPlantings());
 		Assert.assertEquals(5, fetchedInvContract.getFields().get(0).getPlantings().size());
 		
+		//Calculate expected MEA acres
+		List<InventoryField> plantings = fetchedInvContract.getFields().get(0).getPlantings();
+		Map<Integer, Double> expectedMeaList = new HashMap<>();
+		for (InventoryField inventoryField : plantings) {
+			double expectedMea = inventoryField.getInventoryBerries().getMatureEquivalentAcres();
+			//If variety has been added already, add the new mea to the stored value
+			if(expectedMeaList.size() > 0 && expectedMeaList.containsKey(inventoryField.getInventoryBerries().getCropVarietyId())) {
+				expectedMea = expectedMeaList.get(inventoryField.getInventoryBerries().getCropVarietyId()) + inventoryField.getInventoryBerries().getMatureEquivalentAcres();
+			}
+			expectedMeaList.put(inventoryField.getInventoryBerries().getCropVarietyId(), expectedMea);
+		}
+	
 		uwContractRsrc = getUwContract(policyNumber1, service, topLevelEndpoints);
 		Assert.assertNotNull(uwContractRsrc);
 		Assert.assertNotNull(uwContractRsrc.getInventoryContractGuid());
@@ -287,6 +298,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setCropVarietyId(1010689);
 		expectedDyfvb.setCropVarietyName("BLUEJAY");
 		expectedDyfvb.setPlantedAcres(400.0);
+		expectedDyfvb.setMatureEquivalentAcres(expectedMeaList.get(1010689));
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
 		expectedDyfvb.setTotalProduction(null);
@@ -310,6 +322,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setCropVarietyId(1010694);
 		expectedDyfvb.setCropVarietyName("MALAHAT");
 		expectedDyfvb.setPlantedAcres(200.0);
+		expectedDyfvb.setMatureEquivalentAcres(expectedMeaList.get(1010694));
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
 		expectedDyfvb.setTotalProduction(null);
@@ -322,6 +335,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setCropVarietyId(1010695);
 		expectedDyfvb.setCropVarietyName("MEEKER");
 		expectedDyfvb.setPlantedAcres(500.0);
+		expectedDyfvb.setMatureEquivalentAcres(expectedMeaList.get(1010695));
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
 		expectedDyfvb.setTotalProduction(null);
@@ -431,6 +445,20 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNotNull(fetchedInvContract.getFields().get(0).getPlantings());
 		Assert.assertEquals(5, fetchedInvContract.getFields().get(0).getPlantings().size());
 		
+		//Calculate expected MEA acres
+		List<InventoryField> plantings = fetchedInvContract.getFields().get(0).getPlantings();
+		plantings.addAll(fetchedInvContract.getFields().get(1).getPlantings());
+		Map<String, Double> expectedMeaList = new HashMap<>();
+		for (InventoryField inventoryField : plantings) {
+			String key = inventoryField.getFieldId().toString() + "_" + inventoryField.getInventoryBerries().getCropVarietyId();
+			double expectedMea = inventoryField.getInventoryBerries().getMatureEquivalentAcres();
+			//If variety has been added already, add the new mea to the stored value
+			if(expectedMeaList.size() > 0 && expectedMeaList.containsKey(key)) {
+				expectedMea = expectedMeaList.get(key) + inventoryField.getInventoryBerries().getMatureEquivalentAcres();
+			}
+			expectedMeaList.put(key, expectedMea);
+		}
+		
 		uwContractRsrc = getUwContract(policyNumber1, service, topLevelEndpoints);
 		Assert.assertNotNull(uwContractRsrc);
 		Assert.assertNotNull(uwContractRsrc.getInventoryContractGuid());
@@ -485,6 +513,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setCropVarietyId(1010689);
 		expectedDyfvb.setCropVarietyName("BLUEJAY");
 		expectedDyfvb.setPlantedAcres(400.0);
+		expectedDyfvb.setMatureEquivalentAcres(expectedMeaList.get(fieldId1 + "_" + 1010689));
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
 		expectedDyfvb.setTotalProduction(null);
@@ -508,6 +537,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setCropVarietyId(1010694);
 		expectedDyfvb.setCropVarietyName("MALAHAT");
 		expectedDyfvb.setPlantedAcres(200.0);
+		expectedDyfvb.setMatureEquivalentAcres(expectedMeaList.get(fieldId1 + "_" + 1010694));
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
 		expectedDyfvb.setTotalProduction(null);
@@ -520,6 +550,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setCropVarietyId(1010695);
 		expectedDyfvb.setCropVarietyName("MEEKER");
 		expectedDyfvb.setPlantedAcres(500.0);
+		expectedDyfvb.setMatureEquivalentAcres(expectedMeaList.get(fieldId1 + "_" + 1010695));
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
 		expectedDyfvb.setTotalProduction(null);
@@ -559,6 +590,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setCropVarietyId(1010689);
 		expectedDyfvb.setCropVarietyName("BLUEJAY");
 		expectedDyfvb.setPlantedAcres(600.0);
+		expectedDyfvb.setMatureEquivalentAcres(expectedMeaList.get(fieldId2 + "_" + 1010689));
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
 		expectedDyfvb.setTotalProduction(null);
@@ -1108,6 +1140,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertEquals(expected.getCropVarietyId(), actual.getCropVarietyId());
 		Assert.assertEquals(expected.getCropVarietyName(), actual.getCropVarietyName());
 		Assert.assertEquals(expected.getPlantedAcres(), actual.getPlantedAcres());
+		Assert.assertEquals(expected.getMatureEquivalentAcres(), actual.getMatureEquivalentAcres());
 		Assert.assertEquals(expected.getSalesYield(), actual.getSalesYield());
 		Assert.assertEquals(expected.getSoldShippedYield(), actual.getSoldShippedYield());
 		Assert.assertEquals(expected.getTotalProduction(), actual.getTotalProduction());

@@ -10,6 +10,7 @@
 		<result property="declaredYieldFieldCommodityBerriesGuid" column="declared_yield_field_commodity_berries_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="cropVarietyId" column="crop_variety_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="plantedAcres" column="planted_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="matureEquivalentAcres" column="mature_equivalent_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="soldShippedYield" column="sold_shipped_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="salesYield" column="sales_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="abandonmentYield" column="abandonment_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
@@ -31,6 +32,7 @@
 			t.declared_yield_field_commodity_berries_guid,
 			t.crop_variety_id,
 			t.planted_acres,
+			t.mature_equivalent_acres,
 			t.sold_shipped_yield,
 			t.sales_yield,
 			t.abandonment_yield,
@@ -61,6 +63,7 @@
 			declared_yield_field_commodity_berries_guid,
 			crop_variety_id,
 			planted_acres,
+			mature_equivalent_acres,
 			sold_shipped_yield,
 			sales_yield,
 			abandonment_yield,
@@ -75,6 +78,7 @@
 			#{dto.declaredYieldFieldCommodityBerriesGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{dto.cropVarietyId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.plantedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.matureEquivalentAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.soldShippedYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.salesYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.abandonmentYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
@@ -90,6 +94,7 @@
 	<update id="update">
 		update declared_yield_field_variety_berries
 		set planted_acres = #{dto.plantedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			mature_equivalent_acres = #{dto.matureEquivalentAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			sold_shipped_yield = #{dto.soldShippedYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			sales_yield = #{dto.salesYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			abandonment_yield = #{dto.abandonmentYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},

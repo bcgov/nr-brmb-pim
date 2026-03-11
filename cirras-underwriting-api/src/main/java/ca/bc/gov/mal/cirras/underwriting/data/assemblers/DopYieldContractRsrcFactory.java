@@ -742,6 +742,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 			model.setCropVarietyId(ib.getCropVarietyId());
 			model.setCropVarietyName(ib.getCropVarietyName());
 			model.setPlantedAcres(ib.getPlantedAcres());
+			model.setMatureEquivalentAcres(ib.getMatureEquivalentAcres());
 		}
 
 		
@@ -761,6 +762,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		// InventoryBerriesDto
 		InventoryBerriesDto ib = ifDto.getInventoryBerries();
 		if ( ib != null && ib.getPlantedAcres() != null ) {
+			//Rollup planted acres
 			Double dopPlantedAcres = model.getPlantedAcres();
 			if ( dopPlantedAcres == null ) {
 				dopPlantedAcres = ib.getPlantedAcres();
@@ -768,6 +770,15 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 				dopPlantedAcres += ib.getPlantedAcres();
 			}
 			model.setPlantedAcres(dopPlantedAcres);
+			
+			//Rollup ME Acres
+			Double dopMatureEquivalentAcres = model.getMatureEquivalentAcres();
+			if ( dopMatureEquivalentAcres == null ) {
+				dopMatureEquivalentAcres = ib.getMatureEquivalentAcres();
+			} else {
+				dopMatureEquivalentAcres += ib.getMatureEquivalentAcres();
+			}
+			model.setMatureEquivalentAcres(dopMatureEquivalentAcres);
 		}
 
 	}
@@ -779,6 +790,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		model.setCropVarietyId(dto.getCropVarietyId());
 		model.setCropVarietyName(dto.getCropVarietyName());
 		model.setPlantedAcres(dto.getPlantedAcres());
+		model.setMatureEquivalentAcres(dto.getMatureEquivalentAcres());
 		model.setAbandonmentYield(dto.getAbandonmentYield());
 		model.setDeclaredYieldFieldCommodityBerriesGuid(dto.getDeclaredYieldFieldCommodityBerriesGuid());
 		model.setDeclaredYieldFieldVarietyBerriesGuid(dto.getDeclaredYieldFieldVarietyBerriesGuid());
@@ -875,6 +887,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		dto.setDeclaredYieldFieldCommodityBerriesGuid(model.getDeclaredYieldFieldCommodityBerriesGuid());
 		dto.setDeclaredYieldFieldVarietyBerriesGuid(model.getDeclaredYieldFieldVarietyBerriesGuid());
 		dto.setPlantedAcres(model.getPlantedAcres());
+		dto.setMatureEquivalentAcres(model.getMatureEquivalentAcres());
 		dto.setSalesYield(model.getSalesYield());
 		dto.setSoldShippedYield(model.getSoldShippedYield());
 		dto.setTotalProduction(model.getTotalProduction());
