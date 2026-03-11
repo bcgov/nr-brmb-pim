@@ -12,6 +12,7 @@
 		<result property="plantInsurabilityTypeCode" column="plant_insurability_type_code" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="plantedYear" column="planted_year" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="plantedAcres" column="planted_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="matureEquivalentAcres" column="mature_equivalent_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="rowSpacing" column="row_spacing" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="plantSpacing" column="plant_spacing" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="totalPlants" column="total_plants" javaType="java.lang.Integer" jdbcType="NUMERIC" />
@@ -40,6 +41,7 @@
 		t.plant_insurability_type_code,
 		t.planted_year, 
 		t.planted_acres, 
+		t.mature_equivalent_acres,
 		t.row_spacing, 
 		t.plant_spacing, 
 		t.total_plants, 
@@ -79,6 +81,7 @@
 			plant_insurability_type_code,
 			planted_year ,
 			planted_acres,
+			mature_equivalent_acres,
 			row_spacing,
 			plant_spacing,
 			total_plants,
@@ -100,6 +103,7 @@
 			#{dto.plantInsurabilityTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{dto.plantedYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.plantedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.matureEquivalentAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.rowSpacing, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.plantSpacing, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.totalPlants, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
@@ -123,6 +127,7 @@
 			plant_insurability_type_code = #{dto.plantInsurabilityTypeCode, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}, 
 			planted_year  = #{dto.plantedYear, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
 			planted_acres = #{dto.plantedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			mature_equivalent_acres = #{dto.matureEquivalentAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			row_spacing = #{dto.rowSpacing, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 
 			plant_spacing = #{dto.plantSpacing, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			total_plants = #{dto.totalPlants, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN}, 

@@ -22,6 +22,7 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 	private String plantInsurabilityTypeCode;
 	private Integer plantedYear;
 	private Double plantedAcres;
+	private Double matureEquivalentAcres;
 	private Integer rowSpacing;
 	private Double plantSpacing;
 	private Integer totalPlants;
@@ -52,6 +53,7 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 		this.plantedYear = dto.plantedYear;
 		this.plantInsurabilityTypeCode = dto.plantInsurabilityTypeCode;
 		this.plantedAcres = dto.plantedAcres;
+		this.matureEquivalentAcres = dto.matureEquivalentAcres;
 		this.rowSpacing = dto.rowSpacing;
 		this.plantSpacing = dto.plantSpacing;
 		this.totalPlants = dto.totalPlants;
@@ -92,6 +94,7 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 			result = result&&dtoUtils.equals("plantedYear", plantedYear, other.plantedYear);
 			result = result&&dtoUtils.equals("plantInsurabilityTypeCode", plantInsurabilityTypeCode, other.plantInsurabilityTypeCode);
 			result = result&&dtoUtils.equals("plantedAcres", plantedAcres, other.plantedAcres, 4);
+			result = result&&dtoUtils.equals("matureEquivalentAcres", matureEquivalentAcres, other.matureEquivalentAcres, 4);
 			result = result&&dtoUtils.equals("rowSpacing", rowSpacing, other.rowSpacing);
 			result = result&&dtoUtils.equals("plantSpacing", plantSpacing, other.plantSpacing, 4);
 			result = result&&dtoUtils.equals("totalPlants", totalPlants, other.totalPlants);
@@ -175,6 +178,14 @@ public class InventoryBerriesDto extends BaseDto<InventoryBerriesDto> {
 		this.plantedAcres = plantedAcres;
 	}
 
+	public Double getMatureEquivalentAcres() {
+		return matureEquivalentAcres;
+	}
+
+	public void setMatureEquivalentAcres(Double matureEquivalentAcres) {
+		this.matureEquivalentAcres = matureEquivalentAcres;
+	}
+	
 	public Integer getRowSpacing() {
 		return rowSpacing;
 	}
