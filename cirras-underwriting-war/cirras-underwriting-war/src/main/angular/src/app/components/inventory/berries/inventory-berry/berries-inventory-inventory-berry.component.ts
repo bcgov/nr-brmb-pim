@@ -358,4 +358,13 @@ export class BerriesInventoryInventoryBerryComponent implements OnChanges{
     }
   }
 
+  isStrawberry() {
+    if(this.selectedCommodity == BERRY_COMMODITY.Strawberry ) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+
 }

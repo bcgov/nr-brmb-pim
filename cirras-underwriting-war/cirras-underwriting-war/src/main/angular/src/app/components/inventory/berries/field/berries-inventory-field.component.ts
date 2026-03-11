@@ -108,7 +108,7 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
       return {
           'display': 'grid',
           'align-items': 'stretch',
-          'width': `830px`
+          'width': `930px`
       };
     }
 
@@ -116,7 +116,7 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
       return {
           'display': 'grid',
           'align-items': 'stretch',
-          'width': `510px`
+          'width': `610px`
       };
     }
 
@@ -132,7 +132,7 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
       return {
           'display': 'grid',
           'align-items': 'stretch',
-          'width': `910px`
+          'width': `1010px`
       };
     }
 
