@@ -6,7 +6,7 @@ import { AnnualField } from 'src/app/conversion/models';
 import { RootState } from 'src/app/store';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
-import { INSURANCE_PLAN } from 'src/app/utils/constants';
+import { BERRY_COMMODITY, INSURANCE_PLAN } from 'src/app/utils/constants';
 
 @Component({
   selector: 'berries-dop-field',
@@ -64,20 +64,29 @@ export class BerriesDopFieldComponent {
     this.field.uwComments = uwComments;
     this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
   }
-
+  
   setTableHeaderStyle() {
-    return {
-      'width': `1520px`
-    };
-  }
-
-  setPlantingStyles() {
-    return {
-        'display': 'grid',
-        'align-items': 'stretch',
-        'width': `830px`
-    };
+    if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
+      return {
+        'width': `1695px`
+      };
+    } else {
+      return {
+        'width': `1795px`
+      };
+    }  
   }
   
+  setPlantingStyles() {
+    if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
+      return {
+        'width': `1020px`
+      };
+    } else {
+      return {
+        'width': `1120px`
+      };
+    }  
+  }
 
 }

@@ -1,4 +1,4 @@
-<div *ngIf="isSelectedCommodity()" class="plcy-inv-field-box" [formGroup]="fieldCommodityFormGroup" style="display: grid; width: 1020px;">
+<div *ngIf="isSelectedCommodity()" class="plcy-inv-field-box" [formGroup]="fieldCommodityFormGroup" style="display: grid;" [ngStyle]="setTableHeaderStyle()">
     
     <berries-dop-variety-list 
         *ngFor="let dopYieldFieldVarietyBerries of dopYieldFieldCommodityBerries.dopYieldFieldVarietyBerriesList"
@@ -9,11 +9,11 @@
 
     </berries-dop-variety-list>
 
-    <div class="plcy-inv-field-box" style="width: 1020px;">
-        <div class="dop-berries-commodity-total border-right" style="width: 760px; padding-right: 4px; justify-content: end;">
+    <div class="plcy-inv-field-box" [ngStyle]="setTableHeaderStyle()">
+        <div class="dop-berries-commodity-total border-right" style="padding-right: 4px; justify-content: end;" [ngStyle]="setCommodityTotalStyle()">
             Total Field Production:
         </div>
-        <div class="dop-berries-commodity-total border-right" style="width: 100px;">
+         <div class="dop-berries-commodity-total border-right" style="width: 100px;">
            {{ dopYieldFieldCommodityBerries.totalProduction | number:'1.0-3' }}
         </div> 
         <div class="inventory-fill number dop-berries-commodity-total border-right" style="width: 100px;">
@@ -25,7 +25,7 @@
                     (blur)="updatetotalProductionOverride()">
             </mat-form-field>  
             <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Total Production Override is writeable">edit</mat-icon>
-        </div>
+        </div> 
         <div style="width: 60px;"></div>
     </div>
 </div>
