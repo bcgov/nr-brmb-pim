@@ -19,12 +19,13 @@ public class DeclaredYieldFieldVarietyBerriesDto extends BaseDto<DeclaredYieldFi
 
 	private Integer cropVarietyId;
 	private Double plantedAcres;
+	private Double matureEquivalentAcres;
 	private Double soldShippedYield;
 	private Double salesYield;
 	private Double abandonmentYield;
 	private Double totalProduction;
 	private Double totalProductionOverride;
-	
+
 	private String createUser;
 	private Date createDate;
 	private String updateUser;
@@ -42,6 +43,7 @@ public class DeclaredYieldFieldVarietyBerriesDto extends BaseDto<DeclaredYieldFi
 		this.declaredYieldFieldCommodityBerriesGuid = dto.declaredYieldFieldCommodityBerriesGuid;
 		this.cropVarietyId = dto.cropVarietyId;
 		this.plantedAcres = dto.plantedAcres;
+		this.matureEquivalentAcres = dto.matureEquivalentAcres;
 		this.soldShippedYield = dto.soldShippedYield;
 		this.salesYield = dto.salesYield;
 		this.abandonmentYield = dto.abandonmentYield;
@@ -75,6 +77,7 @@ public class DeclaredYieldFieldVarietyBerriesDto extends BaseDto<DeclaredYieldFi
 			result = result&&dtoUtils.equals("declaredYieldFieldCommodityBerriesGuid", declaredYieldFieldCommodityBerriesGuid, other.declaredYieldFieldCommodityBerriesGuid);
 			result = result&&dtoUtils.equals("cropVarietyId", cropVarietyId, other.cropVarietyId);
 			result = result&&dtoUtils.equals("plantedAcres", plantedAcres, other.plantedAcres, decimalPrecision);
+			result = result&&dtoUtils.equals("matureEquivalentAcres", matureEquivalentAcres, other.matureEquivalentAcres, decimalPrecision);
 			result = result&&dtoUtils.equals("soldShippedYield", soldShippedYield, other.soldShippedYield, decimalPrecision);
 			result = result&&dtoUtils.equals("salesYield", salesYield, other.salesYield, decimalPrecision);
 			result = result&&dtoUtils.equals("abandonmentYield", abandonmentYield, other.abandonmentYield, decimalPrecision);
@@ -127,6 +130,14 @@ public class DeclaredYieldFieldVarietyBerriesDto extends BaseDto<DeclaredYieldFi
 		this.plantedAcres = plantedAcres;
 	}
 
+	public Double getMatureEquivalentAcres() {
+		return matureEquivalentAcres;
+	}
+	
+	public void setMatureEquivalentAcres(Double matureEquivalentAcres) {
+		this.matureEquivalentAcres = matureEquivalentAcres;
+	}
+	
 	public Double getSoldShippedYield() {
 		return soldShippedYield;
 	}
