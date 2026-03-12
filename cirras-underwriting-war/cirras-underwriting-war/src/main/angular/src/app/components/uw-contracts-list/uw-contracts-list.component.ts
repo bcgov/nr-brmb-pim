@@ -291,6 +291,13 @@ export class UwContractsListComponent extends CollectionComponent implements OnC
     } else {
       return false
     }
+  }
 
+  getDopIconTitle(insurancePlanId) {
+    if (insurancePlanId == INSURANCE_PLAN.BERRIES) {
+      return "Yield"
+    } else {
+      return "Declaration of Production"
+    }
   }
 }
