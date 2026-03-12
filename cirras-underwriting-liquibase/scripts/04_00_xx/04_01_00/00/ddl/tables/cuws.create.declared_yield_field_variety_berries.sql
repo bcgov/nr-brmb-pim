@@ -3,6 +3,7 @@ CREATE TABLE cuws.declared_yield_field_variety_berries(
     declared_yield_field_commodity_berries_guid    varchar(32)       NOT NULL,
     crop_variety_id                                numeric(9, 0)     NOT NULL,
     planted_acres                                  numeric(10, 4)    NOT NULL,
+    mature_equivalent_acres                        numeric(10, 4)    NOT NULL,
     sold_shipped_yield                             numeric(14, 4),
     sales_yield                                    numeric(14, 4),
     abandonment_yield                              numeric(14, 4),
@@ -24,6 +25,8 @@ COMMENT ON COLUMN cuws.declared_yield_field_variety_berries.declared_yield_field
 COMMENT ON COLUMN cuws.declared_yield_field_variety_berries.crop_variety_id IS 'Crop Variety Id is a unique Id of a variety from cirr_crop_types.crpt_id'
 ;
 COMMENT ON COLUMN cuws.declared_yield_field_variety_berries.planted_acres IS 'Planted Acres are the rolled up acres from inventory berries'
+;
+COMMENT ON COLUMN cuws.declared_yield_field_variety_berries.mature_equivalent_acres IS 'Mature Equivalent Acres is the number of ME acres according to the planted year and scale'
 ;
 COMMENT ON COLUMN cuws.declared_yield_field_variety_berries.sold_shipped_yield IS 'Sold Shipped Yield is the total pounds of yield sold and shipped for the field and variety'
 ;
@@ -69,5 +72,3 @@ ALTER TABLE cuws.declared_yield_field_variety_berries ADD CONSTRAINT fk_dyfvb_cv
     FOREIGN KEY (crop_variety_id)
     REFERENCES cuws.crop_variety(crop_variety_id)
 ;
-
-

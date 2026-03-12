@@ -96,6 +96,7 @@ public class InventoryBerriesDaoTest {
 		newDto.setPlantInsurabilityTypeCode("ST1");
 		newDto.setPlantedYear(2020);
 		newDto.setPlantedAcres((double)100);
+		newDto.setMatureEquivalentAcres((double)50);
 		newDto.setRowSpacing(10);
 		newDto.setPlantSpacing(5.3);
 		newDto.setTotalPlants(5000);
@@ -133,6 +134,7 @@ public class InventoryBerriesDaoTest {
 		Assert.assertEquals("PlantInsurabilityTypeCode", newDto.getPlantInsurabilityTypeCode(), fetchedDto.getPlantInsurabilityTypeCode());
 		Assert.assertEquals("PlantedYear", newDto.getPlantedYear(), fetchedDto.getPlantedYear());
 		Assert.assertEquals("PlantedAcres", newDto.getPlantedAcres(), fetchedDto.getPlantedAcres());
+		Assert.assertEquals("MatureEquivalentAcres", newDto.getMatureEquivalentAcres(), fetchedDto.getMatureEquivalentAcres());
 		Assert.assertEquals("RowSpacing", newDto.getRowSpacing(), fetchedDto.getRowSpacing());
 		Assert.assertEquals("PlantSpacing", newDto.getPlantSpacing(), fetchedDto.getPlantSpacing());
 		Assert.assertEquals("TotalPlants", newDto.getTotalPlants(), fetchedDto.getTotalPlants());
@@ -151,6 +153,7 @@ public class InventoryBerriesDaoTest {
 		fetchedDto.setPlantInsurabilityTypeCode("ST2");
 		fetchedDto.setPlantedYear(2021);
 		fetchedDto.setPlantedAcres((double)101);
+		fetchedDto.setMatureEquivalentAcres((double)200);
 		fetchedDto.setRowSpacing(11);
 		fetchedDto.setPlantSpacing(5.5);
 		fetchedDto.setTotalPlants(5001);
@@ -175,6 +178,7 @@ public class InventoryBerriesDaoTest {
 		Assert.assertEquals("PlantInsurabilityTypeCode", fetchedDto.getPlantInsurabilityTypeCode(), updatedDto.getPlantInsurabilityTypeCode());
 		Assert.assertEquals("PlantedYear", fetchedDto.getPlantedYear(), updatedDto.getPlantedYear());
 		Assert.assertEquals("PlantedAcres", fetchedDto.getPlantedAcres(), updatedDto.getPlantedAcres());
+		Assert.assertEquals("MatureEquivalentAcres", fetchedDto.getMatureEquivalentAcres(), updatedDto.getMatureEquivalentAcres());
 		Assert.assertEquals("RowSpacing", fetchedDto.getRowSpacing(), updatedDto.getRowSpacing());
 		Assert.assertEquals("PlantSpacing", fetchedDto.getPlantSpacing(), updatedDto.getPlantSpacing());
 		Assert.assertEquals("TotalPlants", fetchedDto.getTotalPlants(), updatedDto.getTotalPlants());

@@ -34,6 +34,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededGrain;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryUnseeded;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.AnnualFieldDetailDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.CommodityMaturityScaleDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.ContractedFieldDetailDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractDao;
@@ -56,6 +57,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryContractComm
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.PolicyDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.UnderwritingCommentDao;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.AnnualFieldDetailDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityMaturityScaleDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CropCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractDto;
@@ -146,6 +148,7 @@ public class CirrasInventoryService {
 	private DeclaredYieldContractDao declaredYieldContractDao;
 	private CropCommodityDao cropCommodityDao;
 	private DeclaredYieldFieldCommodityBerriesDao declaredYieldFieldCommodityBerriesDao;
+	private CommodityMaturityScaleDao commodityMaturityScaleDao;
 
 	// services
 	private CirrasPolicyService cirrasPolicyService;
@@ -293,6 +296,10 @@ public class CirrasInventoryService {
 	public void setDeclaredYieldFieldCommodityBerriesDao(DeclaredYieldFieldCommodityBerriesDao declaredYieldFieldCommodityBerriesDao) {
 		this.declaredYieldFieldCommodityBerriesDao = declaredYieldFieldCommodityBerriesDao;
 	}
+	
+	public void setCommodityMaturityScaleDao(CommodityMaturityScaleDao commodityMaturityScaleDao) {
+		this.commodityMaturityScaleDao = commodityMaturityScaleDao;
+	}
 
 	public void setCirrasPolicyService(CirrasPolicyService cirrasPolicyService) {
 		this.cirrasPolicyService = cirrasPolicyService;
@@ -327,6 +334,8 @@ public class CirrasInventoryService {
 				// Stores all contracts that need to be re-calculated at the end of the loop
 				// It needs to be done for each contract a field is added to this contract
 				HashSet<Integer> contractsToRecalculate = new HashSet<Integer>();
+
+				List<CommodityMaturityScaleDto> scaleDto = loadBerriesScaleTable(inventoryContract.getInsurancePlanId(), inventoryContract.getCropYear());
 
 				for (AnnualFieldRsrc field : fields) {
 					updateAnnualField(field, inventoryContract, userId, contractsToRecalculate);
@@ -370,7 +379,7 @@ public class CirrasInventoryService {
 								}
 								
 								if (planting.getInventoryBerries() != null) {
-									berriesService.updateInventoryBerries(planting.getInventoryBerries(), inventoryFieldGuid, userId);
+									berriesService.updateInventoryBerries(planting.getInventoryBerries(), inventoryFieldGuid, scaleDto, inventoryContract.getCropYear(), userId);
 								}
 
 							}
@@ -406,6 +415,17 @@ public class CirrasInventoryService {
 		return result;
 	}
 
+	private List<CommodityMaturityScaleDto> loadBerriesScaleTable(Integer insurancePlanId, Integer cropYear)
+			throws DaoException {
+		
+		List<CommodityMaturityScaleDto> scaleDto = null;
+		if (insurancePlanId.equals(InventoryServiceEnums.InsurancePlans.BERRIES.getInsurancePlanId())) {
+			//Load scale table
+			scaleDto = commodityMaturityScaleDao.selectByYear(cropYear);
+		}
+		return scaleDto;
+	}
+	
 	private String insertInventoryContract(InventoryContractRsrc inventoryContract, String userId)
 			throws DaoException {
 
@@ -1483,6 +1503,8 @@ public class CirrasInventoryService {
 				// Stores all contracts that need to be re-calculated at the end of the loop
 				// It needs to be done for each contract a field is added to this contract
 				HashSet<Integer> contractsToRecalculate = new HashSet<Integer>();
+				
+				List<CommodityMaturityScaleDto> scaleDto = loadBerriesScaleTable(inventoryContract.getInsurancePlanId(), inventoryContract.getCropYear());
 
 				for (AnnualFieldRsrc field : fields) {
 					updateAnnualField(field, inventoryContract, userId, contractsToRecalculate);
@@ -1582,7 +1604,7 @@ public class CirrasInventoryService {
 									}
 									
 									if (planting.getInventoryBerries() != null) {
-										berriesService.updateInventoryBerries(planting.getInventoryBerries(), inventoryFieldGuid, userId);
+										berriesService.updateInventoryBerries(planting.getInventoryBerries(), inventoryFieldGuid, scaleDto, inventoryContract.getCropYear(), userId);
 									}
 									
 								}

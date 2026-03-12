@@ -40,7 +40,7 @@
         (click)="goToLink('dop')"
         [ngClass]="isLinkActive('dop') ? 'active' : 'inactive'">
             <mat-icon 
-                matTooltip="Declaration Of Production" 
+                [matTooltip]="getDopTitleForPlan()" 
                 svgIcon="dop" 
                 [ngClass]="isLinkActive('dop') ? 'svg-active' : 'svg-inactive'">
             </mat-icon>
@@ -49,7 +49,7 @@
         *ngIf="userCanAccessDop();" 
         (click)="goToLink('dop')"
         [ngClass]="isLinkActive('dop') ? 'active' : 'inactive'">
-            Declaration of Production
+            {{ getDopTitleForPlan() }}
     </div>
 
     <div *ngIf="userCanAccessVerifiedYield();"  class="filler"></div>

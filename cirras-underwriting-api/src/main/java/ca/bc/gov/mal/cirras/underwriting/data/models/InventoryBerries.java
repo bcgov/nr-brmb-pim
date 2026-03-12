@@ -16,6 +16,7 @@ public class InventoryBerries implements Serializable {
 	private String plantInsurabilityTypeCode;
 	private Integer plantedYear;
 	private Double plantedAcres;
+	private Double matureEquivalentAcres;
 	private Integer rowSpacing;
 	private Double plantSpacing;
 	private Integer totalPlants;
@@ -85,6 +86,14 @@ public class InventoryBerries implements Serializable {
 
 	public void setPlantedAcres(Double plantedAcres) {
 		this.plantedAcres = plantedAcres;
+	}
+
+	public Double getMatureEquivalentAcres() {
+		return matureEquivalentAcres;
+	}
+
+	public void setMatureEquivalentAcres(Double matureEquivalentAcres) {
+		this.matureEquivalentAcres = matureEquivalentAcres;
 	}
 
 	public Integer getRowSpacing() {
