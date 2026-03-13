@@ -156,6 +156,9 @@ public class DeclaredYieldFieldCommodityBerriesDaoTest {
 		newDto.setFieldId(fieldId1);
 		newDto.setTotalProduction(11.22);
 		newDto.setTotalProductionOverride(33.44);
+		newDto.setTotalPlantedAcres(15.0);
+		newDto.setTotalMatureEquivalentAcres(9.9);
+
 
 		
 		declaredYieldFieldCommodityBerriesDao.insert(newDto, userId);
@@ -180,7 +183,9 @@ public class DeclaredYieldFieldCommodityBerriesDaoTest {
 		Assert.assertEquals("FieldId", newDto.getFieldId(), fetchedDto.getFieldId());
 		Assert.assertEquals("TotalProduction", newDto.getTotalProduction(), fetchedDto.getTotalProduction());
 		Assert.assertEquals("TotalProductionOverride", newDto.getTotalProductionOverride(), fetchedDto.getTotalProductionOverride());
-		
+		Assert.assertEquals("TotalPlantedAcres", newDto.getTotalPlantedAcres(), fetchedDto.getTotalPlantedAcres());
+		Assert.assertEquals("TotalMatureEquivalentAcres", newDto.getTotalMatureEquivalentAcres(), fetchedDto.getTotalMatureEquivalentAcres());
+
 		
 		//FETCH
 		fetchedDto = declaredYieldFieldCommodityBerriesDao.fetch(declaredYieldFieldCommodityBerriesGuid);
@@ -192,10 +197,15 @@ public class DeclaredYieldFieldCommodityBerriesDaoTest {
 		Assert.assertEquals("FieldId", newDto.getFieldId(), fetchedDto.getFieldId());
 		Assert.assertEquals("TotalProduction", newDto.getTotalProduction(), fetchedDto.getTotalProduction());
 		Assert.assertEquals("TotalProductionOverride", newDto.getTotalProductionOverride(), fetchedDto.getTotalProductionOverride());
+		Assert.assertEquals("TotalPlantedAcres", newDto.getTotalPlantedAcres(), fetchedDto.getTotalPlantedAcres());
+		Assert.assertEquals("TotalMatureEquivalentAcres", newDto.getTotalMatureEquivalentAcres(), fetchedDto.getTotalMatureEquivalentAcres());
 
 		//UPDATE
 		fetchedDto.setTotalProduction(22.11);
 		fetchedDto.setTotalProductionOverride(44.33);
+		fetchedDto.setTotalPlantedAcres(25.0);
+		fetchedDto.setTotalMatureEquivalentAcres(19.9);
+
 		
 		
 		declaredYieldFieldCommodityBerriesDao.update(fetchedDto, userId);
@@ -210,7 +220,9 @@ public class DeclaredYieldFieldCommodityBerriesDaoTest {
 		Assert.assertEquals("FieldId", fetchedDto.getFieldId(), updatedDto.getFieldId());
 		Assert.assertEquals("TotalProduction", fetchedDto.getTotalProduction(), updatedDto.getTotalProduction());
 		Assert.assertEquals("TotalProductionOverride", fetchedDto.getTotalProductionOverride(), updatedDto.getTotalProductionOverride());
-				
+		Assert.assertEquals("TotalPlantedAcres", fetchedDto.getTotalPlantedAcres(), updatedDto.getTotalPlantedAcres());
+		Assert.assertEquals("TotalMatureEquivalentAcres", fetchedDto.getTotalMatureEquivalentAcres(), updatedDto.getTotalMatureEquivalentAcres());
+	
 		//DELETE
 		declaredYieldFieldCommodityBerriesDao.delete(declaredYieldFieldCommodityBerriesGuid);
 		
@@ -231,6 +243,8 @@ public class DeclaredYieldFieldCommodityBerriesDaoTest {
 		newDto2.setFieldId(fieldId1);
 		newDto2.setTotalProduction(11.22);
 		newDto2.setTotalProductionOverride(33.44);
+		newDto2.setTotalPlantedAcres(25.0);
+		newDto2.setTotalMatureEquivalentAcres(19.9);
 		
 		declaredYieldFieldCommodityBerriesDao.insert(newDto2, userId);
 		Assert.assertNotNull(newDto2.getDeclaredYieldFieldCommodityBerriesGuid());
@@ -275,7 +289,9 @@ public class DeclaredYieldFieldCommodityBerriesDaoTest {
 		newDto.setFieldId(fieldId1);
 		newDto.setTotalProduction(11.22);
 		newDto.setTotalProductionOverride(33.44);
-		
+		newDto.setTotalPlantedAcres(25.0);
+		newDto.setTotalMatureEquivalentAcres(19.9);
+
 		declaredYieldFieldCommodityBerriesDao.insert(newDto, userId);
 
 		//INSERT Commodity 2
@@ -287,6 +303,8 @@ public class DeclaredYieldFieldCommodityBerriesDaoTest {
 		newDto.setFieldId(fieldId1);
 		newDto.setTotalProduction(55.66);
 		newDto.setTotalProductionOverride(77.88);
+		newDto.setTotalPlantedAcres(50.0);
+		newDto.setTotalMatureEquivalentAcres(42.9);
 		
 		declaredYieldFieldCommodityBerriesDao.insert(newDto, userId);
 		
@@ -334,6 +352,8 @@ public class DeclaredYieldFieldCommodityBerriesDaoTest {
 		newDto.setFieldId(fieldId1);
 		newDto.setTotalProduction(11.22);
 		newDto.setTotalProductionOverride(33.44);
+		newDto.setTotalPlantedAcres(25.0);
+		newDto.setTotalMatureEquivalentAcres(19.9);
 		
 		declaredYieldFieldCommodityBerriesDao.insert(newDto, userId);
 
@@ -346,6 +366,8 @@ public class DeclaredYieldFieldCommodityBerriesDaoTest {
 		newDto.setFieldId(fieldId1);
 		newDto.setTotalProduction(11.22);
 		newDto.setTotalProductionOverride(33.44);
+		newDto.setTotalPlantedAcres(25.0);
+		newDto.setTotalMatureEquivalentAcres(19.9);
 		
 		declaredYieldFieldCommodityBerriesDao.insert(newDto, userId);
 		

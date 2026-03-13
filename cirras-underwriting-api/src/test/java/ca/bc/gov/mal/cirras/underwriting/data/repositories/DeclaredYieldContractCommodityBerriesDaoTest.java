@@ -87,6 +87,9 @@ public class DeclaredYieldContractCommodityBerriesDaoTest {
 		newDto.setDeclaredYieldContractGuid(declaredYieldContractGuid);
 		newDto.setTotalProduction(500.0);
 		newDto.setTotalProductionOverride(250.0);
+		newDto.setTotalPlantedAcres(125.0);
+		newDto.setTotalMatureEquivalentAcres(100.1);
+
 
 		dao.insert(newDto, userId);
 		Assert.assertNotNull(newDto.getDeclaredYieldContractCommodityBerriesGuid());
@@ -106,10 +109,14 @@ public class DeclaredYieldContractCommodityBerriesDaoTest {
 		Assert.assertEquals("CropCommodityName", newDto.getCropCommodityName(), fetchedDto.getCropCommodityName());
 		Assert.assertEquals("TotalProduction", newDto.getTotalProduction(), fetchedDto.getTotalProduction());
 		Assert.assertEquals("TotalProductionOverride", newDto.getTotalProductionOverride(), fetchedDto.getTotalProductionOverride());
+		Assert.assertEquals("TotalPlantedAcres", newDto.getTotalPlantedAcres(), fetchedDto.getTotalPlantedAcres());
+		Assert.assertEquals("TotalMatureEquivalentAcres", newDto.getTotalMatureEquivalentAcres(), fetchedDto.getTotalMatureEquivalentAcres());
 
 		//UPDATE
 		fetchedDto.setTotalProduction(700.0);
 		fetchedDto.setTotalProductionOverride(300.0);
+		fetchedDto.setTotalPlantedAcres(250.0);
+		fetchedDto.setTotalMatureEquivalentAcres(210.1);
 		
 		dao.update(fetchedDto, userId);
 
@@ -118,6 +125,8 @@ public class DeclaredYieldContractCommodityBerriesDaoTest {
 
 		Assert.assertEquals("TotalProduction", fetchedDto.getTotalProduction(), updatedDto.getTotalProduction());
 		Assert.assertEquals("TotalProductionOverride", fetchedDto.getTotalProductionOverride(), updatedDto.getTotalProductionOverride());
+		Assert.assertEquals("TotalPlantedAcres", fetchedDto.getTotalPlantedAcres(), updatedDto.getTotalPlantedAcres());
+		Assert.assertEquals("TotalMatureEquivalentAcres", fetchedDto.getTotalMatureEquivalentAcres(), updatedDto.getTotalMatureEquivalentAcres());
 
 
 		//INSERT second commodity
@@ -127,6 +136,8 @@ public class DeclaredYieldContractCommodityBerriesDaoTest {
 		newDto2.setDeclaredYieldContractGuid(declaredYieldContractGuid);
 		newDto2.setTotalProduction(123.4567);
 		newDto2.setTotalProductionOverride(987.6543);
+		newDto2.setTotalPlantedAcres(125.1234);
+		newDto2.setTotalMatureEquivalentAcres(100.9876);
 
 		dao.insert(newDto2, userId);
 

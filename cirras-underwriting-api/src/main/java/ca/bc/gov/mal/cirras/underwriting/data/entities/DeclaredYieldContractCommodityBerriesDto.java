@@ -19,6 +19,8 @@ public class DeclaredYieldContractCommodityBerriesDto extends BaseDto<DeclaredYi
 	private Integer cropCommodityId;
 	private Double totalProduction;
 	private Double totalProductionOverride;
+	private Double totalPlantedAcres;
+	private Double totalMatureEquivalentAcres;
 	private String createUser;
 	private Date createDate;
 	private String updateUser;
@@ -37,6 +39,8 @@ public class DeclaredYieldContractCommodityBerriesDto extends BaseDto<DeclaredYi
 		this.cropCommodityId = dto.cropCommodityId;
 		this.totalProduction = dto.totalProduction;
 		this.totalProductionOverride = dto.totalProductionOverride;
+		this.totalPlantedAcres = dto.totalPlantedAcres;
+		this.totalMatureEquivalentAcres = dto.totalMatureEquivalentAcres;
 		this.createUser = dto.createUser;
 		this.createDate = dto.createDate;
 		this.updateUser = dto.updateUser;
@@ -65,6 +69,8 @@ public class DeclaredYieldContractCommodityBerriesDto extends BaseDto<DeclaredYi
 			result = result&&dtoUtils.equals("cropCommodityId", cropCommodityId, other.cropCommodityId);
 			result = result&&dtoUtils.equals("totalProduction", totalProduction, other.totalProduction, decimalPrecision);
 			result = result&&dtoUtils.equals("totalProductionOverride", totalProductionOverride, other.totalProductionOverride, decimalPrecision);
+			result = result&&dtoUtils.equals("totalPlantedAcres", totalPlantedAcres, other.totalPlantedAcres, decimalPrecision);
+			result = result&&dtoUtils.equals("totalMatureEquivalentAcres", totalMatureEquivalentAcres, other.totalMatureEquivalentAcres, decimalPrecision);
 		}
 		
 		return result;
@@ -118,6 +124,22 @@ public class DeclaredYieldContractCommodityBerriesDto extends BaseDto<DeclaredYi
 
 	public void setTotalProductionOverride(Double totalProductionOverride) {
 		this.totalProductionOverride = totalProductionOverride;
+	}
+
+	public Double getTotalPlantedAcres() {
+		return totalPlantedAcres;
+	}
+
+	public void setTotalPlantedAcres(Double totalPlantedAcres) {
+		this.totalPlantedAcres = totalPlantedAcres;
+	}
+
+	public Double getTotalMatureEquivalentAcres() {
+		return totalMatureEquivalentAcres;
+	}
+
+	public void setTotalMatureEquivalentAcres(Double totalMatureEquivalentAcres) {
+		this.totalMatureEquivalentAcres = totalMatureEquivalentAcres;
 	}
 
 	public String getCreateUser() {
