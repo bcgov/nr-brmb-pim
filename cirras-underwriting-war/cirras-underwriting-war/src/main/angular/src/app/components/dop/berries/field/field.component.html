@@ -1,4 +1,4 @@
-<div *ngIf="fieldHasCommodity()" class="plcy-inv-field-box" [formGroup]="fieldFormGroup" style="width: 1695px;">
+<div *ngIf="fieldHasCommodity()" class="plcy-inv-field-box" [formGroup]="fieldFormGroup" [ngStyle]="setTableHeaderStyle()">
     
     <div class="inventory-cell border-left inventory-border" style="width: 115px;">
         {{ field.fieldId }}
@@ -16,7 +16,7 @@
         {{ field.isLeasedInd ? "Y" : "N" }}
     </div>
      
-    <div class="planting-container inventory-border" style="width: 1020px;">
+    <div class="planting-container-dop-berries inventory-border" [ngStyle]="setPlantingStyles()">
         <berries-dop-commodity-list 
             *ngFor="let dopYieldFieldCommodityBerries of field.dopYieldFieldCommodityBerriesList"
             [dopYieldFieldCommodityBerries]="dopYieldFieldCommodityBerries"
