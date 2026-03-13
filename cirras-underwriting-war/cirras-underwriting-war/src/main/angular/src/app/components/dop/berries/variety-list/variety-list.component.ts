@@ -107,7 +107,7 @@ export class BerriesDopVarietyListComponent {
   }
 
   setFieldVarietyStyle() {
-    if (this.cropCommodityName == BERRY_COMMODITY[13] ) { // strawberry doesn't have ME Acres
+    if (this.isStrawberry() ) { // strawberry doesn't have ME Acres
       return {
         'width': `1020px`
       };
