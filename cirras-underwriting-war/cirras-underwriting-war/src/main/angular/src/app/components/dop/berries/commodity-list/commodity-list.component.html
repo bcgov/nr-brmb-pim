@@ -10,10 +10,19 @@
     </berries-dop-variety-list>
 
     <div class="plcy-inv-field-box" [ngStyle]="setTableHeaderStyle()">
-        <div class="dop-berries-commodity-total border-right" style="padding-right: 4px; justify-content: end;" [ngStyle]="setCommodityTotalStyle()">
+        <div class="dop-berries-commodity-total inventory-cell border-right" style="width: 100px;">
+            {{ dopYieldFieldCommodityBerries.totalPlantedAcres | number:'1.0-1' }}
+        </div>
+        <div *ngIf="!isStrawberry()" class="dop-berries-commodity-total inventory-cell border-right" style="width: 100px;">
+            {{ dopYieldFieldCommodityBerries.totalMatureEquivalentAcres | number:'1.0-1' }}
+        </div>
+        <div class="dop-berries-commodity-total" style="padding-left: 4px; text-align: left; width: 200px;">
+            Field Totals
+        </div>
+        <div class="dop-berries-commodity-total border-right" style="padding-right: 4px; justify-content: end; width: 460px;">
             Total Field Production:
         </div>
-         <div class="dop-berries-commodity-total border-right" style="width: 100px;">
+         <div class="dop-berries-commodity-total border-right inventory-cell" style="width: 100px;">
            {{ dopYieldFieldCommodityBerries.totalProduction | number:'1.0-3' }}
         </div> 
         <div class="inventory-fill number dop-berries-commodity-total border-right" style="width: 100px;">

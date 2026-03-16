@@ -183,6 +183,8 @@ export interface DopYieldFieldCommodityBerries {
     cropYear?: number;
     totalProduction?: number;
     totalProductionOverride?: number;
+    totalPlantedAcres?: number;
+    totalMatureEquivalentAcres?: number;
     dopYieldFieldVarietyBerriesList?: Array<DopYieldFieldVarietyBerries>;
 }
 
@@ -206,6 +208,8 @@ export interface DopYieldContractCommodityBerries {
     cropCommodityName?: string;
     totalProduction?: number;
     totalProductionOverride?: number;
+    totalPlantedAcres?: number;
+    totalMatureEquivalentAcres?: number;
 }
 
 export interface VerifiedYieldContract {

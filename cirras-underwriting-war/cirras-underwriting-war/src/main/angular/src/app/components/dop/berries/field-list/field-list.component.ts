@@ -109,16 +109,16 @@ export class BerriesDopFieldListComponent {
     }  
   }
 
-  setFieldTotalStyle() {
-    if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
-      return {
-        'width': `1375px`
-      };
-    } else {
-      return {
-        'width': `1475px`
-      };
-    }  
-  }
+  // setFieldTotalStyle() {
+  //   if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
+  //     return {
+  //       'width': `460px`
+  //     };
+  //   } else {
+  //     return {
+  //       'width': `460px`
+  //     };
+  //   }  
+  // }
 
 }
