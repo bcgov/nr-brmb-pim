@@ -524,6 +524,9 @@ public class DeclaredYieldFieldVarietyBerriesDaoTest {
 		newDto.setFieldId(fieldId1);
 		newDto.setTotalProduction(null);
 		newDto.setTotalProductionOverride(null);
+		newDto.setTotalPlantedAcres(0.0);
+		newDto.setTotalMatureEquivalentAcres(0.0);
+
 
 		//INSERT
 		dao.insert(newDto, userId);		
