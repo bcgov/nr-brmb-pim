@@ -25,14 +25,12 @@ export class BerriesDopCommodityListComponent {
 
 
   fieldCommodityFormGroup: UntypedFormGroup;
-  cropCommodityName: String;
-
+  
   constructor(private fb: UntypedFormBuilder,
               private store: Store<RootState>,
   ) {}
 
   ngOnInit() {
-    this.cropCommodityName = this.dopYieldFieldCommodityBerries.cropCommodityName
     this.refreshForm()
   }
 
@@ -75,7 +73,7 @@ export class BerriesDopCommodityListComponent {
   }
   
   setTableHeaderStyle() {
-    if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
+    if (this.isStrawberry()) {
       return {
         'width': `1020px`
       };
@@ -99,7 +97,7 @@ export class BerriesDopCommodityListComponent {
   // }
 
   isStrawberry() {
-    if(this.cropCommodityName == BERRY_COMMODITY[13].toUpperCase() ) {
+    if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
       return true
     } else {
       return false
