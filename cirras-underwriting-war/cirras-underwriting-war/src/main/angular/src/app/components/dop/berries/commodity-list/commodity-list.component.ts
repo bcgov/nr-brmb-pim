@@ -23,13 +23,16 @@ export class BerriesDopCommodityListComponent {
   @Input() dopYieldFieldCommodityBerriesFormArray: UntypedFormArray
   @Input() filterByCropCommodityId: number;
 
+
   fieldCommodityFormGroup: UntypedFormGroup;
+  cropCommodityName: String;
 
   constructor(private fb: UntypedFormBuilder,
               private store: Store<RootState>,
   ) {}
 
   ngOnInit() {
+    this.cropCommodityName = this.dopYieldFieldCommodityBerries.cropCommodityName
     this.refreshForm()
   }
 
@@ -83,16 +86,24 @@ export class BerriesDopCommodityListComponent {
     }  
   }
 
-  setCommodityTotalStyle() {
-    if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
-      return {
-        'width': `760px`
-      };
+  // setCommodityTotalStyle() {
+  //   if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
+  //     return {
+  //       'width': `460px`
+  //     };
+  //   } else {
+  //     return {
+  //       'width': `460px`
+  //     };
+  //   }  
+  // }
+
+  isStrawberry() {
+    if(this.cropCommodityName == BERRY_COMMODITY[13].toUpperCase() ) {
+      return true
     } else {
-      return {
-        'width': `860px`
-      };
-    }  
+      return false
+    }
   }
 
 }
