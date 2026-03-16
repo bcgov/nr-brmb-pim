@@ -197,7 +197,7 @@ export class BerriesDopComponent extends BaseComponent {
   onDeleteDop() {
 
     //Ask for confirmation before deleting all DOP data
-    if ( confirm("You are about to delete all DOP data for the policy. Do you want to continue?") ) {
+    if ( confirm("You are about to delete all yield data for the policy. Do you want to continue?") ) {
 
       if (this.dopYieldContract.declaredYieldContractGuid) {
         //Delete dop contract
