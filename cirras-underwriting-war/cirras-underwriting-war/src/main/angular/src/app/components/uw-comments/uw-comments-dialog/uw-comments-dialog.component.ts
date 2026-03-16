@@ -26,7 +26,11 @@ export class UwCommentsDialogComponent {
             case UW_COMMENT_TYPE_CODE.INVENTORY_GENERAL:
                 return "Inventory Comments";
             case UW_COMMENT_TYPE_CODE.DOP_GENERAL:
-                return "DOP Comments";
+                if (this.data.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+                    return "Yield Comments";
+                } else {
+                    return "DOP Comments";
+                }                
             case UW_COMMENT_TYPE_CODE.VERIFIED_YIELD_GENERAL:
                 return "Verified Yield Summary Comments"
             default:
