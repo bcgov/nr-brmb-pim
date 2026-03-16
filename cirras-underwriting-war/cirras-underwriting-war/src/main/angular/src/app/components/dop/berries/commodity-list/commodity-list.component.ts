@@ -23,8 +23,9 @@ export class BerriesDopCommodityListComponent {
   @Input() dopYieldFieldCommodityBerriesFormArray: UntypedFormArray
   @Input() filterByCropCommodityId: number;
 
-  fieldCommodityFormGroup: UntypedFormGroup;
 
+  fieldCommodityFormGroup: UntypedFormGroup;
+  
   constructor(private fb: UntypedFormBuilder,
               private store: Store<RootState>,
   ) {}
@@ -72,7 +73,7 @@ export class BerriesDopCommodityListComponent {
   }
   
   setTableHeaderStyle() {
-    if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
+    if (this.isStrawberry()) {
       return {
         'width': `1020px`
       };
@@ -83,16 +84,24 @@ export class BerriesDopCommodityListComponent {
     }  
   }
 
-  setCommodityTotalStyle() {
+  // setCommodityTotalStyle() {
+  //   if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
+  //     return {
+  //       'width': `460px`
+  //     };
+  //   } else {
+  //     return {
+  //       'width': `460px`
+  //     };
+  //   }  
+  // }
+
+  isStrawberry() {
     if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
-      return {
-        'width': `760px`
-      };
+      return true
     } else {
-      return {
-        'width': `860px`
-      };
-    }  
+      return false
+    }
   }
 
 }
