@@ -16,6 +16,9 @@ public class DopYieldContractCommodityBerries implements Serializable {
 	private Double totalProductionOverride;
 	private Double totalPlantedAcres;
 	private Double totalMatureEquivalentAcres;
+	private Double totalSoldShippedYield;
+	private Double totalSalesYield;
+	private Double totalAbandonmentYield;
 
 	public String getDeclaredYieldContractCommodityBerriesGuid() {
 		return declaredYieldContractCommodityBerriesGuid;
@@ -73,6 +76,30 @@ public class DopYieldContractCommodityBerries implements Serializable {
 
 	public void setTotalMatureEquivalentAcres(Double totalMatureEquivalentAcres) {
 		this.totalMatureEquivalentAcres = totalMatureEquivalentAcres;
+	}
+
+	public Double getTotalSoldShippedYield() {
+		return totalSoldShippedYield;
+	}
+
+	public void setTotalSoldShippedYield(Double totalSoldShippedYield) {
+		this.totalSoldShippedYield = totalSoldShippedYield;
+	}
+
+	public Double getTotalSalesYield() {
+		return totalSalesYield;
+	}
+
+	public void setTotalSalesYield(Double totalSalesYield) {
+		this.totalSalesYield = totalSalesYield;
+	}
+
+	public Double getTotalAbandonmentYield() {
+		return totalAbandonmentYield;
+	}
+
+	public void setTotalAbandonmentYield(Double totalAbandonmentYield) {
+		this.totalAbandonmentYield = totalAbandonmentYield;
 	}
 
 }

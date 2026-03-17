@@ -392,6 +392,9 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 			dto.setDeclaredYieldContractGuid(null);
 			dto.setTotalProduction(null);
 			dto.setTotalProductionOverride(null);
+			dto.setTotalSoldShippedYield(null);
+			dto.setTotalSalesYield(null);
+			dto.setTotalAbandonmentYield(null);
 
 			dopCommodities.add(dto);
 		}
@@ -515,6 +518,9 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		model.setTotalProductionOverride(dto.getTotalProductionOverride());
 		model.setTotalPlantedAcres(dto.getTotalPlantedAcres());
 		model.setTotalMatureEquivalentAcres(dto.getTotalMatureEquivalentAcres());
+		model.setTotalSoldShippedYield(dto.getTotalSoldShippedYield());
+		model.setTotalSalesYield(dto.getTotalSalesYield());
+		model.setTotalAbandonmentYield(dto.getTotalAbandonmentYield());
 
 		return model;
 	}
@@ -999,6 +1005,9 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		dto.setTotalProductionOverride(model.getTotalProductionOverride());
 		dto.setTotalPlantedAcres(model.getTotalPlantedAcres());
 		dto.setTotalMatureEquivalentAcres(model.getTotalMatureEquivalentAcres());
+		dto.setTotalSoldShippedYield(model.getTotalSoldShippedYield());
+		dto.setTotalSalesYield(model.getTotalSalesYield());
+		dto.setTotalAbandonmentYield(model.getTotalAbandonmentYield());
 	}
 	
 	static void setSelfLink(String declaredYieldContractGuid, DopYieldContractRsrc resource, URI baseUri) {
