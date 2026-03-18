@@ -12,6 +12,9 @@
 		<result property="totalProductionOverride" column="total_production_override" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="totalPlantedAcres" column="total_planted_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
 		<result property="totalMatureEquivalentAcres" column="total_mature_equivalent_acres" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="totalSoldShippedYield" column="total_sold_shipped_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="totalSalesYield" column="total_sales_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
+		<result property="totalAbandonmentYield" column="total_abandonment_yield" javaType="java.lang.Double" jdbcType="NUMERIC" />
 
 		<result property="createUser" column="create_user" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="createDate" column="create_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
@@ -30,7 +33,10 @@
 			t.total_production, 
 			t.total_production_override,
 			t.total_planted_acres, 
-			t.total_mature_equivalent_acres, 
+			t.total_mature_equivalent_acres,
+			t.total_sold_shipped_yield, 
+			t.total_sales_yield, 
+			t.total_abandonment_yield, 
  			t.create_user, 
 			t.create_date, 
 			t.update_user, 
@@ -59,6 +65,9 @@
 			total_production_override,
 			total_planted_acres,
 			total_mature_equivalent_acres,
+			total_sold_shipped_yield,
+			total_sales_yield,
+			total_abandonment_yield,
 			create_user,
 			create_date,
 			update_user,
@@ -71,6 +80,9 @@
 			#{dto.totalProductionOverride, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.totalPlantedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{dto.totalMatureEquivalentAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalSoldShippedYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalSalesYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			#{dto.totalAbandonmentYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
 			now(),
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
@@ -83,7 +95,10 @@
 		set total_production = #{dto.totalProduction, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
 			total_production_override = #{dto.totalProductionOverride, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
 			total_planted_acres = #{dto.totalPlantedAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
-			total_mature_equivalent_acres = #{dto.totalMatureEquivalentAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			total_mature_equivalent_acres = #{dto.totalMatureEquivalentAcres, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN},
+			total_sold_shipped_yield = #{dto.totalSoldShippedYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			total_sales_yield = #{dto.totalSalesYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
+			total_abandonment_yield = #{dto.totalAbandonmentYield, javaType=java.lang.Double , jdbcType=NUMERIC, mode=IN}, 
  			update_user = #{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN}, 
 			update_date = now()
 		where declared_yield_contract_commodity_berries_guid = #{dto.declaredYieldContractCommodityBerriesGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN}

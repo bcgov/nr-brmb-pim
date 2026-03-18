@@ -579,6 +579,9 @@ public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 
 		newDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(11.22);
 		newDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(33.44);
+		newDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalSoldShippedYield(5.24);
+		newDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalSalesYield(2.25);
+		newDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalAbandonmentYield(1.25);
 
 		// BLUEBERRY - Variety
 		newDyc.getFields().get(0).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(11.55);
