@@ -10,22 +10,22 @@
     </berries-dop-variety-list>
 
     <div class="plcy-inv-field-box" [ngStyle]="setTableHeaderStyle()">
-        <div class="dop-berries-commodity-total inventory-cell border-right" style="width: 100px;">
+        <div class="dop-berries-field-total inventory-cell border-right" matTooltip="Total Field Acres" style="width: 100px;">
             {{ dopYieldFieldCommodityBerries.totalPlantedAcres | number:'1.0-1' }}
         </div>
-        <div *ngIf="!isStrawberry()" class="dop-berries-commodity-total inventory-cell border-right" style="width: 100px;">
+        <div *ngIf="!isStrawberry()" class="dop-berries-field-total inventory-cell border-right" matTooltip="Total Field ME Acres" style="width: 100px;">
             {{ dopYieldFieldCommodityBerries.totalMatureEquivalentAcres | number:'1.0-1' }}
         </div>
-        <div class="dop-berries-commodity-total" style="padding-left: 4px; text-align: left; width: 200px;">
-            Field Totals
+        <div class="dop-berries-field-total" style="padding-left: 4px; text-align: left; width: 200px;">
+            <!-- Field Totals -->
         </div>
-        <div class="dop-berries-commodity-total border-right" style="padding-right: 4px; justify-content: end; width: 460px;">
-            Total Field Production:
+        <div class="dop-berries-field-total border-right" style="padding-right: 4px; justify-content: end; width: 460px;">
+            <!-- Total Field Production: -->
         </div>
-         <div class="dop-berries-commodity-total border-right inventory-cell" style="width: 100px;">
+         <div class="dop-berries-field-total border-right inventory-cell" matTooltip="Total Field Production" style="width: 100px;">
            {{ dopYieldFieldCommodityBerries.totalProduction | number:'1.0-3' }}
         </div> 
-        <div class="inventory-fill number dop-berries-commodity-total border-right" style="width: 100px;">
+        <div class="inventory-fill number dop-berries-field-total border-right" style="width: 100px;">
            <mat-form-field appearance="fill" style="width: 100px;">
             <input matInput matInputCommified type="text"
                     formControlName="totalProductionOverride"

@@ -1,0 +1,36 @@
+/* The legend main wrapper */
+  .legend-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin-top: 16px;
+    margin-bottom: 20px;
+    padding: 10px;
+  }
+
+  /* Individual legend item container */
+  .legend-entry {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* The color box */
+  .color-box {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    margin-right: 6px;
+  }
+
+  /* Specific colors */
+  .bg-commodity { background-color: #ECF0FE; } 
+  .bg-field { background-color: #FBEDBC; } // #FEFAEC; }
+
+  /* Label text */
+  .legend-label {
+    font-size: 14px;
+    color: #444;
+    font-weight: 500;
+  }
