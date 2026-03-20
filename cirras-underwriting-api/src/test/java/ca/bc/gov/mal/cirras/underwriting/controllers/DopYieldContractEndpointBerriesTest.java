@@ -3,7 +3,9 @@ package ca.bc.gov.mal.cirras.underwriting.controllers;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.junit.After;
@@ -32,11 +34,12 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.PolicyRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldVarietyBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryBerries;
-import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
@@ -103,6 +106,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 	
 	private CirrasUnderwritingService service;
 	private EndpointsRsrc topLevelEndpoints;
+	private DopYieldContractRsrcFactory dopYieldContractRsrcFactory;
 
 	@Before
 	public void prepareTests() throws CirrasUnderwritingServiceException, Oauth2ClientException, NotFoundDaoException, DaoException{
@@ -236,6 +240,51 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNotNull(fetchedInvContract.getFields().get(0).getPlantings());
 		Assert.assertEquals(5, fetchedInvContract.getFields().get(0).getPlantings().size());
 		
+		//Calculate expected MEA acres
+		List<InventoryField> plantings = fetchedInvContract.getFields().get(0).getPlantings();
+		Map<Integer, Double> expectedMeaFieldVarieties = new HashMap<>();		//Field Variety MEA
+		Map<String, Double> expectedMeaFieldCommodities = new HashMap<>();		//Field Commodity MEA
+		Map<String, Double> expectedAcresFieldCommodities = new HashMap<>();		//Field Commodity Planted Acres
+		Map<Integer, Double> expectedMeaContractCommodities = new HashMap<>();	//Contract Commodity MEA
+		Map<Integer, Double> expectedAcresContractCommodities = new HashMap<>();	//Contract Commodity Planted Acres
+		for (InventoryField inventoryField : plantings) {
+			double expectedMea = inventoryField.getInventoryBerries().getMatureEquivalentAcres();
+			double expectedPlantedAcres = inventoryField.getInventoryBerries().getPlantedAcres();
+			//If variety has been added already, add the new mea to the stored value
+			if(expectedMeaFieldVarieties.size() > 0 && expectedMeaFieldVarieties.containsKey(inventoryField.getInventoryBerries().getCropVarietyId())) {
+				expectedMeaFieldVarieties.put(inventoryField.getInventoryBerries().getCropVarietyId(), (expectedMeaFieldVarieties.get(inventoryField.getInventoryBerries().getCropVarietyId()) + expectedMea));
+			} else {
+				expectedMeaFieldVarieties.put(inventoryField.getInventoryBerries().getCropVarietyId(), expectedMea);
+			}
+			
+			Integer cropCommodityId = inventoryField.getInventoryBerries().getCropCommodityId();
+			
+			//Field Commodity
+			String key = inventoryField.getFieldId().toString() + "_" + cropCommodityId;
+			if(expectedMeaFieldCommodities.size() > 0 && expectedMeaFieldCommodities.containsKey(key)) {
+				expectedMeaFieldCommodities.put(key, expectedMeaFieldCommodities.get(key) + expectedMea);
+			} else {
+				expectedMeaFieldCommodities.put(key, expectedMea);
+			}
+			if(expectedAcresFieldCommodities.size() > 0 && expectedAcresFieldCommodities.containsKey(key)) {
+				expectedAcresFieldCommodities.put(key, expectedAcresFieldCommodities.get(key) + expectedPlantedAcres);
+			} else {
+				expectedAcresFieldCommodities.put(key, expectedPlantedAcres);
+			}
+
+			//Contract Commodity
+			if(expectedMeaContractCommodities.size() > 0 && expectedMeaContractCommodities.containsKey(cropCommodityId)) {
+				expectedMeaContractCommodities.put(cropCommodityId, (expectedMeaContractCommodities.get(cropCommodityId) + expectedMea));
+			} else {
+				expectedMeaContractCommodities.put(cropCommodityId, expectedMea);
+			}
+			if(expectedAcresContractCommodities.size() > 0 && expectedAcresContractCommodities.containsKey(cropCommodityId)) {
+				expectedAcresContractCommodities.put(cropCommodityId, (expectedAcresContractCommodities.get(cropCommodityId) + expectedPlantedAcres));
+			} else {
+				expectedAcresContractCommodities.put(cropCommodityId, expectedPlantedAcres);
+			}
+		}
+	
 		uwContractRsrc = getUwContract(policyNumber1, service, topLevelEndpoints);
 		Assert.assertNotNull(uwContractRsrc);
 		Assert.assertNotNull(uwContractRsrc.getInventoryContractGuid());
@@ -281,12 +330,16 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfcb.setFieldId(fieldId1);		
 		expectedDyfcb.setTotalProduction(null);		
 		expectedDyfcb.setTotalProductionOverride(null);
+		expectedDyfcb.setTotalPlantedAcres(expectedAcresFieldCommodities.get(fieldId1 + "_" + 10));
+		expectedDyfcb.setTotalMatureEquivalentAcres(expectedMeaFieldCommodities.get(fieldId1 + "_" + 10));
+
 
 		DopYieldFieldVarietyBerries expectedDyfvb = new DopYieldFieldVarietyBerries();
 		expectedDyfvb.setAbandonmentYield(null);
 		expectedDyfvb.setCropVarietyId(1010689);
 		expectedDyfvb.setCropVarietyName("BLUEJAY");
 		expectedDyfvb.setPlantedAcres(400.0);
+		expectedDyfvb.setMatureEquivalentAcres(expectedMeaFieldVarieties.get(1010689));
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
 		expectedDyfvb.setTotalProduction(null);
@@ -304,12 +357,16 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfcb.setFieldId(fieldId1);		
 		expectedDyfcb.setTotalProduction(null);		
 		expectedDyfcb.setTotalProductionOverride(null);
+		expectedDyfcb.setTotalPlantedAcres(expectedAcresFieldCommodities.get(fieldId1 + "_" + 12));
+		expectedDyfcb.setTotalMatureEquivalentAcres(expectedMeaFieldCommodities.get(fieldId1 + "_" + 12));
+
 
 		expectedDyfvb = new DopYieldFieldVarietyBerries();
 		expectedDyfvb.setAbandonmentYield(null);
 		expectedDyfvb.setCropVarietyId(1010694);
 		expectedDyfvb.setCropVarietyName("MALAHAT");
 		expectedDyfvb.setPlantedAcres(200.0);
+		expectedDyfvb.setMatureEquivalentAcres(expectedMeaFieldVarieties.get(1010694));
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
 		expectedDyfvb.setTotalProduction(null);
@@ -322,6 +379,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setCropVarietyId(1010695);
 		expectedDyfvb.setCropVarietyName("MEEKER");
 		expectedDyfvb.setPlantedAcres(500.0);
+		expectedDyfvb.setMatureEquivalentAcres(expectedMeaFieldVarieties.get(1010695));
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
 		expectedDyfvb.setTotalProduction(null);
@@ -340,6 +398,12 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyccb.setCropCommodityName("BLUEBERRY");
 		expectedDyccb.setTotalProduction(null);
 		expectedDyccb.setTotalProductionOverride(null);
+		expectedDyccb.setTotalPlantedAcres(expectedAcresContractCommodities.get(10));
+		expectedDyccb.setTotalMatureEquivalentAcres(expectedMeaContractCommodities.get(10));
+		expectedDyccb.setTotalSoldShippedYield(null);
+		expectedDyccb.setTotalSalesYield(null);
+		expectedDyccb.setTotalAbandonmentYield(null);
+
 		
 		expectedDyc.getDopYieldContractCommodityBerriesList().add(expectedDyccb);
 		
@@ -348,6 +412,11 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyccb.setCropCommodityName("RASPBERRY");
 		expectedDyccb.setTotalProduction(null);
 		expectedDyccb.setTotalProductionOverride(null);
+		expectedDyccb.setTotalPlantedAcres(expectedAcresContractCommodities.get(12));
+		expectedDyccb.setTotalMatureEquivalentAcres(expectedMeaContractCommodities.get(12));
+		expectedDyccb.setTotalSoldShippedYield(null);
+		expectedDyccb.setTotalSalesYield(null);
+		expectedDyccb.setTotalAbandonmentYield(null);
 		
 		expectedDyc.getDopYieldContractCommodityBerriesList().add(expectedDyccb);
 
@@ -360,6 +429,119 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		
 		logger.debug(">testDopYieldRolloverBerries");
 	}
+	
+	//This tests the a sole factory method and not a complete endpoint call
+	//Tests the rollup of planted acres and MEA in berries inventory from field commodity level to contract commodity level
+	@Test
+	public void testSetYieldContractCommodityBerriesTotalAcres() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
+		logger.debug("<testSetYieldContractCommodityBerriesTotalAcres");
+		
+		if(skipTests) {
+			logger.warn("Skipping tests");
+			return;
+		}
+		
+		dopYieldContractRsrcFactory = new DopYieldContractRsrcFactory();
+		
+		// Remove default planting.
+		AnnualFieldRsrc field1 = new AnnualFieldRsrc();
+		AnnualFieldRsrc field2 = new AnnualFieldRsrc();
+		List<AnnualFieldRsrc> fields = new ArrayList<AnnualFieldRsrc>();
+		List<DopYieldFieldCommodityBerries> berriesList1 = new ArrayList<DopYieldFieldCommodityBerries>();
+		List<DopYieldFieldCommodityBerries> berriesList2 = new ArrayList<DopYieldFieldCommodityBerries>();
+
+		//Create dop yield field commodities
+		//Field 1
+		berriesList1.add(createSimpleDopYieldFieldCommodity(10, "BLUEBERRY", 100.0, 50.0));
+		berriesList1.add(createSimpleDopYieldFieldCommodity(10, "BLUEBERRY", 200.0, 150.0));
+		berriesList1.add(createSimpleDopYieldFieldCommodity(12, "RASPBERRY", 200.0, 150.0));
+		
+		//Field 2
+		berriesList2.add(createSimpleDopYieldFieldCommodity(10, "BLUEBERRY", 300.0, 250.0));
+		berriesList2.add(createSimpleDopYieldFieldCommodity(10, "BLUEBERRY", 200.0, 150.0));
+		berriesList2.add(createSimpleDopYieldFieldCommodity(12, "RASPBERRY", 50.0, 30.0));
+		berriesList2.add(createSimpleDopYieldFieldCommodity(12, "RASPBERRY", 100.0, 70.0));
+		berriesList2.add(createSimpleDopYieldFieldCommodity(13, "STRAWBERRY", 100.0, 50.0));
+		
+		field1.setDopYieldFieldCommodityBerriesList(berriesList1);
+		field2.setDopYieldFieldCommodityBerriesList(berriesList2);
+		
+		fields.add(field1);
+		fields.add(field2);
+
+		//Add contract commodities
+		List<DeclaredYieldContractCommodityBerriesDto> dtos = new ArrayList<DeclaredYieldContractCommodityBerriesDto>();
+		dtos.add(addCommodity(10, "BLUEBERRY"));
+		dtos.add(addCommodity(11, "CRANBERRY"));
+		dtos.add(addCommodity(12, "RASPBERRY"));
+		dtos.add(addCommodity(13, "STRAWBERRY"));
+		
+		dopYieldContractRsrcFactory.setYieldContractCommodityBerriesTotalAcres(fields, dtos);
+		
+		//Expected values
+		Double plantedAcresBlueberry = 800.0;
+		Double meaBlueberry = 600.0;
+		Double plantedAcresCranberry = 0.0;
+		Double meaCranberry = 0.0;
+		Double plantedAcresRaspberry = 350.0;
+		Double meaRaspberry = 250.0;
+		Double plantedAcresStrawberry = 100.0;
+		Double meaStrawberry = 50.0;
+		
+		//Check values
+		assertDeclaredYieldContractCommodityBerries(getDopYieldFieldCommodityBerries(10, dtos), plantedAcresBlueberry, meaBlueberry);
+		assertDeclaredYieldContractCommodityBerries(getDopYieldFieldCommodityBerries(11, dtos), plantedAcresCranberry, meaCranberry);
+		assertDeclaredYieldContractCommodityBerries(getDopYieldFieldCommodityBerries(12, dtos), plantedAcresRaspberry, meaRaspberry);
+		assertDeclaredYieldContractCommodityBerries(getDopYieldFieldCommodityBerries(13, dtos), plantedAcresStrawberry, meaStrawberry);
+
+		logger.debug(">testSetYieldContractCommodityBerriesTotalAcres");
+	}
+
+	private void assertDeclaredYieldContractCommodityBerries(DeclaredYieldContractCommodityBerriesDto expected, Double plantedAcres, Double meAcres) {
+		Assert.assertNotNull(expected);
+		Assert.assertEquals(expected.getTotalPlantedAcres(), plantedAcres, 0.0005);
+		Assert.assertEquals(expected.getTotalMatureEquivalentAcres(), meAcres, 0.0005);
+	}
+	
+	private DeclaredYieldContractCommodityBerriesDto getDopYieldFieldCommodityBerries(Integer cropCommodityId, List<DeclaredYieldContractCommodityBerriesDto> dtos) {
+		
+		DeclaredYieldContractCommodityBerriesDto dto = null;
+		
+		List<DeclaredYieldContractCommodityBerriesDto> filteredList = dtos.stream()
+				.filter(x -> x.getCropCommodityId() == cropCommodityId)
+				.collect(Collectors.toList());
+		
+		if (filteredList != null) {
+			dto = filteredList.get(0);
+		}
+		return dto;
+	}
+
+	
+	private DeclaredYieldContractCommodityBerriesDto addCommodity(Integer cropCommodityId, String cropCommodityName) {
+		DeclaredYieldContractCommodityBerriesDto dto = new DeclaredYieldContractCommodityBerriesDto();
+		dto.setCropCommodityId(cropCommodityId);
+		dto.setCropCommodityName(cropCommodityName);
+		return dto;
+	}
+	
+	private DopYieldFieldCommodityBerries createSimpleDopYieldFieldCommodity(
+            Integer cropCommodityId,
+			String cropCommodityName,
+			Double plantedAcres,
+			Double meAcres
+			) {
+		
+		DopYieldFieldCommodityBerries dop = new DopYieldFieldCommodityBerries();
+
+		dop.setCropCommodityId(cropCommodityId);
+		dop.setCropCommodityName(cropCommodityName);
+		dop.setTotalPlantedAcres(plantedAcres);
+		dop.setTotalMatureEquivalentAcres(meAcres);
+
+		return dop;
+	}	
+	
 		
 	@Test
 	public void testInsertUpdateDeleteDopYieldBerriesContract() throws CirrasUnderwritingServiceException, Oauth2ClientException, ValidationException {
@@ -431,6 +613,53 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNotNull(fetchedInvContract.getFields().get(0).getPlantings());
 		Assert.assertEquals(5, fetchedInvContract.getFields().get(0).getPlantings().size());
 		
+		//Calculate expected MEA acres
+		List<InventoryField> plantings = fetchedInvContract.getFields().get(0).getPlantings();
+		plantings.addAll(fetchedInvContract.getFields().get(1).getPlantings());
+		Map<String, Double> expectedMeaFieldVarieties = new HashMap<>();		//Field Variety MEA
+		Map<String, Double> expectedMeaFieldCommodities = new HashMap<>();		//Field Commodity MEA
+		Map<String, Double> expectedAcresFieldCommodities = new HashMap<>();		//Field Commodity Planted Acres
+		Map<Integer, Double> expectedMeaContractCommodities = new HashMap<>();	//Contract Commodity MEA
+		Map<Integer, Double> expectedAcresContractCommodities = new HashMap<>();	//Contract Commodity Planted Acres
+		for (InventoryField inventoryField : plantings) {
+			String key = inventoryField.getFieldId().toString() + "_" + inventoryField.getInventoryBerries().getCropVarietyId();
+			double expectedMea = inventoryField.getInventoryBerries().getMatureEquivalentAcres();
+			double expectedPlantedAcres = inventoryField.getInventoryBerries().getPlantedAcres();
+			//If variety has been added already, add the new mea to the stored value
+			if(expectedMeaFieldVarieties.size() > 0 && expectedMeaFieldVarieties.containsKey(key)) {
+				expectedMeaFieldVarieties.put(key, (expectedMeaFieldVarieties.get(key) + expectedMea));
+			} else {
+				expectedMeaFieldVarieties.put(key, expectedMea);
+			}
+			
+			Integer cropCommodityId = inventoryField.getInventoryBerries().getCropCommodityId();
+			
+			//Field Commodity
+			key = inventoryField.getFieldId().toString() + "_" + cropCommodityId;
+			if(expectedMeaFieldCommodities.size() > 0 && expectedMeaFieldCommodities.containsKey(key)) {
+				expectedMeaFieldCommodities.put(key, expectedMeaFieldCommodities.get(key) + expectedMea);
+			} else {
+				expectedMeaFieldCommodities.put(key, expectedMea);
+			}
+			if(expectedAcresFieldCommodities.size() > 0 && expectedAcresFieldCommodities.containsKey(key)) {
+				expectedAcresFieldCommodities.put(key, expectedAcresFieldCommodities.get(key) + expectedPlantedAcres);
+			} else {
+				expectedAcresFieldCommodities.put(key, expectedPlantedAcres);
+			}
+
+			//Contract Commodity
+			if(expectedMeaContractCommodities.size() > 0 && expectedMeaContractCommodities.containsKey(cropCommodityId)) {
+				expectedMeaContractCommodities.put(cropCommodityId, (expectedMeaContractCommodities.get(cropCommodityId) + expectedMea));
+			} else {
+				expectedMeaContractCommodities.put(cropCommodityId, expectedMea);
+			}
+			if(expectedAcresContractCommodities.size() > 0 && expectedAcresContractCommodities.containsKey(cropCommodityId)) {
+				expectedAcresContractCommodities.put(cropCommodityId, (expectedAcresContractCommodities.get(cropCommodityId) + expectedPlantedAcres));
+			} else {
+				expectedAcresContractCommodities.put(cropCommodityId, expectedPlantedAcres);
+			}
+		}
+		
 		uwContractRsrc = getUwContract(policyNumber1, service, topLevelEndpoints);
 		Assert.assertNotNull(uwContractRsrc);
 		Assert.assertNotNull(uwContractRsrc.getInventoryContractGuid());
@@ -479,12 +708,15 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfcb.setFieldId(fieldId1);		
 		expectedDyfcb.setTotalProduction(null);		
 		expectedDyfcb.setTotalProductionOverride(null);
+		expectedDyfcb.setTotalPlantedAcres(expectedAcresFieldCommodities.get(fieldId1 + "_" + 10));
+		expectedDyfcb.setTotalMatureEquivalentAcres(expectedMeaFieldCommodities.get(fieldId1 + "_" + 10));
 
 		DopYieldFieldVarietyBerries expectedDyfvb = new DopYieldFieldVarietyBerries();
 		expectedDyfvb.setAbandonmentYield(null);
 		expectedDyfvb.setCropVarietyId(1010689);
 		expectedDyfvb.setCropVarietyName("BLUEJAY");
 		expectedDyfvb.setPlantedAcres(400.0);
+		expectedDyfvb.setMatureEquivalentAcres(expectedMeaFieldVarieties.get(fieldId1 + "_" + 1010689));
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
 		expectedDyfvb.setTotalProduction(null);
@@ -502,12 +734,15 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfcb.setFieldId(fieldId1);		
 		expectedDyfcb.setTotalProduction(null);		
 		expectedDyfcb.setTotalProductionOverride(null);
+		expectedDyfcb.setTotalPlantedAcres(expectedAcresFieldCommodities.get(fieldId1 + "_" + 12));
+		expectedDyfcb.setTotalMatureEquivalentAcres(expectedMeaFieldCommodities.get(fieldId1 + "_" + 12));
 
 		expectedDyfvb = new DopYieldFieldVarietyBerries();
 		expectedDyfvb.setAbandonmentYield(null);
 		expectedDyfvb.setCropVarietyId(1010694);
 		expectedDyfvb.setCropVarietyName("MALAHAT");
 		expectedDyfvb.setPlantedAcres(200.0);
+		expectedDyfvb.setMatureEquivalentAcres(expectedMeaFieldVarieties.get(fieldId1 + "_" + 1010694));
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
 		expectedDyfvb.setTotalProduction(null);
@@ -520,6 +755,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfvb.setCropVarietyId(1010695);
 		expectedDyfvb.setCropVarietyName("MEEKER");
 		expectedDyfvb.setPlantedAcres(500.0);
+		expectedDyfvb.setMatureEquivalentAcres(expectedMeaFieldVarieties.get(fieldId1 + "_" + 1010695));
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
 		expectedDyfvb.setTotalProduction(null);
@@ -553,12 +789,15 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyfcb.setFieldId(fieldId2);		
 		expectedDyfcb.setTotalProduction(null);		
 		expectedDyfcb.setTotalProductionOverride(null);
+		expectedDyfcb.setTotalPlantedAcres(expectedAcresFieldCommodities.get(fieldId2 + "_" + 10));
+		expectedDyfcb.setTotalMatureEquivalentAcres(expectedMeaFieldCommodities.get(fieldId2 + "_" + 10));
 
 		expectedDyfvb = new DopYieldFieldVarietyBerries();
 		expectedDyfvb.setAbandonmentYield(null);
 		expectedDyfvb.setCropVarietyId(1010689);
 		expectedDyfvb.setCropVarietyName("BLUEJAY");
 		expectedDyfvb.setPlantedAcres(600.0);
+		expectedDyfvb.setMatureEquivalentAcres(expectedMeaFieldVarieties.get(fieldId2 + "_" + 1010689));
 		expectedDyfvb.setSalesYield(null);
 		expectedDyfvb.setSoldShippedYield(null);
 		expectedDyfvb.setTotalProduction(null);
@@ -577,6 +816,12 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyccb.setCropCommodityName("BLUEBERRY");
 		expectedDyccb.setTotalProduction(null);
 		expectedDyccb.setTotalProductionOverride(null);
+		expectedDyccb.setTotalPlantedAcres(expectedAcresContractCommodities.get(10));
+		expectedDyccb.setTotalMatureEquivalentAcres(expectedMeaContractCommodities.get(10));
+		expectedDyccb.setTotalSoldShippedYield(null);
+		expectedDyccb.setTotalSalesYield(null);
+		expectedDyccb.setTotalAbandonmentYield(null);
+
 		
 		expectedDyc.getDopYieldContractCommodityBerriesList().add(expectedDyccb);
 		
@@ -585,6 +830,11 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyccb.setCropCommodityName("RASPBERRY");
 		expectedDyccb.setTotalProduction(null);
 		expectedDyccb.setTotalProductionOverride(null);
+		expectedDyccb.setTotalPlantedAcres(expectedAcresContractCommodities.get(12));
+		expectedDyccb.setTotalMatureEquivalentAcres(expectedMeaContractCommodities.get(12));
+		expectedDyccb.setTotalSoldShippedYield(null);
+		expectedDyccb.setTotalSalesYield(null);
+		expectedDyccb.setTotalAbandonmentYield(null);
 		
 		expectedDyc.getDopYieldContractCommodityBerriesList().add(expectedDyccb);
 
@@ -605,12 +855,18 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(22.88);   // Calculated
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(33.44);
-		
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalSoldShippedYield(33.77);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalSalesYield(22.66);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalAbandonmentYield(11.55);
+
 		// RASPBERRY
 		newDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(77.88);
 
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(44.66);  // Calculated
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(77.88);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalSoldShippedYield(88.22);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalSalesYield(77.11);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalAbandonmentYield(66.00);
 
 		// Field 1
 		// Dop Yield Field Commodity Berries
@@ -692,13 +948,20 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(88.22);  // Calculated
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(null);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalSoldShippedYield(null);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalSalesYield(null);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalAbandonmentYield(null);
 
 		// RASPBERRY
 		fetchedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(54.32);
 
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(44.00);  // Calculated
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(54.32);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalSoldShippedYield(22.88);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalSalesYield(11.77);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalAbandonmentYield(00.66);
 
+		
 		// Field 1
 		// Dop Yield Field Commodity Berries
 		// BLUEBERRY
@@ -748,12 +1011,19 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(81.55);  // Calculated: 67.98 + 13.57
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(null);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalSoldShippedYield(63.77);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalSalesYield(42.66);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalAbandonmentYield(21.55);
 
+		
 		// RASPBERRY
 		updatedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(null);
 
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(132.84);  // Calculated: 35.31 + 97.53
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(null);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalSoldShippedYield(22.88);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalSalesYield(11.77);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalAbandonmentYield(00.66);
 
 		// Field 1
 		// Dop Yield Field Commodity Berries
@@ -813,20 +1083,20 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		// BLUEBERRY
 		updatedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).setTotalProductionOverride(13.57);
 
-		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).setTotalProduction(null);  // Calculated
+		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).setTotalProduction(60.0);  // Calculated
 		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).setTotalProductionOverride(13.57);
 				
 		// Dop Yield Field Variety Berries
 		// BLUEBERRY - BLUEJAY
-		updatedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(null);
-		updatedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(null);
-		updatedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(null);
+		updatedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(10.0);
+		updatedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(20.0);
+		updatedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(30.0);
 		updatedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(null);
 		
-		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(null);
-		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(null);
-		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(null);
-		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProduction(null);  // Calculated
+		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setAbandonmentYield(10.0);
+		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSalesYield(20.0);
+		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setSoldShippedYield(30.0);
+		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProduction(10.0 + 20.0 + 30.0);  // Calculated
 		expectedDyc.getFields().get(1).getDopYieldFieldCommodityBerriesList().get(0).getDopYieldFieldVarietyBerriesList().get(0).setTotalProductionOverride(null);
 		
 		updatedDyc = service.updateDopYieldContract(updatedDyc);
@@ -839,12 +1109,18 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProduction(null);  // Calculated
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalProductionOverride(null);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalSoldShippedYield(null);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalSalesYield(null);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(0).setTotalAbandonmentYield(null);
 
 		// RASPBERRY
 		updatedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(null);
 
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProduction(97.53);  // Calculated
 		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalProductionOverride(null);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalSoldShippedYield(null);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalSalesYield(null);
+		expectedDyc.getDopYieldContractCommodityBerriesList().get(1).setTotalAbandonmentYield(null);
 
 		// Field 1
 		// Dop Yield Field Commodity Berries
@@ -1065,6 +1341,12 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertEquals(expected.getCropCommodityName(), actual.getCropCommodityName());
 		Assert.assertEquals(expected.getTotalProduction(), actual.getTotalProduction());
 		Assert.assertEquals(expected.getTotalProductionOverride(), actual.getTotalProductionOverride());
+		Assert.assertEquals(expected.getTotalPlantedAcres(), actual.getTotalPlantedAcres());
+		Assert.assertEquals(expected.getTotalMatureEquivalentAcres(), actual.getTotalMatureEquivalentAcres());
+		Assert.assertEquals(expected.getTotalSoldShippedYield(), actual.getTotalSoldShippedYield());
+		Assert.assertEquals(expected.getTotalSalesYield(), actual.getTotalSalesYield());
+		Assert.assertEquals(expected.getTotalAbandonmentYield(), actual.getTotalAbandonmentYield());
+
 	}
 	
 	
@@ -1108,6 +1390,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertEquals(expected.getCropVarietyId(), actual.getCropVarietyId());
 		Assert.assertEquals(expected.getCropVarietyName(), actual.getCropVarietyName());
 		Assert.assertEquals(expected.getPlantedAcres(), actual.getPlantedAcres());
+		Assert.assertEquals(expected.getMatureEquivalentAcres(), actual.getMatureEquivalentAcres());
 		Assert.assertEquals(expected.getSalesYield(), actual.getSalesYield());
 		Assert.assertEquals(expected.getSoldShippedYield(), actual.getSoldShippedYield());
 		Assert.assertEquals(expected.getTotalProduction(), actual.getTotalProduction());

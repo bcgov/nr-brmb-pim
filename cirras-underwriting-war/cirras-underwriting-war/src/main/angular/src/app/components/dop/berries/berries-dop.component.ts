@@ -167,7 +167,7 @@ export class BerriesDopComponent extends BaseComponent {
     this.dopYieldContract.enteredYieldMeasUnitTypeCode = this.dopYieldContract.defaultYieldMeasUnitTypeCode
 
     if (this.dopYieldContract.declaredYieldContractGuid) {
-      this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract, this.policyId))
+      this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract, this.policyId, "Yield "))
     } else {
       // add new
       this.store.dispatch(AddNewDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract, this.policyId))
@@ -197,11 +197,11 @@ export class BerriesDopComponent extends BaseComponent {
   onDeleteDop() {
 
     //Ask for confirmation before deleting all DOP data
-    if ( confirm("You are about to delete all DOP data for the policy. Do you want to continue?") ) {
+    if ( confirm("You are about to delete all yield data for the policy. Do you want to continue?") ) {
 
       if (this.dopYieldContract.declaredYieldContractGuid) {
         //Delete dop contract
-        this.store.dispatch(DeleteDopYieldContract(DOP_COMPONENT_ID, this.policyId, this.dopYieldContract))
+        this.store.dispatch(DeleteDopYieldContract(DOP_COMPONENT_ID, this.policyId, this.dopYieldContract, "Yield "))
 
       } 
     }

@@ -7,6 +7,7 @@ import { RootState } from 'src/app/store';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { makeNumberOnly } from 'src/app/utils';
+import { BERRY_COMMODITY } from 'src/app/utils/constants';
 
 @Component({
   selector: 'berries-dop-commodity-list',
@@ -22,8 +23,9 @@ export class BerriesDopCommodityListComponent {
   @Input() dopYieldFieldCommodityBerriesFormArray: UntypedFormArray
   @Input() filterByCropCommodityId: number;
 
-  fieldCommodityFormGroup: UntypedFormGroup;
 
+  fieldCommodityFormGroup: UntypedFormGroup;
+  
   constructor(private fb: UntypedFormBuilder,
               private store: Store<RootState>,
   ) {}
@@ -70,4 +72,36 @@ export class BerriesDopCommodityListComponent {
     this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true))
   }
   
+  setTableHeaderStyle() {
+    if (this.isStrawberry()) {
+      return {
+        'width': `1020px`
+      };
+    } else {
+      return {
+        'width': `1120px`
+      };
+    }  
+  }
+
+  // setCommodityTotalStyle() {
+  //   if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
+  //     return {
+  //       'width': `460px`
+  //     };
+  //   } else {
+  //     return {
+  //       'width': `460px`
+  //     };
+  //   }  
+  // }
+
+  isStrawberry() {
+    if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
+      return true
+    } else {
+      return false
+    }
+  }
+
 }

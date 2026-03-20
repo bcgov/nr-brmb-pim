@@ -1,9 +1,13 @@
-<div class="plcy-inv-field-box" [formGroup]="varietyFormGroup" style="width: 1020px;">
+<div class="plcy-inv-field-box" [formGroup]="varietyFormGroup" [ngStyle]="setFieldVarietyStyle()">
     
     <div class="inventory-cell inventory-border" style="width: 100px;">
         {{ dopYieldFieldVarietyBerries.plantedAcres | number:'1.0-1' }}
     </div>
     
+    <div *ngIf="!isStrawberry()" class="inventory-cell inventory-border" style="width: 100px;">
+        {{ dopYieldFieldVarietyBerries.matureEquivalentAcres | number:'1.0-1' }}
+    </div>
+
     <div class="inventory-cell inventory-border" style="width: 180px;">
         {{ cropCommodityName | titlecase }}
     </div>

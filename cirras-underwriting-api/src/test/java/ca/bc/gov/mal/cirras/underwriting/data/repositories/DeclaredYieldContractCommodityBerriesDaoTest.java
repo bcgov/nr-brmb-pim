@@ -87,6 +87,11 @@ public class DeclaredYieldContractCommodityBerriesDaoTest {
 		newDto.setDeclaredYieldContractGuid(declaredYieldContractGuid);
 		newDto.setTotalProduction(500.0);
 		newDto.setTotalProductionOverride(250.0);
+		newDto.setTotalPlantedAcres(125.0);
+		newDto.setTotalMatureEquivalentAcres(100.1);
+		newDto.setTotalSoldShippedYield(40.5);
+		newDto.setTotalSalesYield(50.0);
+		newDto.setTotalAbandonmentYield(60.0);
 
 		dao.insert(newDto, userId);
 		Assert.assertNotNull(newDto.getDeclaredYieldContractCommodityBerriesGuid());
@@ -106,10 +111,20 @@ public class DeclaredYieldContractCommodityBerriesDaoTest {
 		Assert.assertEquals("CropCommodityName", newDto.getCropCommodityName(), fetchedDto.getCropCommodityName());
 		Assert.assertEquals("TotalProduction", newDto.getTotalProduction(), fetchedDto.getTotalProduction());
 		Assert.assertEquals("TotalProductionOverride", newDto.getTotalProductionOverride(), fetchedDto.getTotalProductionOverride());
+		Assert.assertEquals("TotalPlantedAcres", newDto.getTotalPlantedAcres(), fetchedDto.getTotalPlantedAcres());
+		Assert.assertEquals("TotalMatureEquivalentAcres", newDto.getTotalMatureEquivalentAcres(), fetchedDto.getTotalMatureEquivalentAcres());
+		Assert.assertEquals("TotalSoldShippedYield", newDto.getTotalSoldShippedYield(), fetchedDto.getTotalSoldShippedYield());
+		Assert.assertEquals("TotalSalesYield", newDto.getTotalSalesYield(), fetchedDto.getTotalSalesYield());
+		Assert.assertEquals("TotalAbandonmentYield", newDto.getTotalAbandonmentYield(), fetchedDto.getTotalAbandonmentYield());
 
 		//UPDATE
 		fetchedDto.setTotalProduction(700.0);
 		fetchedDto.setTotalProductionOverride(300.0);
+		fetchedDto.setTotalPlantedAcres(250.0);
+		fetchedDto.setTotalMatureEquivalentAcres(210.1);
+		fetchedDto.setTotalSoldShippedYield(41.5);
+		fetchedDto.setTotalSalesYield(51.0);
+		fetchedDto.setTotalAbandonmentYield(61.0);
 		
 		dao.update(fetchedDto, userId);
 
@@ -118,6 +133,11 @@ public class DeclaredYieldContractCommodityBerriesDaoTest {
 
 		Assert.assertEquals("TotalProduction", fetchedDto.getTotalProduction(), updatedDto.getTotalProduction());
 		Assert.assertEquals("TotalProductionOverride", fetchedDto.getTotalProductionOverride(), updatedDto.getTotalProductionOverride());
+		Assert.assertEquals("TotalPlantedAcres", fetchedDto.getTotalPlantedAcres(), updatedDto.getTotalPlantedAcres());
+		Assert.assertEquals("TotalMatureEquivalentAcres", fetchedDto.getTotalMatureEquivalentAcres(), updatedDto.getTotalMatureEquivalentAcres());
+		Assert.assertEquals("TotalSoldShippedYield", fetchedDto.getTotalSoldShippedYield(), updatedDto.getTotalSoldShippedYield());
+		Assert.assertEquals("TotalSalesYield", fetchedDto.getTotalSalesYield(), updatedDto.getTotalSalesYield());
+		Assert.assertEquals("TotalAbandonmentYield", fetchedDto.getTotalAbandonmentYield(), updatedDto.getTotalAbandonmentYield());
 
 
 		//INSERT second commodity
@@ -127,6 +147,12 @@ public class DeclaredYieldContractCommodityBerriesDaoTest {
 		newDto2.setDeclaredYieldContractGuid(declaredYieldContractGuid);
 		newDto2.setTotalProduction(123.4567);
 		newDto2.setTotalProductionOverride(987.6543);
+		newDto2.setTotalPlantedAcres(125.1234);
+		newDto2.setTotalMatureEquivalentAcres(100.9876);
+		newDto2.setTotalSoldShippedYield(null);
+		newDto2.setTotalSalesYield(null);
+		newDto2.setTotalAbandonmentYield(null);
+
 
 		dao.insert(newDto2, userId);
 

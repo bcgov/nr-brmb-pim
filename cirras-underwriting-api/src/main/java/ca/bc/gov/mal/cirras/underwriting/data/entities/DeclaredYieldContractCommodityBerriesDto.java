@@ -19,6 +19,11 @@ public class DeclaredYieldContractCommodityBerriesDto extends BaseDto<DeclaredYi
 	private Integer cropCommodityId;
 	private Double totalProduction;
 	private Double totalProductionOverride;
+	private Double totalPlantedAcres;
+	private Double totalMatureEquivalentAcres;
+	private Double totalSoldShippedYield;
+	private Double totalSalesYield;
+	private Double totalAbandonmentYield;
 	private String createUser;
 	private Date createDate;
 	private String updateUser;
@@ -37,6 +42,11 @@ public class DeclaredYieldContractCommodityBerriesDto extends BaseDto<DeclaredYi
 		this.cropCommodityId = dto.cropCommodityId;
 		this.totalProduction = dto.totalProduction;
 		this.totalProductionOverride = dto.totalProductionOverride;
+		this.totalPlantedAcres = dto.totalPlantedAcres;
+		this.totalMatureEquivalentAcres = dto.totalMatureEquivalentAcres;
+		this.totalSoldShippedYield = dto.totalSoldShippedYield;
+		this.totalSalesYield = dto.totalSalesYield;
+		this.totalAbandonmentYield = dto.totalAbandonmentYield;
 		this.createUser = dto.createUser;
 		this.createDate = dto.createDate;
 		this.updateUser = dto.updateUser;
@@ -65,6 +75,11 @@ public class DeclaredYieldContractCommodityBerriesDto extends BaseDto<DeclaredYi
 			result = result&&dtoUtils.equals("cropCommodityId", cropCommodityId, other.cropCommodityId);
 			result = result&&dtoUtils.equals("totalProduction", totalProduction, other.totalProduction, decimalPrecision);
 			result = result&&dtoUtils.equals("totalProductionOverride", totalProductionOverride, other.totalProductionOverride, decimalPrecision);
+			result = result&&dtoUtils.equals("totalPlantedAcres", totalPlantedAcres, other.totalPlantedAcres, decimalPrecision);
+			result = result&&dtoUtils.equals("totalMatureEquivalentAcres", totalMatureEquivalentAcres, other.totalMatureEquivalentAcres, decimalPrecision);
+			result = result&&dtoUtils.equals("totalSoldShippedYield", totalSoldShippedYield, other.totalSoldShippedYield, decimalPrecision);
+			result = result&&dtoUtils.equals("totalSalesYield", totalSalesYield, other.totalSalesYield, decimalPrecision);
+			result = result&&dtoUtils.equals("totalAbandonmentYield", totalAbandonmentYield, other.totalAbandonmentYield, decimalPrecision);
 		}
 		
 		return result;
@@ -118,6 +133,46 @@ public class DeclaredYieldContractCommodityBerriesDto extends BaseDto<DeclaredYi
 
 	public void setTotalProductionOverride(Double totalProductionOverride) {
 		this.totalProductionOverride = totalProductionOverride;
+	}
+
+	public Double getTotalPlantedAcres() {
+		return totalPlantedAcres;
+	}
+
+	public void setTotalPlantedAcres(Double totalPlantedAcres) {
+		this.totalPlantedAcres = totalPlantedAcres;
+	}
+
+	public Double getTotalMatureEquivalentAcres() {
+		return totalMatureEquivalentAcres;
+	}
+
+	public void setTotalMatureEquivalentAcres(Double totalMatureEquivalentAcres) {
+		this.totalMatureEquivalentAcres = totalMatureEquivalentAcres;
+	}
+	
+	public Double getTotalSoldShippedYield() {
+		return totalSoldShippedYield;
+	}
+
+	public void setTotalSoldShippedYield(Double totalSoldShippedYield) {
+		this.totalSoldShippedYield = totalSoldShippedYield;
+	}
+
+	public Double getTotalSalesYield() {
+		return totalSalesYield;
+	}
+
+	public void setTotalSalesYield(Double totalSalesYield) {
+		this.totalSalesYield = totalSalesYield;
+	}
+
+	public Double getTotalAbandonmentYield() {
+		return totalAbandonmentYield;
+	}
+
+	public void setTotalAbandonmentYield(Double totalAbandonmentYield) {
+		this.totalAbandonmentYield = totalAbandonmentYield;
 	}
 
 	public String getCreateUser() {

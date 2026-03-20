@@ -1,7 +1,7 @@
 <ng-container>
     <button *ngIf="underwritingCommentTypeCode == 'DOP'" mat-raised-button class="secondary header-button" (click)="onLoadComments()">
-        <mat-icon class="button-mat-icon" [svgIcon]="hasComments() ? 'insert_comment' : 'mode_comment'"></mat-icon>DOP
-        Comments
+        <mat-icon class="button-mat-icon" [svgIcon]="hasComments() ? 'insert_comment' : 'mode_comment'"></mat-icon>
+        {{ ( insurancePlanId == INSURANCE_PLAN.BERRIES ? "Yield Comments" : "DOP Comments")}}
     </button>
     <span *ngIf="underwritingCommentTypeCode == 'INV' || underwritingCommentTypeCode == 'VY' ">
         <mat-icon matTooltip="Comments" (click)="onLoadComments()"

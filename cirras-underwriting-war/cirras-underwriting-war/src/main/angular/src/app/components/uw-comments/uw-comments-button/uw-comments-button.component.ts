@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 import { UwCommentsDialogComponent } from "../uw-comments-dialog/uw-comments-dialog.component";
+import { INSURANCE_PLAN } from "src/app/utils/constants";
 
 export interface DialogData {
     insurancePlanId: number;
@@ -53,6 +54,8 @@ export class UwCommentsButtonComponent {
 
     uwCommentsForDialog: UnderwritingComment[];
     dialogRef: MatDialogRef<UwCommentsDialogComponent, any>;
+
+    INSURANCE_PLAN = INSURANCE_PLAN
 
     constructor(protected dialog: MatDialog) { }
 

@@ -19,6 +19,8 @@ public class DopYieldFieldCommodityBerries implements Serializable {
 	private Integer cropYear;
 	private Double totalProduction;
 	private Double totalProductionOverride;
+	private Double totalPlantedAcres;
+	private Double totalMatureEquivalentAcres;
 
 	private List<DopYieldFieldVarietyBerries> dopYieldFieldVarietyBerriesList = new ArrayList<DopYieldFieldVarietyBerries>();
 	
@@ -69,6 +71,22 @@ public class DopYieldFieldCommodityBerries implements Serializable {
 	}
 	public void setTotalProductionOverride(Double totalProductionOverride) {
 		this.totalProductionOverride = totalProductionOverride;
+	}
+
+	public Double getTotalPlantedAcres() {
+		return totalPlantedAcres;
+	}
+
+	public void setTotalPlantedAcres(Double totalPlantedAcres) {
+		this.totalPlantedAcres = totalPlantedAcres;
+	}
+
+	public Double getTotalMatureEquivalentAcres() {
+		return totalMatureEquivalentAcres;
+	}
+
+	public void setTotalMatureEquivalentAcres(Double totalMatureEquivalentAcres) {
+		this.totalMatureEquivalentAcres = totalMatureEquivalentAcres;
 	}
 	
 	public List<DopYieldFieldVarietyBerries> getDopYieldFieldVarietyBerriesList() {

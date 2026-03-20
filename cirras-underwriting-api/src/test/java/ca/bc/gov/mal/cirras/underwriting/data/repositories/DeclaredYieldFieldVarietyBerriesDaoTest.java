@@ -162,6 +162,7 @@ public class DeclaredYieldFieldVarietyBerriesDaoTest {
 		newDto.setCropVarietyName("BLUEJAY");
 		newDto.setDeclaredYieldFieldCommodityBerriesGuid(declaredYieldFieldCommodityBerriesGuid);
 		newDto.setPlantedAcres(33.44);
+		newDto.setMatureEquivalentAcres(25.5);
 		newDto.setSalesYield(55.66);
 		newDto.setSoldShippedYield(77.88);
 		newDto.setTotalProduction(99.00);
@@ -184,6 +185,7 @@ public class DeclaredYieldFieldVarietyBerriesDaoTest {
 		Assert.assertEquals("CropVarietyName", newDto.getCropVarietyName(), fetchedDto.getCropVarietyName());
 		Assert.assertEquals("DeclaredYieldFieldCommodityBerriesGuid", newDto.getDeclaredYieldFieldCommodityBerriesGuid(), fetchedDto.getDeclaredYieldFieldCommodityBerriesGuid());
 		Assert.assertEquals("PlantedAcres", newDto.getPlantedAcres(), fetchedDto.getPlantedAcres());
+		Assert.assertEquals("MatureEquivalentAcres", newDto.getMatureEquivalentAcres(), fetchedDto.getMatureEquivalentAcres());
 		Assert.assertEquals("SalesYield", newDto.getSalesYield(), fetchedDto.getSalesYield());
 		Assert.assertEquals("SoldShippedYield", newDto.getSoldShippedYield(), fetchedDto.getSoldShippedYield());
 		Assert.assertEquals("TotalProduction", newDto.getTotalProduction(), fetchedDto.getTotalProduction());
@@ -199,6 +201,7 @@ public class DeclaredYieldFieldVarietyBerriesDaoTest {
 		Assert.assertEquals("CropVarietyName", newDto.getCropVarietyName(), fetchedDto.getCropVarietyName());
 		Assert.assertEquals("DeclaredYieldFieldCommodityBerriesGuid", newDto.getDeclaredYieldFieldCommodityBerriesGuid(), fetchedDto.getDeclaredYieldFieldCommodityBerriesGuid());
 		Assert.assertEquals("PlantedAcres", newDto.getPlantedAcres(), fetchedDto.getPlantedAcres());
+		Assert.assertEquals("MatureEquivalentAcres", newDto.getMatureEquivalentAcres(), fetchedDto.getMatureEquivalentAcres());
 		Assert.assertEquals("SalesYield", newDto.getSalesYield(), fetchedDto.getSalesYield());
 		Assert.assertEquals("SoldShippedYield", newDto.getSoldShippedYield(), fetchedDto.getSoldShippedYield());
 		Assert.assertEquals("TotalProduction", newDto.getTotalProduction(), fetchedDto.getTotalProduction());
@@ -207,6 +210,7 @@ public class DeclaredYieldFieldVarietyBerriesDaoTest {
 		//UPDATE
 		fetchedDto.setAbandonmentYield(22.11);
 		fetchedDto.setPlantedAcres(44.33);
+		fetchedDto.setMatureEquivalentAcres(30.5);
 		fetchedDto.setSalesYield(66.55);
 		fetchedDto.setSoldShippedYield(88.77);
 		fetchedDto.setTotalProduction(00.99);
@@ -224,6 +228,7 @@ public class DeclaredYieldFieldVarietyBerriesDaoTest {
 		Assert.assertEquals("CropVarietyName", fetchedDto.getCropVarietyName(), updatedDto.getCropVarietyName());
 		Assert.assertEquals("DeclaredYieldFieldCommodityBerriesGuid", fetchedDto.getDeclaredYieldFieldCommodityBerriesGuid(), updatedDto.getDeclaredYieldFieldCommodityBerriesGuid());
 		Assert.assertEquals("PlantedAcres", fetchedDto.getPlantedAcres(), updatedDto.getPlantedAcres());
+		Assert.assertEquals("MatureEquivalentAcres", fetchedDto.getMatureEquivalentAcres(), updatedDto.getMatureEquivalentAcres());
 		Assert.assertEquals("SalesYield", fetchedDto.getSalesYield(), updatedDto.getSalesYield());
 		Assert.assertEquals("SoldShippedYield", fetchedDto.getSoldShippedYield(), updatedDto.getSoldShippedYield());
 		Assert.assertEquals("TotalProduction", fetchedDto.getTotalProduction(), updatedDto.getTotalProduction());
@@ -248,6 +253,7 @@ public class DeclaredYieldFieldVarietyBerriesDaoTest {
 		newDto2.setCropVarietyName("BLUEJAY");
 		newDto2.setDeclaredYieldFieldCommodityBerriesGuid(declaredYieldFieldCommodityBerriesGuid);
 		newDto2.setPlantedAcres(33.44);
+		newDto2.setMatureEquivalentAcres(25.5);
 		newDto2.setSalesYield(55.66);
 		newDto2.setSoldShippedYield(77.88);
 		newDto2.setTotalProduction(99.00);
@@ -296,6 +302,7 @@ public class DeclaredYieldFieldVarietyBerriesDaoTest {
 		newDto.setCropVarietyName("MALAHAT");
 		newDto.setDeclaredYieldFieldCommodityBerriesGuid(declaredYieldFieldCommodityBerriesGuid);
 		newDto.setPlantedAcres(33.44);
+		newDto.setMatureEquivalentAcres(25.5);
 		newDto.setSalesYield(55.66);
 		newDto.setSoldShippedYield(77.88);
 		newDto.setTotalProduction(99.00);
@@ -311,6 +318,7 @@ public class DeclaredYieldFieldVarietyBerriesDaoTest {
 		newDto.setCropVarietyName("MEEKER");
 		newDto.setDeclaredYieldFieldCommodityBerriesGuid(declaredYieldFieldCommodityBerriesGuid);
 		newDto.setPlantedAcres(33.44);
+		newDto.setMatureEquivalentAcres(20.5);
 		newDto.setSalesYield(55.66);
 		newDto.setSoldShippedYield(77.88);
 		newDto.setTotalProduction(99.00);
@@ -364,6 +372,7 @@ public class DeclaredYieldFieldVarietyBerriesDaoTest {
 		newDto.setCropVarietyName("MALAHAT");
 		newDto.setDeclaredYieldFieldCommodityBerriesGuid(declaredYieldFieldCommodityBerriesGuid1);
 		newDto.setPlantedAcres(33.44);
+		newDto.setMatureEquivalentAcres(25.5);
 		newDto.setSalesYield(55.66);
 		newDto.setSoldShippedYield(77.88);
 		newDto.setTotalProduction(99.00);
@@ -381,6 +390,7 @@ public class DeclaredYieldFieldVarietyBerriesDaoTest {
 		newDto.setCropVarietyName("MALAHAT");
 		newDto.setDeclaredYieldFieldCommodityBerriesGuid(declaredYieldFieldCommodityBerriesGuid2);
 		newDto.setPlantedAcres(33.44);
+		newDto.setMatureEquivalentAcres(20.5);
 		newDto.setSalesYield(55.66);
 		newDto.setSoldShippedYield(77.88);
 		newDto.setTotalProduction(99.00);
@@ -514,6 +524,9 @@ public class DeclaredYieldFieldVarietyBerriesDaoTest {
 		newDto.setFieldId(fieldId1);
 		newDto.setTotalProduction(null);
 		newDto.setTotalProductionOverride(null);
+		newDto.setTotalPlantedAcres(0.0);
+		newDto.setTotalMatureEquivalentAcres(0.0);
+
 
 		//INSERT
 		dao.insert(newDto, userId);		

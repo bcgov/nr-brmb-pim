@@ -1,6 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
 import java.net.URI;
+
 //import java.sql.Date;
 import java.util.Date;
 import java.util.HashMap;
@@ -120,6 +121,8 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		// Declared Yield Contract Commodity Berries
 		if (!dycDto.getDeclaredYieldContractCommodityBerriesList().isEmpty()) {
 			List<DopYieldContractCommodityBerries> dopContractCommoditiesBerries = new ArrayList<DopYieldContractCommodityBerries>();
+			
+			setYieldContractCommodityBerriesTotalAcres(resource.getFields(), dycDto.getDeclaredYieldContractCommodityBerriesList());
 
 			for (DeclaredYieldContractCommodityBerriesDto dyccbDto : dycDto.getDeclaredYieldContractCommodityBerriesList()) {
 				DopYieldContractCommodityBerries dyccbModel = createDopYieldContractCommodityBerries(dyccbDto);
@@ -134,6 +137,51 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		resource.setETag(eTag);
 
 		return resource;
+	}
+
+	//Rollup total acres and mea from field commodity to contract commodity level
+	//Public for unit tests
+	public void setYieldContractCommodityBerriesTotalAcres(
+			List<AnnualFieldRsrc> fields,
+			List<DeclaredYieldContractCommodityBerriesDto> dyccbDtos) {
+		
+		Map<Integer, Double> totalPlantedAcresByCommodity = new HashMap<>();
+		Map<Integer, Double> totalMEAcresByCommodity = new HashMap<>();
+		
+		if(dyccbDtos != null && dyccbDtos.size() > 0) {
+	
+			if(fields != null && fields.size() > 0) {
+				for(AnnualFieldRsrc field : fields) {
+					if(field.getDopYieldFieldCommodityBerriesList() != null && field.getDopYieldFieldCommodityBerriesList().size() > 0) {
+						for(DopYieldFieldCommodityBerries dopBerries : field.getDopYieldFieldCommodityBerriesList()) {
+							double plantedAcres = dopBerries.getTotalPlantedAcres();
+							double mea = dopBerries.getTotalMatureEquivalentAcres();
+							Integer cropCommodityId = dopBerries.getCropCommodityId();
+							//If commodity has been added already, add the new planted acres to the stored value
+							if(totalPlantedAcresByCommodity.size() > 0 && totalPlantedAcresByCommodity.containsKey(cropCommodityId)) {
+								plantedAcres = totalPlantedAcresByCommodity.get(cropCommodityId) + plantedAcres;
+							}
+							totalPlantedAcresByCommodity.put(cropCommodityId, plantedAcres);
+	
+							//If commodity has been added already, add the new mea to the stored value
+							if(totalMEAcresByCommodity.size() > 0 && totalMEAcresByCommodity.containsKey(cropCommodityId)) {
+								mea = totalMEAcresByCommodity.get(cropCommodityId) + mea;
+							}
+							totalMEAcresByCommodity.put(cropCommodityId, mea);
+							
+						}
+					}
+				}
+			}
+		
+			for (DeclaredYieldContractCommodityBerriesDto dto : dyccbDtos) {
+				Integer cropCommodityId = dto.getCropCommodityId();
+				dto.setTotalPlantedAcres(notNull(totalPlantedAcresByCommodity.get(cropCommodityId), 0.0));
+				dto.setTotalMatureEquivalentAcres(notNull(totalMEAcresByCommodity.get(cropCommodityId), 0.0));
+			}
+				
+		}
+			
 	}
 
 	private void populateDefaultResource(DopYieldContractRsrc resource, PolicyDto policyDto,
@@ -344,6 +392,10 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 			dto.setDeclaredYieldContractGuid(null);
 			dto.setTotalProduction(null);
 			dto.setTotalProductionOverride(null);
+			dto.setTotalSoldShippedYield(null);
+			dto.setTotalSalesYield(null);
+			dto.setTotalAbandonmentYield(null);
+
 			dopCommodities.add(dto);
 		}
 		return dopCommodities;
@@ -464,6 +516,11 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		model.setDeclaredYieldContractGuid(dto.getDeclaredYieldContractGuid());
 		model.setTotalProduction(dto.getTotalProduction());
 		model.setTotalProductionOverride(dto.getTotalProductionOverride());
+		model.setTotalPlantedAcres(dto.getTotalPlantedAcres());
+		model.setTotalMatureEquivalentAcres(dto.getTotalMatureEquivalentAcres());
+		model.setTotalSoldShippedYield(dto.getTotalSoldShippedYield());
+		model.setTotalSalesYield(dto.getTotalSalesYield());
+		model.setTotalAbandonmentYield(dto.getTotalAbandonmentYield());
 
 		return model;
 	}
@@ -656,12 +713,24 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 					// Add planted acres for this planting to the variety total.
 					updateDopYieldFieldVarietyBerriesFromPlanting(dyfvbModel, ifDto);
 				}
+				
 			}
 		}
 		
 		List<DopYieldFieldCommodityBerries> dopYieldFieldCommodityBerriesList = new ArrayList<DopYieldFieldCommodityBerries>();
 
 		if (!dopYieldFieldCommodityBerriesMap.isEmpty() ) {
+			
+			//Rollup planted and me acres from field variety to field commodity level
+			for(DopYieldFieldCommodityBerries fcb : dopYieldFieldCommodityBerriesMap.values()) {
+				if(fcb.getDopYieldFieldVarietyBerriesList() != null && dopYieldFieldCommodityBerriesMap.size() > 0) {
+					for(DopYieldFieldVarietyBerries variety : fcb.getDopYieldFieldVarietyBerriesList()) {
+						fcb.setTotalPlantedAcres(notNull(fcb.getTotalPlantedAcres(), 0.0) + notNull(variety.getPlantedAcres(), 0.0));
+						fcb.setTotalMatureEquivalentAcres(notNull(fcb.getTotalMatureEquivalentAcres(), 0.0) + notNull(variety.getMatureEquivalentAcres(), 0.0));
+					}
+				}
+			}
+			
 			dopYieldFieldCommodityBerriesList.addAll(dopYieldFieldCommodityBerriesMap.values());
 			dopYieldFieldCommodityBerriesList.sort(new Comparator<DopYieldFieldCommodityBerries>() {
 				@Override
@@ -701,6 +770,8 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		model.setDeclaredYieldFieldCommodityBerriesGuid(null);
 		model.setTotalProduction(null);
 		model.setTotalProductionOverride(null);
+		model.setTotalPlantedAcres(null); //Is set in createDopYieldFieldCommodityBerriesListFromPlantings
+		model.setTotalMatureEquivalentAcres(null); //Is set in createDopYieldFieldCommodityBerriesListFromPlantings
 		
 		return model;
 	}
@@ -716,6 +787,8 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		model.setDeclaredYieldFieldCommodityBerriesGuid(dto.getDeclaredYieldFieldCommodityBerriesGuid());
 		model.setTotalProduction(dto.getTotalProduction());
 		model.setTotalProductionOverride(dto.getTotalProductionOverride());
+		model.setTotalPlantedAcres(dto.getTotalPlantedAcres());
+		model.setTotalMatureEquivalentAcres(dto.getTotalMatureEquivalentAcres());
 
 		// Load DopYieldFieldVarietyBerries
 		if (!dto.getDeclaredYieldFieldVarietyBerriesList().isEmpty() ) {
@@ -742,6 +815,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 			model.setCropVarietyId(ib.getCropVarietyId());
 			model.setCropVarietyName(ib.getCropVarietyName());
 			model.setPlantedAcres(ib.getPlantedAcres());
+			model.setMatureEquivalentAcres(ib.getMatureEquivalentAcres());
 		}
 
 		
@@ -761,6 +835,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		// InventoryBerriesDto
 		InventoryBerriesDto ib = ifDto.getInventoryBerries();
 		if ( ib != null && ib.getPlantedAcres() != null ) {
+			//Rollup planted acres
 			Double dopPlantedAcres = model.getPlantedAcres();
 			if ( dopPlantedAcres == null ) {
 				dopPlantedAcres = ib.getPlantedAcres();
@@ -768,6 +843,15 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 				dopPlantedAcres += ib.getPlantedAcres();
 			}
 			model.setPlantedAcres(dopPlantedAcres);
+			
+			//Rollup ME Acres
+			Double dopMatureEquivalentAcres = model.getMatureEquivalentAcres();
+			if ( dopMatureEquivalentAcres == null ) {
+				dopMatureEquivalentAcres = ib.getMatureEquivalentAcres();
+			} else {
+				dopMatureEquivalentAcres += ib.getMatureEquivalentAcres();
+			}
+			model.setMatureEquivalentAcres(dopMatureEquivalentAcres);
 		}
 
 	}
@@ -779,6 +863,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		model.setCropVarietyId(dto.getCropVarietyId());
 		model.setCropVarietyName(dto.getCropVarietyName());
 		model.setPlantedAcres(dto.getPlantedAcres());
+		model.setMatureEquivalentAcres(dto.getMatureEquivalentAcres());
 		model.setAbandonmentYield(dto.getAbandonmentYield());
 		model.setDeclaredYieldFieldCommodityBerriesGuid(dto.getDeclaredYieldFieldCommodityBerriesGuid());
 		model.setDeclaredYieldFieldVarietyBerriesGuid(dto.getDeclaredYieldFieldVarietyBerriesGuid());
@@ -865,6 +950,9 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		dto.setFieldId(model.getFieldId());
 		dto.setTotalProduction(model.getTotalProduction());
 		dto.setTotalProductionOverride(model.getTotalProductionOverride());
+		dto.setTotalPlantedAcres(model.getTotalPlantedAcres());
+		dto.setTotalMatureEquivalentAcres(model.getTotalMatureEquivalentAcres());
+
 	}
 
 	public void updateDto(DeclaredYieldFieldVarietyBerriesDto dto, DopYieldFieldVarietyBerries model) {
@@ -875,6 +963,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		dto.setDeclaredYieldFieldCommodityBerriesGuid(model.getDeclaredYieldFieldCommodityBerriesGuid());
 		dto.setDeclaredYieldFieldVarietyBerriesGuid(model.getDeclaredYieldFieldVarietyBerriesGuid());
 		dto.setPlantedAcres(model.getPlantedAcres());
+		dto.setMatureEquivalentAcres(model.getMatureEquivalentAcres());
 		dto.setSalesYield(model.getSalesYield());
 		dto.setSoldShippedYield(model.getSoldShippedYield());
 		dto.setTotalProduction(model.getTotalProduction());
@@ -914,6 +1003,11 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		dto.setDeclaredYieldContractGuid(model.getDeclaredYieldContractGuid());
 		dto.setTotalProduction(model.getTotalProduction());
 		dto.setTotalProductionOverride(model.getTotalProductionOverride());
+		dto.setTotalPlantedAcres(model.getTotalPlantedAcres());
+		dto.setTotalMatureEquivalentAcres(model.getTotalMatureEquivalentAcres());
+		dto.setTotalSoldShippedYield(model.getTotalSoldShippedYield());
+		dto.setTotalSalesYield(model.getTotalSalesYield());
+		dto.setTotalAbandonmentYield(model.getTotalAbandonmentYield());
 	}
 	
 	static void setSelfLink(String declaredYieldContractGuid, DopYieldContractRsrc resource, URI baseUri) {
@@ -972,5 +1066,8 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 
 		return result;
 	}
-	
+
+	private Double notNull(Double value, Double defaultValue) {
+		return (value == null) ? defaultValue : value;
+	}
 }

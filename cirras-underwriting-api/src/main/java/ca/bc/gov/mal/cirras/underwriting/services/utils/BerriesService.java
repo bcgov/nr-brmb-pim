@@ -1,6 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.services.utils;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -303,6 +304,10 @@ public class BerriesService {
 		logger.debug("<calculateDeclaredYieldContractCommodityBerries");
 
 		Double totalProduction = null;
+		Double totalSoldShippedYield = null;
+		Double totalSalesYield = null;
+		Double totalAbandonmentYield = null;
+
 
 		List<AnnualFieldRsrc> fields = dopYieldContract.getFields();
 		if (fields != null && !fields.isEmpty()) {
@@ -315,6 +320,15 @@ public class BerriesService {
 						if ( dyfcb.getCropCommodityId().equals(dopContractCommodityBerries.getCropCommodityId()) ) {
 							Double currTotalProduction = notNull(dyfcb.getTotalProductionOverride(), dyfcb.getTotalProduction());
 							totalProduction = safeAdd(totalProduction, currTotalProduction);
+							
+							//Calculate other totals from field variety level to contract commodity level
+							if(dyfcb.getDopYieldFieldVarietyBerriesList() != null && !dyfcb.getDopYieldFieldVarietyBerriesList().isEmpty()) {
+								for (DopYieldFieldVarietyBerries dyfvb : dyfcb.getDopYieldFieldVarietyBerriesList()) {
+									totalSoldShippedYield = safeAdd(totalSoldShippedYield, dyfvb.getSoldShippedYield());
+									totalSalesYield = safeAdd(totalSalesYield, dyfvb.getSalesYield());
+									totalAbandonmentYield = safeAdd(totalAbandonmentYield, dyfvb.getAbandonmentYield());
+								}
+							}
 						}
 					}
 				}
@@ -322,6 +336,10 @@ public class BerriesService {
 		}
 
 		dopContractCommodityBerries.setTotalProduction(totalProduction);
+		dopContractCommodityBerries.setTotalSoldShippedYield(totalSoldShippedYield);
+		dopContractCommodityBerries.setTotalSalesYield(totalSalesYield);
+		dopContractCommodityBerries.setTotalAbandonmentYield(totalAbandonmentYield);
+
 
 		logger.debug(">calculateDeclaredYieldContractCommodityBerries");
 	}

@@ -22,6 +22,8 @@ public class DeclaredYieldFieldCommodityBerriesDto extends BaseDto<DeclaredYield
 	private Integer cropYear;
 	private Double totalProduction;
 	private Double totalProductionOverride;
+	private Double totalPlantedAcres;
+	private Double totalMatureEquivalentAcres;
 
 	private List<DeclaredYieldFieldVarietyBerriesDto> declaredYieldFieldVarietyBerriesList = new ArrayList<DeclaredYieldFieldVarietyBerriesDto>();
 	
@@ -44,6 +46,8 @@ public class DeclaredYieldFieldCommodityBerriesDto extends BaseDto<DeclaredYield
 		this.cropYear = dto.cropYear;
 		this.totalProduction = dto.totalProduction;
 		this.totalProductionOverride = dto.totalProductionOverride;
+		this.totalPlantedAcres = dto.totalPlantedAcres;
+		this.totalMatureEquivalentAcres = dto.totalMatureEquivalentAcres;
 
 		if ( dto.declaredYieldFieldVarietyBerriesList != null ) {			
 			this.declaredYieldFieldVarietyBerriesList = new ArrayList<>();
@@ -82,6 +86,8 @@ public class DeclaredYieldFieldCommodityBerriesDto extends BaseDto<DeclaredYield
 			result = result&&dtoUtils.equals("cropYear", cropYear, other.cropYear);
 			result = result&&dtoUtils.equals("totalProduction", totalProduction, other.totalProduction, decimalPrecision);
 			result = result&&dtoUtils.equals("totalProductionOverride", totalProductionOverride, other.totalProductionOverride, decimalPrecision);
+			result = result&&dtoUtils.equals("totalPlantedAcres", totalPlantedAcres, other.totalPlantedAcres, decimalPrecision);
+			result = result&&dtoUtils.equals("totalMatureEquivalentAcres", totalMatureEquivalentAcres, other.totalMatureEquivalentAcres, decimalPrecision);
 		}
 		
 		return result;
@@ -147,6 +153,22 @@ public class DeclaredYieldFieldCommodityBerriesDto extends BaseDto<DeclaredYield
 		this.totalProductionOverride = totalProductionOverride;
 	}
 
+	public Double getTotalPlantedAcres() {
+		return totalPlantedAcres;
+	}
+
+	public void setTotalPlantedAcres(Double totalPlantedAcres) {
+		this.totalPlantedAcres = totalPlantedAcres;
+	}
+
+	public Double getTotalMatureEquivalentAcres() {
+		return totalMatureEquivalentAcres;
+	}
+
+	public void setTotalMatureEquivalentAcres(Double totalMatureEquivalentAcres) {
+		this.totalMatureEquivalentAcres = totalMatureEquivalentAcres;
+	}
+	
 	public List<DeclaredYieldFieldVarietyBerriesDto> getDeclaredYieldFieldVarietyBerriesList() {
 		return declaredYieldFieldVarietyBerriesList;
 	}

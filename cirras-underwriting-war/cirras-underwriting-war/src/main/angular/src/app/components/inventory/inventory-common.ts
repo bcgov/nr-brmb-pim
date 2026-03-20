@@ -790,7 +790,7 @@ export function addBerriesObject(inventoryFieldGuid, inventoryBerries: Inventory
                                   varietyName: ( inventoryBerries && inventoryBerries.cropVarietyName) ? inventoryBerries.cropVarietyName : CROP_COMMODITY_UNSPECIFIED.NAME
                                 } ],
     plantedYear:              [ (inventoryBerries && inventoryBerries.plantedYear) ? inventoryBerries.plantedYear : null],
-    plantedAcres:             [ (inventoryBerries && inventoryBerries.plantedAcres) ? inventoryBerries.plantedAcres : null],
+    plantedAcres:             [ (inventoryBerries && inventoryBerries.plantedAcres) ? Math.round(inventoryBerries.plantedAcres * 10) / 10 : null], // rounds the acres just in case there are more than 1 decimal
     rowSpacing:               [ (inventoryBerries && inventoryBerries.rowSpacing) ? inventoryBerries.rowSpacing : null],
     plantSpacing:             [ (inventoryBerries && inventoryBerries.plantSpacing) ? inventoryBerries.plantSpacing : null],
     totalPlants:              [ (inventoryBerries && inventoryBerries.totalPlants) ? inventoryBerries.totalPlants : null],

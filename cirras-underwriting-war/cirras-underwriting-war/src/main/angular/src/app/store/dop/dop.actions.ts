@@ -229,11 +229,21 @@ export interface DopYieldContractAction extends Action {
   };
 }
 
+export interface DopYieldContractUpdateAction extends Action {
+  componentId: string;
+  payload: {
+    dopYieldContract: DopYieldContract; 
+    policyId: string;
+    displayMessage: string;
+  };
+}
+
 export interface DeleteDopYieldContractAction extends Action {
   componentId: string;
   payload: {
     dopYieldContract: DopYieldContract; 
     policyId: string;
+    displayMessage: string;
   };
 }
 
@@ -249,26 +259,28 @@ export function AddNewDopYieldContract(componentId: string, dopYieldContract: Do
   };
 }
 
-export function UpdateDopYieldContract(componentId: string, dopYieldContract: DopYieldContract, policyId: string): DopYieldContractAction {
+export function UpdateDopYieldContract(componentId: string, dopYieldContract: DopYieldContract, policyId: string, displayMessage: string): DopYieldContractUpdateAction {
   
   return {
     type: UPDATE_DOP,
     componentId: componentId,
     payload: {
       dopYieldContract,
-      policyId
+      policyId,
+      displayMessage
     }
   };
 }
 
-export function DeleteDopYieldContract(componentId: string, policyId: string, dopYieldContract: DopYieldContract): DeleteDopYieldContractAction {
+export function DeleteDopYieldContract(componentId: string, policyId: string, dopYieldContract: DopYieldContract, displayMessage: string): DeleteDopYieldContractAction {
   
   return {
     type: DELETE_DOP,
     componentId: componentId,
     payload: {
       dopYieldContract,
-      policyId
+      policyId,
+      displayMessage
     }
   };
 }

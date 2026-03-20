@@ -8,6 +8,7 @@ import { RootState } from 'src/app/store';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { makeNumberOnly } from 'src/app/utils';
+import { BERRY_COMMODITY } from 'src/app/utils/constants';
 
 @Component({
   selector: 'berries-dop-field-list',
@@ -63,5 +64,61 @@ export class BerriesDopFieldListComponent {
     this.contractCommodityTotals.totalProductionOverride = this.fieldsFormGroup.value.totalProductionOverride
     this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true))
   }
+
+  setTableHeaderStyle() {
+    if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
+      return {
+        'width': `1695px`
+      };
+    } else {
+      return {
+        'width': `1795px`
+      };
+    }  
+  }
+  
+  setInnerWrapperStyle() {
+    if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
+      return {
+        'width': `1720px`
+      };
+    } else {
+      return {
+        'width': `1820px`
+      };
+    }  
+  }
+
+  isStrawberry() {
+    if(this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  setFieldHeaderStyle() {
+    if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
+      return {
+        'width': `1710px`
+      };
+    } else {
+      return {
+        'width': `1810px`
+      };
+    }  
+  }
+
+  // setFieldTotalStyle() {
+  //   if (this.filterByCropCommodityId == BERRY_COMMODITY.Strawberry ) {
+  //     return {
+  //       'width': `460px`
+  //     };
+  //   } else {
+  //     return {
+  //       'width': `460px`
+  //     };
+  //   }  
+  // }
 
 }
