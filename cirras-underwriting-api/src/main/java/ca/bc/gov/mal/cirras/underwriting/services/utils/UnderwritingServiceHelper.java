@@ -12,8 +12,11 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryUnseeded;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryCoverageTotalForageDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.UnderwritingCommentDao;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryCoverageTotalForageDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.UnderwritingCommentDto;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InventoryCalculationType;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
@@ -23,9 +26,14 @@ public class UnderwritingServiceHelper {
 	private static final Logger logger = LoggerFactory.getLogger(UnderwritingServiceHelper.class);
 
 	private InventoryCoverageTotalForageDao inventoryCoverageTotalForageDao;
+	private UnderwritingCommentDao underwritingCommentDao;
 	
 	public void setInventoryCoverageTotalForageDao(InventoryCoverageTotalForageDao inventoryCoverageTotalForageDao) {
 		this.inventoryCoverageTotalForageDao = inventoryCoverageTotalForageDao;
+	}
+
+	public void setUnderwritingCommentDao(UnderwritingCommentDao underwritingCommentDao) {
+		this.underwritingCommentDao = underwritingCommentDao;
 	}
 
 	public void updateInventoryCoverageTotalForages(List<AnnualFieldRsrc> fields, String inventoryContractGuid, String userId, InventoryCalculationType calcType) throws DaoException {
@@ -43,6 +51,12 @@ public class UnderwritingServiceHelper {
 		totalDtos.addAll(unseededTotalMap.values());
 
 		saveInventoryCoverageTotalForageDtos(totalDtos, userId);
+	}
+	
+	public void loadUwComments(ContractedFieldDetailDto cfdDto) throws DaoException {
+		//Returning all comments of a field
+		List<UnderwritingCommentDto> uwComments = underwritingCommentDao.selectForField(cfdDto.getFieldId());
+		cfdDto.setUwComments(uwComments);
 	}
 	
 	private void populateInventoryCoverageTotalForageMaps(String inventoryContractGuid, 

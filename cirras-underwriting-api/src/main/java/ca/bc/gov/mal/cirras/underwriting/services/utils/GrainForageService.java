@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldGrainBasket;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldSummary;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldFieldForageDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventorySeededForageDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventorySeededGrainDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.ProductDao;
@@ -18,6 +20,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.VerifiedYieldContractRsr
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldRollupForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededForageDto;
@@ -37,6 +41,8 @@ public class GrainForageService {
 	private InventorySeededGrainDao inventorySeededGrainDao;
 	private VerifiedYieldGrainBasketDao verifiedYieldGrainBasketDao;
 	private ProductDao productDao;
+	private DeclaredYieldFieldDao declaredYieldFieldDao;
+	private DeclaredYieldFieldForageDao declaredYieldFieldForageDao;
 
 	private VerifiedYieldContractRsrcFactory verifiedYieldContractRsrcFactory;
 	
@@ -58,17 +64,29 @@ public class GrainForageService {
 		this.productDao = productDao;
 	}
 
+	public void setDeclaredYieldFieldDao(DeclaredYieldFieldDao declaredYieldFieldDao) {
+		this.declaredYieldFieldDao = declaredYieldFieldDao;
+	}
+
+	public void setDeclaredYieldFieldForageDao(DeclaredYieldFieldForageDao declaredYieldFieldForageDao) {
+		this.declaredYieldFieldForageDao = declaredYieldFieldForageDao;
+	}
+
 	public void setVerifiedYieldContractRsrcFactory(VerifiedYieldContractRsrcFactory verifiedYieldContractRsrcFactory) {
 		this.verifiedYieldContractRsrcFactory = verifiedYieldContractRsrcFactory;
 	}
 	
+	public void loadDeclaredSeededGrains(InventoryFieldDto ifDto) throws DaoException {
+		List<InventorySeededGrainDto> inventorySeededGrains = inventorySeededGrainDao.selectForDeclaredYield(ifDto.getInventoryFieldGuid());
+		ifDto.setInventorySeededGrains(inventorySeededGrains);
+	}
 	
-	public void loadSeededGrains(InventoryFieldDto ifDto) throws DaoException {
+	public void loadVerifiedSeededGrains(InventoryFieldDto ifDto) throws DaoException {
 		List<InventorySeededGrainDto> inventorySeededGrains = inventorySeededGrainDao.selectForVerifiedYield(ifDto.getInventoryFieldGuid());
 		ifDto.setInventorySeededGrains(inventorySeededGrains);
 	}
 	
-	public void loadSeededForage(InventoryFieldDto ifDto) throws DaoException {
+	public void loadVerifiedSeededForage(InventoryFieldDto ifDto) throws DaoException {
 		List<InventorySeededForageDto> inventorySeededForages = inventorySeededForageDao.selectForVerifiedYield(ifDto.getInventoryFieldGuid());
 		ifDto.setInventorySeededForages(inventorySeededForages);
 	}
@@ -289,6 +307,23 @@ public class GrainForageService {
 			//Add temporary list with rolled up rows to declared yield contract
 			dycDto.setDeclaredYieldContractCommodityForageList(rolledUpList);
 		}
+	}
+	
+	public void loadDeclaredYieldField(InventoryFieldDto ifDto) throws DaoException {
+		DeclaredYieldFieldDto dyfDto = declaredYieldFieldDao.getByInventoryField(ifDto.getInventoryFieldGuid());
+		ifDto.setDeclaredYieldField(dyfDto);
+	}
+	
+	public void loadSeededForage(InventoryFieldDto ifDto) throws DaoException {
+		
+		List<InventorySeededForageDto> inventorySeededForages = inventorySeededForageDao.selectForDeclaredYield(ifDto.getInventoryFieldGuid());
+		ifDto.setInventorySeededForages(inventorySeededForages);
+	}
+
+	public void loadDeclaredYieldFieldForage(InventoryFieldDto ifDto) throws DaoException {
+
+		List<DeclaredYieldFieldForageDto> dyffDtoList = declaredYieldFieldForageDao.getByInventoryField(ifDto.getInventoryFieldGuid());
+		ifDto.setDeclaredYieldFieldForageList(dyffDtoList);
 	}
 
 	private DeclaredYieldContractCommodityForageDto createRollupRow(DeclaredYieldContractCommodityForageDto dto) {

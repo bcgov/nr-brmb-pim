@@ -23,11 +23,13 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityMaturityScaleDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldVarietyBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.InventoryContractRsrcFactory;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
@@ -497,6 +499,30 @@ public class BerriesService {
 		logger.debug(">updateDeclaredYieldFieldVarietyBerriesList");
 	
 	}
+	
+
+	public void loadInventoryBerries(InventoryFieldDto ifDto) throws DaoException {
+
+		List<InventoryBerriesDto> inventoryBerries = inventoryBerriesDao.selectForDeclaredYield(ifDto.getInventoryFieldGuid());
+		if (inventoryBerries.size() > 0) {
+			ifDto.setInventoryBerries(inventoryBerries.get(0));
+		}
+	}
+
+	public void loadDeclaredYieldFieldCommodityBerries(ContractedFieldDetailDto cfdDto) throws DaoException {
+		List<DeclaredYieldFieldCommodityBerriesDto> dyfcbDtoList = declaredYieldFieldCommodityBerriesDao.select(cfdDto.getFieldId(), cfdDto.getCropYear());
+		cfdDto.setDeclaredYieldFieldCommodityBerriesList(dyfcbDtoList);
+
+		for ( DeclaredYieldFieldCommodityBerriesDto dyfcbDto : dyfcbDtoList ) {
+			loadDeclaredYieldFieldVarietyBerries(dyfcbDto);
+		}	
+	}
+
+	private void loadDeclaredYieldFieldVarietyBerries(DeclaredYieldFieldCommodityBerriesDto dyfcbDto) throws DaoException {
+		List<DeclaredYieldFieldVarietyBerriesDto> dyfvbDtoList = declaredYieldFieldVarietyBerriesDao.select(dyfcbDto.getDeclaredYieldFieldCommodityBerriesGuid());
+		dyfcbDto.setDeclaredYieldFieldVarietyBerriesList(dyfvbDtoList);
+	}
+
 	
 	private String updateDeclaredYieldFieldVarietyBerries(String declaredYieldFieldCommodityBerriesGuid, DopYieldFieldVarietyBerries dopYieldFieldVarietyBerries, String userId) throws DaoException {
 

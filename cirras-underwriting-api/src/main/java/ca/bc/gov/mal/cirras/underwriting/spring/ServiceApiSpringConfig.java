@@ -122,6 +122,7 @@ public class ServiceApiSpringConfig {
 		UnderwritingServiceHelper result = new UnderwritingServiceHelper();
 		
 		result.setInventoryCoverageTotalForageDao(persistenceSpringConfig.inventoryCoverageTotalForageDao());
+		result.setUnderwritingCommentDao(persistenceSpringConfig.underwritingCommentDao());
 		
 		return result;
 	}
@@ -151,6 +152,8 @@ public class ServiceApiSpringConfig {
 		result.setInventorySeededForageDao(persistenceSpringConfig.inventorySeededForageDao());
 		result.setVerifiedYieldGrainBasketDao(persistenceSpringConfig.verifiedYieldGrainBasketDao());
 		result.setProductDao(persistenceSpringConfig.productDao());
+		result.setDeclaredYieldFieldDao(persistenceSpringConfig.declaredYieldFieldDao());
+		result.setDeclaredYieldFieldForageDao(persistenceSpringConfig.declaredYieldFieldForageDao());
 
 		result.setVerifiedYieldContractRsrcFactory(verifiedYieldContractRsrcFactory);
 
@@ -165,6 +168,8 @@ public class ServiceApiSpringConfig {
 		result.setInventoryFieldDao(persistenceSpringConfig.inventoryFieldDao());
 
 		result.setGrainForageService(grainForageService());
+		result.setBerriesService(berriesService());
+		result.setUnderwritingServiceHelper(underwritingServiceHelper());
 
 		return result;
 	}
@@ -343,7 +348,6 @@ public class ServiceApiSpringConfig {
 		result.setYieldMeasUnitConversionDao(persistenceSpringConfig.yieldMeasUnitConversionDao());
 		result.setDeclaredYieldContractDao(persistenceSpringConfig.declaredYieldContractDao());
 		result.setInventoryFieldDao(persistenceSpringConfig.inventoryFieldDao());
-		result.setInventorySeededGrainDao(persistenceSpringConfig.inventorySeededGrainDao());
 		result.setContractedFieldDetailDao(persistenceSpringConfig.contractedFieldDetailDao());
 		result.setDeclaredYieldFieldDao(persistenceSpringConfig.declaredYieldFieldDao());
 		result.setDeclaredYieldFieldForageDao(persistenceSpringConfig.declaredYieldFieldForageDao());
@@ -362,6 +366,8 @@ public class ServiceApiSpringConfig {
 		
 		result.setJasperReportService(jasperReportService);
 		result.setBerriesService(berriesService());
+		result.setFieldService(fieldService());
+		result.setGrainForageService(grainForageService());
 		
 		return result;
 	}

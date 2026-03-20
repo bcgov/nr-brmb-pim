@@ -84,6 +84,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.assemblers.YieldMeasUnitTypeCodeRs
 import ca.bc.gov.mal.cirras.underwriting.services.reports.JasperReportService;
 import ca.bc.gov.mal.cirras.underwriting.services.reports.JasperReportServiceException;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.BerriesService;
+import ca.bc.gov.mal.cirras.underwriting.services.utils.FieldService;
+import ca.bc.gov.mal.cirras.underwriting.services.utils.GrainForageService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InsurancePlans;
 
@@ -108,7 +110,6 @@ public class CirrasDopYieldService {
 	private PolicyDao policyDao;
 	private DeclaredYieldContractDao declaredYieldContractDao;
 	private InventoryFieldDao inventoryFieldDao;
-	private InventorySeededGrainDao inventorySeededGrainDao;
 	private ContractedFieldDetailDao contractedFieldDetailDao;
 	private DeclaredYieldFieldDao declaredYieldFieldDao;
 	private DeclaredYieldFieldForageDao declaredYieldFieldForageDao;
@@ -130,13 +131,23 @@ public class CirrasDopYieldService {
 
 	// Utils
 	private BerriesService berriesService;
-	
+	private FieldService fieldService;
+	private GrainForageService grainForageService;
+
 	public void setApplicationProperties(Properties applicationProperties) {
 		this.applicationProperties = applicationProperties;
 	}
 
 	public void setBerriesService(BerriesService berriesService) {
 		this.berriesService = berriesService;
+	}
+	
+	public void setGrainForageService(GrainForageService grainForageService) {
+		this.grainForageService = grainForageService;
+	}
+
+	public void setFieldService(FieldService fieldService) {
+		this.fieldService = fieldService;
 	}
 	
 	public void setInventoryContractRsrcFactory(InventoryContractRsrcFactory inventoryContractRsrcFactory) {
@@ -169,10 +180,6 @@ public class CirrasDopYieldService {
 
 	public void setInventoryFieldDao(InventoryFieldDao inventoryFieldDao) {
 		this.inventoryFieldDao = inventoryFieldDao;
-	}
-
-	public void setInventorySeededGrainDao(InventorySeededGrainDao inventorySeededGrainDao) {
-		this.inventorySeededGrainDao = inventorySeededGrainDao;
 	}
 
 	public void setContractedFieldDetailDao(ContractedFieldDetailDao contractedFieldDetailDao) {
@@ -268,7 +275,7 @@ public class CirrasDopYieldService {
 			dycDto.setInsurancePlanId(insurancePlanId);
 			
 			loadDopYieldContractCommodities(dycDto);
-			loadFields(dycDto);
+			fieldService.loadDeclaredFields(dycDto);
 
 			result = dopYieldContractRsrcFactory.getDefaultDopYieldContract(policyDto, defaultMeasurementUnitCode,
 					dycDto, factoryContext, authentication);
@@ -335,7 +342,7 @@ public class CirrasDopYieldService {
 
 		loadDopYieldFieldRollups(dto);
 		loadDopYieldContractCommodities(dto);
-		loadFields(dto);
+		fieldService.loadDeclaredFields(dto);
 		loadContractUwComments(dto);
 
 		return dopYieldContractRsrcFactory.getDopYieldContract(dto, factoryContext, authentication);
@@ -413,93 +420,6 @@ public class CirrasDopYieldService {
 		List<InventoryContractCommodityBerriesDto> dtos = inventoryContractCommodityBerriesDao.selectForDopContract(dto.getContractId(), dto.getCropYear());
 		List<DeclaredYieldContractCommodityBerriesDto> dopCommodities = dopYieldContractRsrcFactory.getDopBerriesCommoditiesFromInventoryBerriesCommodities(dtos);
 		dto.setDeclaredYieldContractCommodityBerriesList(dopCommodities);
-	}
-	
-	private void loadFields(DeclaredYieldContractDto dto) throws DaoException {
-
-		List<ContractedFieldDetailDto> fields = contractedFieldDetailDao.selectForDeclaredYield(dto.getContractId(), dto.getCropYear());
-		dto.setFields(fields);
-
-		for (ContractedFieldDetailDto cfdDto : dto.getFields()) {
-			loadPlantings(cfdDto, dto.getInsurancePlanId());
-			loadDeclaredYieldFieldCommodityBerries(cfdDto);
-			loadUwComments(cfdDto);
-		}
-	}
-
-	private void loadPlantings(ContractedFieldDetailDto cfdDto, Integer insurancePlanId) throws DaoException {
-
-		List<InventoryFieldDto> plantings = inventoryFieldDao.selectForDeclaredYield(cfdDto.getFieldId(),
-				cfdDto.getCropYear(), cfdDto.getInsurancePlanId());
-		cfdDto.setPlantings(plantings);
-
-		for (InventoryFieldDto ifDto : plantings) {
-
-			if ( InsurancePlans.GRAIN.getInsurancePlanId().equals(cfdDto.getInsurancePlanId()) ) {
-				loadSeededGrains(ifDto);
-				loadDeclaredYieldField(ifDto);
-			} else if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(cfdDto.getInsurancePlanId()) ) {
-			
-				loadSeededForage(ifDto);
-				loadDeclaredYieldFieldForage(ifDto);
-				
-			} else if ( InsurancePlans.BERRIES.getInsurancePlanId().equals(cfdDto.getInsurancePlanId()) ) {
-				loadInventoryBerries(ifDto);
-			} else {
-				throw new ServiceException("Insurance Plan must be GRAIN, FORAGE or BERRIES");
-			}			
-		}
-	}
-
-	private void loadUwComments(ContractedFieldDetailDto cfdDto) throws DaoException {
-		//List<UnderwritingCommentDto> uwComments = underwritingCommentDao.select(cfdDto.getAnnualFieldDetailId());
-		//Returning all comments of a field
-		List<UnderwritingCommentDto> uwComments = underwritingCommentDao.selectForField(cfdDto.getFieldId());
-		cfdDto.setUwComments(uwComments);
-	}
-
-	private void loadSeededGrains(InventoryFieldDto ifDto) throws DaoException {
-		List<InventorySeededGrainDto> inventorySeededGrains = inventorySeededGrainDao.selectForDeclaredYield(ifDto.getInventoryFieldGuid());
-		ifDto.setInventorySeededGrains(inventorySeededGrains);
-	}
-
-	private void loadDeclaredYieldField(InventoryFieldDto ifDto) throws DaoException {
-		DeclaredYieldFieldDto dyfDto = declaredYieldFieldDao.getByInventoryField(ifDto.getInventoryFieldGuid());
-		ifDto.setDeclaredYieldField(dyfDto);
-	}
-	
-	private void loadSeededForage(InventoryFieldDto ifDto) throws DaoException {
-		
-		List<InventorySeededForageDto> inventorySeededForages = inventorySeededForageDao.selectForDeclaredYield(ifDto.getInventoryFieldGuid());
-		ifDto.setInventorySeededForages(inventorySeededForages);
-	}
-
-	private void loadDeclaredYieldFieldForage(InventoryFieldDto ifDto) throws DaoException {
-
-		List<DeclaredYieldFieldForageDto> dyffDtoList = declaredYieldFieldForageDao.getByInventoryField(ifDto.getInventoryFieldGuid());
-		ifDto.setDeclaredYieldFieldForageList(dyffDtoList);
-	}
-
-	private void loadInventoryBerries(InventoryFieldDto ifDto) throws DaoException {
-
-		List<InventoryBerriesDto> inventoryBerries = inventoryBerriesDao.selectForDeclaredYield(ifDto.getInventoryFieldGuid());
-		if (inventoryBerries.size() > 0) {
-			ifDto.setInventoryBerries(inventoryBerries.get(0));
-		}
-	}
-
-	private void loadDeclaredYieldFieldCommodityBerries(ContractedFieldDetailDto cfdDto) throws DaoException {
-		List<DeclaredYieldFieldCommodityBerriesDto> dyfcbDtoList = declaredYieldFieldCommodityBerriesDao.select(cfdDto.getFieldId(), cfdDto.getCropYear());
-		cfdDto.setDeclaredYieldFieldCommodityBerriesList(dyfcbDtoList);
-
-		for ( DeclaredYieldFieldCommodityBerriesDto dyfcbDto : dyfcbDtoList ) {
-			loadDeclaredYieldFieldVarietyBerries(dyfcbDto);
-		}	
-	}
-
-	private void loadDeclaredYieldFieldVarietyBerries(DeclaredYieldFieldCommodityBerriesDto dyfcbDto) throws DaoException {
-		List<DeclaredYieldFieldVarietyBerriesDto> dyfvbDtoList = declaredYieldFieldVarietyBerriesDao.select(dyfcbDto.getDeclaredYieldFieldCommodityBerriesGuid());
-		dyfcbDto.setDeclaredYieldFieldVarietyBerriesList(dyfvbDtoList);
 	}
 	
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
