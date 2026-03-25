@@ -31,6 +31,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.VerifiedYieldGrainBas
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.YieldMeasUnitConversionDao;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.VerifiedYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityForageDto;
@@ -49,6 +50,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.YieldMeasUnitConversionDt
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.VerifiedYieldContractRsrcFactory;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
+import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 
@@ -735,6 +737,16 @@ public class GrainForageService {
 		}
 
 		return dtoMap;
+	}
+	
+	public void deleteDopData(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract) throws NotFoundDaoException, DaoException {
+
+		if ( inventoryContract.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.FORAGE.toString()) ) { 
+			declaredYieldFieldForageDao.deleteForFieldAndYear(annualField.getFieldId(), inventoryContract.getCropYear());
+		} else if ( inventoryContract.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.GRAIN.toString()) ) {
+			declaredYieldFieldDao.deleteForFieldAndYear(annualField.getFieldId(), inventoryContract.getCropYear());
+		}
+		
 	}
 	
 	// This is only used in unit tests

@@ -47,6 +47,7 @@ import ca.bc.gov.mal.cirras.underwriting.services.reports.JasperReportService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.UnderwritingServiceHelper;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.BerriesService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.FieldService;
+import ca.bc.gov.mal.cirras.underwriting.services.utils.GrainForageInventoryService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.GrainForageService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.OutOfSync;
 
@@ -170,13 +171,45 @@ public class ServiceApiSpringConfig {
 	}
 	
 	@Bean
+	public GrainForageInventoryService grainForageInventoryService() {
+		GrainForageInventoryService result = new GrainForageInventoryService();
+		
+		result.setInventorySeededGrainDao(persistenceSpringConfig.inventorySeededGrainDao());
+		result.setInventorySeededForageDao(persistenceSpringConfig.inventorySeededForageDao());
+		result.setInventoryUnseededDao(persistenceSpringConfig.inventoryUnseededDao());
+		result.setInventoryFieldDao(persistenceSpringConfig.inventoryFieldDao());
+		result.setInventoryContractCommodityDao(persistenceSpringConfig.inventoryContractCommodityDao());
+		
+		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
+		
+		result.setUnderwritingServiceHelper(underwritingServiceHelper());
+
+		return result;
+	}
+	
+	@Bean
 	public FieldService fieldService() {
 		FieldService result = new FieldService();
 		
 		result.setContractedFieldDetailDao(persistenceSpringConfig.contractedFieldDetailDao());
 		result.setInventoryFieldDao(persistenceSpringConfig.inventoryFieldDao());
 		result.setDeclaredYieldFieldForageDao(persistenceSpringConfig.declaredYieldFieldForageDao());
-
+		result.setInventorySeededGrainDao(persistenceSpringConfig.inventorySeededGrainDao());
+		result.setInventoryUnseededDao(persistenceSpringConfig.inventoryUnseededDao());
+		result.setInventorySeededForageDao(persistenceSpringConfig.inventorySeededForageDao());
+		result.setInventoryBerriesDao(persistenceSpringConfig.inventoryBerriesDao());
+		result.setUnderwritingCommentDao(persistenceSpringConfig.underwritingCommentDao());
+		result.setFieldDao(persistenceSpringConfig.fieldDao());
+		result.setAnnualFieldDetailDao(persistenceSpringConfig.annualFieldDetailDao());
+		result.setLegalLandFieldXrefDao(persistenceSpringConfig.legalLandFieldXrefDao());
+		result.setLegalLandDao(persistenceSpringConfig.legalLandDao());
+		result.setLegalLandFieldXrefRsrcFactory(legalLandFieldXrefRsrcFactory);
+		result.setContractedFieldDetailRsrcFactory(contractedFieldDetailRsrcFactory);
+		result.setLegalLandRsrcFactory(legalLandRsrcFactory);
+		result.setFieldRsrcFactory(fieldRsrcFactory);
+		result.setAnnualFieldRsrcFactory(annualFieldRsrcFactory);
+		result.setAnnualFieldDetailRsrcFactory(annualFieldDetailRsrcFactory);
+		
 		result.setGrainForageService(grainForageService());
 		result.setBerriesService(berriesService());
 		result.setUnderwritingServiceHelper(underwritingServiceHelper());
@@ -216,12 +249,7 @@ public class ServiceApiSpringConfig {
 		result.setApplicationProperties(applicationProperties);
 
 		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
-		result.setAnnualFieldRsrcFactory(annualFieldRsrcFactory);
 		result.setLegalLandRsrcFactory(legalLandRsrcFactory);
-		result.setFieldRsrcFactory(fieldRsrcFactory);
-		result.setLegalLandFieldXrefRsrcFactory(legalLandFieldXrefRsrcFactory);
-		result.setAnnualFieldDetailRsrcFactory(annualFieldDetailRsrcFactory);
-		result.setContractedFieldDetailRsrcFactory(contractedFieldDetailRsrcFactory);
 		result.setUwContractRsrcFactory(uwContractRsrcFactory);
 
 		result.setInventoryContractCommodityDao(persistenceSpringConfig.inventoryContractCommodityDao());
@@ -239,7 +267,6 @@ public class ServiceApiSpringConfig {
 		result.setFieldDao(persistenceSpringConfig.fieldDao());
 		result.setAnnualFieldDetailDao(persistenceSpringConfig.annualFieldDetailDao());
 		result.setContractedFieldDetailDao(persistenceSpringConfig.contractedFieldDetailDao());
-		result.setLegalLandFieldXrefDao(persistenceSpringConfig.legalLandFieldXrefDao());
 		result.setInsurancePlanDao(persistenceSpringConfig.insurancePlanDao());
 		result.setDeclaredYieldFieldDao(persistenceSpringConfig.declaredYieldFieldDao());
 		result.setDeclaredYieldFieldForageDao(persistenceSpringConfig.declaredYieldFieldForageDao());
@@ -252,8 +279,9 @@ public class ServiceApiSpringConfig {
 
 		result.setJasperReportService(jasperReportService);
 		
-		result.setUnderwritingServiceHelper(underwritingServiceHelper());
 		result.setBerriesService(berriesService());
+		result.setGrainForageInventoryService(grainForageInventoryService());
+		result.setFieldService(fieldService());
 		
 		return result;
 	}
