@@ -185,7 +185,7 @@ public class CirrasVerifiedYieldService {
 				List<ProductDto> productDtos = loadProducts(dycDto.getContractId(), dycDto.getCropYear());
 
 				loadDopYieldCommodities(dycDto);
-				fieldService.loadFields(dycDto);
+				fieldService.loadVerifiedFields(dycDto);
 
 				if ( InsurancePlans.FORAGE.getInsurancePlanId().equals(policyDto.getInsurancePlanId()) ) {
 					grainForageService.mergeYieldRollupToCommodityTotals(dycDto);
@@ -293,7 +293,7 @@ public class CirrasVerifiedYieldService {
 		List<ProductDto> productDtos = loadProducts(dto.getContractId(), dto.getCropYear());
 		loadVerifiedYieldContractCommodities(dto);
 		loadVerifiedYieldAmendments(dto);
-		fieldService.loadFields(dto);
+		fieldService.loadVerifiedFields(dto);
 		loadVerifiedYieldSummaries(dto);
 		grainForageService.loadVerifiedYieldGrainBasket(dto);
 

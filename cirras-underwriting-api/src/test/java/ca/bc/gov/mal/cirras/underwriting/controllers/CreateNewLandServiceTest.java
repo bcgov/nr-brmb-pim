@@ -12,8 +12,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.FieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandFieldXrefRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
-import ca.bc.gov.mal.cirras.underwriting.services.CirrasInventoryService;
 import ca.bc.gov.mal.cirras.underwriting.services.LandDataSyncService;
+import ca.bc.gov.mal.cirras.underwriting.services.utils.FieldService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.LandUpdateTypes;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 
@@ -43,7 +43,7 @@ public class CreateNewLandServiceTest extends EndpointsTest {
 		Integer fieldId = null;
 
 		
-		CirrasInventoryService invService = (CirrasInventoryService)webApplicationContext.getBean("cirrasInventoryService");
+		FieldService fieldService = (FieldService)webApplicationContext.getBean("fieldService");
 
 		InventoryContractRsrc inventoryContract = new InventoryContractRsrc();
 
@@ -57,7 +57,7 @@ public class CreateNewLandServiceTest extends EndpointsTest {
 		annualField.setDisplayOrder(displayOrder);
 		annualField.setLandUpdateType(LandUpdateTypes.NEW_LAND);
 
-		invService.insertNewLand(annualField, inventoryContract, userId);
+		fieldService.insertNewLand(annualField, inventoryContract, userId);
 		
 		contractedFieldDetailId = annualField.getContractedFieldDetailId();
 		annualFieldDetailId = annualField.getAnnualFieldDetailId();
@@ -129,7 +129,7 @@ public class CreateNewLandServiceTest extends EndpointsTest {
 		String fieldLabel = "UW API Unit Test";
 		String otherLegalDescription = "UW API Unit Test Legal";
 		
-		CirrasInventoryService invService = (CirrasInventoryService)webApplicationContext.getBean("cirrasInventoryService");
+		FieldService fieldService = (FieldService)webApplicationContext.getBean("fieldService");
 
 		AnnualFieldRsrc annualField = new AnnualFieldRsrc();
 		
@@ -144,7 +144,7 @@ public class CreateNewLandServiceTest extends EndpointsTest {
 		annualField.setDisplayOrder(25);
 		annualField.setLandUpdateType(LandUpdateTypes.NEW_LAND);
 
-		invService.insertNewLand(annualField, inventoryContract, userId);
+		fieldService.insertNewLand(annualField, inventoryContract, userId);
 				
 		logger.debug(">testCreateLand");
 	}	
@@ -158,9 +158,9 @@ public class CreateNewLandServiceTest extends EndpointsTest {
 			return;
 		}
 		
-		CirrasInventoryService invService = (CirrasInventoryService)webApplicationContext.getBean("cirrasInventoryService");
+		FieldService fieldService = (FieldService)webApplicationContext.getBean("fieldService");
 
-		String newPID = invService.generatePID();
+		String newPID = fieldService.generatePID();
 		
 		Assert.assertEquals("PID not 12 characters", newPID.length(), 12);
 		Assert.assertEquals("First letters of PID not correct", "GF", newPID.substring(0, 2));
