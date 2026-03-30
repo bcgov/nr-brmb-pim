@@ -17,7 +17,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldForageCut;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldGrain;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollup;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollupForage;
-import ca.bc.gov.mal.cirras.underwriting.services.CirrasDopYieldService;
+import ca.bc.gov.mal.cirras.underwriting.services.utils.GrainForageService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
@@ -44,8 +44,8 @@ public class DopYieldServiceTest extends EndpointsTest {
 			return;
 		}
 		
-		CirrasDopYieldService dopService = (CirrasDopYieldService)webApplicationContext.getBean("cirrasDopYieldService");
-		
+		GrainForageService gfService = (GrainForageService)webApplicationContext.getBean("grainForageService");
+
 		//Create dop Yield Contract
 		DopYieldContractRsrc dopYieldContract = createYieldContract(insurancePlanIdGrain, defaultMeasurementUnitCodeGrain);
 		dopYieldContract.setEnteredYieldMeasUnitTypeCode("BUSHEL");
@@ -55,9 +55,9 @@ public class DopYieldServiceTest extends EndpointsTest {
 		double valueToConvert = (double)10;
 
 		//Convert BUSHEL to TONNE
-		double convertedValue = dopService.convertEstimatedYieldTest(dopYieldContract, targetUnit, cropCommodityId, valueToConvert);
+		double convertedValue = gfService.convertEstimatedYieldTest(dopYieldContract, targetUnit, cropCommodityId, valueToConvert);
 		
-		double expectedValue = valueToConvert * conversionFactor;
+		double expectedValue = valueToConvert / conversionFactor;
 		Assert.assertEquals("BUSHEL to TONNE", expectedValue, convertedValue, assertDelta);
 		
 		
@@ -65,15 +65,15 @@ public class DopYieldServiceTest extends EndpointsTest {
 		dopYieldContract.setEnteredYieldMeasUnitTypeCode("TONNE");
 		targetUnit = "BUSHEL";
 		valueToConvert = (double)100;
-		convertedValue = dopService.convertEstimatedYieldTest(dopYieldContract, targetUnit, cropCommodityId, valueToConvert);
+		convertedValue = gfService.convertEstimatedYieldTest(dopYieldContract, targetUnit, cropCommodityId, valueToConvert);
 		
-		expectedValue = valueToConvert / conversionFactor;
+		expectedValue = valueToConvert * conversionFactor;
 		Assert.assertEquals("BUSHEL to TONNE", expectedValue, convertedValue, assertDelta);
 
 		//Entered Unit = Target Unit = No conversion
 		dopYieldContract.setEnteredYieldMeasUnitTypeCode("BUSHEL");
 		targetUnit = "BUSHEL";
-		convertedValue = dopService.convertEstimatedYieldTest(dopYieldContract, targetUnit, cropCommodityId, valueToConvert);
+		convertedValue = gfService.convertEstimatedYieldTest(dopYieldContract, targetUnit, cropCommodityId, valueToConvert);
 		Assert.assertEquals("Entered Unit = Target Unit", valueToConvert, convertedValue, assertDelta);
 
 		//Invalid units
@@ -81,7 +81,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 		try {
 			dopYieldContract.setEnteredYieldMeasUnitTypeCode("XY");
 			targetUnit = "BUSHEL";
-			convertedValue = dopService.convertEstimatedYieldTest(dopYieldContract, targetUnit, cropCommodityId, valueToConvert);
+			convertedValue = gfService.convertEstimatedYieldTest(dopYieldContract, targetUnit, cropCommodityId, valueToConvert);
 			Assert.fail("Conversion should have thrown an error XY to BUSHEL");
 		} catch (ServiceException e) {
 			//Expected
@@ -92,7 +92,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 		try {
 			dopYieldContract.setEnteredYieldMeasUnitTypeCode(defaultMeasurementUnitCodeGrain);
 			targetUnit = "XY";
-			convertedValue = dopService.convertEstimatedYieldTest(dopYieldContract, targetUnit, cropCommodityId, valueToConvert);
+			convertedValue = gfService.convertEstimatedYieldTest(dopYieldContract, targetUnit, cropCommodityId, valueToConvert);
 			Assert.fail("Conversion should have thrown an error default units to XY");
 		} catch (ServiceException e) {
 			//Expected
@@ -105,7 +105,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 	private static final int oatId = 24;
 	private static final int wheatId = 26; 
 	private double barleyConversionFactor = 45.93;
-	private double oatConversionFactor = 64.482;
+	private double oatConversionFactor = 64.842;
 	
 	@Test
 	public void testCalculateYieldRollup() throws Exception {
@@ -116,7 +116,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 			return;
 		}
 		
-		CirrasDopYieldService dopService = (CirrasDopYieldService)webApplicationContext.getBean("cirrasDopYieldService");
+		GrainForageService gfService = (GrainForageService)webApplicationContext.getBean("grainForageService");
 
 
 		//Create dop Yield Contract
@@ -167,7 +167,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 
 		//Convert BUSHEL to TONNE
 		dopYieldContract.setEnteredYieldMeasUnitTypeCode("BUSHEL");
-		DopYieldContractRsrc convertedDopYieldContract = dopService.calculateYieldRollupTest(dopYieldContract);
+		DopYieldContractRsrc convertedDopYieldContract = gfService.calculateYieldRollupTest(dopYieldContract);
 		
 		double estimatedYieldPerAcre;
 		double convertedValue;
@@ -203,7 +203,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 
 		//Convert TONNE to BUSHEL
 		dopYieldContract.setEnteredYieldMeasUnitTypeCode("TONNE");
-		convertedDopYieldContract = dopService.calculateYieldRollupTest(dopYieldContract);
+		convertedDopYieldContract = gfService.calculateYieldRollupTest(dopYieldContract);
 		
 		Assert.assertEquals(3, convertedDopYieldContract.getDopYieldFieldRollupList().size());
 		
@@ -255,7 +255,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 			return;
 		}
 		
-		CirrasDopYieldService dopService = (CirrasDopYieldService)webApplicationContext.getBean("cirrasDopYieldService");
+		GrainForageService gfService = (GrainForageService)webApplicationContext.getBean("grainForageService");
 
 
 		//Create dop Yield Contract
@@ -422,7 +422,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 		
 		dopYieldContract.setDopYieldContractCommodityForageList(dopYieldContractCommodityForageList);
 
-		DopYieldContractRsrc convertedDopYieldContract = dopService.calculateYieldContractCommodityForageTest(dopYieldContract);
+		DopYieldContractRsrc convertedDopYieldContract = gfService.calculateYieldContractCommodityForageTest(dopYieldContract);
 		
 		Assert.assertNotNull(convertedDopYieldContract);
 		
@@ -468,7 +468,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 			return;
 		}
 		
-		CirrasDopYieldService dopService = (CirrasDopYieldService)webApplicationContext.getBean("cirrasDopYieldService");
+		GrainForageService gfService = (GrainForageService)webApplicationContext.getBean("grainForageService");
 
 
 		//Create dop Yield Contract
@@ -619,7 +619,7 @@ public class DopYieldServiceTest extends EndpointsTest {
 		
 		dopYieldContract.setDopYieldFieldRollupForageList(dopYieldFieldRollupForageList);
 
-		DopYieldContractRsrc convertedDopYieldContract = dopService.calculateYieldFieldRollupForageTest(dopYieldContract);
+		DopYieldContractRsrc convertedDopYieldContract = gfService.calculateYieldFieldRollupForageTest(dopYieldContract);
 		
 		Assert.assertNotNull(convertedDopYieldContract);
 		

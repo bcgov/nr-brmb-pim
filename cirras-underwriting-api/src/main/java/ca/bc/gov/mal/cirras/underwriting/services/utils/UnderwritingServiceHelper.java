@@ -11,21 +11,41 @@ import org.slf4j.LoggerFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryUnseeded;
+import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryCoverageTotalForageDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.UnderwritingCommentDao;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.InventoryContractRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryCoverageTotalForageDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.UnderwritingCommentDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.YieldMeasUnitConversionDto;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InventoryCalculationType;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
+import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
+import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 
 public class UnderwritingServiceHelper {
 
 	private static final Logger logger = LoggerFactory.getLogger(UnderwritingServiceHelper.class);
 
 	private InventoryCoverageTotalForageDao inventoryCoverageTotalForageDao;
+	private UnderwritingCommentDao underwritingCommentDao;
 	
+	private InventoryContractRsrcFactory inventoryContractRsrcFactory;
+
 	public void setInventoryCoverageTotalForageDao(InventoryCoverageTotalForageDao inventoryCoverageTotalForageDao) {
 		this.inventoryCoverageTotalForageDao = inventoryCoverageTotalForageDao;
+	}
+
+	public void setUnderwritingCommentDao(UnderwritingCommentDao underwritingCommentDao) {
+		this.underwritingCommentDao = underwritingCommentDao;
+	}
+
+	public void setInventoryContractRsrcFactory(InventoryContractRsrcFactory inventoryContractRsrcFactory) {
+		this.inventoryContractRsrcFactory = inventoryContractRsrcFactory;
 	}
 
 	public void updateInventoryCoverageTotalForages(List<AnnualFieldRsrc> fields, String inventoryContractGuid, String userId, InventoryCalculationType calcType) throws DaoException {
@@ -44,6 +64,195 @@ public class UnderwritingServiceHelper {
 
 		saveInventoryCoverageTotalForageDtos(totalDtos, userId);
 	}
+	
+	public void loadUwComments(ContractedFieldDetailDto cfdDto) throws DaoException {
+		//Returning all comments of a field
+		List<UnderwritingCommentDto> uwComments = underwritingCommentDao.selectForField(cfdDto.getFieldId());
+		cfdDto.setUwComments(uwComments);
+	}
+	
+	public void updateUnderwritingComment(UnderwritingComment underwritingComment, Integer annualFieldDetailId,
+			Integer growerContractYearId, String declaredYieldContractGuid, String userId,
+			WebAdeAuthentication authentication) throws DaoException, ServiceException {
+
+		UnderwritingCommentDto dto = null;
+
+		if (underwritingComment.getUnderwritingCommentGuid() != null) {
+			dto = underwritingCommentDao.fetch(underwritingComment.getUnderwritingCommentGuid());
+		}
+
+		if (dto == null) {
+			// Insert if it doesn't exist
+			insertUnderwritingComment(underwritingComment, annualFieldDetailId, growerContractYearId,
+					declaredYieldContractGuid, userId);
+		} else {
+
+			if (!dto.getUnderwritingComment().equals(underwritingComment.getUnderwritingComment()) || !dto
+					.getUnderwritingCommentTypeCode().equals(underwritingComment.getUnderwritingCommentTypeCode())) {
+
+				// Check that user is authorized to edit this comment.
+				// Note that this could return null if the current user or create user cannot be
+				// determined.
+				Boolean userCanEditComment = inventoryContractRsrcFactory.checkUserCanEditComment(dto, authentication);
+				if (!Boolean.TRUE.equals(userCanEditComment)) {
+					logger.error("User " + userId + " attempted to edit comment "
+							+ underwritingComment.getUnderwritingCommentGuid() + " created by " + dto.getCreateUser());
+					throw new ServiceException("The current user is not authorized to edit this comment.");
+				}
+
+			}
+
+			inventoryContractRsrcFactory.updateDto(dto, underwritingComment);
+
+			underwritingCommentDao.update(dto, userId);
+		}
+
+	}
+
+	public String insertUnderwritingComment(UnderwritingComment underwritingComment, Integer annualFieldDetailId,
+			Integer growerContractYearId, String declaredYieldContractGuid, String userId) throws DaoException {
+
+		UnderwritingCommentDto dto = new UnderwritingCommentDto();
+		inventoryContractRsrcFactory.updateDto(dto, underwritingComment);
+
+		dto.setUnderwritingCommentGuid(null);
+		dto.setAnnualFieldDetailId(annualFieldDetailId);
+		dto.setGrowerContractYearId(growerContractYearId);
+		dto.setDeclaredYieldContractGuid(declaredYieldContractGuid);
+
+		underwritingCommentDao.insert(dto, userId);
+
+		return dto.getUnderwritingCommentGuid();
+	}
+
+	public void deleteUnderwritingComment(UnderwritingComment underwritingComment, String userId,
+			WebAdeAuthentication authentication) throws NotFoundDaoException, DaoException {
+		logger.debug("<deleteUnderwritingComment");
+
+		UnderwritingCommentDto dto = null;
+
+		if (underwritingComment.getUnderwritingCommentGuid() != null) {
+			dto = underwritingCommentDao.fetch(underwritingComment.getUnderwritingCommentGuid());
+		}
+
+		if (dto != null) {
+			// Check that user is authorized to delete this comment.
+			// Note that this could return false if the current user or create user cannot
+			// be determined.
+			Boolean userCanDeleteComment = inventoryContractRsrcFactory.checkUserCanDeleteComment(dto, authentication);
+			if (!Boolean.TRUE.equals(userCanDeleteComment)) {
+				logger.error("User " + userId + " attempted to delete comment " + dto.getUnderwritingCommentGuid()
+						+ " created by " + dto.getCreateUser());
+				throw new ServiceException("The current user is not authorized to delete this comment.");
+			}
+
+			underwritingCommentDao.delete(underwritingComment.getUnderwritingCommentGuid());
+		}
+
+		logger.debug(">deleteUnderwritingComment");
+	}	
+	
+	private boolean multiplyUnitCoversion;
+
+	/// converts a value (Grain = acres, Forage = weight) into the default units and returns the converted value
+	public Double convertDopYieldFieldAcresWeight(Double valueToConvert, Integer cropCommodityId,
+			DopYieldContractRsrc dopYieldContract, Map<String, YieldMeasUnitConversionDto> ymucMap)
+			throws ServiceException {
+
+		logger.debug("<convertDopYieldFieldAcresWeight");
+
+		Double estYieldDefaultUnit = null;
+		String srcUnit = dopYieldContract.getEnteredYieldMeasUnitTypeCode();
+		String targetUnit = dopYieldContract.getDefaultYieldMeasUnitTypeCode();
+
+		if (srcUnit.equals(targetUnit)) {
+			estYieldDefaultUnit = valueToConvert;
+		} else {
+			YieldMeasUnitConversionDto ymucDto = lookupYieldMeasUnitConversion(ymucMap,
+					cropCommodityId, srcUnit, targetUnit);
+
+			if (ymucDto == null) {
+
+				// Cannot calculate conversion.
+				throw new ServiceException("No conversion is defined for commodity id "
+						+ cropCommodityId + ", Src Unit " + srcUnit + ", Target Unit " + targetUnit
+						+ ", for crop year " + dopYieldContract.getCropYear());
+			} else {
+				estYieldDefaultUnit = calculateYieldMeasUnitConversion(ymucDto,
+						valueToConvert, multiplyUnitCoversion);
+			}
+		}
+		
+		logger.debug(">convertDopYieldFieldAcresWeight");
+
+		return estYieldDefaultUnit;
+	}
+	
+	public double convertEstimatedYield(DopYieldContractRsrc dopYieldContract, String targetUnit,
+			Integer cropCommodityId, double valueToConvert, Map<String, YieldMeasUnitConversionDto> ymucMap) {
+
+		String enteredUnit = dopYieldContract.getEnteredYieldMeasUnitTypeCode();
+
+		if (enteredUnit.equals(targetUnit)) {
+			// No need to convert
+			return valueToConvert;
+		} else {
+			// At this point the entered unit is not equal to the unit to convert to
+
+			YieldMeasUnitConversionDto ymucDto = lookupYieldMeasUnitConversion(ymucMap, cropCommodityId, enteredUnit,
+					targetUnit);
+
+			if (ymucDto == null) {
+
+				// Cannot calculate conversion.
+				throw new ServiceException(
+						"No conversion is defined for commodity id " + cropCommodityId + ", Src Unit " + enteredUnit
+								+ ", Target Unit " + targetUnit + ", for crop year " + dopYieldContract.getCropYear());
+			} else {
+				return calculateYieldMeasUnitConversion(ymucDto, valueToConvert, multiplyUnitCoversion);
+			}
+		}
+	}
+	
+
+	// Lookup function for the map returned by loadYieldMeasUnitConversionsMap
+	private YieldMeasUnitConversionDto lookupYieldMeasUnitConversion(Map<String, YieldMeasUnitConversionDto> ymucMap,
+			Integer cropCommodityId, String srcUnit, String targetUnit) {
+		multiplyUnitCoversion = true;
+		String lookupKey = cropCommodityId + "::" + srcUnit + "::" + targetUnit;
+		YieldMeasUnitConversionDto ymucDto = ymucMap.get(lookupKey);
+		if (ymucDto == null) {
+			// If there is no such key in the list, try the other way around
+			lookupKey = cropCommodityId + "::" + targetUnit + "::" + srcUnit;
+			ymucDto = ymucMap.get(lookupKey);
+			multiplyUnitCoversion = false;
+		}
+
+		return ymucDto;
+	}
+	
+	// Calculate srcValue converted to the target yield meas unit specified by
+	// ymucDto.
+	// If srcValue is null, targetValue is null.
+	// Otherwise the calculated targetValue is returned.
+	private Double calculateYieldMeasUnitConversion(YieldMeasUnitConversionDto ymucDto, Double srcValue,
+			boolean multiply) {
+
+		// Calculate value in target units.
+		Double targetValue = null;
+
+		if (srcValue != null) {
+			if (multiply) {
+				targetValue = srcValue * ymucDto.getConversionFactor();
+			} else {
+				targetValue = srcValue / ymucDto.getConversionFactor();
+			}
+		}
+
+		return targetValue;
+	}
+
+
 	
 	private void populateInventoryCoverageTotalForageMaps(String inventoryContractGuid, 
 			                                              Map<Integer, InventoryCoverageTotalForageDto> cropTotalMap, 

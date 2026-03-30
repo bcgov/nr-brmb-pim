@@ -122,6 +122,9 @@ public class ServiceApiSpringConfig {
 		UnderwritingServiceHelper result = new UnderwritingServiceHelper();
 		
 		result.setInventoryCoverageTotalForageDao(persistenceSpringConfig.inventoryCoverageTotalForageDao());
+		result.setUnderwritingCommentDao(persistenceSpringConfig.underwritingCommentDao());
+		
+		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
 		
 		return result;
 	}
@@ -151,8 +154,17 @@ public class ServiceApiSpringConfig {
 		result.setInventorySeededForageDao(persistenceSpringConfig.inventorySeededForageDao());
 		result.setVerifiedYieldGrainBasketDao(persistenceSpringConfig.verifiedYieldGrainBasketDao());
 		result.setProductDao(persistenceSpringConfig.productDao());
+		result.setDeclaredYieldFieldDao(persistenceSpringConfig.declaredYieldFieldDao());
+		result.setDeclaredYieldFieldForageDao(persistenceSpringConfig.declaredYieldFieldForageDao());
+		result.setDeclaredYieldFieldRollupDao(persistenceSpringConfig.declaredYieldFieldRollupDao());
+		result.setYieldMeasUnitConversionDao(persistenceSpringConfig.yieldMeasUnitConversionDao());
+		result.setDeclaredYieldContractCommodityForageDao(persistenceSpringConfig.declaredYieldContractCommodityForageDao());
+		result.setDeclaredYieldFieldRollupForageDao(persistenceSpringConfig.declaredYieldFieldRollupForageDao());
 
 		result.setVerifiedYieldContractRsrcFactory(verifiedYieldContractRsrcFactory);
+		result.setDopYieldContractRsrcFactory(dopYieldContractRsrcFactory);
+		
+		result.setUnderwritingServiceHelper(underwritingServiceHelper());
 
 		return result;
 	}
@@ -163,8 +175,11 @@ public class ServiceApiSpringConfig {
 		
 		result.setContractedFieldDetailDao(persistenceSpringConfig.contractedFieldDetailDao());
 		result.setInventoryFieldDao(persistenceSpringConfig.inventoryFieldDao());
+		result.setDeclaredYieldFieldForageDao(persistenceSpringConfig.declaredYieldFieldForageDao());
 
 		result.setGrainForageService(grainForageService());
+		result.setBerriesService(berriesService());
+		result.setUnderwritingServiceHelper(underwritingServiceHelper());
 
 		return result;
 	}
@@ -334,17 +349,12 @@ public class ServiceApiSpringConfig {
 		result = new CirrasDopYieldService();
 		result.setApplicationProperties(applicationProperties);
 
-		result.setInventoryContractRsrcFactory(inventoryContractRsrcFactory);
 		result.setDopYieldContractRsrcFactory(dopYieldContractRsrcFactory);
 		result.setYieldMeasUnitTypeCodeRsrcFactory(yieldMeasUnitTypeCodeRsrcFactory);
 
 		result.setPolicyDao(persistenceSpringConfig.policyDao());
 		result.setYieldMeasUnitTypeCodeDao(persistenceSpringConfig.yieldMeasUnitTypeCodeDao());
-		result.setYieldMeasUnitConversionDao(persistenceSpringConfig.yieldMeasUnitConversionDao());
 		result.setDeclaredYieldContractDao(persistenceSpringConfig.declaredYieldContractDao());
-		result.setInventoryFieldDao(persistenceSpringConfig.inventoryFieldDao());
-		result.setInventorySeededGrainDao(persistenceSpringConfig.inventorySeededGrainDao());
-		result.setContractedFieldDetailDao(persistenceSpringConfig.contractedFieldDetailDao());
 		result.setDeclaredYieldFieldDao(persistenceSpringConfig.declaredYieldFieldDao());
 		result.setDeclaredYieldFieldForageDao(persistenceSpringConfig.declaredYieldFieldForageDao());
 		result.setDeclaredYieldFieldRollupDao(persistenceSpringConfig.declaredYieldFieldRollupDao());
@@ -354,7 +364,6 @@ public class ServiceApiSpringConfig {
 		result.setInventoryContractCommodityDao(persistenceSpringConfig.inventoryContractCommodityDao());
 		result.setInventorySeededForageDao(persistenceSpringConfig.inventorySeededForageDao());
 		result.setUnderwritingCommentDao(persistenceSpringConfig.underwritingCommentDao());
-		result.setInventoryBerriesDao(persistenceSpringConfig.inventoryBerriesDao());
 		result.setInventoryContractCommodityBerriesDao(persistenceSpringConfig.inventoryContractCommodityBerriesDao());
 		result.setDeclaredYieldContractCommodityBerriesDao(persistenceSpringConfig.declaredYieldContractCommodityBerriesDao());
 		result.setDeclaredYieldFieldCommodityBerriesDao(persistenceSpringConfig.declaredYieldFieldCommodityBerriesDao());
@@ -362,6 +371,9 @@ public class ServiceApiSpringConfig {
 		
 		result.setJasperReportService(jasperReportService);
 		result.setBerriesService(berriesService());
+		result.setFieldService(fieldService());
+		result.setGrainForageService(grainForageService());
+		result.setUnderwritingServiceHelper(underwritingServiceHelper());
 		
 		return result;
 	}
