@@ -50,7 +50,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventorySeededForage
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventorySeededGrainDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryUnseededDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.LegalLandDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.LegalLandFieldXrefDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InsurancePlanDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.InventoryContractCommodityBerriesDao;
@@ -70,7 +69,6 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededForageDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventorySeededGrainDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryUnseededDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandFieldXrefDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InsurancePlanDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodityBerriesDto;
@@ -89,24 +87,17 @@ import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
 import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.data.assemblers.AnnualFieldDetailRsrcFactory;
-import ca.bc.gov.mal.cirras.underwriting.data.assemblers.AnnualFieldRsrcFactory;
-import ca.bc.gov.mal.cirras.underwriting.data.assemblers.ContractedFieldDetailRsrcFactory;
-import ca.bc.gov.mal.cirras.underwriting.data.assemblers.FieldRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.InventoryContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandRsrcFactory;
-import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandFieldXrefRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UwContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.services.reports.JasperReportService;
 import ca.bc.gov.mal.cirras.underwriting.services.reports.JasperReportServiceException;
-import ca.bc.gov.mal.cirras.underwriting.services.utils.UnderwritingServiceHelper;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.BerriesService;
+import ca.bc.gov.mal.cirras.underwriting.services.utils.FieldService;
+import ca.bc.gov.mal.cirras.underwriting.services.utils.GrainForageInventoryService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InsurancePlans;
-import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InventoryCalculationType;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InventoryReportType;
-import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.LandIdentifierTypeCode;
-import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.PrimaryReferenceTypeCode;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.LandUpdateTypes;
 
 public class CirrasInventoryService {
@@ -117,12 +108,7 @@ public class CirrasInventoryService {
 
 	// factories
 	private InventoryContractRsrcFactory inventoryContractRsrcFactory;
-	private AnnualFieldRsrcFactory annualFieldRsrcFactory;
 	private LegalLandRsrcFactory legalLandRsrcFactory;
-	private FieldRsrcFactory fieldRsrcFactory; 
-	private LegalLandFieldXrefRsrcFactory legalLandFieldXrefRsrcFactory;
-	private AnnualFieldDetailRsrcFactory annualFieldDetailRsrcFactory; 
-	private ContractedFieldDetailRsrcFactory contractedFieldDetailRsrcFactory; 
 	private UwContractRsrcFactory uwContractRsrcFactory;
 
 	// daos
@@ -141,7 +127,6 @@ public class CirrasInventoryService {
 	private FieldDao fieldDao;
 	private AnnualFieldDetailDao annualFieldDetailDao;
 	private ContractedFieldDetailDao contractedFieldDetailDao;
-	private LegalLandFieldXrefDao legalLandFieldXrefDao;
 	private InsurancePlanDao insurancePlanDao;
 	private DeclaredYieldFieldDao declaredYieldFieldDao;
 	private DeclaredYieldFieldForageDao declaredYieldFieldForageDao;
@@ -158,19 +143,24 @@ public class CirrasInventoryService {
 	
 	// utils
 	// @Autowired
-	private UnderwritingServiceHelper underwritingServiceHelper;
 	private BerriesService berriesService;
+	private FieldService fieldService;
+	private GrainForageInventoryService grainForageInventoryService;
 
 	public static final String MaximumResultsProperty = "maximum.results";
 
 	public static final int DefaultMaximumResults = 800;
 
-	public void setUnderwritingServiceHelper(UnderwritingServiceHelper underwritingServiceHelper) {
-		this.underwritingServiceHelper = underwritingServiceHelper;
-	}
-
 	public void setBerriesService(BerriesService berriesService) {
 		this.berriesService = berriesService;
+	}
+	
+	public void setGrainForageInventoryService(GrainForageInventoryService grainForageInventoryService) {
+		this.grainForageInventoryService = grainForageInventoryService;
+	}
+
+	public void setFieldService(FieldService fieldService) {
+		this.fieldService = fieldService;
 	}
 	
 	public void setApplicationProperties(Properties applicationProperties) {
@@ -181,28 +171,8 @@ public class CirrasInventoryService {
 		this.inventoryContractRsrcFactory = inventoryContractRsrcFactory;
 	}
 
-	public void setAnnualFieldRsrcFactory(AnnualFieldRsrcFactory annualFieldRsrcFactory) {
-		this.annualFieldRsrcFactory = annualFieldRsrcFactory;
-	}
-
 	public void setLegalLandRsrcFactory(LegalLandRsrcFactory legalLandRsrcFactory) {
 		this.legalLandRsrcFactory = legalLandRsrcFactory;
-	}
-
-	public void setFieldRsrcFactory(FieldRsrcFactory fieldRsrcFactory) {
-		this.fieldRsrcFactory = fieldRsrcFactory;
-	}
-
-	public void setLegalLandFieldXrefRsrcFactory(LegalLandFieldXrefRsrcFactory legalLandFieldXrefRsrcFactory) {
-		this.legalLandFieldXrefRsrcFactory = legalLandFieldXrefRsrcFactory;
-	}
-
-	public void setAnnualFieldDetailRsrcFactory(AnnualFieldDetailRsrcFactory annualFieldDetailRsrcFactory) {
-		this.annualFieldDetailRsrcFactory = annualFieldDetailRsrcFactory;
-	}
-
-	public void setContractedFieldDetailRsrcFactory(ContractedFieldDetailRsrcFactory contractedFieldDetailRsrcFactory) {
-		this.contractedFieldDetailRsrcFactory = contractedFieldDetailRsrcFactory;
 	}
 
 	public void setUwContractRsrcFactory(UwContractRsrcFactory uwContractRsrcFactory) {
@@ -267,10 +237,6 @@ public class CirrasInventoryService {
 
 	public void setContractedFieldDetailDao(ContractedFieldDetailDao contractedFieldDetailDao) {
 		this.contractedFieldDetailDao = contractedFieldDetailDao;
-	}
-
-	public void setLegalLandFieldXrefDao(LegalLandFieldXrefDao legalLandFieldXrefDao) {
-		this.legalLandFieldXrefDao = legalLandFieldXrefDao;
 	}
 
 	public void setInsurancePlanDao(InsurancePlanDao insurancePlanDao) {
@@ -338,7 +304,7 @@ public class CirrasInventoryService {
 				List<CommodityMaturityScaleDto> scaleDto = loadBerriesScaleTable(inventoryContract.getInsurancePlanId(), inventoryContract.getCropYear());
 
 				for (AnnualFieldRsrc field : fields) {
-					updateAnnualField(field, inventoryContract, userId, contractsToRecalculate);
+					fieldService.updateAnnualField(field, inventoryContract, userId, contractsToRecalculate);
 
 					//If field is being deleted these steps are not necessary 
 					if(field.getLandUpdateType() == null || field.getLandUpdateType().equals(LandUpdateTypes.DELETE_FIELD) == false) {
@@ -361,20 +327,20 @@ public class CirrasInventoryService {
 								String inventoryFieldGuid = updateInventoryField(planting, userId);
 
 								if (planting.getInventoryUnseeded() != null) {
-									updateInventoryUnseeded(planting.getInventoryUnseeded(), inventoryFieldGuid, userId);
+									grainForageInventoryService.updateInventoryUnseeded(planting.getInventoryUnseeded(), inventoryFieldGuid, userId);
 								}
 
 								List<InventorySeededGrain> seededGrains = planting.getInventorySeededGrains();
 								if (seededGrains != null && !seededGrains.isEmpty()) {
 									for (InventorySeededGrain inventorySeededGrain : seededGrains) {
-										updateInventorySeededGrain(inventorySeededGrain, inventoryFieldGuid, userId);
+										grainForageInventoryService.updateInventorySeededGrain(inventorySeededGrain, inventoryFieldGuid, userId);
 									}
 								}
 
 								List<InventorySeededForage> seededForages = planting.getInventorySeededForages();
 								if (seededForages != null && !seededForages.isEmpty()) {
 									for (InventorySeededForage inventorySeededForage : seededForages) {
-										updateInventorySeededForage(inventorySeededForage, inventoryFieldGuid, userId);
+										grainForageInventoryService.updateInventorySeededForage(inventorySeededForage, inventoryFieldGuid, userId);
 									}
 								}
 								
@@ -397,12 +363,12 @@ public class CirrasInventoryService {
 			// verify the totals.
 			if (commodities != null && !commodities.isEmpty()) {
 				for (InventoryContractCommodity commodity : commodities) {
-					insertInventoryContractCommodity(commodity, inventoryContract.getFields(), inventoryContractGuid,
+					grainForageInventoryService.insertInventoryContractCommodity(commodity, inventoryContract.getFields(), inventoryContractGuid,
 							userId);
 				}
 			}
 
-			updateInventoryCoverageTotalForages(inventoryContract, inventoryContractGuid, userId);
+			grainForageInventoryService.updateInventoryCoverageTotalForages(inventoryContract, inventoryContractGuid, userId);
 			
 			updateInventoryContractCommodityBerries(inventoryContract, inventoryContractGuid, userId);
 			
@@ -438,217 +404,6 @@ public class CirrasInventoryService {
 
 		return dto.getInventoryContractGuid();
 	}
-
-	private String insertInventoryContractCommodity(InventoryContractCommodity inventoryContractCommodity,
-			List<AnnualFieldRsrc> fields, String inventoryContractGuid, String userId) throws DaoException {
-
-		logger.debug("<insertInventoryContractCommodity");
-
-		// Calculate unseeded acres totals
-		updateCalculatedAcres(inventoryContractCommodity, fields);
-
-		InventoryContractCommodityDto dto = new InventoryContractCommodityDto();
-		inventoryContractRsrcFactory.updateDto(dto, inventoryContractCommodity);
-
-		dto.setInventoryContractCommodityGuid(null);
-		dto.setInventoryContractGuid(inventoryContractGuid);
-
-		inventoryContractCommodityDao.insert(dto, userId);
-
-		logger.debug(">insertInventoryContractCommodity");
-
-		return dto.getInventoryContractCommodityGuid();
-	}
-
-	private void updateCalculatedAcres(InventoryContractCommodity inventoryContractCommodity,
-			List<AnnualFieldRsrc> fields) {
-
-		logger.debug("<updateCalculatedAcres");
-
-		// Calculate total unseeded, seeded and spot-loss acres for a commodity
-		Double totalUnseededAcres = (double) 0;
-		Double totalSeededAcres = (double) 0;
-		Double totalSpotLossAcres = (double) 0;
-
-		for (AnnualFieldRsrc field : fields) {
-
-			//Don't include field if it has been removed from the policy or deleted
-			Boolean includeField = true;
-			if(field.getLandUpdateType() != null && 
-				(field.getLandUpdateType().equals(LandUpdateTypes.DELETE_FIELD) || 
-				 field.getLandUpdateType().equals(LandUpdateTypes.REMOVE_FIELD_FROM_POLICY))){
-				includeField = false;
-			}
-			if(includeField) {
-	
-				Double seededAcres = (double) 0;
-				Double spotLossAcres = (double) 0;
-	
-				Double unseededAcres = getUnseededAcres(inventoryContractCommodity, field);
-				Map<TotalAcresType, Double> acres = getSeededFieldTotals(inventoryContractCommodity, field);
-	
-				seededAcres = acres.get(TotalAcresType.SEEDED_ACRES);
-				spotLossAcres = acres.get(TotalAcresType.SPOT_LOSS_ACRES);
-				
-				if (unseededAcres != null && unseededAcres > 0) {
-					totalUnseededAcres += unseededAcres;
-				}
-	
-				if (seededAcres != null && seededAcres > 0) {
-					totalSeededAcres += seededAcres;
-				}
-	
-				if (spotLossAcres != null && spotLossAcres > 0) {
-					totalSpotLossAcres += spotLossAcres;
-				}
-			}
-		}
-
-		logger.debug("Total unseeded acres for " + inventoryContractCommodity.getCropCommodityName() + ": " + totalUnseededAcres);
-
-		if (Double.compare(notNull(inventoryContractCommodity.getTotalUnseededAcres(), (double)-1), totalUnseededAcres) != 0) {
-			inventoryContractCommodity.setTotalUnseededAcres(totalUnseededAcres);
-		}
-		if (Double.compare(notNull(inventoryContractCommodity.getTotalSeededAcres(), (double)-1), totalSeededAcres) != 0) {
-			inventoryContractCommodity.setTotalSeededAcres(totalSeededAcres);
-		}
-		if (Double.compare(notNull(inventoryContractCommodity.getTotalSpotLossAcres(), (double)-1), totalSpotLossAcres) != 0) {
-			inventoryContractCommodity.setTotalSpotLossAcres(totalSpotLossAcres);
-		}
-
-		logger.debug(">updateCalculatedAcres");
-
-	}
-
-	private Double getUnseededAcres(InventoryContractCommodity inventoryContractCommodity, AnnualFieldRsrc field) {
-
-		logger.debug("<getUnseededAcres");
-
-		Double unseededAcres = (double) 0;
-		
-		//Unseeded acres are always when pedigree = false
-		if(inventoryContractCommodity.getIsPedigreeInd() == false) {
-			// Get sum of acres of commodities that have a acres to be seeded value and are
-			// not deleted
-			// It's possible that commodities are not specified
-			// Only commodities that are crop insurance eligible AND inventory crops are stored individually
-			// all other commodities are saved as OTHER
-			if (inventoryContractCommodity.getCropCommodityId() == null) {
-				unseededAcres = field.getPlantings().stream()
-						.filter(x -> (x.getInventoryUnseeded().getCropCommodityId() == null
-										|| (x.getInventoryUnseeded().getCropCommodityId() != null
-										&& x.getInventoryUnseeded().getCropVarietyId() == null //Only Grain commodities are in unseeded totals
-										&& (Boolean.FALSE.equals(x.getInventoryUnseeded().getIsCropInsuranceEligibleInd())
-											|| Boolean.FALSE.equals(x.getInventoryUnseeded().getIsInventoryCropInd()))))
-								&& x.getInventoryUnseeded().getAcresToBeSeeded() != null
-								&& (x.getInventoryUnseeded().getDeletedByUserInd() == null
-										|| x.getInventoryUnseeded().getDeletedByUserInd() == false))
-						.mapToDouble(x -> x.getInventoryUnseeded().getAcresToBeSeeded()).sum();
-
-			} else {
-				unseededAcres = field.getPlantings().stream()
-						.filter(x -> x.getInventoryUnseeded().getCropCommodityId() != null 
-								&& x.getInventoryUnseeded().getCropCommodityId().equals(inventoryContractCommodity.getCropCommodityId())
-								&& x.getInventoryUnseeded().getCropVarietyId() == null //Only Grain commodities are in unseeded totals
-								&& Boolean.TRUE.equals(x.getInventoryUnseeded().getIsCropInsuranceEligibleInd())
-								&& Boolean.TRUE.equals(x.getInventoryUnseeded().getIsInventoryCropInd())
-								&& x.getInventoryUnseeded().getAcresToBeSeeded() != null
-								&& (x.getInventoryUnseeded().getDeletedByUserInd() == null
-										|| x.getInventoryUnseeded().getDeletedByUserInd() == false))
-						.mapToDouble(x -> x.getInventoryUnseeded().getAcresToBeSeeded()).sum();
-			}
-		}
-
-		logger.debug(">getUnseededAcres " + unseededAcres);
-
-		return unseededAcres;
-	}
-	
-	private enum TotalAcresType {
-		SEEDED_ACRES,
-		SPOT_LOSS_ACRES
-	}
-
-	private Map<TotalAcresType, Double> getSeededFieldTotals(InventoryContractCommodity inventoryContractCommodity, AnnualFieldRsrc field) {
-
-		logger.debug("<getSeededFieldTotals");
-		
-		Map<TotalAcresType, Double> acres = new HashMap<>();
-		Double seededAcres = 0.0; 
-		Double spotLossAcres = 0.0;
-
-		// Get sum of acres of commodities that have a seeded acres value and are
-		// not deleted
-		// It's possible that commodities are not specified
-
-		for (InventoryField planting : field.getPlantings()) {
-
-			Double plantingSeededAcres = (double) 0;
-			Double plantingSpotLossAcres = (double) 0;
-			
-			// Get Seeded Acres
-			if (inventoryContractCommodity.getCropCommodityId() == null) {
-				plantingSeededAcres = planting.getInventorySeededGrains().stream()
-						.filter(x -> x.getCropCommodityId() == null && x.getSeededAcres() != null
-								&& (x.getDeletedByUserInd() == null || x.getDeletedByUserInd() == false)
-								&& x.getIsQuantityInsurableInd() == true
-								&& x.getIsPedigreeInd().equals(inventoryContractCommodity.getIsPedigreeInd()))
-						.mapToDouble(x -> x.getSeededAcres()).sum();
-
-			} else {
-				plantingSeededAcres = planting.getInventorySeededGrains().stream()
-						.filter(x -> (x.getCropCommodityId() != null
-								&& x.getCropCommodityId().equals(inventoryContractCommodity.getCropCommodityId()))
-								&& x.getSeededAcres() != null
-								&& (x.getDeletedByUserInd() == null || x.getDeletedByUserInd() == false)
-								&& x.getIsQuantityInsurableInd() == true
-								&& x.getIsPedigreeInd().equals(inventoryContractCommodity.getIsPedigreeInd()))
-						.mapToDouble(x -> x.getSeededAcres()).sum();
-			}
-
-			if (plantingSeededAcres != null && plantingSeededAcres > 0) {
-				seededAcres += plantingSeededAcres;
-			}
-
-			// Get Spot Loss Acres
-			if (inventoryContractCommodity.getCropCommodityId() == null) {
-				plantingSpotLossAcres = planting.getInventorySeededGrains().stream()
-						.filter(x -> x.getCropCommodityId() == null && x.getSeededAcres() != null
-								&& (x.getDeletedByUserInd() == null || x.getDeletedByUserInd() == false)
-								&& x.getIsSpotLossInsurableInd() == true
-								&& x.getIsPedigreeInd().equals(inventoryContractCommodity.getIsPedigreeInd()))
-						.mapToDouble(x -> x.getSeededAcres()).sum();
-
-			} else {
-				plantingSpotLossAcres = planting.getInventorySeededGrains().stream()
-						.filter(x -> (x.getCropCommodityId() != null
-								&& x.getCropCommodityId().equals(inventoryContractCommodity.getCropCommodityId()))
-								&& x.getSeededAcres() != null
-								&& (x.getDeletedByUserInd() == null || x.getDeletedByUserInd() == false)
-								&& x.getIsSpotLossInsurableInd() == true
-								&& x.getIsPedigreeInd().equals(inventoryContractCommodity.getIsPedigreeInd()))
-						.mapToDouble(x -> x.getSeededAcres()).sum();
-			}
-
-			if (plantingSpotLossAcres != null && plantingSpotLossAcres > 0) {
-				spotLossAcres += plantingSpotLossAcres;
-			}
-
-		}
-
-		acres.put(TotalAcresType.SEEDED_ACRES, seededAcres);
-		acres.put(TotalAcresType.SPOT_LOSS_ACRES, spotLossAcres);
-
-		logger.debug(">getSeededFieldTotals");
-
-		return acres;
-	}
-
-	private void updateInventoryCoverageTotalForages(InventoryContractRsrc invContract, String inventoryContractGuid, String userId) throws DaoException {
-		if ( invContract.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.FORAGE.toString())) {
-			underwritingServiceHelper.updateInventoryCoverageTotalForages(invContract.getFields(), inventoryContractGuid, userId, InventoryCalculationType.Full);
-		}
-	}
 	
 	private void updateInventoryContractCommodityBerries(InventoryContractRsrc invContract, String inventoryContractGuid, String userId) throws DaoException {
 		if ( invContract.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.BERRIES.toString())) {
@@ -667,48 +422,6 @@ public class CirrasInventoryService {
 
 		return dto.getInventoryFieldGuid();
 	}
-
-	private String insertInventoryUnseeded(InventoryUnseeded inventoryUnseeded, String inventoryFieldGuid,
-			String userId) throws DaoException {
-
-		InventoryUnseededDto dto = new InventoryUnseededDto();
-		inventoryContractRsrcFactory.updateDto(dto, inventoryUnseeded);
-
-		dto.setInventoryUnseededGuid(null);
-		dto.setInventoryFieldGuid(inventoryFieldGuid);
-
-		inventoryUnseededDao.insert(dto, userId);
-
-		return dto.getInventoryUnseededGuid();
-	}
-
-	private String insertInventorySeededGrain(InventorySeededGrain inventorySeededGrain, String inventoryFieldGuid,
-			String userId) throws DaoException {
-
-		InventorySeededGrainDto dto = new InventorySeededGrainDto();
-		inventoryContractRsrcFactory.updateDto(dto, inventorySeededGrain);
-
-		dto.setInventorySeededGrainGuid(null);
-		dto.setInventoryFieldGuid(inventoryFieldGuid);
-
-		inventorySeededGrainDao.insert(dto, userId);
-
-		return dto.getInventorySeededGrainGuid();
-	}
-	
-	private String insertInventorySeededForage(InventorySeededForage inventorySeededForage, String inventoryFieldGuid,
-			String userId) throws DaoException {
-
-		InventorySeededForageDto dto = new InventorySeededForageDto();
-		inventoryContractRsrcFactory.updateDto(dto, inventorySeededForage);
-
-		dto.setInventorySeededForageGuid(null);
-		dto.setInventoryFieldGuid(inventoryFieldGuid);
-
-		inventorySeededForageDao.insert(dto, userId);
-		
-		return dto.getInventorySeededForageGuid();
-	}
 	
 	private String insertUnderwritingComment(UnderwritingComment underwritingComment, Integer annualFieldDetailId,
 			String userId) throws DaoException {
@@ -724,494 +437,6 @@ public class CirrasInventoryService {
 		return dto.getUnderwritingCommentGuid();
 	}
 
-	private void updateAnnualField(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract,
-			String userId, HashSet<Integer> contractsToRecalculate) throws DaoException, NotFoundException, ServiceException {
-
-		Boolean bUpdateContractedFieldDetails = false;
-		Boolean updateFieldData = false;
-
-		// If land is added it needs to be added in CIRRAS first
-		if (annualField.getLandUpdateType() != null) {
-			switch (annualField.getLandUpdateType()) {
-			case LandUpdateTypes.NEW_LAND: // New Legal Land - New Field
-			case LandUpdateTypes.ADD_NEW_FIELD: // Existing Legal Land - New Field
-				insertNewLand(annualField, inventoryContract, userId);
-				break;
-			case LandUpdateTypes.ADD_EXISTING_LAND: // Existing Legal Land - Existing Field
-				addExistingLand(annualField, inventoryContract, userId, contractsToRecalculate);
-				deleteDopData(annualField, inventoryContract);
-				updateFieldData = true;
-				break;
-			case LandUpdateTypes.RENAME_LEGAL_LOCATION:
-				renameLegalLocation(annualField, userId);
-				bUpdateContractedFieldDetails = true;
-				break;
-			case LandUpdateTypes.REPLACE_LEGAL_LOCATION_EXISTING:
-				replaceLegalLocationExisting(annualField, userId);
-				bUpdateContractedFieldDetails = true;
-				break;
-			case LandUpdateTypes.REPLACE_LEGAL_LOCATION_NEW:
-				replaceLegalLocationNew(annualField, inventoryContract, userId);
-				bUpdateContractedFieldDetails = true;
-				break;
-			case LandUpdateTypes.REMOVE_FIELD_FROM_POLICY:
-				removeFieldFromPolicy(annualField, userId);
-				break;
-			case LandUpdateTypes.DELETE_FIELD:
-				deleteField(annualField, inventoryContract, contractsToRecalculate, userId);
-				break;
-			default:
-				throw new ServiceException("Invalid landUpdateType: " + annualField.getLandUpdateType());
-			}
-		} else {
-			bUpdateContractedFieldDetails = true;
-		}
-
-		if (bUpdateContractedFieldDetails || updateFieldData) {
-
-			updateField(annualField, userId);
-
-			if (bUpdateContractedFieldDetails) {
-				// Update contracted field details
-				updateContractedFieldDetails(annualField, userId);
-			}
-		}
-	}
-
-	private void deleteDopData(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract) throws NotFoundDaoException, DaoException {
-
-		if ( inventoryContract.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.FORAGE.toString()) ) { 
-			declaredYieldFieldForageDao.deleteForFieldAndYear(annualField.getFieldId(), inventoryContract.getCropYear());
-		} else if ( inventoryContract.getInsurancePlanName().equals(InventoryServiceEnums.InsurancePlans.GRAIN.toString()) ) {
-			declaredYieldFieldDao.deleteForFieldAndYear(annualField.getFieldId(), inventoryContract.getCropYear());
-		}
-		
-	}
-
-	private void deleteField(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract,
-			HashSet<Integer> contractsToRecalculate, String userId) throws DaoException, NotFoundException {
-
-		logger.debug("<deleteField");
-		
-		//Delete field
-		Integer fieldId = annualField.getFieldId();
-
-		//Delete inventory data of the field if it exists 
-		inventoryFieldDao.removeLinkToPlantingForField(fieldId, userId);
-		inventorySeededForageDao.deleteForField(fieldId);
-		inventorySeededGrainDao.deleteForField(fieldId);
-		inventoryUnseededDao.deleteForField(fieldId);
-		inventoryBerriesDao.deleteForField(fieldId);
-		inventoryFieldDao.deleteForField(fieldId);
-		
-		underwritingCommentDao.deleteForField(fieldId);
-		contractedFieldDetailDao.deleteForField(fieldId);
-		annualFieldDetailDao.deleteForField(fieldId);
-		legalLandFieldXrefDao.deleteForField(fieldId);
-		fieldDao.delete(fieldId);
-
-		logger.debug(">deleteField");
-
-	}
-
-	private void removeFieldFromPolicy(
-					AnnualFieldRsrc annualField, 
-					String userId
-				) throws DaoException, NotFoundException {
-		
-		logger.debug("<removeFieldFromPolicy");
-		
-		ContractedFieldDetailDto dto = contractedFieldDetailDao.fetch(annualField.getContractedFieldDetailId());
-
-		if (dto == null) {
-			throw new NotFoundException("Did not find the annual field: " + annualField.getContractedFieldDetailId());
-		} else {
-			//Delete contracted field detail record
-			contractedFieldDetailDao.delete(dto.getContractedFieldDetailId());
-			
-			//Remove all links of this field's plantings
-			inventoryFieldDao.removeLinkToPlantingForFieldAndYear(annualField.getFieldId(), annualField.getCropYear(), userId);
-		}
-		
-		logger.debug(">removeFieldFromPolicy");
-		
-	}
-
-	private void updateField(AnnualFieldRsrc annualField, String userId)
-			throws DaoException, NotFoundException {
-		
-		FieldDto dto = fieldDao.fetch(annualField.getFieldId());
-
-		if (dto == null) {
-			throw new NotFoundException("Did not find the field: " + annualField.getFieldId());
-		}
-		
-		Boolean update = false;
-
-		// Updates field label if it's different.
-		if (!notNull(dto.getFieldLabel(), "").equals(notNull(annualField.getFieldLabel(), ""))) {
-
-			dto.setFieldLabel(annualField.getFieldLabel());
-			update = true;
-		}
-		
-		// Updates field location if it's different.
-		if (!notNull(dto.getLocation(), "").equals(notNull(annualField.getFieldLocation(), ""))) {
-
-			dto.setLocation(annualField.getFieldLocation());
-			update = true;
-		}
-
-		if(update) {
-			fieldDao.update(dto, userId);
-		}
-	}
-
-	private void renameLegalLocation(AnnualFieldRsrc annualField, String userId)
-			throws DaoException, NotFoundException{
-
-		LegalLandDto dto = legalLandDao.fetch(annualField.getLegalLandId());
-		if (dto == null) {
-			throw new NotFoundException("Did not find the legal land: " + annualField.getLegalLandId());
-		}
-
-		// Updates pid and other description in cuws database and CIRRAS if it's different.
-		if (!notNull(dto.getPrimaryPropertyIdentifier(), "").equals(notNull(annualField.getPrimaryPropertyIdentifier(), ""))) {
-			
-			dto.setPrimaryPropertyIdentifier(annualField.getPrimaryPropertyIdentifier());
-			legalLandDao.update(dto, userId);
-		}
-		
-		if (!notNull(dto.getOtherDescription(), "").equals(notNull(annualField.getOtherLegalDescription(), ""))) {
-
-			dto.setOtherDescription(annualField.getOtherLegalDescription());
-			legalLandDao.update(dto, userId);
-		}
-
-	}
-
-	private void replaceLegalLocationExisting(AnnualFieldRsrc annualField, String userId)
-			throws DaoException, NotFoundException {
-
-		//Check if the new primary legal land exists
-		LegalLandDto llDto = legalLandDao.fetch(annualField.getLegalLandId());
-		if (llDto == null) {
-			throw new NotFoundException("Did not find the legal land: " + annualField.getLegalLandId());
-		}
-
-		AnnualFieldDetailDto afdDto = annualFieldDetailDao.fetch(annualField.getAnnualFieldDetailId());
-		if (afdDto == null) {
-			throw new NotFoundException("Did not find the annual field detail: " + annualField.getAnnualFieldDetailId());
-		}
-
-		// Updates primary legal land in cuws database and CIRRAS if it's different.
-		if (!afdDto.getLegalLandId().equals(llDto.getLegalLandId())) {
-			
-			if(afdDto.getLegalLandId() != null) {
-				cleanupLegalLandFieldXref(afdDto.getLegalLandId(), afdDto.getFieldId());
-			}
-
-			afdDto.setLegalLandId(llDto.getLegalLandId());
-			annualFieldDetailDao.update(afdDto, userId);
-
-			LegalLandFieldXrefDto llfxDto = legalLandFieldXrefDao.fetch(annualField.getLegalLandId(), annualField.getFieldId());
-
-			if (llfxDto == null) {
-				llfxDto = new LegalLandFieldXrefDto();
-				legalLandFieldXrefRsrcFactory.createLegalLandFieldXref(llfxDto, annualField);
-				legalLandFieldXrefDao.insert(llfxDto, userId);
-			}
-		}
-	}
-
-	public void cleanupLegalLandFieldXref(Integer legalLandId, Integer fieldId)
-			throws DaoException, NotFoundDaoException {
-		//Check if there the field has been used for more than 1 year
-		int totalAnnualRecords = annualFieldDetailDao.getTotalForLegalLandField(legalLandId, fieldId);
-		if(totalAnnualRecords == 1) {
-			//If it has been used in one year only, delete legal land lot xref
-			legalLandFieldXrefDao.delete(legalLandId, fieldId);
-		}
-	}
-
-	private void replaceLegalLocationNew(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, String userId)
-			throws DaoException, NotFoundException {
-
-		AnnualFieldDetailDto afdDto = annualFieldDetailDao.fetch(annualField.getAnnualFieldDetailId());
-		if (afdDto == null) {
-			throw new NotFoundException(
-					"Did not find the annual field detail: " + annualField.getAnnualFieldDetailId());
-		}
-		
-		if(afdDto.getLegalLandId() != null) {
-			cleanupLegalLandFieldXref(afdDto.getLegalLandId(), afdDto.getFieldId());
-		}
-
-		//Insert legal land
-		insertQuickLegalLand(annualField, inventoryContract, userId);
-
-		//Update annual field detail
-		afdDto.setLegalLandId(annualField.getLegalLandId());
-		annualFieldDetailDao.update(afdDto, userId);
-
-		//Insert legal land field mapping
-		insertLegalLandFieldXref(annualField, userId);
-	}
-
-	private void addExistingLand(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract,
-			String userId, HashSet<Integer> contractsToRecalculate) throws DaoException, NotFoundException, ServiceException {
-
-		// Adds a new annual field record if necessary
-		processAnnualFieldDetail(annualField, userId);
-
-		// Adds, updates or deletes a contracted field record
-		processContractedFieldDetail(annualField, inventoryContract, userId, contractsToRecalculate);
-	}
-
-	private void processContractedFieldDetail(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, String userId,
-			HashSet<Integer> contractsToRecalculate) throws DaoException {
-
-		ContractedFieldDetailDto fromCfdDto = null;
-
-		//getTransferFromGrowerContractYearId is only set if it's transferred from the same year
-		if (annualField.getTransferFromGrowerContractYearId() != null) {
-			// If the contract the land is transferred from is from another year it won't be
-			// deleted or updated
-			fromCfdDto = contractedFieldDetailDao.selectByGcyAndField(annualField.getTransferFromGrowerContractYearId(), annualField.getFieldId());
-
-			// Transfer happened in the same year
-			if (fromCfdDto != null) {
-				// If there is a contracted field record in the same year and plan it needs to be updated
-				annualField.setContractedFieldDetailId(fromCfdDto.getContractedFieldDetailId());
-				updateContractedFieldDetails(annualField, inventoryContract, fromCfdDto, userId);
-			} else {
-				// If there is NO contracted field record. It needs to be inserted
-				// Insert new Contracted Field Details record
-				addContractedFieldDetail(annualField, inventoryContract, userId);
-			}
-			// Add source policy to list to recalculate inventory contract commodity totals
-			// at the end of the save inventory process
-			// Only necessary if transfered in the same year.
-			contractsToRecalculate.add(annualField.getTransferFromGrowerContractYearId());
-		} else {
-			// If the contract the land is transferred from is from another year. It needs
-			// to be inserted
-			addContractedFieldDetail(annualField, inventoryContract, userId);
-		}
-	}
-
-	private void updateContractedFieldDetails(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, 
-			ContractedFieldDetailDto dto, String userId) throws DaoException, NotFoundDaoException {
-		
-		contractedFieldDetailRsrcFactory.createContractedFieldDetail(dto, annualField, inventoryContract);
-		contractedFieldDetailDao.update(dto, userId);
-		
-	}
-
-	private void addContractedFieldDetail(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, String userId)
-			throws DaoException {
-
-		ContractedFieldDetailDto dto = contractedFieldDetailDao.fetch(annualField.getContractedFieldDetailId());
-
-		if (dto == null) {
-			insertContractedFieldDetail(annualField, inventoryContract, userId);
-		} else {
-			updateContractedFieldDetails(annualField, inventoryContract, dto, userId);
-		}
-	}
-
-	private void processAnnualFieldDetail(AnnualFieldRsrc annualField, String userId)
-			throws DaoException {
-
-		// Check if annual field detail record exists
-		AnnualFieldDetailDto annualFieldDetailDto = annualFieldDetailDao.getByFieldAndCropYear(annualField.getFieldId(), annualField.getCropYear());
-
-		if (annualFieldDetailDto == null) {
-			// insert record if it doesn't exist.
-			
-			//getTransferFromGrowerContractYearId is only set if it's transferred from the same year
-			if (annualField.getTransferFromGrowerContractYearId() == null) {
-				
-				//Field has never been associated with a policy or it's added from another crop year
-				//Set legal land id of the closest annual field detail record
-				setPrimaryLegalLandId(annualField);
-			}
-			
-			insertAnnualFieldDetail(annualField, userId);
-		} else {
-			annualField.setLegalLandId(annualFieldDetailDto.getLegalLandId());
-			annualField.setAnnualFieldDetailId(annualFieldDetailDto.getAnnualFieldDetailId());
-		}
-	}
-	
-	private void setPrimaryLegalLandId(AnnualFieldRsrc annualField) throws DaoException {
-
-		Integer legalLandId = null;
-		//Get previous and subsequent annual records
-		AnnualFieldDetailDto dto = annualFieldDetailDao.getPreviousSubsequentRecords(annualField.getFieldId(), annualField.getCropYear());
-		
-		if (dto != null) {
-			//Take legal land id from previous year if first subsequent year is same number of years or more apart
-		    //from the year than the last previous year
-			Integer yearsBefore = null;
-			Integer yearsAfter = null;
-			if(dto.getPreviousContractCropYear() != null) {
-				yearsBefore = annualField.getCropYear() - dto.getPreviousContractCropYear();
-			}
-			if(dto.getSubsequentContractCropYear() != null) {
-				yearsAfter = dto.getSubsequentContractCropYear() - annualField.getCropYear();
-			}
-			
-			if (yearsBefore != null && yearsAfter != null) {
-				if(yearsBefore <= yearsAfter) {
-					//Take from previous year with contract
-					legalLandId = dto.getPreviousContractLegalLandId();
-				} else {
-					//Take from subsequent year with contract
-					legalLandId = dto.getSubsequentContractLegalLandId();
-				}
-			} else if (yearsBefore != null) {
-				//Take from previous year with contract
-				legalLandId = dto.getPreviousContractLegalLandId();
-			} else if (yearsAfter != null) {
-				//Take from subsequent year with contract
-				legalLandId = dto.getSubsequentContractLegalLandId();
-			} else {
-				//No records with contract association found
-				if(dto.getPreviousLegalLandId() != null) {
-					//Take from previous year with no contract
-					legalLandId = dto.getPreviousLegalLandId();
-				} else if(dto.getSubsequentLegalLandId() != null) {
-					//Take from subsequent year with no contract
-					legalLandId = dto.getSubsequentLegalLandId();
-				}
-			}
-		}
-		
-		annualField.setLegalLandId(legalLandId);
-	}
-	
-	// This method is public for testing reasons
-	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	public void insertNewLand(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, String userId)
-			throws DaoException {
-
-		// Legal Land doesn't have to be added if only a new field is added
-		if (annualField.getLandUpdateType().equals(LandUpdateTypes.NEW_LAND)) {
-			// Insert Legal Land
-			insertQuickLegalLand(annualField, inventoryContract, userId);
-		}
-
-		// Insert Field
-		FieldDto fieldDto = new FieldDto();
-		fieldRsrcFactory.createField(fieldDto, annualField);
-		fieldDao.insert(fieldDto, userId);
-		annualField.setFieldId(fieldDto.getFieldId());
-
-		// Insert Annual Field Details
-		insertAnnualFieldDetail(annualField, userId);
-
-		// Insert Contracted Field Details
-		insertContractedFieldDetail(annualField, inventoryContract, userId);
-
-		// Insert Legal Land Field Maping
-		insertLegalLandFieldXref(annualField, userId);
-		
-		// Set field id for all plantings
-		List<InventoryField> plantings = annualField.getPlantings();
-		if (plantings != null && !plantings.isEmpty()) {
-			for (InventoryField planting : plantings) {
-				planting.setFieldId(annualField.getFieldId());
-			}
-		}
-
-	}
-
-	private void insertLegalLandFieldXref(AnnualFieldRsrc annualField, String userId) throws DaoException {
-		LegalLandFieldXrefDto legalLandFieldXrefDto = new LegalLandFieldXrefDto();
-		legalLandFieldXrefRsrcFactory.createLegalLandFieldXref(legalLandFieldXrefDto, annualField);
-		legalLandFieldXrefDao.insert(legalLandFieldXrefDto, userId);
-	}
-
-	private void insertQuickLegalLand(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, String userId) throws DaoException {
-		LegalLandDto legalLandDto = new LegalLandDto();
-		if(annualField.getPrimaryPropertyIdentifier() == null || annualField.getPrimaryPropertyIdentifier().isEmpty()) {
-			annualField.setPrimaryPropertyIdentifier(generatePID());
-		}
-		
-		String primaryReferenceTypeCode = PrimaryReferenceTypeCode.OTHER.toString();
-		String landIdentifierTypeCode = LandIdentifierTypeCode.OTHER.toString();
-		
-		if(InsurancePlans.BERRIES.getInsurancePlanId().equals(inventoryContract.getInsurancePlanId())) {
-			primaryReferenceTypeCode = PrimaryReferenceTypeCode.IDENTIFIER.toString();
-			landIdentifierTypeCode = LandIdentifierTypeCode.PID.toString();
-		}
-		legalLandRsrcFactory.createQuickLegalLand(legalLandDto, annualField, primaryReferenceTypeCode, landIdentifierTypeCode);
-		legalLandDao.insert(legalLandDto, userId);
-		annualField.setLegalLandId(legalLandDto.getLegalLandId());
-	}
-	
-	// This method is public for testing reasons
-	// Generates a 12 character PID starting with GF followed by a sequence value lead by zeros
-	@Transactional(readOnly = false, rollbackFor = Exception.class)
-	public String generatePID() throws DaoException {
-		
-		logger.debug("<generatePID");
-		
-		Integer nextSequence = legalLandDao.getNextPidSequence();
-		
-		String newPid = "0000000000" + nextSequence.toString();
-		//GF is meant to be used for Grain and Forage
-		newPid = "GF" + newPid.substring(newPid.length() - 10);
-		
-		logger.debug(">generatePID");
-		
-		return newPid;
-		
-	}
-
-	private void insertAnnualFieldDetail(AnnualFieldRsrc annualField, String userId) throws DaoException {
-
-		logger.debug("<insertAnnualFieldDetail");
-		
-		AnnualFieldDetailDto annualFieldDetailDto = new AnnualFieldDetailDto();
-		annualFieldDetailRsrcFactory.createAnnualFieldDetail(annualFieldDetailDto, annualField);
-		annualFieldDetailDao.insert(annualFieldDetailDto, userId);
-		
-		annualField.setAnnualFieldDetailId(annualFieldDetailDto.getAnnualFieldDetailId());
-		
-		logger.debug(">insertAnnualFieldDetail");
-	}
-
-	private void insertContractedFieldDetail(AnnualFieldRsrc annualField, InventoryContractRsrc inventoryContract, String userId)
-			throws DaoException {
-		
-		logger.debug("<insertContractedFieldDetail");
-		
-		// Insert Contracted Field Details
-		ContractedFieldDetailDto contractedFieldDetailDto = new ContractedFieldDetailDto();
-		contractedFieldDetailRsrcFactory.createContractedFieldDetail(contractedFieldDetailDto, annualField, inventoryContract);
-		contractedFieldDetailDto.setContractedFieldDetailId(null);
-
-		contractedFieldDetailDao.insert(contractedFieldDetailDto, userId);
-		annualField.setContractedFieldDetailId(contractedFieldDetailDto.getContractedFieldDetailId());
-		
-		logger.debug(">insertContractedFieldDetail");
-	}
-
-	private void updateContractedFieldDetails(AnnualFieldRsrc annualField, String userId)
-			throws DaoException, NotFoundException {
-
-		ContractedFieldDetailDto dto = contractedFieldDetailDao.fetch(annualField.getContractedFieldDetailId());
-
-		if (dto == null) {
-			throw new NotFoundException("Did not find the annual field: " + annualField.getContractedFieldDetailId());
-		}
-
-		annualFieldRsrcFactory.updateDto(dto, annualField);
-
-		contractedFieldDetailDao.update(dto, userId);
-	}
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public InventoryContractListRsrc getInventoryContractList(
@@ -1507,7 +732,7 @@ public class CirrasInventoryService {
 				List<CommodityMaturityScaleDto> scaleDto = loadBerriesScaleTable(inventoryContract.getInsurancePlanId(), inventoryContract.getCropYear());
 
 				for (AnnualFieldRsrc field : fields) {
-					updateAnnualField(field, inventoryContract, userId, contractsToRecalculate);
+					fieldService.updateAnnualField(field, inventoryContract, userId, contractsToRecalculate);
 
 					//If field is being deleted these steps are not necessary 
 					if(field.getLandUpdateType() == null || field.getLandUpdateType().equals(LandUpdateTypes.DELETE_FIELD) == false) {
@@ -1546,7 +771,7 @@ public class CirrasInventoryService {
 	
 									//Only for Grain, Forage is handled with the seeded records
 									if (planting.getInventoryUnseeded() != null && planting.getInsurancePlanId().equals(InventoryServiceEnums.InsurancePlans.GRAIN.getInsurancePlanId())) {
-										updateInventoryUnseeded(planting.getInventoryUnseeded(), inventoryFieldGuid, userId);
+										grainForageInventoryService.updateInventoryUnseeded(planting.getInventoryUnseeded(), inventoryFieldGuid, userId);
 									}
 	
 									List<InventorySeededGrain> seededGrains = planting.getInventorySeededGrains();
@@ -1556,10 +781,10 @@ public class CirrasInventoryService {
 										for (InventorySeededGrain inventorySeededGrain : seededGrains) {
 											if ( Boolean.TRUE.equals(inventorySeededGrain.getDeletedByUserInd()) && remainingSeededGrains > 1 ) {
 												// Can only delete if it is not the last one. The last one will be cleared, but the record is not deleted.
-												deleteInventorySeededGrain(inventorySeededGrain);
+												grainForageInventoryService.deleteInventorySeededGrain(inventorySeededGrain);
 												remainingSeededGrains--;
 											} else {
-												updateInventorySeededGrain(inventorySeededGrain, inventoryFieldGuid, userId);
+												grainForageInventoryService.updateInventorySeededGrain(inventorySeededGrain, inventoryFieldGuid, userId);
 											}
 										}
 									}
@@ -1571,20 +796,20 @@ public class CirrasInventoryService {
 										for (InventorySeededForage inventorySeededForage : seededForages) {
 											if ( Boolean.TRUE.equals(inventorySeededForage.getDeletedByUserInd()) && remainingSeededForages > 1 ) {
 												// Can only delete if it is not the last one. The last one will be cleared, but the record is not deleted.
-												deleteInventorySeededForage(inventorySeededForage, userId);
+												grainForageInventoryService.deleteInventorySeededForage(inventorySeededForage, userId);
 												remainingSeededForages--;
 											} else {
-												updateInventorySeededForage(inventorySeededForage, inventoryFieldGuid, userId);
+												grainForageInventoryService.updateInventorySeededForage(inventorySeededForage, inventoryFieldGuid, userId);
 											}
 											
 											//Always delete the unseeded record if the seeded forage is deleted or the seeded crop is perennial
 											if(planting.getInventoryUnseeded() != null) {
 												if ( Boolean.TRUE.equals(inventorySeededForage.getDeletedByUserInd())){
-													deleteInventoryUnseeded(planting.getInventoryUnseeded());
+													grainForageInventoryService.deleteInventoryUnseeded(planting.getInventoryUnseeded());
 												} else {
 													//Delete if there is no seeded crop
 													if(inventorySeededForage.getCropCommodityId() == null) {
-														deleteInventoryUnseeded(planting.getInventoryUnseeded());
+														grainForageInventoryService.deleteInventoryUnseeded(planting.getInventoryUnseeded());
 													} else {
 														//Check if seeded crop is perennial
 														CropCommodityDto dto = cropCommodityDao.fetch(inventorySeededForage.getCropCommodityId());
@@ -1592,9 +817,9 @@ public class CirrasInventoryService {
 														if (dto != null) {
 															//Insert/Update if it's an annual crop and delete in all other cases
 															if(dto.getPlantDurationTypeCode().equalsIgnoreCase(InventoryServiceEnums.PlantDurationType.ANNUAL.toString())) {
-																updateInventoryUnseeded(planting.getInventoryUnseeded(), inventoryFieldGuid, userId);
+																grainForageInventoryService.updateInventoryUnseeded(planting.getInventoryUnseeded(), inventoryFieldGuid, userId);
 															} else {
-																deleteInventoryUnseeded(planting.getInventoryUnseeded());
+																grainForageInventoryService.deleteInventoryUnseeded(planting.getInventoryUnseeded());
 															}
 														} 
 													}
@@ -1620,8 +845,8 @@ public class CirrasInventoryService {
 
 			// This needs to be done after dealing with the fields and planting to correctly
 			// verify the totals.
-			updateInventoryContractCommodities(inventoryContract, inventoryContractGuid, userId);
-			updateInventoryCoverageTotalForages(inventoryContract, inventoryContractGuid, userId);
+			grainForageInventoryService.updateInventoryContractCommodities(inventoryContract, inventoryContractGuid, userId);
+			grainForageInventoryService.updateInventoryCoverageTotalForages(inventoryContract, inventoryContractGuid, userId);
 			updateInventoryContractCommodityBerries(inventoryContract, inventoryContractGuid, userId);
 
 			result = getInventoryContract(inventoryContractGuid, factoryContext, authentication);
@@ -1652,36 +877,20 @@ public class CirrasInventoryService {
 					//Recalculate the inventory totals of a list of contracts
 					sourceContract = loadInventoryContract(dto, false, factoryContext, authentication);
 					if (sourceContract != null) {
-						updateInventoryContractCommodities(sourceContract, sourceContract.getInventoryContractGuid(), userId);
-						updateInventoryCoverageTotalForages(sourceContract, sourceContract.getInventoryContractGuid(), userId);
+						grainForageInventoryService.updateInventoryContractCommodities(sourceContract, sourceContract.getInventoryContractGuid(), userId);
+						grainForageInventoryService.updateInventoryCoverageTotalForages(sourceContract, sourceContract.getInventoryContractGuid(), userId);
 						updateInventoryContractCommodityBerries(sourceContract, sourceContract.getInventoryContractGuid(), userId);
 					}
 					
 				}
 				
 				//Update Display order
-				updateDisplayOrderForContract(gcyId, userId);
+				fieldService.updateDisplayOrderForContract(gcyId, userId);
 			}
 		}
 		logger.debug(">recalculateSourceInventoryContracts");
 	}
 	
-	private void updateDisplayOrderForContract(Integer growerContractYearId, String userId)
-			throws DaoException, NotFoundException {
-		
-		//Get contracted fields
-		List<ContractedFieldDetailDto> dtos = contractedFieldDetailDao.selectForDisplayOrderUpdate(growerContractYearId);
-		
-		int i = 1;
-		for (ContractedFieldDetailDto dto : dtos) {
-			if(!dto.getDisplayOrder().equals(i)) {
-				dto.setDisplayOrder(i);
-				contractedFieldDetailDao.updateDisplayOrder(dto, userId);
-			}
-			i++;
-		}
-	}
-
 	private void deleteInventory(InventoryField planting, String userId) throws NotFoundDaoException, DaoException {
 
 		logger.debug("<deleteInventory");
@@ -1700,7 +909,7 @@ public class CirrasInventoryService {
 		if (planting.getInventorySeededForages() != null && planting.getInventorySeededForages().size() > 0) {
 			for (InventorySeededForage inventorySeededForage : planting.getInventorySeededForages()) {
 				//Remove possible link to grain planting
-				removeLink(inventorySeededForage, userId);
+				grainForageInventoryService.removeLink(inventorySeededForage, userId);
 			}
 			inventorySeededForageDao.deleteForInventoryField(planting.getInventoryFieldGuid());
 		}
@@ -1716,41 +925,6 @@ public class CirrasInventoryService {
 		logger.debug(">deleteInventory");
 
 	}
-
-	private void deleteInventorySeededGrain(InventorySeededGrain inventorySeededGrain)
-			throws NotFoundDaoException, DaoException {
-		logger.debug("<deleteInventorySeededGrain");
-
-		inventorySeededGrainDao.delete(inventorySeededGrain.getInventorySeededGrainGuid());
-
-		logger.debug(">deleteInventorySeededGrain");
-	}
-
-	private void deleteInventorySeededForage(InventorySeededForage inventorySeededForage, String userId)
-			throws NotFoundDaoException, DaoException {
-		logger.debug("<deleteInventorySeededForage");
-		
-		linkUnlinkPlantings(inventorySeededForage, userId);
-		inventorySeededForageDao.delete(inventorySeededForage.getInventorySeededForageGuid());
-
-		logger.debug(">deleteInventorySeededForage");
-	}
-
-	private void deleteInventoryUnseeded(InventoryUnseeded inventoryUnseeded)
-			throws NotFoundDaoException, DaoException {
-		logger.debug("<deleteInventoryUnseeded");
-		
-		InventoryUnseededDto dto = null;
-		if (inventoryUnseeded.getInventoryUnseededGuid() != null) {
-			dto = inventoryUnseededDao.fetch(inventoryUnseeded.getInventoryUnseededGuid());
-		}
-
-		if (dto != null) {
-			inventoryUnseededDao.delete(inventoryUnseeded.getInventoryUnseededGuid());
-		}
-
-		logger.debug(">deleteInventoryUnseeded");
-	}	
 	
 	private void deleteUnderwritingComment(UnderwritingComment underwritingComment, String userId, WebAdeAuthentication authentication)
 			throws NotFoundDaoException, DaoException {
@@ -1806,100 +980,6 @@ public class CirrasInventoryService {
 
 		return doDeleteInventoryField;
 	}
-
-	private boolean handleDeletedInventorySeededGrains(InventoryField inventoryField) {
-
-		logger.debug("<handleDeletedInventorySeededGrains");
-		
-		boolean doDeleteInventoryField = false;
-		InventoryUnseeded unseeded = inventoryField.getInventoryUnseeded();
-		List<InventorySeededGrain> seededGrains = inventoryField.getInventorySeededGrains();
-				
-		if ( seededGrains != null) {
-			boolean tryDelete = false;
-			for (InventorySeededGrain seededGrain : seededGrains) {
-				if (Boolean.TRUE.equals(seededGrain.getDeletedByUserInd())) { 
-					tryDelete = true;
-					break;
-				}
-			}
-
-			if (tryDelete) { 
-				// Check if there is any user-entered unseeded or seeded grain data. If not, then planting can be deleted.
-				boolean canDelete = true;
-				if (unseeded != null && !inventoryContractRsrcFactory.checkEmptyInventoryUnseeded(unseeded) && !Boolean.TRUE.equals(unseeded.getDeletedByUserInd()) ) {
-					canDelete = false;
-				} else {
-					for (InventorySeededGrain seededGrain : seededGrains) {
-						if (!inventoryContractRsrcFactory.checkEmptyInventorySeededGrain(seededGrain) && !Boolean.TRUE.equals(seededGrain.getDeletedByUserInd())) { 
-							canDelete = false;
-							break;
-						}
-					}
-				}
-			
-				doDeleteInventoryField = canDelete;
-
-			}
-		}
-
-		logger.debug(">handleDeletedInventorySeededGrains");
-		
-		return doDeleteInventoryField;
-	}	
-
-	private boolean handleDeletedInventorySeededForage(InventoryField inventoryField) {
-
-		logger.debug("<handleDeletedInventorySeededForage");
-		
-		boolean doDeleteInventoryField = false;
-		List<InventorySeededForage> seededForages = inventoryField.getInventorySeededForages();
-//		List<InventorySeededGrain> seededGrains = inventoryField.getInventorySeededGrains();
-				
-		if ( seededForages != null) {
-			boolean tryDelete = false;
-			for (InventorySeededForage seededForage : seededForages) {
-				if (Boolean.TRUE.equals(seededForage.getDeletedByUserInd())) { 
-					tryDelete = true;
-					break;
-				}
-			}
-
-			if (tryDelete) { 
-				// Check if there is any user-entered seeded forage data. If not, then planting can be deleted.
-				boolean canDelete = true;
-				for (InventorySeededForage seededForage : seededForages) {
-					if (!checkEmptyInventorySeededForage(seededForage) && !Boolean.TRUE.equals(seededForage.getDeletedByUserInd())) { 
-						canDelete = false;
-						break;
-					}
-				}
-			
-				doDeleteInventoryField = canDelete;
-
-			}
-		}		
-	
-		logger.debug(">handleDeletedInventorySeededForage");
-
-		return doDeleteInventoryField;
-	}
-	
-	private boolean checkEmptyInventorySeededForage(InventorySeededForage inventorySeededForage) {
-		
-		return inventorySeededForage.getCropVarietyId() == null && 
-				inventorySeededForage.getFieldAcres() == null && 
-				inventorySeededForage.getSeedingYear() == null &&
-				inventorySeededForage.getSeedingDate() == null;
-	}
-
-	private boolean checkEmptyInventorySeededForage(InventorySeededForageDto inventorySeededForage) {
-		
-		return inventorySeededForage.getCropVarietyId() == null && 
-				inventorySeededForage.getFieldAcres() == null && 
-				inventorySeededForage.getSeedingYear() == null &&
-				inventorySeededForage.getSeedingDate() == null;
-	}
 	
 	private boolean checkEmptyInventoryBerries(InventoryBerriesDto inventoryBerries) {
 		return inventoryBerries.getCropVarietyId() == null && 
@@ -1924,11 +1004,11 @@ public class CirrasInventoryService {
 					plantingDeleted = true;
 				}
 				
-				if (handleDeletedInventorySeededGrains(planting)) {
+				if (grainForageInventoryService.handleDeletedInventorySeededGrains(planting)) {
 					plantingDeleted = true;
 				}
 				
-				if (handleDeletedInventorySeededForage(planting)) {
+				if (grainForageInventoryService.handleDeletedInventorySeededForage(planting)) {
 					plantingDeleted = true;
 				}
 				
@@ -1993,103 +1073,6 @@ public class CirrasInventoryService {
 		inventoryContractDao.update(dto, userId);
 	}
 
-	private void updateInventoryContractCommodities(InventoryContractRsrc inventoryContract,
-			String inventoryContractGuid, String userId) throws DaoException, NotFoundException {
-
-		logger.debug("<updateInventoryContractCommodities");
-
-		List<InventoryContractCommodity> commodities = inventoryContract.getCommodities();
-
-		// Get commodities from database
-		List<InventoryContractCommodityDto> dtoCommoditiesTemp = inventoryContractCommodityDao.select(inventoryContractGuid);
-
-		// In order to modify this list for processing below, create a copy. MyBatis
-		// uses the same reference it returned above in
-		// its cache, so modifications to dtoCommoditiesTemp would modify the cache and
-		// can cause it to return incorrect results later
-		// in this transaction.
-		List<InventoryContractCommodityDto> dtoCommodities = null;
-		if (dtoCommoditiesTemp != null) {
-			dtoCommodities = new ArrayList<InventoryContractCommodityDto>(dtoCommoditiesTemp);
-		}
-
-		if (commodities != null && !commodities.isEmpty()) {
-
-			for (InventoryContractCommodity commodity : commodities) {
-
-				logger.debug("Commodity: " + commodity.getCropCommodityName());
-
-				// Check if there is an existing record
-				List<InventoryContractCommodityDto> filteredCommodityDto = null;
-				if (dtoCommodities != null && !dtoCommodities.isEmpty()) {
-
-					// It's possible that commodities are not specified
-					if (commodity.getCropCommodityId() == null) {
-						filteredCommodityDto = dtoCommodities.stream().filter(x -> x.getCropCommodityId() == null
-								&& x.getIsPedigreeInd().equals(commodity.getIsPedigreeInd()))
-								.collect(Collectors.toList());
-					} else {
-						filteredCommodityDto = dtoCommodities.stream()
-								.filter(x -> x.getCropCommodityId() != null
-										&& x.getCropCommodityId().equals(commodity.getCropCommodityId())
-										&& x.getIsPedigreeInd().equals(commodity.getIsPedigreeInd()))
-								.collect(Collectors.toList());
-					}
-				}
-
-				if (filteredCommodityDto == null || filteredCommodityDto.isEmpty()) {
-					// Insert new record
-					logger.debug("Contract Commodity Insert: " + commodity.getCropCommodityName());
-					insertInventoryContractCommodity(commodity, inventoryContract.getFields(), inventoryContractGuid,
-							userId);
-				} else {
-					logger.debug("Contract Commodity Update: " + commodity.getCropCommodityName());
-					// Update existing record
-					InventoryContractCommodityDto commodityDto = filteredCommodityDto.get(0);
-
-					updateInventoryContractCommodity(commodity, commodityDto, inventoryContract.getFields(), userId);
-
-					// Remove dto of that commodity from dto list to know which ones need to be
-					// deleted
-					dtoCommodities.remove(filteredCommodityDto.get(0));
-				}
-			}
-
-			// Delete commodities that don't exist anymore. Those are the only ones left in
-			// the dto list
-			if (dtoCommodities != null && !dtoCommodities.isEmpty()) {
-				for (InventoryContractCommodityDto dto : dtoCommodities) {
-					logger.debug("Contract Commodity Delete: " + dto.getCropCommodityName());
-					inventoryContractCommodityDao.delete(dto.getInventoryContractCommodityGuid());
-				}
-			}
-
-		} else if (dtoCommodities != null && !dtoCommodities.isEmpty()) {
-			// In this case all commodities have been removed and need to be removed from
-			// the database
-			inventoryContractCommodityDao.deleteForInventoryContract(inventoryContractGuid);
-		}
-
-		logger.debug(">updateInventoryContractCommodities");
-
-	}
-
-	private void updateInventoryContractCommodity(InventoryContractCommodity inventoryContractCommodity,
-			InventoryContractCommodityDto dto, List<AnnualFieldRsrc> fields, String userId)
-			throws DaoException, NotFoundException {
-
-		logger.debug("<updateInventoryContractCommodity");
-
-		// Calculate calculated acres totals
-		updateCalculatedAcres(inventoryContractCommodity, fields);
-
-		inventoryContractRsrcFactory.updateDto(dto, inventoryContractCommodity);
-
-		inventoryContractCommodityDao.update(dto, userId);
-
-		logger.debug(">updateInventoryContractCommodity");
-	}
-
 	private String updateInventoryField(InventoryField inventoryField, String userId) throws DaoException {
 
 		InventoryFieldDto dto = null;
@@ -2112,118 +1095,6 @@ public class CirrasInventoryService {
 		}
 
 		return inventoryFieldGuid;
-	}
-
-	private void updateInventoryUnseeded(InventoryUnseeded inventoryUnseeded, String inventoryFieldGuid, String userId)
-			throws DaoException {
-
-		// inventoryUnseeded.getInventoryUnseededGuid() might be null if it's a new crop
-		InventoryUnseededDto dto = null;
-		if (inventoryUnseeded.getInventoryUnseededGuid() != null) {
-			dto = inventoryUnseededDao.fetch(inventoryUnseeded.getInventoryUnseededGuid());
-		}
-
-		if (dto == null) {
-			// Insert if it doesn't exist
-			insertInventoryUnseeded(inventoryUnseeded, inventoryFieldGuid, userId);
-		} else {
-
-			inventoryContractRsrcFactory.updateDto(dto, inventoryUnseeded);
-
-			inventoryUnseededDao.update(dto, userId);
-		}
-	}
-
-	private void updateInventorySeededGrain(InventorySeededGrain inventorySeededGrain, String inventoryFieldGuid,
-			String userId) throws DaoException {
-
-		InventorySeededGrainDto dto = null;
-
-		if (inventorySeededGrain.getInventorySeededGrainGuid() != null) {
-			dto = inventorySeededGrainDao.fetchSimple(inventorySeededGrain.getInventorySeededGrainGuid());
-		}
-
-		if (dto == null) {
-			// Insert if it doesn't exist
-			insertInventorySeededGrain(inventorySeededGrain, inventoryFieldGuid, userId);
-		} else {
-
-			inventoryContractRsrcFactory.updateDto(dto, inventorySeededGrain);
-
-			inventorySeededGrainDao.update(dto, userId);
-		}
-
-	}
-	
-	private void updateInventorySeededForage(InventorySeededForage inventorySeededForage, String inventoryFieldGuid,
-			String userId) throws DaoException, ServiceException {
-
-		InventorySeededForageDto dto = null;
-
-		if (inventorySeededForage.getInventorySeededForageGuid() != null) {
-			dto = inventorySeededForageDao.fetchSimple(inventorySeededForage.getInventorySeededForageGuid());
-		}
-
-		if (dto == null) {
-			// Insert if it doesn't exist
-			inventorySeededForage.setInventorySeededForageGuid(insertInventorySeededForage(inventorySeededForage, inventoryFieldGuid, userId));
-			
-		} else {
-
-			inventoryContractRsrcFactory.updateDto(dto, inventorySeededForage);
-
-			inventorySeededForageDao.update(dto, userId);
-		}
-		
-		linkUnlinkPlantings(inventorySeededForage, userId);
-
-	}
-	
-	private void linkUnlinkPlantings(InventorySeededForage inventorySeededForage, String userId) throws DaoException, ServiceException {
-	
-		//Adds or removes link if the link planting type is set
-		if(inventorySeededForage.getLinkPlantingType() != null) {
-			if (inventorySeededForage.getLinkPlantingType().equalsIgnoreCase(InventoryServiceEnums.LinkPlantingType.ADD_LINK.toString())) {
-				if (inventorySeededForage.getGrainInventoryFieldGuid() != null) {
-					//Link plantings if there is a grain field guid set
-					addLink(inventorySeededForage, userId);
-				} else {
-					throw new ServiceException("No GrainInventoryFieldGuid set to link planting.");
-				}
-			} else if (inventorySeededForage.getLinkPlantingType().equalsIgnoreCase(InventoryServiceEnums.LinkPlantingType.REMOVE_LINK.toString())) {
-				//Remove link
-				removeLink(inventorySeededForage, userId);
-			}
-		} else if (Boolean.TRUE.equals(inventorySeededForage.getDeletedByUserInd())) {
-			//Remove link if planting is deleted
-			removeLink(inventorySeededForage, userId);
-		}
-	}
-
-	private void addLink(InventorySeededForage inventorySeededForage, String userId) throws DaoException, ServiceException {
-		
-		InventoryFieldDto ifDto = inventoryFieldDao.fetch(inventorySeededForage.getGrainInventoryFieldGuid());
-		if(ifDto != null) {
-			ifDto.setUnderseededInventorySeededForageGuid(inventorySeededForage.getInventorySeededForageGuid());
-			inventoryFieldDao.update(ifDto, userId);
-		}
-		else {
-			logger.info("AddLink, Grain planting to link to field not found. InventoryFieldGuid: " + inventorySeededForage.getGrainInventoryFieldGuid());
-			throw new ServiceException("Grain planting to link to field not found.");
-		}
-		
-	}
-
-	private void removeLink(InventorySeededForage inventorySeededForage, String userId) throws DaoException {
-
-		InventoryFieldDto ifDto = inventoryFieldDao.selectLinkedGrainPlanting(inventorySeededForage.getInventorySeededForageGuid());
-		if(ifDto != null) {
-			ifDto.setUnderseededInventorySeededForageGuid(null);
-			inventoryFieldDao.update(ifDto, userId);
-		}
-		else {
-			logger.info("RemoveLink, Planting to link to field not found. InventorySeededForageGuid: " + inventorySeededForage.getInventorySeededForageGuid());
-		}
 	}
 
 	private void updateUnderwritingComment(UnderwritingComment underwritingComment, Integer annualFieldDetailId,
@@ -2786,7 +1657,7 @@ public class CirrasInventoryService {
 						if (isEmpty && ifdDto.getInsurancePlanId().equals(InventoryServiceEnums.InsurancePlans.FORAGE.getInsurancePlanId())) {
 							List<InventorySeededForageDto> inventorySeededForages = inventorySeededForageDao.select(ifdDto.getInventoryFieldGuid());
 							for (InventorySeededForageDto isfDto : inventorySeededForages ) {
-								if ( !checkEmptyInventorySeededForage(isfDto) ) {
+								if ( !grainForageInventoryService.checkEmptyInventorySeededForage(isfDto) ) {
 									isEmpty = false;
 									break;
 								}
@@ -3112,18 +1983,6 @@ public class CirrasInventoryService {
 		}
 
 		return userId;
-	}
-
-	private Double notNull(Double value, Double defaultValue) {
-		return (value == null) ? defaultValue : value;
-	}
-
-	private Integer notNull(Integer value, Integer defaultValue) {
-		return (value == null) ? defaultValue : value;
-	}
-
-	private String notNull(String value, String defaultValue) {
-		return (value == null) ? defaultValue : value;
 	}
 
 }

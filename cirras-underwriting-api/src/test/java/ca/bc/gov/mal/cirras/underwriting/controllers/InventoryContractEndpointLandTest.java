@@ -494,7 +494,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 		
 		// Planting 1
 		InventoryField planting = createPlanting(field1, 1, cropYear1, insurancePlanIdGrain);
-		createInventoryUnseeded(planting, 16, true, 100.0); //Barley
+		createInventoryUnseeded(planting, 16, true, 100.0, true, true); //Barley
 
 		//Field 2
 		AnnualFieldRsrc field2 = getField(fieldId2, invContract.getFields());
@@ -504,11 +504,11 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 		
 		// Planting 1
 		planting = createPlanting(field2, 1, cropYear1, insurancePlanIdGrain);
-		createInventoryUnseeded(planting, 16, true, 50.0); //Barley
+		createInventoryUnseeded(planting, 16, true, 50.0, true, true); //Barley
 
 		// Planting 2
 		planting = createPlanting(field2, 2, cropYear1, insurancePlanIdGrain);
-		createInventoryUnseeded(planting, 26, true, 25.0); //Wheat
+		createInventoryUnseeded(planting, 26, true, 25.0, true, true); //Wheat
 
 
 		// Grain Totals
@@ -669,7 +669,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 		
 		// Planting 1
 		InventoryField planting = createPlanting(field1, 1, cropYear1, insurancePlanIdGrain);
-		createInventoryUnseeded(planting, 16, true, 100.0); //Barley
+		createInventoryUnseeded(planting, 16, true, 100.0, true, true); //Barley
 
 		// Grain Totals
 		List<InventoryContractCommodity> expectedTotals = new ArrayList<InventoryContractCommodity>();
@@ -839,7 +839,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 		
 		// Planting 1
 		InventoryField planting = createPlanting(field1, 1, cropYear1, insurancePlanIdGrain);
-		createInventoryUnseeded(planting, 16, true, 100.0); //Barley
+		createInventoryUnseeded(planting, 16, true, 100.0, true, true); //Barley
 
 		// Grain Totals
 		List<InventoryContractCommodity> expectedTotals = new ArrayList<InventoryContractCommodity>();
@@ -1332,7 +1332,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 		
 		// Planting 1
 		InventoryField planting = createPlanting(field1, 1, cropYear1, insurancePlanIdGrain);
-		createInventoryUnseeded(planting, 16, true, 100.0); //Barley
+		createInventoryUnseeded(planting, 16, true, 100.0, true, true); //Barley
 
 		// Grain Totals
 		List<InventoryContractCommodity> expectedTotals = new ArrayList<InventoryContractCommodity>();
@@ -1475,7 +1475,7 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 		
 		// Planting 1
 		InventoryField planting = createPlanting(field1, 1, cropYear1, insurancePlanIdGrain);
-		createInventoryUnseeded(planting, 16, true, 100.0); //Barley
+		createInventoryUnseeded(planting, 16, true, 100.0, true, true); //Barley
 
 		// Grain Totals
 		List<InventoryContractCommodity> expectedTotals = new ArrayList<InventoryContractCommodity>();
@@ -1884,13 +1884,17 @@ public class InventoryContractEndpointLandTest extends EndpointsTest {
 			InventoryField planting, 
             Integer cropCommodityId, 
             Boolean isUnseededInsurableInd,
-            Double acresToBeSeeded) {
+            Double acresToBeSeeded, 
+            Boolean isCropInsuranceEligibleInd, 
+            Boolean isInventoryCropInd) {
 		
 		InventoryUnseeded inventoryUnseeded = new InventoryUnseeded();
 		inventoryUnseeded.setCropCommodityId(cropCommodityId);
 		inventoryUnseeded.setIsUnseededInsurableInd(isUnseededInsurableInd);
 		inventoryUnseeded.setAcresToBeSeeded(acresToBeSeeded);
 		inventoryUnseeded.setInventoryFieldGuid(planting.getInventoryFieldGuid());
+		inventoryUnseeded.setIsCropInsuranceEligibleInd(isCropInsuranceEligibleInd);
+		inventoryUnseeded.setIsInventoryCropInd(isInventoryCropInd);
 		planting.setInventoryUnseeded(inventoryUnseeded);
 
 	}
