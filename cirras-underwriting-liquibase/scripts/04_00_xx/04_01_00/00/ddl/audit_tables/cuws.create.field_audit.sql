@@ -11,7 +11,7 @@ CREATE TABLE cuws.field_audit(
     create_date                    timestamp(0)     NOT NULL,
     update_user                    varchar(64)      NOT NULL,
     update_date                    timestamp(0)     NOT NULL
-)
+) TABLESPACE pg_default
 ;
 
 
