@@ -184,7 +184,7 @@
 									<goal>npm</goal>
 								</goals>
 								<configuration>
-									<arguments>clean-install -v -no-package-lock --registry=${npm.url} --force</arguments>
+									<arguments>clean-install --loglevel verbose -no-package-lock --registry=${npm.url} --force</arguments>
 								</configuration>
 							</execution>
 							<execution>
