@@ -55,6 +55,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          package-manager-cache: false
 
         #NOTE: necessary to build client-war 
       - name: Add .npmrc file
