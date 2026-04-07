@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION cuws.fn_field_audit_log()
+CREATE OR REPLACE FUNCTION cuws.fn_field_audit()
 RETURNS TRIGGER AS $$
 BEGIN
     IF (TG_OP = 'DELETE') THEN
@@ -70,4 +70,4 @@ CREATE TRIGGER trg_field_audit
 AFTER INSERT OR UPDATE OR DELETE
 ON cuws.field
 FOR EACH ROW
-EXECUTE FUNCTION cuws.fn_field_audit_log();
+EXECUTE FUNCTION cuws.fn_field_audit();
