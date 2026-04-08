@@ -16,7 +16,7 @@ CREATE TABLE cuws.legal_land_audit(
     create_date                          timestamp(6)      NOT NULL,
     update_user                          varchar(64)       NOT NULL,
     update_date                          timestamp(6)      NOT NULL
-)
+) TABLESPACE pg_default
 ;
 
 
