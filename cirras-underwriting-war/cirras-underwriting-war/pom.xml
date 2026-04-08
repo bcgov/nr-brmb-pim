@@ -184,7 +184,8 @@
 									<goal>npm</goal>
 								</goals>
 								<configuration>
-									<arguments>clean-install --loglevel verbose --registry=${npm.url} --force</arguments>
+									<!-- <arguments>clean-install --loglevel verbose --registry=${npm.url} --force</arguments> -->
+									<arguments>clean-install --dry-run --loglevel info --registry=${npm.url} --force</arguments>
 								</configuration>
 							</execution>
 							<execution>
