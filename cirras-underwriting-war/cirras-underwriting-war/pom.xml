@@ -184,7 +184,7 @@
 									<goal>npm</goal>
 								</goals>
 								<configuration>
-									<arguments>clean-install --dry-run --loglevel info --registry=${npm.url} --force</arguments>
+									<arguments>clean-install --dry-run --loglevel info --registry=${npm.url} --force | grep "@cirras/cirras-underwriting-api"</arguments>
 								</configuration>
 							</execution>
 							<execution>
