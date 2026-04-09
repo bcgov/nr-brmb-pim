@@ -26,6 +26,5 @@ COMMENT ON TABLE cuws.audit_transaction_type_code IS 'The table contains the tra
 ;
 
 ALTER TABLE cuws.audit_transaction_type_code ADD 
-    CONSTRAINT pk_attc PRIMARY KEY (audit_transaction_type_code)
+    CONSTRAINT pk_attc PRIMARY KEY (audit_transaction_type_code) USING INDEX TABLESPACE pg_default 
 ;
-

@@ -41,7 +41,7 @@ COMMENT ON TABLE cuws.annual_field_detail_audit IS 'Annual Field Detail Audit ta
 ;
 
 ALTER TABLE cuws.annual_field_detail_audit ADD 
-    CONSTRAINT pk_afda PRIMARY KEY (annual_field_detail_audit_id)
+    CONSTRAINT pk_afda PRIMARY KEY (annual_field_detail_audit_id) USING INDEX TABLESPACE pg_default 
 ;
 
 ALTER TABLE cuws.annual_field_detail_audit ADD CONSTRAINT fk_afda_attc 

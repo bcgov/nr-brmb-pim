@@ -41,9 +41,8 @@ COMMENT ON TABLE cuws.annual_field_crop_audit IS 'Annual Field Crop Audit table 
 ;
 
 ALTER TABLE cuws.annual_field_crop_audit ADD 
-    CONSTRAINT pk_afca PRIMARY KEY (annual_field_crop_audit_id)
+    CONSTRAINT pk_afca PRIMARY KEY (annual_field_crop_audit_id) USING INDEX TABLESPACE pg_default 
 ;
-
 
 ALTER TABLE cuws.annual_field_crop_audit ADD CONSTRAINT fk_afca_attc 
     FOREIGN KEY (audit_transaction_type_code)
