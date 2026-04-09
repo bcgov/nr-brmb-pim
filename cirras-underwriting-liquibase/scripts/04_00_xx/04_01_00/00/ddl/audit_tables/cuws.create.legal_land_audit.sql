@@ -59,7 +59,7 @@ COMMENT ON TABLE cuws.legal_land_audit IS 'The table contains all legal lands fr
 ;
 
 ALTER TABLE cuws.legal_land_audit ADD 
-    CONSTRAINT pk_lla PRIMARY KEY (legal_land_audit_id)
+    CONSTRAINT pk_lla PRIMARY KEY (legal_land_audit_id) USING INDEX TABLESPACE pg_default 
 ;
 
 ALTER TABLE cuws.legal_land_audit ADD CONSTRAINT fk_lla_attc 

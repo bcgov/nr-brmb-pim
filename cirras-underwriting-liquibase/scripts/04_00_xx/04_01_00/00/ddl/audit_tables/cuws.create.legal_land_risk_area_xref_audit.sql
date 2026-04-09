@@ -41,7 +41,7 @@ COMMENT ON TABLE cuws.legal_land_risk_area_xref_audit IS 'The table associates r
 ;
 
 ALTER TABLE cuws.legal_land_risk_area_xref_audit ADD 
-    CONSTRAINT pk_llraxa PRIMARY KEY (legal_land_risk_area_xref_audit_id)
+    CONSTRAINT pk_llraxa PRIMARY KEY (legal_land_risk_area_xref_audit_id) USING INDEX TABLESPACE pg_default 
 ;
 
 ALTER TABLE cuws.legal_land_risk_area_xref_audit ADD CONSTRAINT fk_llraxa_attc 

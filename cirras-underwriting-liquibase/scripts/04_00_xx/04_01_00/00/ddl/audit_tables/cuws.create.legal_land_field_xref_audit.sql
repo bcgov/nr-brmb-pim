@@ -35,7 +35,7 @@ COMMENT ON TABLE cuws.legal_land_field_xref_audit IS 'The table contains cross r
 ;
 
 ALTER TABLE cuws.legal_land_field_xref_audit ADD 
-    CONSTRAINT pk_llfxa PRIMARY KEY (legal_land_field_xref_audit_id)
+    CONSTRAINT pk_llfxa PRIMARY KEY (legal_land_field_xref_audit_id) USING INDEX TABLESPACE pg_default 
 ;
 
 ALTER TABLE cuws.legal_land_field_xref_audit ADD CONSTRAINT fk_llfxa_attc 
