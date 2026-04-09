@@ -44,7 +44,7 @@ COMMENT ON TABLE cuws.contracted_field_detail_audit IS 'Contracted Field Detail 
 ;
 
 ALTER TABLE cuws.contracted_field_detail_audit ADD 
-    CONSTRAINT pk_cfda PRIMARY KEY (contracted_field_detail_audit_id)
+    CONSTRAINT pk_cfda PRIMARY KEY (contracted_field_detail_audit_id) USING INDEX TABLESPACE pg_default 
 ;
 
 ALTER TABLE cuws.contracted_field_detail_audit ADD CONSTRAINT fk_cfda_attc 
