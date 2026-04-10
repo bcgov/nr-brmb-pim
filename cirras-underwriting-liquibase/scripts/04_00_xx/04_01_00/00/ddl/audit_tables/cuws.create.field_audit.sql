@@ -44,7 +44,7 @@ COMMENT ON TABLE cuws.field_audit IS 'Field Audit is the audit table for field'
 ;
 
 ALTER TABLE cuws.field_audit ADD 
-    CONSTRAINT pk_flda PRIMARY KEY (field_audit_id)
+    CONSTRAINT pk_flda PRIMARY KEY (field_audit_id) USING INDEX TABLESPACE pg_default 
 ;
 
 ALTER TABLE cuws.field_audit ADD CONSTRAINT fk_flda_attc 

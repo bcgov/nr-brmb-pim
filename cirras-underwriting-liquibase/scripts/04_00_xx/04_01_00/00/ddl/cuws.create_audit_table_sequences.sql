@@ -6,3 +6,30 @@ CREATE SEQUENCE cuws.flda_seq
     MAXVALUE 999999999
     CYCLE
 ;
+
+CREATE SEQUENCE cuws.afca_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    CYCLE
+;
+
+CREATE SEQUENCE cuws.afda_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    CYCLE
+;
+
+CREATE SEQUENCE cuws.cfda_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    CYCLE
+;
