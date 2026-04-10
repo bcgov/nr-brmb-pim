@@ -33,3 +33,31 @@ CREATE SEQUENCE cuws.cfda_seq
     MAXVALUE 999999999
     CYCLE
 ;
+
+CREATE SEQUENCE cuws.lla_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    CYCLE
+;
+
+CREATE SEQUENCE cuws.llfxa_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    CYCLE
+;
+
+CREATE SEQUENCE cuws.llraxa_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    CYCLE
+;
+
