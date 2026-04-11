@@ -210,6 +210,9 @@ export interface DopYieldContractCommodityBerries {
     totalProductionOverride?: number;
     totalPlantedAcres?: number;
     totalMatureEquivalentAcres?: number;
+    totalSoldShippedYield?: number;
+    totalSalesYield?: number;
+    totalAbandonmentYield?: number;
 }
 
 export interface VerifiedYieldContract {
