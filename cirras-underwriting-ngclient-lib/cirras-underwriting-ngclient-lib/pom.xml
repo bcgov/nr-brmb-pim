@@ -5,7 +5,7 @@
     <parent>
         <groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
         <artifactId>cirras-underwriting-ngclient-lib-parent</artifactId>
-        <version>4.1.0</version>
+        <version>4.1.1-SNAPSHOT</version>
     </parent>
     <artifactId>cirras-underwriting-ngclient-lib</artifactId>
     <packaging>jar</packaging>
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
             <artifactId>cirras-underwriting-api</artifactId>
-            <version>4.1.0</version>
+            <version>4.1.1-SNAPSHOT</version>
             <type>json</type>
             <classifier>swagger</classifier>
 
