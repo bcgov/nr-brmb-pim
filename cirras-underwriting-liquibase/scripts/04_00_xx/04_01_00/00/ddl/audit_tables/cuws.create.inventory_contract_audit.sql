@@ -16,9 +16,9 @@ CREATE TABLE cuws.inventory_contract_audit(
     inv_update_timestamp                 timestamp(6),
     inv_update_user                      varchar(64),
     create_user                          varchar(64)      NOT NULL,
-    create_date                          timestamp(6)     NOT NULL,
+    create_date                          timestamp(0)     NOT NULL,
     update_user                          varchar(64)      NOT NULL,
-    update_date                          timestamp(6)     NOT NULL
+    update_date                          timestamp(0)     NOT NULL
 ) TABLESPACE pg_default
 ;
 

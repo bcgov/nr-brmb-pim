@@ -19,7 +19,7 @@ CREATE TABLE cuws.inventory_contract_commodity_audit(
 
 
 
-COMMENT ON COLUMN cuws.inventory_contract_commodity_audit.inventory_contract_commodity_audit_id IS 'Inventory Contract Coommodity Audit Id is the ID of the Inventory Contract Commodity Audit table, comes from a sequence.'
+COMMENT ON COLUMN cuws.inventory_contract_commodity_audit.inventory_contract_commodity_audit_id IS 'Inventory Contract Commodity Audit Id is the ID of the Inventory Contract Commodity Audit table, comes from a sequence.'
 ;
 COMMENT ON COLUMN cuws.inventory_contract_commodity_audit.audit_transaction_type_code IS 'Audit Transaction Type Code is a unique type code for each audit transaction such as INSERT, UPDATE or DELETE'
 ;

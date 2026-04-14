@@ -9,9 +9,9 @@ CREATE TABLE cuws.inventory_coverage_total_forage_audit(
     is_unseeded_insurable_ind                   varchar(1),
     total_field_acres                           numeric(10, 4),
     create_user                                 varchar(64)       NOT NULL,
-    create_date                                 timestamp(6)      NOT NULL,
+    create_date                                 timestamp(0)      NOT NULL,
     update_user                                 varchar(64)       NOT NULL,
-    update_date                                 timestamp(6)      NOT NULL
+    update_date                                 timestamp(0)      NOT NULL
 ) TABLESPACE pg_default
 ;
 

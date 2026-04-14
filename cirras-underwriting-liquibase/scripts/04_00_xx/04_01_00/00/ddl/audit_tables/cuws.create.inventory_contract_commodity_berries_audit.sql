@@ -12,15 +12,15 @@ CREATE TABLE cuws.inventory_contract_commodity_berries_audit(
     total_plant_insured_acres                        numeric(10, 4),
     total_plant_uninsured_acres                      numeric(10, 4),
     create_user                                      varchar(64)       NOT NULL,
-    create_date                                      timestamp(6)      NOT NULL,
+    create_date                                      timestamp(0)      NOT NULL,
     update_user                                      varchar(64)       NOT NULL,
-    update_date                                      timestamp(6)      NOT NULL
+    update_date                                      timestamp(0)      NOT NULL
 ) TABLESPACE pg_default
 ;
 
 
 
-COMMENT ON COLUMN cuws.inventory_contract_commodity_berries_audit.inventory_contract_commodity_berries_audit_id IS 'Inventory Contract Coommodity Berries Audit Id is the ID of the Inventory Contract Commodity Berries Audit table, comes from a sequence.'
+COMMENT ON COLUMN cuws.inventory_contract_commodity_berries_audit.inventory_contract_commodity_berries_audit_id IS 'Inventory Contract Commodity Berries Audit Id is the ID of the Inventory Contract Commodity Berries Audit table, comes from a sequence.'
 ;
 COMMENT ON COLUMN cuws.inventory_contract_commodity_berries_audit.audit_transaction_type_code IS 'Audit Transaction Type Code is a unique type code for each audit transaction such as INSERT, UPDATE or DELETE'
 ;
