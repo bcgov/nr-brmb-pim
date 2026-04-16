@@ -3,7 +3,7 @@ CREATE TABLE cuws.inventory_contract_commodity_berries_audit(
     audit_transaction_type_code                      varchar(10)       NOT NULL,
     audit_time_stamp                                 timestamp(6)      NOT NULL,
     inventory_contract_commodity_berries_guid        varchar(32)       NOT NULL,
-    inventory_contract_guid                          varchar(32)       NOT NULL,
+    inventory_contract_guid                          varchar(32),
     crop_commodity_id                                numeric(9, 0),
     total_insured_plants                             numeric(10, 0),
     total_uninsured_plants                           numeric(10, 0),

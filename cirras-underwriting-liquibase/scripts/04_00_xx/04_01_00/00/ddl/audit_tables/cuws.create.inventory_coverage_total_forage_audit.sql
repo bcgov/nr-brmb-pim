@@ -3,7 +3,7 @@ CREATE TABLE cuws.inventory_coverage_total_forage_audit(
     audit_transaction_type_code                 varchar(10)       NOT NULL,
     audit_time_stamp                            timestamp(6)      NOT NULL,
     inventory_coverage_total_forage_guid        varchar(32)       NOT NULL,
-    inventory_contract_guid                     varchar(32)       NOT NULL,
+    inventory_contract_guid                     varchar(32),
     crop_commodity_id                           numeric(9, 0),
     plant_insurability_type_code                varchar(10),
     is_unseeded_insurable_ind                   varchar(1),
