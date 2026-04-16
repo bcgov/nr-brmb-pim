@@ -115,7 +115,7 @@ CREATE SEQUENCE cuws.ifa_seq
     NO CYCLE
 ;
 
-CREATE SEQUENCE cuws.isfa_aeq
+CREATE SEQUENCE cuws.isfa_seq
     AS bigint
     START WITH 1
     INCREMENT BY 1
