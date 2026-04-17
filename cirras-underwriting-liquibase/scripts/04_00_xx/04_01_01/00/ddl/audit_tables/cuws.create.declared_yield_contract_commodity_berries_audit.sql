@@ -55,7 +55,7 @@ COMMENT ON COLUMN cuws.declared_yield_contract_commodity_berries_audit.update_us
 ;
 COMMENT ON COLUMN cuws.declared_yield_contract_commodity_berries_audit.update_date IS 'Update Date is the date when the record was updated last.'
 ;
-COMMENT ON TABLE cuws.declared_yield_contract_commodity_berries_audit IS 'Declared Yield Contract Commodity Berries Audit is the audit table for field'
+COMMENT ON TABLE cuws.declared_yield_contract_commodity_berries_audit IS 'Declared Yield Contract Commodity Berries Audit is the audit table for declared_yield_contract_commodity_berries'
 ;
 
 ALTER TABLE cuws.declared_yield_contract_commodity_berries_audit ADD 
