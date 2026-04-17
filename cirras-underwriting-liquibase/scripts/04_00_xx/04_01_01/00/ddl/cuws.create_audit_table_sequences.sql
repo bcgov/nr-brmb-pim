@@ -4,7 +4,7 @@ CREATE SEQUENCE cuws.flda_seq
     INCREMENT BY 1
     MINVALUE 1
     MAXVALUE 999999999
-    CYCLE
+    NO CYCLE
 ;
 
 CREATE SEQUENCE cuws.afca_seq
@@ -13,7 +13,7 @@ CREATE SEQUENCE cuws.afca_seq
     INCREMENT BY 1
     MINVALUE 1
     MAXVALUE 999999999
-    CYCLE
+    NO CYCLE
 ;
 
 CREATE SEQUENCE cuws.afda_seq
@@ -22,7 +22,7 @@ CREATE SEQUENCE cuws.afda_seq
     INCREMENT BY 1
     MINVALUE 1
     MAXVALUE 999999999
-    CYCLE
+    NO CYCLE
 ;
 
 CREATE SEQUENCE cuws.cfda_seq
@@ -31,7 +31,7 @@ CREATE SEQUENCE cuws.cfda_seq
     INCREMENT BY 1
     MINVALUE 1
     MAXVALUE 999999999
-    CYCLE
+    NO CYCLE
 ;
 
 CREATE SEQUENCE cuws.lla_seq
@@ -40,7 +40,7 @@ CREATE SEQUENCE cuws.lla_seq
     INCREMENT BY 1
     MINVALUE 1
     MAXVALUE 999999999
-    CYCLE
+    NO CYCLE
 ;
 
 CREATE SEQUENCE cuws.llfxa_seq
@@ -49,7 +49,7 @@ CREATE SEQUENCE cuws.llfxa_seq
     INCREMENT BY 1
     MINVALUE 1
     MAXVALUE 999999999
-    CYCLE
+    NO CYCLE
 ;
 
 CREATE SEQUENCE cuws.llraxa_seq
@@ -58,6 +58,41 @@ CREATE SEQUENCE cuws.llraxa_seq
     INCREMENT BY 1
     MINVALUE 1
     MAXVALUE 999999999
-    CYCLE
+    NO CYCLE
 ;
 
+CREATE SEQUENCE cuws.icoa_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;
+
+CREATE SEQUENCE cuws.icca_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;
+
+CREATE SEQUENCE cuws.iccba_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;
+
+CREATE SEQUENCE cuws.ictfa_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;
