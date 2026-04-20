@@ -3,7 +3,7 @@ CREATE TABLE cuws.inventory_unseeded_audit(
     audit_transaction_type_code    varchar(10)       NOT NULL,
     audit_time_stamp               timestamp(6)      NOT NULL,
     inventory_unseeded_guid        varchar(32)       NOT NULL,
-    inventory_field_guid           varchar(32)       NOT NULL,
+    inventory_field_guid           varchar(32),
     crop_commodity_id              numeric(9, 0),
     crop_variety_id                numeric(9, 0),
     is_unseeded_insurable_ind      varchar(1),
