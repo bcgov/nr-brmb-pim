@@ -142,3 +142,38 @@ CREATE SEQUENCE cuws.iua_seq
     NO CYCLE
 ;
 
+CREATE SEQUENCE cuws.dyca_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;
+
+CREATE SEQUENCE cuws.dyccfa_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;
+
+CREATE SEQUENCE cuws.dycca_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;
+
+CREATE SEQUENCE cuws.dyccba_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;
