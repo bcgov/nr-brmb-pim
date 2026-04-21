@@ -177,3 +177,57 @@ CREATE SEQUENCE cuws.dyccba_seq
     MAXVALUE 999999999
     NO CYCLE
 ;
+
+CREATE SEQUENCE cuws.dyfa_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;
+
+CREATE SEQUENCE cuws.dyfcba_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;
+
+CREATE SEQUENCE cuws.dyffa_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;
+
+CREATE SEQUENCE cuws.dyfra_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;
+
+CREATE SEQUENCE cuws.dyfrfa_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;
+
+CREATE SEQUENCE cuws.dyfvba_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;

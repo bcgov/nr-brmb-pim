@@ -46,7 +46,7 @@ COMMENT ON COLUMN cuws.declared_yield_field_forage_audit.update_user IS 'Update 
 ;
 COMMENT ON COLUMN cuws.declared_yield_field_forage_audit.update_date IS 'Update Date is the date when the record was updated last.'
 ;
-COMMENT ON TABLE cuws.declared_yield_field_forage_audit IS 'Declared Yield Field Forage Audit is the audit table for declared_yield_field_forage_audit'
+COMMENT ON TABLE cuws.declared_yield_field_forage_audit IS 'Declared Yield Field Forage Audit is the audit table for declared_yield_field_forage'
 ;
 
 ALTER TABLE cuws.declared_yield_field_forage_audit ADD 
