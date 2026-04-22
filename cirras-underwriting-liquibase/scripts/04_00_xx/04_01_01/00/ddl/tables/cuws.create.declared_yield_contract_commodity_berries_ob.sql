@@ -2,9 +2,9 @@ CREATE TABLE cuws.declared_yield_contract_commodity_berries_ob(
     dyccb_ob_id                                       numeric(10, 0)    NOT NULL,
     audit_transaction_type_code                       varchar(10)       NOT NULL,
     declared_yield_contract_commodity_berries_guid    varchar(32)       NOT NULL,
-    create_user                                       varchar(32)       NOT NULL,
+    create_user                                       varchar(64)       NOT NULL,
     create_date                                       timestamp(0)      NOT NULL,
-    update_user                                       varchar(32)       NOT NULL,
+    update_user                                       varchar(64)       NOT NULL,
     update_date                                       timestamp(0)      NOT NULL
 ) TABLESPACE pg_default
 ;

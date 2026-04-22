@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION cuws.fn_declared_yield_contract_commodity_berries_ob(
 RETURNS TRIGGER AS $$
 DECLARE
  v_dyccb_guid varchar(32);
- v_userid varchar(32);
+ v_userid varchar(64);
 BEGIN
 	IF (TG_OP = 'DELETE') THEN
 		v_dyccb_guid := OLD.declared_yield_contract_commodity_berries_guid;
