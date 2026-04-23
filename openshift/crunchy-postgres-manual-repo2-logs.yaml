@@ -1,0 +1,14 @@
+# This PVC must be manually created. Replace all placeholders first.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: crunchy-postgres-#{ENV}#-manual-repo2-logs
+  namespace: #{NAMESPACE}#
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+  storageClassName: netapp-file-backup
+  volumeMode: Filesystem
