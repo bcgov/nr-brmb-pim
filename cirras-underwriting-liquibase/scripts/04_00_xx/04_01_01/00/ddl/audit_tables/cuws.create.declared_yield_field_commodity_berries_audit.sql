@@ -11,9 +11,9 @@ CREATE TABLE cuws.declared_yield_field_commodity_berries_audit(
     total_planted_acres                                numeric(10, 4),
     total_mature_equivalent_acres                      numeric(10, 4),
     create_user                                        varchar(64)       NOT NULL,
-    create_date                                        timestamp(6)      NOT NULL,
+    create_date                                        timestamp(0)      NOT NULL,
     update_user                                        varchar(64)       NOT NULL,
-    update_date                                        timestamp(6)      NOT NULL
+    update_date                                        timestamp(0)      NOT NULL
 ) TABLESPACE pg_default
 ;
 

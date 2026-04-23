@@ -6,7 +6,7 @@ CREATE TABLE cuws.declared_yield_field_rollup_forage_audit(
     declared_yield_contract_guid                   varchar(32),
     commodity_type_code                            varchar(30),
     total_field_acres                              numeric(14, 4),
-    total_bales_loads                              numeric(4, 0),
+    total_bales_loads                              numeric(6, 0),
     harvested_acres                                numeric(14, 4),
     quantity_harvested_tons                        numeric(14, 4),
     yield_per_acre                                 numeric(14, 4),
