@@ -70,6 +70,11 @@
 	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_triggers/cuws.fn_legal_land_audit.sql"}},
 	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_triggers/cuws.fn_legal_land_field_xref_audit.sql"}},
 	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_triggers/cuws.fn_legal_land_risk_area_xref_audit.sql"}},
+	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_triggers/cuws.fn_verified_yield_amendment_audit.sql"}},
+	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_triggers/cuws.fn_verified_yield_contract_audit.sql"}},
+	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_triggers/cuws.fn_verified_yield_contract_commodity_audit.sql"}},
+	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_triggers/cuws.fn_verified_yield_grain_basket_audit.sql"}},
+	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_triggers/cuws.fn_verified_yield_summary_audit.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/grants/cuws.ddl.apply_grants.sql"}}
 ] } }]}
 
