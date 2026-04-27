@@ -25,6 +25,8 @@ CREATE TABLE cuws.verified_yield_summary_audit(
 
 
 
+COMMENT ON COLUMN cuws.verified_yield_summary_audit.verified_yield_summary_audit_id IS 'Verified Yield Summary Audit Id is the ID of the Verified Yield Summary Audit table, comes from a sequence.'
+;
 COMMENT ON COLUMN cuws.verified_yield_summary_audit.audit_transaction_type_code IS 'Audit Transaction Type Code is a unique type code for each audit transaction such as INSERT, UPDATE or DELETE'
 ;
 COMMENT ON COLUMN cuws.verified_yield_summary_audit.audit_time_stamp IS 'Audit Time Stamp denotes when the record was inserted in the audit table.'
