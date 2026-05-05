@@ -7,7 +7,7 @@ CREATE TABLE cuws.verified_yield_contract_audit(
     crop_year                            numeric(4, 0),
     declared_yield_contract_guid         varchar(32),
     default_yield_meas_unit_type_code    varchar(10),
-    verified_yield_update_timestamp      timestamp(6),
+    verified_yield_update_timestamp      timestamp(0),
     verified_yield_update_user           varchar(64),
     create_user                          varchar(64)      NOT NULL,
     create_date                          timestamp(0)     NOT NULL,

@@ -3,7 +3,7 @@ CREATE TABLE cuws.verified_yield_contract_commodity_audit(
     audit_transaction_type_code                   varchar(10)       NOT NULL,
     audit_time_stamp                              timestamp(6)      NOT NULL,
     verified_yield_contract_commodity_guid        varchar(32)       NOT NULL,
-    verified_yield_contract_guid                  varchar(32)       NOT NULL,
+    verified_yield_contract_guid                  varchar(32),
     crop_commodity_id                             numeric(9, 0),
     commodity_type_code                           varchar(30),
     is_pedigree_ind                               varchar(1),
