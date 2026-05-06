@@ -22,6 +22,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.clients.ValidationException;
+import ca.bc.gov.mal.cirras.underwriting.controllers.async.AsynchronousProcessesServiceImpl;
 import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.utils.ApplicationContextProvider;
 import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
@@ -34,6 +35,9 @@ public abstract class EndpointsTest {
 	private static final Logger logger = LoggerFactory.getLogger(EndpointsTest.class);
 	
 	protected static boolean skipTests = false;
+
+	// Set to true to enable Asynchronous Processes that process outboxes and publish events.
+	protected static boolean enableAsyncProcs = false;
 
 	protected static final int port = 8889;
 	protected static final String contextPath = "/cirras-underwriting-api/v1";
@@ -94,6 +98,19 @@ public abstract class EndpointsTest {
 			swappableTokenService.swap(tokenService);
 		}
 
+		if ( enableAsyncProcs )
+		{
+			logger.warn("Asynchronous Processes are enabled.");
+		} 
+		else 
+		{
+			// Turn Off the AsynchronousProcesses by default.
+			AsynchronousProcessesServiceImpl asynchronousProcessesService = webApplicationContext.getBean("asynchronousProcessesService", AsynchronousProcessesServiceImpl.class);
+			asynchronousProcessesService.stop();
+
+			logger.warn("Asynchronous Processes are disabled.");
+		}
+		
 		logger.debug(">startServer");
 	}
 
