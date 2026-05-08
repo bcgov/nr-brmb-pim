@@ -18,10 +18,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import ca.bc.gov.mal.cirras.underwriting.controllers.async.AsyncMasterTask;
 import ca.bc.gov.mal.cirras.underwriting.controllers.async.AsynchronousProcessesService;
 import ca.bc.gov.mal.cirras.underwriting.controllers.async.AsynchronousProcessesServiceImpl;
-import ca.bc.gov.mal.cirras.underwriting.controllers.async.FailOverService;
-import ca.bc.gov.mal.cirras.underwriting.controllers.async.FailOverServiceImpl;
 import ca.bc.gov.mal.cirras.underwriting.controllers.async.FetchOutboxTask;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasDataSyncService;
+import ca.bc.gov.mal.cirras.underwriting.services.FailOverService;
 
 
 @Configuration
@@ -46,22 +45,14 @@ public class AsynchronousProcessesSpringConfig {
 
 	// Beans provided by ServiceApiSpringConfig
 	@Autowired CirrasDataSyncService cirrasDataSyncService;
+	@Autowired FailOverService failOverService;
 
 	@Value("${CIRRAS_UNDERWRITING_REST_CLIENT_ID}")
 	private String webadeOauth2ClientId;
 
 	@Value("${CIRRAS_UNDERWRITING_REST_SECRET}")
 	private String webadeOauth2ClientSecret;
-	
-	@Bean
-	FailOverService failOverService() {
-		FailOverServiceImpl result;
 		
-		result = new FailOverServiceImpl();
-		
-		return result;
-	}
-	
 	@Bean
 	UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken() {
 		UsernamePasswordAuthenticationToken result;
@@ -79,7 +70,7 @@ public class AsynchronousProcessesSpringConfig {
 		result = new AsyncMasterTask(applicationProperties);
 		result.setUsernamePasswordAuthenticationToken(usernamePasswordAuthenticationToken());
 		result.setAuthenticationProvider(securitySpringConfig.authenticationProvider());
-		result.setFailOverService(failOverService());
+		result.setFailOverService(failOverService);
 
 		return result;
 	}

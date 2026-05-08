@@ -7,16 +7,32 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingService;
+import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingServiceException;
+import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.EndpointsRsrc;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
 
 
 public class FetchOutboxTaskTest extends EndpointsTest {
 	private static final Logger logger = LoggerFactory.getLogger(FetchOutboxTaskTest.class);
+
+	private static final String[] SCOPES = {
+			Scopes.GET_TOP_LEVEL
+	};
+		
+	private CirrasUnderwritingService service;
+	private EndpointsRsrc topLevelEndpoints;
+	
 	
 	@Before
-	public void prepareTests() throws NotFoundDaoException, DaoException{
+	public void prepareTests() throws CirrasUnderwritingServiceException, Oauth2ClientException, NotFoundDaoException, DaoException{
+		service = getService(SCOPES);
+		topLevelEndpoints = service.getTopLevelEndpoints();
+
 		delete();
 	}
 
@@ -38,6 +54,8 @@ public class FetchOutboxTaskTest extends EndpointsTest {
 			logger.warn("Skipping tests");
 			return;
 		}
+
+		Assert.assertTrue(enableAsyncProcs);
 		
 		// Not really a unit test, but can use to just run the web server for x minutes. Useful for testing the AsynchronousProcessesService and its associated threads.
 		synchronized (this) { 

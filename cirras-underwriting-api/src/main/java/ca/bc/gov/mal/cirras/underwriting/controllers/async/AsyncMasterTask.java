@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
+import ca.bc.gov.mal.cirras.underwriting.services.FailOverService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.PropertyUtils;
 import ca.bc.gov.nrs.wfone.common.utils.ApplicationContextProvider;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
@@ -29,6 +30,7 @@ public class AsyncMasterTask extends AsynchronousTimerTask {
 	private FailOverService failOverService;
 	
 	private static final String LOGGING_ID_SOURCE = "SYNCFR";
+	private static final String PROCESS_NAME = "UNDERWRITING_EVENT_PUBLISHER";
 	
 	private String NODE_NAME;
 	
@@ -70,7 +72,7 @@ public class AsyncMasterTask extends AsynchronousTimerTask {
 			
 			WebAdeAuthentication authentication = this.getWebAdeAuthentication();
 						
-			boolean masterNodeInd = this.failOverService.asyncCheckForMaster(NODE_NAME, Integer.valueOf(nodeExpiryMinutes), authentication);
+			boolean masterNodeInd = this.failOverService.asyncCheckForMaster(PROCESS_NAME, NODE_NAME, Integer.valueOf(nodeExpiryMinutes), getUserId(authentication));
 			
 			ApplicationContext webApplicationContext = ApplicationContextProvider.getApplicationContext();
 			
@@ -151,6 +153,16 @@ public class AsyncMasterTask extends AsynchronousTimerTask {
 		return randomNum;
 	}
 
+	private String getUserId(WebAdeAuthentication authentication) {
+		String userId = "DEFAULT_USERID";
+
+		if (authentication != null) {
+			userId = authentication.getUserId();
+		}
+
+		return userId;
+	}
+	
 	@Override
 	protected Logger getLogger() {
 		return logger;

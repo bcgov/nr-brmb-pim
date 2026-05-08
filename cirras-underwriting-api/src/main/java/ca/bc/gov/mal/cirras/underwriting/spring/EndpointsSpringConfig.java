@@ -74,7 +74,7 @@ public class EndpointsSpringConfig {
 	    
 	    return result;
 	}
-
+	
 	@Bean
 	public ResourceBundleMessageSource messageSource() {
 		ResourceBundleMessageSource result;

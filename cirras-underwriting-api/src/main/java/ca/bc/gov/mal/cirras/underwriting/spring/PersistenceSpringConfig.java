@@ -68,6 +68,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.PolicyStatusCodeDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.ProductDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.RiskAreaDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.SeedingDeadlineDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.SyncOwnershipDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.SyncOwnershipDaoImpl;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.UnderwritingCommentDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.UnderwritingYearDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.UserSettingDao;
@@ -431,4 +433,8 @@ public class PersistenceSpringConfig {
 		return new DeclaredYieldContractCommodityBerriesOutboxDao();
 	}
 
+	@Bean
+	public SyncOwnershipDao syncOwnershipDao() {
+		return new SyncOwnershipDaoImpl();
+	}
 }
