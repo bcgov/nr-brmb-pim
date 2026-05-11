@@ -20,7 +20,6 @@ import ca.bc.gov.mal.cirras.underwriting.services.CirrasMaintenanceService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasUwLandManagementService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasVerifiedYieldService;
 import ca.bc.gov.mal.cirras.underwriting.services.FailOverService;
-import ca.bc.gov.mal.cirras.underwriting.services.FailOverServiceImpl;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityTypeCodeRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.ContractedFieldDetailRsrcFactory;
@@ -493,9 +492,9 @@ public class ServiceApiSpringConfig {
 
 	@Bean()
 	public FailOverService failOverService() {
-		FailOverServiceImpl result;
+		FailOverService result;
 		
-		result = new FailOverServiceImpl();
+		result = new FailOverService();
 		result.setSyncOwnershipDao(persistenceSpringConfig.syncOwnershipDao());
 		
 		return result;

@@ -22,7 +22,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.clients.ValidationException;
-import ca.bc.gov.mal.cirras.underwriting.controllers.async.AsynchronousProcessesServiceImpl;
+import ca.bc.gov.mal.cirras.underwriting.controllers.async.AsynchronousProcessesService;
 import ca.bc.gov.nrs.wfone.common.model.Message;
 import ca.bc.gov.nrs.wfone.common.utils.ApplicationContextProvider;
 import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
@@ -105,7 +105,7 @@ public abstract class EndpointsTest {
 		else 
 		{
 			// Turn Off the AsynchronousProcesses by default.
-			AsynchronousProcessesServiceImpl asynchronousProcessesService = webApplicationContext.getBean("asynchronousProcessesService", AsynchronousProcessesServiceImpl.class);
+			AsynchronousProcessesService asynchronousProcessesService = webApplicationContext.getBean("asynchronousProcessesService", AsynchronousProcessesService.class);
 			asynchronousProcessesService.stop();
 
 			logger.warn("Asynchronous Processes are disabled.");

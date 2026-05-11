@@ -17,7 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 
 import ca.bc.gov.mal.cirras.underwriting.controllers.async.AsyncMasterTask;
 import ca.bc.gov.mal.cirras.underwriting.controllers.async.AsynchronousProcessesService;
-import ca.bc.gov.mal.cirras.underwriting.controllers.async.AsynchronousProcessesServiceImpl;
 import ca.bc.gov.mal.cirras.underwriting.controllers.async.FetchOutboxTask;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasDataSyncService;
 import ca.bc.gov.mal.cirras.underwriting.services.FailOverService;
@@ -90,9 +89,9 @@ public class AsynchronousProcessesSpringConfig {
 
 	@Bean
 	AsynchronousProcessesService asynchronousProcessesService() throws AddressException {
-		AsynchronousProcessesServiceImpl result;
+		AsynchronousProcessesService result;
 		
-		result = new AsynchronousProcessesServiceImpl();
+		result = new AsynchronousProcessesService();
 		result.setApplicationProperties(applicationProperties);
 		result.setAsyncMasterTask(asyncMasterTask());
 
