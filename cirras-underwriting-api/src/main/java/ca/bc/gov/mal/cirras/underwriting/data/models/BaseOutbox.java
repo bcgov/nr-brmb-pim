@@ -10,7 +10,7 @@ public abstract class BaseOutbox implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String transactionType;
-	private Date entryTimestamp;   // TODO: Rename to createDate?
+	private Date createDate;
 
 	public String getTransactionType() {
 		return transactionType;
@@ -20,12 +20,12 @@ public abstract class BaseOutbox implements Serializable {
 		this.transactionType = transactionType;
 	}	
 	
-	public Date getEntryTimestamp() {
-		return entryTimestamp;
+	public Date getCreateDate() {
+		return createDate;
 	}
 	
-	public void setEntryTimestamp(Date entryTimestamp) {
-		this.entryTimestamp = entryTimestamp;
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 	
 	// Returns the primary key for the source record this outbox points to, as a string.

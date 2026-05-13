@@ -59,7 +59,7 @@ public class FetchOutboxTaskTest extends EndpointsTest {
 		
 		// Not really a unit test, but can use to just run the web server for x minutes. Useful for testing the AsynchronousProcessesService and its associated threads.
 		synchronized (this) { 
-			this.wait(10*60*1000);  // 10 minutes.
+			this.wait(15*60*1000);  // 15 minutes.
 		}
 
 		// TODO: Might be able to test the actual outbox processing.

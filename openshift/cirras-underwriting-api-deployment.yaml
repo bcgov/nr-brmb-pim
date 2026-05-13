@@ -32,6 +32,7 @@ spec:
             export POSTGRES_PASSWORD="{{ .Data.data.POSTGRES_PASSWORD }}"
             export CIRRAS_UNDERWRITING_REST_SECRET="{{ .Data.data.CIRRAS_UNDERWRITING_REST_SECRET }}"
             export JASPER_PASSWORD="{{ .Data.data.JASPER_PASSWORD }}"
+            export MESSAGE_QUEUE_UNDERWRITING_REST_NKEY_SEED="{{ .Data.data.MESSAGE_QUEUE_UNDERWRITING_REST_NKEY_SEED }}"
           {{- end }}          
     spec:
       serviceAccountName: #{LICENSE_PLATE}#-vault
@@ -138,6 +139,71 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-api-config-#{ENV}#
                   key: LOG_LEVEL
+            - name: EMAIL_HOST_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: EMAIL_HOST_NAME
+            - name: EMAIL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: EMAIL_PORT
+            - name: EMAIL_FROM_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: EMAIL_FROM_ADDRESS
+            - name: MESSAGE_QUEUE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: MESSAGE_QUEUE_URL
+            - name: EMAIL_MASTER_TASK_SYNCH_ERROR_SUBJECT
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: EMAIL_MASTER_TASK_SYNCH_ERROR_SUBJECT
+            - name: EMAIL_OUTBOX_SYNCH_ERROR_SUBJECT
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: EMAIL_OUTBOX_SYNCH_ERROR_SUBJECT
+            - name: EMAIL_ADMIN_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: EMAIL_ADMIN_ADDRESS
+            - name: EMAIL_ERROR_SEND_FREQUENCY
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: EMAIL_ERROR_SEND_FREQUENCY
+            - name: APPLICATION_ENVIRONMENT_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: APPLICATION_ENVIRONMENT_NAME
+            - name: POLLING_OUTBOX_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: POLLING_OUTBOX_ENABLED
+            - name: POLLING_OUTBOX_SECONDS_FREQUENCY
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: POLLING_OUTBOX_SECONDS_FREQUENCY
+            - name: POLLING_OUTBOX_MAX_RECORDS
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: POLLING_OUTBOX_MAX_RECORDS
+            - name: POLLING_OUTBOX_MAX_ITERATIONS
+              valueFrom:
+                configMapKeyRef:
+                  name: cirras-underwriting-api-config-#{ENV}#
+                  key: POLLING_OUTBOX_MAX_ITERATIONS
           livenessProbe:
             httpGet:
               path: /cirras-underwriting-api/v1/checkHealth?callstack=test

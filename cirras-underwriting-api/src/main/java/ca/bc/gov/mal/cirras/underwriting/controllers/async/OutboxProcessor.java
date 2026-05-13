@@ -15,7 +15,13 @@ import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 
 public abstract class OutboxProcessor {
-
+	
+	public static final String OUTBOX_POLLING_ENABLED_KEY = "POLLING_OUTBOX_ENABLED";
+	public static final String OUTBOX_POLLING_SECONDS_FREQUENCY_KEY = "POLLING_OUTBOX_SECONDS_FREQUENCY";
+	public static final String OUTBOX_POLLING_MAX_RECORDS_KEY = "POLLING_OUTBOX_MAX_RECORDS";
+	public static final String OUTBOX_POLLING_MAX_ITERATIONS_KEY = "POLLING_OUTBOX_MAX_ITERATIONS";
+	
+	
 	private boolean isEnabled;
 	private long frequency;
 	private int maxRecords;
@@ -103,21 +109,27 @@ public abstract class OutboxProcessor {
 	// Returns the full name of the outbox model object that this OutboxProcessor supports (i.e. BaseOutbox or a subclass thereof).
 	abstract protected String getOutboxClassName();
 
-	// TODO: Set default?
 	// Property name that controls whether this Outbox is processed.
-	abstract protected String getEnabledPropertyKey();
+	// The default value also enables the FetchOutboxTask.
+	protected String getEnabledPropertyKey() {
+		return OUTBOX_POLLING_ENABLED_KEY;
+	}
 	
-	// TODO: Set default?
 	// Property name that controls how often this Outbox is processed.
-	abstract protected String getFrequencyPropertyKey();
+	// The default value also controls how often FetchOutboxTask runs.
+	protected String getFrequencyPropertyKey() {
+		return OUTBOX_POLLING_SECONDS_FREQUENCY_KEY;
+	}
 
-	// TODO: Set default?
 	// Property name that controls how many records are fetched at a time for this Outbox.
-	abstract protected String getMaxRecordsPropertyKey();
+	protected String getMaxRecordsPropertyKey() {
+		return OUTBOX_POLLING_MAX_RECORDS_KEY;
+	}
 
-	// TODO: Set default?
 	// Property name that controls how many fetches are performed in one run for this Outbox.
-	abstract protected String getMaxIterationsPropertyKey();
+	protected String getMaxIterationsPropertyKey() {
+		return OUTBOX_POLLING_MAX_ITERATIONS_KEY;
+	}
 	
 	abstract protected List<? extends BaseOutbox> getNextOutboxes(int maxRecords, WebAdeAuthentication authentication, CirrasDataSyncService cirrasDataSyncService) throws ServiceException;
 

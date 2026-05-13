@@ -5,7 +5,7 @@ import java.io.Serializable;
 //
 // This is not going to be a resource.
 //
-public class DeclaredYieldContractCommodityBerriesOutbox extends BaseOutbox implements Serializable {
+public class DopYieldContractCommodityBerriesOutbox extends BaseOutbox implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer declaredYieldContractCommodityBerriesOutboxId;

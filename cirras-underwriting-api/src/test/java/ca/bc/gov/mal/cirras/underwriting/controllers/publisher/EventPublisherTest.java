@@ -15,8 +15,6 @@ import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingServiceException;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.EndpointsRsrc;
-import ca.bc.gov.mal.cirras.underwriting.services.EventPublisher;
-import ca.bc.gov.mal.cirras.underwriting.services.EventPublisherException;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
 

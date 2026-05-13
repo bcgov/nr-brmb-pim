@@ -33,7 +33,7 @@ public abstract class AsynchronousTimerTask extends TimerTask {
 	private static final String EMAIL_FROM_ADDRESS_KEY = "EMAIL_FROM_ADDRESS";
 	private static final String EMAIL_ERROR_TO_KEY = "EMAIL_ADMIN_ADDRESS";
 	private static final String EMAIL_ERROR_SEND_FREQUENCY_KEY = "EMAIL_ERROR_SEND_FREQUENCY";
-	private static final String ENVIRONMENT_KEY = "DEFAULT_APPLICATION_ENVIRONMENT";
+	private static final String ENVIRONMENT_KEY = "APPLICATION_ENVIRONMENT_NAME";
 	
 	private static final String ENVIRONMENT_PLACE_HOLDER = "%environment%";
 	
@@ -108,7 +108,7 @@ public abstract class AsynchronousTimerTask extends TimerTask {
 			throw new RuntimeException("Missing property '"+getEmailSubjectPropertyKey()+"'");
 		}
 		
-		subject = subjectTemplate.replace(ENVIRONMENT_PLACE_HOLDER, environment);
+		subject = subjectTemplate.replace(ENVIRONMENT_PLACE_HOLDER, environment.toUpperCase());
 		
 		emailFrequency = PropertyUtils.getProperty(applicationProperties, EMAIL_ERROR_SEND_FREQUENCY_KEY, 10) * 1000 * 60;
 

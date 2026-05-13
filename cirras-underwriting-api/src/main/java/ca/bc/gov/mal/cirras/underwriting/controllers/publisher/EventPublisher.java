@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UnderwritingEvent;
-import ca.bc.gov.mal.cirras.underwriting.services.EventPublisher;
-import ca.bc.gov.mal.cirras.underwriting.services.EventPublisherException;
 import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
 import io.nats.client.Connection;
 import io.nats.client.Connection.Status;
@@ -23,10 +21,9 @@ import io.nats.client.Options;
 import io.nats.client.api.PublishAck;
 import io.nats.client.impl.NatsMessage;
 
-// TODO: Merge with interface?
-public class EventPublisherImpl implements EventPublisher {
+public class EventPublisher {
 
-	static final Logger logger = LoggerFactory.getLogger(EventPublisherImpl.class);
+	static final Logger logger = LoggerFactory.getLogger(EventPublisher.class);
 	
 	private static ObjectMapper mapper = new ObjectMapper();
 
@@ -36,7 +33,6 @@ public class EventPublisherImpl implements EventPublisher {
 	// Not created until there is something to publish.
 	private Connection natsConnection = null;
 		
-	@Override
 	public void publish(
 			String eventType,
 			Object resourceBeforeUpdate,

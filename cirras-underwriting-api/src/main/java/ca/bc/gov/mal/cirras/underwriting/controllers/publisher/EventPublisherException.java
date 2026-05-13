@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.services;
+package ca.bc.gov.mal.cirras.underwriting.controllers.publisher;
 
 public class EventPublisherException extends Exception {
 

@@ -8,11 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import ca.bc.gov.mal.cirras.underwriting.controllers.publisher.EventPublisherImpl;
+import ca.bc.gov.mal.cirras.underwriting.controllers.publisher.EventPublisher;
 import ca.bc.gov.mal.cirras.underwriting.controllers.publisher.NatsAuthHandler;
 import ca.bc.gov.mal.cirras.underwriting.controllers.publisher.NatsConnectionListener;
 import ca.bc.gov.mal.cirras.underwriting.controllers.publisher.NatsErrorListener;
-import ca.bc.gov.mal.cirras.underwriting.services.EventPublisher;
 import io.nats.client.Options;
 
 @Configuration
@@ -59,9 +58,9 @@ public class EventPublisherSpringConfig  {
 	
 	@Bean
 	public EventPublisher eventPublisher() {
-		EventPublisherImpl result;
+		EventPublisher result;
 		
-		result = new EventPublisherImpl();
+		result = new EventPublisher();
 		result.setMessageQueueOptions(natsConnectionOptions());
 		result.setMessageQueueSubject("underwriting-event-channel");
 		
