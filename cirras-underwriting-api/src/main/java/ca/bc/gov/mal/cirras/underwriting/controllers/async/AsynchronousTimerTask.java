@@ -19,6 +19,7 @@ import jakarta.mail.internet.MimeMessage.RecipientType;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
@@ -65,11 +66,20 @@ public abstract class AsynchronousTimerTask extends TimerTask {
 	private Instant lastErrorEmailSent;
 
 	protected Properties applicationProperties;
+
+	private static final Logger logger = LoggerFactory.getLogger(AsynchronousTimerTask.class);
 	
 	protected AsynchronousTimerTask(Properties applicationProperties) throws AddressException {
 
 		this.applicationProperties = applicationProperties;
 
+		String webadeCheckTokenURL = applicationProperties.getProperty("WEBADE_CHECK_TOKEN_URL");
+		if ( webadeCheckTokenURL == null ) {
+			logger.info("TEST WEBADE URL PROP: NULL");
+		} else {
+			logger.info("TEST WEBADE URL PROP: " + webadeCheckTokenURL);
+		}
+		
 		emailSession = EmailUtils.getEmailSession(applicationProperties);
 
 		emailFrom = PropertyUtils.getProperty(applicationProperties, EMAIL_FROM_ADDRESS_KEY);
