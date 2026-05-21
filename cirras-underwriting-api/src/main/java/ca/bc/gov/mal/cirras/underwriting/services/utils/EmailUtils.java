@@ -43,6 +43,10 @@ public final class EmailUtils {
 				
 				throw new RuntimeException("Missing property '"+EMAIL_FROM_ADDRESS_PROPERTY+"'");
 			}
+
+			logger.debug("Email Host: " + emailHostName);
+			logger.debug("Email Port: " + emailPort);
+			logger.debug("Email From: " + emailFromAddress);
 			
 			Properties mailProperties = new Properties();
 			mailProperties.setProperty("mail.smtp.host", emailHostName);
