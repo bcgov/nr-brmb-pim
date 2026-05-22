@@ -104,8 +104,7 @@ public class AsynchronousProcessesSpringConfig {
 	@Bean
 	Properties asyncProcessProperties() {
 
-		// TODO: Does this need to include applicationProperties?
-		Properties props = new Properties(applicationProperties);
+		Properties props = new Properties();
 
 		addPropertyIfSet(EmailUtils.EMAIL_HOST_NAME_PROPERTY, emailHostName, props);
 		addPropertyIfSet(EmailUtils.EMAIL_PORT_PROPERTY, emailPort, props);

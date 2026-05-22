@@ -80,7 +80,7 @@ public class FetchOutboxTask extends AsynchronousTimerTask {
 			for ( OutboxProcessor op : outboxProcessorList ) {
 				op.process(authentication, cirrasDataSyncService);
 			}
-						
+			
 		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 			addError(ERROR_TYPE_UNRECOVERABLE, "Encountered an unrecoverable error: "+e.getMessage());
