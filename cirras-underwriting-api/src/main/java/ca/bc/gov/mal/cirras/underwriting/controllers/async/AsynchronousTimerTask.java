@@ -31,10 +31,10 @@ import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 
 public abstract class AsynchronousTimerTask extends TimerTask {
 	
-	private static final String EMAIL_FROM_ADDRESS_KEY = "EMAIL_FROM_ADDRESS";
-	private static final String EMAIL_ERROR_TO_KEY = "EMAIL_ADMIN_ADDRESS";
-	private static final String EMAIL_ERROR_SEND_FREQUENCY_KEY = "EMAIL_ERROR_SEND_FREQUENCY";
-	private static final String ENVIRONMENT_KEY = "APPLICATION_ENVIRONMENT_NAME";
+	public static final String EMAIL_FROM_ADDRESS_KEY = "EMAIL_FROM_ADDRESS";
+	public static final String EMAIL_ERROR_TO_KEY = "EMAIL_ADMIN_ADDRESS";
+	public static final String EMAIL_ERROR_SEND_FREQUENCY_KEY = "EMAIL_ERROR_SEND_FREQUENCY";
+	public static final String ENVIRONMENT_KEY = "APPLICATION_ENVIRONMENT_NAME";
 	
 	private static final String ENVIRONMENT_PLACE_HOLDER = "%environment%";
 	

@@ -25,7 +25,7 @@ import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 
 public class AsyncMasterTask extends AsynchronousTimerTask {
 
-	private static final String EMAIL_SUBJECT_PROPERTY_KEY = "EMAIL_MASTER_TASK_SYNCH_ERROR_SUBJECT";
+	public static final String EMAIL_SUBJECT_PROPERTY_KEY = "EMAIL_MASTER_TASK_SYNCH_ERROR_SUBJECT";
 	
 	private FailOverService failOverService;
 	
