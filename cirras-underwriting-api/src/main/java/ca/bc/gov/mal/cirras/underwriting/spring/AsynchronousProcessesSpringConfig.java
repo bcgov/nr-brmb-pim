@@ -48,10 +48,6 @@ public class AsynchronousProcessesSpringConfig {
 	// Beans provided by ServiceApiSpringConfig
 	@Autowired CirrasDataSyncService cirrasDataSyncService;
 	@Autowired FailOverService failOverService;
-
-	@Value("${EMAIL_HOST_NAME}")
-	private String emailHostName;
-	
 	
 	@Value("${CIRRAS_UNDERWRITING_REST_CLIENT_ID}")
 	private String webadeOauth2ClientId;
@@ -131,12 +127,6 @@ public class AsynchronousProcessesSpringConfig {
 	@Bean
 	@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 	AsyncMasterTask asyncMasterTask() throws AddressException {
-
-		if ( emailHostName == null ) {
-			logger.info("TEST EMAIL HOST NAME: NULL");
-		} else {
-			logger.info("TEST EMAIL HOST NAME: " + emailHostName);
-		}
 		
 		AsyncMasterTask result;
 		

@@ -72,13 +72,6 @@ public abstract class AsynchronousTimerTask extends TimerTask {
 	protected AsynchronousTimerTask(Properties applicationProperties) throws AddressException {
 
 		this.applicationProperties = applicationProperties;
-
-		String webadeCheckTokenURL = applicationProperties.getProperty("WEBADE_CHECK_TOKEN_URL");
-		if ( webadeCheckTokenURL == null ) {
-			logger.info("TEST WEBADE URL PROP: NULL");
-		} else {
-			logger.info("TEST WEBADE URL PROP: " + webadeCheckTokenURL);
-		}
 		
 		emailSession = EmailUtils.getEmailSession(applicationProperties);
 
