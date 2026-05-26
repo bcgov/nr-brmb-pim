@@ -9,7 +9,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 
 import ca.bc.gov.mal.cirras.underwriting.data.models.BaseOutbox;
-import ca.bc.gov.mal.cirras.underwriting.services.CirrasDataSyncService;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasUnderwritingOutboxService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.PropertyUtils;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
@@ -45,7 +45,7 @@ public abstract class OutboxProcessor {
 	}
 
 	// TODO: Create an OutboxService instead of using CirrasDataSyncService?
-	public void process(WebAdeAuthentication authentication, CirrasDataSyncService cirrasDataSyncService) throws ServiceException {
+	public void process(WebAdeAuthentication authentication, CirrasUnderwritingOutboxService cirrasUnderwritingOutboxService) throws ServiceException {
 		getLogger().debug("<process");
 		
 		// Check whether to process outboxes.
@@ -71,7 +71,7 @@ public abstract class OutboxProcessor {
 			int numRecordsProcessed = 0;
 			int numEventsPublished = 0;
 			for ( int i = 0; i < maxIterations && !noMoreRecords; i++ ) { 
-				List<? extends BaseOutbox> outboxes = getNextOutboxes(maxRecords, authentication, cirrasDataSyncService);
+				List<? extends BaseOutbox> outboxes = getNextOutboxes(maxRecords, authentication, cirrasUnderwritingOutboxService);
 				
 				if ( outboxes != null && !outboxes.isEmpty() ) { 
 
@@ -87,7 +87,7 @@ public abstract class OutboxProcessor {
 							doPublishEvent = true;
 						}
 
-						processOutbox(outbox, doPublishEvent, authentication, cirrasDataSyncService);
+						processOutbox(outbox, doPublishEvent, authentication, cirrasUnderwritingOutboxService);
 						
 						numRecordsProcessed++;
 						if ( doPublishEvent ) {
@@ -131,9 +131,9 @@ public abstract class OutboxProcessor {
 		return OUTBOX_POLLING_MAX_ITERATIONS_KEY;
 	}
 	
-	abstract protected List<? extends BaseOutbox> getNextOutboxes(int maxRecords, WebAdeAuthentication authentication, CirrasDataSyncService cirrasDataSyncService) throws ServiceException;
+	abstract protected List<? extends BaseOutbox> getNextOutboxes(int maxRecords, WebAdeAuthentication authentication, CirrasUnderwritingOutboxService cirrasUnderwritingOutboxService) throws ServiceException;
 
-	abstract protected void processOutbox(BaseOutbox outbox, boolean doPublishEvent, WebAdeAuthentication authentication, CirrasDataSyncService cirrasDataSyncService) throws ServiceException;
+	abstract protected void processOutbox(BaseOutbox outbox, boolean doPublishEvent, WebAdeAuthentication authentication, CirrasUnderwritingOutboxService cirrasUnderwritingOutboxService) throws ServiceException;
 
 	abstract protected Logger getLogger();
 	

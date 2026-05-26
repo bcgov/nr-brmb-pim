@@ -166,7 +166,11 @@ public class ResourceTypes extends BaseResourceTypes {
 	public static final String CREATE_DOP_YIELD_CONTRACT = NAMESPACE + "createDopYieldContract";
 	public static final String UPDATE_DOP_YIELD_CONTRACT = NAMESPACE + "updateDopYieldContract";
 	public static final String DELETE_DOP_YIELD_CONTRACT = NAMESPACE + "deleteDopYieldContract";
-	
+
+	//DOP Yield Contract Simple
+	public static final String DOP_YIELD_CONTRACT_SIMPLE_NAME = "dopYieldContractSimple";
+	public static final String DOP_YIELD_CONTRACT_SIMPLE = NAMESPACE + DOP_YIELD_CONTRACT_SIMPLE_NAME;
+
 	//Yield Measurement Unit Type
 	public static final String YIELD_MEAS_UNIT_TYPE_CODE_NAME = "YieldMeasUnitTypeCode";
 	public static final String YIELD_MEAS_UNIT_TYPE_CODE = NAMESPACE + YIELD_MEAS_UNIT_TYPE_CODE_NAME;

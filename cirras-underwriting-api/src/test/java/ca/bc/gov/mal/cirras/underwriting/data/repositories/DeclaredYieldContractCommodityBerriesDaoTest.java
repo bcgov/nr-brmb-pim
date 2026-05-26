@@ -116,7 +116,9 @@ public class DeclaredYieldContractCommodityBerriesDaoTest {
 		Assert.assertEquals("TotalSoldShippedYield", newDto.getTotalSoldShippedYield(), fetchedDto.getTotalSoldShippedYield());
 		Assert.assertEquals("TotalSalesYield", newDto.getTotalSalesYield(), fetchedDto.getTotalSalesYield());
 		Assert.assertEquals("TotalAbandonmentYield", newDto.getTotalAbandonmentYield(), fetchedDto.getTotalAbandonmentYield());
-
+		Assert.assertEquals("ContractId", contractId, fetchedDto.getContractId());
+		Assert.assertEquals("CropYear", cropYear, fetchedDto.getCropYear());
+		
 		//UPDATE
 		fetchedDto.setTotalProduction(700.0);
 		fetchedDto.setTotalProductionOverride(300.0);
@@ -138,6 +140,8 @@ public class DeclaredYieldContractCommodityBerriesDaoTest {
 		Assert.assertEquals("TotalSoldShippedYield", fetchedDto.getTotalSoldShippedYield(), updatedDto.getTotalSoldShippedYield());
 		Assert.assertEquals("TotalSalesYield", fetchedDto.getTotalSalesYield(), updatedDto.getTotalSalesYield());
 		Assert.assertEquals("TotalAbandonmentYield", fetchedDto.getTotalAbandonmentYield(), updatedDto.getTotalAbandonmentYield());
+		Assert.assertEquals("ContractId", contractId, updatedDto.getContractId());
+		Assert.assertEquals("CropYear", cropYear, updatedDto.getCropYear());
 
 
 		//INSERT second commodity
