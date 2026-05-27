@@ -20,7 +20,7 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.async.AsynchronousProcesses
 import ca.bc.gov.mal.cirras.underwriting.controllers.async.AsynchronousTimerTask;
 import ca.bc.gov.mal.cirras.underwriting.controllers.async.FetchOutboxTask;
 import ca.bc.gov.mal.cirras.underwriting.controllers.async.OutboxProcessor;
-import ca.bc.gov.mal.cirras.underwriting.services.CirrasDataSyncService;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasUnderwritingOutboxService;
 import ca.bc.gov.mal.cirras.underwriting.services.FailOverService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.EmailUtils;
 
@@ -46,7 +46,7 @@ public class AsynchronousProcessesSpringConfig {
 	@Autowired SecuritySpringConfig securitySpringConfig;
 
 	// Beans provided by ServiceApiSpringConfig
-	@Autowired CirrasDataSyncService cirrasDataSyncService;
+	@Autowired CirrasUnderwritingOutboxService cirrasUnderwritingOutboxService;
 	@Autowired FailOverService failOverService;
 
 	@Value("${CIRRAS_UNDERWRITING_REST_CLIENT_ID}")
@@ -145,7 +145,7 @@ public class AsynchronousProcessesSpringConfig {
 		result = new FetchOutboxTask(asyncProcessProperties());
 		result.setUsernamePasswordAuthenticationToken(usernamePasswordAuthenticationToken());
 		result.setAuthenticationProvider(securitySpringConfig.authenticationProvider());
-		result.setCirrasDataSyncService(cirrasDataSyncService);
+		result.setCirrasUnderwritingOutboxService(cirrasUnderwritingOutboxService);
 		
 		return result;
 	}

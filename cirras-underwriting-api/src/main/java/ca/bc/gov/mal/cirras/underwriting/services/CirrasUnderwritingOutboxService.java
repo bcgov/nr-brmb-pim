@@ -9,51 +9,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactEmailRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactPhoneRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerContactRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.PolicyRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.ProductRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCodeRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeCodeRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeVarietyXrefRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityVarietyRsrc;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.GrowerDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.OfficeDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.PolicyDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.PolicyStatusCodeDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.ProductDao;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.GrowerDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.OfficeDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyStatusCodeDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.ProductDto;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractSimpleRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.UnderwritingEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityBerriesOutbox;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeCodeDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeVarietyXrefDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.ContactDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.ContactEmailDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.ContactPhoneDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.CropCommodityDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.CropVarietyDto;
-import ca.bc.gov.mal.cirras.underwriting.data.entities.GrowerContactDto;
-import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CirrasDataSyncRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.models.OutboxTransactionTypes;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityBerriesDto;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityBerriesOutboxDto;
+import ca.bc.gov.mal.cirras.underwriting.controllers.publisher.EventPublisher;
+import ca.bc.gov.mal.cirras.underwriting.controllers.publisher.EventPublisherException;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractSimpleRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.OutboxFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityBerriesDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityBerriesOutboxDao;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
-import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.CommodityTypeCodeDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.CommodityTypeVarietyXrefDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.ContactDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.ContactEmailDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.ContactPhoneDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropCommodityDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropVarietyDao;
-import ca.bc.gov.mal.cirras.underwriting.data.repositories.GrowerContactDao;
-import ca.bc.gov.mal.cirras.underwriting.data.resources.PoliciesSyncEventTypes;
 
 public class CirrasUnderwritingOutboxService {
 
@@ -62,35 +33,37 @@ public class CirrasUnderwritingOutboxService {
 	private Properties applicationProperties;
 
 	// factories
-	private CirrasDataSyncRsrcFactory cirrasDataSyncRsrcFactory;
+	private OutboxFactory outboxFactory;
+	private DopYieldContractSimpleRsrcFactory dopYieldContractSimpleRsrcFactory;
 
 	// daos
-	private PolicyStatusCodeDao policyStatusCodeDao;
+	private DeclaredYieldContractCommodityBerriesOutboxDao declaredYieldContractCommodityBerriesOutboxDao;
+	private DeclaredYieldContractCommodityBerriesDao declaredYieldContractCommodityBerriesDao;
+
+	private EventPublisher eventPublisher;
 
 	public void setApplicationProperties(Properties applicationProperties) {
 		this.applicationProperties = applicationProperties;
 	}
 
-	public void setCirrasDataSyncRsrcFactory(CirrasDataSyncRsrcFactory cirrasDataSyncRsrcFactory) {
-		this.cirrasDataSyncRsrcFactory = cirrasDataSyncRsrcFactory;
+	public void setOutboxFactory(OutboxFactory outboxFactory) {
+		this.outboxFactory = outboxFactory;
 	}
 
-	public void setPolicyStatusCodeDao(PolicyStatusCodeDao policyStatusCodeDao) {
-		this.policyStatusCodeDao = policyStatusCodeDao;
+	public void setDopYieldContractSimpleRsrcFactory(DopYieldContractSimpleRsrcFactory dopYieldContractSimpleRsrcFactory) {
+		this.dopYieldContractSimpleRsrcFactory = dopYieldContractSimpleRsrcFactory;
 	}
 
+	public void setDeclaredYieldContractCommodityBerriesOutboxDao(DeclaredYieldContractCommodityBerriesOutboxDao declaredYieldContractCommodityBerriesOutboxDao) {
+		this.declaredYieldContractCommodityBerriesOutboxDao = declaredYieldContractCommodityBerriesOutboxDao;
+	}
 
-	//
-	// The "proof of concept" REST service doesn't have any security
-	//
-	private String getUserId(WebAdeAuthentication authentication) {
-		String userId = "DEFAULT_USERID";
-
-		if (authentication != null) {
-			userId = authentication.getUserId();
-		}
-
-		return userId;
+	public void setDeclaredYieldContractCommodityBerriesDao(DeclaredYieldContractCommodityBerriesDao declaredYieldContractCommodityBerriesDao) {
+		this.declaredYieldContractCommodityBerriesDao = declaredYieldContractCommodityBerriesDao;
+	}
+	
+	public void setEventPublisher(EventPublisher eventPublisher) {
+		this.eventPublisher = eventPublisher;
 	}
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -99,18 +72,18 @@ public class CirrasUnderwritingOutboxService {
 		WebAdeAuthentication authentication
 	) throws ServiceException
 	{
-		logger.debug("<getNextCoveragePerilOutboxes");
+		logger.debug("<getNextDopYieldContractCommodityBerriesOutboxes");
 
 		List<DopYieldContractCommodityBerriesOutbox> results = null;
 
 		try {
-			List<DopYieldContractCommodityBerriesOutboxDto> dtos = coveragePerilOutboxDao.select(maxRecords);
-			results = outboxFactory.getCoveragePerilOutboxList(dtos);
+			List<DeclaredYieldContractCommodityBerriesOutboxDto> dtos = declaredYieldContractCommodityBerriesOutboxDao.select(maxRecords);
+			results = outboxFactory.getDopYieldContractCommodityBerriesOutboxList(dtos);
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);
 		}
 
-		logger.debug(">getNextCoveragePerilOutboxes");
+		logger.debug(">getNextDopYieldContractCommodityBerriesOutboxes");
 		
 		return results;
 	}
@@ -123,32 +96,31 @@ public class CirrasUnderwritingOutboxService {
 	) 
 	throws ServiceException
 	{
-		logger.debug("<processCoveragePerilOutbox");
+		logger.debug("<processDopYieldContractCommodityBerriesOutbox");
 
 		try {
 
 			if ( doPublishEvent.booleanValue() ) { 
 				String eventType = null;
-				CoveragePerilSync beforeCoveragePerilSync = null;
-				CoveragePerilSync afterCoveragePerilSync = null;
+				DopYieldContractSimpleRsrc beforeDopYieldContractSimpleRsrc = null;
+				DopYieldContractSimpleRsrc afterDopYieldContractSimpleRsrc = null;
 				Map<String, String> sourceIdentifiers = new HashMap<>();
 					
-				if ( dopYieldContractCommodityBerriesOutbox.getTransactionType().equals(OutboxTransactionTypes.Inserted) ) {
-					eventType = PoliciesEventTypes.CoveragePerilCreated;
-					afterCoveragePerilSync = getBaseCoveragePerilSyncById(dopYieldContractCommodityBerriesOutbox.getCoveragePerilId());
-
-					sourceIdentifiers.put("coveragePerilId", afterCoveragePerilSync.getCoveragePerilId().toString());
+				if ( dopYieldContractCommodityBerriesOutbox.getTransactionType().equals(OutboxTransactionTypes.Insert) ) {
+					eventType = UnderwritingEventTypes.DopYieldContractCommodityBerriesCreated;
+					afterDopYieldContractSimpleRsrc = getDopYieldContractCommdityBerries(dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesGuid());
+					sourceIdentifiers.put("declaredYieldContractCommodityBerriesGuid", afterDopYieldContractSimpleRsrc.getDopYieldContractCommodityBerries().getDeclaredYieldContractCommodityBerriesGuid());
 						
-				} else if (dopYieldContractCommodityBerriesOutbox.getTransactionType().equals(OutboxTransactionTypes.Updated) ) {
-					eventType = PoliciesEventTypes.CoveragePerilUpdated;
-					afterCoveragePerilSync = getBaseCoveragePerilSyncById(dopYieldContractCommodityBerriesOutbox.getCoveragePerilId());
-					sourceIdentifiers.put("coveragePerilId", afterCoveragePerilSync.getCoveragePerilId().toString());
+				} else if (dopYieldContractCommodityBerriesOutbox.getTransactionType().equals(OutboxTransactionTypes.Update) ) {
+					eventType = UnderwritingEventTypes.DopYieldContractCommodityBerriesUpdated;
+					afterDopYieldContractSimpleRsrc = getDopYieldContractCommdityBerries(dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesGuid());
+					sourceIdentifiers.put("declaredYieldContractCommodityBerriesGuid", afterDopYieldContractSimpleRsrc.getDopYieldContractCommodityBerries().getDeclaredYieldContractCommodityBerriesGuid());
 						
-				} else if (dopYieldContractCommodityBerriesOutbox.getTransactionType().equals(OutboxTransactionTypes.Deleted) ) {
-					eventType = PoliciesEventTypes.CoveragePerilDeleted;
+				} else if (dopYieldContractCommodityBerriesOutbox.getTransactionType().equals(OutboxTransactionTypes.Delete) ) {
+					eventType = UnderwritingEventTypes.DopYieldContractCommodityBerriesDeleted;
 
 					// Since the delete has already happened, no resource is included in the event.
-					sourceIdentifiers.put("coveragePerilId", dopYieldContractCommodityBerriesOutbox.getCoveragePerilId().toString());
+					sourceIdentifiers.put("declaredYieldContractCommodityBerriesGuid", dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesGuid());
 						
 				} else { 
 					throw new ServiceException("Crop Type Outbox returned invalid transaction type");
@@ -156,19 +128,19 @@ public class CirrasUnderwritingOutboxService {
 
 				// Delete Crop Type Outbox before publishing event. If the publish fails, the exception 
 				// rolls back the delete.
-				coveragePerilOutboxDao.delete(dopYieldContractCommodityBerriesOutbox.getCoveragePerilOutboxId());
-				eventPublisher.publish(eventType, beforeCoveragePerilSync, afterCoveragePerilSync, sourceIdentifiers);
+				declaredYieldContractCommodityBerriesOutboxDao.delete(dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesOutboxId());
+				eventPublisher.publish(eventType, beforeDopYieldContractSimpleRsrc, afterDopYieldContractSimpleRsrc, sourceIdentifiers);
 			} else {
 				// Not publishing an event because it would be a duplicate, so just delete the outbox record.
-				coveragePerilOutboxDao.delete(dopYieldContractCommodityBerriesOutbox.getCoveragePerilOutboxId());
+				declaredYieldContractCommodityBerriesOutboxDao.delete(dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesOutboxId());
 			}
 
 		} catch (NotFoundException e) {
 			// If cropId does not exist, then there must be a delete event that will be processed later.
 			// So we can ignore this insert/update event and just delete the outbox record.
-			logger.info("Skipped insert/update event for coveragePerilId " + coveragePerilOutbox.getCoveragePerilId() + " as it no longer exists.");
+			logger.info("Skipped insert/update event for declaredYieldContractCommodityBerriesGuid " + dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesOutboxId() + " as it no longer exists.");
 			try { 
-				coveragePerilOutboxDao.delete(dopYieldContractCommodityBerriesOutbox.getCoveragePerilOutboxId());
+				declaredYieldContractCommodityBerriesOutboxDao.delete(dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesOutboxId());
 			} catch (DaoException e2) { 
 				throw new ServiceException("DAO threw an exception", e2);
 			}
@@ -179,7 +151,28 @@ public class CirrasUnderwritingOutboxService {
 			throw new ServiceException("Event Publisher threw an exception", e);
 		}
 		
-		logger.debug(">processCoveragePerilOutbox");
+		logger.debug(">processDopYieldContractCommodityBerriesOutbox");
+	}
+	
+	private DopYieldContractSimpleRsrc getDopYieldContractCommdityBerries(String declaredYieldContractCommodityBerriesGuid) throws ServiceException, NotFoundException {
+		logger.debug("<getDopYieldContractCommdityBerries");
+			
+		DopYieldContractSimpleRsrc result = null;
+
+		try {
+			DeclaredYieldContractCommodityBerriesDto berriesDto = declaredYieldContractCommodityBerriesDao.fetch(declaredYieldContractCommodityBerriesGuid);
+				
+			if(berriesDto == null) {
+				throw new NotFoundException("no declared yield contract commodity berries record found for " + declaredYieldContractCommodityBerriesGuid);
+			}
+				
+			result = dopYieldContractSimpleRsrcFactory.getDopYieldContractSimple(berriesDto);
+		} catch (DaoException e) {
+			throw new ServiceException("DAO threw an exception", e);
+		}
+			
+		logger.debug(">getDopYieldContractCommdityBerries");
+		return result;
 	}
 
 

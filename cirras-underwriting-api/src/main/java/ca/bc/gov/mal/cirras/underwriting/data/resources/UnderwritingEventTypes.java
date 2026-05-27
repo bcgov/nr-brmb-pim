@@ -1,4 +1,4 @@
-package ca.bc.gov.mal.cirras.underwriting.data.models;
+package ca.bc.gov.mal.cirras.underwriting.data.resources;
 
 public class UnderwritingEventTypes {
 	

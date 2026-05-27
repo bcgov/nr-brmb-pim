@@ -10,7 +10,7 @@ import jakarta.mail.internet.AddressException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.mal.cirras.underwriting.services.CirrasDataSyncService;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasUnderwritingOutboxService;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
 
 public class FetchOutboxTask extends AsynchronousTimerTask {
@@ -21,19 +21,18 @@ public class FetchOutboxTask extends AsynchronousTimerTask {
 		
 	public static final String EMAIL_SUBJECT_PROPERTY_KEY = "EMAIL_OUTBOX_SYNCH_ERROR_SUBJECT";
 
-	// TODO: Create OutboxService instead?
-	private CirrasDataSyncService cirrasDataSyncService;
+	private CirrasUnderwritingOutboxService cirrasUnderwritingOutboxService;
 
 	private List<OutboxProcessor> outboxProcessorList;
 	
 	public FetchOutboxTask(Properties applicationProperties) throws AddressException {
 		super(applicationProperties);
-// TODO		
-//		OutboxProcessor declaredYieldContractCommodityBerriesOutboxProcessor = new DeclaredYieldContractCommodityBerriesOutboxProcessor(applicationProperties);
+
+		OutboxProcessor dopYieldContractCommodityBerriesOutboxProcessor = new DopYieldContractCommodityBerriesOutboxProcessor(applicationProperties);
 
 		// Outboxes are processed in order of dependency.
 		outboxProcessorList = new ArrayList<OutboxProcessor>();
-// TODO:		outboxProcessorList.add(declaredYieldContractCommodityBerriesOutboxProcessor);
+		outboxProcessorList.add(dopYieldContractCommodityBerriesOutboxProcessor);
 		
 	}
 	
@@ -78,7 +77,7 @@ public class FetchOutboxTask extends AsynchronousTimerTask {
 			WebAdeAuthentication authentication = this.getWebAdeAuthentication();
 
 			for ( OutboxProcessor op : outboxProcessorList ) {
-				op.process(authentication, cirrasDataSyncService);
+				op.process(authentication, cirrasUnderwritingOutboxService);
 			}
 			
 		} catch (Throwable e) {
@@ -94,8 +93,8 @@ public class FetchOutboxTask extends AsynchronousTimerTask {
 		logger.debug(">run");
 	}
 
-	public void setCirrasDataSyncService(CirrasDataSyncService cirrasDataSyncService) {
-		this.cirrasDataSyncService = cirrasDataSyncService;
+	public void setCirrasUnderwritingOutboxService(CirrasUnderwritingOutboxService cirrasUnderwritingOutboxService) {
+		this.cirrasUnderwritingOutboxService = cirrasUnderwritingOutboxService;
 	}
 
 	@Override
