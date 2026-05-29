@@ -11,6 +11,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityTypeCodeRsrcFa
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.ContractedFieldDetailRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CropVarietyInsurabilityRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractSimpleRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.FieldRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.GradeModifierRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.GradeModifierTypeRsrcFactory;
@@ -22,6 +23,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LandDataSyncRsrcFactory
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandFieldXrefRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandRiskAreaXrefRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.OutboxFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.RiskAreaRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.SeedingDeadlineRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UnderwritingYearRsrcFactory;
@@ -185,5 +187,16 @@ public class ResourceFactorySpringConfig {
 		UserSettingRsrcFactory result = new UserSettingRsrcFactory();
 		return result;
 	}
-	
+
+	@Bean
+	public OutboxFactory outboxFactory() {
+		OutboxFactory result = new OutboxFactory();
+		return result;
+	}	
+
+	@Bean
+	public DopYieldContractSimpleRsrcFactory dopYieldContractSimpleRsrcFactory() {
+		DopYieldContractSimpleRsrcFactory result = new DopYieldContractSimpleRsrcFactory();
+		return result;
+	}	
 }

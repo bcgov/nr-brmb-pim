@@ -22,6 +22,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.assemblers.OutboxFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityBerriesOutboxDao;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
+import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
 import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
 import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
@@ -128,11 +129,11 @@ public class CirrasUnderwritingOutboxService {
 
 				// Delete Crop Type Outbox before publishing event. If the publish fails, the exception 
 				// rolls back the delete.
-				declaredYieldContractCommodityBerriesOutboxDao.delete(dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesOutboxId());
-				eventPublisher.publish(eventType, beforeDopYieldContractSimpleRsrc, afterDopYieldContractSimpleRsrc, sourceIdentifiers);
+				deleteDeclaredYieldContractCommodityBerriesOutbox(dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesOutboxId());
+				publishDopYieldContractSimple(eventType, beforeDopYieldContractSimpleRsrc, afterDopYieldContractSimpleRsrc, sourceIdentifiers);
 			} else {
 				// Not publishing an event because it would be a duplicate, so just delete the outbox record.
-				declaredYieldContractCommodityBerriesOutboxDao.delete(dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesOutboxId());
+				deleteDeclaredYieldContractCommodityBerriesOutbox(dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesOutboxId());
 			}
 
 		} catch (NotFoundException e) {
@@ -140,7 +141,7 @@ public class CirrasUnderwritingOutboxService {
 			// So we can ignore this insert/update event and just delete the outbox record.
 			logger.info("Skipped insert/update event for declaredYieldContractCommodityBerriesGuid " + dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesOutboxId() + " as it no longer exists.");
 			try { 
-				declaredYieldContractCommodityBerriesOutboxDao.delete(dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesOutboxId());
+				deleteDeclaredYieldContractCommodityBerriesOutbox(dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesOutboxId());
 			} catch (DaoException e2) { 
 				throw new ServiceException("DAO threw an exception", e2);
 			}
@@ -152,6 +153,17 @@ public class CirrasUnderwritingOutboxService {
 		}
 		
 		logger.debug(">processDopYieldContractCommodityBerriesOutbox");
+	}
+
+	public void publishDopYieldContractSimple(String eventType, DopYieldContractSimpleRsrc beforeDopYieldContractSimpleRsrc,
+			DopYieldContractSimpleRsrc afterDopYieldContractSimpleRsrc, Map<String, String> sourceIdentifiers)
+			throws EventPublisherException {
+		eventPublisher.publish(eventType, beforeDopYieldContractSimpleRsrc, afterDopYieldContractSimpleRsrc, sourceIdentifiers);
+	}
+
+	public void deleteDeclaredYieldContractCommodityBerriesOutbox(
+			Integer declaredYieldContractCommodityBerriesOutboxId) throws DaoException, NotFoundDaoException {
+		declaredYieldContractCommodityBerriesOutboxDao.delete(declaredYieldContractCommodityBerriesOutboxId);
 	}
 	
 	private DopYieldContractSimpleRsrc getDopYieldContractCommdityBerries(String declaredYieldContractCommodityBerriesGuid) throws ServiceException, NotFoundException {

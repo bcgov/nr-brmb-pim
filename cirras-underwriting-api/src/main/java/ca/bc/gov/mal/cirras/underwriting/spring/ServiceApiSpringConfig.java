@@ -351,7 +351,7 @@ public class ServiceApiSpringConfig {
 
 		result.setDeclaredYieldContractCommodityBerriesOutboxDao(persistenceSpringConfig.declaredYieldContractCommodityBerriesOutboxDao());
 		result.setDeclaredYieldContractCommodityBerriesDao(persistenceSpringConfig.declaredYieldContractCommodityBerriesDao());
-		
+
 		result.setEventPublisher(eventPublisher);
 		
 		return result;
