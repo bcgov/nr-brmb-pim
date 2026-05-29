@@ -127,7 +127,7 @@ public class CirrasUnderwritingOutboxService {
 					throw new ServiceException("Crop Type Outbox returned invalid transaction type");
 				}
 
-				// Delete Crop Type Outbox before publishing event. If the publish fails, the exception 
+				// Delete Outbox record before publishing event. If the publish fails, the exception 
 				// rolls back the delete.
 				deleteDeclaredYieldContractCommodityBerriesOutbox(dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesOutboxId());
 				publishDopYieldContractSimple(eventType, beforeDopYieldContractSimpleRsrc, afterDopYieldContractSimpleRsrc, sourceIdentifiers);
@@ -154,16 +154,38 @@ public class CirrasUnderwritingOutboxService {
 		
 		logger.debug(">processDopYieldContractCommodityBerriesOutbox");
 	}
+	
+	public boolean publishAndDelete = true;
+	
+	//Only set to false in certain unit tests
+	public void setPublishAndDelete(boolean publishAndDelete) {
+		logger.debug("<setPublishAndDelete");
+		
+		this.publishAndDelete = publishAndDelete;
+		
+		logger.debug(">setPublishAndDelete");
+	}
 
 	public void publishDopYieldContractSimple(String eventType, DopYieldContractSimpleRsrc beforeDopYieldContractSimpleRsrc,
 			DopYieldContractSimpleRsrc afterDopYieldContractSimpleRsrc, Map<String, String> sourceIdentifiers)
 			throws EventPublisherException {
-		eventPublisher.publish(eventType, beforeDopYieldContractSimpleRsrc, afterDopYieldContractSimpleRsrc, sourceIdentifiers);
+		if(publishAndDelete) {
+			eventPublisher.publish(eventType, beforeDopYieldContractSimpleRsrc, afterDopYieldContractSimpleRsrc, sourceIdentifiers);
+		} else {
+			logger.info("Message not published because publishAndDelete is set to false. sourceIdentifier: " + sourceIdentifiers.values().stream()
+                    .findFirst()
+                    .orElse("No sourceIdentifier found"));
+		}
+
 	}
 
 	public void deleteDeclaredYieldContractCommodityBerriesOutbox(
 			Integer declaredYieldContractCommodityBerriesOutboxId) throws DaoException, NotFoundDaoException {
-		declaredYieldContractCommodityBerriesOutboxDao.delete(declaredYieldContractCommodityBerriesOutboxId);
+		if(publishAndDelete) {
+			declaredYieldContractCommodityBerriesOutboxDao.delete(declaredYieldContractCommodityBerriesOutboxId);
+		} else {
+			logger.info("Record not deleted because publishAndDelete is set to false. declaredYieldContractCommodityBerriesOutboxId: " + declaredYieldContractCommodityBerriesOutboxId.toString());
+		}
 	}
 	
 	private DopYieldContractSimpleRsrc getDopYieldContractCommdityBerries(String declaredYieldContractCommodityBerriesGuid) throws ServiceException, NotFoundException {

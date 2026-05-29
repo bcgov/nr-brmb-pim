@@ -96,6 +96,10 @@ public class FetchOutboxTask extends AsynchronousTimerTask {
 	public void setCirrasUnderwritingOutboxService(CirrasUnderwritingOutboxService cirrasUnderwritingOutboxService) {
 		this.cirrasUnderwritingOutboxService = cirrasUnderwritingOutboxService;
 	}
+	
+	public void setCirrasUnderwritingOutboxServicePublishAndDelete(boolean publishAndDelete) {
+		this.cirrasUnderwritingOutboxService.setPublishAndDelete(publishAndDelete);
+	}
 
 	@Override
 	protected String getEmailSubjectPropertyKey() {
