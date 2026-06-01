@@ -8,6 +8,7 @@
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.declared_yield_contract.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.inventory_berries.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.commodity_maturity_scale.sql"}},
+	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.underwriting_comment.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_contract_commodity_berries_ob.sql"}},
 	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/cuws.create_sequences.sql"}},
 	{"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/triggers/cuws.fn_declared_yield_contract_commodity_berries_ob.sql"}},
