@@ -37,7 +37,7 @@ public abstract class EndpointsTest {
 	protected static boolean skipTests = false;
 
 	// Set to true to enable Asynchronous Processes that process outboxes and publish events.
-	protected static boolean enableAsyncProcs = true;
+	protected static boolean enableAsyncProcs = false;
 
 	protected static final int port = 8889;
 	protected static final String contextPath = "/cirras-underwriting-api/v1";
