@@ -56,7 +56,7 @@ public class FetchOutboxTaskTest extends EndpointsTest {
 			return;
 		}
 
-		Assert.assertTrue(enableAsyncProcs);
+		Assert.assertFalse(enableAsyncProcs);
 		
 		// Not really a unit test, but can use to just run the web server for x minutes. Useful for testing the AsynchronousProcessesService and its associated threads.
 //		synchronized (this) { 

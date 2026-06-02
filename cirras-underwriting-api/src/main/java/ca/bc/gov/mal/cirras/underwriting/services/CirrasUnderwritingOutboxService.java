@@ -124,7 +124,7 @@ public class CirrasUnderwritingOutboxService {
 					sourceIdentifiers.put("declaredYieldContractCommodityBerriesGuid", dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesGuid());
 						
 				} else { 
-					throw new ServiceException("Crop Type Outbox returned invalid transaction type");
+					throw new ServiceException("Declared Yield Contract Commodity Berries Outbox returned invalid transaction type");
 				}
 
 				// Delete Outbox record before publishing event. If the publish fails, the exception 
@@ -139,7 +139,7 @@ public class CirrasUnderwritingOutboxService {
 		} catch (NotFoundException e) {
 			// If cropId does not exist, then there must be a delete event that will be processed later.
 			// So we can ignore this insert/update event and just delete the outbox record.
-			logger.info("Skipped insert/update event for declaredYieldContractCommodityBerriesGuid " + dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesOutboxId() + " as it no longer exists.");
+			logger.info("Skipped insert/update event for declaredYieldContractCommodityBerriesGuid " + dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesGuid() + " as it no longer exists.");
 			try { 
 				deleteDeclaredYieldContractCommodityBerriesOutbox(dopYieldContractCommodityBerriesOutbox.getDeclaredYieldContractCommodityBerriesOutboxId());
 			} catch (DaoException e2) { 

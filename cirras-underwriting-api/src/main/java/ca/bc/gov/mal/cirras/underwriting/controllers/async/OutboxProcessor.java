@@ -44,7 +44,6 @@ public abstract class OutboxProcessor {
 	
 	}
 
-	// TODO: Create an OutboxService instead of using CirrasDataSyncService?
 	public void process(WebAdeAuthentication authentication, CirrasUnderwritingOutboxService cirrasUnderwritingOutboxService) throws ServiceException {
 		getLogger().debug("<process");
 		
