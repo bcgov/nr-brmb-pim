@@ -20,6 +20,7 @@
 		<result property="growerContractYearId" column="grower_contract_year_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		<result property="declaredYieldContractGuid" column="declared_yield_contract_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
 		<result property="verifiedYieldSummaryGuid" column="verified_yield_summary_guid" javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result property="isForcedInd" column="is_forced_ind" javaType="java.lang.String" jdbcType="VARCHAR" />
 		
 		<result property="growerContractYearId" column="grower_contract_year_id" javaType="java.lang.Integer" jdbcType="NUMERIC" />
 		
@@ -38,7 +39,8 @@
 		uc.update_date,
 		uc.grower_contract_year_id,
 		uc.declared_yield_contract_guid,
-		uc.verified_yield_summary_guid
+		uc.verified_yield_summary_guid,
+		uc.is_forced_ind
     </sql>
     
     
@@ -62,6 +64,7 @@
 			grower_contract_year_id,
 			declared_yield_contract_guid,
 			verified_yield_summary_guid,
+			is_forced_ind,
 			create_user, 
 			create_date, 
 			update_user, 
@@ -74,6 +77,7 @@
 			#{dto.growerContractYearId, javaType=java.lang.Integer , jdbcType=NUMERIC, mode=IN},
 			#{dto.declaredYieldContractGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{dto.verifiedYieldSummaryGuid, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
+			#{dto.isForcedInd, javaType=java.lang.String , jdbcType=VARCHAR, mode=IN},
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},
 			now(),
 			#{userId, javaType=java.lang.String, jdbcType=VARCHAR, mode=IN},

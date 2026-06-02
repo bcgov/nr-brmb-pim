@@ -172,6 +172,7 @@ public class UnderwritingCommentDaoTest {
 		newDto.setUnderwritingComment("test comment 1");
 		newDto.setUnderwritingCommentTypeCode("INV");
 		newDto.setUnderwritingCommentTypeDesc("Inventory"); // Not saved directly, but indirectly via underwritingCommentTypeCode.
+		newDto.setIsForcedInd("N");
 		
 		underwritingCommentDao.insert(newDto, userId);
 		Assert.assertNotNull(newDto.getUnderwritingCommentGuid());
@@ -195,7 +196,7 @@ public class UnderwritingCommentDaoTest {
 		Assert.assertEquals("underwritingComment", newDto.getUnderwritingComment(), fetchedDto.getUnderwritingComment());
 		Assert.assertEquals("underwritingCommentTypeCode", newDto.getUnderwritingCommentTypeCode(), fetchedDto.getUnderwritingCommentTypeCode());
 		Assert.assertEquals("underwritingCommentTypeDesc", newDto.getUnderwritingCommentTypeDesc(), fetchedDto.getUnderwritingCommentTypeDesc());
-		
+		Assert.assertEquals("isForcedInd", newDto.getIsForcedInd(), fetchedDto.getIsForcedInd());
 		
 		//UPDATE
 		fetchedDto.setUnderwritingComment("test comment 2");
@@ -219,6 +220,7 @@ public class UnderwritingCommentDaoTest {
 		newDto2.setUnderwritingComment("test comment 3");
 		newDto2.setUnderwritingCommentTypeCode("INV");
 		newDto2.setUnderwritingCommentTypeDesc("Inventory"); // Not saved directly, but indirectly via underwritingCommentTypeCode.
+		newDto2.setIsForcedInd("N");
 		
 		underwritingCommentDao.insert(newDto2, userId);
 
@@ -233,8 +235,8 @@ public class UnderwritingCommentDaoTest {
 		
 		//INSERT DOP comment
 		// These need to be set to an existing declared_yield_contract with no comments.
-		String declaredYieldContractGuid = "afbbe9d605384b4992b439d1a35adbba";
-		Integer growerContractYearId = 97637;
+		String declaredYieldContractGuid = "e47a484e52f8453798fcc0c87a253079"; //  "afbbe9d605384b4992b439d1a35adbba";
+		Integer growerContractYearId = 108919; // 97637;
 		
 		//INSERT
 		UnderwritingCommentDto newDto3 = new UnderwritingCommentDto();
@@ -243,6 +245,7 @@ public class UnderwritingCommentDaoTest {
 		newDto3.setUnderwritingCommentTypeDesc("Declaration of Production"); // Not saved directly, but indirectly via underwritingCommentTypeCode.
 		newDto3.setDeclaredYieldContractGuid(declaredYieldContractGuid);
 		newDto3.setGrowerContractYearId(growerContractYearId);
+		newDto3.setIsForcedInd("Y");
 		
 		underwritingCommentDao.insert(newDto3, userId);
 		Assert.assertNotNull(newDto3.getUnderwritingCommentGuid());
@@ -258,7 +261,8 @@ public class UnderwritingCommentDaoTest {
 		
 		Assert.assertEquals("declaredYieldContractGuid", fetchedDto2.getDeclaredYieldContractGuid(), newDto3.getDeclaredYieldContractGuid());
 		Assert.assertEquals("growerContractYearId", fetchedDto2.getGrowerContractYearId(), newDto3.getGrowerContractYearId());
-
+		Assert.assertEquals("isForcedInd", fetchedDto2.getIsForcedInd(), newDto3.getIsForcedInd());
+		
 		//DELETE dop comment
 		underwritingCommentDao.delete(dopUwCommentGuid);
 		

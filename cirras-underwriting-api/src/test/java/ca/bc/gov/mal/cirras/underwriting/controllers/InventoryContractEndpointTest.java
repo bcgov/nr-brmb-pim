@@ -2766,6 +2766,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		underwritingComment.setUnderwritingCommentGuid(null);
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
 		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");
+		underwritingComment.setIsForcedInd("N");
 		
 		List<UnderwritingComment> uwComments = field.getUwComments();
 		uwComments.add(underwritingComment);
