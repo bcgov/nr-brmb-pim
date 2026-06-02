@@ -376,6 +376,21 @@
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
 			<version>2.1.7</version>
+			<!-- Exclude BouncyCastle Artifacts. They appear to be optional, and conflict with jnats dependencies. -->
+			<exclusions>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcmail-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcprov-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bctsp-jdk14</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -472,6 +487,21 @@
 						<groupId>com.lowagie</groupId>
 						<artifactId>itext</artifactId>
 						<version>2.1.7</version>
+						<!-- Exclude BouncyCastle Artifacts. They appear to be optional, and conflict with jnats dependencies. -->
+						<exclusions>
+							<exclusion>
+								<groupId>bouncycastle</groupId>
+								<artifactId>bcmail-jdk14</artifactId>
+							</exclusion>
+							<exclusion>
+								<groupId>bouncycastle</groupId>
+								<artifactId>bcprov-jdk14</artifactId>
+							</exclusion>
+							<exclusion>
+								<groupId>bouncycastle</groupId>
+								<artifactId>bctsp-jdk14</artifactId>
+							</exclusion>
+						</exclusions>
 					</dependency>
 				</dependencies>
 			</plugin>
