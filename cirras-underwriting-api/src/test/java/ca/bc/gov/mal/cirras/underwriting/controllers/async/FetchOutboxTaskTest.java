@@ -15,6 +15,7 @@ import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
+import jakarta.mail.internet.AddressException;
 
 
 public class FetchOutboxTaskTest extends EndpointsTest {
@@ -47,7 +48,7 @@ public class FetchOutboxTaskTest extends EndpointsTest {
 
 	// Ensure that enableAsyncProcs=true in super class before running this test.
 	@Test
-	public void testFetchOutboxTask() throws InterruptedException {
+	public void testFetchOutboxTask() throws InterruptedException, AddressException {
 		logger.debug("<testFetchOutboxTask");
 		
 		if(skipTests) {
@@ -55,16 +56,25 @@ public class FetchOutboxTaskTest extends EndpointsTest {
 			return;
 		}
 
-		Assert.assertTrue(enableAsyncProcs);
+		Assert.assertFalse(enableAsyncProcs);
 		
 		// Not really a unit test, but can use to just run the web server for x minutes. Useful for testing the AsynchronousProcessesService and its associated threads.
-		synchronized (this) { 
-			this.wait(10*60*1000);  // 10 minutes.
-		}
+//		synchronized (this) { 
+//			this.wait(10*60*1000);  // 10 minutes.
+//		}
 
-		// TODO: Might be able to test the actual outbox processing.
+
+		FetchOutboxTask fetchOutboxTask = (FetchOutboxTask)webApplicationContext.getBean("fetchOutboxTask");
+
+		Assert.assertNotNull(fetchOutboxTask);
+
+		//set to false to keep the records and don't push to the queue
+		fetchOutboxTask.setCirrasUnderwritingOutboxServicePublishAndDelete(false);
+		fetchOutboxTask.init();
+		fetchOutboxTask.run();
 		
 		logger.debug(">testFetchOutboxTask");
 	}
+	
 
 }

@@ -17,6 +17,7 @@ import ca.bc.gov.mal.cirras.underwriting.services.CirrasDataSyncService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasDopYieldService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasInventoryService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasMaintenanceService;
+import ca.bc.gov.mal.cirras.underwriting.services.CirrasUnderwritingOutboxService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasUwLandManagementService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasVerifiedYieldService;
 import ca.bc.gov.mal.cirras.underwriting.services.FailOverService;
@@ -25,12 +26,15 @@ import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityTypeCodeRsrcFa
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.ContractedFieldDetailRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CropVarietyInsurabilityRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractSimpleRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.FieldRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.GradeModifierRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.GradeModifierTypeRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.controllers.publisher.EventPublisher;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.AnnualFieldDetailRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.AnnualFieldRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CirrasDataSyncRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.OutboxFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.InventoryContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LandDataSyncRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandRsrcFactory;
@@ -54,6 +58,7 @@ import ca.bc.gov.mal.cirras.underwriting.services.utils.OutOfSync;
 
 import ca.bc.gov.mal.cirras.policies.api.rest.client.v1.CirrasPolicyService;
 
+
 @Configuration
 @Import({
 	CodeHierarchySpringConfig.class,  // can't remove this because some wfone stuff depends on it
@@ -75,6 +80,7 @@ public class ServiceApiSpringConfig {
 	@Autowired ResourceBundleMessageSource messageSource;
 	@Autowired Properties applicationProperties;
 	@Autowired CirrasPolicyService cirrasPolicyService;
+	@Autowired EventPublisher eventPublisher;
 	
     // Beans provided by ResourceFactorySpringConfig
 	@Autowired AnnualFieldRsrcFactory annualFieldRsrcFactory;
@@ -101,6 +107,8 @@ public class ServiceApiSpringConfig {
 	@Autowired YieldMeasUnitConversionRsrcFactory yieldMeasUnitConversionRsrcFactory;
 	@Autowired VerifiedYieldContractRsrcFactory verifiedYieldContractRsrcFactory;
 	@Autowired UserSettingRsrcFactory userSettingRsrcFactory;
+	@Autowired OutboxFactory outboxFactory;
+	@Autowired DopYieldContractSimpleRsrcFactory dopYieldContractSimpleRsrcFactory;
 	
 	// Imported Spring Config
 	@Autowired CodeTableSpringConfig codeTableSpringConfig;
@@ -327,6 +335,24 @@ public class ServiceApiSpringConfig {
 		result.setContactPhoneDao(persistenceSpringConfig.contactPhoneDao());
 		result.setCommodityTypeCodeDao(persistenceSpringConfig.commodityTypeCodeDao());
 		result.setCommodityTypeVarietyXrefDao(persistenceSpringConfig.commodityTypeVarietyXrefDao());
+		
+		return result;
+	}
+	
+	@Bean()
+	public CirrasUnderwritingOutboxService cirrasUnderwritingOutboxService() {
+		CirrasUnderwritingOutboxService result;
+		
+		result = new CirrasUnderwritingOutboxService();
+		result.setApplicationProperties(applicationProperties);
+
+		result.setOutboxFactory(outboxFactory);
+		result.setDopYieldContractSimpleRsrcFactory(dopYieldContractSimpleRsrcFactory);
+
+		result.setDeclaredYieldContractCommodityBerriesOutboxDao(persistenceSpringConfig.declaredYieldContractCommodityBerriesOutboxDao());
+		result.setDeclaredYieldContractCommodityBerriesDao(persistenceSpringConfig.declaredYieldContractCommodityBerriesDao());
+
+		result.setEventPublisher(eventPublisher);
 		
 		return result;
 	}
