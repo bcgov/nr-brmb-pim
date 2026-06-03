@@ -2525,6 +2525,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		underwritingComment.setUnderwritingComment("update to comment for planting number " + planting.getPlantingNumber() + ", Field " + planting.getFieldId());
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
 		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");
+		underwritingComment.setIsForcedInd("N");
 		
 //		List<InventoryField> plantings = new ArrayList<InventoryField>();
 //		plantings.add(planting);
@@ -2663,6 +2664,7 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		underwritingComment.setUnderwritingCommentGuid(null);
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
 		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");
+		underwritingComment.setIsForcedInd("N");
 		
 		List<UnderwritingComment> uwComments = new ArrayList<UnderwritingComment>();
 		uwComments.add(underwritingComment);
@@ -2672,7 +2674,8 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		underwritingComment.setUnderwritingComment("Another comment for field " + field.getFieldId());
 		underwritingComment.setUnderwritingCommentGuid(null);
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
-		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");		
+		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");	
+		underwritingComment.setIsForcedInd("N");
 
 		uwComments.add(underwritingComment);
 		
@@ -3196,7 +3199,8 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		underwritingComment.setUnderwritingComment("Comment for field " + field.getFieldId());
 		underwritingComment.setUnderwritingCommentGuid(null);
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
-		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");		
+		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");
+		underwritingComment.setIsForcedInd("N");
 
 		List<UnderwritingComment> uwComments = new ArrayList<UnderwritingComment>();
 		uwComments.add(underwritingComment);
@@ -3206,7 +3210,8 @@ public class InventoryContractEndpointTest extends EndpointsTest {
 		underwritingComment.setUnderwritingComment("Another comment for field " + field.getFieldId());
 		underwritingComment.setUnderwritingCommentGuid(null);
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
-		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");		
+		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");
+		underwritingComment.setIsForcedInd("N");
 
 		uwComments.add(underwritingComment);
 		

@@ -2076,7 +2076,8 @@ public class VerifiedYieldContractEndpointGrainTest extends EndpointsTest {
 		uwComment.setUnderwritingComment("Verified Yield Comment");
 		uwComment.setUnderwritingCommentGuid(null);
 		uwComment.setUnderwritingCommentTypeCode("VY");
-		uwComment.setUnderwritingCommentTypeDesc("Verified Yield");		
+		uwComment.setUnderwritingCommentTypeDesc("Verified Yield");	
+		uwComment.setIsForcedInd("N");
 
 		return uwComment;
 	}

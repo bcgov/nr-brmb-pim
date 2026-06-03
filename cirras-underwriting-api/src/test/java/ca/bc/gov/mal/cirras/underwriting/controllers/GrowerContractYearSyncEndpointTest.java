@@ -1085,6 +1085,7 @@ public class GrowerContractYearSyncEndpointTest extends EndpointsTest {
 		contractUnderwritingComment.setUnderwritingCommentTypeDesc("Declaration of Production");		
 		contractUnderwritingComment.setDeclaredYieldContractGuid(newDyc.getDeclaredYieldContractGuid());
 		contractUnderwritingComment.setGrowerContractYearId(growerContractYearId1);
+		contractUnderwritingComment.setIsForcedInd("N");
 	
 		contractUwComments.add(contractUnderwritingComment);
 		newDyc.setUwComments(contractUwComments);
@@ -1100,6 +1101,7 @@ public class GrowerContractYearSyncEndpointTest extends EndpointsTest {
 		underwritingComment.setUnderwritingCommentGuid(null);
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
 		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");
+		underwritingComment.setIsForcedInd("N");
 		
 		List<UnderwritingComment> uwComments = field.getUwComments();
 		uwComments.add(underwritingComment);

@@ -862,7 +862,8 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		underwritingComment.setUnderwritingCommentGuid(null);
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
 		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");		
-	
+		underwritingComment.setIsForcedInd("N");
+		
 		uwComments.add(underwritingComment);
 		newDyc.getFields().get(0).setUwComments(uwComments);
 		
@@ -878,7 +879,8 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		contractUnderwritingComment.setUnderwritingCommentTypeDesc("Declaration of Production");		
 		contractUnderwritingComment.setDeclaredYieldContractGuid(newDyc.getDeclaredYieldContractGuid());
 		contractUnderwritingComment.setGrowerContractYearId(gcyId1);
-	
+		contractUnderwritingComment.setIsForcedInd("Y");
+		
 		contractUwComments.add(contractUnderwritingComment);
 		newDyc.setUwComments(contractUwComments);
 						
@@ -961,6 +963,7 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		Assert.assertNull("NullDeclaredYieldContractGuid", fetchedDyc.getFields().get(0).getUwComments().get(0).getDeclaredYieldContractGuid());
 		Assert.assertNull("NullGrowerContractYearId", fetchedDyc.getFields().get(0).getUwComments().get(0).getGrowerContractYearId());
 		Assert.assertEquals("UnderwritingCommentTypeCode", newDyc.getFields().get(0).getUwComments().get(0).getUnderwritingCommentTypeCode(), fetchedDyc.getFields().get(0).getUwComments().get(0).getUnderwritingCommentTypeCode());
+		Assert.assertEquals("IsForcedInd", newDyc.getFields().get(0).getUwComments().get(0).getIsForcedInd(), fetchedDyc.getFields().get(0).getUwComments().get(0).getIsForcedInd());
 		
 		for (int i = 0; i < newDyc.getFields().get(0).getUwComments().size(); i++ ) {
 			for (int k = 0; k < fetchedDyc.getFields().get(0).getUwComments().size(); k++ ) {
@@ -973,6 +976,11 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 					Assert.assertEquals("UnderwritingComment", 
 							fetchedDyc.getFields().get(0).getUwComments().get(k).getUnderwritingComment(), 
 							newDyc.getFields().get(0).getUwComments().get(i).getUnderwritingComment());
+					
+					Assert.assertEquals("IsForcedInd", 
+							fetchedDyc.getFields().get(0).getUwComments().get(k).getIsForcedInd(), 
+							newDyc.getFields().get(0).getUwComments().get(i).getIsForcedInd());
+					
 					
 				}
 			}			
@@ -1063,7 +1071,8 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		underwritingComment2.setUnderwritingCommentGuid(null);
 		underwritingComment2.setUnderwritingCommentTypeCode("INV");
 		underwritingComment2.setUnderwritingCommentTypeDesc("Inventory");		
-	
+		underwritingComment2.setIsForcedInd("N");
+		
 		uwComments.add(underwritingComment2);
 		fetchedDyc.getFields().get(0).setUwComments(uwComments);
 		
@@ -1083,7 +1092,8 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		contractUnderwritingComment2.setUnderwritingCommentTypeDesc("Declaration of Production");		
 		contractUnderwritingComment2.setDeclaredYieldContractGuid(newDyc.getDeclaredYieldContractGuid());
 		contractUnderwritingComment2.setGrowerContractYearId(gcyId1);
-	
+		contractUnderwritingComment2.setIsForcedInd("Y");
+		
 		contractUwComments2.add(contractUnderwritingComment2);
 		fetchedDyc.setUwComments(contractUwComments2);
 		
@@ -1389,6 +1399,7 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		underwritingComment.setUnderwritingCommentGuid(null);
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
 		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");
+		underwritingComment.setIsForcedInd("Y");
 		
 		List<UnderwritingComment> uwComments = field.getUwComments();
 		uwComments.add(underwritingComment);
@@ -1948,7 +1959,8 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		underwritingComment.setUnderwritingCommentGuid(null);
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
 		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");		
-
+		underwritingComment.setIsForcedInd("N");
+		
 		uwComments.add(underwritingComment);
 		
 		resource.getFields().get(0).setUwComments(uwComments);
