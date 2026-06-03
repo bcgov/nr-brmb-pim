@@ -1,6 +1,0 @@
-
-{
-  "databaseChangeLog": [
-{ "changeSet": {"author":"mhostettler","id":"87","changes": [
-  {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.update.underwriting_comment_set_not_null.sql"}}
-  ] } }]}

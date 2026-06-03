@@ -172,7 +172,7 @@ public class UnderwritingCommentDaoTest {
 		newDto.setUnderwritingComment("test comment 1");
 		newDto.setUnderwritingCommentTypeCode("INV");
 		newDto.setUnderwritingCommentTypeDesc("Inventory"); // Not saved directly, but indirectly via underwritingCommentTypeCode.
-		newDto.setIsForcedInd("N");
+		newDto.setIsForcedInd(false);
 		
 		underwritingCommentDao.insert(newDto, userId);
 		Assert.assertNotNull(newDto.getUnderwritingCommentGuid());
@@ -220,7 +220,7 @@ public class UnderwritingCommentDaoTest {
 		newDto2.setUnderwritingComment("test comment 3");
 		newDto2.setUnderwritingCommentTypeCode("INV");
 		newDto2.setUnderwritingCommentTypeDesc("Inventory"); // Not saved directly, but indirectly via underwritingCommentTypeCode.
-		newDto2.setIsForcedInd("N");
+		newDto2.setIsForcedInd(false);
 		
 		underwritingCommentDao.insert(newDto2, userId);
 
@@ -245,7 +245,7 @@ public class UnderwritingCommentDaoTest {
 		newDto3.setUnderwritingCommentTypeDesc("Declaration of Production"); // Not saved directly, but indirectly via underwritingCommentTypeCode.
 		newDto3.setDeclaredYieldContractGuid(declaredYieldContractGuid);
 		newDto3.setGrowerContractYearId(growerContractYearId);
-		newDto3.setIsForcedInd("Y");
+		newDto3.setIsForcedInd(true);
 		
 		underwritingCommentDao.insert(newDto3, userId);
 		Assert.assertNotNull(newDto3.getUnderwritingCommentGuid());

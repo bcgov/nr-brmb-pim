@@ -31,7 +31,7 @@ public class UnderwritingCommentDto extends BaseDto<UnderwritingCommentDto> {
 	private String declaredYieldContractGuid;
 	private String verifiedYieldSummaryGuid;
 	
-	private String isForcedInd;
+	private Boolean isForcedInd;
 	
 	public UnderwritingCommentDto() {
 	}
@@ -178,11 +178,11 @@ public class UnderwritingCommentDto extends BaseDto<UnderwritingCommentDto> {
 		this.verifiedYieldSummaryGuid = verifiedYieldSummaryGuid;
 	}
 	
-	public String getIsForcedInd() {
+	public Boolean getIsForcedInd() {
 		return isForcedInd;
 	}
 
-	public void setIsForcedInd(String isForcedInd) {
+	public void setIsForcedInd(Boolean isForcedInd) {
 		this.isForcedInd = isForcedInd;
 	}
 	
