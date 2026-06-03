@@ -11,6 +11,7 @@ import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 export class UwCommentComponent implements OnInit {
     @Input() uwComment: UnderwritingComment;
     @Input() uwCommentsFormArray: UntypedFormArray;
+    @Input() showForcedCommentsColumn: Boolean;
 
     uwCommentFormGroup: UntypedFormGroup;
     validComment: boolean = true;
@@ -25,6 +26,7 @@ export class UwCommentComponent implements OnInit {
             updateDate: [this.uwComment.updateDate],
             updateUser: [this.uwComment.updateUser],
             underwritingComment: [this.uwComment.underwritingComment],
+            isForcedInd: [this.uwComment.isForcedInd],
             userCanEditInd: [this.uwComment.userCanEditInd]
         });
         this.uwCommentsFormArray.push(this.uwCommentFormGroup);

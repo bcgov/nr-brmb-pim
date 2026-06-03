@@ -100,6 +100,23 @@ export class UwCommentsDialogComponent {
         return this.data.uwComments.filter(uwComment => !uwComment.deletedByUserInd).length > 0;
     }
 
+    showForcedCommentColumn(){
+        // show is Forced Comment column only for Berries Yield for now
+        if (this.data.insurancePlanId == INSURANCE_PLAN.BERRIES && 
+            this.data.underwritingCommentTypeCode == UW_COMMENT_TYPE_CODE.DOP_GENERAL) {
+
+                return true
+        } else {
+
+            return false
+        }
+    }
+
+    isForcedComment() {
+        // TODO 
+        return false
+    }
+
     onAddNewComment() {
         this.data.uwComments.unshift({
             underwritingCommentGuid: Math.floor(Math.random() * 1000000).toString(),
@@ -110,6 +127,7 @@ export class UwCommentsDialogComponent {
             growerContractYearId: this.data.growerContractYearId,
             declaredYieldContractGuid: this.data.declaredYieldContractGuid,
             verifiedYieldSummaryGuid: this.data.verifiedYieldSummaryGuid,
+            isForcedInd: (this.isForcedComment() ? 'Y' : 'N'),
             createUser: '',
             createDate: '',
             updateUser: '',

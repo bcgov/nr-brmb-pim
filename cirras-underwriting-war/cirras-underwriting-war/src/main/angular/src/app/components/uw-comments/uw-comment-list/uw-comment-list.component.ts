@@ -11,6 +11,7 @@ import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 export class UwCommentListComponent {
     @Input() uwComments: UnderwritingComment[];
     @Input() uwCommentsFormArray: UntypedFormArray;
+    @Input() showForcedCommentsColumn: Boolean;
 
     notDeleted(uwComments: UnderwritingComment[]): UnderwritingComment[] {
         return uwComments.filter(uwComment => !uwComment.deletedByUserInd);

@@ -71,8 +71,10 @@
                     </div>
                 </div>
 
-                <uw-comment-list [uwComments]="data.uwComments" [uwCommentsFormArray]="uwCommentsFormArray"
-                    style="display: contents;"></uw-comment-list>
+                <div [ngClass]="showForcedCommentColumn() ? 'forced-comments-header' : 'no-forced-comments-header'">
+                    <uw-comment-list [uwComments]="data.uwComments" [uwCommentsFormArray]="uwCommentsFormArray" [showForcedCommentsColumn]="showForcedCommentColumn()"
+                        style="display: contents;"></uw-comment-list>
+                </div>
 
                 <div class="five-columns" *ngIf="!hasComments()">
                     Select the 'Add Comment' button to add inventory comments.
