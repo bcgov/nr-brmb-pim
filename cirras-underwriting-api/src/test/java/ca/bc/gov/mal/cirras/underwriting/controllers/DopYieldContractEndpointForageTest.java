@@ -503,7 +503,7 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		contractUnderwritingComment.setUnderwritingCommentTypeCode("DOP");
 		contractUnderwritingComment.setUnderwritingCommentTypeDesc("Declaration of Production");		
 		contractUnderwritingComment.setDeclaredYieldContractGuid(newDyc.getDeclaredYieldContractGuid());
-		contractUnderwritingComment.setIsForcedInd("N");
+		contractUnderwritingComment.setIsForcedInd(false);
 		
 		contractUwComments.add(contractUnderwritingComment);
 		newDyc.setUwComments(contractUwComments);
@@ -1133,7 +1133,7 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		underwritingComment.setUnderwritingCommentGuid(null);
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
 		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");		
-		underwritingComment.setIsForcedInd("N");
+		underwritingComment.setIsForcedInd(false);
 		
 		uwComments.add(underwritingComment);
 		

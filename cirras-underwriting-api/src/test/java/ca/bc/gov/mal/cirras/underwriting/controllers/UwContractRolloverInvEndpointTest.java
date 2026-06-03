@@ -739,7 +739,7 @@ public class UwContractRolloverInvEndpointTest extends EndpointsTest {
 		uwComment.setUnderwritingCommentGuid(null);
 		uwComment.setUnderwritingCommentTypeCode("INV");
 		uwComment.setUnderwritingCommentTypeDesc("Inventory");
-		uwComment.setIsForcedInd("N");
+		uwComment.setIsForcedInd(false);
 		
 		uwComments.add(uwComment);
 		

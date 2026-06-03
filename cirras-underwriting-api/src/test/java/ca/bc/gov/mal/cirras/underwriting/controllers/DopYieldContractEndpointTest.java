@@ -862,7 +862,7 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		underwritingComment.setUnderwritingCommentGuid(null);
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
 		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");		
-		underwritingComment.setIsForcedInd("N");
+		underwritingComment.setIsForcedInd(false);
 		
 		uwComments.add(underwritingComment);
 		newDyc.getFields().get(0).setUwComments(uwComments);
@@ -879,7 +879,7 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		contractUnderwritingComment.setUnderwritingCommentTypeDesc("Declaration of Production");		
 		contractUnderwritingComment.setDeclaredYieldContractGuid(newDyc.getDeclaredYieldContractGuid());
 		contractUnderwritingComment.setGrowerContractYearId(gcyId1);
-		contractUnderwritingComment.setIsForcedInd("Y");
+		contractUnderwritingComment.setIsForcedInd(true);
 		
 		contractUwComments.add(contractUnderwritingComment);
 		newDyc.setUwComments(contractUwComments);
@@ -1071,7 +1071,7 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		underwritingComment2.setUnderwritingCommentGuid(null);
 		underwritingComment2.setUnderwritingCommentTypeCode("INV");
 		underwritingComment2.setUnderwritingCommentTypeDesc("Inventory");		
-		underwritingComment2.setIsForcedInd("N");
+		underwritingComment2.setIsForcedInd(false);
 		
 		uwComments.add(underwritingComment2);
 		fetchedDyc.getFields().get(0).setUwComments(uwComments);
@@ -1092,7 +1092,7 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		contractUnderwritingComment2.setUnderwritingCommentTypeDesc("Declaration of Production");		
 		contractUnderwritingComment2.setDeclaredYieldContractGuid(newDyc.getDeclaredYieldContractGuid());
 		contractUnderwritingComment2.setGrowerContractYearId(gcyId1);
-		contractUnderwritingComment2.setIsForcedInd("Y");
+		contractUnderwritingComment2.setIsForcedInd(true);
 		
 		contractUwComments2.add(contractUnderwritingComment2);
 		fetchedDyc.setUwComments(contractUwComments2);
@@ -1399,7 +1399,7 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		underwritingComment.setUnderwritingCommentGuid(null);
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
 		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");
-		underwritingComment.setIsForcedInd("Y");
+		underwritingComment.setIsForcedInd(true);
 		
 		List<UnderwritingComment> uwComments = field.getUwComments();
 		uwComments.add(underwritingComment);
@@ -1959,7 +1959,7 @@ public class DopYieldContractEndpointTest extends EndpointsTest {
 		underwritingComment.setUnderwritingCommentGuid(null);
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
 		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");		
-		underwritingComment.setIsForcedInd("N");
+		underwritingComment.setIsForcedInd(false);
 		
 		uwComments.add(underwritingComment);
 		
