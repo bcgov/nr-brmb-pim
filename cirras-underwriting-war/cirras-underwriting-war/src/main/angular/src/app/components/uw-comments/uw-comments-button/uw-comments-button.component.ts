@@ -23,7 +23,7 @@ export interface DialogData {
     // Verified Yield summary data:
     verifiedYieldSummaryGuid: string;
     commodityName: string,
-    // common data
+    isForcedInd: boolean;
     uwComments: UnderwritingComment[];
 }
 
@@ -89,6 +89,7 @@ export class UwCommentsButtonComponent {
             primaryPropertyIdentifier: this.primaryPropertyIdentifier,
             verifiedYieldSummaryGuid: this.verifiedYieldSummaryGuid,
             commodityName: this.commodityName,
+            isForcedInd: false, // if the user has clicked the Comments button then it's not a forced comment
             uwComments: this.uwCommentsForDialog
         };
     }

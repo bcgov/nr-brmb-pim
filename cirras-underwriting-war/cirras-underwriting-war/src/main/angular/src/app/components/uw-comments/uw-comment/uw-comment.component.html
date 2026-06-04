@@ -16,7 +16,7 @@
     </div>
     <div *ngIf="showForcedCommentsColumn" class="border-right border-bottom">
         <label class="readonly-comment">
-            {{ uwCommentFormGroup.value.isForcedInd }}
+            {{ uwCommentFormGroup.value.isForcedInd ? 'Y' : 'N' }}
         </label>
     </div>
     <div class="border-right border-bottom">

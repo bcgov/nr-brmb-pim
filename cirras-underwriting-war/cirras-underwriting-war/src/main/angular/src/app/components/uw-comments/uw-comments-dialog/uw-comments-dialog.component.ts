@@ -127,7 +127,7 @@ export class UwCommentsDialogComponent {
             growerContractYearId: this.data.growerContractYearId,
             declaredYieldContractGuid: this.data.declaredYieldContractGuid,
             verifiedYieldSummaryGuid: this.data.verifiedYieldSummaryGuid,
-            isForcedInd: (this.isForcedComment() ? 'Y' : 'N'),
+            isForcedInd: this.data.isForcedInd,
             createUser: '',
             createDate: '',
             updateUser: '',

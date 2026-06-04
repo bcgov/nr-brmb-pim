@@ -11,7 +11,7 @@ import { AddNewDopYieldContract, DeleteDopYieldContract, GetDopReport, LoadDopYi
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { getInsurancePlanName, replaceNonAlphanumericCharacters } from 'src/app/utils';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
-import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
+import { AnnualFieldRsrc, DopYieldFieldCommodityBerries, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 
 @Component({
   selector: 'berries-dop',
@@ -30,6 +30,8 @@ export class BerriesDopComponent extends BaseComponent {
   declaredYieldContractGuid: string;
   cropYear: string;
   insurancePlanId: string;
+
+  originalDopYieldContract: DopYieldContract;
 
   hasVerifiedYieldData = false
 
@@ -86,6 +88,9 @@ export class BerriesDopComponent extends BaseComponent {
     }
 
     if ( changes.dopYieldContract && this.dopYieldContract ) {
+      //make a deep copy
+      this.originalDopYieldContract = JSON.parse(JSON.stringify(this.dopYieldContract))
+      
       this.setUpCommoditiesList()
     }
   }
@@ -167,6 +172,10 @@ export class BerriesDopComponent extends BaseComponent {
     this.dopYieldContract.enteredYieldMeasUnitTypeCode = this.dopYieldContract.defaultYieldMeasUnitTypeCode
 
     if (this.dopYieldContract.declaredYieldContractGuid) {
+      // check if a forced comment is needed
+      if (this.isForcedCommentNeeded()) {
+       alert ("add a forced comment")
+      }
       this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract, this.policyId, "Yield "))
     } else {
       // add new
@@ -211,5 +220,63 @@ export class BerriesDopComponent extends BaseComponent {
     this.dopYieldContract.uwComments = uwComments;
     this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
   }
+
+  isForcedCommentNeeded() {
+    // Yield Level Comment is forced when:
+    //   Yield is Updated after the initial save AND
+    //     Total Production for a Commodity changes from a number to another number (ignore null → Number) OR
+    //     Total Production Override for a Commodity changes (including null → Number)
+
+
+    // calculate and check if the Total Production Override for a Commodity has changed
+    for (let cmdty of this.dopYieldContract.dopYieldContractCommodityBerriesList) {
+
+      let origCmdty = this.originalDopYieldContract.dopYieldContractCommodityBerriesList?.find(el => el.cropCommodityId == cmdty.cropCommodityId)
+      
+      if (origCmdty) {
+        let origTotalProductionOverride = (origCmdty.totalProductionOverride === null ? '' : origCmdty.totalProductionOverride)
+        let totalProductionOverride = (cmdty.totalProductionOverride === null ? '' : cmdty.totalProductionOverride)
+
+        if (origTotalProductionOverride !== totalProductionOverride) {
+          return true // we have to enforce a comment
+        }
+      }
+
+      // TODO: calculate and check if the Total Production for a Commodity has changed
+      // let currentTotalProduction = 0
+
+      // for (let fld of this.dopYieldContract.fields) {
+
+      //   for (let fldCmdty of fld.dopYieldFieldCommodityBerriesList) {
+
+      //     if (fldCmdty.cropCommodityId == cmdty.cropCommodityId) {
+
+      //       for (let fldVrty of fldCmdty.dopYieldFieldVarietyBerriesList) {
+              
+      //         if (fldVrty.totalProductionOverride && fldVrty.totalProductionOverride !== null) {
+
+      //           currentTotalProduction = currentTotalProduction + fldVrty.totalProductionOverride
+
+      //         }
+
+      //       }
+
+      //     }
+      //   }
+      // }
+      
+      // // check if any change
+      // if ( cmdty.totalProductionOverride !== null && cmdty.totalProductionOverride !== currentTotalProductionOverride ) {
+      //   return true // we need to force a comment
+      // }
+    }
+    
+    return false // no force comment is needed
+  }
+
+  addForcedComment() {
+
+  }
+
 
 }
