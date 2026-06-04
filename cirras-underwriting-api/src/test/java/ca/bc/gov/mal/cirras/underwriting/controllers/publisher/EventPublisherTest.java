@@ -63,6 +63,9 @@ public class EventPublisherTest extends EndpointsTest {
 			logger.warn("Skipping tests");
 			return;
 		}
+		
+		//The unit test ClaimUnderwritingListenerTest.testClaimUnderwritingEventConsume in the Claims-Listener-api
+		// is processing this message
 
 		String underwritingEventType = UnderwritingEventTypes.DopYieldContractCommodityBerriesUpdated;
 		Integer contractId = 987654;
