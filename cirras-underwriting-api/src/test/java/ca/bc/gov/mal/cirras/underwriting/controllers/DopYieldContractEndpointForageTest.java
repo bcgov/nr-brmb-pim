@@ -503,6 +503,7 @@ public class DopYieldContractEndpointForageTest extends EndpointsTest {
 		contractUnderwritingComment.setUnderwritingCommentTypeCode("DOP");
 		contractUnderwritingComment.setUnderwritingCommentTypeDesc("Declaration of Production");		
 		contractUnderwritingComment.setDeclaredYieldContractGuid(newDyc.getDeclaredYieldContractGuid());
+		contractUnderwritingComment.setGrowerContractYearId(gcyId1);
 		contractUnderwritingComment.setIsForcedInd(false);
 		
 		contractUwComments.add(contractUnderwritingComment);

@@ -398,6 +398,7 @@ public class UnderwritingCommentDaoTest {
 		newDto.setUnderwritingComment(comment);
 		newDto.setUnderwritingCommentTypeCode("VY");
 		newDto.setUnderwritingCommentTypeDesc("Verified Yield");
+		newDto.setIsForcedInd(false);
 		
 		dao.insert(newDto, userId);
 		Assert.assertNotNull(newDto.getUnderwritingCommentGuid());
@@ -416,6 +417,7 @@ public class UnderwritingCommentDaoTest {
 		newDto.setUnderwritingComment("test comment 1");
 		newDto.setUnderwritingCommentTypeCode("INV");
 		newDto.setUnderwritingCommentTypeDesc("Inventory"); // Not saved directly, but indirectly via underwritingCommentTypeCode.
+		newDto.setIsForcedInd(false);
 		
 		dao.insert(newDto, userId);
 		Assert.assertNotNull(newDto.getUnderwritingCommentGuid());
