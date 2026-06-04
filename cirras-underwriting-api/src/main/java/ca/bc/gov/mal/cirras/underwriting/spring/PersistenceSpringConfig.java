@@ -33,6 +33,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropVarietyDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropVarietyInsPlantInsXrefDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CropVarietyInsurabilityDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityBerriesDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityBerriesOutboxDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityForageDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractDao;
@@ -67,6 +68,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.PolicyStatusCodeDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.ProductDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.RiskAreaDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.SeedingDeadlineDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.SyncOwnershipDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.UnderwritingCommentDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.UnderwritingYearDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.UserSettingDao;
@@ -423,5 +425,15 @@ public class PersistenceSpringConfig {
 	@Bean
 	public UserSettingDao userSettingDao() { 
 		return new UserSettingDao();
+	}
+
+	@Bean
+	public DeclaredYieldContractCommodityBerriesOutboxDao declaredYieldContractCommodityBerriesOutboxDao() { 
+		return new DeclaredYieldContractCommodityBerriesOutboxDao();
+	}
+
+	@Bean
+	public SyncOwnershipDao syncOwnershipDao() {
+		return new SyncOwnershipDao();
 	}
 }

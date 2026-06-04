@@ -31,7 +31,9 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.parameters.validation.Param
 	SecuritySpringConfig.class,
 	CirrasPolicyServiceSpringConfig.class,
 	WebConfig.class,
-	CorsFilter.class
+	CorsFilter.class,
+	EventPublisherSpringConfig.class,
+	AsynchronousProcessesSpringConfig.class
 })
 public class EndpointsSpringConfig {
 
@@ -72,7 +74,7 @@ public class EndpointsSpringConfig {
 	    
 	    return result;
 	}
-
+	
 	@Bean
 	public ResourceBundleMessageSource messageSource() {
 		ResourceBundleMessageSource result;

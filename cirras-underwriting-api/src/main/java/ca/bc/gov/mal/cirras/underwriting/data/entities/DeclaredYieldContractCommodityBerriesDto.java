@@ -30,6 +30,8 @@ public class DeclaredYieldContractCommodityBerriesDto extends BaseDto<DeclaredYi
 	private Date updateDate;
 	
 	private String cropCommodityName;
+	private Integer contractId;
+	private Integer cropYear;
 
 	public DeclaredYieldContractCommodityBerriesDto() {
 	}
@@ -53,6 +55,8 @@ public class DeclaredYieldContractCommodityBerriesDto extends BaseDto<DeclaredYi
 		this.updateDate = dto.updateDate;
 		
 		this.cropCommodityName = dto.cropCommodityName;
+		this.contractId = dto.contractId;
+		this.cropYear = dto.cropYear;
 
 	}
 	
@@ -214,4 +218,19 @@ public class DeclaredYieldContractCommodityBerriesDto extends BaseDto<DeclaredYi
 	public void setCropCommodityName(String cropCommodityName) {
 		this.cropCommodityName = cropCommodityName;
 	}
+
+ 	public Integer getContractId() {
+		return contractId;
+	}
+	public void setContractId(Integer contractId) {
+		this.contractId = contractId;
+	}
+ 
+ 	public Integer getCropYear() {
+		return cropYear;
+	}
+	public void setCropYear(Integer cropYear) {
+		this.cropYear = cropYear;
+	}
+	
 }
