@@ -1,4 +1,4 @@
-import { Component, Inject } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { DialogData } from "../uw-comments-button/uw-comments-button.component";
 import { DIALOG_TYPE } from "../../dialogs/base-dialog/base-dialog.component";
@@ -13,7 +13,7 @@ import { INSURANCE_PLAN, UW_COMMENT_TYPE_CODE } from "src/app/utils/constants";
     styleUrls: ['./uw-comments-dialog.component.scss'],
     standalone: false
 })
-export class UwCommentsDialogComponent {
+export class UwCommentsDialogComponent implements OnInit {
     dialogType = DIALOG_TYPE.INFO;
     uwCommentsFormArray = new UntypedFormArray([]);
 
@@ -95,6 +95,11 @@ export class UwCommentsDialogComponent {
         }
     }
 
+    ngOnInit() {
+        if (this.data && this.data.isForcedInd) {
+            this.onAddNewComment()
+        }
+    }
 
     hasComments(): boolean {
         return this.data.uwComments.filter(uwComment => !uwComment.deletedByUserInd).length > 0;
@@ -112,14 +117,9 @@ export class UwCommentsDialogComponent {
         }
     }
 
-    isForcedComment() {
-        // TODO 
-        return false
-    }
-
     onAddNewComment() {
         this.data.uwComments.unshift({
-            underwritingCommentGuid: Math.floor(Math.random() * 1000000).toString(),
+            underwritingCommentGuid: Math.floor(Math.random() * -1000000).toString(), // if it's negative it's an easy way to recognize that it's a new comment. It never gets passed to the backend
             annualFieldDetailId: this.data.annualFieldDetailId,
             underwritingCommentTypeCode: this.data.underwritingCommentTypeCode,
             underwritingCommentTypeDesc: '',

@@ -46,6 +46,11 @@
                             <mat-icon>add</mat-icon> Add Comment
                         </button>
                     </div>
+
+                    <div *ngIf="data.isForcedInd" class="justify-left" 
+                        style="background-color: yellow; grid-column-start: 1; grid-column-end: 6; margin-bottom: 10px; border-width: 1px; border-color:red;">
+                        {{ data.isForcedMessage }}
+                    </div>
                 </div>
 
                 <!-- Inventory Comments headers -->
