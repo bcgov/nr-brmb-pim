@@ -18,6 +18,7 @@ public class UnderwritingComment implements Serializable {
 	private Integer growerContractYearId;
 	private String declaredYieldContractGuid;
 	private String verifiedYieldSummaryGuid;
+	private Boolean isForcedInd;
 	private String createUser;
 	private Date createDate;
 	private String updateUser;
@@ -83,6 +84,14 @@ public class UnderwritingComment implements Serializable {
 
 	public void setVerifiedYieldSummaryGuid(String verifiedYieldSummaryGuid) {
 		this.verifiedYieldSummaryGuid = verifiedYieldSummaryGuid;
+	}
+	
+	public Boolean getIsForcedInd() {
+		return isForcedInd;
+	}
+
+	public void setIsForcedInd(Boolean isForcedInd) {
+		this.isForcedInd = isForcedInd;
 	}
 	
 	public String getCreateUser() {

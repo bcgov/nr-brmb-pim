@@ -483,6 +483,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory {
 		model.setUnderwritingCommentTypeDesc(dto.getUnderwritingCommentTypeDesc());
 		model.setDeclaredYieldContractGuid(dto.getDeclaredYieldContractGuid());
 		model.setVerifiedYieldSummaryGuid(dto.getVerifiedYieldSummaryGuid());
+		model.setIsForcedInd(dto.getIsForcedInd());
 		model.setGrowerContractYearId(dto.getGrowerContractYearId());
 		model.setUpdateDate(dto.getUpdateDate());
 		model.setUpdateUser(dto.getUpdateUser());
@@ -1090,6 +1091,7 @@ public class InventoryContractRsrcFactory extends BaseResourceFactory {
 		dto.setUnderwritingComment(model.getUnderwritingComment());
 		dto.setUnderwritingCommentTypeCode(model.getUnderwritingCommentTypeCode());
 		dto.setUnderwritingCommentTypeDesc(model.getUnderwritingCommentTypeDesc());
+		dto.setIsForcedInd(model.getIsForcedInd());
 	}
 
 	

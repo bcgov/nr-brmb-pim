@@ -31,6 +31,8 @@ public class UnderwritingCommentDto extends BaseDto<UnderwritingCommentDto> {
 	private String declaredYieldContractGuid;
 	private String verifiedYieldSummaryGuid;
 	
+	private Boolean isForcedInd;
+	
 	public UnderwritingCommentDto() {
 	}
 	
@@ -50,6 +52,7 @@ public class UnderwritingCommentDto extends BaseDto<UnderwritingCommentDto> {
 		this.growerContractYearId = dto.growerContractYearId;
 		this.declaredYieldContractGuid = dto.declaredYieldContractGuid;
 		this.verifiedYieldSummaryGuid = dto.verifiedYieldSummaryGuid;
+		this.isForcedInd = dto.isForcedInd;
 
 	}
 	
@@ -73,6 +76,7 @@ public class UnderwritingCommentDto extends BaseDto<UnderwritingCommentDto> {
 			result = result&&dtoUtils.equals("growerContractYearId", growerContractYearId, other.growerContractYearId);
 			result = result&&dtoUtils.equals("declaredYieldContractGuid", declaredYieldContractGuid, other.declaredYieldContractGuid);
 			result = result&&dtoUtils.equals("verifiedYieldSummaryGuid", verifiedYieldSummaryGuid, other.verifiedYieldSummaryGuid);
+			result = result&&dtoUtils.equals("isForcedInd", isForcedInd, other.isForcedInd);
 		}
 		
 		return result;
@@ -173,5 +177,13 @@ public class UnderwritingCommentDto extends BaseDto<UnderwritingCommentDto> {
 	public void setVerifiedYieldSummaryGuid(String verifiedYieldSummaryGuid) {
 		this.verifiedYieldSummaryGuid = verifiedYieldSummaryGuid;
 	}
- 
+	
+	public Boolean getIsForcedInd() {
+		return isForcedInd;
+	}
+
+	public void setIsForcedInd(Boolean isForcedInd) {
+		this.isForcedInd = isForcedInd;
+	}
+	
 }

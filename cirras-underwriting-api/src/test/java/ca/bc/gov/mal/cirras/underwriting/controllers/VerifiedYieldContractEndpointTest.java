@@ -519,7 +519,8 @@ public class VerifiedYieldContractEndpointTest extends EndpointsTest {
 		uw.setUnderwritingCommentTypeCode("VY");
 		uw.setUnderwritingComment("comment 1");
 		uw.setVerifiedYieldSummaryGuid(vys.getVerifiedYieldSummaryGuid());
-
+		uw.setIsForcedInd(false);
+		
 		expectedComments.add(uw);
 		vys.setUwComments(expectedComments);
 

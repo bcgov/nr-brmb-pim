@@ -345,8 +345,9 @@ public class UwContractValidateRemoveFieldEndpointTest extends EndpointsTest {
 		underwritingComment.setUnderwritingComment("Comment1 for field " + resource.getFields().get(0).getFieldId());
 		underwritingComment.setUnderwritingCommentGuid(null);
 		underwritingComment.setUnderwritingCommentTypeCode("INV");
-		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");		
-
+		underwritingComment.setUnderwritingCommentTypeDesc("Inventory");	
+		underwritingComment.setIsForcedInd(false);
+		
 		uwComments.add(underwritingComment);
 		
 		resource.getFields().get(0).setUwComments(uwComments);
