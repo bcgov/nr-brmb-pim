@@ -61,7 +61,7 @@ export class UwCommentComponent implements OnInit {
 
         if (this.uwComment.isForcedInd ) {
             if (this.uwComment.underwritingCommentGuid.charAt(0) == '-') {
-                // it's a brand new comment , not saved in the database yet -> allow editing
+                // it's a brand new comment, not saved in the database yet -> allow editing
                 return true
             } else {
                 return false

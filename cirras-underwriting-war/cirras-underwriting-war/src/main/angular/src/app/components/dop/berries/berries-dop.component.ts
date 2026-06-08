@@ -180,21 +180,15 @@ export class BerriesDopComponent extends BaseComponent {
     // set up units
     this.dopYieldContract.enteredYieldMeasUnitTypeCode = this.dopYieldContract.defaultYieldMeasUnitTypeCode
 
-    if (this.dopYieldContract.declaredYieldContractGuid) {
+    if (this.dopYieldContract.declaredYieldContractGuid) { // update yield
 
       if (this.isForcedCommentNeeded()) {
-
-        // this.addForcedComment()
-
-        // click the DOP comments button
+        
         this.isForcedInd = true
         this.isForcedMessage = "Yield Commodity Total(s) have changed. Please add a comment to justify the change."
         
-        // if (this.uwButtonElement) {
-        //   this.uwButtonElement.nativeElement.click();
-        // }
+        // click the DOP comments button
         if (this.uwComponentInstance) {
-          // Replace 'onClick()' with the actual internal click handler method name of that component
           this.uwComponentInstance.onLoadComments(); 
         }
 
@@ -256,9 +250,11 @@ export class BerriesDopComponent extends BaseComponent {
       // it was a foced comment and we have to save the dop
       this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract, this.policyId, "Yield "))
       this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, false ));
+
+    } else {
+      this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
     }
-    
-    this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, true));
+        
   }
 
   isForcedCommentNeeded() {
@@ -331,57 +327,5 @@ export class BerriesDopComponent extends BaseComponent {
     
     return false // no force comment is needed
   }
-
-  addForcedComment() {
-
-
-
-    // let data: DialogData = {
-    //   insurancePlanId: parseInt(this.insurancePlanId),
-    //   underwritingCommentTypeCode: 'DOP',
-    //   growerContractYearId: this.dopYieldContract.growerContractYearId,
-    //   declaredYieldContractGuid: this.declaredYieldContractGuid,
-    //   policyNumber: this.growerContract.policyNumber,
-    //   growerName: this.growerContract.growerName,
-    //   growerNumber: this.growerContract.growerNumber.toString(),
-    //   isForcedInd: true, 
-    //   isForcedMessage: "Yield Commodity Total(s) have changed. Please add a comment to justify the change.",
-    //   uwComments: this.dopYieldContract.uwComments
-    // }
-
-    // let dialogRef = this.dialog.open(UwCommentsDialogComponent, {
-    //   width: '1136px',
-    //   data: data,
-    //   autoFocus: false,
-    //   closeOnNavigation: false,
-    //   panelClass: 'wf-dialog'
-    // });
-    
-    // const self = this;
-    // dialogRef.afterClosed().subscribe(result => {
-    //     if (result?.event == 'Done') {
-    //       debugger
-    //       result?.data
-    //         // this.onDone.emit(self.uwCommentsForDialog.map(comment => {
-    //         //   debugger
-    //         //     return {
-    //         //         ...comment,
-    //         //         // erase guid for new comments
-    //         //         underwritingCommentGuid: comment.createDate ? comment.underwritingCommentGuid : null,
-    //         //     };
-    //         // }));
-
-    //       // this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, this.dopYieldContract, this.policyId, "Yield "))
-    //       // this.store.dispatch(setFormStateUnsaved(DOP_COMPONENT_ID, false ));
-
-    //     } else if (result?.event == 'Cancel') { 
-    //       debugger
-    //         // restore uwCommentsForDialog to its original state
-    //         // this.uwCommentsForDialog = JSON.parse(JSON.stringify(this.dopYieldContract.uwComments)) || [];
-    //     }
-    // });        
-
-  }
-
 
 }
