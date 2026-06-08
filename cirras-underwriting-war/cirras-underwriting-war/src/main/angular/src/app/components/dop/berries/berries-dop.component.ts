@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AnnualField, UwContract } from 'src/app/conversion/models';
 import { DopYieldContract } from 'src/app/conversion/models-yield';
 import { BaseComponent } from '../../common/base/base.component';
@@ -11,9 +11,8 @@ import { AddNewDopYieldContract, DeleteDopYieldContract, GetDopReport, LoadDopYi
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { getInsurancePlanName, replaceNonAlphanumericCharacters } from 'src/app/utils';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
-import { AnnualFieldRsrc, DopYieldFieldCommodityBerries, UnderwritingComment } from '@cirras/cirras-underwriting-api';
-import { DialogData, UwCommentsButtonComponent } from '../../uw-comments/uw-comments-button/uw-comments-button.component';
-import { UwCommentsDialogComponent } from '../../uw-comments/uw-comments-dialog/uw-comments-dialog.component';
+import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
+import { UwCommentsButtonComponent } from '../../uw-comments/uw-comments-button/uw-comments-button.component';
 
 @Component({
   selector: 'berries-dop',
