@@ -4,6 +4,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON cuws.declared_yield_field_variety_berrie
 GRANT SELECT, INSERT, UPDATE, DELETE ON cuws.declared_yield_contract_commodity_berries TO "app_cuws_rest_proxy";
 GRANT SELECT, INSERT, UPDATE, DELETE ON cuws.commodity_maturity_scale TO "app_cuws_rest_proxy";
 GRANT SELECT, INSERT, UPDATE, DELETE ON cuws.declared_yield_contract_commodity_berries_ob TO "app_cuws_rest_proxy";
+GRANT SELECT, INSERT, UPDATE, DELETE ON cuws.claim_calculation_berries_sync TO "app_cuws_rest_proxy";
 
 -- Grant permissios to the audit tables
 GRANT SELECT, INSERT ON cuws.annual_field_crop_audit TO "app_cuws_rest_proxy";
