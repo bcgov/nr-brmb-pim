@@ -22,16 +22,16 @@ public class ApplicationInitializer extends AbstractSecurityWebApplicationInitia
 	
 	public ApplicationInitializer() {
 		super(EndpointsSpringConfig.class);
-		LOGGER.info("<ApplicationInitializer");
+		LOGGER.info("<Underwriting Api ApplicationInitializer");
 		
-		LOGGER.info(">ApplicationInitializer");
+		LOGGER.info(">Underwriting Api ApplicationInitializer");
 	}	
 
     private static final String PAR_NAME_CTX_CONFIG_LOCATION = "contextConfigLocation";
 	
     
 	protected void beforeSpringSecurityFilterChain(ServletContext servletContext) {
-    	LOGGER.info("<beforeSpringSecurityFilterChain");
+    	LOGGER.info("<Underwriting Api beforeSpringSecurityFilterChain");
     	
     	// Disable Jersey Spring Context Loader
     	servletContext.setInitParameter(PAR_NAME_CTX_CONFIG_LOCATION, "java configuration");
@@ -54,6 +54,6 @@ public class ApplicationInitializer extends AbstractSecurityWebApplicationInitia
         FilterRegistration.Dynamic corsFilter = servletContext.addFilter("CORS Filter", CorsFilter.class);
         corsFilter.addMappingForUrlPatterns(null, false, "/*");
     	
-    	LOGGER.info(">beforeSpringSecurityFilterChain");
+    	LOGGER.info(">Underwriting Api beforeSpringSecurityFilterChain");
 	}
 }
