@@ -8,8 +8,8 @@ export interface DialogData {
     insurancePlanId: number;
     underwritingCommentTypeCode: string;
     // Inventory and DOP field data
-    annualFieldDetailId: number;
-    fieldId: number;
+    annualFieldDetailId?: number;
+    fieldId?: number;
     fieldName?: string;
     fieldLocation?: string;
     legalLocation?: string;
@@ -21,9 +21,10 @@ export interface DialogData {
     growerName: string;
     growerNumber: string;
     // Verified Yield summary data:
-    verifiedYieldSummaryGuid: string;
-    commodityName: string,
-    // common data
+    verifiedYieldSummaryGuid?: string;
+    commodityName?: string,
+    isForcedInd: boolean;
+    isForcedMessage?: string;
     uwComments: UnderwritingComment[];
 }
 
@@ -49,6 +50,8 @@ export class UwCommentsButtonComponent {
     @Input() primaryPropertyIdentifier: string;
     @Input() verifiedYieldSummaryGuid: string;
     @Input() commodityName: string;
+    @Input() isForcedInd: boolean;
+    @Input() isForcedMessage: string;
     @Input() uwComments: UnderwritingComment[];
     @Output() onDone = new EventEmitter<UnderwritingComment[]>();
 
@@ -89,6 +92,8 @@ export class UwCommentsButtonComponent {
             primaryPropertyIdentifier: this.primaryPropertyIdentifier,
             verifiedYieldSummaryGuid: this.verifiedYieldSummaryGuid,
             commodityName: this.commodityName,
+            isForcedInd: (this.isForcedInd == null ? false : this.isForcedInd), 
+            isForcedMessage: this.isForcedMessage,
             uwComments: this.uwCommentsForDialog
         };
     }

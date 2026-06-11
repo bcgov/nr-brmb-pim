@@ -11,6 +11,7 @@ import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 export class UwCommentComponent implements OnInit {
     @Input() uwComment: UnderwritingComment;
     @Input() uwCommentsFormArray: UntypedFormArray;
+    @Input() showForcedCommentsColumn: Boolean;
 
     uwCommentFormGroup: UntypedFormGroup;
     validComment: boolean = true;
@@ -25,6 +26,7 @@ export class UwCommentComponent implements OnInit {
             updateDate: [this.uwComment.updateDate],
             updateUser: [this.uwComment.updateUser],
             underwritingComment: [this.uwComment.underwritingComment],
+            isForcedInd: [this.uwComment.isForcedInd],
             userCanEditInd: [this.uwComment.userCanEditInd]
         });
         this.uwCommentsFormArray.push(this.uwCommentFormGroup);
@@ -48,6 +50,24 @@ export class UwCommentComponent implements OnInit {
         const index = this.uwCommentsFormArray.value.findIndex(uwComment => uwComment.underwritingCommentGuid === this.uwComment.underwritingCommentGuid);
         if (index !== -1) {
             this.uwCommentsFormArray.removeAt(index);
+        }
+    }
+
+    canUserEditComment() {
+
+        if (!this.uwComment.userCanEditInd) {
+            return false
+        }
+
+        if (this.uwComment.isForcedInd ) {
+            if (this.uwComment.underwritingCommentGuid.charAt(0) == '-') {
+                // it's a brand new comment, not saved in the database yet -> allow editing
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return true
         }
     }
 }

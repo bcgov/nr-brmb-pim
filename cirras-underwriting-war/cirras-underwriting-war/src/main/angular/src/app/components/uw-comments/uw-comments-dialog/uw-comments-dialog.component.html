@@ -46,6 +46,11 @@
                             <mat-icon>add</mat-icon> Add Comment
                         </button>
                     </div>
+
+                    <div *ngIf="data.isForcedInd" class="justify-left" 
+                        style="background-color: yellow; grid-column-start: 1; grid-column-end: 6; margin-bottom: 10px; border-width: 1px; border-color:red;">
+                        {{ data.isForcedMessage }}
+                    </div>
                 </div>
 
                 <!-- Inventory Comments headers -->
@@ -71,8 +76,10 @@
                     </div>
                 </div>
 
-                <uw-comment-list [uwComments]="data.uwComments" [uwCommentsFormArray]="uwCommentsFormArray"
-                    style="display: contents;"></uw-comment-list>
+                <div [ngClass]="showForcedCommentColumn() ? 'forced-comments-header' : 'no-forced-comments-header'">
+                    <uw-comment-list [uwComments]="data.uwComments" [uwCommentsFormArray]="uwCommentsFormArray" [showForcedCommentsColumn]="showForcedCommentColumn()"
+                        style="display: contents;"></uw-comment-list>
+                </div>
 
                 <div class="five-columns" *ngIf="!hasComments()">
                     Select the 'Add Comment' button to add inventory comments.
@@ -82,7 +89,10 @@
     </div>
 
     <div mat-dialog-actions align="end">
-        <p style="margin-right: auto;">To save new comments, click done and then click save on the main screen.</p>
+        <p *ngIf="data.isForcedInd; else nonForcedComment" style="margin-right: auto;">Click Done to save the new comment and the data on the main screen.</p>
+        <ng-template #nonForcedComment>
+            <p style="margin-right: auto;">To save new comments, click done and then click save on the main screen.</p>
+        </ng-template>
         <button mat-raised-button class="secondary" (click)="onCancel()">Cancel</button>
         <button mat-raised-button class="primary" (click)="onDone()">Done</button>
     </div>
