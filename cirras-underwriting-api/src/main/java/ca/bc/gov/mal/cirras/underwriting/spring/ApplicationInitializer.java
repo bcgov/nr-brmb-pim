@@ -23,7 +23,7 @@ public class ApplicationInitializer extends AbstractSecurityWebApplicationInitia
 	public ApplicationInitializer() {
 		super(EndpointsSpringConfig.class);
 		LOGGER.info("<Underwriting Api ApplicationInitializer");
-		
+		System.out.println("Underwriting Api");
 		LOGGER.info(">Underwriting Api ApplicationInitializer");
 	}	
 
@@ -32,6 +32,7 @@ public class ApplicationInitializer extends AbstractSecurityWebApplicationInitia
     
 	protected void beforeSpringSecurityFilterChain(ServletContext servletContext) {
     	LOGGER.info("<Underwriting Api beforeSpringSecurityFilterChain");
+		System.out.println("Underwriting Api");
     	
     	// Disable Jersey Spring Context Loader
     	servletContext.setInitParameter(PAR_NAME_CTX_CONFIG_LOCATION, "java configuration");
