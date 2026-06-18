@@ -2,5 +2,5 @@
 **/.git.bak
 compose.yaml
 local-config
-cirras-underwriting-api/src/test/resources/static.properties
+cirras-underwriting-api/cirras-underwriting-api-server/src/test/resources/static.properties
 cirras-underwriting-war/settings.xml
