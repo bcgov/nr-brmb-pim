@@ -319,7 +319,8 @@ export class BerriesDopComponent extends BaseComponent {
       }
       
       // check if any change to commodity total production 
-      if (cmdty.totalProduction && cmdty.totalProduction !== currentTotalProduction){
+      if ( (cmdty.totalProduction === null  && currentTotalProduction > 0 ) || 
+            (cmdty.totalProduction && cmdty.totalProduction !== currentTotalProduction) ){
         return true // enforce a comment
       }
     }
