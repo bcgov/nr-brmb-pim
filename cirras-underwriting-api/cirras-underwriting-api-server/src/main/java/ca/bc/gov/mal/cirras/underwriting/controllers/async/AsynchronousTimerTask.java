@@ -235,7 +235,6 @@ public abstract class AsynchronousTimerTask extends TimerTask {
 		}
 	}
 
-	// TODO: Do we want to continue using emails for alerts?
 	protected void sendErrors() {
 		getLogger().debug("<sendErrors");
 		

@@ -85,6 +85,8 @@ public class FetchOutboxTask extends AsynchronousTimerTask {
 			addError(ERROR_TYPE_UNRECOVERABLE, "Encountered an unrecoverable error: "+e.getMessage());
 		}
 		
+		addError("Test Error Email", "This is a test of the error email.");
+		
 		sendErrors();
 		
 		long executionMillis = System.currentTimeMillis() - startMillis;
