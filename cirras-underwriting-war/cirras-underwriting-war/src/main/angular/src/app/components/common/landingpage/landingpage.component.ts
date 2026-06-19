@@ -134,6 +134,10 @@ export class LandingPageComponent implements OnInit {
 
           resourceRoute = ResourcesRoutes.DOP_FORAGE
           
+      } else if ( uwContract.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+
+          resourceRoute = ResourcesRoutes.DOP_BERRIES
+          
       }
 
       let dopLink = "/" + resourceRoute + 
