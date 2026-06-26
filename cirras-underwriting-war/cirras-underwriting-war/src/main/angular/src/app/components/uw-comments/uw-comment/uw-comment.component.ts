@@ -55,19 +55,7 @@ export class UwCommentComponent implements OnInit {
 
     canUserEditComment() {
 
-        if (!this.uwComment.userCanEditInd) {
-            return false
-        }
+        return this.uwComment.userCanEditInd
 
-        if (this.uwComment.isForcedInd ) {
-            if (this.uwComment.underwritingCommentGuid.charAt(0) == '-') {
-                // it's a brand new comment, not saved in the database yet -> allow editing
-                return true
-            } else {
-                return false
-            }
-        } else {
-            return true
-        }
     }
 }
