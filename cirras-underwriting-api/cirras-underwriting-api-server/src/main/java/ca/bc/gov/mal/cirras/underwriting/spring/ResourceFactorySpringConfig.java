@@ -26,6 +26,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.OutboxFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.RiskAreaRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.SeedingDeadlineRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.SyncClaimCalculationSimpleRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UnderwritingYearRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UserSettingRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UwContractRsrcFactory;
@@ -197,6 +198,12 @@ public class ResourceFactorySpringConfig {
 	@Bean
 	public DopYieldContractSimpleRsrcFactory dopYieldContractSimpleRsrcFactory() {
 		DopYieldContractSimpleRsrcFactory result = new DopYieldContractSimpleRsrcFactory();
+		return result;
+	}
+	
+	@Bean
+	public SyncClaimCalculationSimpleRsrcFactory syncClaimCalculationSimpleRsrcFactory() {
+		SyncClaimCalculationSimpleRsrcFactory result = new SyncClaimCalculationSimpleRsrcFactory();
 		return result;
 	}	
 }

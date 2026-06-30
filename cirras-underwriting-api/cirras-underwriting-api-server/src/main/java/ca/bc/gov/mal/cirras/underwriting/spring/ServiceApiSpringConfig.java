@@ -20,6 +20,7 @@ import ca.bc.gov.mal.cirras.underwriting.services.CirrasMaintenanceService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasUnderwritingOutboxService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasUwLandManagementService;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasVerifiedYieldService;
+import ca.bc.gov.mal.cirras.underwriting.services.ClaimDataSyncService;
 import ca.bc.gov.mal.cirras.underwriting.services.FailOverService;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CommodityTypeCodeRsrcFactory;
@@ -42,6 +43,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandFieldXrefRsrcF
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandRiskAreaXrefRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.RiskAreaRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.SeedingDeadlineRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.SyncClaimCalculationSimpleRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UnderwritingYearRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UserSettingRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UwContractRsrcFactory;
@@ -109,6 +111,7 @@ public class ServiceApiSpringConfig {
 	@Autowired UserSettingRsrcFactory userSettingRsrcFactory;
 	@Autowired OutboxFactory outboxFactory;
 	@Autowired DopYieldContractSimpleRsrcFactory dopYieldContractSimpleRsrcFactory;
+	@Autowired SyncClaimCalculationSimpleRsrcFactory syncClaimCalculationSimpleRsrcFactory;
 	
 	// Imported Spring Config
 	@Autowired CodeTableSpringConfig codeTableSpringConfig;
@@ -353,6 +356,20 @@ public class ServiceApiSpringConfig {
 		result.setDeclaredYieldContractCommodityBerriesDao(persistenceSpringConfig.declaredYieldContractCommodityBerriesDao());
 
 		result.setEventPublisher(eventPublisher);
+		
+		return result;
+	}
+	
+	@Bean()
+	public ClaimDataSyncService claimDataSyncService() {
+		ClaimDataSyncService result;
+		
+		result = new ClaimDataSyncService();
+		result.setApplicationProperties(applicationProperties);
+
+		result.setSyncClaimCalculationSimpleRsrcFactory(syncClaimCalculationSimpleRsrcFactory);
+
+		result.setClaimCalculationBerriesSyncDao(persistenceSpringConfig.claimCalculationBerriesSyncDao());
 		
 		return result;
 	}
