@@ -20,6 +20,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LandDataSyncRsrcFactory
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.LegalLandRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.RiskAreaRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.SeedingDeadlineRsrcFactory;
+import ca.bc.gov.mal.cirras.underwriting.data.assemblers.SyncClaimCalculationSimpleRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UnderwritingYearRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UserSettingRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.UwContractRsrcFactory;
@@ -272,6 +273,11 @@ public class TopLevelEndpoints extends BaseEndpointsImpl {
 				selfURI = VerifiedYieldContractRsrcFactory.getVerifiedYieldContractSimpleSelfUri(baseUri);
 				result.getLinks().add(new RelLink(ResourceTypes.VERIFIED_YIELD_CONTRACT_SIMPLE, selfURI, HttpMethod.GET));
 			}
+			
+			if (hasAuthority(Scopes.GET_CLAIM_CALCULATION_SIMPLE)) {
+				selfURI = SyncClaimCalculationSimpleRsrcFactory.getSyncClaimCalculationSimpleSelfUri(baseUri);
+				result.getLinks().add(new RelLink(ResourceTypes.SYNC_CLAIM_CALCULATION_SIMPLE, selfURI, HttpMethod.GET));
+			}
 
 			
 			//**********************************************************
@@ -348,6 +354,10 @@ public class TopLevelEndpoints extends BaseEndpointsImpl {
 				selfURI = CirrasDataSyncRsrcFactory.getCommodityTypeVarietyXrefSelfUri(baseUri);
 				result.getLinks().add(new RelLink(ResourceTypes.SYNCHRONIZE_COMMODITY_TYPE_VARIETY_XREF, selfURI, HttpMethod.POST));
 
+				//CLAIM CALCULATION SIMPLE SYNC
+				selfURI = SyncClaimCalculationSimpleRsrcFactory.getSyncClaimCalculationSimpleSelfUri(baseUri);
+				result.getLinks().add(new RelLink(ResourceTypes.SYNCHRONIZE_CLAIM_CALCULATION_SIMPLE, selfURI, HttpMethod.POST));
+
 			}
 
 			//DELETE
@@ -420,6 +430,10 @@ public class TopLevelEndpoints extends BaseEndpointsImpl {
 				//COMMODITY TYPE VARIETY XREF SYNC
 				selfURI = CirrasDataSyncRsrcFactory.getCommodityTypeVarietyXrefSelfUri(baseUri);
 				result.getLinks().add(new RelLink(ResourceTypes.DELETE_COMMODITY_TYPE_VARIETY_XREF, selfURI, HttpMethod.DELETE));
+
+				//CLAIM CALCULATION SIMPLE SYNC
+				selfURI = SyncClaimCalculationSimpleRsrcFactory.getSyncClaimCalculationSimpleSelfUri(baseUri);
+				result.getLinks().add(new RelLink(ResourceTypes.DELETE_SYNC_CLAIM_CALCULATION_SIMPLE, selfURI, HttpMethod.DELETE));
 
 			}
 

@@ -25,8 +25,7 @@ public class ClaimCalculationBerriesSyncDaoTest {
 	@Autowired 
 	private PersistenceSpringConfig persistenceSpringConfig;
 	
-	private String claimCalculationBerriesSyncGuid = null;
-
+	private String claimCalculationBerriesGuid = "testClaimCalculationBerriesGuid";
 
 	@Before
 	public void prepareTests() throws NotFoundDaoException, DaoException{
@@ -40,12 +39,10 @@ public class ClaimCalculationBerriesSyncDaoTest {
 	
 	private void deleteClaimCalculationBerriesSync() throws NotFoundDaoException, DaoException{
 		
-		if(claimCalculationBerriesSyncGuid != null) {
-			ClaimCalculationBerriesSyncDao dao = persistenceSpringConfig.claimCalculationBerriesSyncDao();
-			ClaimCalculationBerriesSyncDto dto = dao.fetch(claimCalculationBerriesSyncGuid);
-			if (dto != null) {
-				dao.delete(claimCalculationBerriesSyncGuid);
-			}
+		ClaimCalculationBerriesSyncDao dao = persistenceSpringConfig.claimCalculationBerriesSyncDao();
+		ClaimCalculationBerriesSyncDto dto = dao.fetch(claimCalculationBerriesGuid);
+		if (dto != null) {
+			dao.delete(claimCalculationBerriesGuid);
 		}
 	}
 	
@@ -69,17 +66,16 @@ public class ClaimCalculationBerriesSyncDaoTest {
 		newDto.setContractId(12345666);
 		newDto.setCropYear(2025);
 		newDto.setClaimCalculationGuid("testClaimCalculationGuid");
-		newDto.setClaimCalculationBerriesGuid("testClaimCalculationBerriesGuid");
+		newDto.setClaimCalculationBerriesGuid(claimCalculationBerriesGuid);
 		newDto.setTotalYieldForCalculation(100.0);
 		newDto.setCalculationStatusCode("DRAFT");
 		newDto.setCalculationVersion(1);
 		newDto.setDataSyncTransDate(dataSyncTransDate);
 
 		dao.insert(newDto, userId);
-		claimCalculationBerriesSyncGuid = newDto.getClaimCalculationBerriesSyncGuid();
 		
 		//FETCH
-		ClaimCalculationBerriesSyncDto fetchedDto = dao.fetch(claimCalculationBerriesSyncGuid);
+		ClaimCalculationBerriesSyncDto fetchedDto = dao.fetch(claimCalculationBerriesGuid);
 		
 
 		Assert.assertEquals("ClaimCalculationBerriesSyncGuid", newDto.getClaimCalculationBerriesSyncGuid(), fetchedDto.getClaimCalculationBerriesSyncGuid());
@@ -103,7 +99,7 @@ public class ClaimCalculationBerriesSyncDaoTest {
 		dao.update(fetchedDto, userId);
 		
 		//FETCH
-		ClaimCalculationBerriesSyncDto updatedDto = dao.fetch(claimCalculationBerriesSyncGuid);
+		ClaimCalculationBerriesSyncDto updatedDto = dao.fetch(claimCalculationBerriesGuid);
 
 		Assert.assertEquals("TotalYieldForCalculation", fetchedDto.getTotalYieldForCalculation(), updatedDto.getTotalYieldForCalculation());
 		Assert.assertEquals("CalculationStatusCode", fetchedDto.getCalculationStatusCode(), updatedDto.getCalculationStatusCode());
@@ -118,17 +114,17 @@ public class ClaimCalculationBerriesSyncDaoTest {
 		dao.update(updatedDto, userId);
 		
 		//FETCH
-		ClaimCalculationBerriesSyncDto notUpdatedDto = dao.fetch(claimCalculationBerriesSyncGuid);
+		ClaimCalculationBerriesSyncDto notUpdatedDto = dao.fetch(claimCalculationBerriesGuid);
 
 		//DataSyncTransDate is still the same (no update happened)
 		Assert.assertTrue("DataSyncTransDate", notUpdatedDto.getDataSyncTransDate().compareTo(dataSyncTransDate) == 0);
 
 		
 		//DELETE
-		dao.delete(notUpdatedDto.getClaimCalculationBerriesSyncGuid());
+		dao.delete(notUpdatedDto.getClaimCalculationBerriesGuid());
 
 		//FETCH
-		ClaimCalculationBerriesSyncDto deletedDto = dao.fetch(notUpdatedDto.getClaimCalculationBerriesSyncGuid());
+		ClaimCalculationBerriesSyncDto deletedDto = dao.fetch(notUpdatedDto.getClaimCalculationBerriesGuid());
 		Assert.assertNull(deletedDto);
 
 	}

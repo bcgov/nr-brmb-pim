@@ -3,6 +3,7 @@ package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 import java.net.URI;
 
 import ca.bc.gov.mal.cirras.underwriting.controllers.PolicyEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.SyncClaimCalculationSimpleEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ClaimCalculationBerriesSyncDto;
 import ca.bc.gov.mal.cirras.underwriting.data.models.SyncClaimCalculationBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncClaimCalculationSimpleRsrc;
@@ -61,7 +62,7 @@ public class SyncClaimCalculationSimpleRsrcFactory extends BaseResourceFactory {
 			URI baseUri) {
 
 		String result = UriBuilder.fromUri(baseUri)
-			.path(PolicyEndpoint.class)
+			.path(SyncClaimCalculationSimpleEndpoint.class)
 			.build()
 			.toString();
 

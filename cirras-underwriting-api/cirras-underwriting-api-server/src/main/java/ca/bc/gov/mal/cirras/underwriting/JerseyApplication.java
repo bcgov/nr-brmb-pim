@@ -40,6 +40,7 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.PolicyEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.ProductEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.RiskAreaListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.SeedingDeadlineListEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.SyncClaimCalculationSimpleEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.SyncCodeEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.SyncCommodityTypeCodeEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.SyncCommodityTypeVarietyXrefEndpoint;
@@ -142,6 +143,7 @@ public class JerseyApplication extends JerseyResourceConfig {
 		register(VerifiedYieldContractSimpleEndpoint.class);
 		register(UserSettingListEndpoint.class);
 		register(UserSettingEndpoint.class);
+		register(SyncClaimCalculationSimpleEndpoint.class);
 		
 
 		register(OpenApiResource.class);

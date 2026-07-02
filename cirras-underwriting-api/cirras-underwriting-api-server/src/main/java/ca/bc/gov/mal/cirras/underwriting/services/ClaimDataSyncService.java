@@ -64,7 +64,7 @@ public class ClaimDataSyncService {
 	
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public SyncClaimCalculationSimpleRsrc getSyncClaimCalculationSimple(
-			String claimCalculationBerriesSyncGuid, 
+			String claimCalculationBerriesGuid, 
 			FactoryContext factoryContext, 
 			WebAdeAuthentication authentication)
 			throws ServiceException, NotFoundException, DaoException {
@@ -74,13 +74,13 @@ public class ClaimDataSyncService {
 		SyncClaimCalculationSimpleRsrc result = null;
 
 		try {
-			ClaimCalculationBerriesSyncDto dto = claimCalculationBerriesSyncDao.fetch(claimCalculationBerriesSyncGuid);
+			ClaimCalculationBerriesSyncDto dto = claimCalculationBerriesSyncDao.fetch(claimCalculationBerriesGuid);
 
 			if (dto != null) {
 				result = syncClaimCalculationSimpleRsrcFactory.getSyncClaimCalculationSimple(dto);
 			} else {
 				// No record found
-				throw new NotFoundException("Did not find claim calculation berries sync with guid: " + claimCalculationBerriesSyncGuid);
+				throw new NotFoundException("Did not find claim calculation berries sync with claimCalculationBerriesGuid: " + claimCalculationBerriesGuid);
 			}
 	
 		} catch (DaoException e) {
