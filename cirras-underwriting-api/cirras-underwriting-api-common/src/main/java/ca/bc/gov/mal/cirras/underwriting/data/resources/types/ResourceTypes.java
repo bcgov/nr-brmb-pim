@@ -247,5 +247,10 @@ public class ResourceTypes extends BaseResourceTypes {
 	public static final String UPDATE_USER_SETTING = NAMESPACE + "updateUserSetting";
 	public static final String DELETE_USER_SETTING = NAMESPACE + "deleteUserSetting";
 	
+	//Sync Claim Calculation Simple
+	public static final String SYNC_CLAIM_CALCULATION_SIMPLE_NAME = "syncClaimCalculationSimple";
+	public static final String SYNC_CLAIM_CALCULATION_SIMPLE = NAMESPACE + SYNC_CLAIM_CALCULATION_SIMPLE_NAME;
+	public static final String SYNCHRONIZE_CLAIM_CALCULATION_SIMPLE = NAMESPACE + "synchronizeClaimCalculationSimple";
+	public static final String DELETE_SYNC_CLAIM_CALCULATION_SIMPLE = NAMESPACE + "deleteSyncClaimCalculationSimple";
 }
 

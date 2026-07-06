@@ -21,6 +21,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.AnnualFieldDetailDao;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.ClaimCalculationBerriesSyncDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CommodityMaturityScaleDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CommodityTypeCodeDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CommodityTypeVarietyXrefDao;
@@ -435,5 +436,10 @@ public class PersistenceSpringConfig {
 	@Bean
 	public SyncOwnershipDao syncOwnershipDao() {
 		return new SyncOwnershipDao();
+	}
+
+	@Bean
+	public ClaimCalculationBerriesSyncDao claimCalculationBerriesSyncDao() { 
+		return new ClaimCalculationBerriesSyncDao(); 
 	}
 }

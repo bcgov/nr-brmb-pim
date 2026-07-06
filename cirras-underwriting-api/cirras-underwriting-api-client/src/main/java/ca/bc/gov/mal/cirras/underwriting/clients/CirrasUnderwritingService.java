@@ -41,6 +41,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.RenameLegalValidationRsr
 import ca.bc.gov.mal.cirras.underwriting.data.resources.ReplaceLegalValidationRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.RiskAreaListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SeedingDeadlineListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncClaimCalculationSimpleRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCodeRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeCodeRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeVarietyXrefRsrc;
@@ -2346,6 +2347,63 @@ public class CirrasUnderwritingService extends BaseRestServiceClient {
 				putQueryParam(queryParams, "cropVarietyId",  cropVarietyId);
 				
 				dao.Process(ResourceTypes.DELETE_COMMODITY_TYPE_VARIETY_XREF, this.getTransformer(), parent, queryParams, getWebClient());
+		
+			} catch (RestDAOException e) {
+				throw new CirrasUnderwritingServiceException(e);
+			}
+			
+		}
+
+		//CLAIM CALCULATION SIMPLE SYNC
+		
+		public SyncClaimCalculationSimpleRsrc getSyncClaimCalculationSimple(EndpointsRsrc parent, String claimCalculationBerriesGuid)
+		throws CirrasUnderwritingServiceException {
+
+			GenericRestDAO<SyncClaimCalculationSimpleRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(SyncClaimCalculationSimpleRsrc.class);
+
+			try {
+				
+				Map<String, String> queryParams = new HashMap<String, String>();
+				
+				putQueryParam(queryParams, "claimCalculationBerriesGuid",  claimCalculationBerriesGuid);
+				
+				Response<SyncClaimCalculationSimpleRsrc> response = dao.Process(ResourceTypes.SYNC_CLAIM_CALCULATION_SIMPLE, this.getTransformer(), parent, queryParams, getWebClient());
+				return response.getResource();
+			} catch (RestDAOException rde) {
+				throw new CirrasUnderwritingServiceException(rde);
+			}
+		}
+
+		
+		public void synchronizeClaimCalculationSimple(SyncClaimCalculationSimpleRsrc resource) throws CirrasUnderwritingServiceException, ValidationException {
+
+			EndpointsRsrc parentEndpoint = getTopLevelEndpoints();
+			
+			GenericRestDAO<SyncClaimCalculationSimpleRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(SyncClaimCalculationSimpleRsrc.class);
+			
+			try {
+				dao.Process(ResourceTypes.SYNCHRONIZE_CLAIM_CALCULATION_SIMPLE, this.getTransformer(), parentEndpoint, resource, getWebClient());
+							
+			} catch(BadRequestException e) {
+				throw new ValidationException(e.getMessages());			
+			} catch (RestDAOException rde) {
+				throw new CirrasUnderwritingServiceException(rde);
+			}
+			
+		}
+
+		
+		public void deleteSyncClaimCalculationSimple(EndpointsRsrc parent, String claimCalculationBerriesGuid) throws CirrasUnderwritingServiceException {
+
+			GenericRestDAO<SyncClaimCalculationSimpleRsrc> dao = this.getRestDAOFactory().getGenericRestDAO(SyncClaimCalculationSimpleRsrc.class);
+			
+			try {
+			
+				Map<String, String> queryParams = new HashMap<String, String>();
+				
+				putQueryParam(queryParams, "claimCalculationBerriesGuid",  claimCalculationBerriesGuid);
+				
+				dao.Process(ResourceTypes.DELETE_SYNC_CLAIM_CALCULATION_SIMPLE, this.getTransformer(), parent, queryParams, getWebClient());
 		
 			} catch (RestDAOException e) {
 				throw new CirrasUnderwritingServiceException(e);
