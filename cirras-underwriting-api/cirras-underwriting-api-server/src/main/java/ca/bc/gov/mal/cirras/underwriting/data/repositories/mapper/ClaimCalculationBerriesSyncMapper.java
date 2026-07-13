@@ -11,6 +11,8 @@ public interface ClaimCalculationBerriesSyncMapper {
 	
 	List<ClaimCalculationBerriesSyncDto> fetchAll(Map<String, Object> parameters);
 
+	List<ClaimCalculationBerriesSyncDto> selectForContractAndYear(Map<String, Object> parameters);
+
 	int insert(Map<String, Object> parameters);
 
 	int update(Map<String, Object> parameters);

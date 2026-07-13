@@ -440,6 +440,7 @@ public class ServiceApiSpringConfig {
 		result.setDeclaredYieldContractCommodityBerriesDao(persistenceSpringConfig.declaredYieldContractCommodityBerriesDao());
 		result.setDeclaredYieldFieldCommodityBerriesDao(persistenceSpringConfig.declaredYieldFieldCommodityBerriesDao());
 		result.setDeclaredYieldFieldVarietyBerriesDao(persistenceSpringConfig.declaredYieldFieldVarietyBerriesDao());
+		result.setClaimCalculationBerriesSyncDao(persistenceSpringConfig.claimCalculationBerriesSyncDao());
 		
 		result.setJasperReportService(jasperReportService);
 		result.setBerriesService(berriesService());

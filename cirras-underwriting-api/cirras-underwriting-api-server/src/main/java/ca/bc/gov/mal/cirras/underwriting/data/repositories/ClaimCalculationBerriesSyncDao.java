@@ -65,7 +65,27 @@ public class ClaimCalculationBerriesSyncDao extends BaseDao {
 		return dtos;
 	}
 
+	public List<ClaimCalculationBerriesSyncDto> selectForContractAndYear(Integer contractId, Integer cropYear) throws DaoException {
 
+		logger.debug("<selectForContractAndYear");
+
+		List<ClaimCalculationBerriesSyncDto> dtos = null;
+
+		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			
+			parameters.put("contractId", contractId);
+			parameters.put("cropYear", cropYear);
+						
+			dtos = this.mapper.selectForContractAndYear(parameters);
+
+		} catch (RuntimeException e) {
+			handleException(e);
+		}
+
+		logger.debug(">selectForContractAndYear " + dtos);
+		return dtos;
+	}
 	
 	
 	public void insert(ClaimCalculationBerriesSyncDto dto, String userId) throws DaoException {

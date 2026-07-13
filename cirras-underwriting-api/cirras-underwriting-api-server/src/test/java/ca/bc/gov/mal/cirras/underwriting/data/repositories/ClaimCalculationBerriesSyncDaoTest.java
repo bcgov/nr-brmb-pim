@@ -2,6 +2,7 @@ package ca.bc.gov.mal.cirras.underwriting.data.repositories;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -60,11 +61,13 @@ public class ClaimCalculationBerriesSyncDaoTest {
 		Date dataSyncTransDate = addSeconds(dateTime, -120);
 
 		String userId = "JUNIT_TEST";
+		Integer contractId = 12345666;
+		Integer cropYear = 2025;
 
 		//INSERT
 		newDto.setCropCommodityId(10);
-		newDto.setContractId(12345666);
-		newDto.setCropYear(2025);
+		newDto.setContractId(contractId);
+		newDto.setCropYear(cropYear);
 		newDto.setClaimCalculationGuid("testClaimCalculationGuid");
 		newDto.setClaimCalculationBerriesGuid(claimCalculationBerriesGuid);
 		newDto.setTotalYieldForCalculation(100.0);
@@ -118,6 +121,23 @@ public class ClaimCalculationBerriesSyncDaoTest {
 
 		//DataSyncTransDate is still the same (no update happened)
 		Assert.assertTrue("DataSyncTransDate", notUpdatedDto.getDataSyncTransDate().compareTo(dataSyncTransDate) == 0);
+
+		//Get by contract and year
+		List<ClaimCalculationBerriesSyncDto> dtos = dao.selectForContractAndYear(contractId, cropYear);
+		Assert.assertNotNull(dtos);
+		Assert.assertEquals(1, dtos.size());
+		ClaimCalculationBerriesSyncDto dto = dtos.get(0);
+		
+		Assert.assertEquals("ClaimCalculationBerriesSyncGuid", notUpdatedDto.getClaimCalculationBerriesSyncGuid(), dto.getClaimCalculationBerriesSyncGuid());
+		Assert.assertEquals("CropCommodityId", notUpdatedDto.getCropCommodityId(), dto.getCropCommodityId());
+		Assert.assertEquals("ContractId", notUpdatedDto.getContractId(), dto.getContractId());
+		Assert.assertEquals("CropYear", notUpdatedDto.getCropYear(), dto.getCropYear());
+		Assert.assertEquals("ClaimCalculationGuid", notUpdatedDto.getClaimCalculationGuid(), dto.getClaimCalculationGuid());
+		Assert.assertEquals("ClaimCalculationBerriesGuid", notUpdatedDto.getClaimCalculationBerriesGuid(), dto.getClaimCalculationBerriesGuid());
+		Assert.assertEquals("TotalYieldForCalculation", notUpdatedDto.getTotalYieldForCalculation(), dto.getTotalYieldForCalculation());
+		Assert.assertEquals("CalculationStatusCode", notUpdatedDto.getCalculationStatusCode(), dto.getCalculationStatusCode());
+		Assert.assertEquals("CalculationVersion", notUpdatedDto.getCalculationVersion(), dto.getCalculationVersion());
+		Assert.assertTrue("DataSyncTransDate 1", notUpdatedDto.getDataSyncTransDate().compareTo(dto.getDataSyncTransDate()) == 0);
 
 		
 		//DELETE
