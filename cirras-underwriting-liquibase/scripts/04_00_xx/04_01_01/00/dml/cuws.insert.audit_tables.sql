@@ -336,4 +336,14 @@ FROM vys2
 WHERE verified_yield_summary.verified_yield_summary_guid = vys2.verified_yield_summary_guid;
 
 
+\qecho Insert underwriting_comment_audit
+WITH t2 AS (
+    SELECT underwriting_comment_guid, update_user
+    FROM underwriting_comment 
+)
+UPDATE underwriting_comment
+SET update_user = t2.update_user
+FROM t2
+WHERE underwriting_comment.underwriting_comment_guid = t2.underwriting_comment_guid;
+
 \o 

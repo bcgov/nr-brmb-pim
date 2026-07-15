@@ -232,6 +232,16 @@ CREATE SEQUENCE cuws.dyfvba_seq
     NO CYCLE
 ;
 
+CREATE SEQUENCE cuws.uca_seq
+    AS bigint
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    NO CYCLE
+;
+
+
 CREATE SEQUENCE cuws.vyaa_seq
     AS bigint
     START WITH 1
