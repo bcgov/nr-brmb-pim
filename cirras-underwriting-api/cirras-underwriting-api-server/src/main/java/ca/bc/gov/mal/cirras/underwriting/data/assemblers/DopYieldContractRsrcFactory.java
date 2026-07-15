@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import jakarta.ws.rs.core.UriBuilder;
 
@@ -528,11 +529,33 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		model.setTotalAbandonmentYield(dto.getTotalAbandonmentYield());
 		
 		if(claimCalculationBerriesSyncDtos != null) {
-			//Get correct total yield for calculation for commodity
-			model.setTotalYieldForCalculation(null);
+			setClaimCalculationForBerriesCommodity(model, claimCalculationBerriesSyncDtos);
 		};
 
 		return model;
+	}
+	
+	public void setClaimCalculationForBerriesCommodity(
+			DopYieldContractCommodityBerries model, 
+			List<ClaimCalculationBerriesSyncDto> claimCalculationBerriesSyncDtos) {
+
+		//Set TotalYieldForCalculation and CalculationStatusCode to null if amount is null or no calculation exists
+		//Set values from the latest version
+
+		//Default
+		model.setTotalYieldForCalculation(null);
+		model.setCalculationStatusCode(null);
+
+		//Find latest claim calculation for the commodity
+		Optional<ClaimCalculationBerriesSyncDto> filteredList = claimCalculationBerriesSyncDtos.stream()
+		        .filter(x -> x.getCropCommodityId() == model.getCropCommodityId())
+		        .max(Comparator.comparingInt(ClaimCalculationBerriesSyncDto::getCalculationVersion));
+		
+		//Sets the model values if a calculation has been found
+		filteredList.ifPresent(matchedDto -> {
+		    model.setTotalYieldForCalculation(matchedDto.getTotalYieldForCalculation());
+		    model.setCalculationStatusCode(matchedDto.getCalculationStatusCode());
+		});
 	}
 	
 	// Creates an AnnualFieldRsrc for a DopYieldContract.

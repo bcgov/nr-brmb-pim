@@ -23,6 +23,7 @@ import ca.bc.gov.mal.cirras.underwriting.clients.ValidationException;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldDetailRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.AnnualFieldRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.ClaimSyncEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.ContractedFieldDetailRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.EndpointsRsrc;
@@ -32,6 +33,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.PolicyRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncClaimCalculationSimpleRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractRsrcFactory;
@@ -41,6 +43,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldCommodityBerri
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldVarietyBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
+import ca.bc.gov.mal.cirras.underwriting.data.models.SyncClaimCalculationBerries;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
 import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
@@ -98,7 +101,10 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 
 	private Integer annualFieldDetailId3 = null;
 	private Integer contractedFieldDetailId3 = null;
-
+	
+	private String claimCalculationBerriesGuid1 = "testccBerriesGuid1561";
+	private String claimCalculationBerriesGuid2 = "testccBerriesGuid1562";
+	private String claimCalculationBerriesGuid3 = "testccBerriesGuid1563";
 	
 	private String fieldLocation = "Field Location";
 			
@@ -155,6 +161,11 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		service.deleteGrowerContractYear(topLevelEndpoints, gcyId2.toString());
 		service.deletePolicy(topLevelEndpoints, policyId2.toString());
 		service.deleteGrower(topLevelEndpoints, growerId.toString());
+		
+		service.deleteSyncClaimCalculationSimple(topLevelEndpoints, claimCalculationBerriesGuid1);
+		service.deleteSyncClaimCalculationSimple(topLevelEndpoints, claimCalculationBerriesGuid2);
+		service.deleteSyncClaimCalculationSimple(topLevelEndpoints, claimCalculationBerriesGuid3);
+
 	}
 
 	private void deleteInventoryContract(String policyNumber) throws CirrasUnderwritingServiceException {
@@ -565,7 +576,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		createField(fieldId2);
 		createAnnualFieldDetail(annualFieldDetailId2, cropYear1, fieldId2);
 		createContractedFieldDetail(contractedFieldDetailId2, annualFieldDetailId2, gcyId1, false, 2);		
-		
+
 		UwContractRsrc uwContractRsrc = getUwContract(policyNumber1, service, topLevelEndpoints);
 		Assert.assertNotNull(uwContractRsrc);
 		Assert.assertNull(uwContractRsrc.getInventoryContractGuid());
@@ -664,6 +675,13 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertNotNull(uwContractRsrc);
 		Assert.assertNotNull(uwContractRsrc.getInventoryContractGuid());
 		Assert.assertNull(uwContractRsrc.getDeclaredYieldContractGuid());
+		
+		//Create claim calculations for commodities
+		//Blueberry
+		createClaimCalculation(10, cropYear1, "claimCalculationGuid1", "ARCHIVED", 1, claimCalculationBerriesGuid1, 100.0);
+		createClaimCalculation(10, cropYear1, "claimCalculationGuid2", "DRAFT", 2, claimCalculationBerriesGuid2, 200.0);
+		//Raspberry
+		createClaimCalculation(12, cropYear1, "claimCalculationGuid3", "APPROVED", 1, claimCalculationBerriesGuid3, 300.0);
 		
 		DopYieldContractRsrc newDyc = service.rolloverDopYieldContract(uwContractRsrc);
 
@@ -821,6 +839,8 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyccb.setTotalSoldShippedYield(null);
 		expectedDyccb.setTotalSalesYield(null);
 		expectedDyccb.setTotalAbandonmentYield(null);
+		expectedDyccb.setCalculationStatusCode("DRAFT");
+		expectedDyccb.setTotalYieldForCalculation(200.0);
 
 		
 		expectedDyc.getDopYieldContractCommodityBerriesList().add(expectedDyccb);
@@ -835,6 +855,8 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		expectedDyccb.setTotalSoldShippedYield(null);
 		expectedDyccb.setTotalSalesYield(null);
 		expectedDyccb.setTotalAbandonmentYield(null);
+		expectedDyccb.setCalculationStatusCode("APPROVED");
+		expectedDyccb.setTotalYieldForCalculation(300.0);
 		
 		expectedDyc.getDopYieldContractCommodityBerriesList().add(expectedDyccb);
 
@@ -1213,8 +1235,7 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		logger.debug(">testInsertUpdateDeleteDopYieldBerriesContract");
 	}
 
-	
-	
+
 	private UwContractRsrc getUwContract(String policyNumber,
 			CirrasUnderwritingService service, 
 			EndpointsRsrc topLevelEndpoints) throws CirrasUnderwritingServiceException {
@@ -1346,6 +1367,8 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 		Assert.assertEquals(expected.getTotalSoldShippedYield(), actual.getTotalSoldShippedYield());
 		Assert.assertEquals(expected.getTotalSalesYield(), actual.getTotalSalesYield());
 		Assert.assertEquals(expected.getTotalAbandonmentYield(), actual.getTotalAbandonmentYield());
+		Assert.assertEquals(expected.getCalculationStatusCode(), actual.getCalculationStatusCode());
+		Assert.assertEquals(expected.getTotalYieldForCalculation(), actual.getTotalYieldForCalculation());
 
 	}
 	
@@ -1539,6 +1562,45 @@ public class DopYieldContractEndpointBerriesTest extends EndpointsTest {
 	
 		service.synchronizeContractedFieldDetail(resource);
 
+	}
+	
+	
+	private void createClaimCalculation(
+			Integer cropCommodityId, 
+			Integer cropYear, 
+			String claimCalculationGuid, 
+			String calculationStatusCode, 
+			Integer calculationVersion, 
+			String claimCalculationBerriesGuid, 
+			Double totalYieldForCalculation
+			) throws CirrasUnderwritingServiceException, ValidationException {
+
+		//Date and Time without millisecond
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MILLISECOND, 0); //Set milliseconds to 0 because they are not set in the database
+		Date transactionDate = cal.getTime();
+
+		Date createTransactionDate = addSeconds(transactionDate, -1);
+
+		//CREATE Claim Calculation Berries
+		SyncClaimCalculationSimpleRsrc resource = new SyncClaimCalculationSimpleRsrc();
+		resource.setCropCommodityId(cropCommodityId);
+		resource.setContractId(contractId);
+		resource.setCropYear(cropYear);
+		resource.setClaimCalculationGuid(claimCalculationGuid);
+		resource.setCalculationStatusCode(calculationStatusCode);
+		resource.setCalculationVersion(calculationVersion);
+
+		resource.setDataSyncTransDate(createTransactionDate);
+		resource.setTransactionType(ClaimSyncEventTypes.ClaimCalculationBerriesCreated);
+		
+		SyncClaimCalculationBerries model = new SyncClaimCalculationBerries();
+		model.setClaimCalculationBerriesGuid(claimCalculationBerriesGuid);
+		model.setTotalYieldForCalculation(totalYieldForCalculation);
+		resource.setSyncClaimCalculationBerries(model);
+
+		service.synchronizeClaimCalculationSimple(resource);
+	
 	}
 	
 	private static Date addSeconds(Date date, Integer seconds) {
