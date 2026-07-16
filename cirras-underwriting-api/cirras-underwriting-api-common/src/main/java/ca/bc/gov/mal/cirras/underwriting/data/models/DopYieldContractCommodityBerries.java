@@ -19,6 +19,8 @@ public class DopYieldContractCommodityBerries implements Serializable {
 	private Double totalSoldShippedYield;
 	private Double totalSalesYield;
 	private Double totalAbandonmentYield;
+	private Double totalYieldForCalculation;
+	private String calculationStatusCode;
 
 	public String getDeclaredYieldContractCommodityBerriesGuid() {
 		return declaredYieldContractCommodityBerriesGuid;
@@ -100,6 +102,22 @@ public class DopYieldContractCommodityBerries implements Serializable {
 
 	public void setTotalAbandonmentYield(Double totalAbandonmentYield) {
 		this.totalAbandonmentYield = totalAbandonmentYield;
+	}
+	
+	public Double getTotalYieldForCalculation() {
+		return totalYieldForCalculation;
+	}
+		
+	public void setTotalYieldForCalculation(Double totalYieldForCalculation) {
+		this.totalYieldForCalculation = totalYieldForCalculation;
+	}
+	
+	public String getCalculationStatusCode() {
+		return calculationStatusCode;
+	}
+
+	public void setCalculationStatusCode(String calculationStatusCode) {
+		this.calculationStatusCode = calculationStatusCode;
 	}
 
 }

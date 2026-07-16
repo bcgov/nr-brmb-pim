@@ -51,6 +51,13 @@
 		WHERE t.claim_calculation_berries_guid = #{claimCalculationBerriesGuid}
 	</select>
 	
+	<select id="selectForContractAndYear" resultMap="ClaimCalculationBerriesSyncDtoMap">
+		<include refid="selectColumns"/>
+		FROM claim_calculation_berries_sync t
+		WHERE t.contract_id = #{contractId}
+		AND t.crop_year = #{cropYear}
+	</select>
+	
 	<insert id="insert">
 		<selectKey keyProperty="claimCalculationBerriesSyncGuid" resultType="java.lang.String" order="BEFORE"> 
 			select replace(cast(gen_random_uuid() as text), '-', '')

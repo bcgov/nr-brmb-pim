@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
+import ca.bc.gov.mal.cirras.underwriting.data.repositories.ClaimCalculationBerriesSyncDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityForageDao;
@@ -32,6 +33,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.UnderwritingCommentDa
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.YieldMeasUnitTypeCodeDao;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.YieldMeasUnitTypeCodeListRsrc;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ClaimCalculationBerriesSyncDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityForageDto;
@@ -95,6 +97,7 @@ public class CirrasDopYieldService {
 	private DeclaredYieldContractCommodityBerriesDao declaredYieldContractCommodityBerriesDao;
 	private DeclaredYieldFieldCommodityBerriesDao declaredYieldFieldCommodityBerriesDao;
 	private DeclaredYieldFieldVarietyBerriesDao declaredYieldFieldVarietyBerriesDao;
+	private ClaimCalculationBerriesSyncDao claimCalculationBerriesSyncDao;
 
 	// Jasper Reports
 	private JasperReportService jasperReportService;
@@ -201,6 +204,10 @@ public class CirrasDopYieldService {
 	public void setDeclaredYieldFieldVarietyBerriesDao(DeclaredYieldFieldVarietyBerriesDao declaredYieldFieldVarietyBerriesDao) {
 		this.declaredYieldFieldVarietyBerriesDao = declaredYieldFieldVarietyBerriesDao;
 	}
+	
+	public void setClaimCalculationBerriesSyncDao(ClaimCalculationBerriesSyncDao claimCalculationBerriesSyncDao) {
+		this.claimCalculationBerriesSyncDao = claimCalculationBerriesSyncDao;
+	}
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public DopYieldContractRsrc rolloverDopYieldContract(Integer policyId,
@@ -230,10 +237,14 @@ public class CirrasDopYieldService {
 			dycDto.setInsurancePlanId(insurancePlanId);
 			
 			loadDopYieldContractCommodities(dycDto);
+			List<ClaimCalculationBerriesSyncDto> claimCalculationBerriesSyncDtos = loadClaimCalculationBerriesSync(
+																						policyDto.getContractId(), 
+																						policyDto.getCropYear(),
+																						policyDto.getInsurancePlanId());
 			fieldService.loadDeclaredFields(dycDto);
 
 			result = dopYieldContractRsrcFactory.getDefaultDopYieldContract(policyDto, defaultMeasurementUnitCode,
-					dycDto, factoryContext, authentication);
+					dycDto, claimCalculationBerriesSyncDtos, factoryContext, authentication);
 
 		} catch (DaoException e) {
 			throw new ServiceException("DAO threw an exception", e);
@@ -297,10 +308,14 @@ public class CirrasDopYieldService {
 
 		loadDopYieldFieldRollups(dto);
 		loadDopYieldContractCommodities(dto);
+		List<ClaimCalculationBerriesSyncDto> claimCalculationBerriesSyncDtos = loadClaimCalculationBerriesSync(
+																					dto.getContractId(), 
+																					dto.getCropYear(),
+																					dto.getInsurancePlanId());
 		fieldService.loadDeclaredFields(dto);
 		loadContractUwComments(dto);
 
-		return dopYieldContractRsrcFactory.getDopYieldContract(dto, factoryContext, authentication);
+		return dopYieldContractRsrcFactory.getDopYieldContract(dto, claimCalculationBerriesSyncDtos, factoryContext, authentication);
 	}
 
 	private void loadContractUwComments(DeclaredYieldContractDto dto) throws DaoException {
@@ -340,6 +355,13 @@ public class CirrasDopYieldService {
 		} else {
 			throw new ServiceException("Insurance Plan must be GRAIN, FORAGE or BERRIES");
 		}
+	}
+
+	private List<ClaimCalculationBerriesSyncDto> loadClaimCalculationBerriesSync(Integer contractId, Integer cropYear, Integer insurancePlanId) throws DaoException {
+		if ( InsurancePlans.BERRIES.getInsurancePlanId().equals(insurancePlanId) ) {
+			 return claimCalculationBerriesSyncDao.selectForContractAndYear(contractId, cropYear);
+		}
+		return null;
 	}
 	
 	private void getInventoryContractCommodityTypes(DeclaredYieldContractDto dto) throws DaoException {

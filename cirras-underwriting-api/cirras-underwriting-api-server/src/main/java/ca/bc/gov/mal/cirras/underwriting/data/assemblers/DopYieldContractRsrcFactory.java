@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import jakarta.ws.rs.core.UriBuilder;
 
@@ -35,6 +36,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollupForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldVarietyBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldGrain;
+import ca.bc.gov.mal.cirras.underwriting.data.entities.ClaimCalculationBerriesSyncDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ContractedFieldDetailDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityBerriesDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityDto;
@@ -62,6 +64,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 			PolicyDto policyDto,
 			String defaultMeasurementUnitCode,
 			DeclaredYieldContractDto dycDto,
+			List<ClaimCalculationBerriesSyncDto> claimCalculationBerriesSyncDtos,
 			FactoryContext context, 
 			WebAdeAuthentication authentication
 		) throws FactoryException {
@@ -125,7 +128,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 			setYieldContractCommodityBerriesTotalAcres(resource.getFields(), dycDto.getDeclaredYieldContractCommodityBerriesList());
 
 			for (DeclaredYieldContractCommodityBerriesDto dyccbDto : dycDto.getDeclaredYieldContractCommodityBerriesList()) {
-				DopYieldContractCommodityBerries dyccbModel = createDopYieldContractCommodityBerries(dyccbDto);
+				DopYieldContractCommodityBerries dyccbModel = createDopYieldContractCommodityBerries(dyccbDto, claimCalculationBerriesSyncDtos);
 				dopContractCommoditiesBerries.add(dyccbModel);
 			}
 
@@ -205,6 +208,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 	
 	public DopYieldContractRsrc getDopYieldContract(
 			DeclaredYieldContractDto dto, 
+			List<ClaimCalculationBerriesSyncDto> claimCalculationBerriesSyncDtos,
 			FactoryContext context, 
 			WebAdeAuthentication authentication
 		) throws FactoryException {
@@ -291,7 +295,7 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 			List<DopYieldContractCommodityBerries> dopYieldContractCommodityBerriesList = new ArrayList<DopYieldContractCommodityBerries>();
 
 			for (DeclaredYieldContractCommodityBerriesDto dyccbDto : dto.getDeclaredYieldContractCommodityBerriesList()) {
-				DopYieldContractCommodityBerries dyccbModel = createDopYieldContractCommodityBerries(dyccbDto);
+				DopYieldContractCommodityBerries dyccbModel = createDopYieldContractCommodityBerries(dyccbDto, claimCalculationBerriesSyncDtos);
 				dopYieldContractCommodityBerriesList.add(dyccbModel);
 			}
 
@@ -507,7 +511,9 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		return model;
 	}
 
-	private DopYieldContractCommodityBerries createDopYieldContractCommodityBerries(DeclaredYieldContractCommodityBerriesDto dto) {
+	private DopYieldContractCommodityBerries createDopYieldContractCommodityBerries(
+			DeclaredYieldContractCommodityBerriesDto dto,
+			List<ClaimCalculationBerriesSyncDto> claimCalculationBerriesSyncDtos) {
 		DopYieldContractCommodityBerries model = new DopYieldContractCommodityBerries();
 
 		model.setCropCommodityId(dto.getCropCommodityId());
@@ -521,8 +527,35 @@ public class DopYieldContractRsrcFactory extends BaseResourceFactory {
 		model.setTotalSoldShippedYield(dto.getTotalSoldShippedYield());
 		model.setTotalSalesYield(dto.getTotalSalesYield());
 		model.setTotalAbandonmentYield(dto.getTotalAbandonmentYield());
+		
+		if(claimCalculationBerriesSyncDtos != null) {
+			setClaimCalculationForBerriesCommodity(model, claimCalculationBerriesSyncDtos);
+		};
 
 		return model;
+	}
+	
+	public void setClaimCalculationForBerriesCommodity(
+			DopYieldContractCommodityBerries model, 
+			List<ClaimCalculationBerriesSyncDto> claimCalculationBerriesSyncDtos) {
+
+		//Set TotalYieldForCalculation and CalculationStatusCode to null if amount is null or no calculation exists
+		//Set values from the latest version
+
+		//Default
+		model.setTotalYieldForCalculation(null);
+		model.setCalculationStatusCode(null);
+
+		//Find latest claim calculation for the commodity
+		Optional<ClaimCalculationBerriesSyncDto> filteredList = claimCalculationBerriesSyncDtos.stream()
+		        .filter(x -> x.getCropCommodityId() == model.getCropCommodityId())
+		        .max(Comparator.comparingInt(ClaimCalculationBerriesSyncDto::getCalculationVersion));
+		
+		//Sets the model values if a calculation has been found
+		filteredList.ifPresent(matchedDto -> {
+		    model.setTotalYieldForCalculation(matchedDto.getTotalYieldForCalculation());
+		    model.setCalculationStatusCode(matchedDto.getCalculationStatusCode());
+		});
 	}
 	
 	// Creates an AnnualFieldRsrc for a DopYieldContract.
