@@ -26,6 +26,7 @@
             [filterByCropCommodityId]="filterByCropCommodityId"
         ></berries-dop-field>
 
+        <!-- Total Commodity Yield -->
         <div class="plcy-inv-field-box" [formGroup]="fieldsFormGroup" [ngStyle]="setFieldHeaderStyle()">
             <div class="dop-berries-commodity-total border-left inventory-border" style="padding-right: 4px; justify-content: end; width: 615px;">
                 {{ filteredCropCommodityName | titlecase }} Totals:
@@ -63,6 +64,27 @@
             </div>
             <div class="dop-berries-commodity-total inventory-border"  style="width: 60px;"></div>
             <div class="dop-berries-commodity-total inventory-border"  style="width: 60px;"></div>
+        </div>
+
+        <!-- Claim Calculation Yield -->
+        <div *ngIf="contractCommodityTotals && contractCommodityTotals.totalYieldForCalculation" class="plcy-inv-field-box" [ngStyle]="setFieldHeaderStyle()">
+            <div class="dop-berries-claim-yield border-left inventory-border" style="width: 715px;"></div>
+            <div *ngIf="!isStrawberry()" class="dop-berries-claim-yield inventory-border" style="width: 100px;"></div>
+            <div class="dop-berries-claim-yield inventory-border" style="padding-right: 4px; justify-content: end; width: 360px;">
+                A claim calculation exists with status:
+            </div>
+            <div class="dop-berries-claim-yield inventory-cell inventory-border" style="width:100px">
+                {{ (contractCommodityTotals && contractCommodityTotals.calculationStatusCode ? contractCommodityTotals.calculationStatusCode : "") | titlecase }}
+            </div>
+            <div class="dop-berries-claim-yield inventory-border" style="padding-right: 4px; justify-content: end; width: 300px;">
+                Yield from claim calculation:
+            </div> 
+            <div class="inventory-cell number dop-berries-claim-yield" style="width: 76px;">
+                {{ (contractCommodityTotals && contractCommodityTotals.totalYieldForCalculation ? contractCommodityTotals.totalYieldForCalculation : "") | number:'1.0-3' }}
+            </div>
+            <div class="dop-berries-claim-yield inventory-border"  style="width: 24px;"></div>
+            <div class="dop-berries-claim-yield inventory-border"  style="width: 60px;"></div>
+            <div class="dop-berries-claim-yield inventory-border"  style="width: 60px;"></div>
         </div>
 
     </div>
