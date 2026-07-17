@@ -34,6 +34,7 @@ GRANT SELECT, INSERT ON cuws.inventory_unseeded_audit TO "app_cuws_rest_proxy";
 GRANT SELECT, INSERT ON cuws.legal_land_audit TO "app_cuws_rest_proxy";
 GRANT SELECT, INSERT ON cuws.legal_land_field_xref_audit TO "app_cuws_rest_proxy";
 GRANT SELECT, INSERT ON cuws.legal_land_risk_area_xref_audit TO "app_cuws_rest_proxy"; 
+GRANT SELECT, INSERT ON cuws.underwriting_comment_audit TO "app_cuws_rest_proxy";
 GRANT SELECT, INSERT ON cuws.verified_yield_amendment_audit TO "app_cuws_rest_proxy";
 GRANT SELECT, INSERT ON cuws.verified_yield_contract_audit TO "app_cuws_rest_proxy";
 GRANT SELECT, INSERT ON cuws.verified_yield_contract_commodity_audit TO "app_cuws_rest_proxy";
