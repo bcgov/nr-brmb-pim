@@ -213,6 +213,8 @@ export interface DopYieldContractCommodityBerries {
     totalSoldShippedYield?: number;
     totalSalesYield?: number;
     totalAbandonmentYield?: number;
+    calculationStatusCode?: string;
+    totalYieldForCalculation?: number;
 }
 
 export interface VerifiedYieldContract {
