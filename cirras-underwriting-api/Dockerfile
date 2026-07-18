@@ -1,4 +1,4 @@
-FROM tomcat:10.1.44-jre21
+FROM tomcat:10.1.57-jre21
 
 COPY ./target/cirras-underwriting-api-4.1.0-SNAPSHOT.war .
 COPY ./deploy-tools ./deploy-tools
