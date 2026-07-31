@@ -2,6 +2,7 @@
 {
     "databaseChangeLog": [
 { "changeSet": {"author":"mhostettler","id":"56","changes": [
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_tables/cuws.create.audit_transaction_type_code.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_field_commodity_berries.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_field_variety_berries.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.declared_yield_contract_commodity_berries.sql"}},
@@ -13,7 +14,6 @@
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/tables/cuws.create.claim_calculation_berries_sync.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/cuws.create_sequences.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/triggers/cuws.fn_declared_yield_contract_commodity_berries_ob.sql"}},
-    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_tables/cuws.create.audit_transaction_type_code.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_tables/cuws.create.annual_field_crop_audit.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_tables/cuws.create.annual_field_detail_audit.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_tables/cuws.create.contracted_field_detail_audit.sql"}},
