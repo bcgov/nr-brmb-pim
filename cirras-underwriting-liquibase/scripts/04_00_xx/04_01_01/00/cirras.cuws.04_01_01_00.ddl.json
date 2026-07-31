@@ -20,7 +20,7 @@
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_tables/cuws.create.declared_yield_contract_audit.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_tables/cuws.create.declared_yield_contract_cmdty_forage_audit.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_tables/cuws.create.declared_yield_contract_commodity_audit.sql"}},
-    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_tables/cuws.create.declared_yield_contract_commodity_berries_audit.sql"}},	
+    {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_tables/cuws.create.declared_yield_contract_commodity_berries_audit.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_tables/cuws.create.declared_yield_field_audit.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_tables/cuws.create.declared_yield_field_commodity_berries_audit.sql"}},
     {"sqlFile": {"relativeToChangelogFile": "true", "path": "ddl/audit_tables/cuws.create.declared_yield_field_forage_audit.sql"}},
