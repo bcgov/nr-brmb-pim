@@ -1,9 +1,5 @@
-
-\o cirras.cuws.04_01_01_01.insert_audit_tables.dml.log
-
 -- annual_field_crop table is empty  
 
-\qecho Insert annual_field_detail_audit
 WITH t2 AS (
     SELECT annual_field_detail_id, update_user
     FROM annual_field_detail 
@@ -14,7 +10,6 @@ FROM t2
 WHERE annual_field_detail.annual_field_detail_id = t2.annual_field_detail_id;
 
 
-\qecho Insert contracted_field_detail_audit
 WITH t2 AS (
     SELECT contracted_field_detail_id, update_user
     FROM contracted_field_detail 
@@ -25,7 +20,6 @@ FROM t2
 WHERE contracted_field_detail.contracted_field_detail_id = t2.contracted_field_detail_id;
 
 
-\qecho Insert field_audit
 WITH t2 AS (
     SELECT field_id, update_user
     FROM field 
@@ -36,7 +30,6 @@ FROM t2
 WHERE field.field_id = t2.field_id;
 
 
-\qecho Insert legal_land_audit
 WITH t2 AS (
     SELECT legal_land_id, update_user
     FROM legal_land 
@@ -47,7 +40,6 @@ FROM t2
 WHERE legal_land.legal_land_id = t2.legal_land_id;
 
 
-\qecho Insert legal_land_field_xref_audit
 WITH t2 AS (
     SELECT legal_land_id, field_id, update_user
     FROM legal_land_field_xref 
@@ -59,7 +51,6 @@ WHERE legal_land_field_xref.legal_land_id = t2.legal_land_id
 and legal_land_field_xref.field_id = t2.field_id;
 
 
-\qecho Insert legal_land_risk_area_xref_audit
 WITH t2 AS (
     SELECT legal_land_id, risk_area_id, update_user
     FROM legal_land_risk_area_xref 
@@ -71,7 +62,6 @@ WHERE legal_land_risk_area_xref.legal_land_id = t2.legal_land_id
 and legal_land_risk_area_xref.risk_area_id = t2.risk_area_id;
 
 
-\qecho Insert inventory_contract_audit
 WITH ico2 AS (
     SELECT inventory_contract_guid, update_user
     FROM inventory_contract 
@@ -82,7 +72,6 @@ FROM ico2
 WHERE inventory_contract.inventory_contract_guid = ico2.inventory_contract_guid;
 
 
-\qecho Insert inventory_contract_commodity_audit
 WITH icc2 AS (
     SELECT inventory_contract_commodity_guid, update_user
     FROM inventory_contract_commodity 
@@ -93,7 +82,6 @@ FROM icc2
 WHERE inventory_contract_commodity.inventory_contract_commodity_guid = icc2.inventory_contract_commodity_guid;
 
 
-\qecho Insert inventory_contract_commodity_berries_audit
 WITH iccb2 AS (
     SELECT inventory_contract_commodity_berries_guid, update_user
     FROM inventory_contract_commodity_berries 
@@ -104,7 +92,6 @@ FROM iccb2
 WHERE inventory_contract_commodity_berries.inventory_contract_commodity_berries_guid = iccb2.inventory_contract_commodity_berries_guid;
 
 
-\qecho Insert inventory_coverage_total_forage_audit
 WITH ictf2 AS (
     SELECT inventory_coverage_total_forage_guid, update_user
     FROM inventory_coverage_total_forage 
@@ -115,7 +102,6 @@ FROM ictf2
 WHERE inventory_coverage_total_forage.inventory_coverage_total_forage_guid = ictf2.inventory_coverage_total_forage_guid;
 
 
-\qecho Insert inventory_berries_audit
 WITH ibe2 AS (
     SELECT inventory_berries_guid, update_user
     FROM inventory_berries 
@@ -126,7 +112,6 @@ FROM ibe2
 WHERE inventory_berries.inventory_berries_guid = ibe2.inventory_berries_guid;
 
 
-\qecho Insert inventory_field_audit
 WITH ifd2 AS (
     SELECT inventory_field_guid, update_user
     FROM inventory_field 
@@ -137,7 +122,6 @@ FROM ifd2
 WHERE inventory_field.inventory_field_guid = ifd2.inventory_field_guid;
 
 
-\qecho Insert inventory_seeded_forage_audit
 WITH isf2 AS (
     SELECT inventory_seeded_forage_guid, update_user
     FROM inventory_seeded_forage 
@@ -148,7 +132,6 @@ FROM isf2
 WHERE inventory_seeded_forage.inventory_seeded_forage_guid = isf2.inventory_seeded_forage_guid;
 
 
-\qecho Insert inventory_seeded_grain_audit
 WITH isg2 AS (
     SELECT inventory_seeded_grain_guid, update_user
     FROM inventory_seeded_grain 
@@ -159,7 +142,6 @@ FROM isg2
 WHERE inventory_seeded_grain.inventory_seeded_grain_guid = isg2.inventory_seeded_grain_guid;
 
 
-\qecho Insert inventory_unseeded_audit
 WITH iu2 AS (
     SELECT inventory_unseeded_guid, update_user
     FROM inventory_unseeded 
@@ -171,7 +153,6 @@ WHERE inventory_unseeded.inventory_unseeded_guid = iu2.inventory_unseeded_guid;
 
 
 
-\qecho Insert declared_yield_contract_audit
 WITH dyc2 AS (
     SELECT declared_yield_contract_guid, update_user
     FROM declared_yield_contract 
@@ -182,7 +163,6 @@ FROM dyc2
 WHERE declared_yield_contract.declared_yield_contract_guid = dyc2.declared_yield_contract_guid;
 
 
-\qecho Insert declared_yield_contract_cmdty_forage_audit
 WITH dyccf2 AS (
     SELECT declared_yield_contract_cmdty_forage_guid, update_user
     FROM declared_yield_contract_cmdty_forage 
@@ -193,7 +173,6 @@ FROM dyccf2
 WHERE declared_yield_contract_cmdty_forage.declared_yield_contract_cmdty_forage_guid = dyccf2.declared_yield_contract_cmdty_forage_guid;
 
 
-\qecho Insert declared_yield_contract_commodity_audit
 WITH dycc2 AS (
     SELECT declared_yield_contract_commodity_guid, update_user
     FROM declared_yield_contract_commodity 
@@ -204,7 +183,6 @@ FROM dycc2
 WHERE declared_yield_contract_commodity.declared_yield_contract_commodity_guid = dycc2.declared_yield_contract_commodity_guid;
 
 
-\qecho Insert declared_yield_contract_commodity_berries_audit
 WITH dyccb2 AS (
     SELECT declared_yield_contract_commodity_berries_guid, update_user
     FROM declared_yield_contract_commodity_berries 
@@ -215,7 +193,6 @@ FROM dyccb2
 WHERE declared_yield_contract_commodity_berries.declared_yield_contract_commodity_berries_guid = dyccb2.declared_yield_contract_commodity_berries_guid;
 
 
-\qecho Insert declared_yield_field_audit
 WITH dyf2 AS (
     SELECT declared_yield_field_guid, update_user
     FROM declared_yield_field 
@@ -226,7 +203,6 @@ FROM dyf2
 WHERE declared_yield_field.declared_yield_field_guid = dyf2.declared_yield_field_guid;
 
 
-\qecho Insert declared_yield_field_commodity_berries_audit
 WITH dyfcb2 AS (
     SELECT declared_yield_field_commodity_berries_guid, update_user
     FROM declared_yield_field_commodity_berries 
@@ -237,7 +213,6 @@ FROM dyfcb2
 WHERE declared_yield_field_commodity_berries.declared_yield_field_commodity_berries_guid = dyfcb2.declared_yield_field_commodity_berries_guid;
 
 
-\qecho Insert declared_yield_field_forage_audit
 WITH dyff2 AS (
     SELECT declared_yield_field_forage_guid, update_user
     FROM declared_yield_field_forage 
@@ -248,7 +223,6 @@ FROM dyff2
 WHERE declared_yield_field_forage.declared_yield_field_forage_guid = dyff2.declared_yield_field_forage_guid;
 
 
-\qecho Insert declared_yield_field_rollup_audit
 WITH dyfr2 AS (
     SELECT declared_yield_field_rollup_guid, update_user
     FROM declared_yield_field_rollup 
@@ -259,7 +233,6 @@ FROM dyfr2
 WHERE declared_yield_field_rollup.declared_yield_field_rollup_guid = dyfr2.declared_yield_field_rollup_guid;
 
 
-\qecho Insert declared_yield_field_rollup_forage_audit
 WITH dyfrf2 AS (
     SELECT declared_yield_field_rollup_forage_guid, update_user
     FROM declared_yield_field_rollup_forage 
@@ -270,7 +243,6 @@ FROM dyfrf2
 WHERE declared_yield_field_rollup_forage.declared_yield_field_rollup_forage_guid = dyfrf2.declared_yield_field_rollup_forage_guid;
 
 
-\qecho Insert declared_yield_field_variety_berries_audit
 WITH dyfvb2 AS (
     SELECT declared_yield_field_variety_berries_guid, update_user
     FROM declared_yield_field_variety_berries 
@@ -281,7 +253,6 @@ FROM dyfvb2
 WHERE declared_yield_field_variety_berries.declared_yield_field_variety_berries_guid = dyfvb2.declared_yield_field_variety_berries_guid;
 
 
-\qecho Insert verified_yield_amendment_audit
 WITH vya2 AS (
     SELECT verified_yield_amendment_guid, update_user
     FROM verified_yield_amendment 
@@ -292,7 +263,6 @@ FROM vya2
 WHERE verified_yield_amendment.verified_yield_amendment_guid = vya2.verified_yield_amendment_guid;
 
 
-\qecho Insert verified_yield_contract_audit
 WITH vyc2 AS (
     SELECT verified_yield_contract_guid, update_user
     FROM verified_yield_contract 
@@ -303,7 +273,6 @@ FROM vyc2
 WHERE verified_yield_contract.verified_yield_contract_guid = vyc2.verified_yield_contract_guid;
 
 
-\qecho Insert verified_yield_contract_commodity_audit
 WITH vycc2 AS (
     SELECT verified_yield_contract_commodity_guid, update_user
     FROM verified_yield_contract_commodity 
@@ -314,7 +283,6 @@ FROM vycc2
 WHERE verified_yield_contract_commodity.verified_yield_contract_commodity_guid = vycc2.verified_yield_contract_commodity_guid;
 
 
-\qecho Insert verified_yield_grain_basket_audit
 WITH vygb2 AS (
     SELECT verified_yield_grain_basket_guid, update_user
     FROM verified_yield_grain_basket 
@@ -325,7 +293,6 @@ FROM vygb2
 WHERE verified_yield_grain_basket.verified_yield_grain_basket_guid = vygb2.verified_yield_grain_basket_guid;
 
 
-\qecho Insert verified_yield_summary_audit
 WITH vys2 AS (
     SELECT verified_yield_summary_guid, update_user
     FROM verified_yield_summary 
@@ -336,7 +303,6 @@ FROM vys2
 WHERE verified_yield_summary.verified_yield_summary_guid = vys2.verified_yield_summary_guid;
 
 
-\qecho Insert underwriting_comment_audit
 WITH t2 AS (
     SELECT underwriting_comment_guid, update_user
     FROM underwriting_comment 
@@ -345,5 +311,3 @@ UPDATE underwriting_comment
 SET update_user = t2.update_user
 FROM t2
 WHERE underwriting_comment.underwriting_comment_guid = t2.underwriting_comment_guid;
-
-\o 
