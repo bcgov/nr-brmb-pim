@@ -21,7 +21,7 @@
         <dependency>
             <groupId>ca.bc.gov.mal.cirras.underwriting</groupId>
             <artifactId>cirras-underwriting-api-server</artifactId>
-            <version>4.1.1-SNAPSHOT</version>
+            <version>4.1.1</version>
             <type>json</type>
             <classifier>swagger</classifier>
 
