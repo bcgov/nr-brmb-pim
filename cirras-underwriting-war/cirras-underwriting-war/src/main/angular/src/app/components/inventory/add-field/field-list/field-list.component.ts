@@ -167,22 +167,20 @@ export class FieldListComponent {
     }
   }
 
-  checkLength() {
+  sendNewField() {
 
-    if ((this.fieldListForm.get("fieldLabel").value && this.fieldListForm.get("fieldLabel").value.length > 1 )
-        || (this.fieldListForm.get("fieldLocation").value && this.fieldListForm.get("fieldLocation").value.length > 1) ) {
+    // selecting Add New Field radio button on the screen, just in case the user had not selected it
+    this.fieldListForm.controls.fieldIdSelected.setValue("-1")
 
-      // send the field info back to the add-field component
-      let field = {
-        type: '', // just to get aroung the mandatory type property
-        fieldId: -1,
-        fieldLabel: this.fieldListForm.get("fieldLabel").value,
-        fieldLocation: this.fieldListForm.get("fieldLocation").value
-      }
-
-      this.sendField(field)
+    // send the field info back to the add-field component
+    let field = {
+      type: '', // just to get aroung the mandatory type property
+      fieldId: -1,
+      fieldLabel: this.fieldListForm.get("fieldLabel").value,
+      fieldLocation: this.fieldListForm.get("fieldLocation").value
     }
-    
+
+    this.sendField(field)
   }
 
   sendField(field: AnnualFieldRsrc) {

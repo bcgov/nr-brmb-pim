@@ -31,7 +31,8 @@ import {
   GET_DOCUMENT_BYTES, 
   GetDopReportAction, 
   GetReportError,
-  GetReportSuccess
+  GetReportSuccess,
+  DopYieldContractUpdateAction
 } from "./dop.actions";
 import { convertToDopContract, convertToYieldMeasUnitList } from "src/app/conversion/conversion-from-rest-yield";
 import { DopYieldContract } from "src/app/conversion/models-yield";
@@ -215,7 +216,7 @@ updateDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
     debounceTime(500),
     switchMap(
         ([action, store]) => {
-            let typedAction = <DopYieldContractAction>action;
+            let typedAction = <DopYieldContractUpdateAction>action;
             let requestId = `CUWS${UUID.UUID().toUpperCase()}`.replace(/-/g, "");
             let authToken = this.tokenService.getOauthToken();
             let payload = <DopYieldContract>typedAction.payload.dopYieldContract;
@@ -236,7 +237,7 @@ updateDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
               .pipe(
                   concatMap((response: any) => {
 
-                    displaySaveSuccessSnackbar(this.snackbarService, "DOP Yield ");
+                    displaySaveSuccessSnackbar(this.snackbarService, typedAction.payload.displayMessage);
 
                     let newInventoryContract: DopYieldContract = convertToDopContract(response.body, response.headers ? response.headers.get("ETag") : null) 
 
@@ -282,7 +283,7 @@ deleteDopYield: Observable<Action> = createEffect (() => this.actions.pipe(
             .pipe(
                 map((response: any) => {
 
-                  displayDeleteSuccessSnackbar(this.snackbarService, "DOP Yield ");
+                  displayDeleteSuccessSnackbar(this.snackbarService, typedAction.payload.displayMessage);
                   
                   this.store.dispatch(LoadGrowerContract(typedAction.componentId, typedAction.payload.policyId, SCREEN_TYPE.DOP)) // to update the side navigation links
                   

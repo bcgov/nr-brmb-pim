@@ -25,6 +25,7 @@
     <div class="inventory-cell" style="width: 75px;"
         [ngClass]="fieldHiddenOnPrintoutInd ? 'inventory-border-exclude-printout border-right-exclude-printout' : 'inventory-border'">
         <uw-comments-button
+            [insurancePlanId]="currentInsurancePlanId"
             [underwritingCommentTypeCode]="'INV'"
             [annualFieldDetailId]="fieldFormGroup.value.annualFieldDetailId"
             [fieldId]="fieldFormGroup.value.fieldId"

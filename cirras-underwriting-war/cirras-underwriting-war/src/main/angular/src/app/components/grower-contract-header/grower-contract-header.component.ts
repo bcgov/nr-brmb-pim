@@ -77,7 +77,8 @@ export class GrowerContractHeaderComponent {
 
     if ( linkType == 'dop' && 
         (routerUrl.indexOf(ResourcesRoutes.DOP_GRAIN) > -1 || 
-        routerUrl.indexOf(ResourcesRoutes.DOP_FORAGE) > -1  )) {
+        routerUrl.indexOf(ResourcesRoutes.DOP_FORAGE) > -1 || 
+        routerUrl.indexOf(ResourcesRoutes.DOP_BERRIES) > -1)) {
       return true
     } 
 
@@ -102,9 +103,15 @@ export class GrowerContractHeaderComponent {
       'grid-template-columns':  '26px 154px 35px 26px 134px 35px 26px 190px 35px 26px 110px auto'
     }
 
-    if (this.growerContract && this.growerContract.insurancePlanId !== INSURANCE_PLAN.GRAIN ) {
+    if (this.growerContract && this.growerContract.insurancePlanId == INSURANCE_PLAN.FORAGE ) {
       styles = {
         'grid-template-columns':  '26px 80px 35px 26px 200px 35px 26px 110px auto'
+      }
+    }
+
+    if (this.growerContract && this.growerContract.insurancePlanId == INSURANCE_PLAN.BERRIES ) {
+      styles = {
+        'grid-template-columns':  '26px 80px 35px 26px 80px 35px 26px 110px auto'
       }
     }
 
@@ -143,7 +150,8 @@ export class GrowerContractHeaderComponent {
     }
 
     if (routerUrl.indexOf(ResourcesRoutes.DOP_GRAIN) > -1 || 
-        routerUrl.indexOf(ResourcesRoutes.DOP_FORAGE) > -1 ) {
+        routerUrl.indexOf(ResourcesRoutes.DOP_FORAGE) > -1 || 
+        routerUrl.indexOf(ResourcesRoutes.DOP_BERRIES) > -1) {
       styles = {  
         'border': '1px solid #E1CF7B',
         'border-radius': '5px',
@@ -160,6 +168,14 @@ export class GrowerContractHeaderComponent {
     }
 
     return styles;
+  }
+
+  getDopTitleForPlan() {
+    if (this.growerContract && this.growerContract.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+      return "Yield"
+    } else {
+      return "Declaration of Production"
+    }
   }
 
 }

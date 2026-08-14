@@ -51,8 +51,8 @@
     <!-- end cranberry specific -->
      
     <!-- plantings -->
-    <div class="planting-container" [ngStyle]="setPlantingStyles()"
-        [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout' : 'inventory-border'">
+    <div class="planting-container inventory-border-right" [ngStyle]="setPlantingStyles()">
+        <!-- [ngClass]="isFieldHiddenOnPrintout ? 'inventory-border-exclude-printout' : 'inventory-border'" -->
         <berries-inventory-planting 
             *ngFor="let planting of field.plantings"
             [planting]="planting"
@@ -76,11 +76,13 @@
         </mat-icon>
 
         <uw-comments-button
+            [insurancePlanId]="currentInsurancePlanId"
             [underwritingCommentTypeCode]="'INV'"
             [annualFieldDetailId]="field.annualFieldDetailId"
             [fieldId]="field.fieldId"
             [fieldName]="field.fieldLabel"
-            [legalLocation]="field.otherLegalDescription"
+            [fieldLocation]="field.fieldLocation"
+            [primaryPropertyIdentifier]="field.primaryPropertyIdentifier"
             [uwComments]="field.uwComments"
             (onDone)="onInventoryCommentsDone($event)"></uw-comments-button>
 

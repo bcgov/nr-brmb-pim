@@ -1,8 +1,9 @@
 <div class="border-right header border-top border-bottom border-left">Date Created</div>
 <div class="border-right header border-top border-bottom">Date Updated</div>
 <div class="border-right header border-top border-bottom">Updated By</div>
+<div *ngIf="showForcedCommentsColumn" class="border-right header border-top border-bottom">Forced Comment</div>
 <div class="border-right header border-top border-bottom">Comment</div>
 <div class="border-right header justify-center border-top border-bottom">Remove</div>
 
 <uw-comment *ngFor="let uwComment of notDeleted(uwComments)" [uwComment]="uwComment"
-    [uwCommentsFormArray]="uwCommentsFormArray" style="display: contents;"></uw-comment>
+    [uwCommentsFormArray]="uwCommentsFormArray" [showForcedCommentsColumn]="showForcedCommentsColumn"  style="display: contents;"></uw-comment>

@@ -199,7 +199,7 @@
                             </a> 
 
                             <a *ngIf="userCanAccessDop(item)" (click)="goToLink(item, 'dop')">
-                                <mat-icon title="Declaration of Production" svgIcon="dop"></mat-icon>
+                                <mat-icon [title]="getDopIconTitle(item.insurancePlanId)" svgIcon="dop"></mat-icon>
                             </a> 
 
                             <a *ngIf="userCanAccessVerifiedYield(item)" (click)="goToLink(item, 'verifiedYield')">

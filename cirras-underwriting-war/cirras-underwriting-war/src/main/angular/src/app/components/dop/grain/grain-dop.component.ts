@@ -716,7 +716,7 @@ export class GrainDopComponent extends BaseComponent{
     const newDopYieldContract: DopYieldContract = this.getUpdatedDopYieldContract()
 
     if (this.dopYieldContract.declaredYieldContractGuid) {
-      this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, newDopYieldContract, this.policyId))
+      this.store.dispatch(UpdateDopYieldContract(DOP_COMPONENT_ID, newDopYieldContract, this.policyId, "DOP Yield "))
     } else {
       // add new
       this.store.dispatch(AddNewDopYieldContract(DOP_COMPONENT_ID, newDopYieldContract, this.policyId))
@@ -739,7 +739,7 @@ export class GrainDopComponent extends BaseComponent{
 
       if (this.dopYieldContract.declaredYieldContractGuid) {
         //Delete dop contract
-        this.store.dispatch(DeleteDopYieldContract(DOP_COMPONENT_ID, this.policyId, newDopYieldContract))
+        this.store.dispatch(DeleteDopYieldContract(DOP_COMPONENT_ID, this.policyId, newDopYieldContract, "DOP Yield "))
 
       } 
     }

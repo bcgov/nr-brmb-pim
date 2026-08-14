@@ -7,6 +7,7 @@ import { AnnualField } from "src/app/conversion/models";
 import { RootState } from "src/app/store";
 import { setFormStateUnsaved } from "src/app/store/application/application.actions";
 import { DOP_COMPONENT_ID } from "src/app/store/dop/dop.state";
+import { INSURANCE_PLAN } from "src/app/utils/constants";
 
 @Component({
     selector: 'forage-dop-field',
@@ -25,6 +26,10 @@ export class ForageDopFieldComponent implements OnInit {
         private dialog: MatDialog,
         private store: Store<RootState>) {
     }
+
+      get currentInsurancePlanId(): number {
+        return INSURANCE_PLAN.FORAGE
+      }
 
     ngOnInit(): void {
         this.fieldFormGroup = this.fb.group({

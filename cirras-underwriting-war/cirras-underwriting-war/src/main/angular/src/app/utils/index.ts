@@ -516,6 +516,10 @@ export function setHttpHeaders(authToken) {
 
             resourceRoute = ResourcesRoutes.DOP_FORAGE
             
+        } else if (item.insurancePlanId == INSURANCE_PLAN.BERRIES) {
+
+            resourceRoute = ResourcesRoutes.DOP_BERRIES
+            
         }
 
         router.navigate([resourceRoute,

@@ -43,6 +43,10 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
               protected dialog: MatDialog,
               protected cdr: ChangeDetectorRef) {}
 
+  get currentInsurancePlanId(): number {
+    return INSURANCE_PLAN.BERRIES
+  }
+
   ngOnInit() {
     this.refreshForm()
   }
@@ -104,7 +108,7 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
       return {
           'display': 'grid',
           'align-items': 'stretch',
-          'width': `830px`
+          'width': `930px`
       };
     }
 
@@ -112,7 +116,7 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
       return {
           'display': 'grid',
           'align-items': 'stretch',
-          'width': `510px`
+          'width': `610px`
       };
     }
 
@@ -128,7 +132,7 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
       return {
           'display': 'grid',
           'align-items': 'stretch',
-          'width': `910px`
+          'width': `1010px`
       };
     }
 
@@ -191,15 +195,18 @@ export class BerriesInventoryFieldComponent implements OnInit, OnChanges{
     return setTableHeaderStyleForBerries(this.selectedCommodity)
   }
 
+  //Hide on printout is not used by berries at the moment; should always be false
   setIsFieldHiddenOnPrintout() {
-    
-    let elem = this.field.plantings.filter(x => x.isHiddenOnPrintoutInd !== true)
 
-    if (elem.length == 0) {
-      this.isFieldHiddenOnPrintout = true // all plantings are hidden
-    } else {
-      this.isFieldHiddenOnPrintout = false // at least one planting is not hidden
-    } 
+    this.isFieldHiddenOnPrintout = false
+    
+    // let elem = this.field.plantings.filter(x => x.isHiddenOnPrintoutInd !== true)
+
+    // if (elem.length == 0) {
+    //   this.isFieldHiddenOnPrintout = true // all plantings are hidden
+    // } else {
+    //   this.isFieldHiddenOnPrintout = false // at least one planting is not hidden
+    // } 
   }
 
   isCranberry() {

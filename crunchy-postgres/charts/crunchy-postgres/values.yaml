@@ -52,6 +52,10 @@ pgBackRest:
   timeout: "600"
   s3UriStyle: path
 
+  # PVC for persisting logs from S3 backups. Has to be created manually.
+  s3LogsVolume: crunchy-postgres-#{ENV}#-manual-repo2-logs
+  logLevelConsole: warn
+
   repos:
     # Times are intrepreted as GMT timezone, which is 7 or 8 hours ahead depending on daylight savings time.
     # So, for example, to get a backup to run at 12am, we specify 8am here.

@@ -3,6 +3,8 @@ kind: PostgresCluster
 metadata:
   name: {{ template "crunchy-postgres.fullname" . }}
   labels: {{ include "crunchy-postgres.labels" . | nindent 4 }}
+  annotations:
+    postgres-operator.crunchydata.com/pgbackrest-cloud-log-volume: {{ .Values.pgBackRest.s3LogsVolume }}
 spec:
   metadata:
     labels: {{ include "crunchy-postgres.labels" . | nindent 6 }}
@@ -80,7 +82,10 @@ spec:
                     postgres-operator.crunchydata.com/cluster:
                       {{ template "crunchy-postgres.fullname" . }}
                     postgres-operator.crunchydata.com/instance-set: {{ .Values.instances.name }}-ha
-  
+
+  replicaService:
+    type: NodePort
+
   users:
     - name: {{ template "crunchy-postgres.fullname" . }}
       databases:
@@ -99,6 +104,8 @@ spec:
         - secret:
             name: {{ .Values.pgBackRest.repos.configuration.secretName }}
       global:
+        log-level-console: {{ .Values.pgBackRest.logLevelConsole }}
+
         # hardcoding repo1 until we solution allowing multiple repos
         repo1-retention-full: {{ .Values.pgBackRest.retentionFull | quote }}
         repo1-retention-full-type: {{ .Values.pgBackRest.retentionFullType }}

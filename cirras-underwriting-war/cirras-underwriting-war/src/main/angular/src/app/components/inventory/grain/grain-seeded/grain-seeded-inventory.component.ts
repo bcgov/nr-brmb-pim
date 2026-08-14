@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, SimpleChanges} from '@angular/core'
 import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { GrainInventoryComponent } from "../grain-inventory.component";
 import { makeTitleCase } from 'src/app/utils'; 
-import { CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
+import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { CropVarietyCommodityType } from 'src/app/conversion/models';
 import { CropVarietyOptionsType, roundUpDecimal } from '../../inventory-common';
 import { AddPlantingPopupData, LinkPlantingComponent } from '../../link-planting/link-planting.component';
@@ -30,6 +30,10 @@ export class GrainSeededInventoryComponent extends GrainInventoryComponent {
   filteredUnderSeededVarietyOptions: CropVarietyOptionsType[];  
 
   isHiddenFieldInTotals = false;
+
+  get currentInsurancePlanId(): number {
+    return INSURANCE_PLAN.GRAIN
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     super.ngOnChanges(changes);

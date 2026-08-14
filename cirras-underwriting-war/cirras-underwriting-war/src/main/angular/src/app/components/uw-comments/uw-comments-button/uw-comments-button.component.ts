@@ -2,14 +2,18 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 import { UwCommentsDialogComponent } from "../uw-comments-dialog/uw-comments-dialog.component";
+import { INSURANCE_PLAN } from "src/app/utils/constants";
 
 export interface DialogData {
+    insurancePlanId: number;
     underwritingCommentTypeCode: string;
     // Inventory and DOP field data
-    annualFieldDetailId: number;
-    fieldId: number;
-    fieldName: string;
-    legalLocation: string;
+    annualFieldDetailId?: number;
+    fieldId?: number;
+    fieldName?: string;
+    fieldLocation?: string;
+    legalLocation?: string;
+    primaryPropertyIdentifier?: string;
     // DOP policy data
     growerContractYearId: number;
     declaredYieldContractGuid: string;
@@ -17,9 +21,10 @@ export interface DialogData {
     growerName: string;
     growerNumber: string;
     // Verified Yield summary data:
-    verifiedYieldSummaryGuid: string;
-    commodityName: string,
-    // common data
+    verifiedYieldSummaryGuid?: string;
+    commodityName?: string,
+    isForcedInd: boolean;
+    isForcedMessage?: string;
     uwComments: UnderwritingComment[];
 }
 
@@ -30,6 +35,7 @@ export interface DialogData {
     standalone: false
 })
 export class UwCommentsButtonComponent {
+    @Input() insurancePlanId: number;
     @Input() underwritingCommentTypeCode: string;
     @Input() annualFieldDetailId: number;
     @Input() growerContractYearId: number;
@@ -39,14 +45,20 @@ export class UwCommentsButtonComponent {
     @Input() growerNumber: string;
     @Input() fieldId: number;
     @Input() fieldName: string;
+    @Input() fieldLocation: string;
     @Input() legalLocation: string;
+    @Input() primaryPropertyIdentifier: string;
     @Input() verifiedYieldSummaryGuid: string;
     @Input() commodityName: string;
+    @Input() isForcedInd: boolean;
+    @Input() isForcedMessage: string;
     @Input() uwComments: UnderwritingComment[];
     @Output() onDone = new EventEmitter<UnderwritingComment[]>();
 
     uwCommentsForDialog: UnderwritingComment[];
     dialogRef: MatDialogRef<UwCommentsDialogComponent, any>;
+
+    INSURANCE_PLAN = INSURANCE_PLAN
 
     constructor(protected dialog: MatDialog) { }
 
@@ -65,6 +77,7 @@ export class UwCommentsButtonComponent {
 
     get data(): DialogData {
         return {
+            insurancePlanId: this.insurancePlanId,
             underwritingCommentTypeCode: this.underwritingCommentTypeCode,
             annualFieldDetailId: this.annualFieldDetailId,
             growerContractYearId: this.growerContractYearId,
@@ -74,9 +87,13 @@ export class UwCommentsButtonComponent {
             growerNumber: this.growerNumber,
             fieldId: this.fieldId,
             fieldName: this.fieldName,
+            fieldLocation: this.fieldLocation,
             legalLocation: this.legalLocation,
+            primaryPropertyIdentifier: this.primaryPropertyIdentifier,
             verifiedYieldSummaryGuid: this.verifiedYieldSummaryGuid,
             commodityName: this.commodityName,
+            isForcedInd: (this.isForcedInd == null ? false : this.isForcedInd), 
+            isForcedMessage: this.isForcedMessage,
             uwComments: this.uwCommentsForDialog
         };
     }

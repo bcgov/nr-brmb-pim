@@ -14,8 +14,13 @@
             {{ uwCommentFormGroup.value.updateUser }}
         </label>
     </div>
+    <div *ngIf="showForcedCommentsColumn" class="border-right border-bottom">
+        <label class="readonly-comment">
+            {{ uwCommentFormGroup.value.isForcedInd ? 'Y' : 'N' }}
+        </label>
+    </div>
     <div class="border-right border-bottom">
-        <mat-form-field appearance="fill" *ngIf="uwCommentFormGroup.value.userCanEditInd; else readOnlyComment"  style="width: 100%;">
+        <mat-form-field appearance="fill" *ngIf="canUserEditComment(); else readOnlyComment"  style="width: 100%;">
             <textarea matInput formControlName="underwritingComment" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
                 cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" maxlength="2000" (blur)="onCommentChange()"
                 [style.background-color]="validComment ? 'transparent' : 'yellow'">
@@ -27,7 +32,7 @@
         </ng-template>
     </div>
     <div class="border-right justify-center align-center border-bottom">
-        <button mat-icon-button *ngIf="uwComment.userCanDeleteInd" matTooltip="Delete Comment"
+        <button mat-icon-button *ngIf="uwComment.userCanDeleteInd && !uwComment.isForcedInd" matTooltip="Delete Comment"
             (click)="onDeleteComment()">
             <mat-icon class="delete-icon">delete_outline</mat-icon>
         </button>

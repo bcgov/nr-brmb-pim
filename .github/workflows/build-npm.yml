@@ -46,7 +46,7 @@ jobs:
       - name: Set up nodejs
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Extract version number
         id: getVersion
@@ -71,7 +71,7 @@ jobs:
           --url=${{vars.ARTIFACTORY_BASE_URL}} \
           --user=${{ secrets.OPENSHIFT_ACCOUNT }} \
           --password=${{ secrets.OPENSHIFT_PASSWORD }} \
-          "${{ env.REPO_PREFIX }}-$REPO_SUFFIX/${{ env.ARTIFACTORY_PATH }}/${{inputs.API_TARGET}}-rest-endpoints/${{ steps.getVersion.outputs.VERSION_NUMBER }}/${{inputs.API_TARGET}}-rest-endpoints-${{ steps.getVersion.outputs.VERSION_NUMBER }}-swagger.json" \
+          "${{ env.REPO_PREFIX }}-$REPO_SUFFIX/${{ env.ARTIFACTORY_PATH }}/${{inputs.API_TARGET}}-server/${{ steps.getVersion.outputs.VERSION_NUMBER }}/${{inputs.API_TARGET}}-server-${{ steps.getVersion.outputs.VERSION_NUMBER }}-swagger.json" \
           ${{inputs.SWAGGER_TARGET_PATH}}
       
       - name: npm install

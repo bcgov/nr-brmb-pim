@@ -7,6 +7,7 @@
     <div *ngIf="isCranberry()" class="inventory-header" style="width:100px">Bog I.D.</div>
     <div class="inventory-header" style="width:80px">Planted <br /> Year</div>
     <div class="inventory-header" style="width:100px">Acres</div>
+    <div *ngIf="!isStrawberry()" class="inventory-header" style="width:100px">Mature Equivalent Acres</div>
     <div class="inventory-header" style="width:80px">Quantity <br />Insurable</div>
     <div *ngIf="isCranberry()" class="inventory-header" style="width:100px">MM/YY Bogs Mowed</div>
     <div *ngIf="isCranberry()" class="inventory-header" style="width:100px">MM/YY Bogs Renovated</div>
