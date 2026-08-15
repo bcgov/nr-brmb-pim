@@ -34,7 +34,7 @@
 			<dependency>
 				<groupId>jakarta.xml.bind</groupId>
 				<artifactId>jakarta.xml.bind-api</artifactId>
-				<version>4.0.2</version>
+				<version>4.0.5</version>
 			</dependency>
 
 			<!-- WebADE Rest -->
@@ -157,13 +157,13 @@
 			<dependency>
 				<groupId>org.tuckey</groupId>
 				<artifactId>urlrewritefilter</artifactId>
-				<version>5.1.1</version>
+				<version>5.1.3</version>
 			</dependency>
 
 			<dependency>
 				<groupId>jakarta.servlet</groupId>
 				<artifactId>jakarta.servlet-api</artifactId>
-				<version>6.0.0</version>
+				<version>6.1.0</version>
 			</dependency>
 
 			<dependency>
@@ -192,7 +192,7 @@
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-slf4j-impl</artifactId>
-				<version>2.24.2</version>
+				<version>2.26.1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
