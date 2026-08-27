@@ -114,7 +114,8 @@ jobs:
           API_CPU_LIMIT: ${{ vars.API_CPU_LIMIT }}
           API_MEMORY_REQUEST: ${{ vars.API_MEMORY_REQUEST }}
           API_MEMORY_LIMIT: ${{ vars.API_MEMORY_LIMIT }}
-          MAX_API_COUNT: ${{ vars.MAX_APP_COUNT }}
+          MIN_API_COUNT: ${{ vars.MIN_API_COUNT }}
+          MAX_API_COUNT: ${{ vars.MAX_API_COUNT }}
 
           POSTGRES_RESOURCE_NAME: ${{ vars.POSTGRES_RESOURCE_NAME }}
 
@@ -147,6 +148,7 @@ jobs:
 
           
           #Frontend variables
+          MIN_UI_COUNT: ${{ vars.MIN_UI_COUNT }}
           MAX_UI_COUNT: ${{ vars.MAX_UI_COUNT }}
           BASE_URL: https://cirras-underwriting-ui-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/pub/cirras-underwriting/
           CIRRAS_UNDERWRITING_REST_URI: https://cirras-underwriting-api-route-${{ inputs.ENVIRONMENT_NAME }}-${{inputs.NAMESPACE}}.apps.silver.devops.gov.bc.ca/cirras-underwriting-api/v1
