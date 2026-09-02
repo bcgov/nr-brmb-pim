@@ -8,7 +8,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: cirras-underwriting-api-deployment-#{ENV}#
-  minReplicas: 1
+  minReplicas: #{MIN_API_COUNT}#
   maxReplicas: #{MAX_API_COUNT}#
   metrics:
     # These define triggers based on % request value, not % limit value
