@@ -13,7 +13,7 @@
 		<java-target-version>21</java-target-version>
 		<dollar>$</dollar>
 		<spring.version>6.2.1</spring.version>
-		<wfone.common.version>1.5.0</wfone.common.version>
+		<pit.common.version>1.0.0-SNAPSHOT</pit.common.version>
 		<jetty.version>12.1.0</jetty.version>
 	</properties>
 	<modules>
@@ -45,19 +45,6 @@
 				<groupId>ca.bc.gov.mal.cirras.policies</groupId>
 				<artifactId>cirras-policies-api-rest-client</artifactId>
 				<version>1.13.0</version>
-			</dependency>
-
-			<!-- Wildfire OrgUnit -->
-			<dependency>
-				<groupId>ca.bc.gov.nrs.wforg</groupId>
-				<artifactId>wforg-org-unit-api-rest-common</artifactId>
-				<version>1.0.0</version>
-			</dependency>
-
-			<dependency>
-				<groupId>ca.bc.gov.webade</groupId>
-				<artifactId>webade-spring-bootstrap-support</artifactId>
-				<version>1.1.0.0</version>
 			</dependency>
 			
 			<dependency>
@@ -223,64 +210,64 @@
 			</dependency>
 
 			<dependency>
-				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-				<artifactId>wfone-common-model</artifactId>
-				<version>${wfone.common.version}</version>
+				<groupId>ca.bc.gov.mal.pit.common</groupId>
+				<artifactId>pit-common-model</artifactId>
+				<version>${pit.common.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-				<artifactId>wfone-common-rest-common</artifactId>
-				<version>${wfone.common.version}</version>
+				<groupId>ca.bc.gov.mal.pit.common</groupId>
+				<artifactId>pit-common-rest-common</artifactId>
+				<version>${pit.common.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-				<artifactId>wfone-common-rest-client</artifactId>
-				<version>${wfone.common.version}</version>
+				<groupId>ca.bc.gov.mal.pit.common</groupId>
+				<artifactId>pit-common-rest-client</artifactId>
+				<version>${pit.common.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-				<artifactId>wfone-common-persistence</artifactId>
-				<version>${wfone.common.version}</version>
+				<groupId>ca.bc.gov.mal.pit.common</groupId>
+				<artifactId>pit-common-persistence</artifactId>
+				<version>${pit.common.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-				<artifactId>wfone-common-utils</artifactId>
-				<version>${wfone.common.version}</version>
+				<groupId>ca.bc.gov.mal.pit.common</groupId>
+				<artifactId>pit-common-utils</artifactId>
+				<version>${pit.common.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-				<artifactId>wfone-common-service-api</artifactId>
-				<version>${wfone.common.version}</version>
+				<groupId>ca.bc.gov.mal.pit.common</groupId>
+				<artifactId>pit-common-service-api</artifactId>
+				<version>${pit.common.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-				<artifactId>wfone-common-code-persistence</artifactId>
-				<version>${wfone.common.version}</version>
+				<groupId>ca.bc.gov.mal.pit.common</groupId>
+				<artifactId>pit-common-code-persistence</artifactId>
+				<version>${pit.common.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-				<artifactId>wfone-common-webade</artifactId>
-				<version>${wfone.common.version}</version>
+				<groupId>ca.bc.gov.mal.pit.common</groupId>
+				<artifactId>pit-common-webade</artifactId>
+				<version>${pit.common.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-				<artifactId>wfone-common-webade-oauth2-test</artifactId>
-				<version>${wfone.common.version}</version>
+				<groupId>ca.bc.gov.mal.pit.common</groupId>
+				<artifactId>pit-common-webade-oauth2-test</artifactId>
+				<version>${pit.common.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-				<artifactId>wfone-common-rest-endpoints</artifactId>
-				<version>${wfone.common.version}</version>
+				<groupId>ca.bc.gov.mal.pit.common</groupId>
+				<artifactId>pit-common-rest-endpoints</artifactId>
+				<version>${pit.common.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-				<artifactId>wfone-common-code-endpoints</artifactId>
-				<version>${wfone.common.version}</version>
+				<groupId>ca.bc.gov.mal.pit.common</groupId>
+				<artifactId>pit-common-code-endpoints</artifactId>
+				<version>${pit.common.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-				<artifactId>wfone-common-checkhealth</artifactId>
-				<version>${wfone.common.version}</version>
+				<groupId>ca.bc.gov.mal.pit.common</groupId>
+				<artifactId>pit-common-checkhealth</artifactId>
+				<version>${pit.common.version}</version>
 			</dependency>
 
 			<!-- Logging -->

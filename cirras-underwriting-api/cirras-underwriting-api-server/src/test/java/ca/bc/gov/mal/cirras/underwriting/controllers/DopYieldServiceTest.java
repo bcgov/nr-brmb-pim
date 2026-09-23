@@ -20,7 +20,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollupForage;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.GrainForageService;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
-import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
+import ca.bc.gov.mal.pit.common.service.api.ServiceException;
 
 public class DopYieldServiceTest extends EndpointsTest {
 	private static final Logger logger = LoggerFactory.getLogger(DopYieldServiceTest.class);

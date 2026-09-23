@@ -6,14 +6,14 @@ import java.util.List;
 
 import jakarta.ws.rs.core.UriBuilder;
 
-import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
-import ca.bc.gov.nrs.common.wfone.rest.resource.RelLink;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dto.PagedDtos;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
-import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
-import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
-import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
+import ca.bc.gov.mal.pit.common.rest.resource.MessageRsrc;
+import ca.bc.gov.mal.pit.common.rest.resource.RelLink;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dto.PagedDtos;
+import ca.bc.gov.mal.pit.common.rest.endpoints.resource.factory.BaseResourceFactory;
+import ca.bc.gov.mal.pit.common.service.api.model.factory.FactoryContext;
+import ca.bc.gov.mal.pit.common.service.api.model.factory.FactoryException;
+import ca.bc.gov.mal.pit.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.controllers.DopYieldContractEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.InventoryContractEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.UwContractEndpoint;

@@ -14,7 +14,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.InventoryContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.Oauth2ClientException;
 
 public class InventoryContractListEndpointTest extends EndpointsTest {
 	private static final Logger logger = LoggerFactory.getLogger(InventoryContractListEndpointTest.class);

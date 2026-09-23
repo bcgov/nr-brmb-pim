@@ -9,10 +9,10 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.parameters.validation.Param
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.VerifiedYieldContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.services.CirrasVerifiedYieldService;
-import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
-import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
-import ca.bc.gov.nrs.wfone.common.service.api.ValidationFailureException;
+import ca.bc.gov.mal.pit.common.rest.resource.HeaderConstants;
+import ca.bc.gov.mal.pit.common.rest.resource.MessageListRsrc;
+import ca.bc.gov.mal.pit.common.rest.endpoints.BaseEndpointsImpl;
+import ca.bc.gov.mal.pit.common.service.api.ValidationFailureException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;

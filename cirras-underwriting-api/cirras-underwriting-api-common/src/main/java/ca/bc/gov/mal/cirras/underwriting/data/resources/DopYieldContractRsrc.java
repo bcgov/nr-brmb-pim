@@ -16,7 +16,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityFo
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollup;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldRollupForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
-import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
+import ca.bc.gov.mal.pit.common.rest.resource.BaseResource;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.DOP_YIELD_CONTRACT_NAME)
 @XmlSeeAlso({ DopYieldContractRsrc.class })

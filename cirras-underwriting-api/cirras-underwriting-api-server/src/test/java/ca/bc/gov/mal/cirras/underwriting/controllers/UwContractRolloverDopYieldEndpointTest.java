@@ -19,7 +19,7 @@ import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldFieldGrain;
 
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.Oauth2ClientException;
 
 public class UwContractRolloverDopYieldEndpointTest extends EndpointsTest {
 	private static final Logger logger = LoggerFactory.getLogger(UwContractRolloverDopYieldEndpointTest.class);
