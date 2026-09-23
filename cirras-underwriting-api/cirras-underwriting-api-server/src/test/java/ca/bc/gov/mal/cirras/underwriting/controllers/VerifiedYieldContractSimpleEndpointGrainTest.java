@@ -54,9 +54,9 @@ import ca.bc.gov.mal.cirras.underwriting.services.utils.CommodityCoverageCode;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.LandManagementEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InsurancePlans;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.Oauth2ClientException;
 
 public class VerifiedYieldContractSimpleEndpointGrainTest extends EndpointsTest {
 	private static final Logger logger = LoggerFactory.getLogger(VerifiedYieldContractSimpleEndpointGrainTest.class);

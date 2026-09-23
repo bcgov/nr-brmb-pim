@@ -18,11 +18,11 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.EndpointsRsrc;
 //import ca.bc.gov.mal.cirras.claims.api.rest.v1.endpoints.security.Scopes;
 //import ca.bc.gov.mal.cirras.claims.api.rest.v1.resource.EndpointsRsrc;
 //import ca.bc.gov.mal.cirras.claims.api.rest.test.EndpointsTest;
-import ca.bc.gov.nrs.common.wfone.rest.resource.CodeRsrc;
-import ca.bc.gov.nrs.common.wfone.rest.resource.CodeTableListRsrc;
-import ca.bc.gov.nrs.common.wfone.rest.resource.CodeTableRsrc;
-import ca.bc.gov.nrs.wfone.common.model.Code;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
+import ca.bc.gov.mal.pit.common.rest.resource.CodeRsrc;
+import ca.bc.gov.mal.pit.common.rest.resource.CodeTableListRsrc;
+import ca.bc.gov.mal.pit.common.rest.resource.CodeTableRsrc;
+import ca.bc.gov.mal.pit.common.model.Code;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.Oauth2ClientException;
 
 public class CodeTablesEndpointsTest extends EndpointsTest {
 	private static final Logger logger = LoggerFactory.getLogger(CodeTablesEndpointsTest.class);

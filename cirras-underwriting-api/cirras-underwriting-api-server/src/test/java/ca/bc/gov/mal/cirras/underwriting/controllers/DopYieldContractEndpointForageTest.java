@@ -48,10 +48,10 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededGrain;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryUnseeded;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
-import ca.bc.gov.nrs.common.wfone.rest.resource.RelLink;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
+import ca.bc.gov.mal.pit.common.rest.resource.RelLink;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.Oauth2ClientException;
 
 public class DopYieldContractEndpointForageTest extends EndpointsTest {
 	private static final Logger logger = LoggerFactory.getLogger(DopYieldContractEndpointForageTest.class);

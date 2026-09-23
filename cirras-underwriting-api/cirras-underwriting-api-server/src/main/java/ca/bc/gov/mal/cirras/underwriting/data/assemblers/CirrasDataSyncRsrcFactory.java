@@ -43,7 +43,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCodeRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeCodeRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityTypeVarietyXrefRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncCommodityVarietyRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
+import ca.bc.gov.mal.pit.common.rest.endpoints.resource.factory.BaseResourceFactory;
 import jakarta.ws.rs.core.UriBuilder;
 
 public class CirrasDataSyncRsrcFactory extends BaseResourceFactory { 

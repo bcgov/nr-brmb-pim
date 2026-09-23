@@ -13,7 +13,7 @@ import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
 
 import ca.bc.gov.mal.cirras.underwriting.services.utils.PropertyUtils;
-import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
+import ca.bc.gov.mal.pit.common.service.api.ServiceException;
 
 public class AsynchronousProcessesService implements ApplicationListener<ApplicationEvent> {
 	

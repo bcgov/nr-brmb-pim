@@ -64,9 +64,9 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.VerifiedYieldContractListEn
 import ca.bc.gov.mal.cirras.underwriting.controllers.VerifiedYieldContractSimpleEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.YieldMeasUnitConversionListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.YieldMeasUnitTypeCodeListEndpoint;
-import ca.bc.gov.nrs.wfone.common.api.rest.code.endpoints.impl.CodeTableEndpointsImpl;
-import ca.bc.gov.nrs.wfone.common.api.rest.code.endpoints.impl.CodeTableListEndpointsImpl;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.jersey.JerseyResourceConfig;
+import ca.bc.gov.mal.pit.common.api.rest.code.endpoints.impl.CodeTableEndpointsImpl;
+import ca.bc.gov.mal.pit.common.api.rest.code.endpoints.impl.CodeTableListEndpointsImpl;
+import ca.bc.gov.mal.pit.common.rest.endpoints.jersey.JerseyResourceConfig;
 import io.swagger.v3.jaxrs2.integration.JaxrsOpenApiContextBuilder;
 import io.swagger.v3.jaxrs2.integration.resources.AcceptHeaderOpenApiResource;
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
@@ -154,8 +154,8 @@ public class JerseyApplication extends JerseyResourceConfig {
 			.resourcePackages(
 				Stream.of(
 					"ca.bc.gov.mal.cirras.underwriting.controllers",
-					"ca.bc.gov.nrs.wfone.common.api.rest.code.endpoints",
-					"ca.bc.gov.nrs.wfone.common.rest.endpoints"
+					"ca.bc.gov.mal.pit.common.api.rest.code.endpoints",
+					"ca.bc.gov.mal.pit.common.rest.endpoints"
 				).collect(Collectors.toSet()));
 
 

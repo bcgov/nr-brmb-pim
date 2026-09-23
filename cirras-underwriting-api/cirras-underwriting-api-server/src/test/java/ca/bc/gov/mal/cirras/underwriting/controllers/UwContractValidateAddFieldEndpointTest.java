@@ -40,10 +40,10 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededForage;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededGrain;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.InventoryServiceEnums.InsurancePlans;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
-import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
+import ca.bc.gov.mal.pit.common.rest.resource.MessageRsrc;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.Oauth2ClientException;
 
 public class UwContractValidateAddFieldEndpointTest extends EndpointsTest {
 	private static final Logger logger = LoggerFactory.getLogger(UwContractValidateAddFieldEndpointTest.class);

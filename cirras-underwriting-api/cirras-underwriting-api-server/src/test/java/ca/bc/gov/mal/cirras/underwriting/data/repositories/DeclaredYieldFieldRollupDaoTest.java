@@ -15,7 +15,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContract
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldFieldRollupDto;
 import ca.bc.gov.mal.cirras.underwriting.spring.PersistenceSpringConfig;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

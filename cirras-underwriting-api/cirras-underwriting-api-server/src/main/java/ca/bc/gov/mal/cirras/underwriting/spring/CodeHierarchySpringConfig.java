@@ -1,7 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.spring;
 
-import ca.bc.gov.nrs.wfone.common.persistence.code.dao.CodeHierarchyConfig;
-import ca.bc.gov.nrs.wfone.common.persistence.code.spring.CodePersistenceSpringConfig;
+import ca.bc.gov.mal.pit.common.persistence.code.dao.CodeHierarchyConfig;
+import ca.bc.gov.mal.pit.common.persistence.code.spring.CodePersistenceSpringConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -27,9 +27,9 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.GrowerDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.LegalLandFieldXrefDto;
 import ca.bc.gov.mal.cirras.underwriting.spring.PersistenceSpringConfig;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dto.PagedDtos;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.persistence.dto.PagedDtos;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TestConfig.class, PersistenceSpringConfig.class })

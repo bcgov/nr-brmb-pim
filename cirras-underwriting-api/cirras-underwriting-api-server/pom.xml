@@ -35,21 +35,16 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>ca.bc.gov.webade</groupId>
-			<artifactId>webade-spring-bootstrap-support</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-			<artifactId>wfone-common-rest-endpoints</artifactId>
+			<groupId>ca.bc.gov.mal.pit.common</groupId>
+			<artifactId>pit-common-rest-endpoints</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-			<artifactId>wfone-common-code-endpoints</artifactId>
+			<groupId>ca.bc.gov.mal.pit.common</groupId>
+			<artifactId>pit-common-code-endpoints</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-			<artifactId>wfone-common-checkhealth</artifactId>
+			<groupId>ca.bc.gov.mal.pit.common</groupId>
+			<artifactId>pit-common-checkhealth</artifactId>
 		</dependency>
 		
 		<dependency>
@@ -186,8 +181,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-			<artifactId>wfone-common-webade-oauth2-test</artifactId>
+			<groupId>ca.bc.gov.mal.pit.common</groupId>
+			<artifactId>pit-common-webade-oauth2-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
@@ -342,8 +337,8 @@
                     <configurationFilePath>${project.build.directory}/classes/openapi-configuration.json</configurationFilePath>
                     <resourcePackages>
                         <package>ca.bc.gov.mal.cirras.underwriting.controllers</package>
-                        <package>ca.bc.gov.nrs.wfone.common.api.rest.code.endpoints</package>
-                        <package>ca.bc.gov.nrs.wfone.common.rest.endpoints</package>
+                        <package>ca.bc.gov.mal.pit.common.api.rest.code.endpoints</package>
+                        <package>ca.bc.gov.mal.pit.common.rest.endpoints</package>
                     </resourcePackages>
                     <prettyPrint>true</prettyPrint>
                 </configuration>
