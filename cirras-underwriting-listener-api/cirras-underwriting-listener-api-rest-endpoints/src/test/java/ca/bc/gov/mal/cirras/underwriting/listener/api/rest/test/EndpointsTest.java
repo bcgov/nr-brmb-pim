@@ -46,7 +46,6 @@ public abstract class EndpointsTest {
 //	protected static ApplicationContext webApplicationContext;
 
 	protected static TokenServiceStub tokenService;
-	protected static WildfireHumanResourcesPayrollServiceStub wildfireHumanResourcesPayrollService;
 
 	//**************
 	protected static final int port = 8889;
