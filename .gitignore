@@ -5,3 +5,5 @@ local-config
 cirras-underwriting-api/cirras-underwriting-api-server/src/test/resources/static.properties
 cirras-underwriting-api/src/test/resources/static.properties
 cirras-underwriting-war/settings.xml
+cirras-underwriting-listener-api/cirras-underwriting-listener-failover-service/src/test/resources/static.properties
+cirras-underwriting-listener-api/cirras-underwriting-listener-api-rest-endpoints/src/test/resources/static.properties
