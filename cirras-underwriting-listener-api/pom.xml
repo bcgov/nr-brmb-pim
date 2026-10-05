@@ -26,6 +26,18 @@
 		<module>cirras-underwriting-listener-api-rest-client</module>
 		<module>cirras-underwriting-listener-failover-service</module>
 	</modules>
+	
+	<distributionManagement>
+	    <repository>
+	        <id>openshift-releases</id>
+	        <url>${RELEASE_URL}</url>
+	    </repository>
+	    <snapshotRepository>
+	        <id>openshift-snapshots</id>
+	        <url>${SNAPSHOT_URL}</url>
+	    </snapshotRepository>
+	</distributionManagement>
+		
 	<dependencyManagement>
 		<dependencies>
 
