@@ -253,7 +253,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
   setFormSeededStyles(){
     return {
-      'grid-template-columns':  '250px 200px auto  140px 150px 12px 190px'
+      'grid-template-columns':  '500px auto 170px 12px 140px 150px 12px 190px'
     }
   }
 
