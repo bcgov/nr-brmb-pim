@@ -44,7 +44,17 @@
             <div class="plcy-inv-form-header" [ngStyle]="setFormStyles()">
                 <div>
                     <h2>Verified Yield</h2>
-                    <p>Last Updated: {{ ((verifiedYieldContract && verifiedYieldContract.verifiedYieldUpdateTimestamp) ? verifiedYieldContract.verifiedYieldUpdateTimestamp : "" ) | date }} </p>
+                    <div class="div-table-last-updated">
+                        <div class="div-table-row-last-updated">
+                            <div class="div-table-col-last-updated">
+                                Last Updated: {{ ((verifiedYieldContract && verifiedYieldContract.verifiedYieldUpdateTimestamp) ? verifiedYieldContract.verifiedYieldUpdateTimestamp : "" ) | date }}
+                            </div>
+                            <div class="div-table-col-last-updated">
+                                Updated By: {{ ((verifiedYieldContract && verifiedYieldContract.verifiedYieldUpdateUser) ? verifiedYieldContract.verifiedYieldUpdateUser : "" ) }}
+                            </div>
+                        </div>
+                    </div>
+                
                 </div>            
                
                 <div>

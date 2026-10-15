@@ -62,7 +62,16 @@
         <div class="plcy-inv-form-header" [ngStyle]="setFormStyles()">
             <div>
                 <h2>Declaration of Production | Schedule D - 15</h2>
-                <p>Last Updated: {{ ((dopYieldContract && dopYieldContract.dopUpdateTimestamp) ? dopYieldContract.dopUpdateTimestamp : "" ) | date }}</p>
+                <div class="div-table-last-updated">
+                    <div class="div-table-row-last-updated">
+                        <div class="div-table-col-last-updated">
+                            Last Updated: {{ ((dopYieldContract && dopYieldContract.dopUpdateTimestamp) ? dopYieldContract.dopUpdateTimestamp : "" ) | date }}
+                        </div>
+                        <div class="div-table-col-last-updated">
+                            Updated By: {{ ((dopYieldContract && dopYieldContract.dopUpdateUser) ? dopYieldContract.dopUpdateUser : "" ) }}
+                        </div>
+                    </div>
+                </div>
             </div> 
             <div class="plcy-frm-hdr-calendar" matTooltip="Date when the Declaration of Production is submitted.">
                 <!-- DOP Date: -->
