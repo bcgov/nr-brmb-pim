@@ -69,7 +69,16 @@
         <div class="plcy-inv-form-header" [ngStyle]="setFormSeededStyles()">
             <div>
                 <h2>Grain Seeded Crop Report | Schedule F - 6</h2>
-                <p>Last Updated: {{ ((inventoryContract && inventoryContract.invUpdateTimestamp) ? inventoryContract.invUpdateTimestamp : "" ) | date }}</p>
+                <div class="div-table-last-updated">
+                    <div class="div-table-row-last-updated">
+                        <div class="div-table-col-last-updated">
+                            Last Updated: {{ ((inventoryContract && inventoryContract.invUpdateTimestamp) ? inventoryContract.invUpdateTimestamp : "" ) | date }}
+                        </div>
+                        <div class="div-table-col-last-updated">
+                            Updated By: {{ ((inventoryContract && inventoryContract.invUpdateUser) ? inventoryContract.invUpdateUser : "" ) }}
+                        </div>
+                    </div>
+                </div>
             </div>
             <div >
                 <button mat-raised-button class="secondary header-button" (click)="onToggleColumns()">
