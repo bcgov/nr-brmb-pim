@@ -92,7 +92,7 @@ export class UwCommentsButtonComponent {
             primaryPropertyIdentifier: this.primaryPropertyIdentifier,
             verifiedYieldSummaryGuid: this.verifiedYieldSummaryGuid,
             commodityName: this.commodityName,
-            isForcedInd: (this.isForcedInd == null ? false : this.isForcedInd), 
+            isForcedInd: (this.isForcedInd ? this.isForcedInd : false), 
             isForcedMessage: this.isForcedMessage,
             uwComments: this.uwCommentsForDialog
         };
