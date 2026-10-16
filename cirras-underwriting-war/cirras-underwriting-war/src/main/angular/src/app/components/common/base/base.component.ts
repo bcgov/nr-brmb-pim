@@ -28,7 +28,7 @@ import {ConnectionService} from "ngx-connection-service";
 import {ActionItem} from "../base-wrapper/base-wrapper.component";
 import {Overlay} from "@angular/cdk/overlay";
 import {ApplicationStateService} from "../../../services/application-state.service";
-import {AppConfigService, TokenService} from "@wf1/wfcc-core-lib";
+import {AppConfigService, TokenService} from "@bcgov/pit-common-core-lib";
 import {PaginationInstance} from "ngx-pagination";
 import { HttpClient } from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";

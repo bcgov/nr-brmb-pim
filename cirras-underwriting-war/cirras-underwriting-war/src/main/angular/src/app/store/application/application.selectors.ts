@@ -1,6 +1,6 @@
 import {ErrorState, LoadState} from "./application.state";
 import {RootState} from "../index";
-import {SearchState} from "@wf1/wfcc-core-lib";
+import {SearchState} from "@bcgov/pit-common-core-lib";
 
 export const selectSearchState = (componentId) => (state: RootState): SearchState => ((state[componentId]) ? state[componentId] : undefined);
 

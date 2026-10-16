@@ -13,7 +13,7 @@ import {
     selectLegalLandListLoadState 
 } from "../../store/application/application.selectors";
 
-import {SearchState} from "@wf1/wfcc-core-lib";
+import {SearchState} from "@bcgov/pit-common-core-lib";
 import { LAND_SEARCH_COMPONENT_ID } from "src/app/store/land-management/land-management.state";
 
 @Component({
