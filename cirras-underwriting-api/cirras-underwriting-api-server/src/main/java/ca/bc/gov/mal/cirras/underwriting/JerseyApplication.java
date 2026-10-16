@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import ca.bc.gov.mal.cirras.underwriting.controllers.AnnualFieldDetailEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.AnnualFieldListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.AnnualFieldRolloverInvEndpoint;
+import ca.bc.gov.mal.cirras.underwriting.controllers.CheckTokenController;
 import ca.bc.gov.mal.cirras.underwriting.controllers.CommodityTypeCodeListEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.ContactEmailEndpoint;
 import ca.bc.gov.mal.cirras.underwriting.controllers.ContactEndpoint;
@@ -146,6 +147,8 @@ public class JerseyApplication extends JerseyResourceConfig {
 		register(SyncClaimCalculationSimpleEndpoint.class);
 		
 
+		register(CheckTokenController.class);
+		
 		register(OpenApiResource.class);
 		register(AcceptHeaderOpenApiResource.class);
 

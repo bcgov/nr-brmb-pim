@@ -252,5 +252,8 @@ public class ResourceTypes extends BaseResourceTypes {
 	public static final String SYNC_CLAIM_CALCULATION_SIMPLE = NAMESPACE + SYNC_CLAIM_CALCULATION_SIMPLE_NAME;
 	public static final String SYNCHRONIZE_CLAIM_CALCULATION_SIMPLE = NAMESPACE + "synchronizeClaimCalculationSimple";
 	public static final String DELETE_SYNC_CLAIM_CALCULATION_SIMPLE = NAMESPACE + "deleteSyncClaimCalculationSimple";
+	
+	//Test the checktoken endpoint for tests only
+	public static final String CHECK_TOKEN = NAMESPACE + "checkToken";
 }
 

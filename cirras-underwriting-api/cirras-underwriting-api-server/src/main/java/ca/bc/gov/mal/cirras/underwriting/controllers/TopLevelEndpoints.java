@@ -5,7 +5,7 @@ import java.net.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+import ca.bc.gov.mal.cirras.underwriting.controllers.CheckTokenController;
 import ca.bc.gov.mal.cirras.underwriting.controllers.scopes.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.AnnualFieldRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.CirrasDataSyncRsrcFactory;
@@ -52,6 +52,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
 
 
 @Path("/")
@@ -86,6 +87,13 @@ public class TopLevelEndpoints extends BaseEndpointsImpl {
 			String selfURI = CodeTableResourceFactory.getCodeTablesSelfUri(null, baseUri);
 			result.getLinks().add(new RelLink(ResourceTypes.CODE_TABLE_LIST, selfURI, HttpMethod.GET));
 
+			// for the checktoken ui 
+			selfURI = UriBuilder.fromUri(baseUri)
+					.path(CheckTokenController.class)
+					.build()
+					.toString();
+			result.getLinks().add(new RelLink(ResourceTypes.CHECK_TOKEN, selfURI, HttpMethod.GET));
+			
 			if (hasAuthority(Scopes.SEARCH_UWCONTRACTS)) {
 				selfURI = UwContractRsrcFactory.getUwContractListSelfUri(null, null, null, null, null, null, null, null, null, null, null, baseUri);
 				result.getLinks().add(new RelLink(ResourceTypes.UWCONTRACT_LIST, selfURI, HttpMethod.GET));
