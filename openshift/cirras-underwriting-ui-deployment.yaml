@@ -94,11 +94,11 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-ui-config-#{ENV}#
                   key: WEBADE_OAUTH2_ENABLE_CHECKTOKEN
-            - name: LOCAL_CHECKTOKEN_ENDPOINT
+            - name: UI_CHECKTOKEN_ENDPOINT
               valueFrom:
                 configMapKeyRef:
                   name: cirras-underwriting-ui-config-#{ENV}#
-                  key: LOCAL_CHECKTOKEN_ENDPOINT
+                  key: UI_CHECKTOKEN_ENDPOINT
             - name: WEBADE_CHECK_TOKEN_URL
               valueFrom:
                 configMapKeyRef:

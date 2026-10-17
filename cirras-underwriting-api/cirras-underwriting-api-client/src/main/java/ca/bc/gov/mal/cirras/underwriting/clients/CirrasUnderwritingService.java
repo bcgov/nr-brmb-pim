@@ -66,6 +66,7 @@ import ca.bc.gov.nrs.wfone.common.rest.client.BaseRestServiceClient;
 import ca.bc.gov.nrs.wfone.common.rest.client.GenericRestDAO;
 import ca.bc.gov.nrs.wfone.common.rest.client.Response;
 import ca.bc.gov.nrs.wfone.common.rest.client.RestDAOException;
+import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.resource.CheckedToken;
 
 public class CirrasUnderwritingService extends BaseRestServiceClient {
 
@@ -2410,5 +2411,22 @@ public class CirrasUnderwritingService extends BaseRestServiceClient {
 			}
 			
 		}
+		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+		// test get token
+		/////////////////////////////////////////////////////////////////////////////////////////////////////	
+		
+		public CheckedToken checkToken(EndpointsRsrc parent)
+		throws CirrasUnderwritingServiceException {
+		
+			GenericRestDAO<CheckedToken> dao = this.getRestDAOFactory().getGenericRestDAO(CheckedToken.class);
+		
+			try {
+				Response<CheckedToken> response = dao.Process(ResourceTypes.CHECK_TOKEN, this.getTransformer(), parent, getWebClient());
+				return response.getResource();
+			} catch (RestDAOException rde) {
+				throw new CirrasUnderwritingServiceException(rde);
+			}
+		}	
 
 }

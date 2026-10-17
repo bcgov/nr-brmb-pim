@@ -43,7 +43,7 @@
 
     String WEBADE_OAUTH2_AUTHORIZE_URL = EnvironmentVariable.getVariable("WEBADE_OAUTH2_AUTHORIZE_URL");
     String WEBADE_OAUTH2_ENABLE_CHECKTOKEN = EnvironmentVariable.getVariable("WEBADE_OAUTH2_ENABLE_CHECKTOKEN");
-    String LOCAL_CHECKTOKEN_ENDPOINT = EnvironmentVariable.getVariable("LOCAL_CHECKTOKEN_ENDPOINT");
+    String UI_CHECKTOKEN_ENDPOINT = EnvironmentVariable.getVariable("UI_CHECKTOKEN_ENDPOINT");
     String WEBADE_CHECK_TOKEN_URL = EnvironmentVariable.getVariable("WEBADE_CHECK_TOKEN_URL");
     String WEBADE_OAUTH2_SITEMINDER_URL = EnvironmentVariable.getVariable("WEBADE_OAUTH2_SITEMINDER_URL");
     String WEBADE_OAUTH2_SCOPES = EnvironmentVariable.getVariable("WEBADE_OAUTH2_SCOPES");
@@ -54,7 +54,7 @@
     json = json.append("\"oauth2Url\":\"").append(WEBADE_OAUTH2_AUTHORIZE_URL).append("\"").append(",");	
     json = json.append("\"clientId\":\"").append("CIRRAS_UNDERWRITING_UI").append("\"").append(",");
     json = json.append("\"enableCheckToken\":").append(WEBADE_OAUTH2_ENABLE_CHECKTOKEN).append(",");	
-    json = json.append("\"checkTokenUrl\":\"").append(LOCAL_CHECKTOKEN_ENDPOINT).append("\"").append(",");	
+    json = json.append("\"checkTokenUrl\":\"").append(UI_CHECKTOKEN_ENDPOINT).append("\"").append(",");	
 	  json = json.append("\"siteminderUrlPrefix\":\"").append(WEBADE_OAUTH2_SITEMINDER_URL).append("\"").append(",");		
     json = json.append("\"authScopes\":\"").append(WEBADE_OAUTH2_SCOPES).append("\"");	
     json = json.append("}");

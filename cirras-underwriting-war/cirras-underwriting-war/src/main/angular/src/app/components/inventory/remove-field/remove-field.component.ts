@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { UntypedFormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RemoveFieldValidationRsrc } from '@cirras/cirras-underwriting-api';
-import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
+import { AppConfigService, TokenService } from '@bcgov/pit-common-core-lib';
 import { setHttpHeaders } from 'src/app/utils';
 import { LAND_UPDATE_TYPE } from 'src/app/utils/constants';
 import { DIALOG_TYPE } from '../../dialogs/base-dialog/base-dialog.component';
