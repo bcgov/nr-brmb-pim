@@ -59,8 +59,6 @@ jobs:
         #NOTE: necessary to build client-war 
       - name: Add .npmrc file
         run: echo -e $NPMRC > ~/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Build with Maven and push to artifactory
         run: |
@@ -69,7 +67,9 @@ jobs:
           export RELEASE_URL=${{ vars.RELEASE_URL }}
           export SNAPSHOT_URL=${{ vars.SNAPSHOT_URL }}
           mvn --settings=settings.xml --batch-mode --update-snapshots -f ${{ inputs.MICROSERVICE_NAME }}/pom.xml -Drepo.login=${{ secrets.IDIR_AS_EMAIL }} -Drepo.password=${{ secrets.IDIR_PASSWORD }}  -DopenshiftRepo.login=${{ secrets.OPENSHIFT_ACCOUNT }} -DopenshiftRepo.password=${{ secrets.OPENSHIFT_PASSWORD }} deploy
-
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Cache local Maven repository
         uses: actions/cache@v4
         with:
