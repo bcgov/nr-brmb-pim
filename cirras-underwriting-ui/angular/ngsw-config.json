@@ -36,7 +36,7 @@
     {
       "name": "config",
       "urls": [
-        "/config.jsp"
+        "/assets/data/appConfig.json"
       ],
       "cacheConfig": {
         "strategy": "freshness",

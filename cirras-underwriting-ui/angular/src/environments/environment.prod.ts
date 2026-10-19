@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    app_config_location: "config.jsp",
+    app_config_location: "assets/data/appConfig.json",
     override_sign_up: false,
     restrict_imports: false,
     staff_supplier_invs_location: "assets/stub-data/staff-supplier-invs-data.json",
