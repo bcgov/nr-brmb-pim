@@ -33,11 +33,6 @@ spec:
                 configMapKeyRef:
                   name: cirras-underwriting-ui-config-#{ENV}#
                   key: BASE_URL
-            - name: WEBADE_GET_TOKEN_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: cirras-underwriting-ui-config-#{ENV}#
-                  key: WEBADE_GET_TOKEN_URL
             - name: CIRRAS_UNDERWRITING_REST_URI
               valueFrom:
                 configMapKeyRef:
