@@ -1,0 +1,75 @@
+@use '../../../../../styles/variables' as var;
+
+  .cuw-row-group {
+    //padding: 30px 10px 10px 10px;
+    margin: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    
+    .cuw-container {
+        display: grid;
+        grid-auto-rows: minmax( 2em, auto );
+        
+        div {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+  
+        .header {
+            font-weight: bold;            
+        }
+
+        .border-right {
+            border-right: 2px solid #ccc;          
+        }
+  
+        .border-top {
+            border-top: 2px solid #ccc;          
+        }
+  
+        .border-left {
+            border-left: 2px solid #ccc;          
+        }
+  
+        .justify-center {
+            justify-content: center;   
+        }
+  
+        .border-bottom {
+            border-bottom: 2px solid #ccc;
+        }
+
+        &.gmt-info {
+            grid-template-columns: 150px 190px 100px 100px 30px;
+        }
+    }
+  }
+
+  .unsaved-changes-warning {
+    display: flex; 
+    flex-direction: row; 
+    justify-content:center; 
+    align-items: center; 
+    max-width: 500px;
+    margin-left: 90px; 
+    margin-bottom: 10px;
+    border: 2px solid orangered; 
+    border-radius: 5px;
+
+    .mat-icon {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .table-wrapper {
+    max-height: calc(var(--vh, 1vh) * 100 - 27em);
+    width: calc(100% - 2 * var(--cirras-underwriting-gutter-space));
+    width: 590px;
+    margin: 0;
+    border-top: 1px solid var.$colour-light-grey;
+    border-bottom: 1px solid var.$colour-light-grey;
+    overflow-y: auto;
+  }

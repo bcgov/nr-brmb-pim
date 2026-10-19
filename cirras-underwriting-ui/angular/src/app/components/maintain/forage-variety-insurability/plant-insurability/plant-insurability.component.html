@@ -1,0 +1,44 @@
+<cuws-base-dialog [titleLabel]="titleLabel" [type]="dialogType">
+
+    <div mat-dialog-content>
+    <div class="row-group-left">
+    <form [formGroup]="varietyPlantInsForm">
+        
+        <div class="cuw-row-group">
+            <div class="cuw-container pi-info">
+                <div *ngFor="let plantIns of varietyPlantInsForm.controls.plantIns['controls']; index as rowIndex"
+                    [formGroup]="plantIns"        
+                    style="display: contents;">                    
+                    
+                    <div>   
+                        <mat-checkbox [disabled]="plantIns.value.isUsedInd"
+                            formControlName="cb">
+                        </mat-checkbox>
+                    </div>
+
+                    <div>   
+                        {{ plantIns.value.description}}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+    </div>
+
+        <div mat-dialog-actions align="end">
+            <button mat-raised-button class="secondary" (click)="onCancelChanges()">
+                Cancel
+            </button>
+            
+            &nbsp;
+            <button 
+                mat-raised-button class="primary" 
+                (click)="onProceed()">
+                    Proceed
+            </button>
+        </div>
+
+
+</cuws-base-dialog>

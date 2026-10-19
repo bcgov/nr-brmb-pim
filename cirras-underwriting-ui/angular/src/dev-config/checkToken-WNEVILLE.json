@@ -1,0 +1,39 @@
+{
+  "authorities": null,
+  "resourceIds": null,
+  "jti": "95926bdc-7d78-4fc1-abc2-e741dc64a710",
+  "sub": "IDIR\\WNEVILLE",
+  "scope": [
+      "CIRRAS_UNDERWRITING.GET_CODE_TABLES",
+      "CIRRAS_UNDERWRITING.SEARCH_CLAIMS",
+      "WEBADE-OAUTH2.user",
+      "CIRRAS_UNDERWRITING.SEARCH_CALCULATIONS",
+      "CIRRAS_UNDERWRITING.GET_TOP_LEVEL",
+      "CIRRAS_UNDERWRITING.PRINT_CALCULATION",
+      "CIRRAS_UNDERWRITING.GET_CALCULATION"
+  ],
+  "clientId": "CIRRAS_UNDERWRITING_UI",
+  "cid": "CIRRAS_UNDERWRITING_UI",
+  "clientAppCode": "CIRRAS_UNDERWRITING",
+  "grantType": "implicit",
+  "userId": "IDIR\\WNEVILLE",
+  "userName": "Internal/47BE04156B5D4A1FB45BB080D22F90EB/UNK",
+  "givenName": "Wendy",
+  "familyName": "Neville",
+  "email": "no.email.provided@invalid.com",
+  "userType": "GOV",
+  "userGuid": "47BE04156B5D4A1FB45BB080D22F90EB",
+  "onBehalfOfOrganizationId": null,
+  "onBehalfOfOrganizationCode": null,
+  "onBehalfOfOrganizationName": null,
+  "onBehalfOfOrganizationAdditionalInfo": null,
+  "businessNumber": null,
+  "businessGuid": null,
+  "iat": 1632177408,
+  "exp": 2632220608,
+  "iss": "http://localhost:8080/webade-oauth2/oauth/token",
+  "aud": [
+      "CIRRAS_UNDERWRITING",
+      "WEBADE-OAUTH2"
+  ]
+}

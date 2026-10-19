@@ -1,0 +1,85 @@
+@use '../variables' as var;
+
+.mat-mdc-snack-bar-container {
+    color: var.$colour-white;
+    font-family: var.$font-family-main;
+    font-size: var.$font-size;
+    word-break: break-word;
+
+    .snack-bar-content{
+        display: flex;
+        align-items: center;
+
+        .icon-panel{
+            padding: var(--cirras-underwriting-gutter-space);
+            display: flex;
+            background-color: var.$colour-lighter-grey;
+            height: 100%;
+            align-items: center;
+        }
+
+        .message-panel{
+            padding:var(--cirras-underwriting-gutter-space);
+            flex: 1;
+        }
+
+        button{
+            padding: calc(#{var(--cirras-underwriting-gutter-space)}/2);
+            border: 1px var.$colour-white solid;
+            border-radius: var.$wf1-border-radius;
+            color: var.$colour-white;
+            margin-right: var(--cirras-underwriting-gutter-space);
+            cursor: pointer;
+            font-family: var.$font-family-main;
+        }
+
+    }
+
+    .mat-mdc-snack-bar-label {
+        padding: 0;
+    }
+
+    &.snackbar-success {
+        --mdc-snackbar-container-color: #{ var.$colour-success };
+        mat-icon{
+            color: var.$colour-success;
+        }
+        button{
+            background-color: var.$colour-success;
+        }
+    }
+
+    &.snackbar-error {
+        --mdc-snackbar-container-color: #{ var.$colour-errors };
+        mat-icon{
+            color: var.$colour-errors;
+        }
+        button{
+            background-color: var.$colour-errors;
+        }
+    }
+
+    &.snackbar-info {
+        --mdc-snackbar-container-color: #{ var.$colour-blue-grey };
+        mat-icon{
+            color: var.$colour-blue-grey;
+        }
+        button{
+            background-color: var.$colour-blue-grey;
+        }
+    }
+
+    &.snackbar-update {
+        --mdc-snackbar-container-color: #{ var.$colour-blue-grey };
+
+        button {
+            color: var.$colour-blue-grey;
+        }
+        mat-icon{
+            color: var.$colour-blue-grey;
+        }
+        button{
+            background-color: var.$colour-blue-grey;
+        }
+    }
+}

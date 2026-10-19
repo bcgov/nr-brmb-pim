@@ -1,0 +1,126 @@
+.row-group-left {
+    padding-top: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 20px;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+  .legal-land-container {
+    display: grid;
+    grid-auto-rows: minmax( 2em, auto );
+    padding-top: 10px;
+
+    &.same-location-legal-land-info {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    &.other-legal-land-info {
+      grid-template-columns: 1fr 2.5fr 2.5fr;
+    }
+
+    &.legal-land-info {
+      grid-template-columns: 1fr 2fr 2fr 8fr;
+    }
+
+    &.field-info {
+      grid-template-columns: 2fr 2fr 3fr;
+    }
+
+    &.field-on-other-policy {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    &.error-messages {
+      grid-template-columns: 1fr 20fr;
+    }
+
+    div {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .center {
+        justify-content: center;
+    }
+
+    .header {
+        font-weight: bold;            
+    }
+
+    .border-right {
+        border-right: 2px solid #ccc;          
+    }
+
+    .border-top {
+        border-top: 2px solid #ccc;          
+    }
+
+    .border-left {
+        border-left: 2px solid #ccc;          
+    }
+
+    .justify-center {
+        justify-content: center;   
+    }
+
+    .border-bottom {
+        border-bottom: 2px solid #ccc;
+    }
+
+    .padding {
+        padding: 8px;
+    }
+  }
+
+
+  ::ng-deep  .mdc-text-field--filled {
+
+    /* change the background color */
+    .mat-mdc-form-field-focus-overlay {
+        background-color: transparent !important;
+    }
+  }
+
+
+}
+
+span.location-title {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 27px;
+  margin-bottom: 16px;
+}
+
+span.location-subtitle {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 20px;
+  margin-right: 8px;
+}
+
+div.location-button {
+  display: inline-flex;
+  justify-content: flex-end;
+
+  button {
+    color: #424242;
+    border: 1px solid #c2c2c2;
+    margin-top: 8px;
+    margin-bottom: 20px;
+  }
+}
+
+p.location-warning {
+  display: flex;
+  align-items: center;
+  margin-block-start: 0;
+  margin-block-end: 0;
+
+  &:nth-of-type(n+2) {
+    margin-block-start: 20px;
+  }
+}

@@ -1,0 +1,58 @@
+
+<cuws-base-dialog [titleLabel]="titleLabel" [type]="dialogType">
+        
+    <div mat-dialog-content>
+        <div class="row-group-left">
+    
+        <div class="cuw-row-group">
+            <div class="cuw-container gmt-info" >  
+                
+                <div class="header border-top border-left border-right border-bottom justify-center">Unit Type <br /> Code</div>
+                <div class="header border-top border-right border-bottom justify-center">Description</div>
+                <div class="header border-top border-right border-bottom justify-center">Decimal <br />Precision</div>
+                <div class="header border-top border-right border-bottom justify-center">Effective <br/> Date</div>
+                <div class="header border-top border-right border-bottom justify-center">Expiry Date</div>
+                <div class="header border-top border-right border-bottom justify-center">Base Unit</div>
+            </div>
+
+            <div class="cuw-container gmt-info">
+   
+                <div *ngFor="let unit of yieldMeasUnitList.collection" style="display: contents;">
+
+                    <div  class="gmt-info border-right border-bottom border-left justify-center">   
+                        {{ ( unit.yieldMeasUnitTypeCode) ? unit.yieldMeasUnitTypeCode : "" }}
+                    </div>
+
+                    <div class="gmt-info border-right border-bottom justify-center" >
+                        {{ ( unit.description) ? unit.description : "" }}
+                    </div>
+
+                    <div class="gmt-info border-right border-bottom justify-center" >
+                        {{ ( unit.decimalPrecision) ? unit.decimalPrecision : "" }}
+                    </div>
+
+                    <div class="gmt-info border-right border-bottom justify-center" >
+                        {{ (  ( unit.effectiveDate) ? unit.effectiveDate : "" ) | date }}
+                    </div>
+
+                    <div  class="gmt-info border-right border-bottom justify-center" >
+                        {{ (  ( unit.expiryDate) ? unit.expiryDate : "" ) | date }}
+                    </div>
+
+                    <div class="gmt-info border-right border-bottom justify-center" >
+                        {{ ( unit.isDefaultYieldUnitInd) ? "Y" : "N" }}
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+    </div>
+    </div>
+
+    <div mat-dialog-actions align="end">
+        <button mat-raised-button class="secondary" (click)="onCancelChanges()">
+            Cancel
+        </button>
+    </div>
+</cuws-base-dialog>

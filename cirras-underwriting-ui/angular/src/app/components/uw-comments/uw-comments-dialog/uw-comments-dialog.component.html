@@ -1,0 +1,100 @@
+<cuws-base-dialog [titleLabel]="titleLabel" [type]="dialogType" class="underwriting-comments">
+
+    <div mat-dialog-content>
+        <div class="row-group-left">
+            <div class="comments-container comments-info">
+
+                <!-- Verified Yield Summary Comments headers -->
+                <div class="five-columns vys-comments-header" *ngIf="data.underwritingCommentTypeCode === 'VY'">
+                    <div class="justify-left padding-bottom">
+                        Commodity
+                        <span class="header">{{ data.commodityName }}</span>
+                    </div>
+                    <div class="justify-left padding-bottom">
+                        <!-- empty div -->
+                    </div>
+                    <div class="justify-left padding-bottom">
+                        <!-- empty div -->
+                    </div>
+                    <div class="justify-left padding-bottom"></div>
+                    <div class="justify-right padding-bottom">
+                        <button *ngIf="securityUtilService.canEditInventory()" mat-raised-button color="secondary"
+                            class="header-button" (click)="onAddNewComment()">
+                            <mat-icon>add</mat-icon> Add Comment
+                        </button>
+                    </div>
+                </div>
+
+                <!-- DOP Comments headers -->
+                <div class="five-columns dop-comments-header" *ngIf="data.underwritingCommentTypeCode === 'DOP'">
+                    <div class="justify-left padding-bottom">
+                        Policy Number
+                        <span class="header">{{ data.policyNumber }}</span>
+                    </div>
+                    <div class="justify-left padding-bottom">
+                        Grower Name
+                        <span class="header">{{ data.growerName }}</span>
+                    </div>
+                    <div class="justify-left padding-bottom">
+                        Grower Number
+                        <span class="header">{{ data.growerNumber }}</span>
+                    </div>
+                    <div class="justify-left padding-bottom"></div>
+                    <div class="justify-right padding-bottom">
+                        <button *ngIf="securityUtilService.canEditInventory()" mat-raised-button color="secondary"
+                            class="header-button" (click)="onAddNewComment()">
+                            <mat-icon>add</mat-icon> Add Comment
+                        </button>
+                    </div>
+
+                    <div *ngIf="data.isForcedInd" class="justify-left" 
+                        style="background-color: yellow; grid-column-start: 1; grid-column-end: 6; margin-bottom: 10px; border-width: 1px; border-color:red;">
+                        {{ data.isForcedMessage }}
+                    </div>
+                </div>
+
+                <!-- Inventory Comments headers -->
+                <div class="five-columns inventory-comments-header" *ngIf="data.underwritingCommentTypeCode === 'INV'">
+                    <div class="justify-left padding-bottom">
+                        Field ID
+                        <span class="header">{{ data.fieldId }}</span>
+                    </div>
+                    <div class="justify-left padding-bottom">
+                        {{ fieldLabel }}
+                        <span class="header">{{ fieldNameOrAddress }}</span>
+                    </div>
+                    <div class="justify-left padding-bottom">
+                        {{ legalDescriptionLabel }} 
+                        <span class="header">{{ legalDescription }}</span>
+                    </div>
+                    <div class="justify-left padding-bottom"></div>
+                    <div class="justify-right padding-bottom">
+                        <button *ngIf="securityUtilService.canEditInventory()" mat-raised-button color="secondary"
+                            class="header-button" (click)="onAddNewComment()">
+                            <mat-icon>add</mat-icon> Add Comment
+                        </button>
+                    </div>
+                </div>
+
+                <div [ngClass]="showForcedCommentColumn() ? 'forced-comments-header' : 'no-forced-comments-header'">
+                    <uw-comment-list [uwComments]="data.uwComments" [uwCommentsFormArray]="uwCommentsFormArray" [showForcedCommentsColumn]="showForcedCommentColumn()"
+                        style="display: contents;"></uw-comment-list>
+                </div>
+
+                <div class="five-columns" *ngIf="!hasComments()">
+                    Select the 'Add Comment' button to add inventory comments.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div mat-dialog-actions align="end">
+        <p *ngIf="data.isForcedInd; else nonForcedComment" style="margin-right: auto;">Click Done to save the new comment and the data on the main screen.</p>
+        <ng-template #nonForcedComment>
+            <p style="margin-right: auto;">To save new comments, click done and then click save on the main screen.</p>
+        </ng-template>
+        <button mat-raised-button class="secondary" (click)="onCancel()">Cancel</button>
+        <button mat-raised-button class="primary" (click)="onDone()">Done</button>
+    </div>
+
+</cuws-base-dialog>

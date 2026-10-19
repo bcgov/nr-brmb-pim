@@ -1,0 +1,36 @@
+<base-wrapper [errorState]="errorState">
+    <div class="base-container bg-color-lightblue">
+        <div class="base-container flex-y"> 
+            <br />
+            <h2>Dashboard</h2>
+
+            <form [formGroup]="getViewModel().formGroup">
+                <div class="uw-year-row-group">
+                    <div class="cuw-container cuw-grower-info" >  
+
+                        <div>
+                            <span class="grower-header-label">Crop Year: </span> 
+                        </div>
+                        <div>
+                            <select appWFSingleSelect appWFPlaceholder="Select Crop Year" aria-label="Crop Year"
+                                [options]="uwYearOptions" [selected]="selectedCropYear">
+                                <option value=""><span class="placeholder">Select Crop Year</span></option>
+                                <option *ngFor="let option of uwYearOptions" value="{{option.cropYear}}">
+                                    <span>{{option.cropYear}}</span>
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="securityUtilService.canCreateUwYear()" class="button-row flex-y-fixed" style="width: 580px;">
+
+                    <button mat-raised-button class="primary button-large-text"  (click)="onCreateNewUwYear()">
+                        <mat-icon class="button-mat-icon">add_box</mat-icon>Create New Crop Year
+                    </button>
+                    &nbsp;
+
+                </div>
+            </form>
+        </div>
+    </div>
+</base-wrapper>

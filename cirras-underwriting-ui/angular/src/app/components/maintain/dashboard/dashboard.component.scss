@@ -1,0 +1,51 @@
+// @import '../../../../styles/variables';
+
+.uw-year-row-group{
+    padding: 30px 10px 0px 10px;
+      margin: 10px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+  
+      .cuw-container {
+        display: grid;
+        grid-auto-rows: minmax( 2em, auto );
+  
+        div {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+      }
+  
+        &.cuw-grower-info {
+          grid-template-columns: 80px 230px auto;
+      }
+  
+      }
+  }
+  
+  h2 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-left: 20px;
+    display: inline;
+  }
+
+  .button-row {
+    padding-top: 12px;
+    margin-left: 20px;
+    margin-right: 20px;
+  
+    ::ng-deep .mat-mdc-raised-button {
+      padding: 0 10px;
+    }
+  }
+
+  .button-mat-icon {
+    margin-right: 4px;
+  }
+
+  .button-large-text {
+    font-size: 20px !important;
+  }
+  
