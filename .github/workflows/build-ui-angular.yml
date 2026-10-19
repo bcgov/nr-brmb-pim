@@ -55,7 +55,7 @@ jobs:
       - name: Install dependencies for Angular project
         run: |
           cd ${{ inputs.MICROSERVICE_NAME }}/angular
-          npm clean-install
+          npm clean-install --force
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
