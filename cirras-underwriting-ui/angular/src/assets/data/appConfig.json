@@ -12,7 +12,7 @@
   },
   "webade": {
     "oauth2Url": "#{WEBADE_OAUTH2_AUTHORIZE_URL}#",
-    "clientId": "CIRRAS_CLAIMS_UI",
+    "clientId": "CIRRAS_UNDERWRITING_UI",
     "authScopes": "#{WEBADE_OAUTH2_SCOPES}#",
     "enableCheckToken": "#{WEBADE_OAUTH2_ENABLE_CHECKTOKEN}#",
     "checkTokenUrl": "#{UI_CHECKTOKEN_ENDPOINT}#",
