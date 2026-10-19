@@ -6,7 +6,7 @@ WORKDIR /app
 COPY ./express-server ./express-server
 
 # Copy angular (client)
-COPY ./angular/dist/pit-claim ./angular/dist/pit-claim
+COPY ./angular/dist/cirras-underwriting ./angular/dist/cirras-underwriting
 
 # Install server deps
 WORKDIR /app/express-server

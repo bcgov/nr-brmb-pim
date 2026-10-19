@@ -1,0 +1,116 @@
+name: build ui angular
+
+on:
+  workflow_call:
+    inputs:
+      ENVIRONMENT:
+        required: true
+        type: string
+      MICROSERVICE_NAME:
+        required: true
+        type: string
+      TAG:
+        required: true
+        type: string
+      UI_TARGET:
+        required: true
+        type: string
+      NPM_ARTIFACT_PATH: 
+        required: true
+        type: string
+
+env:
+  NPMRC: ${{ secrets.NPMRC }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.ENVIRONMENT }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Extract version number
+        id: getVersion
+        # run: echo "VERSION_NUMBER=$(grep -Po -m 1 '(?<=<version>)[0-9\.]+(-SNAPSHOT)?'  ${{ inputs.MICROSERVICE_NAME }}/pom.xml )" >> $GITHUB_OUTPUT
+        run: echo "VERSION_NUMBER=$(grep -Po '"version"\s*:\s*"\K[^"]+' "${{ inputs.MICROSERVICE_NAME }}/angular/package.json")" >> $GITHUB_OUTPUT
+
+      - name: Setup artifactory
+        uses: jfrog/setup-jfrog-cli@v4
+
+      - name: Set up nodejs
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      #NOTE: necessary to build client-angular 
+      - name: Add .npmrc file
+        run: echo -e $NPMRC > ~/.npmrc
+          
+      #NOTE: build the angular app 
+      - name: Install dependencies for Angular project
+        run: |
+          cd ${{ inputs.MICROSERVICE_NAME }}/angular
+          npm clean-install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build angular app
+        run: |
+          cd ${{ inputs.MICROSERVICE_NAME }}/angular
+          npm run build.prod
+          export VERSION_NUMBER=${{ steps.getVersion.outputs.VERSION_NUMBER }}
+          export INPUT_NAME="${{ inputs.MICROSERVICE_NAME }}"
+          export DIST_NAME="dist/${INPUT_NAME%-ui}"
+          tar -cvzf ${{ inputs.UI_TARGET}}-$VERSION_NUMBER.tgz $DIST_NAME
+
+      - name: Push Build to Artifactory
+        run: |
+          export VERSION_NUMBER=${{ steps.getVersion.outputs.VERSION_NUMBER }}
+          mv ${{ inputs.MICROSERVICE_NAME }}/angular/${{ inputs.UI_TARGET}}-$VERSION_NUMBER.tgz  ${{ inputs.UI_TARGET}}-$VERSION_NUMBER.tgz
+          export BUILD_NAME="${{ inputs.UI_TARGET}}-$VERSION_NUMBER"
+          export BUILD_MODULE="${{ inputs.UI_TARGET}}"
+          
+          jf rt upload  --url ${{ vars.ARTIFACTORY_URL }} --user ${{ secrets.OPENSHIFT_ACCOUNT }} --password ${{ secrets.OPENSHIFT_PASSWORD }} --build-name $BUILD_NAME --module $BUILD_MODULE --target-props npm.version=$VERSION_NUMBER "${{ inputs.UI_TARGET}}-$VERSION_NUMBER.tgz" ${{ vars.NPM_REPO }}/${{ inputs.NPM_ARTIFACT_PATH}}/${{inputs.UI_TARGET}}-$VERSION_NUMBER.${{ github.run_number }}.tgz
+
+      #NOTE: docker related step 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ vars.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta_pr
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ vars.REGISTRY}}/${{ github.repository_owner }}/${{ inputs.MICROSERVICE_NAME }}
+          tags: |
+            type=schedule
+            type=raw,value=${{ github.base_ref }}
+            type=raw,value=latest
+            type=ref,event=tag
+            type=raw,value=${{ steps.getVersion.outputs.VERSION_NUMBER }}
+            type=raw,value=${{ inputs.TAG }}
+            ${{ toJson(github.event.pull_request.number) == '{}' && format( 'type=raw,value=pr-{0}', github.event.pull_request.number) || '' }} 
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: ./${{ inputs.MICROSERVICE_NAME }}
+          push: true
+          tags: ${{ steps.meta_pr.outputs.tags }}
+          labels: ${{ steps.meta_pr.outputs.labels }}
+
+      # NOTE: We store built images in ghcr.io, but use artifactory as a pull-through repository - artifacts.developer.gov.bc.ca/github-docker-remote/bcgov

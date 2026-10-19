@@ -1,0 +1,21 @@
+{
+  "application": {
+    "acronym": "CIRRAS-UNDERWRITING", 
+    "version": "4.2.0-SNAPSHOT",
+    "baseUrl": "#{BASE_URL}#",
+    "environment": "#{APPLICATION_ENVIRONMENT_NAME}#"
+  },
+  "rest": {
+    "cirras_underwriting":  "#{CIRRAS_UNDERWRITING_REST_URI}#", 
+    "grain_verified_yield_calculator_url": "#{GRAIN_VERIFIED_YIELD_CALCULATOR_URI}#", 
+    "forage_verified_yield_calculator_url": "#{FORAGE_VERIFIED_YIELD_CALCULATOR_URI}#"
+  },
+  "webade": {
+    "oauth2Url": "#{WEBADE_OAUTH2_AUTHORIZE_URL}#",
+    "clientId": "CIRRAS_CLAIMS_UI",
+    "authScopes": "#{WEBADE_OAUTH2_SCOPES}#",
+    "enableCheckToken": "#{WEBADE_OAUTH2_ENABLE_CHECKTOKEN}#",
+    "checkTokenUrl": "#{UI_CHECKTOKEN_ENDPOINT}#",
+    "siteminderUrlPrefix": "#{WEBADE_OAUTH2_SITEMINDER_URL}#"   
+  }
+}

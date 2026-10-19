@@ -10,7 +10,7 @@ const app = express();
 const port = process.env.TOMCAT_PORT || 8080;
 const hostname = "0.0.0.0";
 
-const angularPath = path.join(__dirname, '../angular/dist/pit-claim');
+const angularPath = path.join(__dirname, '../angular/dist/cirras-underwriting');
 
 function startServer() {
 	try {
@@ -24,14 +24,14 @@ function startServer() {
 		let processedConfig = configTemplate
 			.replace(/#\{BASE_URL\}#/g, process.env.BASE_URL)
 			.replace(/#\{APPLICATION_ENVIRONMENT_NAME\}#/g, process.env.APPLICATION_ENVIRONMENT_NAME )
-			.replace(/#\{CIRRAS_CLAIMS_REST_URI\}#/g, process.env.CIRRAS_CLAIMS_REST_URI)
-			.replace(/#\{PIT_UNDERWRITING_UI_URL\}#/g, process.env.PIT_UNDERWRITING_UI_URL)
+			.replace(/#\{CIRRAS_UNDERWRITING_REST_URI\}#/g, process.env.CIRRAS_UNDERWRITING_REST_URI)
+			.replace(/#\{GRAIN_VERIFIED_YIELD_CALCULATOR_URI\}#/g, process.env.GRAIN_VERIFIED_YIELD_CALCULATOR_URI)
+			.replace(/#\{FORAGE_VERIFIED_YIELD_CALCULATOR_URI\}#/g, process.env.FORAGE_VERIFIED_YIELD_CALCULATOR_URI)
 			.replace(/#\{WEBADE_OAUTH2_AUTHORIZE_URL\}#/g, process.env.WEBADE_OAUTH2_AUTHORIZE_URL)
 			.replace(/#\{WEBADE_OAUTH2_SCOPES\}#/g, process.env.WEBADE_OAUTH2_SCOPES)
 			.replace(/#\{WEBADE_OAUTH2_ENABLE_CHECKTOKEN\}#/g, process.env.WEBADE_OAUTH2_ENABLE_CHECKTOKEN )
 			.replace(/#\{UI_CHECKTOKEN_ENDPOINT\}#/g, process.env.UI_CHECKTOKEN_ENDPOINT )
 			.replace(/#\{WEBADE_OAUTH2_SITEMINDER_URL\}#/g, process.env.WEBADE_OAUTH2_SITEMINDER_URL );
-
 
 		// Middleware
 		app.use(cors());
@@ -39,15 +39,15 @@ function startServer() {
 
 		// Serve the modified config dynamically when requested
 		console.log(`Serve the modified config dynamically`);
-		app.get('/pub/pit-claim/assets/data/appConfig.json', (req, res) => {
+		app.get('/pub/cirras-underwriting/assets/data/appConfig.json', (req, res) => {
 			res.setHeader('Content-Type', 'application/json');
 			res.send(processedConfig);
 		});
 
-		app.use('/pub/pit-claim', express.static(angularPath));
+		app.use('/pub/cirras-underwriting', express.static(angularPath));
 
 		// Send all requests to Angular app
-		app.get('/pub/pit-claim/*', (req, res) => {
+		app.get('/pub/cirras-underwriting/*', (req, res) => {
 			res.sendFile(path.join(angularPath, 'index.html'));
 		});
 
