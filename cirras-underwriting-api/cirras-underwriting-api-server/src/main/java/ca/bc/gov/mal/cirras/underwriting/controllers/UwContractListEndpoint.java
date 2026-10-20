@@ -1,7 +1,10 @@
 package ca.bc.gov.mal.cirras.underwriting.controllers;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -87,6 +90,11 @@ public class UwContractListEndpoint extends BaseEndpointsImpl {
 		Response response = null;
 		
 		logRequest();
+
+		// DEBUG
+		System.out.println("TZ TEST RESULT: " + ZoneId.of("America/Vancouver").getRules().getOffset(Instant.parse("2026-12-01T12:00:00Z")));
+		System.out.println("TZ Default: " + TimeZone.getDefault().getID());
+		// END DEBUG
 		
 		if(!hasAuthority(Scopes.SEARCH_UWCONTRACTS)) {
 			return Response.status(Status.FORBIDDEN).build();
