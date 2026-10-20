@@ -18,7 +18,8 @@
     "updateMode": "prefetch",
     "resources": {
       "files": [
-        "/assets/**"
+        "/assets/**",
+        "!/assets/data/appConfig.json"
       ]
     }
   }],

@@ -6,7 +6,7 @@
                 <div class="grower-header">
                     <div>Yield Conversions</div>
                     <div class="top-filter" style="margin: 12px 0 0 0;">
-                        <select appWFSingleSelect appWFPlaceholder="Select Plan" aria-label="Plan"
+                        <select appPitSingleSelect appPitPlaceholder="Select Plan" aria-label="Plan"
                             [options]="insurancePlansDefault" (updated)="onPlanChange($event)"
                             [selected]="selectedInsurancePlanId">
                             <option value=""><span class="placeholder">Select Plan</span></option>
@@ -14,7 +14,7 @@
                                 <span>{{option.description}}</span>
                             </option>
                         </select>
-                        <select appWFSingleSelect appWFPlaceholder="Select Conversion" aria-label="Conversion"
+                        <select appPitSingleSelect appPitPlaceholder="Select Conversion" aria-label="Conversion"
                             [options]="yieldMeasUnitOptions" (updated)="onUnitChange($event)"
                             [selected]="selectedUnits">
                             <option value=""><span class="placeholder">Select Conversion</span></option>

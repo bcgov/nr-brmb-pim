@@ -1,20 +1,20 @@
-<wf-application class="cirras-application"
+<pit-application class="cirras-application"
                 [config]="applicationConfig"
                 [(state)]="applicationState"
 >
-    <wf-header
+    <pit-header
         [config]="applicationConfig"
         [(state)]="applicationState"
         [useSupportLink]="true"
         (supportLinkClick)="onSupportLinkClick()"
-    ></wf-header>
+    ></pit-header>
 
-    <wf-menu
+    <pit-menu
             [menuItems]="appMenu"
             [config]="applicationConfig"
             [(state)]="applicationState"
     >
-    </wf-menu>
+    </pit-menu>
 
     <div>
         <ng-template #defaultMainContent>
@@ -28,5 +28,5 @@
         </div>
     </div>
 
-</wf-application>
+</pit-application>
 

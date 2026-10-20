@@ -2,9 +2,9 @@ import {Injectable} from "@angular/core";
 import {SwUpdate} from "@angular/service-worker";
 import {interval} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {WFSnackbarComponent} from "../components/common/snackbars/wf-snackbar.component";
+import {PitSnackbarComponent} from "../components/common/snackbars/pit-snackbar.component";
 import {getSnackbarConfig} from "../utils/user-feedback-utils";
-import {WF_SNACKBAR_TYPES} from "../utils";
+import {PIT_SNACKBAR_TYPES} from "../utils";
 
 @Injectable({providedIn: "root"})
 export class UpdateService {
@@ -30,7 +30,7 @@ export class UpdateService {
                     console.log("current version is: ", event.currentVersion);
                     console.log("available version is: ", event.latestVersion);
 
-                    let snackbarRef = this.snackbarService.openFromComponent(WFSnackbarComponent, getSnackbarConfig("A new version is available", WF_SNACKBAR_TYPES.UPDATE));
+                    let snackbarRef = this.snackbarService.openFromComponent(PitSnackbarComponent, getSnackbarConfig("A new version is available", PIT_SNACKBAR_TYPES.UPDATE));
                     snackbarRef.onAction().subscribe(
                         () => {
                             this.swUpdate.activateUpdate().then(() => document.location.reload());

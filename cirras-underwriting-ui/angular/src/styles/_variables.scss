@@ -64,36 +64,36 @@ $colour-highlight4: #e0f8fc;
  */
 
 // Standard measurements
-$wf1-app-header-height: 96px;
-$wf1-toolbar-height: 48px;
-$wf1-sidebar-title-height: 44px;
-$wf1-filter-toolbar-content-height: 200px;
-$wf1-filter-toolbar-total-height: $wf1-toolbar-height + $wf1-filter-toolbar-content-height;
+$pit-app-header-height: 96px;
+$pit-toolbar-height: 48px;
+$pit-sidebar-title-height: 44px;
+$pit-filter-toolbar-content-height: 200px;
+$pit-filter-toolbar-total-height: $pit-toolbar-height + $pit-filter-toolbar-content-height;
 
 
 // Side panel related measurements for sidebar interfaces
-$wf1-total-app-header-height: $wf1-app-header-height + $wf1-toolbar-height;
-$wf1-header-plus-toolbar-total-height: $wf1-sidebar-title-height + $wf1-toolbar-height;
-$wf1-header-plus-toolbar-and-filter-total-height: $wf1-header-plus-toolbar-total-height + $wf1-toolbar-height;
-$wf1-header-plus-toolbar-and-filter-content-total-height: $wf1-header-plus-toolbar-total-height + $wf1-toolbar-height + $wf1-filter-toolbar-content-height;
-$wf1-app-map-panel-height: calc(var(--vh, 1vh) * 100 - #{$wf1-total-app-header-height});
-$wf1-app-side-panel-height: calc(var(--vh, 1vh) * 100 - #{$wf1-total-app-header-height + $wf1-sidebar-title-height});
-$wf1-app-side-panel-with-toolbar-height: calc(var(--vh, 1vh) * 100 - #{$wf1-total-app-header-height + $wf1-header-plus-toolbar-total-height});
+$pit-total-app-header-height: $pit-app-header-height + $pit-toolbar-height;
+$pit-header-plus-toolbar-total-height: $pit-sidebar-title-height + $pit-toolbar-height;
+$pit-header-plus-toolbar-and-filter-total-height: $pit-header-plus-toolbar-total-height + $pit-toolbar-height;
+$pit-header-plus-toolbar-and-filter-content-total-height: $pit-header-plus-toolbar-total-height + $pit-toolbar-height + $pit-filter-toolbar-content-height;
+$pit-app-map-panel-height: calc(var(--vh, 1vh) * 100 - #{$pit-total-app-header-height});
+$pit-app-side-panel-height: calc(var(--vh, 1vh) * 100 - #{$pit-total-app-header-height + $pit-sidebar-title-height});
+$pit-app-side-panel-with-toolbar-height: calc(var(--vh, 1vh) * 100 - #{$pit-total-app-header-height + $pit-header-plus-toolbar-total-height});
 // TODO: Fix filter styling issue that requires .16px to be added to below variables to hide vertical scrollbar.
-$wf1-app-side-panel-with-toolbar-and-filter-height: calc(var(--vh, 1vh) * 100 - #{$wf1-total-app-header-height + $wf1-header-plus-toolbar-and-filter-total-height + .16px});
-$wf1-app-side-panel-with-toolbar-and-filter-content-height: calc(var(--vh, 1vh) * 100 - #{$wf1-total-app-header-height + $wf1-header-plus-toolbar-and-filter-content-total-height + .16px});
+$pit-app-side-panel-with-toolbar-and-filter-height: calc(var(--vh, 1vh) * 100 - #{$pit-total-app-header-height + $pit-header-plus-toolbar-and-filter-total-height + .16px});
+$pit-app-side-panel-with-toolbar-and-filter-content-height: calc(var(--vh, 1vh) * 100 - #{$pit-total-app-header-height + $pit-header-plus-toolbar-and-filter-content-total-height + .16px});
 
 // Main panel related measurements for full screen interfaces. (No top-level toolbar)
-$wf1-app-main-panel-container-height: calc(var(--vh, 1vh) * 100 - #{$wf1-app-header-height});
-$wf1-app-main-panel-tab-panel-height: calc(var(--vh, 1vh) * 100 - #{$wf1-app-header-height + $wf1-toolbar-height});
+$pit-app-main-panel-container-height: calc(var(--vh, 1vh) * 100 - #{$pit-app-header-height});
+$pit-app-main-panel-tab-panel-height: calc(var(--vh, 1vh) * 100 - #{$pit-app-header-height + $pit-toolbar-height});
 // TODO: Fix filter styling issue that requires .16px to be added to below variables to hide vertical scrollbar.
-$wf1-app-main-panel-table-height: calc(var(--vh, 1vh) * 100 - #{$wf1-total-app-header-height + $wf1-toolbar-height + .16px});
-$wf1-app-main-panel-table-with-filter-content-height: calc(var(--vh, 1vh) * 100 - #{$wf1-total-app-header-height + $wf1-toolbar-height + $wf1-filter-toolbar-content-height + .16px});
+$pit-app-main-panel-table-height: calc(var(--vh, 1vh) * 100 - #{$pit-total-app-header-height + $pit-toolbar-height + .16px});
+$pit-app-main-panel-table-with-filter-content-height: calc(var(--vh, 1vh) * 100 - #{$pit-total-app-header-height + $pit-toolbar-height + $pit-filter-toolbar-content-height + .16px});
 
 // Other measurements
-$wf1-app-header-mobile-height: 64px;
-$wf1-app-map-mobile-height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom) - (112px));
-$wf1-loading-screen-height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom) - (96px));
+$pit-app-header-mobile-height: 64px;
+$pit-app-map-mobile-height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom) - (112px));
+$pit-loading-screen-height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom) - (96px));
 
 $grid-breakpoints: (
         xs: 350px,
@@ -104,13 +104,13 @@ $grid-breakpoints: (
 );
 
 $max-component-width: 65rem;
-$wf1-app-mobile-outer-padding: 10px;
+$pit-app-mobile-outer-padding: 10px;
 
-$wf1-public-app-header-height: 72px;
-$wf1-public-app-header-img-height: 70px;
+$pit-public-app-header-height: 72px;
+$pit-public-app-header-img-height: 70px;
 
-$wf1-border-radius: 5px;
-$wf1-paginator-height: 40px;
+$pit-border-radius: 5px;
+$pit-paginator-height: 40px;
 
 $font-family-main: 'Noto Sans', 'Verdana', 'sans-serif';
 $font-weight: 200;

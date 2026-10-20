@@ -35,7 +35,12 @@
               "src/assets",
               "src/dev-config",
               "src/manifest.json",
-              "src/refresh-token.html"
+              "src/refresh-token.html",
+              {
+                "glob": "bc-sans/**/*",
+                "input": "node_modules/@bcgov/pit-common-application-lib",
+                "output": "assets"
+              }
             ],
             "styles": [
               "src/styles/main.scss",
@@ -67,7 +72,12 @@
                 "src/assets",
                 "src/dev-config",
                 "src/manifest.json",
-                "src/refresh-token.html"
+                "src/refresh-token.html",
+                {
+                  "glob": "bc-sans/**/*",
+                  "input": "node_modules/@bcgov/pit-common-application-lib",
+                  "output": "assets"
+                }
               ],
               "optimization": {
                 "fonts": false

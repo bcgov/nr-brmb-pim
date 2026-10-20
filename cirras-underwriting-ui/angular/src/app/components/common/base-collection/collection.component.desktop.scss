@@ -66,7 +66,7 @@
   }
 
   input {
-    border-radius: var.$wf1-border-radius;
+    border-radius: var.$pit-border-radius;
     border: 1px solid var.$colour-light-grey;
   }
 
@@ -101,7 +101,7 @@
 
     ::ng-deep .ms-search{
       width: calc(100% - 7px);
-      border-radius: var.$wf1-border-radius;
+      border-radius: var.$pit-border-radius;
       font-family: var.$font-family-main;
       font-size: var.$font-size;
       >input{
@@ -124,7 +124,7 @@
       width: 80px;
       border: 1px solid var.$colour-light-grey;
       padding: 0 5px;
-      border-radius: var.$wf1-border-radius;
+      border-radius: var.$pit-border-radius;
       font-family: var.$font-family-main;
       font-size: var.$font-size;
       color: inherit;
@@ -149,7 +149,7 @@
       width: 60px;
       border: 1px solid var.$colour-light-grey;
       padding: 0 5px;
-      border-radius: var.$wf1-border-radius;
+      border-radius: var.$pit-border-radius;
       height: 35px;
       line-height: 35px;
       font-family: var.$font-family-main;
@@ -281,7 +281,7 @@
   }
   ::ng-deep .ms-search{
     width: 200px ;// calc(100% - 7px);
-    border-radius: var.$wf1-border-radius;
+    border-radius: var.$pit-border-radius;
     font-family: var.$font-family-main;
     font-size: var.$font-size;
     >input{
@@ -304,7 +304,7 @@
 
     border: 1px solid var.$colour-light-grey;
     padding: 0 5px;
-    border-radius: var.$wf1-border-radius;
+    border-radius: var.$pit-border-radius;
     font-family: var.$font-family-main;
     font-size: var.$font-size;
     color: inherit;
@@ -330,7 +330,7 @@
   select {
     border: 1px solid var.$colour-light-grey;
     padding: 0 5px;
-    border-radius: var.$wf1-border-radius;
+    border-radius: var.$pit-border-radius;
     height: 36px;
     line-height: 36px;
     font-family: var.$font-family-main;
@@ -352,7 +352,7 @@
   ::ng-deep mat-checkbox .mat-mdc-checkbox-frame {
     background-color: var.$colour-white;
     border: 1px solid var.$colour-light-grey;
-    border-radius: var.$wf1-border-radius;
+    border-radius: var.$pit-border-radius;
   }
 }
 
