@@ -60,17 +60,9 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatButtonModule} from "@angular/material/button";
 import {OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlMomentDateTimeModule} from "@busacca/ng-pick-datetime";
-import {BaseExpansionPanelComponent} from "./components/common/base-expansion-panel/base-expansion-panel.component";
 import {PitSnackbarComponent} from "./components/common/snackbars/pit-snackbar.component";
-import {TimeMaskDirective} from "./directives/time-mask.directive";
-import {DateTimeMaskDirective} from "./directives/date-time-mask.directive";
-import {DateMaskDirective} from "./directives/date-mask.directive";
 import {ErrorDialogComponent} from "./components/dialogs/error-dialog/error-dialog.component";
-import {DateRangeMaskDirective} from "./directives/date-range-mask.directive";
-import {ReadonlyFieldDirective} from "./directives/readonly-field.directive";
-import {ReadonlyFormDirective} from "./directives/readonly-form.directive";
 import {A11yModule} from "@angular/cdk/a11y";
-import {MultiSelectDirective} from "./directives/multi-select.directive";
 import {SingleSelectDirective} from "./directives/singleselect.directive";
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -83,7 +75,6 @@ import { UwCommentListComponent } from "./components/uw-comments/uw-comment-list
 import { UwCommentComponent } from "./components/uw-comments/uw-comment/uw-comment.component";
 import { ReportsDownloadButtonComponent } from "./components/reports/reports-download-button/reports-download-button.component";
 import { ReportsDownloadDialogComponent } from "./components/reports/reports-download-dialog/reports-download-dialog.component";
-import { PrintoutLogoComponent } from './components/printout-logo/printout-logo.component';
 import { EditLegalLandInInventoryComponent } from './components/inventory/edit-legal-land/edit-legal-land.component';
 import { GrainUnseededInventoryComponent } from './components/inventory/grain/grain-unseeded/grain-unseeded-inventory.component';
 import { GrainSeededInventoryComponent } from "./components/inventory/grain/grain-seeded/grain-seeded-inventory.component";
@@ -187,19 +178,9 @@ if (!environment.production || !environment.restrict_imports) {
 }
 
 @NgModule({ declarations: [
-        DateMaskDirective,
-        TimeMaskDirective,
-        DateTimeMaskDirective,
-        DateRangeMaskDirective,
-        ReadonlyFieldDirective,
-        ReadonlyFormDirective,
-        MultiSelectDirective,
-        SingleSelectDirective,
-        MultiSelectDirective,
         SingleSelectDirective,
         MatInputCommifiedDirective,
         PitSnackbarComponent,
-        BaseExpansionPanelComponent,
         BaseDialogComponent,
         AutoFocusDirective,
         UwContractsListContainer,
@@ -218,7 +199,6 @@ if (!environment.production || !environment.restrict_imports) {
         UwCommentComponent,
         ReportsDownloadButtonComponent,
         ReportsDownloadDialogComponent,
-        PrintoutLogoComponent,
         EditLegalLandInInventoryComponent,
         RenameLegalLandComponent,
         ReplaceLegalLandComponent,
