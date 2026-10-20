@@ -1,7 +1,7 @@
 import {Component, Inject} from "@angular/core";
 // External
 import {MAT_SNACK_BAR_DATA, MatSnackBarRef} from "@angular/material/snack-bar";
-import {WF_SNACKBAR_TYPES, WFSnackbarData} from "../../../utils";
+import {PIT_SNACKBAR_TYPES, PitSnackbarData} from "../../../utils";
 
 @Component({
     selector: 'cirras-underwriting-snackbar',
@@ -22,11 +22,11 @@ import {WF_SNACKBAR_TYPES, WFSnackbarData} from "../../../utils";
   `,
     standalone: false
 })
-export class WFSnackbarComponent {
-  SNACKBAR_TYPES = WF_SNACKBAR_TYPES;
+export class PitSnackbarComponent {
+  SNACKBAR_TYPES = PIT_SNACKBAR_TYPES;
 
   constructor(
-      public snackBarRef: MatSnackBarRef<WFSnackbarComponent>,
-      @Inject(MAT_SNACK_BAR_DATA) public data: WFSnackbarData
+      public snackBarRef: MatSnackBarRef<PitSnackbarComponent>,
+      @Inject(MAT_SNACK_BAR_DATA) public data: PitSnackbarData
   ) {}
 }

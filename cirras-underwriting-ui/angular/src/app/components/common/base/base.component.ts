@@ -203,7 +203,7 @@ export class BaseComponent implements OnInit, OnChanges, AfterViewInit {
                     });
                     // if (this.SAVE_FAIL_TEXT && !this.showingErrorDialog) {
                     //     setTimeout(() => {
-                    //         this.snackbarService.openFromComponent(WFSnackbarComponent, getSnackbarConfig(this.SAVE_FAIL_TEXT, WF_SNACKBAR_TYPES.ERROR));
+                    //         this.snackbarService.openFromComponent(PitSnackbarComponent, getSnackbarConfig(this.SAVE_FAIL_TEXT, PIT_SNACKBAR_TYPES.ERROR));
                     //     });
                     // }
 

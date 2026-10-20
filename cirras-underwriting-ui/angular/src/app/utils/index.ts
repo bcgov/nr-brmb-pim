@@ -124,7 +124,7 @@ export function getWeekRange(date: Moment, numWeeks: number): Moment[] {
     return weekRange;
 }
 
-export interface WFSnackbarData {
+export interface PitSnackbarData {
     message: string;
     type: string;
 }
@@ -137,7 +137,7 @@ export interface WFSnackbarData {
 //     return momenttz(dateTimeLocalMoment).local().tz("America/Vancouver").format(DATE_FORMATS.API_TIMESTAMP_WITH_SEP);
 // }
 
-export const WF_SNACKBAR_TYPES = {SUCCESS: "success", ERROR: "error", WARNING: "warning", UPDATE: "update"};
+export const PIT_SNACKBAR_TYPES = {SUCCESS: "success", ERROR: "error", WARNING: "warning", UPDATE: "update"};
 
 export  const hasValues = (obj) => Object.values(obj).some(v => v !== null && typeof v !== "undefined");
 

@@ -81,7 +81,7 @@ export class BaseDialogComponent implements AfterViewInit, OnChanges, OnDestroy 
     initModels() {}
 
     handleAccessibiltyOnLoad() {
-        let mainEl = document.getElementById("wfrmMain");
+        let mainEl = document.getElementById("cirrasUnderwritingMain");
         if (mainEl) {
             mainEl.removeAttribute("role");
             mainEl.setAttribute("inert", "");
@@ -101,7 +101,7 @@ export class BaseDialogComponent implements AfterViewInit, OnChanges, OnDestroy 
     }
 
     handleAccessibiltyOnDestroy() {
-        let mainEl = document.getElementById("wfrmMain");
+        let mainEl = document.getElementById("cirrasUnderwritingMain");
         if (mainEl) {
             mainEl.setAttribute("role", "main");
             mainEl.removeAttribute("inert");

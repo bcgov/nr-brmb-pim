@@ -26,7 +26,7 @@
         button{
             padding: calc(#{var(--cirras-underwriting-gutter-space)}/2);
             border: 1px var.$colour-white solid;
-            border-radius: var.$wf1-border-radius;
+            border-radius: var.$pit-border-radius;
             color: var.$colour-white;
             margin-right: var(--cirras-underwriting-gutter-space);
             cursor: pointer;

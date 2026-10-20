@@ -7,9 +7,9 @@ import {catchError, mergeMap} from "rxjs/operators";
 import {Router} from "@angular/router";
 import {RouterExtService} from "../services/router-ext.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {WFSnackbarComponent} from "../components/common/snackbars/wf-snackbar.component";
+import {PitSnackbarComponent} from "../components/common/snackbars/pit-snackbar.component";
 import {displayErrorMessage, ErrorHandlingInstructions, getSnackbarConfig} from "../utils/user-feedback-utils";
-import {WF_SNACKBAR_TYPES} from "../utils";
+import {PIT_SNACKBAR_TYPES} from "../utils";
 import { ResourcesRoutes } from "../utils/constants";
 
 @Injectable()
@@ -176,7 +176,7 @@ export class ResourcesInterceptor extends AuthenticationInterceptor implements H
 
     displayRefreshErrorMessage(message: string) {
         if (!this.refreshSnackbar) {
-            this.refreshSnackbar = this.snackbarService.openFromComponent(WFSnackbarComponent, getSnackbarConfig(message, WF_SNACKBAR_TYPES.ERROR));
+            this.refreshSnackbar = this.snackbarService.openFromComponent(PitSnackbarComponent, getSnackbarConfig(message, PIT_SNACKBAR_TYPES.ERROR));
 
             this.refreshSnackbar.onAction().subscribe(() => {
                 this.refreshSnackbar = undefined;

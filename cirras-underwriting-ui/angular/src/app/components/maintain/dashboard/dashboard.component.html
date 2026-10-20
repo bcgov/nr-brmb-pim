@@ -12,7 +12,7 @@
                             <span class="grower-header-label">Crop Year: </span> 
                         </div>
                         <div>
-                            <select appWFSingleSelect appWFPlaceholder="Select Crop Year" aria-label="Crop Year"
+                            <select appPitSingleSelect appPitPlaceholder="Select Crop Year" aria-label="Crop Year"
                                 [options]="uwYearOptions" [selected]="selectedCropYear">
                                 <option value=""><span class="placeholder">Select Crop Year</span></option>
                                 <option *ngFor="let option of uwYearOptions" value="{{option.cropYear}}">

@@ -35,7 +35,7 @@
             <form [formGroup]="getViewModel().formGroup">
 
                 <div class="top-filter" style="margin-bottom: 16px;">
-                    <select appWFSingleSelect appWFPlaceholder="Crop Year" aria-label="Crop Year"
+                    <select appPitSingleSelect appPitPlaceholder="Crop Year" aria-label="Crop Year"
                         [options]="uwYearOptions" (updated)="uwYearsChange($event)" [selected]="selectedCropYear">
                         <option value=""><span class="placeholder">Crop Year</span></option>
                         <option *ngFor="let option of uwYearOptions" value="{{option.cropYear}}">
