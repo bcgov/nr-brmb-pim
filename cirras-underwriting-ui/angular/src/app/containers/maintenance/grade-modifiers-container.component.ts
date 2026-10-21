@@ -2,7 +2,7 @@ import { BaseContainer } from "../base/base-container.component";
 import {select} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {Component} from "@angular/core";
-import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
+import { Location, LocationStrategy, PathLocationStrategy, AsyncPipe } from "@angular/common";
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
 import {
@@ -16,6 +16,7 @@ import { GradeModifierList, GradeModifierTypeList, UnderwritingYearList } from "
 import { selectGradeModifierList, selectGradeModifierTypeList, selectUnderwritingYears } from "src/app/store/maintenance/maintenance.selectors";
 import { CropCommodityList } from "src/app/conversion/models";
 import { selectCropCommodityList } from "src/app/store/crop-commodity/crop-commodity.selectors";
+import { GradeModifiersComponent } from "../../components/maintain/grade-modifiers/grade-modifiers.component";
 
 @Component({
     selector: "grade-modifiers-container",
@@ -30,7 +31,7 @@ import { selectCropCommodityList } from "src/app/store/crop-commodity/crop-commo
             [isUnsaved]="isUnsaved$ | async"
         ></grade-modifiers>`,
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
-    standalone: false
+    imports: [GradeModifiersComponent, AsyncPipe]
 })
 export class GradeModifiersContainer extends BaseContainer {
 

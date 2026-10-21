@@ -6,12 +6,14 @@ import { Store } from "@ngrx/store";
 import { RootState } from "src/app/store";
 import { GetInventoryReport } from "src/app/store/inventory/inventory.actions";
 import { GetDopReport } from "src/app/store/dop/dop.actions";
+import { MatButton } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
     selector: 'reports-download-button',
     templateUrl: './reports-download-button.component.html',
     styleUrls: ['./reports-download-button.component.scss'],
-    standalone: false
+    imports: [MatButton, MatIcon]
 })
 export class ReportsDownloadButtonComponent {
     @Input() reportChoice: string;

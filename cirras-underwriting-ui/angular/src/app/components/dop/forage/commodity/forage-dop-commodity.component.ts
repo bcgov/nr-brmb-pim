@@ -1,6 +1,6 @@
-import { DecimalPipe } from "@angular/common";
+import { DecimalPipe, TitleCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { DopYieldContractCommodityForage } from "src/app/conversion/models-yield";
 import { RootState } from "src/app/store";
@@ -8,13 +8,18 @@ import { setFormStateUnsaved } from "src/app/store/application/application.actio
 import { DOP_COMPONENT_ID } from "src/app/store/dop/dop.state";
 import { makeNumberOnly } from "src/app/utils";
 import { PLANT_DURATION } from "src/app/utils/constants";
+import { MatFormField } from "@angular/material/form-field";
+import { MatInput } from "@angular/material/input";
+import { MatInputCommifiedDirective } from "../../../../directives/input-comified.directive";
+import { MatIcon } from "@angular/material/icon";
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
     selector: 'forage-dop-commodity',
     templateUrl: './forage-dop-commodity.component.html',
     styleUrls: ['./forage-dop-commodity.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, MatTooltip, DecimalPipe, TitleCasePipe]
 })
 export class ForageDopCommodityComponent implements OnInit {
     @Input() commodity: DopYieldContractCommodityForage;

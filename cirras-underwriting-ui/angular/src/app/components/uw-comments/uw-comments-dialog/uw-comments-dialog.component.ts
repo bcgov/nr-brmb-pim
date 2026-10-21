@@ -1,17 +1,22 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from "@angular/material/dialog";
 import { DialogData } from "../uw-comments-button/uw-comments-button.component";
-import { DIALOG_TYPE } from "../../dialogs/base-dialog/base-dialog.component";
+import { DIALOG_TYPE, BaseDialogComponent } from "../../dialogs/base-dialog/base-dialog.component";
 import { SecurityUtilService } from "src/app/services/security-util.service";
 import { UntypedFormArray } from "@angular/forms";
 import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 import { INSURANCE_PLAN, UW_COMMENT_TYPE_CODE } from "src/app/utils/constants";
+import { CdkScrollable } from "@angular/cdk/scrolling";
+import { NgIf, NgClass } from "@angular/common";
+import { MatButton } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
+import { UwCommentListComponent } from "../uw-comment-list/uw-comment-list.component";
 
 @Component({
     selector: 'uw-comments-dialog',
     templateUrl: './uw-comments-dialog.component.html',
     styleUrls: ['./uw-comments-dialog.component.scss'],
-    standalone: false
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, NgIf, MatButton, MatIcon, NgClass, UwCommentListComponent, MatDialogActions]
 })
 export class UwCommentsDialogComponent implements OnInit {
     dialogType = DIALOG_TYPE.INFO;

@@ -8,12 +8,15 @@ import { HttpClient } from '@angular/common/http';
 import { setHttpHeaders, userCanAccessDop, userCanAccessInventory, userCanAccessVerifiedYield } from 'src/app/utils';
 import { UwContract, UwContractsList } from 'src/app/conversion/models';
 import { INSURANCE_PLAN, ResourcesRoutes } from 'src/app/utils/constants';
+import { NgIf, NgStyle } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'cirras-landingpage',
     templateUrl: './landingpage.component.html',
     styleUrls: ['./landingpage.component.scss'],
-    standalone: false
+    imports: [NgIf, MatTooltip, MatIcon, NgStyle]
 })
 export class LandingPageComponent implements OnInit {
 

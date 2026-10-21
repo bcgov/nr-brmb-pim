@@ -1,12 +1,17 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
+import { NgIf, NgStyle, NgFor } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { FieldListWithMessageComponent } from '../field-list-with-message/field-list-with-message.component';
+import { LegalLandListWithMessageComponent } from '../legal-land-list-with-message/legal-land-list-with-message.component';
 
 @Component({
-  selector: 'replace-legal-land',
-  templateUrl: './replace-legal-land.component.html',
-  styleUrl: './replace-legal-land.component.scss',
-  standalone: false
+    selector: 'replace-legal-land',
+    templateUrl: './replace-legal-land.component.html',
+    styleUrl: './replace-legal-land.component.scss',
+    imports: [NgIf, MatIcon, NgStyle, FormsModule, ReactiveFormsModule, MatRadioGroup, NgFor, MatRadioButton, FieldListWithMessageComponent, LegalLandListWithMessageComponent]
 })
 export class ReplaceLegalLandComponent implements OnInit {
   @Input() replaceLegalLandList

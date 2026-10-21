@@ -6,13 +6,21 @@ import { AddNewUserSettings, LoadUserSettings, UpdateUserSettings } from 'src/ap
 import { UserSetting } from 'src/app/conversion/models-maintenance';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { USER_SETTINGS_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
+import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
+import { NgIf, NgStyle, NgFor } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormField } from '@angular/material/form-field';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
 
 @Component({
     selector: 'user-settings',
     templateUrl: './user-settings.component.html',
     styleUrls: ['./user-settings.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [BaseWrapperComponent, NgIf, MatIcon, NgStyle, MatButton, FormsModule, ReactiveFormsModule, MatFormField, MatSelect, MatOption, NgFor]
 })
 export class UserSettingsComponent extends BaseComponent implements OnChanges {
 

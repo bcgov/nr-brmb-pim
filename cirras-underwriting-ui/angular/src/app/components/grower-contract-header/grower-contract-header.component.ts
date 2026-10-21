@@ -4,13 +4,17 @@ import { INSURANCE_PLAN, ResourcesRoutes } from 'src/app/utils/constants';
 import { goToLinkGlobal, userCanAccessDop, userCanAccessInventory, userCanAccessVerifiedYield } from "src/app/utils";
 import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { Router } from '@angular/router';
+import { NgStyle, NgIf, NgClass, SlicePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { OtherYearPolicyComponent } from './other-year-policy/other-year-policy.component';
 
 @Component({
     selector: 'cirras-grower-contract-header',
     templateUrl: './grower-contract-header.component.html',
     styleUrls: ['./grower-contract-header.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgStyle, NgIf, NgClass, MatIcon, MatTooltip, OtherYearPolicyComponent, SlicePipe]
 })
 export class GrowerContractHeaderComponent {
   @Input() growerContract: UwContract;  

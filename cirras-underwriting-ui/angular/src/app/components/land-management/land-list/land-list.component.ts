@@ -5,6 +5,18 @@ import { ClearLegalLand, clearLandSearch, searchLand } from "src/app/store/land-
 import { LAND_SEARCH_COMPONENT_ID, initLandSearchPaging } from "src/app/store/land-management/land-management.state";
 import { LandListComponentModel } from "./land-list.component.model";
 import { ResourcesRoutes } from "src/app/utils/constants";
+import { BaseWrapperComponent } from "../../common/base-wrapper/base-wrapper.component";
+import { NgIf, NgFor } from "@angular/common";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { MatButton, MatIconButton } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
+import { MatLabel, MatSuffix } from "@angular/material/form-field";
+import { FormsModule } from "@angular/forms";
+import { MatTooltip } from "@angular/material/tooltip";
+import { SingleSelectDirective } from "../../../directives/singleselect.directive";
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from "@angular/material/table";
+import { MatSort, MatSortHeader } from "@angular/material/sort";
+import { NgxPaginationModule } from "ngx-pagination";
 
 @Component({
     selector: "cirras-land-list",
@@ -13,7 +25,7 @@ import { ResourcesRoutes } from "src/app/utils/constants";
         "../../common/base-collection/collection.component.desktop.scss",
         "./land-list.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [BaseWrapperComponent, NgIf, MatProgressSpinner, MatButton, MatIcon, MatLabel, FormsModule, MatIconButton, MatSuffix, MatTooltip, SingleSelectDirective, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgxPaginationModule, NgFor]
 })
 
 export class LandListComponent extends CollectionComponent implements OnChanges, AfterViewInit {

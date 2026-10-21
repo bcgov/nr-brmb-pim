@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { roundUpDecimal } from 'src/app/components/inventory/inventory-common';
 import { AnnualField } from 'src/app/conversion/models';
@@ -9,14 +9,21 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { makeNumberOnly } from 'src/app/utils';
 import { BERRY_COMMODITY } from 'src/app/utils/constants';
+import { NgStyle, NgIf, NgFor, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { BerriesDopFieldComponent } from '../field/field.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatInputCommifiedDirective } from '../../../../directives/input-comified.directive';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'berries-dop-field-list',
-  templateUrl: './field-list.component.html',
-  styleUrl: './field-list.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  standalone: false
+    selector: 'berries-dop-field-list',
+    templateUrl: './field-list.component.html',
+    styleUrl: './field-list.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    imports: [NgStyle, NgIf, NgFor, BerriesDopFieldComponent, FormsModule, ReactiveFormsModule, MatTooltip, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, DecimalPipe, TitleCasePipe]
 })
 export class BerriesDopFieldListComponent {
   @Input() fields: Array<AnnualField>;

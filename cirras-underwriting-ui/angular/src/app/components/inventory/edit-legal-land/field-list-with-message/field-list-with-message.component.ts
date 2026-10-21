@@ -2,12 +2,14 @@ import { Component, Input } from '@angular/core';
 import { getThePolicyAndPlan } from '../../inventory-common';
 import { AnnualFieldRsrc } from '@cirras/cirras-underwriting-api';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
+import { NgIf, NgStyle, NgFor } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'field-list-with-message',
-  templateUrl: './field-list-with-message.component.html',
-  styleUrl: './field-list-with-message.component.scss',
-  standalone: false
+    selector: 'field-list-with-message',
+    templateUrl: './field-list-with-message.component.html',
+    styleUrl: './field-list-with-message.component.scss',
+    imports: [NgIf, MatIcon, NgStyle, NgFor]
 })
 export class FieldListWithMessageComponent {
   @Input() fieldList 

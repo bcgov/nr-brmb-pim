@@ -2,7 +2,7 @@ import { BaseContainer } from "../base/base-container.component";
 import {select} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {Component} from "@angular/core";
-import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
+import { Location, LocationStrategy, PathLocationStrategy, AsyncPipe } from "@angular/common";
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
 import {
@@ -13,6 +13,7 @@ import {
 import { MAINTENANCE_COMPONENT_ID } from "src/app/store/maintenance/maintenance.state";
 import { GradeModifierTypeList } from "src/app/conversion/models-maintenance";
 import { selectGradeModifierTypeList } from "src/app/store/maintenance/maintenance.selectors";
+import { GradeModifiersTypesComponent } from "../../components/maintain/grade-modifiers/grade-modifiers-types/grade-modifiers-types.component";
 
 @Component({
     selector: "seeding-deadlines-container",
@@ -21,7 +22,7 @@ import { selectGradeModifierTypeList } from "src/app/store/maintenance/maintenan
             [gradeModifierTypesList]="gradeModifierTypesList$ | async"
         ></grade-modifiers-types>`,
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
-    standalone: false
+    imports: [GradeModifiersTypesComponent, AsyncPipe]
 })
 
 export class GradeModifierTypesContainer extends BaseContainer {

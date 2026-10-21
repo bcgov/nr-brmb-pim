@@ -1,14 +1,19 @@
 import {ERROR_TYPE, ErrorState} from "../../../store/application/application.state";
 import {ChangeDetectionStrategy, Component, Inject} from "@angular/core";
-import {DIALOG_TYPE} from "../base-dialog/base-dialog.component";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { DIALOG_TYPE, BaseDialogComponent } from "../base-dialog/base-dialog.component";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from "@angular/material/dialog";
+import { CdkScrollable } from "@angular/cdk/scrolling";
+import { NgIf } from "@angular/common";
+import { MatRadioGroup, MatRadioButton } from "@angular/material/radio";
+import { FormsModule } from "@angular/forms";
+import { MatButton } from "@angular/material/button";
 
 @Component({
     selector: 'base-error-dialog',
     templateUrl: './error-dialog.component.html',
     styleUrls: ['../../common/base/base.component.scss', './error-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, NgIf, MatRadioGroup, FormsModule, MatRadioButton, MatDialogActions, MatButton]
 })
 export class ErrorDialogComponent {
     titleLabel = "Error";

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { VerifiedYieldAmendment } from 'src/app/conversion/models-yield';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
@@ -10,6 +10,15 @@ import { makeNumberOnly, makeTitleCase } from 'src/app/utils';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
 import { roundUpDecimal } from '../../inventory/inventory-common';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
+import { NgIf, NgFor, TitleCasePipe } from '@angular/common';
+import { MatFormField } from '@angular/material/form-field';
+import { MatSelect } from '@angular/material/select';
+import { MatOption, MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatInput } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatInputCommifiedDirective } from '../../../directives/input-comified.directive';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 
 @Component({
     selector: 'verified-yield-amendment',
@@ -17,7 +26,7 @@ import { INSURANCE_PLAN } from 'src/app/utils/constants';
     styleUrls: ['./verified-yield-amendment.component.scss', '../../../../styles/_inventory.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, NgIf, MatFormField, MatSelect, NgFor, MatOption, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatIcon, MatTooltip, MatInputCommifiedDirective, CdkTextareaAutosize, TitleCasePipe]
 })
 export class VerifiedYieldAmendmentComponent implements OnChanges {
 

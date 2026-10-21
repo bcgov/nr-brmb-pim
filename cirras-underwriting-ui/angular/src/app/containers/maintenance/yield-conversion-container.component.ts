@@ -2,7 +2,7 @@ import { BaseContainer } from "../base/base-container.component";
 import {select} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {Component} from "@angular/core";
-import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
+import { Location, LocationStrategy, PathLocationStrategy, AsyncPipe } from "@angular/common";
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
 import {
@@ -15,6 +15,7 @@ import { YieldMeasUnitTypeCodeList } from "src/app/conversion/models-yield";
 import { selectYieldMeasUnit } from "src/app/store/dop/dop.selectors";
 import { YieldMeasUnitConversionList } from "src/app/conversion/models-maintenance";
 import { selectYieldMeasUnitConversionList } from "src/app/store/maintenance/maintenance.selectors";
+import { YieldConversionComponent } from "../../components/maintain/yield-conversion/yield-conversion.component";
 
 @Component({
     selector: "yield-conversion-container",
@@ -26,7 +27,7 @@ import { selectYieldMeasUnitConversionList } from "src/app/store/maintenance/mai
             [errorState]="errorState$ | async"
         ></yield-conversion>`,
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
-    standalone: false
+    imports: [YieldConversionComponent, AsyncPipe]
 })
 
 export class YieldConversionContainer extends BaseContainer {

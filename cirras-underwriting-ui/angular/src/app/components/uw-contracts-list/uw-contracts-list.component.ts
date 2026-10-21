@@ -10,6 +10,19 @@ import { INSURANCE_PLAN, REPORT_CHOICES, REPORT_SORT_BY, REPORT_TYPE, ResourcesR
 import { goToLinkGlobal, userCanAccessDop, userCanAccessInventory, userCanAccessVerifiedYield } from "src/app/utils";
 import { LoadUserSettings } from "src/app/store/maintenance/maintenance.actions";
 import { UserSetting } from "src/app/conversion/models-maintenance";
+import { BaseWrapperComponent } from "../common/base-wrapper/base-wrapper.component";
+import { NgIf, NgFor } from "@angular/common";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { ReportsDownloadButtonComponent } from "../reports/reports-download-button/reports-download-button.component";
+import { MatLabel, MatSuffix } from "@angular/material/form-field";
+import { FormsModule } from "@angular/forms";
+import { MatIconButton, MatButton } from "@angular/material/button";
+import { MatTooltip } from "@angular/material/tooltip";
+import { MatIcon } from "@angular/material/icon";
+import { SingleSelectDirective } from "../../directives/singleselect.directive";
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from "@angular/material/table";
+import { MatSort, MatSortHeader } from "@angular/material/sort";
+import { NgxPaginationModule } from "ngx-pagination";
 
 @Component({
     selector: "cirras-uw-contracts-list",
@@ -18,7 +31,7 @@ import { UserSetting } from "src/app/conversion/models-maintenance";
         "../common/base-collection/collection.component.desktop.scss",
         "./uw-contracts-list.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [BaseWrapperComponent, NgIf, MatProgressSpinner, ReportsDownloadButtonComponent, MatLabel, FormsModule, MatIconButton, MatSuffix, MatTooltip, MatIcon, SingleSelectDirective, NgFor, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatSortHeader, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgxPaginationModule]
 })
 
 export class UwContractsListComponent extends CollectionComponent implements OnChanges, AfterViewInit {

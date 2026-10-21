@@ -2,6 +2,8 @@ import {Component, Inject} from "@angular/core";
 // External
 import {MAT_SNACK_BAR_DATA, MatSnackBarRef} from "@angular/material/snack-bar";
 import {PIT_SNACKBAR_TYPES, PitSnackbarData} from "../../../utils";
+import { NgIf } from "@angular/common";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
     selector: 'cirras-underwriting-snackbar',
@@ -20,7 +22,7 @@ import {PIT_SNACKBAR_TYPES, PitSnackbarData} from "../../../utils";
       </div>
 
   `,
-    standalone: false
+    imports: [NgIf, MatIcon]
 })
 export class PitSnackbarComponent {
   SNACKBAR_TYPES = PIT_SNACKBAR_TYPES;

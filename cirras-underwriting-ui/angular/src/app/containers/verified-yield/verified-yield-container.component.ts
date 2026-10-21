@@ -2,7 +2,7 @@ import { BaseContainer } from "../base/base-container.component";
 import {select} from "@ngrx/store";
 import {Observable} from "rxjs";
 import { Component, OnInit} from "@angular/core";
-import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
+import { Location, LocationStrategy, PathLocationStrategy, AsyncPipe } from "@angular/common";
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
 import {
@@ -16,6 +16,7 @@ import { selectGrowerContract } from "src/app/store/grower-contract/grower-contr
 import { VerifiedYieldContract } from "src/app/conversion/models-yield";
 import { VERIFIED_YIELD_COMPONENT_ID } from "src/app/store/verified-yield/verified-yield.state";
 import { selectCropCommodityList, selectVerifiedYieldContract } from "src/app/store/verified-yield/verified-yield.selectors";
+import { VerifiedYieldComponent } from "../../components/verified-yield/verified-yield.component";
 
 @Component({
     selector: "grain-vy-container",
@@ -29,7 +30,7 @@ import { selectCropCommodityList, selectVerifiedYieldContract } from "src/app/st
             [isUnsaved]="isUnsaved$ | async"
         ></verified-yield>`,
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
-    standalone: false
+    imports: [VerifiedYieldComponent, AsyncPipe]
 })
 export class VerifiedYieldContainer extends BaseContainer implements OnInit {
 

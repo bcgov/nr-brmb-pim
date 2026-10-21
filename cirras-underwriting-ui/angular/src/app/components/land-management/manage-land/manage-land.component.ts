@@ -6,7 +6,7 @@ import { getCodeOptions } from 'src/app/utils/code-table-utils';
 import { LegalLand, RiskAreaList } from 'src/app/conversion/models';
 import { MANAGE_LEGAL_LAND_COMPONENT_ID } from 'src/app/store/land-management/land-management.state';
 import { addNewLegalLand, deleteLegalLand, getLegalLand, getRiskAreaList, updateLegalLand } from 'src/app/store/land-management/land-management.actions';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { areNotEqual, makeNumberOnly } from 'src/app/utils';
 import { PRIMARY_LAND_IDENTIFIER_TYPE_CODE, PRIMARY_REFERENCE_TYPE_CODE } from 'src/app/utils/constants';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
@@ -22,13 +22,23 @@ import { ConnectionService } from 'ngx-connection-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Overlay } from '@angular/cdk/overlay';
 import { HttpClient } from '@angular/common/http';
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, NgFor, NgIf, NgStyle, TitleCasePipe } from '@angular/common';
+import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgxMaskDirective } from 'ngx-mask';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'manage-land',
     templateUrl: './manage-land.component.html',
     styleUrls: ['./manage-land.component.scss'],
-    standalone: false
+    imports: [BaseWrapperComponent, FormsModule, ReactiveFormsModule, MatRadioGroup, NgFor, MatRadioButton, MatFormField, MatLabel, MatInput, NgxMaskDirective, NgIf, MatSelect, MatOption, MatIcon, MatTooltip, NgStyle, MatButton, TitleCasePipe]
 })
 export class ManageLandComponent extends BaseComponent implements OnChanges {
 

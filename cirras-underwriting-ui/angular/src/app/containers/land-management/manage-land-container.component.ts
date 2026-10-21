@@ -1,7 +1,7 @@
 
 
 import { Component } from "@angular/core";
-import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
+import { Location, LocationStrategy, PathLocationStrategy, AsyncPipe } from "@angular/common";
 import {BaseContainer} from "../base/base-container.component";
 import {select} from "@ngrx/store";
 import {Observable} from "rxjs";
@@ -9,6 +9,7 @@ import { ErrorState, LoadState } from "src/app/store/application/application.sta
 import { selectLegalLandListErrorState, selectLegalLandListLoadState } from "src/app/store/application/application.selectors";
 import { selectLegalLand, selectRiskAreaList } from "src/app/store/land-management/land-management.selectors";
 import { MANAGE_LEGAL_LAND_COMPONENT_ID } from "src/app/store/land-management/land-management.state";
+import { ManageLandComponent } from "../../components/land-management/manage-land/manage-land.component";
 
 @Component({
     selector: "manage-land-container",
@@ -19,7 +20,7 @@ import { MANAGE_LEGAL_LAND_COMPONENT_ID } from "src/app/store/land-management/la
                 [errorState]="errorState$ | async"
         ></manage-land>`,
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
-    standalone: false
+    imports: [ManageLandComponent, AsyncPipe]
 })
 
 export class ManageLandComponentContainer extends BaseContainer {

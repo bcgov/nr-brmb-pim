@@ -2,7 +2,7 @@ import { BaseContainer } from "../base/base-container.component";
 import {select, Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import { Component } from "@angular/core";
-import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
+import { Location, LocationStrategy, PathLocationStrategy, AsyncPipe } from "@angular/common";
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
 import {
@@ -14,6 +14,7 @@ import {
 import { MAINTENANCE_COMPONENT_ID } from "src/app/store/maintenance/maintenance.state";
 import { CropVarietyInsurabilityList } from "src/app/conversion/models-maintenance";
 import { selectCropVarietyInsurabilityList } from "src/app/store/maintenance/maintenance.selectors";
+import { ForageVarietyInsurabilityComponent } from "../../components/maintain/forage-variety-insurability/forage-variety-insurability.component";
 
 @Component({
     selector: "forage-variety-insurability-container",
@@ -25,7 +26,7 @@ import { selectCropVarietyInsurabilityList } from "src/app/store/maintenance/mai
             [isUnsaved]="isUnsaved$ | async"          
         ></forage-variety-insurability>`,
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
-    standalone: false
+    imports: [ForageVarietyInsurabilityComponent, AsyncPipe]
 })
 export class ForageVarietyInsurabilityContainer extends BaseContainer {
 

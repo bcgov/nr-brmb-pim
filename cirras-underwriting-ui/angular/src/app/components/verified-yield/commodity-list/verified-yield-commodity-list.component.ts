@@ -3,13 +3,18 @@ import { UntypedFormArray } from "@angular/forms";
 import { AppConfigService } from "@bcgov/pit-common-core-lib";
 import { DopYieldContractCommodityForage } from "src/app/conversion/models-yield";
 import { INSURANCE_PLAN } from "src/app/utils/constants";
+import { NgIf, NgStyle, NgFor } from "@angular/common";
+import { MatTooltip } from "@angular/material/tooltip";
+import { MatIcon } from "@angular/material/icon";
+import { MatButton } from "@angular/material/button";
+import { VerifiedYieldCommodityComponent } from "../commodity/verified-yield-commodity.component";
 
 @Component({
     selector: 'verified-yield-commodity-list',
     templateUrl: './verified-yield-commodity-list.component.html',
     styleUrls: ['./verified-yield-commodity-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgIf, MatTooltip, MatIcon, NgStyle, MatButton, NgFor, VerifiedYieldCommodityComponent]
 })
 export class VerifiedYieldCommodityListComponent  {
 

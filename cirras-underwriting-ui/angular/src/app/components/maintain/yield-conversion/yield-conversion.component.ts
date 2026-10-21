@@ -7,16 +7,23 @@ import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
 import { YieldMeasUnitConversionList } from 'src/app/conversion/models-maintenance';
 import { ClearYieldConversion, LoadYieldConversion, SaveYieldConversion } from 'src/app/store/maintenance/maintenance.actions';
-import { UntypedFormArray } from '@angular/forms';
+import { UntypedFormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { areNotEqual, makeNumberOnly } from 'src/app/utils';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { YieldConversionUnitsContainer } from 'src/app/containers/maintenance/yield-conversion-units-container.component';
+import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
+import { SingleSelectDirective } from '../../../directives/singleselect.directive';
+import { NgFor, NgIf, NgStyle, TitleCasePipe } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 @Component({
     selector: 'yield-conversion',
     templateUrl: './yield-conversion.component.html',
     styleUrls: ['./yield-conversion.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss'],
-    standalone: false
+    imports: [BaseWrapperComponent, SingleSelectDirective, FormsModule, NgFor, MatButton, MatIcon, NgIf, NgStyle, ReactiveFormsModule, MatFormField, MatInput, TitleCasePipe]
 })
 export class YieldConversionComponent extends BaseComponent implements OnChanges  {
 

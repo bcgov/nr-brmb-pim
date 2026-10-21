@@ -2,7 +2,7 @@ import { BaseContainer } from "../base/base-container.component";
 import {select, Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import { Component } from "@angular/core";
-import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
+import { Location, LocationStrategy, PathLocationStrategy, AsyncPipe } from "@angular/common";
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
 import {
@@ -14,6 +14,7 @@ import {
 import { USER_SETTINGS_COMPONENT_ID } from "src/app/store/maintenance/maintenance.state";
 import { UserSetting } from "src/app/conversion/models-maintenance";
 import { selectUserSetting } from "src/app/store/maintenance/maintenance.selectors";
+import { UserSettingsComponent } from "../../components/maintain/user-settings/user-settings.component";
 
 @Component({
     selector: "user-settings-container",
@@ -25,7 +26,7 @@ import { selectUserSetting } from "src/app/store/maintenance/maintenance.selecto
             [errorState]="errorState$ | async"        
         ></user-settings>`,
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
-    standalone: false
+    imports: [UserSettingsComponent, AsyncPipe]
 })
 export class UserSettingsContainer extends BaseContainer {
 

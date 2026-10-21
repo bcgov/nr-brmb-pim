@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { DopYieldFieldRollupForage } from 'src/app/conversion/models-yield';
 import { RootState } from 'src/app/store';
 import { makeNumberOnly } from 'src/app/utils';
+import { DecimalPipe, TitleCasePipe } from '@angular/common';
 
 @Component({
     selector: 'forage-dop-yield-summary',
@@ -11,7 +12,7 @@ import { makeNumberOnly } from 'src/app/utils';
     styleUrls: ['./forage-dop-yield-summary.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, DecimalPipe, TitleCasePipe]
 })
 export class ForageDopYieldSummaryComponent{
 

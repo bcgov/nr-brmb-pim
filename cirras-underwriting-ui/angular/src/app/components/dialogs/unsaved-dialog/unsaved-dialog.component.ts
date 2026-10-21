@@ -1,13 +1,15 @@
 import {ChangeDetectionStrategy, Component, Inject} from "@angular/core";
-import {DIALOG_TYPE} from "../base-dialog/base-dialog.component";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { DIALOG_TYPE, BaseDialogComponent } from "../base-dialog/base-dialog.component";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from "@angular/material/dialog";
+import { CdkScrollable } from "@angular/cdk/scrolling";
+import { MatButton } from "@angular/material/button";
 
 @Component({
     selector: 'base-unsaved-dialog',
     templateUrl: './unsaved-dialog.component.html',
     styleUrls: ['../../common/base/base.component.scss', './unsaved-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, MatDialogActions, MatButton]
 })
 export class UnsavedDialogComponent {
     titleLabel = "Unsaved Changes";

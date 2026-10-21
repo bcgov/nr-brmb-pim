@@ -19,12 +19,13 @@ import {
 } from "@angular/core";
 import { ApplicationState } from "src/app/store/application/application.state";
 import { DecimalPipe } from "@angular/common";
+import { BaseWrapperComponent } from "../common/base-wrapper/base-wrapper.component";
 
 @Component({
     selector: "cirras-underwriting-unauthorized-page",
     templateUrl: "./unauthorized-page.component.html",
     styleUrls: ["./unauthorized-page.component.scss"],
-    standalone: false
+    imports: [BaseWrapperComponent]
 }) 
 export class UnauthorizedPageComponent extends BaseComponent {
   constructor(protected router: Router,

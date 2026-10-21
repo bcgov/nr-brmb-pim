@@ -1,15 +1,19 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AnnualFieldRsrc } from '@cirras/cirras-underwriting-api';
 import { makeTitleCase } from 'src/app/utils';
 import { BERRY_COMMODITY, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { getThePolicyAndPlan } from '../../inventory-common';
+import { NgIf, NgStyle, NgFor } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 @Component({
-  selector: 'field-list',
-  templateUrl: './field-list.component.html',
-  styleUrl: './field-list.component.scss',
-  standalone: false
+    selector: 'field-list',
+    templateUrl: './field-list.component.html',
+    styleUrl: './field-list.component.scss',
+    imports: [FormsModule, ReactiveFormsModule, NgIf, MatIcon, NgStyle, NgFor, MatFormField, MatInput, MatHint]
 })
 export class FieldListComponent {
   @Input() fieldList 

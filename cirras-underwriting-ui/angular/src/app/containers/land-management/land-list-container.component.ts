@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
+import { Location, LocationStrategy, PathLocationStrategy, AsyncPipe } from "@angular/common";
 import {BaseContainer} from "../base/base-container.component";
 import {select} from "@ngrx/store";
 import {Observable} from "rxjs";
@@ -15,6 +15,7 @@ import {
 
 import {SearchState} from "@bcgov/pit-common-core-lib";
 import { LAND_SEARCH_COMPONENT_ID } from "src/app/store/land-management/land-management.state";
+import { LandListComponent } from "../../components/land-management/land-list/land-list.component";
 
 @Component({
     selector: "cirras-land-list-container",
@@ -25,7 +26,7 @@ import { LAND_SEARCH_COMPONENT_ID } from "src/app/store/land-management/land-man
                 [errorState]="errorState$ | async"
         ></cirras-land-list>`,
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
-    standalone: false
+    imports: [LandListComponent, AsyncPipe]
 })
 
 export class LandListContainer extends BaseContainer {

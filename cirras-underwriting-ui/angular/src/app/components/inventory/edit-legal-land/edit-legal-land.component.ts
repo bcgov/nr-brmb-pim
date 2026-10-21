@@ -1,22 +1,31 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { AnnualFieldRsrc, AnnualFieldListRsrc, LegalLandRsrc, RenameLegalValidationRsrc, ReplaceLegalValidationRsrc } from '@cirras/cirras-underwriting-api';
 import { AppConfigService, TokenService } from '@bcgov/pit-common-core-lib';
 import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest';
 import { LegalLandList } from 'src/app/conversion/models';
 import { setHttpHeaders } from 'src/app/utils';
 import { INSURANCE_PLAN, LAND_UPDATE_TYPE } from 'src/app/utils/constants';
-import { DIALOG_TYPE } from '../../dialogs/base-dialog/base-dialog.component';
+import { DIALOG_TYPE, BaseDialogComponent } from '../../dialogs/base-dialog/base-dialog.component';
 import { AddLandPopupData } from '../add-field/add-field.component';
 import { lastValueFrom } from 'rxjs';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { MatFormField, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { RenameLegalLandComponent } from './rename-legal-land/rename-legal-land.component';
+import { ReplaceLegalLandComponent } from './replace-legal-land/replace-legal-land.component';
 
 @Component({
     selector: 'cirras-edit-land',
     templateUrl: './edit-legal-land.component.html',
     styleUrls: ['./edit-legal-land.component.scss'],
-    standalone: false
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatFormField, MatInput, NgIf, MatHint, MatButton, MatIcon, RenameLegalLandComponent, ReplaceLegalLandComponent, MatDialogActions]
 })
 
 export class EditLegalLandInInventoryComponent implements OnInit {

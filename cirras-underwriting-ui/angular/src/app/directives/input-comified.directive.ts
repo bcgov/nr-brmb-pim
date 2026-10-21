@@ -7,8 +7,7 @@ import { numberWithCommas } from '../utils';
     selector: 'input[matInputCommified]',
     providers: [
         { provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: MatInputCommifiedDirective },
-    ],
-    standalone: false
+    ]
 })
 export class MatInputCommifiedDirective {
   // tslint:disable-next-line:variable-name

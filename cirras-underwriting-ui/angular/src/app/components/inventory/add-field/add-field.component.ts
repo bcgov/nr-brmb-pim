@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AddFieldValidationRsrc, AnnualFieldListRsrc, AnnualFieldRsrc, InventoryField, LegalLandRsrc, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
@@ -8,8 +8,19 @@ import { AppConfigService, TokenService } from '@bcgov/pit-common-core-lib';
 import { setHttpHeaders } from 'src/app/utils';
 import { lastValueFrom } from 'rxjs';
 import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { BERRY_COMMODITY, INSURANCE_PLAN, LAND_UPDATE_TYPE } from 'src/app/utils/constants';
+import { BaseDialogComponent } from '../../dialogs/base-dialog/base-dialog.component';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { NgFor, NgIf } from '@angular/common';
+import { MatFormField, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { LegalLandListComponent } from './legal-land-list/legal-land-list.component';
+import { FieldListComponent } from './field-list/field-list.component';
+import { FieldValidationsComponent } from './field-validations/field-validations.component';
 
 
 export interface AddLandPopupData {
@@ -44,10 +55,10 @@ export interface AddLandPopupData {
 }
 
 @Component({
-  selector: 'add-field',
-  templateUrl: './add-field.component.html',
-  styleUrl: './add-field.component.scss',
-  standalone: false
+    selector: 'add-field',
+    templateUrl: './add-field.component.html',
+    styleUrl: './add-field.component.scss',
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatRadioGroup, NgFor, MatRadioButton, MatFormField, MatInput, NgIf, MatHint, MatButton, MatIcon, LegalLandListComponent, FieldListComponent, FieldValidationsComponent, MatDialogActions]
 })
 export class AddFieldComponent implements OnInit{
 

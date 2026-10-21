@@ -1,19 +1,20 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnInit} from "@angular/core";
 import {UpdateService} from "../../services/update.service";
-import {Router} from "@angular/router";
+import { Router, RouterOutlet } from "@angular/router";
 import {Store} from "@ngrx/store";
 import {RootState} from "../../store";
 import {DomSanitizer} from "@angular/platform-browser";
 import {MatIconRegistry} from "@angular/material/icon";
 import {ApplicationStateService} from "../../services/application-state.service";
 import {addRemoveCdkOverlayClass} from "../../utils";
-import { PitApplicationConfiguration, PitApplicationState, PitDevice, RouterLink } from "@bcgov/pit-common-application-lib"; 
+import { PitApplicationConfiguration, PitApplicationState, PitDevice, RouterLink, PitApplicationComponent, PitHeaderComponent, PitMenuComponent } from "@bcgov/pit-common-application-lib"; 
 import {Subscription} from "rxjs";
 import { ResourcesRoutes } from "src/app/utils/constants";
 import { MatDialog } from "@angular/material/dialog";
 import { AppConfigService, TokenService } from "@bcgov/pit-common-core-lib";
 import { SecurityUtilService } from "src/app/services/security-util.service";
 import { ROUTE_SCOPES } from "src/app/utils/scopes";
+import { NgTemplateOutlet } from "@angular/common";
 
 const DEVICE: PitDevice = 'desktop';
 
@@ -22,7 +23,7 @@ const DEVICE: PitDevice = 'desktop';
     templateUrl: "./app.component.html",
     styleUrls: ["./app.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [PitApplicationComponent, PitHeaderComponent, PitMenuComponent, RouterOutlet, NgTemplateOutlet]
 })
 export class AppComponent implements OnInit {
 
