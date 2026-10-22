@@ -1,0 +1,31 @@
+@use '../../../../../styles/variables';
+@use '../../../../../styles/inventory';
+
+.plcy-inv-field-container-blue {
+    max-width: 100%;
+    border: solid 1px #ccc;
+    min-height: 54px; // 64px;
+    display: block;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .plcy-inv-field-container-blue>div:nth-child(2n+1) // this is responsible for the alternating row colors
+  {
+    background: #EFF5FA; // blue
+  }
+
+  .grain-unsdd-inv-cntrct-container {
+    display: grid;
+    grid-auto-rows: minmax( 2em, auto );
+    grid-template-columns: 1fr 1fr 1fr 3fr;
+
+    div {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+  }
+

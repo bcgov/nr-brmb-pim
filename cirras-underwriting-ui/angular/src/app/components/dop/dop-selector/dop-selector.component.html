@@ -1,0 +1,19 @@
+<base-wrapper [errorState]="errorState">
+
+    <forage-dop *ngIf="getDopType() == 'forage'"
+        [growerContract]="growerContract"
+        [dopYieldContract]="dopYieldContract"
+        [yieldMeasUnitList]="yieldMeasUnitList"
+        [loadState]="loadState"
+        [errorState]="errorState"     
+        [isUnsaved]="isUnsaved"       
+    ></forage-dop>
+
+    <berries-dop *ngIf="getDopType() == 'berries'"
+        [growerContract]="growerContract"
+        [dopYieldContract]="dopYieldContract"
+        [isUnsaved]="isUnsaved"
+    ></berries-dop> 
+
+</base-wrapper>
+

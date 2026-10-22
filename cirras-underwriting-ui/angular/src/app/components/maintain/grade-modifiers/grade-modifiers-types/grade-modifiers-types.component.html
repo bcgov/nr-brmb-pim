@@ -1,0 +1,96 @@
+<cuws-base-dialog [titleLabel]="titleLabel" [type]="dialogType">
+    <div mat-dialog-content>
+    <div class="row-group-left">
+    <form [formGroup]="gradeModifierTypesForm">
+        
+        <div class="cuw-row-group">
+
+            <div *ngIf="hasDataChanged == true" class="unsaved-changes-warning">
+              
+                <span #el matTooltip="" style="margin-left: 6px; margin-right: 10px;">
+                    <mat-icon [ngStyle]="{'color':'orangered', 'font-size':'xx-large'}">warning</mat-icon>
+                  </span>
+                 <span style="font-size: large; color:orangered">
+                    There are unsaved changes on the page. 
+                </span> 
+    
+            </div>
+            
+            <div class="cuw-container gmt-info" >  
+                
+                <div class="header border-top border-left border-right border-bottom">Grade Modifier <br /> Type</div>
+                <div class="header border-top border-right border-bottom">Description</div>
+                <div class="header border-top border-right border-bottom">Effective <br/> Year</div>
+                <div class="header border-top border-right border-bottom">Expiry <br/> Year</div>
+                <div class="header border-top border-right border-bottom"></div>
+            </div>
+
+            <div class="table-wrapper flex-y-grow cuw-container gmt-info">
+                
+                <div *ngFor="let gradeModifierType of gradeModifierTypesForm.controls.gradeModifierTypes['controls']; index as rowIndex"
+                    [formGroup]="gradeModifierType"        
+                    style="display: contents;">
+
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true"  class="inventory-fill border-right border-bottom border-left">   
+                        <mat-form-field appearance="fill" *ngIf="gradeModifierType.value.addedByUserInd == true">
+                            <input matInput formControlName="gradeModifierTypeCode" maxlength="10">
+                        </mat-form-field>
+                        <mat-icon *ngIf="gradeModifierType.value.addedByUserInd == true" style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
+                        <span style="padding-left: 6px;">{{ ( gradeModifierType.value.addedByUserInd) ? "" : gradeModifierType.value.gradeModifierTypeCode }}</span>
+                    </div>
+
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="inventory-fill border-right border-bottom" style="width:190px;" >
+                        <mat-form-field appearance="fill">
+                            <input matInput formControlName="description" maxlength="100">
+                        </mat-form-field>
+                        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
+                    </div>
+
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="inventory-fill border-right border-bottom" style="width:100px;" >
+                        <mat-form-field appearance="fill" *ngIf="gradeModifierType.value.addedByUserInd == true">
+                            <input matInput formControlName="effectiveYear" maxlength="4" (keypress)="numberOnly($event)">
+                        </mat-form-field>
+                        <mat-icon *ngIf="gradeModifierType.value.addedByUserInd == true" style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
+                        <span style="padding-left: 6px;">{{  ( gradeModifierType.value.addedByUserInd) ? "" :  gradeModifierType.value.effectiveYear }}</span>
+                    </div>
+
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="inventory-fill border-right border-bottom" style="width:100px;" >
+                        <mat-form-field appearance="fill">
+                            <input matInput formControlName="expiryYear"                                                             
+                                    (keypress)="numberOnly($event)" 
+                                    maxlength="4">
+                        </mat-form-field>
+                        <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Editable field">edit</mat-icon>
+                    </div>
+
+                    <div *ngIf="!gradeModifierType.value.deletedByUserInd == true" class="border-right border-bottom" style="width:30px;" >
+                        <mat-icon *ngIf="securityUtilService.canEditGradeModifiers() && gradeModifierType.value.deleteAllowedInd == true"
+                                matTooltip="Delete Grade Modifier Type" 
+                                [ngStyle]="{'color':'red'}"
+                                (click)="onDeleteGradeModifierType(rowIndex)">close</mat-icon>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+    </form>
+    </div>
+    </div>
+
+    <div mat-dialog-actions align="end">
+        <button mat-raised-button class="secondary" (click)="onCancelChanges()">
+            Cancel
+        </button>
+        &nbsp;
+        <button *ngIf="securityUtilService.canEditGradeModifiers()" mat-raised-button class="primary"
+            (click)="onAddGradeModifierType()">
+            Add
+        </button>
+        &nbsp;
+        <button *ngIf="securityUtilService.canEditGradeModifiers()" mat-raised-button class="primary" (click)="onSave()">
+            Save
+        </button>
+    </div>
+
+</cuws-base-dialog>

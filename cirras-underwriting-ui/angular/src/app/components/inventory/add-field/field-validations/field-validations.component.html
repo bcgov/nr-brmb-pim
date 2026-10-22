@@ -1,0 +1,15 @@
+            <!-- warning and error messages -->
+            <div  
+                class="validation-container error-messages" style="padding-top: 16px;">
+
+                <div *ngFor="let msg of validationMessages.errorMessages" style="display:contents">
+                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'orangered', 'font-size':'x-large'}">warning</mat-icon></div>
+                    <div><span>{{ msg.message }}</span></div>
+                </div>
+
+                <div *ngFor="let msg of validationMessages.warningMessages" style="display:contents">
+                    <div class="justify-left"><mat-icon [ngStyle]="{'color':'orange', 'font-size':'x-large'}">warning</mat-icon></div>
+                    <div><span>{{ msg.message }}</span></div>
+                </div>
+
+            </div>

@@ -1,0 +1,219 @@
+<base-wrapper [errorState]="errorState"> 
+    <div class="base-container">
+        <div class="base-container flex-y"> 
+        
+        <div class="policy-header-container" style="display: grid; grid-template-columns: auto 188px 180px 12px 170px 80px;">
+            <div class="grower-header">
+                {{ ( (growerContract && growerContract.growerName) ? growerContract.growerName : "" ) | titlecase}} 
+                ({{ ((dopYieldContract && dopYieldContract.insurancePlanId) ? getInsPlanName(dopYieldContract.insurancePlanId) : "" ) | titlecase }})
+                {{ (growerContract && growerContract.policyNumber) ? growerContract.policyNumber : "" }}   
+            </div>
+            <div style="display: grid; grid-template-columns: 28px 160px;">
+                <!-- unsaved messages -->
+                <div *ngIf="isUnsaved && !hasVerifiedYieldData">
+                    <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
+                </div>
+                <div *ngIf="isUnsaved && !hasVerifiedYieldData" class="unsaved-changes">
+                    Unsaved Changes 
+                </div>
+            </div>
+            <!-- related policies -->
+            <div>
+                <related-policies
+                    [growerContract]="growerContract"
+                ></related-policies> 
+            </div>
+            <div class="vertical-line"></div>
+            <div matTooltip="Changes must be saved before download is possible.">
+                <button mat-raised-button class="secondary button-large-text" [disabled]="isUnsaved"
+                (click)="onPrint()">
+                    <mat-icon class="button-mat-icon">download</mat-icon>Download
+                </button>
+            </div>
+            <div>
+                <button 
+                    *ngIf="securityUtilService.canEditDop() && !hasVerifiedYieldData" 
+                    mat-raised-button 
+                    class="primary button-large-text" 
+                    [disabled]="!isUnsaved" 
+                    (click)="onSave()">
+                        Save
+                </button>
+            </div>
+        </div>        
+            
+        <cirras-grower-contract-header
+            [growerContract]="growerContract"
+        ></cirras-grower-contract-header>  
+
+        <div *ngIf="hasVerifiedYieldData == true" class="message-container">
+            <!-- The policy has yield message -->
+            <div class="has-yield-warning">
+                <mat-icon>warning</mat-icon>            
+                <span class="warning-message">
+                    DOP edits are not permitted when a policy has Verified Yield data.  
+                    If you need to update the DOP, delete the Verified Yield data first.</span> 
+            </div>
+        </div>
+
+        <form [formGroup]="getViewModel().formGroup">
+
+            <div class="plcy-inv-form-header" [ngStyle]="setFormStyles()">
+                <div>
+                    <h2>Declaration of Production</h2>
+                    <p>Last Updated: {{ ((dopYieldContract && dopYieldContract.dopUpdateTimestamp) ? dopYieldContract.dopUpdateTimestamp : "" ) | date }}</p>
+                </div>            
+                <div class="plcy-frm-hdr-calendar" matTooltip="Date when the Declaration of Production is submitted.">
+                    <!-- DOP Date: -->
+                    <mat-form-field appearance="outline" >
+                        <input matInput 
+                            [matDatepicker]="picker"
+                            formControlName="declarationOfProductionDate" 
+                            (dateChange)="updateDeclarationOfProductionDate()"
+                            (input)="updateDeclarationOfProductionDate()">
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="plcy-frm-hdr-dropdown" matTooltip="Units">
+                    <!-- Units:  -->
+                    <mat-form-field *ngIf="yieldMeasUnitList && yieldMeasUnitList.collection" 
+                        appearance="outline" style="width: 110px;">
+                        <mat-select
+                            formControlName="yieldMeasUnitTypeCode"
+                            (selectionChange)="updateEnteredYieldMeasUnitTypeCode()">
+                            <mat-option *ngFor="let option of yieldMeasUnitList.collection" [value]="option.yieldMeasUnitTypeCode"
+                            >{{ option.description | titlecase }}</mat-option>
+                        </mat-select>
+                        </mat-form-field>
+                </div>
+                <div>
+                    <!-- add cut -->
+                    <button
+                        mat-raised-button 
+                        class="secondary" 
+                        class="header-button"  
+                        matTooltip="Add New Cut"
+                        [disabled]="!isNewCutBtnEnabled()"
+                        (click)="onAddNewCut()">
+                        New Cut
+                    </button>
+                </div>
+                <div>
+                    <!-- remove cut -->
+                    <button
+                        mat-raised-button 
+                        class="secondary" 
+                        class="header-button"  
+                        matTooltip="Remove Last Cut"
+                        [disabled]="!isRemoveCutBtnEnabled()"
+                        (click)="onRemoveLastCut()">
+                        Remove Cut
+                    </button>
+                </div>
+                <div>
+                    <uw-comments-button
+                        [underwritingCommentTypeCode]="'DOP'"
+                        [growerContractYearId]="dopYieldContract?.growerContractYearId"
+                        [declaredYieldContractGuid]="dopYieldContract?.declaredYieldContractGuid"
+                        [policyNumber]="growerContract?.policyNumber"
+                        [growerName]="growerContract?.growerName"
+                        [growerNumber]="growerContract?.growerNumber"
+                        [uwComments]="dopYieldContract?.uwComments"
+                        (onDone)="onDopCommentsDone($event)"></uw-comments-button>
+                </div>
+                <div>
+                    <button *ngIf="!hasVerifiedYieldData"
+                        mat-raised-button 
+                        class="secondary" 
+                        class="header-button"  
+                        matTooltip="Clear unsaved changes"
+                        (click)="onCancel()">
+                        Clear Changes
+                    </button>
+                </div>
+                <div class="vertical-line"></div>
+                <div>
+                    <button *ngIf="securityUtilService.canDeleteDop() && !hasVerifiedYieldData &&
+                                    dopYieldContract && 
+                                    dopYieldContract.declaredYieldContractGuid" 
+                                    mat-raised-button 
+                                    class="secondary header-button-red" 
+                                    (click)="onDeleteDop()">
+                        <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset DOP
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
+
+                <!-- field data -->
+                <forage-dop-field-list
+                    *ngIf="dopYieldContract && dopYieldContract.fields"
+                    [fields]="dopYieldContract.fields"
+                    [fieldsFormArray]="getViewModel().formGroup.controls.fields"></forage-dop-field-list>
+    
+
+
+
+
+                <div class="question-single" style="border: 1px solid #E1CF7B; background: #FEFAEC;">
+                    
+
+                    <div class="forage-dop-contract-info">
+                        <div class="cell">Baler/Wagon Make & Model:</div>
+                        <div class="comment-fill">
+                            <mat-form-field appearance="outline" style="width: 400px;">
+                                <input matInput formControlName="balerWagonInfo" 
+                                        maxlength="128"
+                                        (blur)="updateBalerWagonInfo()">
+                            </mat-form-field>
+                        </div>
+                        <div class="cell">Total Number of Livestock:</div>  
+                        <div class="comment-fill">
+                            <mat-form-field appearance="outline" style="width: 100px;">
+                                <input matInput matInputCommified formControlName="totalLivestock" 
+                                        maxlength="5"
+                                        (keypress)="numberOnly($event)"
+                                        (blur)="updateTotalLivestock()">
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+                <!-- dop contract data  -->
+                <div class="plcy-inv-cntrct" style="grid-template-columns: 830px 790px;" >
+                    <div>
+                        <!-- yield summary  -->
+                        <forage-dop-yield-summary-list
+                            *ngIf="dopYieldContract && dopYieldContract.dopYieldFieldRollupForageList"
+                            [fieldRollupList]="dopYieldContract.dopYieldFieldRollupForageList"
+                            [fieldRollupFormArray]="getViewModel().formGroup.controls.dopYieldFieldRollupForageList"
+                            [isUnsaved]="isUnsaved"></forage-dop-yield-summary-list>
+                    </div>
+    
+                    <div>
+                        <!-- commodity totals -->
+                        <forage-dop-commodity-list
+                            *ngIf="dopYieldContract && dopYieldContract.dopYieldContractCommodityForageList"
+                            [commodities]="dopYieldContract.dopYieldContractCommodityForageList"
+                            [commoditiesFormArray]="getViewModel().formGroup.controls.dopYieldContractCommodityForageList"
+                            [decimalPrecision]="decimalPrecision"
+                            [isUnsaved]="isUnsaved"></forage-dop-commodity-list>
+                    </div>
+    
+                </div>
+    
+            </div>
+        </form>
+        </div>
+    </div>
+</base-wrapper>

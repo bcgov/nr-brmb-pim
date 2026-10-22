@@ -1,0 +1,20 @@
+.berries-tot-cmdty-container
+  {
+    display: grid; 
+    grid-auto-rows: minmax( 2em, auto );
+    grid-template-columns: 226px 80px;
+    margin-left: 16px;
+  
+    div {
+        display: flex;
+    }
+
+    .header {
+      color: #0C0C0C;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: left;
+      padding-left: 6px;
+    }
+  
+  }

@@ -1,0 +1,49 @@
+// @import '../../../../../styles/variables';
+
+  .cuw-row-group {
+    //padding: 30px 10px 10px 10px;
+    margin: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    .cuw-container {
+        display: grid;
+        grid-auto-rows: minmax( 2em, auto );
+        
+        div {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+  
+        .header {
+            font-weight: bold;            
+        }
+
+        .border-right {
+            border-right: 2px solid #ccc;          
+        }
+  
+        .border-top {
+            border-top: 2px solid #ccc;          
+        }
+  
+        .border-left {
+            border-left: 2px solid #ccc;          
+        }
+  
+        .justify-center {
+            justify-content: center;   
+        }
+  
+        .border-bottom {
+            border-bottom: 2px solid #ccc;
+        }
+
+        &.pi-info {
+            grid-template-columns: 30px 150px ;
+        }
+
+    }
+  }

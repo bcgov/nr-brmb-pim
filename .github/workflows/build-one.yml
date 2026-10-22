@@ -14,8 +14,8 @@ on:
         type: choice
         options:
           - cirras-underwriting-api
-          - cirras-underwriting-war
           - cirras-underwriting-ngclient-lib
+          - cirras-underwriting-ui
 
 
 jobs:
@@ -40,11 +40,14 @@ jobs:
       SWAGGER_TARGET_PATH: cirras-underwriting-ngclient-lib/cirras-underwriting-ngclient-lib/src/main/angular/src/swagger/swagger.json
       NPM_ARTIFACT_PATH: \@cirras/cirras-underwriting-api/-/@cirras
 
-  build-underwriting-war:
-    uses: ./.github/workflows/build-package.yml
-    if: ${{ inputs.COMPONENT == 'cirras-underwriting-war' }}
+  build-underwriting-ui:
+    uses: ./.github/workflows/build-ui-angular.yml
+    if: ${{ inputs.COMPONENT == 'cirras-underwriting-ui' }}
     secrets: inherit
     with:
       ENVIRONMENT: DEV
-      MICROSERVICE_NAME: cirras-underwriting-war
+      MICROSERVICE_NAME: cirras-underwriting-ui
       TAG: ${{ inputs.TAG }}
+      UI_TARGET: cirras-underwriting-ui
+      NPM_ARTIFACT_PATH: \@pit/cirras-underwriting-ui/-/@pit
+      
