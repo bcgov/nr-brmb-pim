@@ -1,0 +1,92 @@
+<div class="plcy-inv-field-box" style="margin-top: 20px;" [ngStyle]="setTableHeaderStyle()">
+    <div class="inventory-header border-left" style="width:115px">Field ID</div>
+    <div class="inventory-header" style="width:280px;">Field Address</div>
+    <div class="inventory-header" style="width:140px">Legal Description</div>
+    <div class="inventory-header" style="width:80px">Is Leased</div>
+    
+    <div class="inventory-header" style="width:100px">Acres</div>
+    <div *ngIf="!isStrawberry()" class="inventory-header" style="width:100px">Mature Equivalent Acres</div>
+    <div class="inventory-header" style="width:180px">Crop</div>
+    <div class="inventory-header" style="width:180px">Variety</div>
+    <div class="inventory-header" style="width:100px">Sold / <br/>Shipped</div>  
+    <div class="inventory-header" style="width:100px">Private / <br/> Direct Sales</div>
+    <div class="inventory-header" style="width:100px">Abndmnt</div>
+    <div class="inventory-header" style="width:100px">Total <br/> Production</div>
+    <div class="inventory-header" style="width:100px">Total <br/> Production <br/> Override</div>
+
+    <div class="inventory-header" style="width:60px;">Manage Variety</div>
+    <div class="inventory-header" style="width:60px;">Manage Field</div>
+</div>
+
+<div class="plcy-inv-fld-tbl-inner-wrapper" [ngStyle]="setInnerWrapperStyle()">
+    <div class="plcy-dop-berries-field-container" [ngStyle]="setTableHeaderStyle()">  
+        <berries-dop-field *ngFor="let field of fields" 
+            [field]="field"
+            [fieldsFormArray]="fieldsFormArray"
+            [filterByCropCommodityId]="filterByCropCommodityId"
+        ></berries-dop-field>
+
+        <!-- Total Commodity Yield -->
+        <div class="plcy-inv-field-box" [formGroup]="fieldsFormGroup" [ngStyle]="setFieldHeaderStyle()">
+            <div class="dop-berries-commodity-total border-left inventory-border" style="padding-right: 4px; justify-content: end; width: 615px;">
+                {{ filteredCropCommodityName | titlecase }} Totals:
+            </div>
+            <div class="dop-berries-commodity-total inventory-cell inventory-border" matTooltip="Total Commodity Acres" style="width: 100px;">
+                {{ contractCommodityTotals.totalPlantedAcres | number:'1.0-1' }}
+            </div>
+            <div *ngIf="!isStrawberry()" class="dop-berries-commodity-total inventory-cell inventory-border" matTooltip="Total Commodity ME Acres" style="width: 100px;">
+                {{ contractCommodityTotals.totalMatureEquivalentAcres | number:'1.0-1' }}
+            </div>
+            <div class="dop-berries-commodity-total inventory-border" style="padding-right: 4px; justify-content: end; width: 360px;">
+                
+            </div>
+            <div class="dop-berries-commodity-total inventory-cell inventory-border" matTooltip="Total Commodity Sold/Shipped Yield" style="width:100px">
+                {{ (contractCommodityTotals && contractCommodityTotals.totalSoldShippedYield ? contractCommodityTotals.totalSoldShippedYield : "") | number:'1.0-3' }}
+            </div>
+            <div class="dop-berries-commodity-total inventory-cell inventory-border" matTooltip="Total Commodity Sales Yield" style="width:100px">
+                {{ (contractCommodityTotals && contractCommodityTotals.totalSalesYield ? contractCommodityTotals.totalSalesYield : "") | number:'1.0-3' }}
+            </div>
+            <div class="dop-berries-commodity-total inventory-cell inventory-border" matTooltip="Total Commodity Abandonment Yield" style="width:100px">
+                {{ (contractCommodityTotals && contractCommodityTotals.totalAbandonmentYield ? contractCommodityTotals.totalAbandonmentYield : "") | number:'1.0-3' }}
+            </div>
+            <div class="dop-berries-commodity-total inventory-border inventory-cell" matTooltip="Total Commodity Production" style="width: 100px;">
+                {{ (contractCommodityTotals && contractCommodityTotals.totalProduction ? contractCommodityTotals.totalProduction : "") | number:'1.0-3' }}
+            </div> 
+            <div class="inventory-fill number dop-berries-commodity-total inventory-border" style="width: 100px;">
+                <mat-form-field appearance="fill" style="width: 100px;">
+                    <input matInput matInputCommified type="text"
+                            formControlName="totalProductionOverride"
+                            maxlength="14"
+                            (keypress)="numberOnly($event)" 
+                            (blur)="updatetotalProductionOverride()">
+                    </mat-form-field>  
+                    <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Total Production Override is writeable">edit</mat-icon>
+            </div>
+            <div class="dop-berries-commodity-total inventory-border"  style="width: 60px;"></div>
+            <div class="dop-berries-commodity-total inventory-border"  style="width: 60px;"></div>
+        </div>
+
+        <!-- Claim Calculation Yield -->
+        <div *ngIf="contractCommodityTotals && contractCommodityTotals.totalYieldForCalculation" class="plcy-inv-field-box" [ngStyle]="setFieldHeaderStyle()">
+            <div class="dop-berries-claim-yield border-left inventory-border" style="width: 715px;"></div>
+            <div *ngIf="!isStrawberry()" class="dop-berries-claim-yield inventory-border" style="width: 100px;"></div>
+            <div class="dop-berries-claim-yield inventory-border" style="padding-right: 4px; justify-content: end; width: 360px;">
+                A claim calculation exists with status:
+            </div>
+            <div class="dop-berries-claim-yield inventory-cell inventory-border" style="width:100px">
+                {{ (contractCommodityTotals && contractCommodityTotals.calculationStatusCode ? contractCommodityTotals.calculationStatusCode : "") | titlecase }}
+            </div>
+            <div class="dop-berries-claim-yield inventory-border" style="padding-right: 4px; justify-content: end; width: 300px;">
+                Yield from claim calculation:
+            </div> 
+            <div class="inventory-cell number dop-berries-claim-yield" style="width: 76px;">
+                {{ (contractCommodityTotals && contractCommodityTotals.totalYieldForCalculation ? contractCommodityTotals.totalYieldForCalculation : "") | number:'1.0-3' }}
+            </div>
+            <div class="dop-berries-claim-yield inventory-border"  style="width: 24px;"></div>
+            <div class="dop-berries-claim-yield inventory-border"  style="width: 60px;"></div>
+            <div class="dop-berries-claim-yield inventory-border"  style="width: 60px;"></div>
+        </div>
+
+    </div>
+</div>
+

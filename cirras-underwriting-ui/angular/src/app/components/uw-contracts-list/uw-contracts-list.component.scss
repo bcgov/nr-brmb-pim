@@ -1,0 +1,125 @@
+@use '../../../styles/variables' as var;
+
+.mat-mdc-table {
+    display: block;
+    font-family: var.$font-family-main;
+  }
+  
+  .mat-mdc-row,
+  .mat-mdc-header-row {
+    display: flex;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 24px;
+  }
+  
+  .mat-mdc-cell,
+  .mat-mdc-header-cell {
+    flex: 1;
+    overflow: hidden;
+    word-wrap: break-word;
+  }
+
+  .mat-column-growerName {
+    // flex: 0 0 50%;
+
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    flex: 0 0 30%; // !important;
+    width: 30%; // !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  
+    word-break: break-word;
+  
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+
+  }
+
+  h1{
+    font-size: x-large;
+  }
+
+  .filter-label{
+    font-weight: bold !important;
+  }
+
+.search-and-filters {
+
+  .field {
+    &:has(select[aria-label="Plan"]) {
+      width: 150px !important;
+      flex-basis: 150px !important;
+    }
+    &:has(select[aria-label="Crop Year"]) {
+      width: 150px !important;
+      flex-basis: 150px !important;
+    }
+    &:has(select[aria-label="Policy Status"]) {
+      width: 150px !important;
+      flex-basis: 150px !important;
+    }
+    &:has(select[aria-label="Office"]) {
+      width: 150px !important;
+      flex-basis: 150px !important;
+    }
+    &:has(select[aria-label="Report Type"]) {
+      width: 150px !important;
+      flex-basis: 150px !important;
+    }
+    button[color="primary"] {
+      width: 109px;
+      .mat-icon {
+        height: 20px;
+        width: 20px;
+        vertical-align: sub;
+      }
+    }
+  }
+
+  .field {
+    &.search-input:has(input[aria-label="Grower Information"]) {
+      width: 220px !important;
+      flex-basis: 220px !important;
+    }
+    &.search-input:has(input[aria-label="Policy Number"]) {
+      width: 116px !important;
+      flex-basis: 116px !important;
+    }
+  }
+}
+
+.summary-buttons {
+  p {
+    width: 230px;
+    display: flex;
+    justify-content: right;
+
+    span {
+      margin-right: 16px;
+    }
+  }
+}
+
+.table-search-header:nth-child(3) {
+  background-color: transparent;
+
+  .search-and-filters {
+    margin: 12px 0px 12px 0px;
+  }
+}
+
+.table-search-header .search-and-filters {
+  .input-clear-button {
+    margin-left: 191px !important;
+  }
+}
+
+.table-wrapper {
+  border-top: 0;
+}

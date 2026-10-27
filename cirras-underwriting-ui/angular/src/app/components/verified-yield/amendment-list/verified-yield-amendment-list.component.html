@@ -1,0 +1,49 @@
+<div class="plcy-inv-cmdty-totals-header"
+    style="grid-template-columns: 123px 250px 180px 125px 115px 500px 60px; padding-left: 0px;">
+
+    <div class="table-header border-top border-left" style="text-align: left; padding-left: 6px; grid-column-start: 1; grid-column-end: 6; padding-top: 8px; background-color: #F5F5FF;">
+        Amendments
+    </div>
+    <div class="table-header border-top border-right" style="grid-column-start: 6; grid-column-end: 8; text-align: right; height:40px; padding-top:2px; padding-right: 2px; background-color: #F5F5FF;">
+        <button 
+            mat-raised-button class="secondary" 
+            (click)="addAmendment()">
+                Add Row
+        </button>
+    </div>
+
+    <div class="header border-top border-bottom border-right  border-left">
+        Type
+    </div>
+    <div class="border-right header border-top border-bottom">
+        Field
+    </div>
+    <div class="border-right header border-top border-bottom">
+        {{ ( isGrainPolicy() ? "Commodity" : "Variety" ) }}
+    </div>
+    <div class="border-right header border-top border-bottom">
+        Yield/ac
+    </div>
+    <div class="header border-top border-bottom border-right">
+        Acres
+    </div>
+    <div class="header border-top border-bottom border-right">
+        Rationale
+    </div>
+    <div class="header border-top border-bottom border-right">
+        Actions
+    </div>
+
+    <div *ngIf="fieldOptions && cropCommodityOptions && amendments && amendments.length > 0"
+        class="verified-yield-amendments-container"
+        style="grid-template-columns: 123px 250px 180px 125px 115px 500px 60px; margin-left: 0px;">
+        <verified-yield-amendment *ngFor="let amendment of amendments" [amendment]="amendment"
+            [amendmentsFormArray]="amendmentsFormArray" 
+            [fieldOptions]="fieldOptions"
+            [cropCommodityOptions]="cropCommodityOptions"
+            [cropVarietyOptions]="cropVarietyOptions"
+            [insurancePlanId]="insurancePlanId"
+            style="display: contents;"></verified-yield-amendment>
+    </div>
+
+</div>

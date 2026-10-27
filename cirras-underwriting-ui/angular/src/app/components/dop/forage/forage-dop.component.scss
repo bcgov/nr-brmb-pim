@@ -1,0 +1,23 @@
+@use '../../../../styles/variables';
+@use '../../../../styles/inventory';
+
+.forage-dop-contract-info {
+    display: grid; 
+    grid-template-columns: 210px 500px 200px auto;
+
+    .cell {
+      padding-top: 6px;
+      padding-bottom: 16px;
+        font-size: 15px;
+        color: #424242;
+        justify-content: center;  
+      }
+}
+
+.question-single{
+  width: 1730px;
+  border-radius: 5px 5px 5px 5px;
+  padding-top: 16px;
+  padding-left: 8px;    
+  margin-top: 16px;
+}

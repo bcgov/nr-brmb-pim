@@ -1,0 +1,30 @@
+.base-container{
+    margin: 10px;
+    max-width: 500px;
+    
+    .flex-y {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  
+.message-container {
+  
+    div {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+ 
+    .has-warning {
+      display: flex; 
+      flex-direction: row; 
+      justify-content:center; 
+      align-items: center; 
+      margin-right: 20px; 
+      border: 2px solid orangered; 
+      border-radius: 5px;
+    }
+    
+  }

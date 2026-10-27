@@ -1,0 +1,89 @@
+@use 'src/styles/variables' as var;
+
+::ng-deep  wf-application.cirras-application {
+
+  &.device-desktop{
+    .body .menu{
+      min-height: calc(100vh - var(--wf-header-height) - 2px);
+      font-family: var.$font-family-main;
+    }
+  }
+
+
+  >.body {
+    max-height: calc(100vh - var(--wf-header-height) - 2px);
+    overflow: hidden;
+    .menu .nav-items {
+
+      a.nav-item{
+        
+
+        .label {
+          // overflow: auto;
+          white-space: pre-line;
+          //text-overflow: ellipsis;
+          
+          font-weight: 400 !important;
+          font-size: 15px;
+          
+          margin-top: 14px !important;
+          margin-bottom: 14px !important;
+        }
+        mat-icon{   
+         font-family: 'Material Icons Outlined' !important;  
+        }
+      }
+    }
+
+  }
+
+  .bc-logo {
+    .bcwfservice-logo {
+        background-image: url("../../../assets/images/logo/bcgov-logo.png") !important; 
+        background-size: auto auto !important; 
+        width: calc(var(--wf-header-bcwfservice-logo-height) * 5) !important;
+
+    }
+  } 
+
+  .app-logo-and-title{
+    .wildfire1-logo{
+        background-image: none !important;
+        background-size: 0 0 !important; 
+        height: 0 !important; 
+        width: 0 !important;  
+    }
+
+    .separator {
+        border-left: 0px !important;
+        margin: 0 0px !important;
+    }
+  }
+
+  .version{
+    .short {
+        margin-bottom: 35px;
+    }
+  }
+
+  .footer{
+    .mat-icon{
+        font-family: 'Material Icons Outlined' !important; 
+    }
+  }
+
+  .system-and-user-info {
+    // changes the text in the top right menu, next to the user icon
+    // from Training and Support, which is hardcoded in the wf library
+    // to User Settings
+    span.training  {
+      visibility: hidden;
+    }
+
+    .training:after  {
+      visibility: visible;
+      content: 'User Settings';
+    }
+  }
+  
+}

@@ -1,0 +1,23 @@
+<cuws-base-dialog [titleLabel]="titleLabel" [type]="dialogType" class="remove-field">
+    <div mat-dialog-content class="grow">
+
+        <div class="row-group-left">
+            <p style="font-size: larger; font-weight: bold;">
+                Do you want to delete the planting on the policy {{ (policyNumber ? policyNumber : "" ) }} or only remove the link? 
+            </p>
+        </div>
+    </div>
+
+    <div mat-dialog-actions align="end">
+        <button mat-raised-button class="secondary" (click)="onDeletePlanting()">
+            Delete Forage Planting 
+        </button>
+        &nbsp;
+        <button mat-raised-button class="secondary" (click)="onRemoveLink()">
+            Keep Forage Planting
+        </button>
+
+    </div>
+</cuws-base-dialog>
+
+

@@ -1,0 +1,27 @@
+div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 8px;
+}
+
+.justify-center {
+    justify-content: center;
+    text-align: center;
+}
+
+.align-center {
+    align-items: center;
+}
+
+:host:nth-child(even) {
+    div {
+        div {
+            background-color: #F2F2F2;
+        }
+    }
+}
+
+textarea.mat-mdc-input-element.cdk-textarea-autosize {
+    overflow: auto;
+}

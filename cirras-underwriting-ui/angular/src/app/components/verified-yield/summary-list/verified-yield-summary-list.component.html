@@ -1,0 +1,66 @@
+<div class="plcy-inv-cmdty-totals-header"
+    style="grid-template-columns: 140px 100px 100px 25px 115px 115px 115px 115px 130px 25px 125px 100px; padding-left: 0px;">
+
+    <div *ngIf="isUnsaved" class="table-header border-top border-left border-right"
+        style="grid-column-start: 1; grid-column-end: 13;">
+        <span #el matTooltip="" style="margin-left:10px;">
+            <mat-icon
+                [ngStyle]="{'color':'orangered', 'font-size':'large', 'padding-top': '4px'}">warning_amber</mat-icon>
+        </span>
+        <span style="color:orangered; font-size: 14px;">
+            Verified Yield Summary is calculated on save.
+        </span>
+    </div>
+
+    <div class="table-header border-top border-left border-right" style="text-align: left; padding-left: 6px; grid-column-start: 1; grid-column-end: 13; padding-top: 8px; background-color: #F5F5FF;">
+        Yield Summary
+    </div>
+
+    <div class="header border-top border-bottom border-right  border-left">
+        Commodity
+    </div>
+    <div class="border-right header border-top border-bottom">
+        Insured Acres
+    </div>
+    <div class="header border-top border-bottom">
+        Production Acres
+    </div>
+    <div class="border-right border-top border-bottom">
+        <!-- warning icon -->
+    </div>
+    <div class="border-right header border-top border-bottom">
+        Harvested Yield
+    </div>
+    <div class="border-right header border-top border-bottom">
+        Harvested Yield/Acre
+    </div>
+    <div class="header border-top border-bottom border-right">
+        Appraised Yield
+    </div>
+    <div class="header border-top border-bottom border-right">
+        Assessed Yield
+    </div>
+    <div class="header border-top border-bottom">
+        Yield to Count
+    </div>
+    <div class="border-top border-bottom border-right">
+        <!-- warning icon -->
+    </div>
+    <div class="header border-top border-bottom border-right">
+        Yield % PY
+    </div>
+
+    <div class="header border-top border-bottom border-right">
+        Comments
+    </div>
+
+    <div class="verified-yield-summaries-container"
+        style="grid-template-columns: 140px 100px 100px 25px 115px 115px 115px 115px 130px 25px 125px 100px; margin-left: 0px;">
+        <verified-yield-summary *ngFor="let summary of summaries" 
+            [summary]="summary"
+            [summariesFormArray]="summariesFormArray"
+            
+            style="display: contents;"></verified-yield-summary>
+    </div>
+
+</div>

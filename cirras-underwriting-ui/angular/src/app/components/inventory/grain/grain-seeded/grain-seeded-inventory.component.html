@@ -1,0 +1,632 @@
+<div class="base-container">  
+    <div class="base-container flex-y"> 
+
+    
+        <div class="policy-header-container">
+            <div class="grower-header">
+                {{ ( (growerContract && growerContract.growerName) ? growerContract.growerName : "" ) | titlecase}} 
+                ({{ ((inventoryContract && inventoryContract.insurancePlanName) ? inventoryContract.insurancePlanName : "" ) | titlecase }})
+                {{ (growerContract && growerContract.policyNumber) ? growerContract.policyNumber : "" }}   
+            </div>
+            <div style="display: grid; grid-template-columns: 28px 270px;">
+                <!-- unsaved messages -->
+                <div *ngIf="hasYieldData == false && hasDataChanged == true;">
+                    <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
+                </div>
+                <div *ngIf="hasYieldData == false && hasDataChanged == true;" class="unsaved-changes">
+                    Unsaved Changes 
+                </div>
+                
+                <!-- hidden totals warning -->
+                <div *ngIf="isHiddenFieldInTotals">
+                    <mat-icon [ngStyle]="{'color':'orange', 'width':'24px'}">warning</mat-icon>
+                </div>
+                <div *ngIf="isHiddenFieldInTotals" class="unsaved-changes">
+                    Hidden fields are included in acre totals
+                </div>
+            </div>
+            <!-- related policies -->
+            <div>
+                <related-policies
+                    [growerContract]="growerContract"
+                ></related-policies> 
+            </div>
+            <div class="vertical-line"></div>
+            <div matTooltip="Changes must be saved before download is possible.">
+                <button mat-raised-button class="secondary button-large-text" [disabled]="hasDataChanged == true || !inventoryContract || !inventoryContract.inventoryContractGuid"
+                (click)="onPrint('seeded')">
+                    <mat-icon class="button-mat-icon">download</mat-icon>Download
+                </button>
+            </div>
+            <div>
+                <button 
+                    *ngIf="securityUtilService.canEditInventory() && !hasYieldData" 
+                    mat-raised-button 
+                    [ngClass]="isHiddenFieldInTotals ? 'secondary header-button-red' : 'primary button-large-text'"
+                    [disabled]="!hasDataChanged" 
+                    (click)="onSave()">
+                        Save
+                </button>
+            </div>
+        </div>
+
+        <cirras-grower-contract-header
+            [growerContract]="growerContract"
+        ></cirras-grower-contract-header>  
+
+        <div *ngIf="hasYieldData == true" class="message-container">
+            <!-- The policy has yield message -->
+            <div class="has-yield-warning">
+                <mat-icon>warning</mat-icon>            
+                <span class="warning-message">
+                    Inventory edits are not permitted when a policy has DOP data.  
+                    If you need to update the inventory, delete the DOP data first.</span> 
+            </div>
+        </div>
+
+        <form [formGroup]="getViewModel().formGroup" (keydown.enter)="$event.preventDefault()" >
+ 
+        <div class="plcy-inv-form-header" [ngStyle]="setFormSeededStyles()">
+            <div>
+                <h2>Grain Seeded Crop Report | Schedule F - 6</h2>
+                <p>Last Updated: {{ ((inventoryContract && inventoryContract.invUpdateTimestamp) ? inventoryContract.invUpdateTimestamp : "" ) | date }}</p>
+            </div>
+            <div >
+                <button mat-raised-button class="secondary header-button" (click)="onToggleColumns()">
+                    <mat-icon  *ngIf="!getViewModel().formGroup.controls.showMoreColumns.value; else lessColumnsIcon" class="button-mat-icon" svgIcon="left-panel-open"></mat-icon> 
+                        
+                    <ng-template #lessColumnsIcon>
+                        <mat-icon  class="button-mat-icon" svgIcon="left-panel-close"></mat-icon>
+                    </ng-template>
+
+                    {{ ( !getViewModel().formGroup.controls.showMoreColumns.value) ? "More columns" : "Less Columns" }}
+
+                </button>
+            </div>
+            <div>
+                <button *ngIf="securityUtilService.canEditInventory() && !hasYieldData" mat-raised-button class="secondary header-button"  (click)="onAddNewField()">
+                    <mat-icon class="button-mat-icon">add</mat-icon>Add Field
+                </button>
+            </div>
+            <div>
+                <button *ngIf="!hasYieldData" 
+                    mat-raised-button 
+                    class="secondary header-button"  
+                    matTooltip="Clear unsaved changes"
+                    (click)="onCancel()">
+                    Clear Changes
+                </button>
+            </div>
+            <div class="vertical-line"></div>
+            <div>
+                <button *ngIf="securityUtilService.canDeleteInventory() && 
+                                inventoryContract && inventoryContract.inventoryContractGuid &&
+                                hasYieldData == false"  
+                    mat-raised-button class="secondary" 
+                    class="header-button-red"  
+                    (click)="onDeleteInventory()">
+                    <mat-icon class="button-mat-icon">delete_outlined</mat-icon>Reset Inventory
+                </button>
+            </div>
+        </div>
+
+        <div class="plcy-inv-fld-tbl-outer-wrapper flex-y-grow">
+
+            <!-- inventory table header it needs to stay on the screen -->
+            <div class="plcy-inv-field-box" [ngStyle]="setTableWrapperStyles()">
+                <div class="inventory-header border-left" style="width:40px">
+                    <mat-icon class="button-mat-icon" matTooltip="Drag this icon up or down to change the field order">drag_handle</mat-icon>
+                </div>
+                <div class="inventory-header" style="width:45px" matTooltip="Field Order">F.O.</div>
+                <div class="inventory-header" style="width:115px">Field ID</div>
+                <div class="inventory-header" style="width:164px;">Field Name</div>  
+                <div class="inventory-header" style="width:156px;">Legal Location</div> 
+
+                <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value" class="inventory-header" style="width:44px" matTooltip="Seeding Order">S.O.</div>
+                <div class="inventory-header" style="width:92px">Last Year's Crop</div>
+
+                <div class="inventory-header" style="width:140px">Crop Seeded</div>
+                <div class="inventory-header" style="width:180px">Variety</div>
+
+                <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value" class="inventory-header" style="width:156px">Class / Type</div>
+                <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value" class="inventory-header" style="width:78px">Pedigree</div>
+
+                <div class="inventory-header" style="width:106px">
+                    <span matTooltip="Acres are rounded to the nearest tenth after the decimal point">Acres* <br />Seeded</span></div>
+                
+                <div class="inventory-header" style="width:169px">Seeding Date</div>
+
+                <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value" class="inventory-header" style="width:68px">Re-seeded</div>
+                <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value" class="inventory-header" style="width:84px">Unseeded<br/>Insurable</div>
+                <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value" class="inventory-header" style="width:84px">Insurable<br/>Quantity</div>
+
+                <div class="inventory-header" style="width:94px">Insurable Spot-Loss</div>
+
+                <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value" class="inventory-header" style="width:164px">Underseeded Variety</div>
+                <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value" class="inventory-header" style="width:134px">
+                    <span matTooltip="Acres are rounded to the nearest tenth after the decimal point">Under-<br/>seeded Acres</span></div>
+
+                <div class="inventory-header" style="width:90px;">Manage Planting</div>
+                <div class="inventory-header" style="width:75px;">Manage Field</div> 
+            </div>
+
+            <!-- inventory table body -->
+            <div class="plcy-inv-fld-tbl-inner-wrapper flex-y-grow" [ngStyle]="setTableWrapperStyles()">
+                <div cdkDropList class="plcy-inv-field-container-green" [ngStyle]="setStyles()" 
+                    (cdkDropListDropped)="drop($event)">
+                        
+                    <div class="plcy-inv-field-box" cdkDragLockAxis="y" cdkDrag
+                        *ngFor="let field of getViewModel().formGroup.controls.fields['controls']; index as fieldIndex"
+                        [formGroup]="field">
+
+                        <div *ngIf="field.value.deletedByUserInd == false" 
+                            class="inventory-cell"
+                            [ngClass]=" isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border-exclude-printout border-left-exclude-printout' : 'inventory-border'" style="width:40px">
+                            <div class="plcy-inv-field-handle" cdkDragHandle>
+                                <mat-icon style="color: #888888;">drag_handle</mat-icon>
+                            </div>
+                        </div>
+           
+                        <div *ngIf="field.value.deletedByUserInd == false" 
+                            class="inventory-cell"
+                            [ngClass]="isFieldHiddenOnPrintout(fieldIndex)? 'inventory-border-exclude-printout' : 'inventory-border'" style="width:45px">
+                                {{field.value.displayOrder}}
+                        </div>
+                        <div *ngIf="field.value.deletedByUserInd == false" 
+                            class="inventory-cell"
+                            [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border-bottom-exclude-printout ' : 'inventory-border-bottom'" style="width:90px;">
+                                <span *ngIf="field.value.fieldId > 0">{{field.value.fieldId}}</span>
+                        </div> 
+                        <div *ngIf="field.value.deletedByUserInd == false" 
+                            class="inventory-cell"
+                            [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border-exclude-printout' : 'inventory-border'" style="width:25px;">
+                                <mat-icon 
+                                    *ngIf="isLinkedField(field.value.fieldId)" 
+                                    style="margin-top:4px; margin-right: 2px;"
+                                    [matTooltip]="linkedFieldTooltip(field.value.fieldId)">
+                                        link
+                                </mat-icon>
+                        </div> 
+
+                        <div *ngIf="field.value.deletedByUserInd == false" 
+                            class="inventory-fill" 
+                            [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border-exclude-printout' : 'inventory-border'" style="width:164px;">
+                            <mat-form-field appearance="fill">
+                                <input matInput type="text"
+                                        formControlName="fieldLabel"
+                                        (keydown)="navigateUpDown($event, 1)"
+                                        (blur)="isMyFormDirty()"
+                                        maxlength="28">
+                            </mat-form-field> 
+                            <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Field Name is writeable">edit</mat-icon>
+                        </div>
+                        <div *ngIf="field.value.deletedByUserInd == false" 
+                            class="inventory-cell" 
+                            [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border-exclude-printout' : 'inventory-border'" style="width:156px; display: flex; justify-content: space-between;"> 
+                            <span style="padding-left:10px;">{{ field.value.otherLegalDescription }} </span>
+                            <mat-icon *ngIf="securityUtilService.canEditInventory() && field.value.isNewFieldUI == false" style="padding-right:10px;" matTooltip="Edit Legal Location" (click)="onEditLocation(field)">arrow_forward</mat-icon>
+                        </div>
+                                                
+                        <div *ngIf="field.value.deletedByUserInd == false" 
+                            class="planting-container" 
+                            [ngStyle]="setPlantingStyles()"
+                            [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border-exclude-printout' : 'inventory-border'">
+                            
+                            <div *ngFor="let planting of field.value.plantings['controls']; index as plantingIndex; first as isFirst; last as isLast;"   
+                                [formGroup]="planting"    
+                                style="display:contents;"> 
+
+                                <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value && planting.value.deletedByUserInd != true" 
+                                    class="inventory-cell" style="width:44px;"
+                                    [ngClass]="isFieldHiddenOnPrintout(fieldIndex) 
+                                        ? 'inventory-border' 
+                                        : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) 
+                                            ? 'inventory-border-exclude-printout border-left-exclude-printout' 
+                                            :  'inventory-border' )">
+
+                                    <span style="padding-top: 6px; padding-left: 4px;">{{ planting.value.plantingNumber }}</span>
+                                </div>
+
+                                <div *ngIf="planting.value.deletedByUserInd != true"  
+                                    class="inventory-cell" style="width:92px;"
+                                    [ngClass]="isFieldHiddenOnPrintout(fieldIndex) 
+                                                ? 'inventory-border' 
+                                                : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) 
+                                                    ? (getViewModel().formGroup.controls.showMoreColumns.value 
+                                                        ? 'inventory-border-exclude-printout' 
+                                                        : 'inventory-border-exclude-printout border-left-exclude-printout' )
+                                                    :  'inventory-border' )" >
+
+                                    <span style="padding-top: 6px; padding-left: 4px;">{{ planting.value.lastYearCropCommodityVarietyName | titlecase }}</span>
+                                </div>
+                                
+                                <div *ngIf="planting.value.deletedByUserInd != true" > 
+
+                                    <div class="planting-container" [ngStyle]="setSeededGrainStyles()">
+                                        <div *ngFor="let inventorySeededGrains of planting.value.inventorySeededGrains['controls']; index as invSeededIndex"   
+                                            [formGroup]="inventorySeededGrains"    
+                                            style="display:contents;">  
+
+                                        <div *ngIf="inventorySeededGrains.value.deletedByUserInd != true"
+                                                class="inventory-fill" style="width:140px;"
+                                                [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">                                                  
+                                                <mat-form-field appearance="fill">
+                                                <mat-select hideSingleSelectionIndicator="true"
+                                                    formControlName="cropCommodityId" 
+                                                    (selectionChange)="cropCommodityChange($event, fieldIndex, plantingIndex, invSeededIndex)">
+                                                    <mat-option *ngFor="let option of seededCommodityOptions" [value]="option.cropCommodityId"
+                                                    >{{ option.commodityName | titlecase }}</mat-option>
+                                                </mat-select>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div *ngIf="inventorySeededGrains.value.deletedByUserInd != true"
+                                                class="inventory-fill" style="width:180px;"
+                                                [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
+
+                                                <mat-icon *ngIf="isVarietyWarningVisible(fieldIndex, plantingIndex, invSeededIndex)"
+                                                    matTooltip="Probable Yield review required"
+                                                    [ngStyle]="{'color':'orangered', 'padding-top': '4px'}">warning</mat-icon>
+
+                                                <mat-form-field appearance="fill" 
+                                                    [ngStyle]="{'background-color': shouldHighlightVariety(fieldIndex, plantingIndex, invSeededIndex) ? 'yellow' : '' }">
+
+                                                    <input 
+                                                        type="text" 
+                                                        matInput 
+                                                        formControlName="cropVarietyCtrl" 
+                                                        [matAutocomplete]="autoVrty"
+                                                        (focus)="varietyFocus(fieldIndex, plantingIndex, invSeededIndex)"
+                                                        (keydown)="clearCommoditySelection(fieldIndex, plantingIndex, invSeededIndex)"
+                                                        (keyup)="searchVariety($event.target.value, fieldIndex, plantingIndex, invSeededIndex)"
+                                                        (blur)="validateVariety(autoVrty, $event.target.value, fieldIndex, plantingIndex, invSeededIndex)">
+                                                    <mat-autocomplete #autoVrty="matAutocomplete"  hideSingleSelectionIndicator="true"
+                                                        [displayWith]="displayVarietyFn"
+                                                        (optionSelected)="varietySelected($event, fieldIndex, plantingIndex, invSeededIndex)">
+                                                    <mat-option *ngFor="let option of filteredSeededVarietyOptions" [value]="option">
+                                                        {{ option.varietyName | titlecase }}
+                                                    </mat-option>
+                                                    </mat-autocomplete>
+                                                </mat-form-field>  
+                                                <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Variety is writeable">edit</mat-icon>
+                                            </div>
+
+                                            <div 
+                                                *ngIf="getViewModel().formGroup.controls.showMoreColumns.value && inventorySeededGrains.value.deletedByUserInd != true" 
+                                                class="inventory-fill" style="width:156px;"
+                                                [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
+
+                                                <mat-form-field 
+                                                    *ngIf="inventorySeededGrains.value.commodityTypeOptions 
+                                                            && inventorySeededGrains.value.commodityTypeOptions.length > 1; else elseBlockCmdtyType" appearance="fill" >
+                                                    <mat-select hideSingleSelectionIndicator="true" formControlName="commodityTypeCode" (selectionChange)="isMyFormDirty()">
+                                                        <mat-option *ngFor="let option of inventorySeededGrains.value.commodityTypeOptions" [value]="option.commodityTypeCode"
+                                                        >{{ option.commodityTypeDesc | titlecase }}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            
+                                                <ng-template #elseBlockCmdtyType>
+                                                    <span style="padding-top: 6px; padding-left: 4px;">{{ inventorySeededGrains.value.commodityTypeDesc }}</span>
+                                                </ng-template>
+
+                                            </div>
+
+                                            <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value && inventorySeededGrains.value.deletedByUserInd != true" 
+                                                class="inventory-fill border-bottom border-right" style="width:78px;"
+                                                [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
+                                                <mat-checkbox 
+                                                    formControlName="isPedigreeInd" 
+                                                    (change)="isChecked($event, fieldIndex, plantingIndex, invSeededIndex)">
+                                                </mat-checkbox>
+                                            </div>
+
+                                            <div *ngIf="inventorySeededGrains.value.deletedByUserInd != true" 
+                                                class="inventory-fill" style="width:106px;"
+                                                [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
+                                                
+                                                <mat-form-field appearance="fill">
+                                                    <input matInput matInputCommified formControlName="seededAcres" 
+                                                            (keyup)="geInvSeededTotals()"
+                                                            (keypress)="numberOnly($event)" 
+                                                            (blur)="roundUpAcres(fieldIndex, plantingIndex, invSeededIndex); checkForHiddenFieldInTotals();"
+                                                            maxlength="10">
+                                                </mat-form-field>
+                                                <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Seeded Acres is writeable">edit</mat-icon>
+                                            </div>
+
+                                            <div *ngIf="inventorySeededGrains.value.deletedByUserInd != true" 
+                                                style="width:24px;"
+                                                [ngClass]="isFieldHiddenOnPrintout(fieldIndex) 
+                                                            ? 'inventory-border-bottom' 
+                                                            : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) 
+                                                                ? 'inventory-border-bottom-exclude-printout' 
+                                                                :  'inventory-border-bottom' )">
+
+                                                <mat-icon *ngIf="isFullCoverageWarningVisible(fieldIndex, plantingIndex, invSeededIndex)"
+                                                    matTooltip="Planting was seeded during the reduced coverage dates" 
+                                                    style="margin-right: 2px;" [ngStyle]="{'color':'orange', 'padding-top': '4px'}">warning</mat-icon>
+                                            
+                                                <mat-icon *ngIf="isFinalCoverageWarningVisible(fieldIndex, plantingIndex, invSeededIndex)"
+                                                    matTooltip="Planting was seeded after the seeding deadlines"
+                                                    [ngStyle]="{'color':'orangered', 'padding-top': '4px'}">warning</mat-icon>
+                                            </div>
+
+                                            <div *ngIf="inventorySeededGrains.value.deletedByUserInd != true"
+                                                class="inventory-date" style="width:145px;"
+                                                [ngClass]="isFieldHiddenOnPrintout(fieldIndex) 
+                                                            ? 'inventory-border' 
+                                                            : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) 
+                                                                    ? 'inventory-border-exclude-printout' :  'inventory-border' )">
+                                                
+                                                <mat-form-field appearance="fill" >
+                                                <input matInput 
+                                                    [matDatepicker]="picker"
+                                                    formControlName="seededDate" 
+                                                    (dateChange)="onDateChange(fieldIndex, plantingIndex, invSeededIndex)"
+                                                    (dateInput)="isMyFormDirty()"
+                                                    (blur)="validateSeededDate($event, fieldIndex, plantingIndex, invSeededIndex)">
+                                                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>                                            
+
+                                            <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value && inventorySeededGrains.value.deletedByUserInd != true" 
+                                                class="inventory-fill border-bottom border-left border-right" style="width:68px;"
+                                                [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
+
+                                                <mat-checkbox 
+                                                    formControlName="isReplacedInd" 
+                                                    (change)="isChecked($event, fieldIndex, plantingIndex, invSeededIndex)">
+                                                </mat-checkbox>
+                                            </div>
+
+                                            <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value && inventorySeededGrains.value.deletedByUserInd != true" 
+                                                class="border-bottom border-left" style="width:84px;"
+                                                [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
+                                                {{ planting.value.isUnseededInsurableInd ? 'Yes' : ''}}
+                                            </div>
+
+                                            <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value && inventorySeededGrains.value.deletedByUserInd != true" 
+                                                class="inventory-fill border-bottom border-left" style="width:84px;"
+                                                [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
+
+                                                <mat-checkbox 
+                                                    *ngIf="isSeededCommodityQuantityInsurable(fieldIndex, plantingIndex, invSeededIndex)"
+                                                    formControlName="isQuantityInsurableInd" 
+                                                    (change)="isChecked($event, fieldIndex, plantingIndex, invSeededIndex);checkForHiddenFieldInTotals();">
+                                                </mat-checkbox>
+                                            </div>
+
+                                            <div *ngIf="inventorySeededGrains.value.deletedByUserInd != true" 
+                                                class="inventory-fill border-bottom border-left" style="width:94px;"
+                                                [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )">
+                                                <mat-checkbox 
+                                                    *ngIf="isSeededCommoditySpotLossInsurable(fieldIndex, plantingIndex, invSeededIndex)"
+                                                    formControlName="isSpotLossInsurableInd" 
+                                                    (change)="isChecked($event, fieldIndex, plantingIndex, invSeededIndex);checkForHiddenFieldInTotals();">
+                                                </mat-checkbox>
+                                            </div>
+                                            
+                                            <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value && inventorySeededGrains.value.deletedByUserInd != true"
+                                                class="inventory-fill border-left " 
+                                                [ngClass]="(isLast) ? 'border-bottom' : ''"
+                                                [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )"
+                                                style="width:164px;">
+
+                                                <mat-form-field appearance="fill"> 
+                                                    <input 
+                                                        type="text" 
+                                                        matInput 
+                                                        formControlName="underSeededVrtyCtrl" 
+                                                        [matAutocomplete]="autoUnderSeededVrty" 
+                                                        (keyup)="searchUnderSeededVariety($event.target.value)"
+                                                        (focus)="underseededVarietyFocus()"
+                                                        (blur)="validateUnderSeededVariety(autoUnderSeededVrty, fieldIndex, plantingIndex, invSeededIndex)">
+                                                    <mat-autocomplete #autoUnderSeededVrty="matAutocomplete"  hideSingleSelectionIndicator="true"
+                                                        [displayWith]="displayVarietyFn">
+                                                    <mat-option *ngFor="let option of filteredUnderSeededVarietyOptions" [value]="option">
+                                                        {{ option.varietyName | titlecase }}
+                                                    </mat-option>
+                                                    </mat-autocomplete>
+                                                </mat-form-field>
+                                                <mat-icon style="padding-right:10px; font-size:18px; margin-top:6px;" matTooltip="Underseeded Variety is writeable">edit</mat-icon>
+                                            </div> 
+
+                                            <div *ngIf="getViewModel().formGroup.controls.showMoreColumns.value && inventorySeededGrains.value.deletedByUserInd != true"
+                                                class="inventory-fill number border-left " 
+                                                [ngClass]="(isLast) ? 'border-bottom' : ''"
+                                                [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout' :  'inventory-border' )"
+                                                style="width:134px;">
+                                               
+                                                <mat-form-field appearance="fill" 
+                                                    [ngStyle]="{'background-color': shouldHighlightUnderseeded(fieldIndex, plantingIndex, invSeededIndex) ? 'yellow' : '' }" > 
+                                                    <input 
+                                                        formControlName="underSeededAcres"
+                                                        matInput matInputCommified
+                                                        (keypress)="numberOnly($event)"  
+                                                        (keyup)="isMyFormDirty()"
+                                                        (blur)="roundUpUnderSeededAcres(fieldIndex, plantingIndex, invSeededIndex)"
+                                                        [readonly]="isUnderSeededAcresReadOnly(fieldIndex, plantingIndex, invSeededIndex)"
+                                                        maxlength="10">
+                                                </mat-form-field>
+                                                
+                                                <mat-icon 
+                                                    *ngIf="isInfoVisible(field.value.fieldId, inventorySeededGrains)"
+                                                    matTooltip="The forage policy has a different grower than the grain policy." 
+                                                    >info_outlined</mat-icon>
+
+                                                <mat-icon
+                                                    *ngIf="isWarningVisible(field.value.fieldId, planting.value.inventoryFieldGuid, inventorySeededGrains)"
+                                                    [matTooltip]="getWarningTooltip(field.value.fieldId, planting.value.inventoryFieldGuid, inventorySeededGrains)">
+                                                        warning
+                                                </mat-icon>
+
+                                                <mat-icon 
+                                                    *ngIf="isLinkedPlanting(field.value.fieldId, planting.value.inventoryFieldGuid)"
+                                                    [matTooltip]="linkedPlantingTooltip(field.value.fieldId, planting.value.inventoryFieldGuid)">link</mat-icon>
+                                                
+                                                <mat-icon 
+                                                    *ngIf="inventorySeededGrains.value.underSeededAcres"
+                                                    matTooltip="Add or remove link of underseeded Grain planting to a Forage planting." 
+                                                    (click)="onLinkPlantings(field, plantingIndex, invSeededIndex)">edit</mat-icon>
+
+                                            </div> 
+
+                                            <div *ngIf="inventorySeededGrains.value.deletedByUserInd != true"
+                                                class="border-bottom border-right border-left" style="width:90px; align-items:center;"
+                                                [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border' : ( isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'inventory-border-exclude-printout border-right-exclude-printout' :  'inventory-border' )">
+
+                                                <mat-icon 
+                                                    [ngStyle]="{'color': (securityUtilService.canEditInventory() && isAddPlantingVisible(planting, invSeededIndex)) ? '#666666' : '#C2C2C2' }" 
+                                                    matTooltip="Add New Planting" 
+                                                    (click)="onAddPlantingLocal(planting, invSeededIndex)">
+                                                    add
+                                                </mat-icon>
+                                                <mat-icon *ngIf="securityUtilService.canEditInventory()"
+                                                    matTooltip="Delete Planting" 
+                                                    style="margin-left: 4px; margin-right: 4px;"
+                                                    (click)="onDeletePlanting(planting, invSeededIndex)"
+                                                    svgIcon="cancel"></mat-icon>
+
+                                                <mat-icon 
+                                                    matTooltip="Hide on printout" 
+                                                    svgIcon="{{ isPlantingHiddenOnPrintout(fieldIndex, plantingIndex) ? 'visibility_off' : 'visibility' }}" 
+                                                    (click)="toggleHiddenOnPrintout(fieldIndex, plantingIndex);checkForHiddenFieldInTotals();"></mat-icon>
+
+                                            </div>
+                                        </div>
+                                    </div>                        
+                                </div>
+
+                            </div>
+                        </div> 
+
+                        <div *ngIf="field.value.deletedByUserInd == false" 
+                            class="inventory-cell" 
+                            [ngClass]="isFieldHiddenOnPrintout(fieldIndex) ? 'inventory-border-exclude-printout  border-right-exclude-printout' : 'inventory-border'" 
+                            style="width:75px">
+                            <uw-comments-button
+                                [insurancePlanId]="currentInsurancePlanId"
+                                [underwritingCommentTypeCode]="'INV'"
+                                [annualFieldDetailId]="field.value.annualFieldDetailId"
+                                [fieldId]="field.value.fieldId"
+                                [fieldName]="field.value.fieldLabel"
+                                [legalLocation]="field.value.otherLegalDescription"
+                                [uwComments]="field.value.uwComments"
+                                (onDone)="onInventoryCommentsDone(field.value.fieldId, $event)"></uw-comments-button>
+
+                            <mat-icon matTooltip="View History">history</mat-icon>
+                            <mat-icon class="delete-icon"
+                                *ngIf="securityUtilService.canEditInventory(); else elseBlockDelFld" 
+                                matTooltip="Delete field or remove it from policy" 
+                                (click)="onDeleteField(field)">delete_outline</mat-icon>
+                            <ng-template #elseBlockDelFld><span style="width: 25px;"></span></ng-template>
+                        </div>
+
+                    </div>
+
+                    <div class="plcy-inv-field-box" style="background-color: white;">
+                        <div class="inventory-header border-left" [ngStyle]="setTotalsLineStyles()">
+                                <span style="margin-right:4px"> 
+                                    <span matTooltip="Acres are rounded to the nearest tenth after the decimal point">Total Insurable Quantity:</span>
+                                </span>                
+                            </div>
+                        <div class="inventory-header" style="width: 106px; justify-content: left; padding-left:10px;">
+                            <span style="margin-right: 0.8em;">
+                                {{ sumInsuredQuantityAcres | number: '1.0-1' }} 
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="plcy-inv-field-box" style="background-color: white;">
+                        <div class="inventory-header border-left" [ngStyle]="setTotalsLineStyles()">
+                                <span style="margin-right:4px"> 
+                                    <span matTooltip="Acres are rounded to the nearest tenth after the decimal point">
+                                    Total Spot-Loss Insurable Acres: </span>
+                                </span>                
+                            </div>
+                        <div class="inventory-header" style="width: 106px; justify-content: left; padding-left:10px;">
+                            <span style="margin-right: 0.8em;">
+                                {{ sumInsuredSpotLossAcres | number: '1.0-1' }} 
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- inventory contract data  -->
+            <div class="plcy-inv-cntrct" style="grid-template-columns: 700px 600px" >
+                <div class="question" 
+                    style="border: 1px solid #B8CFB8; background: #F1F7F1; 
+                        display: grid;
+                        grid-auto-rows: minmax( 2em, auto );
+                        grid-template-columns: 580px 100px">
+                    <div style="padding-top: 6px;">
+                        Do you expect to have grain stored from previous crop years on August 1st?
+                    </div>
+                    <div class="question-dropdown" style="padding-bottom: 16px;">
+                        <mat-form-field appearance="outline" style="width: 100px;">
+                            <mat-select hideSingleSelectionIndicator="true" formControlName="grainFromPrevYearInd" (selectionChange)="isMyFormDirty()">
+                                <mat-option [value]=""></mat-option>
+                                <mat-option [value]="true">Yes</mat-option>
+                                <mat-option [value]="false">No</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div style="padding-left: 100px;">
+
+                    <!-- commodity totals -->
+                    <div class="plcy-inv-cmdty-totals-header"> 
+                        <div class="header border-top border-bottom border-left border-right"> Commodity </div>
+                        <div class="border-right header border-top border-bottom">
+                            <span matTooltip="Acres are rounded to the nearest tenth after the decimal point">Acres (QTY)</span></div>
+                        <div class="border-right header border-top border-bottom">
+                            <span matTooltip="Acres are rounded to the nearest tenth after the decimal point">Acres (Spot-Loss)</span></div>
+                    </div>
+
+                    <div class="plcy-inv-cmdty-totals-container"> 
+                        <div *ngFor="let commodity of getViewModel().formGroup.controls.commodities['controls']"
+                            [formGroup]="commodity"          
+                            class="repeat" style="width:410px;"> <!-- style="display:contents" -->
+
+                            <div *ngIf="commodity.value.isVisible" class="border-right border-bottom border-left" style="padding-left: 6px; width:150px;">               
+                                {{ commodity.value.cropCommodityName | titlecase }}
+                            </div>
+                
+                            <div *ngIf="commodity.value.isVisible" class="border-right border-bottom" style="padding-left: 6px; width:120px;">               
+                                {{ commodity.value.totalSeededAcres | number: '1.0-1' }}
+                            </div>
+                
+                            <div *ngIf="commodity.value.isVisible" class="border-right border-bottom" style="padding-left: 6px; width:140px;">               
+                                {{ commodity.value.totalSpotLossAcres | number: '1.0-1' }}
+                            </div>
+                        
+                        </div>
+                    </div>
+                    <div class="plcy-inv-cmdty-totals-header"> 
+                        <div class="header border-right border-bottom border-left">               
+                            Total
+                        </div>
+            
+                        <div class="header border-right border-bottom center">               
+                            {{ sumCommodityTotalInsuredQuantityAcres | number: '1.0-1' }}
+                        </div>
+            
+                        <div class="header border-right border-bottom center">
+                            {{ sumCommodityTotalSpotLossAcres | number: '1.0-1'  }}
+                        </div>
+                    </div>
+                    
+                </div>
+
+            </div>
+
+        </div>
+    </form>
+
+    
+    </div>
+</div>
