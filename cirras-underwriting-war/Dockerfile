@@ -1,6 +1,6 @@
 FROM tomcat:10.1.61-jre21
 
-COPY ./cirras-underwriting-war/target/cirras-underwriting-war-4.1.2-SNAPSHOT.war .
+COPY ./cirras-underwriting-war/target/cirras-underwriting-war-4.1.2.war .
 COPY ./deploy-tools/log4j2.xml .
 COPY ./deploy-tools/server.xml .
 
