@@ -58,7 +58,7 @@ body {
     width: 100%;
   }
 
-  mat-toolbar.wf1-public-application-header {
+  mat-toolbar.pit-public-application-header {
     flex: 0 0 auto;
   }
 
@@ -169,7 +169,7 @@ a:hover {
 #core-interface-container .ngx-pagination {
   text-align: center;
   padding-inline-start: 0;
-  border-radius: var.$wf1-border-radius;
+  border-radius: var.$pit-border-radius;
   margin: 0;
 
   li:first-child {
@@ -696,7 +696,7 @@ mat-error.mat-mdc-form-field-error {
       justify-content: space-between;
       box-shadow: none;
       border: solid 1px var.$colour-light-grey;
-      border-radius: var.$wf1-border-radius;
+      border-radius: var.$pit-border-radius;
     }
   }
 }

@@ -18,7 +18,7 @@ declare var $: any;
     standalone: false
 })
 export class MultiSelectDirective implements AfterViewInit, OnChanges {
-    @Input() appWFPlaceholder?: string;
+    @Input() appPitPlaceholder?: string;
     @Input() options: any[];
     @Input() selected: any[];
     @Output() updated: EventEmitter<any> = new EventEmitter();
@@ -54,7 +54,7 @@ export class MultiSelectDirective implements AfterViewInit, OnChanges {
             self.onClick();
         });
         this.multiselect = $(this.selectHtmlElement).multipleSelect({
-            placeholder: this.appWFPlaceholder ? this.appWFPlaceholder : "Select...",
+            placeholder: this.appPitPlaceholder ? this.appPitPlaceholder : "Select...",
             minimumCountSelected: 1,
             onClick: this.onClick.bind(this),
             onCheckAll: this.checkAll.bind(this),

@@ -46,7 +46,7 @@
 
                   <div class="field">
                     <mat-label class="label filter-label">Plan</mat-label>
-                    <select appWFSingleSelect appWFPlaceholder="All"
+                    <select appPitSingleSelect appPitPlaceholder="All"
                             class="select-selectedPlan"
                             aria-label="Plan"
                             [options]="insurancePlans"
@@ -63,7 +63,7 @@
                   
                   <div class="field">
                       <mat-label class="label filter-label">Crop Year</mat-label>
-                      <select appWFSingleSelect appWFPlaceholder="All"
+                      <select appPitSingleSelect appPitPlaceholder="All"
                               class="select-selectedCropYear"
                               aria-label="Crop Year"
                               [options]="cropYearOptions"
@@ -80,7 +80,7 @@
 
                   <div class="field">
                       <mat-label class="label filter-label">Policy Status</mat-label>
-                      <select appWFSingleSelect appWFPlaceholder="All"
+                      <select appPitSingleSelect appPitPlaceholder="All"
                               class="select-selectedPolicyStatus"
                               aria-label="Policy Status"
                               [options]="policyStatusOptions"
@@ -96,9 +96,9 @@
                   </div>
                   <div class="field">
                       <mat-label class="label filter-label">Office</mat-label>
-                      <select appWFSingleSelect
+                      <select appPitSingleSelect
                               class="select-selectedOffice"
-                              appWFPlaceholder="All"
+                              appPitPlaceholder="All"
                               aria-label="Office"
                               [selected]="selectedOffice"
                               [options]="officeOptions"
@@ -113,8 +113,8 @@
                   </div>
                   <div class="field">
                     <mat-label class="label filter-label">Report Type</mat-label>
-                    <select appWFSingleSelect
-                            appWFPlaceholder="Inventory"
+                    <select appPitSingleSelect
+                            appPitPlaceholder="Inventory"
                             aria-label="Report Type"
                             [options]="reportTypes"
                             [selected]="selectedReportType"
@@ -230,7 +230,7 @@
                                 <span>
                                     Show
                                 </span>
-                    <select appWFSingleSelect appWFPlaceholder="Select..."
+                    <select appPitSingleSelect appPitPlaceholder="Select..."
                             aria-label="Show entries"
                             [selected]="showEntriesSelection"
                             [options]="showEntriesOptions"

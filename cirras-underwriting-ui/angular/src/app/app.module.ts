@@ -61,7 +61,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatButtonModule} from "@angular/material/button";
 import {OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlMomentDateTimeModule} from "@busacca/ng-pick-datetime";
 import {BaseExpansionPanelComponent} from "./components/common/base-expansion-panel/base-expansion-panel.component";
-import {WFSnackbarComponent} from "./components/common/snackbars/wf-snackbar.component";
+import {PitSnackbarComponent} from "./components/common/snackbars/pit-snackbar.component";
 import {TimeMaskDirective} from "./directives/time-mask.directive";
 import {DateTimeMaskDirective} from "./directives/date-time-mask.directive";
 import {DateMaskDirective} from "./directives/date-mask.directive";
@@ -115,7 +115,7 @@ import { YieldConversionComponent } from './components/maintain/yield-conversion
 import { YieldConversionContainer } from "./containers/maintenance/yield-conversion-container.component";
 import { YieldConversionUnitsComponent } from './components/maintain/yield-conversion/yield-conversion-units/yield-conversion-units.component';
 import { YieldConversionUnitsContainer } from "./containers/maintenance/yield-conversion-units-container.component";
-import { WildfireApplicationModule , WildfireResourceManagerModule } from "@wf1/wfcc-application-ui";
+import { PitApplicationModule } from "@bcgov/pit-common-application-lib";
 import { RelatedPoliciesComponent } from './components/related-policies/related-policies.component';
 import { UnsavedDialogComponent } from './components/dialogs/unsaved-dialog/unsaved-dialog.component';
 import { ForageDopComponent } from './components/dop/forage/forage-dop.component';
@@ -198,7 +198,7 @@ if (!environment.production || !environment.restrict_imports) {
         MultiSelectDirective,
         SingleSelectDirective,
         MatInputCommifiedDirective,
-        WFSnackbarComponent,
+        PitSnackbarComponent,
         BaseExpansionPanelComponent,
         BaseDialogComponent,
         AutoFocusDirective,
@@ -345,8 +345,9 @@ if (!environment.production || !environment.restrict_imports) {
         A11yModule,
         MatNativeDateModule,
         MatDatepickerModule,
-        WildfireApplicationModule.forRoot(),
-        WildfireResourceManagerModule.forRoot()], providers: [
+        PitApplicationModule.forRoot() // ,
+        // WildfireResourceManagerModule.forRoot()
+    ], providers: [
         // Added provideBootstrapEffects function to handle the ngrx issue that loads effects before APP_INITIALIZER
         // providers have finished initializing.
         // See https://github.com/ngrx/platform/issues/931 for more information.

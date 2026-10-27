@@ -104,7 +104,7 @@ export class UwCommentsButtonComponent {
             data: this.data,
             autoFocus: false,
             closeOnNavigation: false,
-            panelClass: 'wf-dialog'
+            panelClass: 'pit-dialog'
         });
 
         const self = this;

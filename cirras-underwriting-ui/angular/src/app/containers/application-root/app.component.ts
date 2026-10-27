@@ -7,15 +7,15 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {MatIconRegistry} from "@angular/material/icon";
 import {ApplicationStateService} from "../../services/application-state.service";
 import {addRemoveCdkOverlayClass} from "../../utils";
-import { RouterLink, WfApplicationConfiguration, WfApplicationState, WfDevice } from "@wf1/wfcc-application-ui";
+import { PitApplicationConfiguration, PitApplicationState, PitDevice, RouterLink } from "@bcgov/pit-common-application-lib"; 
 import {Subscription} from "rxjs";
 import { ResourcesRoutes } from "src/app/utils/constants";
 import { MatDialog } from "@angular/material/dialog";
 import { AppConfigService, TokenService } from "@bcgov/pit-common-core-lib";
 import { SecurityUtilService } from "src/app/services/security-util.service";
-import { ROUTE_SCOPES, SCOPES_UI } from "src/app/utils/scopes";
+import { ROUTE_SCOPES } from "src/app/utils/scopes";
 
-const DEVICE: WfDevice = 'desktop';
+const DEVICE: PitDevice = 'desktop';
 
 @Component({
     selector: "cirras-underwriting-root",
@@ -26,13 +26,13 @@ const DEVICE: WfDevice = 'desktop';
 })
 export class AppComponent implements OnInit {
 
-    applicationState: WfApplicationState = {
+    applicationState: PitApplicationState = {
         menu: 'expanded'
     };
 
     appMenu: RouterLink[] = [];
 
-    applicationConfig: WfApplicationConfiguration = {
+    applicationConfig: PitApplicationConfiguration = {
         title: "PRODUCTION INSURANCE UNDERWRITING",
         device: DEVICE,
         userName: "",

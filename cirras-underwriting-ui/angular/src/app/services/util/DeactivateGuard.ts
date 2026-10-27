@@ -52,7 +52,7 @@ export class DeactivateGuard  {
             data: displayLabel,
             autoFocus: false,
             closeOnNavigation: false,
-            panelClass: 'wf-dialog'
+            panelClass: 'pit-dialog'
         };
         this.applicationStateService.resetViewportScale();
         const dialogRef = this.dialog.open(UnsavedDialogComponent, config);

@@ -7,14 +7,14 @@
                     <div>Annual Grade Adjustments</div>
                     <div>Manage Grain Grade Modifiers</div>
                     <div class="top-filter" style="margin: 0;">
-                        <select appWFSingleSelect appWFPlaceholder="Select Crop Year" aria-label="Crop Year"
+                        <select appPitSingleSelect appPitPlaceholder="Select Crop Year" aria-label="Crop Year"
                             [options]="uwYearOptions" (updated)="uwYearsChange($event)" [selected]="selectedCropYear">
                             <option value=""><span class="placeholder">Select Crop Year</span></option>
                             <option *ngFor="let option of uwYearOptions" value="{{option.cropYear}}">
                                 <span>{{option.cropYear}}</span>
                             </option>
                         </select>
-                        <select appWFSingleSelect appWFPlaceholder="Select Commodity" aria-label="Commodity"
+                        <select appPitSingleSelect appPitPlaceholder="Select Commodity" aria-label="Commodity"
                             [options]="cropCommodityOptions" (updated)="selectedCropCommodityIdChange($event)"
                             [selected]="selectedCropCommodityId">
                             <option value=""><span class="placeholder">Select Commodity</span></option>
