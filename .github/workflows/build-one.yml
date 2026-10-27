@@ -49,5 +49,5 @@ jobs:
       MICROSERVICE_NAME: cirras-underwriting-ui
       TAG: ${{ inputs.TAG }}
       UI_TARGET: cirras-underwriting-ui
-      NPM_ARTIFACT_PATH: \@pit/cirras-underwriting-ui/-/@cirras
+      NPM_ARTIFACT_PATH: \@pit/cirras-underwriting-ui/-/@pit
       

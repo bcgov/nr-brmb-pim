@@ -41,4 +41,4 @@ jobs:
       ENVIRONMENT: DEV
       MICROSERVICE_NAME: cirras-underwriting-ui
       UI_TARGET: cirras-underwriting-ui
-      NPM_ARTIFACT_PATH: \@cirras/cirras-underwriting-ui/-/@cirras
+      NPM_ARTIFACT_PATH: \@pit/cirras-underwriting-ui/-/@pit

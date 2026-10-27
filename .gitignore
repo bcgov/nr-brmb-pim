@@ -7,3 +7,4 @@ cirras-underwriting-api/src/test/resources/static.properties
 cirras-underwriting-war/settings.xml
 cirras-underwriting-listener-api/cirras-underwriting-listener-failover-service/src/test/resources/static.properties
 cirras-underwriting-listener-api/cirras-underwriting-listener-api-rest-endpoints/src/test/resources/static.properties
+cirras-underwriting-ui/angular/unused-report.html
