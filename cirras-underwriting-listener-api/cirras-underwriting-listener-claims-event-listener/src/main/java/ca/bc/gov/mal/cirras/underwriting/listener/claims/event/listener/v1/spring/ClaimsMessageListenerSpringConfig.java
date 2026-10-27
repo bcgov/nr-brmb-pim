@@ -32,12 +32,12 @@ public class ClaimsMessageListenerSpringConfig {
 
 	static final Logger logger = LoggerFactory.getLogger(ClaimsMessageListenerSpringConfig.class);
 
-	@Value("${message-queue.url}")
+	@Value("${MESSAGE_QUEUE_URL}")
 	private String natsURL;
 	
-	@Value("${message-queue.underwriting.sync.rest.nkey.seed}")
+	@Value("${MESSAGE_QUEUE_UNDERWRITING_REST_NKEY_SEED}")
 	private String nkeySeed;
-	
+
 	
 	@Autowired
 	private ServiceApiSpringConfig serviceApiSpringConfig;
@@ -77,27 +77,26 @@ public class ClaimsMessageListenerSpringConfig {
 
 	}
 	
-	
-	@Value("${email.error.send.frequency}")
-	private String emailFrequency;
+	@Value("${EMAIL_ERROR_SEND_FREQUENCY}")
+	private String emailErrorSendFrequency;
 	
 	public long emailFrequency() {
 		long result = 10*1000*60;
 		
-		if(emailFrequency!=null) {
+		if(emailErrorSendFrequency!=null) {
 			
-			result = Long.valueOf(emailFrequency).longValue() * 60 * 1000;
+			result = Long.valueOf(emailErrorSendFrequency).longValue() * 60 * 1000;
 		}
 		
 		return result;
 	}
 
-	@Value("${default.application.environment}")
+	@Value("${APPLICATION_ENVIRONMENT_NAME}")
 	private String environment;
 	
 	private static final String ENVIRONMENT_PLACE_HOLDER = "%environment%";
 
-	@Value("${email.underwriting.listener.synch.error.subject}")
+	@Value("${EMAIL_UW_LISTENER_SYNCH_ERROR_SUBJECT}")
 	private String emailSubjectTemplate;
 	
 	private String emailSubject() {
@@ -108,16 +107,16 @@ public class ClaimsMessageListenerSpringConfig {
 		return result;
 	}
 
-	@Value("${email.admin.address}")
+	@Value("${EMAIL_ADMIN_ADDRESS}")
 	private String rawAddresses;
 
-	@Value("${email.host.name}")
+	@Value("${EMAIL_HOST_NAME}")
 	private String emailHostName;
 
-	@Value("${email.port}")
+	@Value("${EMAIL_PORT}")
 	private String emailPort;
 
-	@Value("${email.from.address}")
+	@Value("${EMAIL_FROM_ADDRESS}")
 	private String emailFromAddress;
 
 	private Session emailSession() {

@@ -24,21 +24,17 @@ import ca.bc.gov.mal.cirras.underwriting.listener.policies.event.listener.v1.Nat
 import io.nats.client.Options;
 
 @Configuration
-@Import({ 
-	ServiceApiSpringConfig.class,
-	FailoverServiceSpringConfig.class
-})
+@Import({ ServiceApiSpringConfig.class, FailoverServiceSpringConfig.class })
 public class PoliciesMessageListenerSpringConfig {
 
 	static final Logger logger = LoggerFactory.getLogger(PoliciesMessageListenerSpringConfig.class);
 
-	@Value("${message-queue.url}")
+	@Value("${MESSAGE_QUEUE_URL}")
 	private String natsURL;
-	
-	@Value("${message-queue.underwriting.sync.rest.nkey.seed}")
+
+	@Value("${MESSAGE_QUEUE_UNDERWRITING_REST_NKEY_SEED}")
 	private String nkeySeed;
-	
-	
+
 	@Autowired
 	private ServiceApiSpringConfig serviceApiSpringConfig;
 
@@ -51,8 +47,7 @@ public class PoliciesMessageListenerSpringConfig {
 		logger.debug(">PoliciesMessageListenerSpringConfig");
 	}
 
-
-	@Bean 
+	@Bean
 	Options natsConnectionOptions() {
 
 		logger.info("NATS Server URL: " + natsURL);
@@ -61,84 +56,77 @@ public class PoliciesMessageListenerSpringConfig {
 		NatsConnectionListener connListener = new NatsConnectionListener();
 		NatsErrorListener errListener = new NatsErrorListener();
 
-		Options.Builder builder = new Options.Builder()
-                .server(natsURL)
-                .connectionTimeout(Duration.ofSeconds(10))
-                .pingInterval(Duration.ofSeconds(30))
-                .reconnectWait(Duration.ofSeconds(10))
-                .authHandler(authHandler)
-                .connectionListener(connListener)
-                .errorListener(errListener)
-                .maxReconnects(3);
-		
-        Options options = builder.build();
+		Options.Builder builder = new Options.Builder().server(natsURL).connectionTimeout(Duration.ofSeconds(10))
+				.pingInterval(Duration.ofSeconds(30)).reconnectWait(Duration.ofSeconds(10)).authHandler(authHandler)
+				.connectionListener(connListener).errorListener(errListener).maxReconnects(3);
 
-        return options;
+		Options options = builder.build();
+
+		return options;
 
 	}
-	
-	
-	@Value("${email.error.send.frequency}")
-	private String emailFrequency;
-	
+
+	@Value("${EMAIL_ERROR_SEND_FREQUENCY}")
+	private String emailErrorSendFrequency;
+
 	public long emailFrequency() {
-		long result = 10*1000*60;
-		
-		if(emailFrequency!=null) {
-			
-			result = Long.valueOf(emailFrequency).longValue() * 60 * 1000;
+		long result = 10 * 1000 * 60;
+
+		if (emailErrorSendFrequency != null) {
+
+			result = Long.valueOf(emailErrorSendFrequency).longValue() * 60 * 1000;
 		}
-		
+
 		return result;
 	}
 
-	@Value("${default.application.environment}")
+	@Value("${APPLICATION_ENVIRONMENT_NAME}")
 	private String environment;
-	
+
 	private static final String ENVIRONMENT_PLACE_HOLDER = "%environment%";
 
-	@Value("${email.underwriting.listener.synch.error.subject}")
+	@Value("${EMAIL_UW_LISTENER_SYNCH_ERROR_SUBJECT}")
 	private String emailSubjectTemplate;
-	
+
 	private String emailSubject() {
 		String result;
-		
+
 		result = emailSubjectTemplate.replace(ENVIRONMENT_PLACE_HOLDER, environment);
-		
+
 		return result;
 	}
 
-	@Value("${email.admin.address}")
+	@Value("${EMAIL_ADMIN_ADDRESS}")
 	private String rawAddresses;
 
-	@Value("${email.host.name}")
+	@Value("${EMAIL_HOST_NAME}")
 	private String emailHostName;
 
-	@Value("${email.port}")
+	@Value("${EMAIL_PORT}")
 	private String emailPort;
 
-	@Value("${email.from.address}")
+	@Value("${EMAIL_FROM_ADDRESS}")
 	private String emailFromAddress;
 
 	private Session emailSession() {
 		logger.debug("<emailSession");
 		Session result;
-		
+
 		Properties mailProperties = new Properties();
 		mailProperties.setProperty("mail.smtp.host", emailHostName);
 		mailProperties.setProperty("mail.smtp.port", emailPort);
 		mailProperties.setProperty("mail.from.address", emailFromAddress);
-		
+
 		result = Session.getDefaultInstance(mailProperties);
-		
+
 		logger.debug(">emailSession");
 		return result;
 	}
-	
+
 	@Bean
 	public EventListener policiesEventListener() {
 		CirrasUnderwritingPoliciesEventListenerImpl result;
-		
+
 		result = new CirrasUnderwritingPoliciesEventListenerImpl();
 
 		result.setMessageQueueOptions(natsConnectionOptions());
@@ -146,24 +134,23 @@ public class PoliciesMessageListenerSpringConfig {
 		result.setMessageQueueStream("policies-event-channel");
 		result.setInitialRedeliveryDelaySeconds(5);
 		result.setReceiveTimeoutMilis(1000);
-		result.setCirrasUnderwritingPoliciesListenerService(serviceApiSpringConfig.cirrasUnderwritingPoliciesListenerService());
+		result.setCirrasUnderwritingPoliciesListenerService(
+				serviceApiSpringConfig.cirrasUnderwritingPoliciesListenerService());
 		result.setEmailFrequency(emailFrequency());
 		result.setEmailSession(emailSession());
 		result.setEmailSubject(emailSubject());
 		result.setRawAddresses(rawAddresses);
 		result.setEmailFrom(emailFromAddress);
-		
+
 		return result;
 	}
-	
+
 	@Bean
 	public FailoverEventListener policiesFailoverEventListener() {
 		FailoverEventListener result;
-		
-		result = new FailoverEventListener(
-				policiesFailOverService, 
-				policiesEventListener());
-		
+
+		result = new FailoverEventListener(policiesFailOverService, policiesEventListener());
+
 		return result;
 	}
 
