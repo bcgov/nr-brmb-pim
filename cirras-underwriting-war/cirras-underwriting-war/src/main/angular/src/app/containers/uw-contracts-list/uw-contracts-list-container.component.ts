@@ -12,7 +12,7 @@ import {
 } from "../../store/application/application.selectors";
 
 import { UW_CONTRACTS_SEARCH_COMPONENT_ID } from "src/app/store/uw-contracts-list/uw-contracts-list.state";
-import {SearchState} from "@wf1/wfcc-core-lib";
+import {SearchState} from "@bcgov/pit-common-core-lib";
 import { CropCommodityList } from "src/app/conversion/models";
 import {selectCropCommodityList} from "src/app/store/crop-commodity/crop-commodity.selectors";
 import { UserSetting } from "src/app/conversion/models-maintenance";

@@ -1,4 +1,4 @@
-import {SearchState} from "@wf1/wfcc-core-lib";
+import {SearchState} from "@bcgov/pit-common-core-lib";
 import {InventoryContractList, UwContractsList} from "../../conversion/models";
 import {getDefaultPagingInfoRequest} from "../application/application.state";
 

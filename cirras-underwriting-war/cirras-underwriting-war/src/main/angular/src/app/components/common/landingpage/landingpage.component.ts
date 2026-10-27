@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
-import {AppConfigService, TokenService} from "@wf1/wfcc-core-lib";
+import {AppConfigService, TokenService} from "@bcgov/pit-common-core-lib";
 import {Overlay} from "@angular/cdk/overlay";
 import { HttpClient } from '@angular/common/http';
 import { setHttpHeaders, userCanAccessDop, userCanAccessInventory, userCanAccessVerifiedYield } from 'src/app/utils';

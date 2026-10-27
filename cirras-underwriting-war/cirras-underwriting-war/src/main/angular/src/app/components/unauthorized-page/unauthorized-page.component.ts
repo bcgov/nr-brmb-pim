@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
-import {TokenService} from "@wf1/wfcc-core-lib";
+import {TokenService} from "@bcgov/pit-common-core-lib";
 import {BaseComponent} from "../common/base/base.component";
-import { AppConfigService } from "@wf1/wfcc-core-lib";
+import { AppConfigService } from "@bcgov/pit-common-core-lib";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DomSanitizer, Title} from "@angular/platform-browser";
 import {State, Store} from "@ngrx/store";

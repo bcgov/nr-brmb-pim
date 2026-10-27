@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { AddFieldValidationRsrc, AnnualFieldListRsrc, AnnualFieldRsrc, InventoryField, LegalLandRsrc, UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
 import { LegalLandList } from 'src/app/conversion/models';
-import { AppConfigService, TokenService } from '@wf1/wfcc-core-lib';
+import { AppConfigService, TokenService } from '@bcgov/pit-common-core-lib';
 import { setHttpHeaders } from 'src/app/utils';
 import { lastValueFrom } from 'rxjs';
 import { convertToLegalLandList } from 'src/app/conversion/conversion-from-rest';

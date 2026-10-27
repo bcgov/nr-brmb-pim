@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { UntypedFormArray } from "@angular/forms";
-import { AppConfigService } from "@wf1/wfcc-core-lib";
+import { AppConfigService } from "@bcgov/pit-common-core-lib";
 import { DopYieldContractCommodityForage } from "src/app/conversion/models-yield";
 import { INSURANCE_PLAN } from "src/app/utils/constants";
 
