@@ -5,22 +5,13 @@ import {ApplicationStateService} from "./services/application-state.service";
 import {ResourcesRoutes as R} from "./utils/constants";
 import {ResourcesAuthGuard} from "./services/util/ResourcesAuthGuard";
 import {SignOutPageComponent} from "./components/sign-out-page/sign-out-page.component";
-
 import {ROUTE_SCOPES} from "./utils/scopes";
 import { InventoryContractContainer } from "./containers/inventory/inventory-contract-container.component";
 import { UwContractsListContainer } from "./containers/uw-contracts-list/uw-contracts-list-container.component";
 import { GrainDopContainer } from "./containers/dop/grain-dop-container.component";
-import { LandListContainer } from "./containers/land-management/land-list-container.component";
-import { ManageLandComponentContainer } from "./containers/land-management/manage-land-container.component";
 import { LandingPageComponent } from "./components/common/landingpage/landingpage.component";
-import { SeedingDeadlinesContainer } from "./containers/maintenance/seeding-deadlines-container.component";
-import { GradeModifiersContainer } from "./containers/maintenance/grade-modifiers-container.component";
-import { DashboardContainer } from "./containers/maintenance/dashboard-container.component";
-import { ForageVarietyInsurabilityContainer } from "./containers/maintenance/forage-variety-insurability-container.component";
-import { YieldConversionContainer } from "./containers/maintenance/yield-conversion-container.component";
 import { DeactivateGuard } from "./services/util/DeactivateGuard";
 import { ForageDopContainer } from "./containers/dop/forage-dop-container.component";
-import { VerifiedYieldContainer } from "./containers/verified-yield/verified-yield-container.component";
 import { UserSettingsContainer } from "./containers/maintenance/user-settings-container";
 
 const routesDesktop: Routes = [
@@ -91,27 +82,37 @@ const routesDesktop: Routes = [
       ] 
     },
 
+    
+    // lazy loading chunks
     // grain verified yield
-    { path: R.VERIFIED_YIELD, 
-      children: [
-      { 
-        path: ':insurancePlanId/:cropYear/:policyId/:verifiedYieldContractGuid', component: VerifiedYieldContainer, data: {scopes: [ROUTE_SCOPES.VERIFIED_YEILD]},
-        canActivate: [ResourcesAuthGuard],
-        canDeactivate: [DeactivateGuard]
-      },
-      ] 
+    { 
+      path: R.VERIFIED_YIELD, 
+      children: [{
+          path: '',
+          loadChildren: () => import('src/app/routes/verified-yield-routing.module')
+            .then(m => m.VerifiedYieldRoutingModule)
+        }] 
     },
+    // land management
+    { 
+      path: R.LAND, 
+      children: [{
+          path: '',
+          loadChildren: () => import('src/app/routes/land-routing.module')
+            .then(m => m.LandRoutingModule)
+        }] 
+    },
+    // support data
+    { 
+      path: R.MAINTAIN, 
+      children: [{
+          path: '',
+          loadChildren: () => import('src/app/routes/maintain-routing.module')
+            .then(m => m.MaintainRoutingModule)
+        }] 
+    },
+    // end of lazy load chunks
 
-    { path: R.LAND_LIST, component: LandListContainer, data: {scopes: [ROUTE_SCOPES.LEGAL_LAND]},  pathMatch: "full" },
-    { path: R.LAND_MANAGE, 
-      children: [
-        { 
-          path: ':legalLandId', component: ManageLandComponentContainer, data: {scopes: [ROUTE_SCOPES.LEGAL_LAND]},
-          canActivate: [ResourcesAuthGuard],
-          canDeactivate: [DeactivateGuard]
-        },
-        ] 
-    },
     { path: R.LANDING_PAGE, 
       children: [
       { 
@@ -120,12 +121,6 @@ const routesDesktop: Routes = [
       },
       ] 
     },
-
-    { path: R.MAINTAIN_DASHBOARD, component: DashboardContainer, data: {scopes: [ROUTE_SCOPES.MAINTAIN]}, pathMatch: "full"},
-    { path: R.MAINTAIN_SEEDING_DEADLINES, component: SeedingDeadlinesContainer, data: {scopes: [ROUTE_SCOPES.MAINTAIN_SEEDING_DEADLINES]}, pathMatch: "full", canActivate: [ResourcesAuthGuard], canDeactivate: [DeactivateGuard] },
-    { path: R.MAINTAIN_GRADE_MODIFIERS, component: GradeModifiersContainer, data: {scopes: [ROUTE_SCOPES.MAINTAIN_GRADE_MODIFIERS]}, pathMatch: "full", canActivate: [ResourcesAuthGuard], canDeactivate: [DeactivateGuard] },
-    { path: R.MAINTAIN_FORAGE_VARIETY_INSURABILITY, component: ForageVarietyInsurabilityContainer, data: {scopes: [ROUTE_SCOPES.MAINTAIN_FORAGE_VARIETY_INSURABILITY]},  pathMatch: "full", canActivate: [ResourcesAuthGuard], canDeactivate: [DeactivateGuard] },
-    { path: R.MAINTAIN_YIELD_CONVERSION, component: YieldConversionContainer, data: {scopes: [ROUTE_SCOPES.MAINTAIN_YIELD_CONVERSION]},  pathMatch: "full", canActivate: [ResourcesAuthGuard], canDeactivate: [DeactivateGuard] },
   
     { path: R.USER_SETTINGS, component: UserSettingsContainer, data: {scopes: [ROUTE_SCOPES.USER_SETTINGS]},  pathMatch: "full", canActivate: [ResourcesAuthGuard], canDeactivate: [DeactivateGuard]  },
     
@@ -141,9 +136,5 @@ const routesDesktop: Routes = [
 export class AppRoutingModule {
     public constructor(router: Router,
                        applicationStateService: ApplicationStateService) {
-        // if (applicationStateService.getIsMobileResolution()) {
-        //     console.log("mobile mode");
-        //     router.resetConfig(routesMobile);
-        // }
     }
 }

@@ -11,13 +11,17 @@ export enum ResourcesRoutes {
     DOP_FORAGE = "dop/forage",
     DOP_BERRIES = "dop/berries",
     VERIFIED_YIELD = "verified-yield",
+    // for lazyload chunks
+    MAINTAIN = "maintain",
     MAINTAIN_DASHBOARD = "maintain/dashboard",
     MAINTAIN_SEEDING_DEADLINES = "maintain/seeding-deadlines",
     MAINTAIN_GRADE_MODIFIERS = "maintain/grade-modifiers",
     MAINTAIN_FORAGE_VARIETY_INSURABILITY = "maintain/forage-variety-insurability",
     MAINTAIN_YIELD_CONVERSION = "maintain/yield-conversion",
+    LAND = "land-management",
     LAND_LIST = "land-management/land-list",
     LAND_MANAGE = "land-management/manage-land",
+    //
     LANDING_PAGE = "landingpage",
     UNAUTHORIZED = "unauthorized",
     ERROR_PAGE = "error",
