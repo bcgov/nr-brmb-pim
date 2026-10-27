@@ -1,6 +1,6 @@
-FROM tomcat:10.1.44-jre21
+FROM tomcat:10.1.61-jre21
 
-COPY ./cirras-underwriting-listener-api-server/target/cirras-underwriting-listener-api-server-4.2.0-SNAPSHOT.war .
+COPY ./target/cirras-underwriting-listener-api-4.2.0-SNAPSHOT.war .
 COPY ./deploy-tools ./deploy-tools
 
 RUN ls
