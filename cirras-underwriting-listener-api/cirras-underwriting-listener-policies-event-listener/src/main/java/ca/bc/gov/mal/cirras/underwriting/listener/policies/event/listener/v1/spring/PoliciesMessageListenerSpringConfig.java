@@ -32,7 +32,7 @@ public class PoliciesMessageListenerSpringConfig {
 	@Value("${MESSAGE_QUEUE_URL}")
 	private String natsURL;
 
-	@Value("${MESSAGE_QUEUE_UNDERWRITING_REST_NKEY_SEED}")
+	@Value("${MESSAGE_QUEUE_UNDERWRITING_SYNC_REST_NKEY_SEED}")
 	private String nkeySeed;
 
 	@Autowired
