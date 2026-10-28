@@ -85,7 +85,23 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
     if (changes.inventoryContract) {
       this.inventoryContract = changes.inventoryContract.currentValue;
 
-      if (this.inventoryContract && this.inventoryContract.fields && this.inventoryContract.fields.length > 0) {
+      let isAutomaticallySaved = false
+
+      if (this.inventoryContract && !this.inventoryContract.inventoryContractGuid ) {
+
+        // check if it's a rolled over policy -> all fields should have a commodity
+        if (this.inventoryContract.fields && this.inventoryContract.fields.length > 0) {
+
+          if (this.hasFieldsWithoutCommodities() ){ // there is at least one field without a commodity - save is not possible
+            alert("This is a new policy or its inventory was reset. Automatic save is not possible. Please select a commodity and add fields, then save.")
+          } else {
+            isAutomaticallySaved = true
+            this.onSave()
+          }
+        }        
+      }
+
+      if (!isAutomaticallySaved && this.inventoryContract && this.inventoryContract.fields && this.inventoryContract.fields.length > 0) {
         this.onCheckForHiddenPlantingsInTotals() // check for values that don't show in the report but are included in the totals
 
         if (!this.fieldsWithoutCommoditiesExist() ) {
@@ -108,6 +124,19 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
         }
       }      
     }
+  }
+
+  hasFieldsWithoutCommodities() {
+    for (let i = 0; i < this.inventoryContract.fields.length; i++){
+      for (let k = 0; k < this.inventoryContract.fields[i].plantings.length; k++){
+        let pltg = this.inventoryContract.fields[i].plantings[k]
+
+        if ( !pltg.inventoryBerries.cropCommodityId ) {
+          return true
+        }
+      }
+    }
+    return false
   }
 
   fieldsWithoutCommoditiesExist() {
@@ -223,7 +252,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
 
   setFormSeededStyles(){
     return {
-      'grid-template-columns':  '250px 200px auto  140px 150px 12px 190px'
+      'grid-template-columns':  '500px auto 170px 12px 140px 150px 12px 190px'
     }
   }
 
@@ -285,7 +314,7 @@ export class BerriesInventoryComponent extends BaseComponent implements OnChange
       if (field.deletedByUserInd != true ) {
         for (let planting of field.plantings) {
 
-          if (planting && planting.inventoryBerries && planting.inventoryBerries.cropCommodityId == this.selectedCommodity) {
+          if (planting && planting.inventoryBerries && planting.inventoryBerries.cropCommodityId == this.selectedCommodity && !planting.inventoryBerries.deletedByUserInd) {
             let plantedYear = planting.inventoryBerries.plantedYear
             let rowSpacing = planting.inventoryBerries.rowSpacing
             

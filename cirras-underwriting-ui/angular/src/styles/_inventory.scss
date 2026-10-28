@@ -393,4 +393,20 @@
       font-size: 14px; 
     }
   }
-  
+    
+  .div-table-last-updated {
+    display: table;
+    width: 500px;
+    border-collapse: collapse; 
+  }
+
+  .div-table-row-last-updated {
+    display: table-row;
+  }
+
+  .div-table-col-last-updated {
+    display: table-cell;
+    padding-left: 20px;
+    padding-top: 6px;
+    font-size: 14px;
+  }

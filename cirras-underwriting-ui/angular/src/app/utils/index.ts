@@ -571,6 +571,8 @@ export function setHttpHeaders(authToken) {
       underwritingCommentTypeCode:    uwComment.underwritingCommentTypeCode,
       underwritingCommentTypeDesc:    uwComment.underwritingCommentTypeDesc, 
       underwritingComment:            uwComment.underwritingComment,
+      verifiedYieldSummaryGuid:       uwComment.verifiedYieldSummaryGuid,
+      isForcedInd:                    uwComment.isForcedInd,
       createUser:                     uwComment.createUser,
       createDate:                     uwComment.createDate,
       updateUser:                     uwComment.updateUser,
