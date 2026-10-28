@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { AddFieldValidationRsrc, AnnualFieldRsrc, LinkedPlanting, UwContractListRsrc } from '@cirras/cirras-underwriting-api';
 import { AppConfigService, TokenService } from '@bcgov/pit-common-core-lib';
 import { InventoryContract, UwContract } from 'src/app/conversion/models';
@@ -13,7 +13,13 @@ import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state'
 import { Store } from '@ngrx/store';
 import { RootState } from 'src/app/store';
 import { RemovePlantingDialogComponent } from './remove-planting-dialog/remove-planting-dialog.component';
-import { DIALOG_TYPE } from '../../dialogs/base-dialog/base-dialog.component';
+import { DIALOG_TYPE, BaseDialogComponent } from '../../dialogs/base-dialog/base-dialog.component';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { NgIf, NgFor, NgStyle } from '@angular/common';
+import { MatFormField, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 export interface AddPlantingPopupData {
   fieldId: number;
@@ -41,7 +47,7 @@ export interface AddPlantingPopupData {
     selector: 'cirras-link-planting',
     templateUrl: './link-planting.component.html',
     styleUrls: ['./link-planting.component.scss'],
-    standalone: false
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, NgIf, NgFor, MatFormField, MatInput, MatHint, MatButton, MatIcon, NgStyle, MatDialogActions]
 })
 export class LinkPlantingComponent implements OnInit {
 

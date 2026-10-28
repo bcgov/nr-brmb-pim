@@ -1,14 +1,18 @@
 import { Component, Inject, Input } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
 import { YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
+import { BaseDialogComponent } from '../../../dialogs/base-dialog/base-dialog.component';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { NgFor, DatePipe } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'yield-conversion-units',
     templateUrl: './yield-conversion-units.component.html',
     styleUrls: ['./yield-conversion-units.component.scss'],
-    standalone: false
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, NgFor, MatDialogActions, MatButton, DatePipe]
 })
 export class YieldConversionUnitsComponent {
 

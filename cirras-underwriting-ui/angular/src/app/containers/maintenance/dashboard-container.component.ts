@@ -2,7 +2,7 @@ import { BaseContainer } from "../base/base-container.component";
 import {select} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {Component} from "@angular/core";
-import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
+import { Location, LocationStrategy, PathLocationStrategy, AsyncPipe } from "@angular/common";
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
 import {
@@ -13,6 +13,7 @@ import {
 import { MAINTENANCE_COMPONENT_ID } from "src/app/store/maintenance/maintenance.state";
 import { UnderwritingYearList } from "src/app/conversion/models-maintenance";
 import { selectUnderwritingYears } from "src/app/store/maintenance/maintenance.selectors";
+import { DashboardComponent } from "../../components/maintain/dashboard/dashboard.component";
 
 @Component({
     selector: "dashboard-container",
@@ -23,7 +24,7 @@ import { selectUnderwritingYears } from "src/app/store/maintenance/maintenance.s
             [errorState]="errorState$ | async"
         ></cirras-dashboard>`,
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
-    standalone: false
+    imports: [DashboardComponent, AsyncPipe]
 })
 
 export class DashboardContainer extends BaseContainer {

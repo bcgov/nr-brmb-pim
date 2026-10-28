@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { roundUpDecimal } from 'src/app/components/inventory/inventory-common';
 import { DopYieldFieldVarietyBerries } from 'src/app/conversion/models-yield';
@@ -9,14 +9,20 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { makeNumberOnly } from 'src/app/utils';
 import { BERRY_COMMODITY } from 'src/app/utils/constants';
+import { NgStyle, NgIf, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatInputCommifiedDirective } from '../../../../directives/input-comified.directive';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'berries-dop-variety-list',
-  templateUrl: './variety-list.component.html',
-  styleUrl: './variety-list.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  standalone: false
+    selector: 'berries-dop-variety-list',
+    templateUrl: './variety-list.component.html',
+    styleUrl: './variety-list.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    imports: [FormsModule, ReactiveFormsModule, NgStyle, NgIf, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, MatTooltip, DecimalPipe, TitleCasePipe]
 })
 export class BerriesDopVarietyListComponent {
   @Input() dopYieldFieldVarietyBerries: DopYieldFieldVarietyBerries

@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { InventoryContractCommodityBerries } from '@cirras/cirras-underwriting-api';
 import { BERRY_COMMODITY } from 'src/app/utils/constants';
+import { DecimalPipe, TitleCasePipe } from '@angular/common';
 
 @Component({
-  selector: 'berries-inventory-commodity-totals',
-  templateUrl: './berries-inventory-commodity-totals.component.html',
-  styleUrl: './berries-inventory-commodity-totals.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  standalone: false
+    selector: 'berries-inventory-commodity-totals',
+    templateUrl: './berries-inventory-commodity-totals.component.html',
+    styleUrl: './berries-inventory-commodity-totals.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    imports: [DecimalPipe, TitleCasePipe]
 })
 export class BerriesInventoryCommodityListComponent {
   @Input() insurabilityType : string;

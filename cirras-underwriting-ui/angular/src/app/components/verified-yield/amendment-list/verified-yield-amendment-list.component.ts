@@ -3,13 +3,16 @@ import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular
 import { VerifiedYieldAmendment } from 'src/app/conversion/models-yield';
 import { AnnualField, CropCommodityList } from 'src/app/conversion/models';
 import { INSURANCE_PLAN, VERIFIED_YIELD_AMENDMENT_CODE } from 'src/app/utils/constants';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgFor } from '@angular/common';
+import { VerifiedYieldAmendmentComponent } from '../amendment/verified-yield-amendment.component';
 
 @Component({
     selector: 'verified-yield-amendment-list',
     templateUrl: './verified-yield-amendment-list.component.html',
     styleUrl: './verified-yield-amendment-list.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [MatButton, NgIf, NgFor, VerifiedYieldAmendmentComponent]
 })
 export class VerifiedYieldAmendmentListComponent implements OnChanges{
   @Input() verifiedYieldContractGuid: string;

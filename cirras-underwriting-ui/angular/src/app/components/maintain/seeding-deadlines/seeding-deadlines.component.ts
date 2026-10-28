@@ -4,17 +4,29 @@ import { SeedingDeadlinesComponentModel } from './seeding-deadlines.component.mo
 import { SeedingDeadlineList, UnderwritingYearList } from 'src/app/conversion/models-maintenance';
 import { loadSeedingDeadlines, loadUwYears, saveSeedingDeadlines } from 'src/app/store/maintenance/maintenance.actions';
 import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
-import { UntypedFormArray, UntypedFormControl } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { areDatesNotEqual, setHttpHeaders } from 'src/app/utils';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 import { CommodityTypeCodeListRsrc } from '@cirras/cirras-underwriting-api';
+import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
+import { NgIf, NgStyle, NgFor, DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { SingleSelectDirective } from '../../../directives/singleselect.directive';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'seeding-deadlines',
     templateUrl: './seeding-deadlines.component.html',
     styleUrls: ['./seeding-deadlines.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss'],
-    standalone: false
+    imports: [BaseWrapperComponent, NgIf, MatIcon, NgStyle, MatButton, FormsModule, ReactiveFormsModule, SingleSelectDirective, NgFor, MatRadioGroup, MatRadioButton, MatFormField, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatTooltip, DatePipe]
 })
 export class SeedingDeadlinesComponent extends BaseComponent implements OnChanges  {
 

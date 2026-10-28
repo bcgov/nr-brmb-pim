@@ -1,10 +1,23 @@
 import { ChangeDetectionStrategy, Component, SimpleChanges } from '@angular/core';
-import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { isBaseCommodity, makeTitleCase } from 'src/app/utils';
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { GrainInventoryComponent } from "../grain-inventory.component";
 import { CropCommodityVarietyOptionsType, roundUpDecimal } from '../../inventory-common';
 import {ViewEncapsulation } from '@angular/core';
+import { NgIf, NgStyle, NgClass, NgFor, DecimalPipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { RelatedPoliciesComponent } from '../../../related-policies/related-policies.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { GrowerContractHeaderComponent } from '../../../grower-contract-header/grower-contract-header.component';
+import { CdkDropList, CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
+import { MatFormField, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatAutocompleteTrigger, MatAutocomplete, MatOption } from '@angular/material/autocomplete';
+import { MatInputCommifiedDirective } from '../../../../directives/input-comified.directive';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { UwCommentsButtonComponent } from '../../../uw-comments/uw-comments-button/uw-comments-button.component';
 
 @Component({
     selector: 'grain-unseeded-inventory',
@@ -12,7 +25,7 @@ import {ViewEncapsulation } from '@angular/core';
     styleUrls: ['./grain-unseeded-inventory.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [NgIf, MatIcon, NgStyle, RelatedPoliciesComponent, MatTooltip, MatButton, NgClass, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, CdkDropList, NgFor, CdkDrag, CdkDragHandle, MatFormField, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatOption, MatInputCommifiedDirective, MatCheckbox, UwCommentsButtonComponent, MatHint, DecimalPipe, TitleCasePipe, DatePipe]
 })
 
 export class GrainUnseededInventoryComponent extends GrainInventoryComponent { 

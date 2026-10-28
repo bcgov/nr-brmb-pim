@@ -13,14 +13,22 @@ import { getInsurancePlanName, replaceNonAlphanumericCharacters } from 'src/app/
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { UwCommentsButtonComponent } from '../../uw-comments/uw-comments-button/uw-comments-button.component';
+import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
+import { NgIf, NgStyle, NgFor, TitleCasePipe, DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { GrowerContractHeaderComponent } from '../../grower-contract-header/grower-contract-header.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BerriesDopFieldListComponent } from './field-list/field-list.component';
 
 @Component({
-  selector: 'berries-dop',
-  templateUrl: './berries-dop.component.html',
-  styleUrl: './berries-dop.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  standalone: false
+    selector: 'berries-dop',
+    templateUrl: './berries-dop.component.html',
+    styleUrl: './berries-dop.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    imports: [BaseWrapperComponent, NgIf, MatIcon, NgStyle, MatTooltip, MatButton, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, UwCommentsButtonComponent, NgFor, BerriesDopFieldListComponent, TitleCasePipe, DatePipe]
 })
 export class BerriesDopComponent extends BaseComponent {
   @Input() growerContract: UwContract;

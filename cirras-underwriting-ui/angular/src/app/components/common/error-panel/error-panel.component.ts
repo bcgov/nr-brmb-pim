@@ -13,13 +13,19 @@ import {
 import {ERROR_TYPE, ErrorState} from "../../../store/application/application.state";
 import {getDisplayErrorMessage} from "../../../utils/error-messages";
 import scrollIntoView from "scroll-into-view-if-needed";
+import { NgIf, NgClass, NgFor } from "@angular/common";
+import { MatCard, MatCardHeader, MatCardTitle, MatCardContent } from "@angular/material/card";
+import { MatRadioGroup, MatRadioButton } from "@angular/material/radio";
+import { FormsModule } from "@angular/forms";
+import { MatDialogActions } from "@angular/material/dialog";
+import { MatButton } from "@angular/material/button";
 
 @Component({
     selector: "cirras-underwriting-base-error-panel",
     templateUrl: "./error-panel.component.html",
     styleUrls: ["../base/base.component.scss", "./error-panel.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgIf, MatCard, MatCardHeader, NgClass, MatCardTitle, MatCardContent, NgFor, MatRadioGroup, FormsModule, MatRadioButton, MatDialogActions, MatButton]
 })
 export class ErrorPanelComponent implements OnChanges {
     @ViewChild("errorContainer") errorContainer: ElementRef;

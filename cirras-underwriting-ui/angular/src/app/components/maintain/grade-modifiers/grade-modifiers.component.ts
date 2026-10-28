@@ -4,19 +4,29 @@ import { GradeModifiersComponentModel } from './grade-modifiers.component.model'
 import { GradeModifierList, GradeModifierTypeList, UnderwritingYearList } from 'src/app/conversion/models-maintenance';
 import { loadGradeModifierTypes, loadGradeModifiers, loadUwYears, saveGradeModifiers } from 'src/app/store/maintenance/maintenance.actions';
 import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.state';
-import { UntypedFormArray } from '@angular/forms';
+import { UntypedFormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { makeNumberOnly } from 'src/app/utils';
 import { CROP_COMMODITY_TYPE_CONST, CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { GradeModifierTypesContainer } from 'src/app/containers/maintenance/grade-modifier-types-container.component';
 import { CropCommodityList } from 'src/app/conversion/models';
 import { ClearCropCommodity, LoadCropCommodityList } from 'src/app/store/crop-commodity/crop-commodity.actions';
+import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
+import { SingleSelectDirective } from '../../../directives/singleselect.directive';
+import { NgFor, NgIf, NgStyle, TitleCasePipe } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField } from '@angular/material/form-field';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
+import { MatInput } from '@angular/material/input';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'grade-modifiers',
     templateUrl: './grade-modifiers.component.html',
     styleUrls: ['./grade-modifiers.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss'],
-    standalone: false
+    imports: [BaseWrapperComponent, SingleSelectDirective, FormsModule, NgFor, NgIf, MatButton, MatIcon, NgStyle, ReactiveFormsModule, MatFormField, MatSelect, MatOption, MatInput, MatTooltip, TitleCasePipe]
 })
 export class GradeModifiersComponent extends BaseComponent implements OnChanges  {
 

@@ -1,12 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UntypedFormBuilder, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { RemoveFieldValidationRsrc } from '@cirras/cirras-underwriting-api';
 import { AppConfigService, TokenService } from '@bcgov/pit-common-core-lib';
 import { setHttpHeaders } from 'src/app/utils';
 import { LAND_UPDATE_TYPE } from 'src/app/utils/constants';
-import { DIALOG_TYPE } from '../../dialogs/base-dialog/base-dialog.component';
+import { DIALOG_TYPE, BaseDialogComponent } from '../../dialogs/base-dialog/base-dialog.component';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { NgIf, NgFor, NgStyle } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 
 
 export interface RemoveFieldPopupData {
@@ -27,7 +32,7 @@ export interface RemoveFieldPopupData {
     selector: 'cirras-remove-field',
     templateUrl: './remove-field.component.html',
     styleUrls: ['./remove-field.component.scss'],
-    standalone: false
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, NgIf, NgFor, MatIcon, NgStyle, MatDialogActions, MatButton, MatTooltip]
 })
 export class RemoveFieldComponent implements OnInit {
 

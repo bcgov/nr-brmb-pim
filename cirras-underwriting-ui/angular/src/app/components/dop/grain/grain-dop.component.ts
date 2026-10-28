@@ -16,7 +16,7 @@ import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { LoadGrowerContract } from 'src/app/store/grower-contract/grower-contract.actions';
 import { BaseComponent } from '../../common/base/base.component';
 import { GrainDopComponentModel } from './grain-dop.component.model';
-import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { addUwCommentsObject, areDatesNotEqual, areNotEqual, getInsurancePlanName, makeNumberOnly, replaceNonAlphanumericCharacters, setHttpHeaders } from 'src/app/utils';
 import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
@@ -25,6 +25,22 @@ import { GradeModifierOptionsType } from '../dop-common';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { roundUpDecimal } from '../../inventory/inventory-common';
 import { SCREEN_TYPE } from 'src/app/utils/constants';
+import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
+import { NgIf, NgStyle, NgFor, DecimalPipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { RelatedPoliciesComponent } from '../../related-policies/related-policies.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { GrowerContractHeaderComponent } from '../../grower-contract-header/grower-contract-header.component';
+import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatSelect } from '@angular/material/select';
+import { MatOption, MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { UwCommentsButtonComponent } from '../../uw-comments/uw-comments-button/uw-comments-button.component';
+import { MatInputCommifiedDirective } from '../../../directives/input-comified.directive';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 
 @Component({
     selector: 'grain-dop',
@@ -32,7 +48,7 @@ import { SCREEN_TYPE } from 'src/app/utils/constants';
     styleUrls: ['./grain-dop.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [BaseWrapperComponent, NgIf, MatIcon, NgStyle, RelatedPoliciesComponent, MatTooltip, MatButton, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, NgFor, MatOption, UwCommentsButtonComponent, MatInputCommifiedDirective, MatCheckbox, MatRadioGroup, MatRadioButton, MatAutocompleteTrigger, MatAutocomplete, DecimalPipe, TitleCasePipe, DatePipe]
 })
 
 export class GrainDopComponent extends BaseComponent{

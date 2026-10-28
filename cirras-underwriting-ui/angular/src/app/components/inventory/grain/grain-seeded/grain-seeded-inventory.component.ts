@@ -1,6 +1,6 @@
 
 import { ChangeDetectionStrategy, Component, SimpleChanges} from '@angular/core';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GrainInventoryComponent } from "../grain-inventory.component";
 import { makeTitleCase } from 'src/app/utils'; 
 import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/constants';
@@ -9,6 +9,21 @@ import { CropVarietyOptionsType, roundUpDecimal } from '../../inventory-common';
 import { AddPlantingPopupData, LinkPlantingComponent } from '../../link-planting/link-planting.component';
 import { LoadInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import {ViewEncapsulation } from '@angular/core';
+import { NgIf, NgStyle, NgClass, NgFor, DecimalPipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { RelatedPoliciesComponent } from '../../../related-policies/related-policies.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { GrowerContractHeaderComponent } from '../../../grower-contract-header/grower-contract-header.component';
+import { CdkDropList, CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
+import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatSelect } from '@angular/material/select';
+import { MatOption, MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatInputCommifiedDirective } from '../../../../directives/input-comified.directive';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { UwCommentsButtonComponent } from '../../../uw-comments/uw-comments-button/uw-comments-button.component';
 
 @Component({
     selector: 'grain-seeded-inventory',
@@ -16,7 +31,7 @@ import {ViewEncapsulation } from '@angular/core';
     styleUrls: ['./grain-seeded-inventory.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [NgIf, MatIcon, NgStyle, RelatedPoliciesComponent, MatTooltip, MatButton, NgClass, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, CdkDropList, NgFor, CdkDrag, CdkDragHandle, MatFormField, MatInput, MatSelect, MatOption, MatAutocompleteTrigger, MatAutocomplete, MatCheckbox, MatInputCommifiedDirective, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, UwCommentsButtonComponent, DecimalPipe, TitleCasePipe, DatePipe]
 })
 
 export class GrainSeededInventoryComponent extends GrainInventoryComponent { 

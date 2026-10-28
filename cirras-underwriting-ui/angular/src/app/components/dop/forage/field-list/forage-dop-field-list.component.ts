@@ -1,13 +1,16 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { UntypedFormArray, FormBuilder, FormGroup } from "@angular/forms";
 import { AnnualField } from "src/app/conversion/models";
+import { NgStyle, NgFor } from "@angular/common";
+import { MatTooltip } from "@angular/material/tooltip";
+import { ForageDopFieldComponent } from "../field/forage-dop-field.component";
 
 @Component({
     selector: 'forage-dop-field-list',
     templateUrl: './forage-dop-field-list.component.html',
     styleUrls: ['./forage-dop-field-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgStyle, MatTooltip, NgFor, ForageDopFieldComponent]
 })
 export class ForageDopFieldListComponent {
     @Input() fields: Array<AnnualField>;

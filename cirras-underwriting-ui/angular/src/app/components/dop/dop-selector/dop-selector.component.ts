@@ -4,13 +4,17 @@ import { UwContract } from 'src/app/conversion/models';
 import { DopYieldContract, YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
 import { ErrorState, LoadState } from 'src/app/store/application/application.state';
 import { ResourcesRoutes } from 'src/app/utils/constants';
+import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
+import { NgIf } from '@angular/common';
+import { ForageDopComponent } from '../forage/forage-dop.component';
+import { BerriesDopComponent } from '../berries/berries-dop.component';
 
 @Component({
-  selector: 'dop-selector',
-  templateUrl: './dop-selector.component.html',
-  styleUrl: './dop-selector.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+    selector: 'dop-selector',
+    templateUrl: './dop-selector.component.html',
+    styleUrl: './dop-selector.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [BaseWrapperComponent, NgIf, ForageDopComponent, BerriesDopComponent]
 })
 export class DopSelectorComponent {
   @Input() growerContract: UwContract;

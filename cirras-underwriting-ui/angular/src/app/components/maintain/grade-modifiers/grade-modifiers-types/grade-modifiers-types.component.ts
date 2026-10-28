@@ -1,6 +1,6 @@
 import { Component, Inject, Input, OnChanges, OnInit , SimpleChanges} from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Store} from "@ngrx/store";
 import { RootState} from "../../../../store";
 import { GradeModifierType, GradeModifierTypeList } from 'src/app/conversion/models-maintenance';
@@ -10,12 +10,20 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { areNotEqual, makeNumberOnly } from 'src/app/utils';
 import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
+import { BaseDialogComponent } from '../../../dialogs/base-dialog/base-dialog.component';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { NgIf, NgStyle, NgFor } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'grade-modifiers-types',
     templateUrl: './grade-modifiers-types.component.html',
     styleUrls: ['./grade-modifiers-types.component.scss'],
-    standalone: false
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, NgIf, MatTooltip, MatIcon, NgStyle, NgFor, MatFormField, MatInput, MatDialogActions, MatButton]
 })
 export class GradeModifiersTypesComponent implements OnInit, OnChanges {
 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 import { Store } from "@ngrx/store";
@@ -8,13 +8,18 @@ import { RootState } from "src/app/store";
 import { setFormStateUnsaved } from "src/app/store/application/application.actions";
 import { DOP_COMPONENT_ID } from "src/app/store/dop/dop.state";
 import { INSURANCE_PLAN } from "src/app/utils/constants";
+import { NgClass, NgStyle } from "@angular/common";
+import { ForageDopYieldFieldListComponent } from "../yield-field-list/forage-dop-yield-field-list.component";
+import { UwCommentsButtonComponent } from "../../../uw-comments/uw-comments-button/uw-comments-button.component";
+import { MatIcon } from "@angular/material/icon";
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
     selector: 'forage-dop-field',
     templateUrl: './forage-dop-field.component.html',
     styleUrls: ['./forage-dop-field.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, NgClass, NgStyle, ForageDopYieldFieldListComponent, UwCommentsButtonComponent, MatIcon, MatTooltip]
 })
 export class ForageDopFieldComponent implements OnInit {
     @Input() field: AnnualField;

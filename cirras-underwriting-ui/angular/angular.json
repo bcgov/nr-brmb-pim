@@ -20,10 +20,8 @@
             "allowedCommonJsDependencies": [
               "lodash",
               "deep-equal",
-              "moment-timezone",
               "moment",
-              "angular2-uuid",
-              "vanilla-text-mask"              
+              "angular2-uuid"          
             ],
             "outputPath": "dist/cirras-underwriting",
             "index": "src/index.html",

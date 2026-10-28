@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { roundUpDecimal } from 'src/app/components/inventory/inventory-common';
 import { DopYieldFieldCommodityBerries } from 'src/app/conversion/models-yield';
@@ -8,14 +8,21 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { makeNumberOnly } from 'src/app/utils';
 import { BERRY_COMMODITY } from 'src/app/utils/constants';
+import { NgIf, NgStyle, NgFor, DecimalPipe } from '@angular/common';
+import { BerriesDopVarietyListComponent } from '../variety-list/variety-list.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatInputCommifiedDirective } from '../../../../directives/input-comified.directive';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'berries-dop-commodity-list',
-  templateUrl: './commodity-list.component.html',
-  styleUrl: './commodity-list.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  standalone: false
+    selector: 'berries-dop-commodity-list',
+    templateUrl: './commodity-list.component.html',
+    styleUrl: './commodity-list.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    imports: [NgIf, FormsModule, ReactiveFormsModule, NgStyle, NgFor, BerriesDopVarietyListComponent, MatTooltip, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, DecimalPipe]
 })
 
 export class BerriesDopCommodityListComponent {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { VerifiedYieldContractCommodity } from "src/app/conversion/models-yield";
 import { RootState } from "src/app/store";
@@ -8,13 +8,19 @@ import { VERIFIED_YIELD_COMPONENT_ID } from "src/app/store/verified-yield/verifi
 import { makeNumberOnly } from "src/app/utils";
 import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { roundUpDecimal } from "../../inventory/inventory-common";
+import { NgStyle, NgIf, DecimalPipe, TitleCasePipe } from "@angular/common";
+import { MatFormField } from "@angular/material/form-field";
+import { MatInput } from "@angular/material/input";
+import { MatInputCommifiedDirective } from "../../../directives/input-comified.directive";
+import { MatIcon } from "@angular/material/icon";
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
     selector: 'verified-yield-commodity',
     templateUrl: './verified-yield-commodity.component.html',
     styleUrls: ['./verified-yield-commodity.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, NgStyle, NgIf, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, MatTooltip, DecimalPipe, TitleCasePipe]
 })
 export class VerifiedYieldCommodityComponent implements OnChanges {
 

@@ -4,7 +4,11 @@ import { INSURANCE_PLAN, ResourcesRoutes } from 'src/app/utils/constants';
 import { goToLinkGlobal, makeTitleCase, userCanAccessDop, userCanAccessInventory, userCanAccessVerifiedYield } from "src/app/utils";
 import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { Router } from '@angular/router';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormField } from '@angular/material/form-field';
+import { MatSelect } from '@angular/material/select';
+import { NgFor } from '@angular/common';
+import { MatOption } from '@angular/material/autocomplete';
 
 @Component({
     selector: 'related-policies',
@@ -12,7 +16,7 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
     styleUrls: ['./related-policies.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatSelect, NgFor, MatOption]
 })
 
 export class RelatedPoliciesComponent implements OnInit, OnChanges {

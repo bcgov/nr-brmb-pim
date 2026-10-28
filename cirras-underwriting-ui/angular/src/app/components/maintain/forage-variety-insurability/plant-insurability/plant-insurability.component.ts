@@ -1,14 +1,19 @@
 import { Component, Inject, OnInit, } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
+import { BaseDialogComponent } from '../../../dialogs/base-dialog/base-dialog.component';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { NgFor } from '@angular/common';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'cirras-plant-insurability',
     templateUrl: './plant-insurability.component.html',
     styleUrls: ['./plant-insurability.component.scss'],
-    standalone: false
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, NgFor, MatCheckbox, MatDialogActions, MatButton]
 })
 export class PlantInsurabilityComponent implements OnInit {
   dialogType = DIALOG_TYPE.INFO;

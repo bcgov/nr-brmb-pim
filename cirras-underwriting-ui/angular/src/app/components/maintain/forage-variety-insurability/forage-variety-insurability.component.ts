@@ -6,15 +6,21 @@ import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.
 import { loadVarietyInsurability, saveVarietyInsurability } from 'src/app/store/maintenance/maintenance.actions';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 import { CropVarietyInsurabilityList } from 'src/app/conversion/models-maintenance';
-import { UntypedFormArray } from '@angular/forms';
+import { UntypedFormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlantInsurabilityComponent } from './plant-insurability/plant-insurability.component';
 import { areNotEqual } from 'src/app/utils';
+import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
+import { NgIf, NgStyle, NgFor, NgClass, TitleCasePipe } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'forage-variety-insurability',
     templateUrl: './forage-variety-insurability.component.html',
     styleUrls: ['./forage-variety-insurability.component.scss'],
-    standalone: false
+    imports: [BaseWrapperComponent, NgIf, MatButton, MatIcon, NgStyle, FormsModule, ReactiveFormsModule, NgFor, NgClass, MatCheckbox, MatTooltip, TitleCasePipe]
 })
 export class ForageVarietyInsurabilityComponent  extends BaseComponent implements OnChanges  {
 

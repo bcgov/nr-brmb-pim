@@ -2,7 +2,7 @@ import { BaseContainer } from "../base/base-container.component";
 import {select} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {Component} from "@angular/core";
-import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
+import { Location, LocationStrategy, PathLocationStrategy, AsyncPipe } from "@angular/common";
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
 import {
@@ -16,6 +16,7 @@ import { selectInventoryContract } from "src/app/store/inventory/inventory.selec
 import { INVENTORY_COMPONENT_ID } from "src/app/store/inventory/inventory.state";
 import { selectCropCommodityList, selectUnderSeededCropCommodityList } from "src/app/store/crop-commodity/crop-commodity.selectors";
 import { selectGrowerContract } from "src/app/store/grower-contract/grower-contract.selector";
+import { InventorySelectorComponent } from "../../components/inventory/inventory-selector/inventory-selector.component";
 
 @Component({
     selector: "cirras-underwriting-inventory-contract-container",
@@ -30,7 +31,7 @@ import { selectGrowerContract } from "src/app/store/grower-contract/grower-contr
             [isUnsaved]="isUnsaved$ | async"
         ></cirras-underwriting-inventory-selector>`,
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
-    standalone: false
+    imports: [InventorySelectorComponent, AsyncPipe]
 })
 
 export class InventoryContractContainer extends BaseContainer {

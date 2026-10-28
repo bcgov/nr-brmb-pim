@@ -1,11 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
+import { NgIf, NgStyle, NgFor } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'legal-land-list-with-message',
-  templateUrl: './legal-land-list-with-message.component.html',
-  styleUrl: './legal-land-list-with-message.component.scss',
-  standalone: false
+    selector: 'legal-land-list-with-message',
+    templateUrl: './legal-land-list-with-message.component.html',
+    styleUrl: './legal-land-list-with-message.component.scss',
+    imports: [NgIf, MatIcon, NgStyle, NgFor]
 })
 export class LegalLandListWithMessageComponent {
   @Input() legalLandList 

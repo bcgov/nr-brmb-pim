@@ -13,6 +13,19 @@ import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verifi
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { ClearCropCommodity, LoadCropCommodityList } from 'src/app/store/crop-commodity/crop-commodity.actions';
 import { CROP_COMMODITY_TYPE_CONST, INSURANCE_PLAN, SCREEN_TYPE } from 'src/app/utils/constants';
+import { BaseWrapperComponent } from '../common/base-wrapper/base-wrapper.component';
+import { NgIf, NgStyle, NgFor, TitleCasePipe, DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { RelatedPoliciesComponent } from '../related-policies/related-policies.component';
+import { MatButton } from '@angular/material/button';
+import { GrowerContractHeaderComponent } from '../grower-contract-header/grower-contract-header.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { VerifiedYieldCommodityListComponent } from './commodity-list/verified-yield-commodity-list.component';
+import { VerifiedYieldAmendmentListComponent } from './amendment-list/verified-yield-amendment-list.component';
+import { VerifiedYieldSummaryListComponent } from './summary-list/verified-yield-summary-list.component';
+import { VerifiedYieldGrainBasketComponent } from './grain-basket/verified-yield-grain-basket.component';
 
 @Component({
     selector: 'verified-yield',
@@ -20,7 +33,7 @@ import { CROP_COMMODITY_TYPE_CONST, INSURANCE_PLAN, SCREEN_TYPE } from 'src/app/
     styleUrls: ['./verified-yield.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [BaseWrapperComponent, NgIf, MatIcon, NgStyle, RelatedPoliciesComponent, MatButton, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, MatTooltip, NgFor, MatCheckbox, VerifiedYieldCommodityListComponent, VerifiedYieldAmendmentListComponent, VerifiedYieldSummaryListComponent, VerifiedYieldGrainBasketComponent, TitleCasePipe, DatePipe]
 })
 export class VerifiedYieldComponent extends BaseComponent {
 

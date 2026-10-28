@@ -1,13 +1,20 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { DIALOG_TYPE } from "../../dialogs/base-dialog/base-dialog.component";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from "@angular/material/dialog";
+import { DIALOG_TYPE, BaseDialogComponent } from "../../dialogs/base-dialog/base-dialog.component";
 import { INSURANCE_PLAN, REPORT_CHOICES, REPORT_SORT_BY, REPORT_TYPE_OPTIONS, SORT_BY_CHOICES } from "src/app/utils/constants";
+import { CdkScrollable } from "@angular/cdk/scrolling";
+import { NgIf, NgFor } from "@angular/common";
+import { MatLabel, MatFormField } from "@angular/material/form-field";
+import { MatSelect } from "@angular/material/select";
+import { MatOption } from "@angular/material/autocomplete";
+import { MatButton } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
     selector: 'reports-download-dialog',
     templateUrl: './reports-download-dialog.component.html',
     styleUrls: ['./reports-download-dialog.component.scss'],
-    standalone: false
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, NgIf, MatLabel, MatFormField, MatSelect, NgFor, MatOption, MatDialogActions, MatButton, MatIcon]
 })
 export class ReportsDownloadDialogComponent implements OnInit {
     titleLabel = "Report Details";

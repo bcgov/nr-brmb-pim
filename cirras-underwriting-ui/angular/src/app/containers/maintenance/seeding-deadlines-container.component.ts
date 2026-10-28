@@ -2,7 +2,7 @@ import { BaseContainer } from "../base/base-container.component";
 import {select} from "@ngrx/store";
 import {Observable} from "rxjs";
 import { Component} from "@angular/core";
-import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
+import { Location, LocationStrategy, PathLocationStrategy, AsyncPipe } from "@angular/common";
 
 import {ErrorState, LoadState} from "../../store/application/application.state";
 import {
@@ -13,6 +13,7 @@ import {
 import { MAINTENANCE_COMPONENT_ID } from "src/app/store/maintenance/maintenance.state";
 import { SeedingDeadlineList, UnderwritingYearList } from "src/app/conversion/models-maintenance";
 import { selectUnderwritingYears, selectseedingDeadlineList } from "src/app/store/maintenance/maintenance.selectors";
+import { SeedingDeadlinesComponent } from "../../components/maintain/seeding-deadlines/seeding-deadlines.component";
 
 @Component({
     selector: "seeding-deadlines-container",
@@ -24,7 +25,7 @@ import { selectUnderwritingYears, selectseedingDeadlineList } from "src/app/stor
             [errorState]="errorState$ | async"
         ></seeding-deadlines>`,
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
-    standalone: false
+    imports: [SeedingDeadlinesComponent, AsyncPipe]
 })
 
 export class SeedingDeadlinesContainer extends BaseContainer {

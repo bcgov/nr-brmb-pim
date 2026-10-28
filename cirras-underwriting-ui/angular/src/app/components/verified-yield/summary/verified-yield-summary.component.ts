@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, SimpleChanges } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { Store } from '@ngrx/store';
 import { VerifiedYieldSummary } from 'src/app/conversion/models-yield';
@@ -7,13 +7,17 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { RootState } from 'src/app/store';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
+import { NgIf, NgStyle, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { UwCommentsButtonComponent } from '../../uw-comments/uw-comments-button/uw-comments-button.component';
 
 @Component({
     selector: 'verified-yield-summary',
     templateUrl: './verified-yield-summary.component.html',
     styleUrl: './verified-yield-summary.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [FormsModule, ReactiveFormsModule, NgIf, MatIcon, MatTooltip, NgStyle, UwCommentsButtonComponent, DecimalPipe, TitleCasePipe]
 })
 export class VerifiedYieldSummaryComponent {
   @Input() summary: VerifiedYieldSummary;

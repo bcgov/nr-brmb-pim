@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Store } from "@ngrx/store";
 import { RootState } from "src/app/store";
 import { InventoryBerries } from '@cirras/cirras-underwriting-api';
@@ -11,13 +11,21 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { BERRY_COMMODITY, CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
 import { showIsPlantInsuredForBerries, showPlantSpacingForBerries, showRowSpacingForBerries, showTotalPlantsForBerries } from '../field-list/berries-inventory-field-list.component';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
+import { NgIf, NgFor, NgStyle, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatAutocompleteTrigger, MatAutocomplete, MatOption } from '@angular/material/autocomplete';
+import { MatSelect } from '@angular/material/select';
 
 @Component({
-  selector: 'berries-inventory-inventory-berry',
-  templateUrl: './berries-inventory-inventory-berry.component.html',
-  styleUrl: './berries-inventory-inventory-berry.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+    selector: 'berries-inventory-inventory-berry',
+    templateUrl: './berries-inventory-inventory-berry.component.html',
+    styleUrl: './berries-inventory-inventory-berry.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [FormsModule, ReactiveFormsModule, NgIf, MatFormField, MatInput, MatIcon, MatTooltip, MatCheckbox, MatAutocompleteTrigger, MatAutocomplete, NgFor, MatOption, NgStyle, MatSelect, DecimalPipe, TitleCasePipe]
 })
 
 export class BerriesInventoryInventoryBerryComponent implements OnChanges{

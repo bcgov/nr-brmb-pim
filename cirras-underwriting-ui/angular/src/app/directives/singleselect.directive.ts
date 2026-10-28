@@ -14,10 +14,7 @@ import {arrayEquals} from "../utils";
 
 declare var $: any;
 
-@Directive({
-    selector: '[appPitSingleSelect]',
-    standalone: false
-})
+@Directive({ selector: '[appPitSingleSelect]' })
 export class SingleSelectDirective implements AfterViewInit, OnChanges {
     @Input() appPitPlaceholder?: string;
     @Output() updated: EventEmitter<any> = new EventEmitter();

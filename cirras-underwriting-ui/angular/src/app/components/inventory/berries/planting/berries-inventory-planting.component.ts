@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Store } from "@ngrx/store";
 import { RootState } from "src/app/store";
 import { InventoryField } from '@cirras/cirras-underwriting-api';
@@ -7,14 +7,23 @@ import { addSimplePlantingObject } from '../../inventory-common';
 import { BERRY_COMMODITY } from 'src/app/utils/constants';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
+import { NgStyle, NgClass, NgIf } from '@angular/common';
+import { BerriesInventoryInventoryBerryComponent } from '../inventory-berry/berries-inventory-inventory-berry.component';
 
 
 @Component({
-  selector: 'berries-inventory-planting',
-  templateUrl: './berries-inventory-planting.component.html',
-  styleUrl: './berries-inventory-planting.component.scss',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'berries-inventory-planting',
+    templateUrl: './berries-inventory-planting.component.html',
+    styleUrl: './berries-inventory-planting.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        NgStyle,
+        NgClass,
+        NgIf,
+        BerriesInventoryInventoryBerryComponent,
+    ],
 })
 export class BerriesInventoryPlantingComponent implements OnChanges { 
 

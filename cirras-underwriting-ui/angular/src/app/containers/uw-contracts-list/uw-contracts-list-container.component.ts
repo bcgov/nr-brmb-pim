@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {Location, LocationStrategy, PathLocationStrategy} from "@angular/common";
+import { Location, LocationStrategy, PathLocationStrategy, AsyncPipe } from "@angular/common";
 import {BaseContainer} from "../base/base-container.component";
 import {select} from "@ngrx/store";
 import {Observable} from "rxjs";
@@ -17,6 +17,7 @@ import { CropCommodityList } from "src/app/conversion/models";
 import {selectCropCommodityList} from "src/app/store/crop-commodity/crop-commodity.selectors";
 import { UserSetting } from "src/app/conversion/models-maintenance";
 import { selectUserSetting } from "src/app/store/maintenance/maintenance.selectors";
+import { UwContractsListComponent } from "../../components/uw-contracts-list/uw-contracts-list.component";
 
 @Component({
     selector: "cirras-uw-contracts-list-container",
@@ -31,7 +32,7 @@ import { selectUserSetting } from "src/app/store/maintenance/maintenance.selecto
                 [reportCollection]="reportCollection$ | async"
         ></cirras-uw-contracts-list>`,
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
-    standalone: false
+    imports: [UwContractsListComponent, AsyncPipe]
 })
 export class UwContractsListContainer extends BaseContainer {
     collection$: Observable<any> = this.store.pipe(select(selectUwContractsList()));
