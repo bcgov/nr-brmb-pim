@@ -80,10 +80,10 @@ public abstract class EndpointsTest {
 		testApplicationContext = new ClassPathXmlApplicationContext(new String[] { "classpath:/test-spring-config.xml" });
 		
 		Map<String, DataSource> dataSources = new HashMap<>();
-		{
-			DataSource dataSource = testApplicationContext.getBean("bootstrapDataSource", DataSource.class);
-			dataSources.put("jdbc/webade_bootstrap", dataSource);
-		}
+		//		{
+		//			DataSource dataSource = testApplicationContext.getBean("bootstrapDataSource", DataSource.class);
+		//			dataSources.put("jdbc/webade_bootstrap", dataSource);
+		//		}
 		{
 			DataSource dataSource = testApplicationContext.getBean("failoverDataSource", DataSource.class);
 			dataSources.put("jdbc/failover", dataSource);

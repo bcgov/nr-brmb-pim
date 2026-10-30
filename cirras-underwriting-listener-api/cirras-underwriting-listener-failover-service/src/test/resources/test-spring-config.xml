@@ -19,6 +19,11 @@
 		</property>
 	</bean>
 	
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="properties" ref="applicationProperties" />
+	</bean>
+
+	
 	<bean id="failoverDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.postgresql.Driver" />
 		<property name="url" value="${POSTGRES_URL}" /> 
