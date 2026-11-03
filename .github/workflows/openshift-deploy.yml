@@ -11,6 +11,7 @@ on:
         options: 
           - cirras-underwriting-api
           - cirras-underwriting-ui
+          - cirras-underwriting-listener-api
       ENVIRONMENT_NAME:
         required: true
         type: choice
@@ -72,14 +73,14 @@ jobs:
 
       - name: update IMAGE NAME variable if needed
         id: updateImageName
-        if: ${{ inputs.MICROSERVICE_NAME == 'cirras-underwriting-api' || inputs.MICROSERVICE_NAME == 'cirras-underwriting-ui' }}
+        if: ${{ inputs.MICROSERVICE_NAME == 'cirras-underwriting-api' || inputs.MICROSERVICE_NAME == 'cirras-underwriting-ui' || inputs.MICROSERVICE_NAME == 'cirras-underwriting-listener-api' }}
         run: |
           export IMAGE_NAME=${{ inputs.MICROSERVICE_NAME }}
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_OUTPUT
 
       - name: Get digest of docker image
         id: getDigest
-        if: ${{ inputs.MICROSERVICE_NAME == 'cirras-underwriting-api' || inputs.MICROSERVICE_NAME == 'cirras-underwriting-ui' }}
+        if: ${{ inputs.MICROSERVICE_NAME == 'cirras-underwriting-api' || inputs.MICROSERVICE_NAME == 'cirras-underwriting-ui' || inputs.MICROSERVICE_NAME == 'cirras-underwriting-listener-api'}}
         run: |
           export IMAGE='ghcr.io/${{github.repository_owner}}/${{ steps.updateImageName.outputs.IMAGE_NAME}}:${{ inputs.TAG }}'
           docker pull $IMAGE
