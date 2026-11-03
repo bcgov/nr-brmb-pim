@@ -562,7 +562,7 @@ export function setHttpHeaders(authToken) {
     return Math.floor(Math.random() * 100000)
   }
 
-  export function addUwCommentsObject(uwComment: UnderwritingComment) { 
+  export function addUwCommentsObject(uwComment: UnderwritingComment) {   
     return {
       underwritingCommentGuid:        uwComment.underwritingCommentGuid ,
       annualFieldDetailId:            uwComment.annualFieldDetailId,
@@ -571,6 +571,8 @@ export function setHttpHeaders(authToken) {
       underwritingCommentTypeCode:    uwComment.underwritingCommentTypeCode,
       underwritingCommentTypeDesc:    uwComment.underwritingCommentTypeDesc, 
       underwritingComment:            uwComment.underwritingComment,
+      verifiedYieldSummaryGuid:       uwComment.verifiedYieldSummaryGuid,
+      isForcedInd:                    uwComment.isForcedInd,
       createUser:                     uwComment.createUser,
       createDate:                     uwComment.createDate,
       updateUser:                     uwComment.updateUser,

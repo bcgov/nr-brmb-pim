@@ -1,6 +1,8 @@
 fullnameOverride: crunchy-postgres-#{ENV}#
 
-crunchyImage: # it's not necessary to specify an image as the images specified in the Crunchy Postgres Operator will be pulled by default
+# PIM-2711: Temporary set images explicitly to pull down timezone updates.
+crunchyImage: artifacts.developer.gov.bc.ca/bcgov-docker-local/crunchy-postgres:ubi8-17.7-20260910
+#crunchyImage: # it's not necessary to specify an image as the images specified in the Crunchy Postgres Operator will be pulled by default
 #crunchyImage: artifacts.developer.gov.bc.ca/bcgov-docker-local/crunchy-postgres-gis:ubi8-15.2-3.3-0 # use this image for POSTGIS
 postgresVersion: 17
 #postGISVersion: '3.3' # use this version of POSTGIS. both crunchyImage and this property needs to have valid values for POSTGIS to be enabled.
@@ -17,12 +19,6 @@ instances:
   walVolumeClaimSpec:
     storage: #{DB_WAL_VOLUME_SIZE}#
     storageClassName: netapp-block-standard
-  # Note: using New York time zone to match existing deployment - otherwise, would use either local time or PST
-  env:
-    - name: PGTZ
-      value: America/New_York
-    - name: TZ
-      value: America/New_York
   requests:
     cpu: 1m
     memory: 19Mi
@@ -38,7 +34,9 @@ instances:
       memory: 64Mi
 
 pgBackRest:
-  image: # it's not necessary to specify an image as the images specified in the Crunchy Postgres Operator will be pulled by default
+  # PIM-2711: Temporary set images explicitly to pull down timezone updates.
+  image: artifacts.developer.gov.bc.ca/bcgov-docker-local/crunchy-pgbackrest:ubi8-2.56.0-20260910
+  #image: # it's not necessary to specify an image as the images specified in the Crunchy Postgres Operator will be pulled by default
   retentionFull: "12" # Ideally a larger number such as 30 backups/days
   retentionDifferential: "30"
 
@@ -106,7 +104,9 @@ patroni:
 
 proxy:
   pgBouncer:
-    image: # it's not necessary to specify an image as the images specified in the Crunchy Postgres Operator will be pulled by default
+    # PIM-2711: Temporary set images explicitly to pull down timezone updates.
+    image: artifacts.developer.gov.bc.ca/bcgov-docker-local/crunchy-pgbouncer:ubi8-1.24-20260910
+    # image: # it's not necessary to specify an image as the images specified in the Crunchy Postgres Operator will be pulled by default
     replicas: #{BOUNCER_REPLICAS}#
     requests:
       cpu: 1m

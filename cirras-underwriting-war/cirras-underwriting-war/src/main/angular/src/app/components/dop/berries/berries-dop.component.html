@@ -54,8 +54,17 @@
             <div class="plcy-inv-form-header" [ngStyle]="setFormStyles()">
                 <div>
                     <h2>Yield</h2>
-                    <p>Last Updated: {{ ((dopYieldContract && dopYieldContract.dopUpdateTimestamp) ? dopYieldContract.dopUpdateTimestamp : "" ) | date }}</p>
-                </div>    
+                    <div class="div-table-last-updated">
+                        <div class="div-table-row-last-updated">
+                            <div class="div-table-col-last-updated">
+                                Last Updated: {{ ((dopYieldContract && dopYieldContract.dopUpdateTimestamp) ? dopYieldContract.dopUpdateTimestamp : "" ) | date }}
+                            </div>
+                            <div class="div-table-col-last-updated">
+                                Updated By: {{ ((dopYieldContract && dopYieldContract.dopUpdateUser) ? dopYieldContract.dopUpdateUser : "" ) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="message-container">        
                     <div class="has-yield-warning">
                         <mat-icon *ngIf="isUnsaved  && !hasVerifiedYieldData">warning</mat-icon>            
