@@ -16,7 +16,7 @@ on:
           - cirras-underwriting-api
           - cirras-underwriting-ngclient-lib
           - cirras-underwriting-ui
-
+          - cirras-underwriting-listener-api
 
 jobs:
   build-underwriting-api: 
@@ -50,4 +50,13 @@ jobs:
       TAG: ${{ inputs.TAG }}
       UI_TARGET: cirras-underwriting-ui
       NPM_ARTIFACT_PATH: \@pit/cirras-underwriting-ui/-/@pit
-      
+  
+  build-underwriting-listener-api: 
+    uses: ./.github/workflows/build-package.yml
+    if: ${{ inputs.COMPONENT == 'cirras-underwriting-listener-api' }}
+    secrets: inherit
+    with:
+      ENVIRONMENT: DEV
+      MICROSERVICE_NAME: cirras-underwriting-listener-api
+      JAVA_VERSION: 21
+      TAG: ${{ inputs.TAG }}
