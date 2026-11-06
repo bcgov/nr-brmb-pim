@@ -28,7 +28,8 @@
             },
             "index": "src/index.html",
             "polyfills": [
-              "src/polyfills.ts"
+              "src/polyfills.ts",
+              "zone.js"
             ],
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
@@ -45,7 +46,6 @@
             ],
             "styles": [
               "src/styles/main.scss",
-              "node_modules/@busacca/ng-pick-datetime/assets/style/picker.scss",
               "node_modules/multiple-select/dist/multiple-select.css"
             ],
             "scripts": [
@@ -92,7 +92,7 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "serviceWorker": true
+              "serviceWorker": "ngsw-config.json"
             }
           },
           "defaultConfiguration": ""
