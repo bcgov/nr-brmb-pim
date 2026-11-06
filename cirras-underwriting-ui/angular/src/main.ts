@@ -1,6 +1,4 @@
 import { enableProdMode, APP_INITIALIZER, Injector, importProvidersFrom, provideZoneChangeDetection } from "@angular/core";
-import {platformBrowserDynamic} from "@angular/platform-browser-dynamic";
-
 import { cirrasUnderwritingRestInitializerFn } from "./app/app.module";
 import {environment} from "./environments/environment";
 import { provideBootstrapEffects, DATE_FORMATS } from "./app/utils";
