@@ -6,7 +6,7 @@ import { LAND_SEARCH_COMPONENT_ID, initLandSearchPaging } from "src/app/store/la
 import { LandListComponentModel } from "./land-list.component.model";
 import { ResourcesRoutes } from "src/app/utils/constants";
 import { BaseWrapperComponent } from "../../common/base-wrapper/base-wrapper.component";
-import { NgIf, NgFor } from "@angular/common";
+
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
@@ -25,7 +25,7 @@ import { NgxPaginationModule } from "ngx-pagination";
         "../../common/base-collection/collection.component.desktop.scss",
         "./land-list.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [BaseWrapperComponent, NgIf, MatProgressSpinner, MatButton, MatIcon, MatLabel, FormsModule, MatIconButton, MatSuffix, MatTooltip, SingleSelectDirective, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgxPaginationModule, NgFor]
+    imports: [BaseWrapperComponent, MatProgressSpinner, MatButton, MatIcon, MatLabel, FormsModule, MatIconButton, MatSuffix, MatTooltip, SingleSelectDirective, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgxPaginationModule]
 })
 
 export class LandListComponent extends CollectionComponent implements OnChanges, AfterViewInit {

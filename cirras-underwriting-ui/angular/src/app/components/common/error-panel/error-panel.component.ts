@@ -13,7 +13,7 @@ import {
 import {ERROR_TYPE, ErrorState} from "../../../store/application/application.state";
 import {getDisplayErrorMessage} from "../../../utils/error-messages";
 import scrollIntoView from "scroll-into-view-if-needed";
-import { NgIf, NgClass, NgFor } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { MatCard, MatCardHeader, MatCardTitle, MatCardContent } from "@angular/material/card";
 import { MatRadioGroup, MatRadioButton } from "@angular/material/radio";
 import { FormsModule } from "@angular/forms";
@@ -25,7 +25,7 @@ import { MatButton } from "@angular/material/button";
     templateUrl: "./error-panel.component.html",
     styleUrls: ["../base/base.component.scss", "./error-panel.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, MatCard, MatCardHeader, NgClass, MatCardTitle, MatCardContent, NgFor, MatRadioGroup, FormsModule, MatRadioButton, MatDialogActions, MatButton]
+    imports: [MatCard, MatCardHeader, NgClass, MatCardTitle, MatCardContent, MatRadioGroup, FormsModule, MatRadioButton, MatDialogActions, MatButton]
 })
 export class ErrorPanelComponent implements OnChanges {
     @ViewChild("errorContainer") errorContainer: ElementRef;

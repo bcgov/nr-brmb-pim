@@ -1,12 +1,14 @@
-<div class="base-container flex-y"> 
-    <div class="message-container">
-        <div *ngIf="hasErrors == true" class="has-warning">
-            <span #el matTooltip="" style="margin-left: 10px; margin-right: 20px;">
-                <mat-icon [ngStyle]="{'color':'orangered', 'font-size':'xx-large'}">warning</mat-icon>
-            </span>
-            <span style="font-size: large; color:orangered">
-                {{ errorMessage }}
-            </span> 
-        </div>
-    </div>
+<div class="base-container flex-y">
+  <div class="message-container">
+    @if (hasErrors == true) {
+      <div class="has-warning">
+        <span #el matTooltip="" style="margin-left: 10px; margin-right: 20px;">
+          <mat-icon [ngStyle]="{'color':'orangered', 'font-size':'xx-large'}">warning</mat-icon>
+        </span>
+        <span style="font-size: large; color:orangered">
+          {{ errorMessage }}
+        </span>
+      </div>
+    }
+  </div>
 </div>

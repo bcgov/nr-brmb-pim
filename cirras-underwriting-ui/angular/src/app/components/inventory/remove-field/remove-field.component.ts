@@ -8,7 +8,7 @@ import { setHttpHeaders } from 'src/app/utils';
 import { LAND_UPDATE_TYPE } from 'src/app/utils/constants';
 import { DIALOG_TYPE, BaseDialogComponent } from '../../dialogs/base-dialog/base-dialog.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { NgIf, NgFor, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -32,7 +32,7 @@ export interface RemoveFieldPopupData {
     selector: 'cirras-remove-field',
     templateUrl: './remove-field.component.html',
     styleUrls: ['./remove-field.component.scss'],
-    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, NgIf, NgFor, MatIcon, NgStyle, MatDialogActions, MatButton, MatTooltip]
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, MatIcon, NgStyle, MatDialogActions, MatButton, MatTooltip]
 })
 export class RemoveFieldComponent implements OnInit {
 

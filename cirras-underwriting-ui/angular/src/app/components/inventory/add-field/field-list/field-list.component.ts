@@ -4,7 +4,7 @@ import { AnnualFieldRsrc } from '@cirras/cirras-underwriting-api';
 import { makeTitleCase } from 'src/app/utils';
 import { BERRY_COMMODITY, INSURANCE_PLAN } from 'src/app/utils/constants';
 import { getThePolicyAndPlan } from '../../inventory-common';
-import { NgIf, NgStyle, NgFor } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatHint } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -13,7 +13,7 @@ import { MatInput } from '@angular/material/input';
     selector: 'field-list',
     templateUrl: './field-list.component.html',
     styleUrl: './field-list.component.scss',
-    imports: [FormsModule, ReactiveFormsModule, NgIf, MatIcon, NgStyle, NgFor, MatFormField, MatInput, MatHint]
+    imports: [FormsModule, ReactiveFormsModule, MatIcon, NgStyle, MatFormField, MatInput, MatHint]
 })
 export class FieldListComponent {
   @Input() fieldList 

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { UntypedFormArray } from "@angular/forms";
 import { DopYieldFieldForage } from "src/app/conversion/models-yield";
-import { NgFor } from "@angular/common";
+
 import { ForageDopYieldFieldComponent } from "../yield-field/forage-dop-yield-field.component";
 
 @Component({
@@ -9,7 +9,7 @@ import { ForageDopYieldFieldComponent } from "../yield-field/forage-dop-yield-fi
     templateUrl: './forage-dop-yield-field-list.component.html',
     styleUrls: ['./forage-dop-yield-field-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgFor, ForageDopYieldFieldComponent]
+    imports: [ForageDopYieldFieldComponent]
 })
 export class ForageDopYieldFieldListComponent {
     @Input() yieldFields: Array<DopYieldFieldForage>;

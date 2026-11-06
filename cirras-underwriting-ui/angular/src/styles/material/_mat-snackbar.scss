@@ -40,7 +40,7 @@
     }
 
     &.snackbar-success {
-        --mdc-snackbar-container-color: #{ var.$colour-success };
+        --mat-snackbar-container-color: #{ var.$colour-success };
         mat-icon{
             color: var.$colour-success;
         }
@@ -50,7 +50,7 @@
     }
 
     &.snackbar-error {
-        --mdc-snackbar-container-color: #{ var.$colour-errors };
+        --mat-snackbar-container-color: #{ var.$colour-errors };
         mat-icon{
             color: var.$colour-errors;
         }
@@ -60,7 +60,7 @@
     }
 
     &.snackbar-info {
-        --mdc-snackbar-container-color: #{ var.$colour-blue-grey };
+        --mat-snackbar-container-color: #{ var.$colour-blue-grey };
         mat-icon{
             color: var.$colour-blue-grey;
         }
@@ -70,7 +70,7 @@
     }
 
     &.snackbar-update {
-        --mdc-snackbar-container-color: #{ var.$colour-blue-grey };
+        --mat-snackbar-container-color: #{ var.$colour-blue-grey };
 
         button {
             color: var.$colour-blue-grey;

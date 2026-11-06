@@ -1,3 +1,5 @@
-<forage-dop-yield-field *ngFor="let yieldField of yieldFields" [yieldField]="yieldField"
+@for (yieldField of yieldFields; track yieldField) {
+  <forage-dop-yield-field [yieldField]="yieldField"
     [yieldFieldsFormArray]="yieldFieldsFormArray" [fieldHiddenOnPrintoutInd]="fieldHiddenOnPrintoutInd"
-    style="display: contents;"></forage-dop-yield-field>
+  style="display: contents;"></forage-dop-yield-field>
+}

@@ -22,7 +22,7 @@ import { ConnectionService } from 'ngx-connection-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Overlay } from '@angular/cdk/overlay';
 import { HttpClient } from '@angular/common/http';
-import { DecimalPipe, NgFor, NgIf, NgStyle, TitleCasePipe } from '@angular/common';
+import { DecimalPipe, NgStyle, TitleCasePipe } from '@angular/common';
 import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -38,7 +38,7 @@ import { MatButton } from '@angular/material/button';
     selector: 'manage-land',
     templateUrl: './manage-land.component.html',
     styleUrls: ['./manage-land.component.scss'],
-    imports: [BaseWrapperComponent, FormsModule, ReactiveFormsModule, MatRadioGroup, NgFor, MatRadioButton, MatFormField, MatLabel, MatInput, NgxMaskDirective, NgIf, MatSelect, MatOption, MatIcon, MatTooltip, NgStyle, MatButton, TitleCasePipe]
+    imports: [BaseWrapperComponent, FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatFormField, MatLabel, MatInput, NgxMaskDirective, MatSelect, MatOption, MatIcon, MatTooltip, NgStyle, MatButton, TitleCasePipe]
 })
 export class ManageLandComponent extends BaseComponent implements OnChanges {
 
