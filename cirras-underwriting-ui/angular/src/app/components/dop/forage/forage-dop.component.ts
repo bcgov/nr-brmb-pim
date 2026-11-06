@@ -26,7 +26,7 @@ import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { SCREEN_TYPE } from 'src/app/utils/constants';
 import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
-import { NgIf, NgStyle, NgFor, TitleCasePipe, DatePipe } from '@angular/common';
+import { NgStyle, TitleCasePipe, DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { RelatedPoliciesComponent } from '../../related-policies/related-policies.component';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -50,7 +50,7 @@ import { ForageDopCommodityListComponent } from './commodity-list/forage-dop-com
     styleUrls: ['./forage-dop.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [BaseWrapperComponent, NgIf, MatIcon, NgStyle, RelatedPoliciesComponent, MatTooltip, MatButton, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, NgFor, MatOption, UwCommentsButtonComponent, ForageDopFieldListComponent, MatInputCommifiedDirective, ForageDopYieldSummaryListComponent, ForageDopCommodityListComponent, TitleCasePipe, DatePipe]
+    imports: [BaseWrapperComponent, MatIcon, NgStyle, RelatedPoliciesComponent, MatTooltip, MatButton, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, UwCommentsButtonComponent, ForageDopFieldListComponent, MatInputCommifiedDirective, ForageDopYieldSummaryListComponent, ForageDopCommodityListComponent, TitleCasePipe, DatePipe]
 })
 export class ForageDopComponent extends BaseComponent {
   @Input() growerContract: UwContract;

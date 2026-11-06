@@ -15,7 +15,7 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { MatFormField, MatHint } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { NgIf } from '@angular/common';
+
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RenameLegalLandComponent } from './rename-legal-land/rename-legal-land.component';
@@ -25,7 +25,7 @@ import { ReplaceLegalLandComponent } from './replace-legal-land/replace-legal-la
     selector: 'cirras-edit-land',
     templateUrl: './edit-legal-land.component.html',
     styleUrls: ['./edit-legal-land.component.scss'],
-    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatFormField, MatInput, NgIf, MatHint, MatButton, MatIcon, RenameLegalLandComponent, ReplaceLegalLandComponent, MatDialogActions]
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatFormField, MatInput, MatHint, MatButton, MatIcon, RenameLegalLandComponent, ReplaceLegalLandComponent, MatDialogActions]
 })
 
 export class EditLegalLandInInventoryComponent implements OnInit {

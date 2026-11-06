@@ -7,7 +7,7 @@ import { MAINTENANCE_COMPONENT_ID } from 'src/app/store/maintenance/maintenance.
 import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SingleSelectDirective } from '../../../directives/singleselect.directive';
-import { NgFor, NgIf } from '@angular/common';
+
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 
@@ -15,7 +15,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'cirras-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
-    imports: [BaseWrapperComponent, FormsModule, ReactiveFormsModule, SingleSelectDirective, NgFor, NgIf, MatButton, MatIcon]
+    imports: [BaseWrapperComponent, FormsModule, ReactiveFormsModule, SingleSelectDirective, MatButton, MatIcon]
 })
 export class DashboardComponent  extends BaseComponent implements OnChanges   {
 

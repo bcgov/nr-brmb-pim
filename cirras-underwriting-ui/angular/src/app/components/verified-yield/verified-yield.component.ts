@@ -14,7 +14,7 @@ import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { ClearCropCommodity, LoadCropCommodityList } from 'src/app/store/crop-commodity/crop-commodity.actions';
 import { CROP_COMMODITY_TYPE_CONST, INSURANCE_PLAN, SCREEN_TYPE } from 'src/app/utils/constants';
 import { BaseWrapperComponent } from '../common/base-wrapper/base-wrapper.component';
-import { NgIf, NgStyle, NgFor, TitleCasePipe, DatePipe } from '@angular/common';
+import { NgStyle, TitleCasePipe, DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { RelatedPoliciesComponent } from '../related-policies/related-policies.component';
 import { MatButton } from '@angular/material/button';
@@ -33,7 +33,7 @@ import { VerifiedYieldGrainBasketComponent } from './grain-basket/verified-yield
     styleUrls: ['./verified-yield.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [BaseWrapperComponent, NgIf, MatIcon, NgStyle, RelatedPoliciesComponent, MatButton, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, MatTooltip, NgFor, MatCheckbox, VerifiedYieldCommodityListComponent, VerifiedYieldAmendmentListComponent, VerifiedYieldSummaryListComponent, VerifiedYieldGrainBasketComponent, TitleCasePipe, DatePipe]
+    imports: [BaseWrapperComponent, MatIcon, NgStyle, RelatedPoliciesComponent, MatButton, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, MatTooltip, MatCheckbox, VerifiedYieldCommodityListComponent, VerifiedYieldAmendmentListComponent, VerifiedYieldSummaryListComponent, VerifiedYieldGrainBasketComponent, TitleCasePipe, DatePipe]
 })
 export class VerifiedYieldComponent extends BaseComponent {
 

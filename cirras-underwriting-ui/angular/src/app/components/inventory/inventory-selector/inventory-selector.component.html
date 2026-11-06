@@ -1,30 +1,38 @@
 <base-wrapper [errorState]="errorState">
- 
-    <grain-unseeded-inventory *ngIf="getInventoryType() == 'unseeded'"
-      [inventoryContract]="inventoryContract"
-      [growerContract]="growerContract"
-      [cropCommodityList]="cropCommodityList"
-      [underSeededCropCommodityList]="underSeededCropCommodityList"
-    ></grain-unseeded-inventory>
 
-    <grain-seeded-inventory *ngIf="getInventoryType() == 'seeded'"
-      [inventoryContract]="inventoryContract"
-      [growerContract]="growerContract"
-      [cropCommodityList]="cropCommodityList"
-      [underSeededCropCommodityList]="underSeededCropCommodityList"
-    ></grain-seeded-inventory> 
+@if (getInventoryType() == 'unseeded') {
+  <grain-unseeded-inventory
+    [inventoryContract]="inventoryContract"
+    [growerContract]="growerContract"
+    [cropCommodityList]="cropCommodityList"
+    [underSeededCropCommodityList]="underSeededCropCommodityList"
+  ></grain-unseeded-inventory>
+}
 
-    <forage-inventory *ngIf="getInventoryType() == 'forage'"
-      [inventoryContract]="inventoryContract"
-      [growerContract]="growerContract"
-      [cropCommodityList]="cropCommodityList"
-    ></forage-inventory> 
+@if (getInventoryType() == 'seeded') {
+  <grain-seeded-inventory
+    [inventoryContract]="inventoryContract"
+    [growerContract]="growerContract"
+    [cropCommodityList]="cropCommodityList"
+    [underSeededCropCommodityList]="underSeededCropCommodityList"
+  ></grain-seeded-inventory>
+}
 
-    <berries-inventory *ngIf="getInventoryType() == 'berries'"
-      [inventoryContract]="inventoryContract"
-      [growerContract]="growerContract"
-      [cropCommodityList]="cropCommodityList"
-      [isUnsaved]="isUnsaved"
-    ></berries-inventory> 
+@if (getInventoryType() == 'forage') {
+  <forage-inventory
+    [inventoryContract]="inventoryContract"
+    [growerContract]="growerContract"
+    [cropCommodityList]="cropCommodityList"
+  ></forage-inventory>
+}
+
+@if (getInventoryType() == 'berries') {
+  <berries-inventory
+    [inventoryContract]="inventoryContract"
+    [growerContract]="growerContract"
+    [cropCommodityList]="cropCommodityList"
+    [isUnsaved]="isUnsaved"
+  ></berries-inventory>
+}
 
 </base-wrapper>

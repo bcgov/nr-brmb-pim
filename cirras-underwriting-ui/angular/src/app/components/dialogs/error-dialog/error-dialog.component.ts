@@ -3,7 +3,7 @@ import {ChangeDetectionStrategy, Component, Inject} from "@angular/core";
 import { DIALOG_TYPE, BaseDialogComponent } from "../base-dialog/base-dialog.component";
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from "@angular/material/dialog";
 import { CdkScrollable } from "@angular/cdk/scrolling";
-import { NgIf } from "@angular/common";
+
 import { MatRadioGroup, MatRadioButton } from "@angular/material/radio";
 import { FormsModule } from "@angular/forms";
 import { MatButton } from "@angular/material/button";
@@ -13,7 +13,7 @@ import { MatButton } from "@angular/material/button";
     templateUrl: './error-dialog.component.html',
     styleUrls: ['../../common/base/base.component.scss', './error-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, NgIf, MatRadioGroup, FormsModule, MatRadioButton, MatDialogActions, MatButton]
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, MatRadioGroup, FormsModule, MatRadioButton, MatDialogActions, MatButton]
 })
 export class ErrorDialogComponent {
     titleLabel = "Error";

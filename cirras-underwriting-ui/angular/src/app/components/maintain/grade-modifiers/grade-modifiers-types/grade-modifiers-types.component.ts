@@ -12,7 +12,7 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.component';
 import { BaseDialogComponent } from '../../../dialogs/base-dialog/base-dialog.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { NgIf, NgStyle, NgFor } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField } from '@angular/material/form-field';
@@ -23,7 +23,7 @@ import { MatButton } from '@angular/material/button';
     selector: 'grade-modifiers-types',
     templateUrl: './grade-modifiers-types.component.html',
     styleUrls: ['./grade-modifiers-types.component.scss'],
-    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, NgIf, MatTooltip, MatIcon, NgStyle, NgFor, MatFormField, MatInput, MatDialogActions, MatButton]
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatTooltip, MatIcon, NgStyle, MatFormField, MatInput, MatDialogActions, MatButton]
 })
 export class GradeModifiersTypesComponent implements OnInit, OnChanges {
 

@@ -6,7 +6,7 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { ResourcesRoutes } from 'src/app/utils/constants';
 import { MatFormField } from '@angular/material/form-field';
 import { MatSelect } from '@angular/material/select';
-import { NgFor } from '@angular/common';
+
 import { MatOption } from '@angular/material/autocomplete';
 
 @Component({
@@ -15,7 +15,7 @@ import { MatOption } from '@angular/material/autocomplete';
     styleUrl: './other-year-policy.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatSelect, NgFor, MatOption]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatSelect, MatOption]
 })
 export class OtherYearPolicyComponent implements OnInit, OnChanges  {
 
