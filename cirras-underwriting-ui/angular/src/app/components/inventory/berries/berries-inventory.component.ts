@@ -12,7 +12,7 @@ import { isInt, replaceNonAlphanumericCharacters } from 'src/app/utils';
 import { AddFieldComponent, AddLandPopupData } from '../add-field/add-field.component';
 import { createNewAnnualFieldObject, getDefaultInventoryBerries, getDefaultPlanting } from '../inventory-common';
 import { AnnualFieldRsrc, InventoryBerries, InventoryField } from '@cirras/cirras-underwriting-api';
-import { NgIf, NgStyle, NgFor, TitleCasePipe, DatePipe } from '@angular/common';
+import { NgStyle, TitleCasePipe, DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
@@ -30,7 +30,7 @@ import { BerriesInventoryCommodityListComponent } from './commodity-totals/berri
     styleUrl: './berries-inventory.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, MatIcon, NgStyle, MatTooltip, MatButton, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatSelect, NgFor, MatOption, BerriesInventoryFieldListComponent, BerriesInventoryCommodityListComponent, TitleCasePipe, DatePipe]
+    imports: [MatIcon, NgStyle, MatTooltip, MatButton, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatSelect, MatOption, BerriesInventoryFieldListComponent, BerriesInventoryCommodityListComponent, TitleCasePipe, DatePipe]
 })
 export class BerriesInventoryComponent extends BaseComponent implements OnChanges {
   @Input() inventoryContract: InventoryContract;

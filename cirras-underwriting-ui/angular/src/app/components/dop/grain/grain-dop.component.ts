@@ -26,7 +26,7 @@ import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { roundUpDecimal } from '../../inventory/inventory-common';
 import { SCREEN_TYPE } from 'src/app/utils/constants';
 import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
-import { NgIf, NgStyle, NgFor, DecimalPipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { NgStyle, DecimalPipe, TitleCasePipe, DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { RelatedPoliciesComponent } from '../../related-policies/related-policies.component';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -48,7 +48,7 @@ import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
     styleUrls: ['./grain-dop.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [BaseWrapperComponent, NgIf, MatIcon, NgStyle, RelatedPoliciesComponent, MatTooltip, MatButton, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, NgFor, MatOption, UwCommentsButtonComponent, MatInputCommifiedDirective, MatCheckbox, MatRadioGroup, MatRadioButton, MatAutocompleteTrigger, MatAutocomplete, DecimalPipe, TitleCasePipe, DatePipe]
+    imports: [BaseWrapperComponent, MatIcon, NgStyle, RelatedPoliciesComponent, MatTooltip, MatButton, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, UwCommentsButtonComponent, MatInputCommifiedDirective, MatCheckbox, MatRadioGroup, MatRadioButton, MatAutocompleteTrigger, MatAutocomplete, DecimalPipe, TitleCasePipe, DatePipe]
 })
 
 export class GrainDopComponent extends BaseComponent{

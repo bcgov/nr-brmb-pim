@@ -14,7 +14,7 @@ import { RemoveFieldComponent, RemoveFieldPopupData } from '../../remove-field/r
 import { MatDialog } from '@angular/material/dialog';
 import { AddLandPopupData } from '../../add-field/add-field.component';
 import { EditLegalLandInInventoryComponent } from '../../edit-legal-land/edit-legal-land.component';
-import { NgIf, NgStyle, NgClass, NgFor } from '@angular/common';
+import { NgStyle, NgClass } from '@angular/common';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { AutoFocusDirective } from '../../../../directives/auto-focus.directive';
@@ -29,7 +29,7 @@ import { UwCommentsButtonComponent } from '../../../uw-comments/uw-comments-butt
     templateUrl: './berries-inventory-field.component.html',
     styleUrl: './berries-inventory-field.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, FormsModule, ReactiveFormsModule, NgStyle, NgClass, MatFormField, MatInput, AutoFocusDirective, MatIcon, MatTooltip, MatCheckbox, NgFor, BerriesInventoryPlantingComponent, UwCommentsButtonComponent]
+    imports: [FormsModule, ReactiveFormsModule, NgStyle, NgClass, MatFormField, MatInput, AutoFocusDirective, MatIcon, MatTooltip, MatCheckbox, BerriesInventoryPlantingComponent, UwCommentsButtonComponent]
 })
 export class BerriesInventoryFieldComponent implements OnInit, OnChanges{  
 

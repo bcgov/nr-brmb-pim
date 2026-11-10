@@ -10,7 +10,7 @@ import { UntypedFormArray, FormsModule, ReactiveFormsModule } from '@angular/for
 import { PlantInsurabilityComponent } from './plant-insurability/plant-insurability.component';
 import { areNotEqual } from 'src/app/utils';
 import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
-import { NgIf, NgStyle, NgFor, NgClass, TitleCasePipe } from '@angular/common';
+import { NgStyle, NgClass, TitleCasePipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -20,7 +20,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     selector: 'forage-variety-insurability',
     templateUrl: './forage-variety-insurability.component.html',
     styleUrls: ['./forage-variety-insurability.component.scss'],
-    imports: [BaseWrapperComponent, NgIf, MatButton, MatIcon, NgStyle, FormsModule, ReactiveFormsModule, NgFor, NgClass, MatCheckbox, MatTooltip, TitleCasePipe]
+    imports: [BaseWrapperComponent, MatButton, MatIcon, NgStyle, FormsModule, ReactiveFormsModule, NgClass, MatCheckbox, MatTooltip, TitleCasePipe]
 })
 export class ForageVarietyInsurabilityComponent  extends BaseComponent implements OnChanges  {
 

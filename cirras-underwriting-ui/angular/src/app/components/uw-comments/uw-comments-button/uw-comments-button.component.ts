@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 import { UwCommentsDialogComponent } from "../uw-comments-dialog/uw-comments-dialog.component";
 import { INSURANCE_PLAN } from "src/app/utils/constants";
-import { NgIf } from "@angular/common";
+
 import { MatButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
@@ -36,7 +36,7 @@ export interface DialogData {
     selector: 'uw-comments-button',
     templateUrl: './uw-comments-button.component.html',
     styleUrls: ['./uw-comments-button.component.scss'],
-    imports: [NgIf, MatButton, MatIcon, MatTooltip]
+    imports: [MatButton, MatIcon, MatTooltip]
 })
 export class UwCommentsButtonComponent {
     @Input() insurancePlanId: number;

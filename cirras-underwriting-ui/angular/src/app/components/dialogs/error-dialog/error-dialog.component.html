@@ -1,13 +1,17 @@
 <cuws-base-dialog [titleLabel]="titleLabel" [type]="dialogType" class="error-dialog">
-    <div mat-dialog-content class="no-scroll">
-        <div>{{message}}</div>
-        <mat-radio-group *ngIf="type == ERROR_TYPE_OBJ.FAILED_PRECONDITION" [(ngModel)]="selectedAction">
-            <mat-radio-button value="refresh">Refresh and lose current updates</mat-radio-button><br/>
-            <mat-radio-button value="overwrite">Overwrite with current updates</mat-radio-button>
-        </mat-radio-group>
-    </div>
-    <div mat-dialog-actions align="end">
-        <button mat-raised-button color="secondary" *ngIf="type == ERROR_TYPE_OBJ.FAILED_PRECONDITION" (click)="cancel()">Cancel</button>
-        <button mat-raised-button color="primary" [disabled]="type == ERROR_TYPE_OBJ.FAILED_PRECONDITION && !selectedAction" (click)="ok()">OK</button>
-    </div>
+  <div mat-dialog-content class="no-scroll">
+    <div>{{message}}</div>
+    @if (type == ERROR_TYPE_OBJ.FAILED_PRECONDITION) {
+      <mat-radio-group [(ngModel)]="selectedAction">
+        <mat-radio-button value="refresh">Refresh and lose current updates</mat-radio-button><br/>
+        <mat-radio-button value="overwrite">Overwrite with current updates</mat-radio-button>
+      </mat-radio-group>
+    }
+  </div>
+  <div mat-dialog-actions align="end">
+    @if (type == ERROR_TYPE_OBJ.FAILED_PRECONDITION) {
+      <button mat-raised-button color="secondary" (click)="cancel()">Cancel</button>
+    }
+    <button mat-raised-button color="primary" [disabled]="type == ERROR_TYPE_OBJ.FAILED_PRECONDITION && !selectedAction" (click)="ok()">OK</button>
+  </div>
 </cuws-base-dialog>

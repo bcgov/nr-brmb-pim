@@ -16,7 +16,7 @@ import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./containers/application-root/app.component";
 import {environment} from "../environments/environment";
 import {initialRootState, rootEffects, rootReducers} from "./store";
-import {DATE_FORMATS, provideBootstrapEffects} from "./utils";
+import {provideBootstrapEffects} from "./utils";
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from "ngx-mask";
 import {MomentModule} from "ngx-moment";
 import {UnauthorizedPageComponent} from "./components/unauthorized-page/unauthorized-page.component";
@@ -59,7 +59,6 @@ import {MatCardModule} from "@angular/material/card";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatButtonModule} from "@angular/material/button";
-import {OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlMomentDateTimeModule} from "@busacca/ng-pick-datetime";
 import {PitSnackbarComponent} from "./components/common/snackbars/pit-snackbar.component";
 import {ErrorDialogComponent} from "./components/dialogs/error-dialog/error-dialog.component";
 import {A11yModule} from "@angular/cdk/a11y";
@@ -176,5 +175,4 @@ if (!environment.production || !environment.restrict_imports) {
         connectInZone: true}),
     ];
 }
-
 

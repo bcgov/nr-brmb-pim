@@ -1,6 +1,5 @@
-import {searchReducer, SearchState} from "@bcgov/pit-common-core-lib";
+import { SearchActions, searchReducer, SearchState} from "@bcgov/pit-common-core-lib";
 import {Action} from "@ngrx/store";
-import {SearchActions} from "@bcgov/pit-common-core-lib/lib/search/store/actions";
 
 import deepEqual from "deep-equal";
 import { SearchUwContractsAction, SEARCH_UW_CONTRACTS } from "../uw-contracts-list/uw-contracts-list.actions";
