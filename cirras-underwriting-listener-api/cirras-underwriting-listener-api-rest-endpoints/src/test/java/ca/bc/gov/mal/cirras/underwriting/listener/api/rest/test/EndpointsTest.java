@@ -86,7 +86,7 @@ public abstract class EndpointsTest {
 		//		}
 		{
 			DataSource dataSource = testApplicationContext.getBean("failoverDataSource", DataSource.class);
-			dataSources.put("jdbc/failover", dataSource);
+			dataSources.put("jdbc/cirras_underwriting_rest", dataSource);
 		}
 
 
