@@ -1,12 +1,12 @@
-@use '../variables';
+@use '../variables' as var;
 
 .mat-mdc-radio-button.mat-accent {
 
-  --mat-radio-selected-focus-icon-color: $colour-blue;
-  --mat-radio-selected-hover-icon-color: $colour-blue;
-  --mat-radio-selected-icon-color: $colour-blue;
-  --mat-radio-selected-pressed-icon-color: $colour-blue;
-  --mat-mdc-radio-checked-ripple-color: $colour-blue;
+  --mat-radio-selected-focus-icon-color: #{var.$colour-blue};
+  --mat-radio-selected-hover-icon-color: #{var.$colour-blue};
+  --mat-radio-selected-icon-color: #{var.$colour-blue};
+  --mat-radio-selected-pressed-icon-color: #{var.$colour-blue};
+  --mat-mdc-radio-checked-ripple-color: #{var.$colour-blue};
 
   .mdc-form-field {
       .mdc-radio {
@@ -41,5 +41,10 @@
     
     &.inv-radio-button {
       margin: 0 5px;
+      --mat-radio-selected-focus-icon-color: #{var.$colour-blue};
+      --mat-radio-selected-hover-icon-color: #{var.$colour-blue};
+      --mat-radio-selected-icon-color: #{var.$colour-blue};
+      --mat-radio-selected-pressed-icon-color: #{var.$colour-blue};
+      --mat-mdc-radio-checked-ripple-color: #{var.$colour-blue};
     }
   }

@@ -244,7 +244,9 @@
                   Did you purchase or come into possession of any grain from sources other than those fields which you have insured?
                 </div>
                 <div>
-                  <mat-radio-group class="plcy-grain-sdd-inv inv-radio-group" formControlName="grainFromOtherSourceInd">
+                  <mat-radio-group class="plcy-grain-sdd-inv inv-radio-group"
+                    formControlName="grainFromOtherSourceInd"
+                    (change)="isMyFormDirty()">
                     <mat-radio-button class="plcy-grain-sdd-inv inv-radio-button" [value]="true">
                       Yes
                     </mat-radio-button>
