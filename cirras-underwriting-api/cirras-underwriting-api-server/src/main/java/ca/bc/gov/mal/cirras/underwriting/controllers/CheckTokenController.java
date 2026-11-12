@@ -2,12 +2,12 @@ package ca.bc.gov.mal.cirras.underwriting.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
-import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
-import ca.bc.gov.nrs.wfone.common.utils.HttpServletRequestHolder;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.TokenService;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.resource.CheckedToken;
+import ca.bc.gov.mal.pit.common.rest.resource.HeaderConstants;
+import ca.bc.gov.mal.pit.common.rest.resource.MessageListRsrc;
+import ca.bc.gov.mal.pit.common.rest.endpoints.BaseEndpointsImpl;
+import ca.bc.gov.mal.pit.common.utils.HttpServletRequestHolder;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.TokenService;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.resource.CheckedToken;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
