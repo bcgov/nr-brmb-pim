@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.TokenService;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.impl.TokenServiceImpl;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.TokenService;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.impl.TokenServiceImpl;
 
 @Configuration
 public class TokenServiceSpringConfig  {

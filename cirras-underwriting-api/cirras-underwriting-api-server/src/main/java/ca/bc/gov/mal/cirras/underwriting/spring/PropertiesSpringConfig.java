@@ -15,7 +15,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 
-import ca.bc.gov.webade.spring.bootstrap.BootstrapPropertiesFactory;
+//import ca.bc.gov.webade.spring.bootstrap.BootstrapPropertiesFactory;
 
 @Configuration
 public class PropertiesSpringConfig {

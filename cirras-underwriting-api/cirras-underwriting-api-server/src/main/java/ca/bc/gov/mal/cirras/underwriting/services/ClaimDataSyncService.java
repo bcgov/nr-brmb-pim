@@ -10,11 +10,11 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.ClaimSyncEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncClaimCalculationSimpleRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ClaimCalculationBerriesSyncDto;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.SyncClaimCalculationSimpleRsrcFactory;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
-import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
-import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
-import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.service.api.NotFoundException;
+import ca.bc.gov.mal.pit.common.service.api.ServiceException;
+import ca.bc.gov.mal.pit.common.service.api.model.factory.FactoryContext;
+import ca.bc.gov.mal.pit.common.webade.authentication.WebAdeAuthentication;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.ClaimCalculationBerriesSyncDao;
 
 public class ClaimDataSyncService {

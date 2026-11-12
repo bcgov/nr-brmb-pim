@@ -15,9 +15,9 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyCommodityType;
 import ca.bc.gov.mal.cirras.underwriting.data.models.CropVarietyPlantInsurability;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.CropCommodityListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.CropCommodityRsrc;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
-import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.rest.endpoints.resource.factory.BaseResourceFactory;
+import ca.bc.gov.mal.pit.common.service.api.model.factory.FactoryException;
 import jakarta.ws.rs.core.UriBuilder;
 
 public class CommodityRsrcFactory extends BaseResourceFactory { 

@@ -35,9 +35,9 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.InventorySeededGrain;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryUnseeded;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.LandUpdateTypes;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.Oauth2ClientException;
 
 public class InventoryContractEndpointTest extends EndpointsTest {
 	private static final Logger logger = LoggerFactory.getLogger(InventoryContractEndpointTest.class);

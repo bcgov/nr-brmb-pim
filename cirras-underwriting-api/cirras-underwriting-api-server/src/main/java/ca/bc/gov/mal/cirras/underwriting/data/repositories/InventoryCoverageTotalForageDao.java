@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.mapper.InventoryCoverageTotalForageMapper;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryCoverageTotalForageDto;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.BaseDao;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.mybatis.BaseDao;
 
 
 @Repository

@@ -12,9 +12,9 @@ import jakarta.ws.rs.core.Response.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
-import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
+import ca.bc.gov.mal.pit.common.rest.resource.HeaderConstants;
+import ca.bc.gov.mal.pit.common.rest.resource.MessageListRsrc;
+import ca.bc.gov.mal.pit.common.rest.endpoints.BaseEndpointsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;

@@ -13,7 +13,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryCoverageTotalForage;
-import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
+import ca.bc.gov.mal.pit.common.rest.resource.BaseResource;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.INVENTORY_CONTRACT_NAME)
 @XmlSeeAlso({ InventoryContractRsrc.class })

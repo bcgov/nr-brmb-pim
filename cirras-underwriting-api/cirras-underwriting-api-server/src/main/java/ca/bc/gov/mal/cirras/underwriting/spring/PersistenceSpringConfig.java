@@ -81,12 +81,12 @@ import ca.bc.gov.mal.cirras.underwriting.data.repositories.VerifiedYieldGrainBas
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.YieldMeasUnitConversionDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.YieldMeasUnitPlanXrefDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.YieldMeasUnitTypeCodeDao;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.BooleanTypeHandler;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.InstantTypeHandler;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.LocalDateTimeTypeHandler;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.LocalDateTypeHandler;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.LocalTimeTypeHandler;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.ResetDirtyInterceptor;
+import ca.bc.gov.mal.pit.common.persistence.dao.mybatis.BooleanTypeHandler;
+import ca.bc.gov.mal.pit.common.persistence.dao.mybatis.InstantTypeHandler;
+import ca.bc.gov.mal.pit.common.persistence.dao.mybatis.LocalDateTimeTypeHandler;
+import ca.bc.gov.mal.pit.common.persistence.dao.mybatis.LocalDateTypeHandler;
+import ca.bc.gov.mal.pit.common.persistence.dao.mybatis.LocalTimeTypeHandler;
+import ca.bc.gov.mal.pit.common.persistence.dao.mybatis.ResetDirtyInterceptor;
 
 @Configuration
 @EnableTransactionManagement

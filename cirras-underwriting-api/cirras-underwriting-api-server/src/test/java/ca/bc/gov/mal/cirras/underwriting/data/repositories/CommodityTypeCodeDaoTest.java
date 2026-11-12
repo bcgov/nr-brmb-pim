@@ -19,8 +19,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.CommodityTypeCodeDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.CropCommodityDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.SeedingDeadlineDto;
 import ca.bc.gov.mal.cirras.underwriting.spring.PersistenceSpringConfig;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

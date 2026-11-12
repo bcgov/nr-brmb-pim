@@ -1,6 +1,6 @@
 package ca.bc.gov.mal.cirras.underwriting.data.resources.types;
 
-import ca.bc.gov.nrs.common.wfone.rest.resource.types.BaseResourceTypes;
+import ca.bc.gov.mal.pit.common.rest.resource.types.BaseResourceTypes;
 
 public class ResourceTypes extends BaseResourceTypes {
 	

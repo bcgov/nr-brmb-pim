@@ -9,8 +9,8 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
-import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
+import ca.bc.gov.mal.pit.common.rest.resource.BaseResource;
+import ca.bc.gov.mal.pit.common.rest.resource.MessageRsrc;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.REPLACE_LEGAL_VALIDATION_NAME)
 @XmlSeeAlso({ ReplaceLegalValidationRsrc.class })

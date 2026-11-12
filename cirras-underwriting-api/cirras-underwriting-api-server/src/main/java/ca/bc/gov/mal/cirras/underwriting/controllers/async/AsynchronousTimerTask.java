@@ -24,9 +24,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 
 import ca.bc.gov.mal.cirras.underwriting.services.utils.EmailUtils;
 import ca.bc.gov.mal.cirras.underwriting.services.utils.PropertyUtils;
-import ca.bc.gov.nrs.wfone.common.model.Message;
-import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
-import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
+import ca.bc.gov.mal.pit.common.model.Message;
+import ca.bc.gov.mal.pit.common.service.api.ServiceException;
+import ca.bc.gov.mal.pit.common.webade.authentication.WebAdeAuthentication;
 
 public abstract class AsynchronousTimerTask extends TimerTask {
 	

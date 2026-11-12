@@ -17,7 +17,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.PolicySimple;
 import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiableCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiableVariety;
-import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
+import ca.bc.gov.mal.pit.common.rest.resource.BaseResource;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.ANNUAL_FIELD_NAME)
 @XmlSeeAlso({ AnnualFieldRsrc.class })

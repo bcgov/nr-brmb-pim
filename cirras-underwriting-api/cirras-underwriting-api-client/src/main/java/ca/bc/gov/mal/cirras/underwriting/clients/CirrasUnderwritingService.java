@@ -66,7 +66,6 @@ import ca.bc.gov.nrs.wfone.common.rest.client.BaseRestServiceClient;
 import ca.bc.gov.nrs.wfone.common.rest.client.GenericRestDAO;
 import ca.bc.gov.nrs.wfone.common.rest.client.Response;
 import ca.bc.gov.nrs.wfone.common.rest.client.RestDAOException;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.resource.CheckedToken;
 
 public class CirrasUnderwritingService extends BaseRestServiceClient {
 

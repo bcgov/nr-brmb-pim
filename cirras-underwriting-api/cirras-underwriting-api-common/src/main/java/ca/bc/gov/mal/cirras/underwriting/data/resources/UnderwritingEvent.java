@@ -12,9 +12,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
-import ca.bc.gov.nrs.common.wfone.rest.resource.transformers.InstantJacksonDeserializer;
-import ca.bc.gov.nrs.common.wfone.rest.resource.transformers.InstantJacksonSerializer;
+import ca.bc.gov.mal.pit.common.rest.resource.BaseResource;
+import ca.bc.gov.mal.pit.common.rest.resource.transformers.InstantJacksonDeserializer;
+import ca.bc.gov.mal.pit.common.rest.resource.transformers.InstantJacksonSerializer;
 
 @JsonSubTypes({ @Type(value = UnderwritingEvent.class, name = ResourceTypes.NAMESPACE+"publishEvent") })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")

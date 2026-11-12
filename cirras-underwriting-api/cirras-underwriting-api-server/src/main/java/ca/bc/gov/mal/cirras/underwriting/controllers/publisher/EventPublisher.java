@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UnderwritingEvent;
-import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
+import ca.bc.gov.mal.pit.common.rest.resource.BaseResource;
 import io.nats.client.Connection;
 import io.nats.client.Connection.Status;
 import io.nats.client.JetStream;

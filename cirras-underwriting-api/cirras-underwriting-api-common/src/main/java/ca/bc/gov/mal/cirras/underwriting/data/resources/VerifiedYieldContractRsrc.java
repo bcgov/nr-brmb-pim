@@ -14,8 +14,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldAmendment;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldContractCommodity;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldSummary;
 import ca.bc.gov.mal.cirras.underwriting.data.models.VerifiedYieldGrainBasket;
-import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
-import ca.bc.gov.nrs.common.wfone.rest.resource.MessageRsrc;
+import ca.bc.gov.mal.pit.common.rest.resource.BaseResource;
+import ca.bc.gov.mal.pit.common.rest.resource.MessageRsrc;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.VERIFIED_YIELD_CONTRACT_NAME)
 @XmlSeeAlso({ VerifiedYieldContractRsrc.class })

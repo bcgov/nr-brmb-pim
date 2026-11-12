@@ -23,9 +23,9 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractListRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UwContractRsrc;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.Oauth2ClientException;
 
 public class UwContractValidateRenameLegalEndpointTest extends EndpointsTest {
 	private static final Logger logger = LoggerFactory.getLogger(UwContractValidateRenameLegalEndpointTest.class);

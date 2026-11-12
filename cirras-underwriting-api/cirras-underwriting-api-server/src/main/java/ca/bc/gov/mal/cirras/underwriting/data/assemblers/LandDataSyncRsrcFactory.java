@@ -26,7 +26,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.FieldRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.GrowerContractYearSyncRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandFieldXrefRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.LegalLandRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
+import ca.bc.gov.mal.pit.common.rest.endpoints.resource.factory.BaseResourceFactory;
 import jakarta.ws.rs.core.UriBuilder;
 
 public class LandDataSyncRsrcFactory extends BaseResourceFactory { 

@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.mapper.InventoryFieldMapper;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.utils.UnderwritingCodeEnums;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.BaseDao;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.mybatis.BaseDao;
 
 
 @Repository
