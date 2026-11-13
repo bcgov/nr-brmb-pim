@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CUWS_Inventory_Forage" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="50100802-6b63-4521-9855-0feecd4e6a17">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="CUWS"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="484"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="511"/>
@@ -501,7 +501,7 @@ where ifd.is_hidden_on_printout_ind = 'N'
 					<textFieldExpression><![CDATA[new SimpleDateFormat("MMM dd, yyyy").format($F{inv_update_timestamp})]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="0" y="3" width="180" height="16" uuid="2307112c-566f-4fee-9c5a-c1896ac8cec2">
+					<reportElement x="0" y="2" width="180" height="18" uuid="2307112c-566f-4fee-9c5a-c1896ac8cec2">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Bottom">
@@ -510,7 +510,7 @@ where ifd.is_hidden_on_printout_ind = 'N'
 					<text><![CDATA[Production Insurance]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="0" y="38" width="220" height="15" uuid="24bd4c2c-2f1d-47c7-9b89-0a6ec465ecb6">
+					<reportElement x="0" y="40" width="220" height="15" uuid="24bd4c2c-2f1d-47c7-9b89-0a6ec465ecb6">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement>
@@ -528,7 +528,7 @@ where ifd.is_hidden_on_printout_ind = 'N'
 					<imageExpression><![CDATA["images/SCAP_BCID_Can_Lockup.png"]]></imageExpression>
 				</image>
 				<staticText>
-					<reportElement x="99" y="54" width="350" height="25" uuid="ef1d3c62-0729-454d-bc79-2d5d9a2dde6a">
+					<reportElement x="99" y="56" width="350" height="25" uuid="ef1d3c62-0729-454d-bc79-2d5d9a2dde6a">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -539,7 +539,7 @@ where ifd.is_hidden_on_printout_ind = 'N'
 					<text><![CDATA[Forage Field Inventory]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="0" y="20" width="180" height="16" uuid="e1cd01f1-30b2-4b3b-a76b-3512546b1275">
+					<reportElement x="0" y="20" width="180" height="18" uuid="e1cd01f1-30b2-4b3b-a76b-3512546b1275">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Bottom">
