@@ -19,8 +19,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ca.bc.gov.mal.cirras.underwriting.listener.failover.persistence.v1.dto.SyncOwnershipDto;
 import ca.bc.gov.mal.cirras.underwriting.listener.failover.persistence.v1.dao.SyncOwnershipDao;
 import ca.bc.gov.mal.cirras.underwriting.listener.failover.persistence.v1.spring.FailoverPersistenceSpringConfig;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

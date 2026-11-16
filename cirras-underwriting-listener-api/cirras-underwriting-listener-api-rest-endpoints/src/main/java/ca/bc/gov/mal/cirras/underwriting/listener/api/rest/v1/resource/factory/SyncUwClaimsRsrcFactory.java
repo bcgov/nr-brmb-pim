@@ -10,7 +10,7 @@ import ca.bc.gov.mal.cirras.claims.data.models.ClaimCalculationBerries;
 import ca.bc.gov.mal.cirras.claims.data.resources.ClaimCalculationSimpleRsrc;
 import ca.bc.gov.mal.cirras.claims.data.resources.ClaimEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.listener.service.api.v1.model.factory.SyncUwClaimsFactory;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
+import ca.bc.gov.mal.pit.common.rest.endpoints.resource.factory.BaseResourceFactory;
 
 public class SyncUwClaimsRsrcFactory extends BaseResourceFactory implements SyncUwClaimsFactory {
 

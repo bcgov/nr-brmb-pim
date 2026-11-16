@@ -23,9 +23,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ca.bc.gov.mal.cirras.underwriting.listener.api.rest.client.v1.ValidationException;
 import ca.bc.gov.mal.cirras.underwriting.listener.failover.service.api.v1.async.FailOverService;
 import ca.bc.gov.mal.cirras.underwriting.listener.failover.service.api.v1.async.ServiceException;
-import ca.bc.gov.nrs.wfone.common.model.Message;
-import ca.bc.gov.nrs.wfone.common.utils.ApplicationContextProvider;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.stub.TokenServiceStub;
+import ca.bc.gov.mal.pit.common.model.Message;
+import ca.bc.gov.mal.pit.common.utils.ApplicationContextProvider;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.stub.TokenServiceStub;
 import ca.bc.gov.test.jetty.EmbeddedServer;
 
 public abstract class EndpointsTest {

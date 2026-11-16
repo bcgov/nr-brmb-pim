@@ -31,8 +31,8 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-			<artifactId>wfone-common-rest-common</artifactId>
+			<groupId>ca.bc.gov.mal.pit.common</groupId>
+			<artifactId>pit-common-rest-common</artifactId>
 		</dependency>
 		
 	</dependencies>

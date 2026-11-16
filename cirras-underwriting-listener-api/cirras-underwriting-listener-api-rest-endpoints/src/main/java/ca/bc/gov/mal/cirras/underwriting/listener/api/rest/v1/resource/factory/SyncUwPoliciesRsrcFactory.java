@@ -26,7 +26,7 @@ import ca.bc.gov.mal.cirras.policies.api.rest.v1.resource.InsuredGrowerRsrc;
 import ca.bc.gov.mal.cirras.policies.api.rest.v1.resource.TelecomRsrc;
 import ca.bc.gov.mal.cirras.policies.model.v1.PoliciesEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.listener.service.api.v1.model.factory.SyncUwPoliciesFactory;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
+import ca.bc.gov.mal.pit.common.rest.endpoints.resource.factory.BaseResourceFactory;
 
 public class SyncUwPoliciesRsrcFactory extends BaseResourceFactory implements SyncUwPoliciesFactory {
 

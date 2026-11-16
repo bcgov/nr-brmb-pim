@@ -15,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.bc.gov.mal.cirras.underwriting.listener.service.api.v1.CirrasUnderwritingLandManagementListenerService;
-import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
-import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
+import ca.bc.gov.mal.pit.common.service.api.ServiceException;
+import ca.bc.gov.mal.pit.common.service.api.model.factory.FactoryContext;
 
 public class CirrasUwLandManagementEventListenerImpl implements EventListener, Runnable {
 

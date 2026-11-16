@@ -15,7 +15,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 
-import ca.bc.gov.nrs.wfone.common.utils.LoggingConfigurer;
+import ca.bc.gov.mal.pit.common.utils.LoggingConfigurer;
 import ca.bc.gov.webade.spring.bootstrap.BootstrapPropertiesFactory;
 
 @Configuration

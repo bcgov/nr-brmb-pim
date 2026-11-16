@@ -17,8 +17,8 @@
 	<dependencies>
 	
 		<dependency>
-			<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-			<artifactId>wfone-common-model</artifactId>
+			<groupId>ca.bc.gov.mal.pit.common</groupId>
+			<artifactId>pit-common-model</artifactId>
 		</dependency>
 
 		<dependency>

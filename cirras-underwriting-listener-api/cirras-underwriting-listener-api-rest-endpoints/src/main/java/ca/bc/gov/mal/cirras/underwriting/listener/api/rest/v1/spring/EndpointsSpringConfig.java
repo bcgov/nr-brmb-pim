@@ -19,9 +19,9 @@ import ca.bc.gov.mal.cirras.underwriting.listener.api.rest.v1.parameters.validat
 import ca.bc.gov.mal.cirras.underwriting.listener.claims.event.listener.v1.spring.ClaimsMessageListenerSpringConfig;
 import ca.bc.gov.mal.cirras.underwriting.listener.policies.event.listener.v1.spring.PoliciesMessageListenerSpringConfig;
 //import ca.bc.gov.mal.cirras.underwriting.listener.land.management.event.listener.v1.spring.LandMgmtMessageListenerSpringConfig;
-import ca.bc.gov.nrs.wfone.common.checkhealth.CheckHealthValidator;
-import ca.bc.gov.nrs.wfone.common.checkhealth.CompositeValidator;
-import ca.bc.gov.nrs.wfone.common.utils.ApplicationContextProvider;
+import ca.bc.gov.mal.pit.common.checkhealth.CheckHealthValidator;
+import ca.bc.gov.mal.pit.common.checkhealth.CompositeValidator;
+import ca.bc.gov.mal.pit.common.utils.ApplicationContextProvider;
 
 @Configuration
 @Import({
