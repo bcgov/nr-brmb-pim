@@ -5,14 +5,14 @@ import { YieldMeasUnitTypeCodeList } from 'src/app/conversion/models-yield';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
 import { BaseDialogComponent } from '../../../dialogs/base-dialog/base-dialog.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { NgFor, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'yield-conversion-units',
     templateUrl: './yield-conversion-units.component.html',
     styleUrls: ['./yield-conversion-units.component.scss'],
-    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, NgFor, MatDialogActions, MatButton, DatePipe]
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, MatDialogActions, MatButton, DatePipe]
 })
 export class YieldConversionUnitsComponent {
 

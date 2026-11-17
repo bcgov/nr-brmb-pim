@@ -56,6 +56,24 @@
     .mat-mdc-form-field-type-mat-select:not(.mat-form-field-disabled) .mat-mdc-text-field-wrapper {
         padding-left:2px;
     }
+
+    .mat-mdc-autocomplete-panel {
+        display: flex;
+        justify-content: left;
+        align-items: stretch; 
+        flex-direction: column;
+    }
+
+    .mat-mdc-option {
+        padding: 0 4px; 
+    }
+
+    .mat-mdc-select-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+    }
 }
 .number{
     .mdc-text-field {
@@ -183,3 +201,5 @@
         }
     }
 }
+
+

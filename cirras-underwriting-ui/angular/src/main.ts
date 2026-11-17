@@ -1,9 +1,7 @@
-import { enableProdMode, APP_INITIALIZER, Injector, importProvidersFrom } from "@angular/core";
-import {platformBrowserDynamic} from "@angular/platform-browser-dynamic";
-
+import { enableProdMode, APP_INITIALIZER, Injector, importProvidersFrom, provideZoneChangeDetection } from "@angular/core";
 import { cirrasUnderwritingRestInitializerFn } from "./app/app.module";
 import {environment} from "./environments/environment";
-import { provideBootstrapEffects, DATE_FORMATS } from "./app/utils";
+import { provideBootstrapEffects } from "./app/utils";
 import { rootEffects, rootReducers, initialRootState } from "./app/store";
 import { UpdateService } from "./app/services/update.service";
 import { AppConfigService, TokenService, CoreUIModule } from "@bcgov/pit-common-core-lib";
@@ -11,7 +9,6 @@ import { Configuration as CirrasUnderwritingAPIServiceConfiguration, ApiModule a
 import { Title, BrowserModule, bootstrapApplication } from "@angular/platform-browser";
 import { appInitFn } from "./app/utils/app-initializer";
 import { HttpHandler, HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlMomentDateTimeModule } from "@busacca/ng-pick-datetime";
 import { RouteReuseStrategy } from "@angular/router";
 import { CustomReuseStrategy } from "./app/utils/custom-route-reuse-strategy";
 import { ResourcesInterceptor } from "./app/interceptors/resources-interceptor";
@@ -77,7 +74,7 @@ let isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
 if (!isIEOrEdge) {
     bootstrapApplication(AppComponent, {
     providers: [
-        importProvidersFrom(CirrasUnderwritingAPIServiceModule, DragDropModule, CdkTableModule, BrowserModule, FormsModule, MatExpansionModule, MatBadgeModule, MatGridListModule, MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatRadioModule, MatSelectModule, MatSnackBarModule, MatSortModule, MatTabsModule, MatTableModule, MatPaginatorModule, MatTooltipModule, MatSnackBarModule, MatSidenavModule, MatToolbarModule, MomentModule, MatProgressSpinnerModule, NgxMaskDirective, NgxMaskPipe, OwlDateTimeModule, OwlMomentDateTimeModule, ReactiveFormsModule, ScrollingModule, CoreUIModule.forRoot({ configurationPath: environment.app_config_location }), StoreModule.forRoot(rootReducers, { initialState: initialRootState }), AppRoutingModule, NgxPaginationModule, EffectsModule.forRoot([]), ServiceWorkerModule.register("ngsw-worker.js", { enabled: environment.production, scope: "./" }), ...devOnlyImports, A11yModule, MatNativeDateModule, MatDatepickerModule, PitApplicationModule.forRoot() // ,
+        provideZoneChangeDetection(),importProvidersFrom(CirrasUnderwritingAPIServiceModule, DragDropModule, CdkTableModule, BrowserModule, FormsModule, MatExpansionModule, MatBadgeModule, MatGridListModule, MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatRadioModule, MatSelectModule, MatSnackBarModule, MatSortModule, MatTabsModule, MatTableModule, MatPaginatorModule, MatTooltipModule, MatSnackBarModule, MatSidenavModule, MatToolbarModule, MomentModule, MatProgressSpinnerModule, NgxMaskDirective, NgxMaskPipe, ReactiveFormsModule, ScrollingModule, CoreUIModule.forRoot({ configurationPath: environment.app_config_location }), StoreModule.forRoot(rootReducers, { initialState: initialRootState }), AppRoutingModule, NgxPaginationModule, EffectsModule.forRoot([]), ServiceWorkerModule.register("ngsw-worker.js", { enabled: environment.production, scope: "./" }), ...devOnlyImports, A11yModule, MatNativeDateModule, MatDatepickerModule, PitApplicationModule.forRoot() // ,
         // WildfireResourceManagerModule.forRoot()
         ),
         // Added provideBootstrapEffects function to handle the ngrx issue that loads effects before APP_INITIALIZER
@@ -100,7 +97,6 @@ if (!isIEOrEdge) {
             multi: false,
             deps: [AppConfigService]
         },
-        { provide: OWL_DATE_TIME_FORMATS, useValue: DATE_FORMATS },
         { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
         {
             provide: HTTP_INTERCEPTORS,
@@ -148,5 +144,4 @@ if (!isIEOrEdge) {
 
     }).catch(err => console.log(err));
 }
-
 

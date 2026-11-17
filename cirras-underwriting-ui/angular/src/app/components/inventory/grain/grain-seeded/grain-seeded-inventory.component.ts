@@ -9,7 +9,7 @@ import { CropVarietyOptionsType, roundUpDecimal } from '../../inventory-common';
 import { AddPlantingPopupData, LinkPlantingComponent } from '../../link-planting/link-planting.component';
 import { LoadInventoryContract } from 'src/app/store/inventory/inventory.actions';
 import {ViewEncapsulation } from '@angular/core';
-import { NgIf, NgStyle, NgClass, NgFor, DecimalPipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { NgStyle, NgClass, DecimalPipe, TitleCasePipe, DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { RelatedPoliciesComponent } from '../../../related-policies/related-policies.component';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -31,7 +31,7 @@ import { UwCommentsButtonComponent } from '../../../uw-comments/uw-comments-butt
     styleUrls: ['./grain-seeded-inventory.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, MatIcon, NgStyle, RelatedPoliciesComponent, MatTooltip, MatButton, NgClass, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, CdkDropList, NgFor, CdkDrag, CdkDragHandle, MatFormField, MatInput, MatSelect, MatOption, MatAutocompleteTrigger, MatAutocomplete, MatCheckbox, MatInputCommifiedDirective, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, UwCommentsButtonComponent, DecimalPipe, TitleCasePipe, DatePipe]
+    imports: [MatIcon, NgStyle, RelatedPoliciesComponent, MatTooltip, MatButton, NgClass, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, CdkDropList, CdkDrag, CdkDragHandle, MatFormField, MatInput, MatSelect, MatOption, MatAutocompleteTrigger, MatAutocomplete, MatCheckbox, MatInputCommifiedDirective, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, UwCommentsButtonComponent, DecimalPipe, TitleCasePipe, DatePipe]
 })
 
 export class GrainSeededInventoryComponent extends GrainInventoryComponent { 

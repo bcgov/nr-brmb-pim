@@ -13,7 +13,7 @@ import { BERRY_COMMODITY, INSURANCE_PLAN, LAND_UPDATE_TYPE } from 'src/app/utils
 import { BaseDialogComponent } from '../../dialogs/base-dialog/base-dialog.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
-import { NgFor, NgIf } from '@angular/common';
+
 import { MatFormField, MatHint } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
@@ -58,7 +58,7 @@ export interface AddLandPopupData {
     selector: 'add-field',
     templateUrl: './add-field.component.html',
     styleUrl: './add-field.component.scss',
-    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatRadioGroup, NgFor, MatRadioButton, MatFormField, MatInput, NgIf, MatHint, MatButton, MatIcon, LegalLandListComponent, FieldListComponent, FieldValidationsComponent, MatDialogActions]
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatRadioGroup, MatRadioButton, MatFormField, MatInput, MatHint, MatButton, MatIcon, LegalLandListComponent, FieldListComponent, FieldValidationsComponent, MatDialogActions]
 })
 export class AddFieldComponent implements OnInit{
 

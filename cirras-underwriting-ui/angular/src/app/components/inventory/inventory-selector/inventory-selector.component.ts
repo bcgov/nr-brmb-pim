@@ -11,7 +11,7 @@ import { CROP_COMMODITY_TYPE_CONST, INSURANCE_PLAN, ResourcesRoutes, SCREEN_TYPE
 import { RootState } from "src/app/store";
 import { ErrorState, LoadState } from "src/app/store/application/application.state";
 import { BaseWrapperComponent } from "../../common/base-wrapper/base-wrapper.component";
-import { NgIf } from "@angular/common";
+
 import { GrainUnseededInventoryComponent } from "../grain/grain-unseeded/grain-unseeded-inventory.component";
 import { GrainSeededInventoryComponent } from "../grain/grain-seeded/grain-seeded-inventory.component";
 import { ForageInventoryComponent } from "../forage/forage-inventory.component";
@@ -23,7 +23,7 @@ import { BerriesInventoryComponent } from "../berries/berries-inventory.componen
     templateUrl: './inventory-selector.component.html',
     styleUrls: ['./inventory-selector.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [BaseWrapperComponent, NgIf, GrainUnseededInventoryComponent, GrainSeededInventoryComponent, ForageInventoryComponent, BerriesInventoryComponent]
+    imports: [BaseWrapperComponent, GrainUnseededInventoryComponent, GrainSeededInventoryComponent, ForageInventoryComponent, BerriesInventoryComponent]
 })
 export class InventorySelectorComponent implements OnInit{ 
 

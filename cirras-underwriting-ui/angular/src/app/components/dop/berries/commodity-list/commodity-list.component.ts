@@ -8,7 +8,7 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { makeNumberOnly } from 'src/app/utils';
 import { BERRY_COMMODITY } from 'src/app/utils/constants';
-import { NgIf, NgStyle, NgFor, DecimalPipe } from '@angular/common';
+import { NgStyle, DecimalPipe } from '@angular/common';
 import { BerriesDopVarietyListComponent } from '../variety-list/variety-list.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatFormField } from '@angular/material/form-field';
@@ -22,7 +22,7 @@ import { MatIcon } from '@angular/material/icon';
     styleUrl: './commodity-list.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, FormsModule, ReactiveFormsModule, NgStyle, NgFor, BerriesDopVarietyListComponent, MatTooltip, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, DecimalPipe]
+    imports: [FormsModule, ReactiveFormsModule, NgStyle, BerriesDopVarietyListComponent, MatTooltip, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, DecimalPipe]
 })
 
 export class BerriesDopCommodityListComponent {

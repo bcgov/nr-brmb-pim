@@ -17,7 +17,7 @@ import {ViewEncapsulation } from '@angular/core';
 import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { asapScheduler } from 'rxjs';
 import { AddLandPopupData } from '../add-field/add-field.component';
-import { NgIf, NgStyle, NgClass, NgFor, DecimalPipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { NgStyle, NgClass, DecimalPipe, TitleCasePipe, DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { RelatedPoliciesComponent } from '../../related-policies/related-policies.component';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -38,7 +38,7 @@ import { UwCommentsButtonComponent } from '../../uw-comments/uw-comments-button/
     styleUrls: ['./forage-inventory.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, MatIcon, NgStyle, RelatedPoliciesComponent, MatTooltip, MatButton, NgClass, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, CdkDropList, NgFor, CdkDrag, CdkDragHandle, MatFormField, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatOption, MatInputCommifiedDirective, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepickerToggleIcon, MatDatepicker, MatCheckbox, MatSelect, UwCommentsButtonComponent, DecimalPipe, TitleCasePipe, DatePipe]
+    imports: [MatIcon, NgStyle, RelatedPoliciesComponent, MatTooltip, MatButton, NgClass, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, CdkDropList, CdkDrag, CdkDragHandle, MatFormField, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatOption, MatInputCommifiedDirective, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepickerToggleIcon, MatDatepicker, MatCheckbox, MatSelect, UwCommentsButtonComponent, DecimalPipe, TitleCasePipe, DatePipe]
 })
 
 export class ForageInventoryComponent extends BaseComponent implements OnChanges {

@@ -7,7 +7,7 @@ import { UntypedFormArray } from "@angular/forms";
 import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
 import { INSURANCE_PLAN, UW_COMMENT_TYPE_CODE } from "src/app/utils/constants";
 import { CdkScrollable } from "@angular/cdk/scrolling";
-import { NgIf, NgClass } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { MatButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { UwCommentListComponent } from "../uw-comment-list/uw-comment-list.component";
@@ -16,7 +16,7 @@ import { UwCommentListComponent } from "../uw-comment-list/uw-comment-list.compo
     selector: 'uw-comments-dialog',
     templateUrl: './uw-comments-dialog.component.html',
     styleUrls: ['./uw-comments-dialog.component.scss'],
-    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, NgIf, MatButton, MatIcon, NgClass, UwCommentListComponent, MatDialogActions]
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, MatButton, MatIcon, NgClass, UwCommentListComponent, MatDialogActions]
 })
 export class UwCommentsDialogComponent implements OnInit {
     dialogType = DIALOG_TYPE.INFO;

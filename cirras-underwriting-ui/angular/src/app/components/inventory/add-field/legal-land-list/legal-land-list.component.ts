@@ -2,13 +2,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 import { MatIcon } from '@angular/material/icon';
-import { NgStyle, NgIf, NgFor } from '@angular/common';
+import { NgStyle } from '@angular/common';
 
 @Component({
     selector: 'legal-land-list',
     templateUrl: './legal-land-list.component.html',
     styleUrl: './legal-land-list.component.scss',
-    imports: [MatIcon, NgStyle, FormsModule, ReactiveFormsModule, NgIf, NgFor]
+    imports: [MatIcon, NgStyle, FormsModule, ReactiveFormsModule]
 })
 export class LegalLandListComponent {
   @Input() selectedSearch // e.g. PID

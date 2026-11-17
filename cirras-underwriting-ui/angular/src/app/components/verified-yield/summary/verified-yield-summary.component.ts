@@ -7,7 +7,7 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { RootState } from 'src/app/store';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
-import { NgIf, NgStyle, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { NgStyle, DecimalPipe, TitleCasePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { UwCommentsButtonComponent } from '../../uw-comments/uw-comments-button/uw-comments-button.component';
@@ -17,7 +17,7 @@ import { UwCommentsButtonComponent } from '../../uw-comments/uw-comments-button/
     templateUrl: './verified-yield-summary.component.html',
     styleUrl: './verified-yield-summary.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, NgIf, MatIcon, MatTooltip, NgStyle, UwCommentsButtonComponent, DecimalPipe, TitleCasePipe]
+    imports: [FormsModule, ReactiveFormsModule, MatIcon, MatTooltip, NgStyle, UwCommentsButtonComponent, DecimalPipe, TitleCasePipe]
 })
 export class VerifiedYieldSummaryComponent {
   @Input() summary: VerifiedYieldSummary;

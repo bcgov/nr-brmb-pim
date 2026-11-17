@@ -10,7 +10,7 @@ const app = express();
 const port = process.env.TOMCAT_PORT || 8080;
 const hostname = "0.0.0.0";
 
-const angularPath = path.join(__dirname, '../angular/dist/cirras-underwriting');
+const angularPath = path.join(__dirname, '../angular/dist/cirras-underwriting/browser');
 
 function startServer() {
 	try {
@@ -47,7 +47,7 @@ function startServer() {
 		app.use('/pub/cirras-underwriting', express.static(angularPath));
 
 		// Send all requests to Angular app
-		app.get('/pub/cirras-underwriting/*', (req, res) => {
+		app.get('/pub/cirras-underwriting/{*splat}', (req, res) => {
 			res.sendFile(path.join(angularPath, 'index.html'));
 		});
 

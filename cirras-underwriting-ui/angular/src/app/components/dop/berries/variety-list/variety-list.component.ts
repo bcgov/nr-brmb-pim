@@ -9,7 +9,7 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { makeNumberOnly } from 'src/app/utils';
 import { BERRY_COMMODITY } from 'src/app/utils/constants';
-import { NgStyle, NgIf, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { NgStyle, DecimalPipe, TitleCasePipe } from '@angular/common';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatInputCommifiedDirective } from '../../../../directives/input-comified.directive';
@@ -22,7 +22,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     styleUrl: './variety-list.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [FormsModule, ReactiveFormsModule, NgStyle, NgIf, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, MatTooltip, DecimalPipe, TitleCasePipe]
+    imports: [FormsModule, ReactiveFormsModule, NgStyle, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, MatTooltip, DecimalPipe, TitleCasePipe]
 })
 export class BerriesDopVarietyListComponent {
   @Input() dopYieldFieldVarietyBerries: DopYieldFieldVarietyBerries

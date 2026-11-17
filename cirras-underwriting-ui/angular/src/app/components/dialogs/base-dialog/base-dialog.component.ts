@@ -25,7 +25,7 @@ import { ErrorState, LoadState } from "../../../store/application/application.st
 import { CONSTANTS, addRemoveCdkOverlayClass, hasValues } from "../../../utils";
 import { ErrorMessages } from "../../../utils/error-messages";
 import { BaseComponentModel } from "../../common/base/base.component.model";
-import { NgIf, NgClass } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { CdkTrapFocus } from "@angular/cdk/a11y";
@@ -41,7 +41,7 @@ export enum DIALOG_TYPE {
     templateUrl: "./base-dialog.component.html",
     styleUrls: ["../../common/base/base.component.scss", "./base-dialog.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, MatDialogTitle, CdkDrag, CdkDragHandle, MatProgressSpinner, CdkTrapFocus, NgClass, ErrorPanelComponent]
+    imports: [MatDialogTitle, CdkDrag, CdkDragHandle, MatProgressSpinner, CdkTrapFocus, NgClass, ErrorPanelComponent]
 })
 export class BaseDialogComponent implements AfterViewInit, OnChanges, OnDestroy {
     @Input() disableDrag?: boolean = false;

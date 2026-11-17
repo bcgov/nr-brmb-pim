@@ -8,7 +8,7 @@ import { VERIFIED_YIELD_COMPONENT_ID } from "src/app/store/verified-yield/verifi
 import { makeNumberOnly } from "src/app/utils";
 import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { roundUpDecimal } from "../../inventory/inventory-common";
-import { NgStyle, NgIf, DecimalPipe, TitleCasePipe } from "@angular/common";
+import { NgStyle, DecimalPipe, TitleCasePipe } from "@angular/common";
 import { MatFormField } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatInputCommifiedDirective } from "../../../directives/input-comified.directive";
@@ -20,7 +20,7 @@ import { MatTooltip } from "@angular/material/tooltip";
     templateUrl: './verified-yield-commodity.component.html',
     styleUrls: ['./verified-yield-commodity.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, NgStyle, NgIf, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, MatTooltip, DecimalPipe, TitleCasePipe]
+    imports: [FormsModule, ReactiveFormsModule, NgStyle, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, MatTooltip, DecimalPipe, TitleCasePipe]
 })
 export class VerifiedYieldCommodityComponent implements OnChanges {
 

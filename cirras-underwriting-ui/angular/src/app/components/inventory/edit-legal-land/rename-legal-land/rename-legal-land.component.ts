@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
-import { NgIf, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { LegalLandListWithMessageComponent } from '../legal-land-list-with-message/legal-land-list-with-message.component';
 import { FieldListWithMessageComponent } from '../field-list-with-message/field-list-with-message.component';
@@ -9,7 +9,7 @@ import { FieldListWithMessageComponent } from '../field-list-with-message/field-
     selector: 'rename-legal-land',
     templateUrl: './rename-legal-land.component.html',
     styleUrl: './rename-legal-land.component.scss',
-    imports: [NgIf, MatIcon, NgStyle, LegalLandListWithMessageComponent, FieldListWithMessageComponent]
+    imports: [MatIcon, NgStyle, LegalLandListWithMessageComponent, FieldListWithMessageComponent]
 })
 export class RenameLegalLandComponent implements OnChanges {
   @Input() renameLegalLandList 

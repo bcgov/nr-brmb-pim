@@ -13,7 +13,7 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { YieldConversionUnitsContainer } from 'src/app/containers/maintenance/yield-conversion-units-container.component';
 import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
 import { SingleSelectDirective } from '../../../directives/singleselect.directive';
-import { NgFor, NgIf, NgStyle, TitleCasePipe } from '@angular/common';
+import { NgStyle, TitleCasePipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField } from '@angular/material/form-field';
@@ -23,7 +23,7 @@ import { MatInput } from '@angular/material/input';
     selector: 'yield-conversion',
     templateUrl: './yield-conversion.component.html',
     styleUrls: ['./yield-conversion.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss'],
-    imports: [BaseWrapperComponent, SingleSelectDirective, FormsModule, NgFor, MatButton, MatIcon, NgIf, NgStyle, ReactiveFormsModule, MatFormField, MatInput, TitleCasePipe]
+    imports: [BaseWrapperComponent, SingleSelectDirective, FormsModule, MatButton, MatIcon, NgStyle, ReactiveFormsModule, MatFormField, MatInput, TitleCasePipe]
 })
 export class YieldConversionComponent extends BaseComponent implements OnChanges  {
 

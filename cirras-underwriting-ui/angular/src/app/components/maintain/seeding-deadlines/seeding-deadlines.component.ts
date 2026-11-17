@@ -10,7 +10,7 @@ import { areDatesNotEqual, setHttpHeaders } from 'src/app/utils';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
 import { CommodityTypeCodeListRsrc } from '@cirras/cirras-underwriting-api';
 import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
-import { NgIf, NgStyle, NgFor, DatePipe } from '@angular/common';
+import { NgStyle, DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { SingleSelectDirective } from '../../../directives/singleselect.directive';
@@ -26,7 +26,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     selector: 'seeding-deadlines',
     templateUrl: './seeding-deadlines.component.html',
     styleUrls: ['./seeding-deadlines.component.scss', '../../common/base-collection/collection.component.desktop.scss', '../../common/base/base.component.scss'],
-    imports: [BaseWrapperComponent, NgIf, MatIcon, NgStyle, MatButton, FormsModule, ReactiveFormsModule, SingleSelectDirective, NgFor, MatRadioGroup, MatRadioButton, MatFormField, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatTooltip, DatePipe]
+    imports: [BaseWrapperComponent, MatIcon, NgStyle, MatButton, FormsModule, ReactiveFormsModule, SingleSelectDirective, MatRadioGroup, MatRadioButton, MatFormField, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatTooltip, DatePipe]
 })
 export class SeedingDeadlinesComponent extends BaseComponent implements OnChanges  {
 
