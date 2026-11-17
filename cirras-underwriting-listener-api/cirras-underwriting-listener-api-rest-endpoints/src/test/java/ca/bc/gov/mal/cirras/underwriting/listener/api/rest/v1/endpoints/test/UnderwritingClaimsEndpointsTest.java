@@ -266,7 +266,7 @@ public class UnderwritingClaimsEndpointsTest extends EndpointsTest {
 
 		// Wait 15 seconds for the event listener to receive the message in its thread then transfer it here.
 		synchronized (this) {
-			//this.wait(15*1000); //15 seconds
+			this.wait(15*1000); //15 seconds
 			//this.wait(10*60*1000); //10 minutes
 		}
 		
