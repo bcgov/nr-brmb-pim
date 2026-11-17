@@ -2,8 +2,8 @@ package ca.bc.gov.mal.cirras.underwriting.listener.failover.persistence.v1.dao;
 
 import java.io.Serializable;
 
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
 import ca.bc.gov.mal.cirras.underwriting.listener.failover.persistence.v1.dto.SyncOwnershipDto;
 
 public interface SyncOwnershipDao extends Serializable {

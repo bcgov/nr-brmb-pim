@@ -12,8 +12,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
 import ca.bc.gov.mal.cirras.underwriting.JerseyApplication;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.filters.RequestMetricsFilter;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.filters.VersionForwardingFilter;
+import ca.bc.gov.mal.pit.common.rest.endpoints.filters.RequestMetricsFilter;
+import ca.bc.gov.mal.pit.common.rest.endpoints.filters.VersionForwardingFilter;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ApplicationInitializer extends AbstractSecurityWebApplicationInitializer {

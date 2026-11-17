@@ -19,12 +19,12 @@
 
 		<!-- NRS Common -->
 		<dependency>
-			<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-			<artifactId>wfone-common-persistence</artifactId>
+			<groupId>ca.bc.gov.mal.pit.common</groupId>
+			<artifactId>pit-common-persistence</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-			<artifactId>wfone-common-utils</artifactId>
+			<groupId>ca.bc.gov.mal.pit.common</groupId>
+			<artifactId>pit-common-utils</artifactId>
 		</dependency>
 
 		<dependency>

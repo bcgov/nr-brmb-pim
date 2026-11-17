@@ -27,9 +27,9 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.UnderwritingYearListRsrc
 import ca.bc.gov.mal.cirras.underwriting.data.resources.UnderwritingYearRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.models.GradeModifierType;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.Oauth2ClientException;
 
 public class GradeModifierTypeListEndpointTest extends EndpointsTest {
 	private static final Logger logger = LoggerFactory.getLogger(GradeModifierTypeListEndpointTest.class);

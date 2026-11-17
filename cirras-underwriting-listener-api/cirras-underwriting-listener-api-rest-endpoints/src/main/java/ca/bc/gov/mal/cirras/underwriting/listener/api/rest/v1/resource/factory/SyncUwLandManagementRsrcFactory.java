@@ -16,7 +16,7 @@ package ca.bc.gov.mal.cirras.underwriting.listener.api.rest.v1.resource.factory;
 //import ca.bc.gov.mal.cirras.land.management.api.rest.v1.resource.GrowerContractYearRsrc;
 
 import ca.bc.gov.mal.cirras.underwriting.listener.service.api.v1.model.factory.SyncUwLandManagementFactory;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
+import ca.bc.gov.mal.pit.common.rest.endpoints.resource.factory.BaseResourceFactory;
 
 public class SyncUwLandManagementRsrcFactory extends BaseResourceFactory implements SyncUwLandManagementFactory {
 

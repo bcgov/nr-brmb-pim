@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import ca.bc.gov.nrs.common.wfone.rest.resource.BaseResource;
+import ca.bc.gov.mal.pit.common.rest.resource.BaseResource;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
 
 @XmlRootElement(namespace = ResourceTypes.NAMESPACE, name = ResourceTypes.COMMODITY_TYPE_CODE_LIST_NAME)

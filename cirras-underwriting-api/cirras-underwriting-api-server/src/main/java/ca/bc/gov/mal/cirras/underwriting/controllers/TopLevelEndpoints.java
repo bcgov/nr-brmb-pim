@@ -29,11 +29,11 @@ import ca.bc.gov.mal.cirras.underwriting.data.assemblers.YieldMeasUnitConversion
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.YieldMeasUnitTypeCodeRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.EndpointsRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.types.ResourceTypes;
-import ca.bc.gov.nrs.common.wfone.rest.resource.HeaderConstants;
-import ca.bc.gov.nrs.common.wfone.rest.resource.MessageListRsrc;
-import ca.bc.gov.nrs.common.wfone.rest.resource.RelLink;
-import ca.bc.gov.nrs.wfone.common.api.rest.code.resource.factory.CodeTableResourceFactory;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.BaseEndpointsImpl;
+import ca.bc.gov.mal.pit.common.rest.resource.HeaderConstants;
+import ca.bc.gov.mal.pit.common.rest.resource.MessageListRsrc;
+import ca.bc.gov.mal.pit.common.rest.resource.RelLink;
+import ca.bc.gov.mal.pit.common.api.rest.code.resource.factory.CodeTableResourceFactory;
+import ca.bc.gov.mal.pit.common.rest.endpoints.BaseEndpointsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;

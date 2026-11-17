@@ -21,11 +21,11 @@ import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractSimpleR
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.OutboxFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityBerriesDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.DeclaredYieldContractCommodityBerriesOutboxDao;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
-import ca.bc.gov.nrs.wfone.common.service.api.NotFoundException;
-import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
-import ca.bc.gov.nrs.wfone.common.webade.authentication.WebAdeAuthentication;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.service.api.NotFoundException;
+import ca.bc.gov.mal.pit.common.service.api.ServiceException;
+import ca.bc.gov.mal.pit.common.webade.authentication.WebAdeAuthentication;
 
 public class CirrasUnderwritingOutboxService {
 

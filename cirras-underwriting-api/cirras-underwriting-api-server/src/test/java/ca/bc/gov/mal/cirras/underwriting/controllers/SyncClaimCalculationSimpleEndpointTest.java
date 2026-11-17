@@ -19,9 +19,9 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.SyncClaimCalculationBerries
 import ca.bc.gov.mal.cirras.underwriting.data.resources.ClaimSyncEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.ContactRsrc;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.Oauth2ClientException;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.PoliciesSyncEventTypes;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncClaimCalculationSimpleRsrc;
 

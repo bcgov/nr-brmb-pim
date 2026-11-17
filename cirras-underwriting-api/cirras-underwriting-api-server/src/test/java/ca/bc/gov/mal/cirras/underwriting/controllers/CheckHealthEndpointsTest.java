@@ -9,12 +9,12 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.bc.gov.nrs.common.wfone.rest.resource.HealthCheckResponseRsrc;
-import ca.bc.gov.nrs.wfone.common.http.AbstractHttpServletRequest;
-import ca.bc.gov.nrs.wfone.common.rest.client.RestClientServiceException;
-import ca.bc.gov.nrs.wfone.common.utils.HttpServletRequestHolder;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.resource.AccessToken;
+import ca.bc.gov.mal.pit.common.rest.resource.HealthCheckResponseRsrc;
+import ca.bc.gov.mal.pit.common.http.AbstractHttpServletRequest;
+import ca.bc.gov.mal.pit.common.rest.client.RestClientServiceException;
+import ca.bc.gov.mal.pit.common.utils.HttpServletRequestHolder;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.Oauth2ClientException;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.resource.AccessToken;
 import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
 

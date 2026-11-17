@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ca.bc.gov.nrs.wfone.common.persistence.code.dao.CodeTableConfig;
-import ca.bc.gov.nrs.wfone.common.persistence.code.dao.CodeTableDao;
-import ca.bc.gov.nrs.wfone.common.persistence.code.dto.CodeDto;
-import ca.bc.gov.nrs.wfone.common.persistence.code.dto.CodeTableDto;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.code.dao.CodeTableConfig;
+import ca.bc.gov.mal.pit.common.persistence.code.dao.CodeTableDao;
+import ca.bc.gov.mal.pit.common.persistence.code.dto.CodeDto;
+import ca.bc.gov.mal.pit.common.persistence.code.dto.CodeTableDto;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
 
 public class CachedCodeTables {
 	

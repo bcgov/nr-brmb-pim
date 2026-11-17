@@ -23,8 +23,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncClaimCalculationSimp
 import ca.bc.gov.mal.cirras.underwriting.listener.api.rest.test.EndpointsTest;
 import ca.bc.gov.mal.cirras.underwriting.listener.api.rest.v1.endpoints.security.Scopes;
 import ca.bc.gov.mal.cirras.underwriting.listener.claims.event.listener.v1.CirrasUnderwritingClaimsEventListenerImpl;
-import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
-import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
+import ca.bc.gov.mal.pit.common.service.api.ServiceException;
+import ca.bc.gov.mal.pit.common.service.api.model.factory.FactoryContext;
 
 public class UnderwritingClaimsEndpointsTest extends EndpointsTest {
 	
