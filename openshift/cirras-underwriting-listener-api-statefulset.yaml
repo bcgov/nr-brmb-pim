@@ -1,14 +1,21 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   namespace: '#{NAMESPACE}#'
-  name: cirras-underwriting-listener-api-deployment-#{ENV}#
+  name: cirras-underwriting-listener-api-statefulset-#{ENV}#
   annotations: {}
 spec:
   selector:
     matchLabels:
       app: cirras-underwriting-listener-api-#{ENV}#
   replicas: 1
+  serviceName: cirras-underwriting-listener-api-service-#{ENV}#
+  podManagementPolicy: OrderedReady
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      partition: 0
   template:
     metadata:
       labels:
@@ -185,9 +192,3 @@ spec:
             limits:
               cpu: #{UW_LISTENER_API_CPU_LIMIT}#
               memory: #{UW_LISTENER_API_MEMORY_LIMIT}#
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-  paused: false
