@@ -13,8 +13,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import ca.bc.gov.mal.cirras.underwriting.data.entities.UnderwritingYearDto;
 import ca.bc.gov.mal.cirras.underwriting.spring.PersistenceSpringConfig;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

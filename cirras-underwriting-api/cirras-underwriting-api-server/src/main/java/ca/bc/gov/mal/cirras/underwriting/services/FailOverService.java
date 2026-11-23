@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.bc.gov.mal.cirras.underwriting.data.entities.SyncOwnershipDto;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.SyncOwnershipDao;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
 
 public class FailOverService  {
 

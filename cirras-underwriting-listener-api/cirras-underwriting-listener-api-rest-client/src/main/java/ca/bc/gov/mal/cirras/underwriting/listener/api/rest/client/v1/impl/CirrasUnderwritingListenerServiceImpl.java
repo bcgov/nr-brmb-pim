@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.bc.gov.mal.cirras.underwriting.listener.api.rest.client.v1.CirrasUnderwritingListenerService;
-import ca.bc.gov.nrs.wfone.common.rest.client.BaseRestServiceClient;
+import ca.bc.gov.mal.pit.common.rest.client.BaseRestServiceClient;
 
 public class CirrasUnderwritingListenerServiceImpl extends BaseRestServiceClient implements CirrasUnderwritingListenerService {
 

@@ -24,8 +24,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.authentication.WebadeOauth2AuthenticationProvider;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.TokenService;
+import ca.bc.gov.mal.pit.common.webade.oauth2.authentication.WebadeOauth2AuthenticationProvider;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.TokenService;
 
 @Configuration
 @EnableWebSecurity(debug = false)

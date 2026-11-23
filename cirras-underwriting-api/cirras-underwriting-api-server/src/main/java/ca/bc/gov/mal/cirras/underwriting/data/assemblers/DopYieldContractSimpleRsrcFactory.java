@@ -1,7 +1,7 @@
 package ca.bc.gov.mal.cirras.underwriting.data.assemblers;
 
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
-import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryException;
+import ca.bc.gov.mal.pit.common.rest.endpoints.resource.factory.BaseResourceFactory;
+import ca.bc.gov.mal.pit.common.service.api.model.factory.FactoryException;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.DopYieldContractSimpleRsrc;
 import ca.bc.gov.mal.cirras.underwriting.data.models.DopYieldContractCommodityBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.DeclaredYieldContractCommodityBerriesDto;

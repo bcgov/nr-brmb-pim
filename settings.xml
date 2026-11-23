@@ -22,10 +22,21 @@
   <password>${openshiftRepo.password}</password>
   <id>openshift-snapshots</id>
 </server>
+<server>
+  <username>${ghPkgRepo.login}</username>
+  <password>${ghPkgRepo.password}</password>
+  <id>github</id>
+</server>
 </servers>
 <profiles>
 <profile>
 <repositories>
+  <repository>
+   <snapshots />
+   <id>github</id>
+   <name>nr-brmb-pit-common</name>
+   <url>https://maven.pkg.github.com/bcgov/nr-brmb-pit-common</url>
+ </repository>
  <repository>
    <snapshots>
      <enabled>false</enabled>

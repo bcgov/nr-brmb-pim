@@ -7,7 +7,7 @@ import ca.bc.gov.mal.cirras.underwriting.controllers.SyncClaimCalculationSimpleE
 import ca.bc.gov.mal.cirras.underwriting.data.entities.ClaimCalculationBerriesSyncDto;
 import ca.bc.gov.mal.cirras.underwriting.data.models.SyncClaimCalculationBerries;
 import ca.bc.gov.mal.cirras.underwriting.data.resources.SyncClaimCalculationSimpleRsrc;
-import ca.bc.gov.nrs.wfone.common.rest.endpoints.resource.factory.BaseResourceFactory;
+import ca.bc.gov.mal.pit.common.rest.endpoints.resource.factory.BaseResourceFactory;
 import jakarta.ws.rs.core.UriBuilder;
 
 public class SyncClaimCalculationSimpleRsrcFactory extends BaseResourceFactory { 

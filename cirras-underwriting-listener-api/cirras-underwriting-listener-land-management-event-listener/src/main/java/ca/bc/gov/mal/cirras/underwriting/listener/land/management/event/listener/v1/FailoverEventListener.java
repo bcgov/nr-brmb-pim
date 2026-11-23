@@ -11,7 +11,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
 
-//import ca.bc.gov.nrs.wfone.failover.service.api.v1.async.FailOverService;
 import ca.bc.gov.mal.cirras.underwriting.listener.failover.service.api.v1.async.FailOverService;
 
 public class FailoverEventListener implements ApplicationListener<ApplicationEvent> {

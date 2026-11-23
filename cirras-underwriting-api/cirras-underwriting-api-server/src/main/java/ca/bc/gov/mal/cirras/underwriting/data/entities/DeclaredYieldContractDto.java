@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.bc.gov.mal.cirras.underwriting.data.utils.DateUtils;
-import ca.bc.gov.nrs.wfone.common.persistence.dto.BaseDto;
-import ca.bc.gov.nrs.wfone.common.persistence.utils.DtoUtils;
+import ca.bc.gov.mal.pit.common.persistence.dto.BaseDto;
+import ca.bc.gov.mal.pit.common.persistence.utils.DtoUtils;
 
 public class DeclaredYieldContractDto extends BaseDto<DeclaredYieldContractDto> {
 

@@ -32,8 +32,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractCommodit
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.DopYieldContractRsrcFactory;
 import ca.bc.gov.mal.cirras.underwriting.data.assemblers.InventoryContractRsrcFactory;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.service.api.ServiceException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.service.api.ServiceException;
 
 public class BerriesService {
 

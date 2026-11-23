@@ -6,8 +6,8 @@
 	<bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="locations">
 			<list>
-				<value>classpath:static.properties</value>
 				<value>classpath:test.properties</value>
+				<value>classpath:static.properties</value>
 			</list>
 		</property>
 	</bean>

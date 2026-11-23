@@ -3,7 +3,7 @@ package ca.bc.gov.mal.cirras.underwriting.listener.api.rest.client.v1;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.bc.gov.nrs.wfone.common.model.Message;
+import ca.bc.gov.mal.pit.common.model.Message;
 
 public class ValidationException extends Exception {
 	

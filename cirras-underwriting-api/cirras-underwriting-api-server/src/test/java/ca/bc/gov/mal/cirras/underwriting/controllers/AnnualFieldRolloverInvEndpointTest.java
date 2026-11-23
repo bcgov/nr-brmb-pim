@@ -22,7 +22,7 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.UnderwritingComment;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryFieldDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.PolicyDto;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.Oauth2ClientException;
 
 public class AnnualFieldRolloverInvEndpointTest extends EndpointsTest {
 	private static final Logger logger = LoggerFactory.getLogger(AnnualFieldRolloverInvEndpointTest.class);

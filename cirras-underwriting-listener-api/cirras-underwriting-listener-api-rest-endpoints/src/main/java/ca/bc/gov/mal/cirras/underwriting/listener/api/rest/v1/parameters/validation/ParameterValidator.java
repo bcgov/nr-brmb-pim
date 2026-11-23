@@ -11,10 +11,10 @@ import ca.bc.gov.mal.cirras.underwriting.listener.api.rest.v1.parameters.PagingQ
 import ca.bc.gov.mal.cirras.underwriting.listener.api.rest.v1.parameters.validation.constraints.EffectiveAsOfDateQueryParametersConstraints;
 import ca.bc.gov.mal.cirras.underwriting.listener.api.rest.v1.parameters.validation.constraints.EffectiveAsOfTimestampQueryParamConstraints;
 import ca.bc.gov.mal.cirras.underwriting.listener.api.rest.v1.parameters.validation.constraints.PagingQueryParameterConstraints;
-import ca.bc.gov.nrs.wfone.common.model.Message;
-import ca.bc.gov.nrs.wfone.common.service.api.validation.BaseValidator;
-import ca.bc.gov.nrs.wfone.common.utils.DateUtils;
-import ca.bc.gov.nrs.wfone.common.utils.MessageBuilder;
+import ca.bc.gov.mal.pit.common.model.Message;
+import ca.bc.gov.mal.pit.common.service.api.validation.BaseValidator;
+import ca.bc.gov.mal.pit.common.utils.DateUtils;
+import ca.bc.gov.mal.pit.common.utils.MessageBuilder;
 
 public class ParameterValidator extends BaseValidator {
 	private static final Logger logger = LoggerFactory.getLogger(ParameterValidator.class);

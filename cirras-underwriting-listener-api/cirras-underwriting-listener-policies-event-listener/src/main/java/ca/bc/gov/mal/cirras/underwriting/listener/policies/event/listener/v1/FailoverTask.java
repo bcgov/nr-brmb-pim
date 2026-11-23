@@ -7,7 +7,6 @@ import java.util.TimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//import ca.bc.gov.nrs.wfone.failover.service.api.v1.async.FailOverService;
 import ca.bc.gov.mal.cirras.underwriting.listener.failover.service.api.v1.async.FailOverService;
 
 public class FailoverTask extends TimerTask {

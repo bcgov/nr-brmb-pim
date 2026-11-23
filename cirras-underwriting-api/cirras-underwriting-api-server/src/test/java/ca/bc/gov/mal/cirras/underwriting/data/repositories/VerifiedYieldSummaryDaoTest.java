@@ -23,8 +23,8 @@ import ca.bc.gov.mal.cirras.underwriting.data.entities.InventoryContractDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.VerifiedYieldSummaryDto;
 import ca.bc.gov.mal.cirras.underwriting.data.entities.VerifiedYieldContractDto;
 import ca.bc.gov.mal.cirras.underwriting.spring.PersistenceSpringConfig;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

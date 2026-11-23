@@ -47,9 +47,9 @@ import ca.bc.gov.mal.cirras.underwriting.data.models.InventoryField;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.CommodityMaturityScaleDao;
 import ca.bc.gov.mal.cirras.underwriting.data.repositories.TestConfig;
 import ca.bc.gov.mal.cirras.underwriting.test.EndpointsTest;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.DaoException;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.NotFoundDaoException;
-import ca.bc.gov.nrs.wfone.common.webade.oauth2.token.client.Oauth2ClientException;
+import ca.bc.gov.mal.pit.common.persistence.dao.DaoException;
+import ca.bc.gov.mal.pit.common.persistence.dao.NotFoundDaoException;
+import ca.bc.gov.mal.pit.common.webade.oauth2.token.client.Oauth2ClientException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes= {TestConfig.class, PersistenceSpringConfig.class})

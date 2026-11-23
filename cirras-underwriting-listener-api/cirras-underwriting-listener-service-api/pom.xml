@@ -44,16 +44,16 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-			<artifactId>wfone-common-service-api</artifactId>
+			<groupId>ca.bc.gov.mal.pit.common</groupId>
+			<artifactId>pit-common-service-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-			<artifactId>wfone-common-code-persistence</artifactId>
+			<groupId>ca.bc.gov.mal.pit.common</groupId>
+			<artifactId>pit-common-code-persistence</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ca.bc.gov.nrs.wfone.common</groupId>
-			<artifactId>wfone-common-webade</artifactId>
+			<groupId>ca.bc.gov.mal.pit.common</groupId>
+			<artifactId>pit-common-webade</artifactId>
 		</dependency>
 
 		<dependency>

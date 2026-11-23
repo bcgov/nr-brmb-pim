@@ -21,12 +21,12 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.BooleanTypeHandler;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.InstantTypeHandler;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.LocalDateTimeTypeHandler;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.LocalDateTypeHandler;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.LocalTimeTypeHandler;
-import ca.bc.gov.nrs.wfone.common.persistence.dao.mybatis.ResetDirtyInterceptor;
+import ca.bc.gov.mal.pit.common.persistence.dao.mybatis.BooleanTypeHandler;
+import ca.bc.gov.mal.pit.common.persistence.dao.mybatis.InstantTypeHandler;
+import ca.bc.gov.mal.pit.common.persistence.dao.mybatis.LocalDateTimeTypeHandler;
+import ca.bc.gov.mal.pit.common.persistence.dao.mybatis.LocalDateTypeHandler;
+import ca.bc.gov.mal.pit.common.persistence.dao.mybatis.LocalTimeTypeHandler;
+import ca.bc.gov.mal.pit.common.persistence.dao.mybatis.ResetDirtyInterceptor;
 import ca.bc.gov.mal.cirras.underwriting.listener.failover.persistence.v1.dao.SyncOwnershipDao;
 import ca.bc.gov.mal.cirras.underwriting.listener.failover.persistence.v1.dao.mybatis.SyncOwnershipDaoImpl;
 

@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ca.bc.gov.mal.cirras.underwriting.clients.CirrasUnderwritingService;
 import ca.bc.gov.mal.cirras.underwriting.listener.service.api.v1.CirrasUnderwritingLandManagementListenerService;
 import ca.bc.gov.mal.cirras.underwriting.listener.service.api.v1.model.factory.SyncUwLandManagementFactory;
-import ca.bc.gov.nrs.wfone.common.service.api.model.factory.FactoryContext;
+import ca.bc.gov.mal.pit.common.service.api.model.factory.FactoryContext;
 
 public class CirrasUnderwritingLandManagementListenerServiceImpl implements CirrasUnderwritingLandManagementListenerService {
 
