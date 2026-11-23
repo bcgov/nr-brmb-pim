@@ -15,7 +15,7 @@ import { RootState } from 'src/app/store';
 import { RemovePlantingDialogComponent } from './remove-planting-dialog/remove-planting-dialog.component';
 import { DIALOG_TYPE, BaseDialogComponent } from '../../dialogs/base-dialog/base-dialog.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { NgIf, NgFor, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { MatFormField, MatHint } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
@@ -47,7 +47,7 @@ export interface AddPlantingPopupData {
     selector: 'cirras-link-planting',
     templateUrl: './link-planting.component.html',
     styleUrls: ['./link-planting.component.scss'],
-    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, NgIf, NgFor, MatFormField, MatInput, MatHint, MatButton, MatIcon, NgStyle, MatDialogActions]
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatHint, MatButton, MatIcon, NgStyle, MatDialogActions]
 })
 export class LinkPlantingComponent implements OnInit {
 

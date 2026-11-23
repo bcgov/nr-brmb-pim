@@ -1,4 +1,4 @@
-import { DecimalPipe, NgIf } from "@angular/common";
+import { DecimalPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Store } from "@ngrx/store";
@@ -19,7 +19,7 @@ import { MatTooltip } from "@angular/material/tooltip";
     templateUrl: './forage-dop-yield-field-cut.component.html',
     styleUrls: ['./forage-dop-yield-field-cut.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, NgIf, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, MatTooltip]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, MatTooltip]
 })
 export class ForageDopYieldFieldCutComponent implements OnInit {
     @Input() yieldField: DopYieldFieldForage;

@@ -7,7 +7,7 @@ import { addSimplePlantingObject } from '../../inventory-common';
 import { BERRY_COMMODITY } from 'src/app/utils/constants';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { INVENTORY_COMPONENT_ID } from 'src/app/store/inventory/inventory.state';
-import { NgStyle, NgClass, NgIf } from '@angular/common';
+import { NgStyle, NgClass } from '@angular/common';
 import { BerriesInventoryInventoryBerryComponent } from '../inventory-berry/berries-inventory-inventory-berry.component';
 
 
@@ -17,13 +17,12 @@ import { BerriesInventoryInventoryBerryComponent } from '../inventory-berry/berr
     styleUrl: './berries-inventory-planting.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        NgStyle,
-        NgClass,
-        NgIf,
-        BerriesInventoryInventoryBerryComponent,
-    ],
+    FormsModule,
+    ReactiveFormsModule,
+    NgStyle,
+    NgClass,
+    BerriesInventoryInventoryBerryComponent
+],
 })
 export class BerriesInventoryPlantingComponent implements OnChanges { 
 

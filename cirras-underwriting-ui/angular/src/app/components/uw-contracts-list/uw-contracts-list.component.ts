@@ -11,7 +11,7 @@ import { goToLinkGlobal, userCanAccessDop, userCanAccessInventory, userCanAccess
 import { LoadUserSettings } from "src/app/store/maintenance/maintenance.actions";
 import { UserSetting } from "src/app/conversion/models-maintenance";
 import { BaseWrapperComponent } from "../common/base-wrapper/base-wrapper.component";
-import { NgIf, NgFor } from "@angular/common";
+
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { ReportsDownloadButtonComponent } from "../reports/reports-download-button/reports-download-button.component";
 import { MatLabel, MatSuffix } from "@angular/material/form-field";
@@ -31,7 +31,7 @@ import { NgxPaginationModule } from "ngx-pagination";
         "../common/base-collection/collection.component.desktop.scss",
         "./uw-contracts-list.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [BaseWrapperComponent, NgIf, MatProgressSpinner, ReportsDownloadButtonComponent, MatLabel, FormsModule, MatIconButton, MatSuffix, MatTooltip, MatIcon, SingleSelectDirective, NgFor, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatSortHeader, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgxPaginationModule]
+    imports: [BaseWrapperComponent, MatProgressSpinner, ReportsDownloadButtonComponent, MatLabel, FormsModule, MatIconButton, MatSuffix, MatTooltip, MatIcon, SingleSelectDirective, MatButton, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatSortHeader, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, NgxPaginationModule]
 })
 
 export class UwContractsListComponent extends CollectionComponent implements OnChanges, AfterViewInit {

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { UnderwritingComment } from "@cirras/cirras-underwriting-api";
-import { NgIf, DatePipe } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { MatFormField } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
@@ -13,7 +13,7 @@ import { MatIcon } from "@angular/material/icon";
     selector: 'uw-comment',
     templateUrl: './uw-comment.component.html',
     styleUrls: ['./uw-comment.component.scss'],
-    imports: [FormsModule, ReactiveFormsModule, NgIf, MatFormField, MatInput, CdkTextareaAutosize, MatIconButton, MatTooltip, MatIcon, DatePipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatInput, CdkTextareaAutosize, MatIconButton, MatTooltip, MatIcon, DatePipe]
 })
 export class UwCommentComponent implements OnInit {
     @Input() uwComment: UnderwritingComment;

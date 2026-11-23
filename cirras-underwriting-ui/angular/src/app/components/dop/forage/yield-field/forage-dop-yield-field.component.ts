@@ -7,7 +7,7 @@ import { RootState } from "src/app/store";
 import { setFormStateUnsaved } from "src/app/store/application/application.actions";
 import { DOP_COMPONENT_ID } from "src/app/store/dop/dop.state";
 import { getCodeOptions } from "src/app/utils/code-table-utils";
-import { NgClass, NgStyle, NgIf, TitleCasePipe, DatePipe } from "@angular/common";
+import { NgClass, NgStyle, TitleCasePipe, DatePipe } from "@angular/common";
 import { MatCheckbox } from "@angular/material/checkbox";
 import { ForageDopYieldFieldCutListComponent } from "../yield-field-cut-list/forage-dop-yield-field-cut-list.component";
 import { MatIcon } from "@angular/material/icon";
@@ -18,7 +18,7 @@ import { MatTooltip } from "@angular/material/tooltip";
     templateUrl: './forage-dop-yield-field.component.html',
     styleUrls: ['./forage-dop-yield-field.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, NgClass, MatCheckbox, NgStyle, ForageDopYieldFieldCutListComponent, MatIcon, MatTooltip, NgIf, TitleCasePipe, DatePipe]
+    imports: [FormsModule, ReactiveFormsModule, NgClass, MatCheckbox, NgStyle, ForageDopYieldFieldCutListComponent, MatIcon, MatTooltip, TitleCasePipe, DatePipe]
 })
 export class ForageDopYieldFieldComponent implements OnInit {
     @Input() yieldField: DopYieldFieldForage;

@@ -1,5 +1,9 @@
-<div *ngFor="let yieldFieldCut of yieldFieldCuts" style="display: contents;">
-    <forage-dop-yield-field-cut *ngIf="!yieldFieldCut.deletedByUserInd" [yieldField]="yieldField"
+@for (yieldFieldCut of yieldFieldCuts; track yieldFieldCut) {
+  <div style="display: contents;">
+    @if (!yieldFieldCut.deletedByUserInd) {
+      <forage-dop-yield-field-cut [yieldField]="yieldField"
         [yieldFieldCut]="yieldFieldCut" [yieldFieldCutsFormArray]="yieldFieldCutsFormArray"
-        style="display: contents;"></forage-dop-yield-field-cut>
-</div>
+      style="display: contents;"></forage-dop-yield-field-cut>
+    }
+  </div>
+}

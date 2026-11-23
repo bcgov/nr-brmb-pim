@@ -5,7 +5,7 @@ import { CROP_COMMODITY_UNSPECIFIED, INSURANCE_PLAN } from 'src/app/utils/consta
 import { GrainInventoryComponent } from "../grain-inventory.component";
 import { CropCommodityVarietyOptionsType, roundUpDecimal } from '../../inventory-common';
 import {ViewEncapsulation } from '@angular/core';
-import { NgIf, NgStyle, NgClass, NgFor, DecimalPipe, TitleCasePipe, DatePipe } from '@angular/common';
+import { NgStyle, NgClass, DecimalPipe, TitleCasePipe, DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { RelatedPoliciesComponent } from '../../../related-policies/related-policies.component';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -25,7 +25,7 @@ import { UwCommentsButtonComponent } from '../../../uw-comments/uw-comments-butt
     styleUrls: ['./grain-unseeded-inventory.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, MatIcon, NgStyle, RelatedPoliciesComponent, MatTooltip, MatButton, NgClass, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, CdkDropList, NgFor, CdkDrag, CdkDragHandle, MatFormField, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatOption, MatInputCommifiedDirective, MatCheckbox, UwCommentsButtonComponent, MatHint, DecimalPipe, TitleCasePipe, DatePipe]
+    imports: [MatIcon, NgStyle, RelatedPoliciesComponent, MatTooltip, MatButton, NgClass, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, CdkDropList, CdkDrag, CdkDragHandle, MatFormField, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatOption, MatInputCommifiedDirective, MatCheckbox, UwCommentsButtonComponent, MatHint, DecimalPipe, TitleCasePipe, DatePipe]
 })
 
 export class GrainUnseededInventoryComponent extends GrainInventoryComponent { 

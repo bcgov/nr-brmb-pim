@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormArray } from '@angular/forms';
 import { DopYieldFieldRollupForage } from 'src/app/conversion/models-yield';
-import { NgIf, NgStyle, NgFor, DecimalPipe } from '@angular/common';
+import { NgStyle, DecimalPipe } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { ForageDopYieldSummaryComponent } from '../yield-summary/forage-dop-yield-summary.component';
@@ -12,7 +12,7 @@ import { ForageDopYieldSummaryComponent } from '../yield-summary/forage-dop-yiel
     styleUrls: ['./forage-dop-yield-summary-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, MatTooltip, MatIcon, NgStyle, NgFor, ForageDopYieldSummaryComponent, DecimalPipe]
+    imports: [MatTooltip, MatIcon, NgStyle, ForageDopYieldSummaryComponent, DecimalPipe]
 })
 
 

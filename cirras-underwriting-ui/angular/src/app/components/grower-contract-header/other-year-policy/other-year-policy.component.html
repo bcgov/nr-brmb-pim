@@ -1,12 +1,14 @@
 
 <form [formGroup]="otherYearPoliciesForm" class="other-year-policy">
-    <mat-form-field appearance="outline" style="width:100px;">
-        <mat-select hideSingleSelectionIndicator="true"
-            formControlName="cropYear"
-            (selectionChange)="cropYearChange($event)">
-            <mat-option *ngFor="let option of cropYearOptions" [value]="option"
-                >{{ option }}</mat-option>
-        </mat-select>
-        </mat-form-field>
+  <mat-form-field appearance="outline" style="width:100px;">
+    <mat-select hideSingleSelectionIndicator="true"
+      formControlName="cropYear"
+      (selectionChange)="cropYearChange($event)">
+      @for (option of cropYearOptions; track option) {
+        <mat-option [value]="option"
+        >{{ option }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
 </form>
 

@@ -6,7 +6,7 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { RootState } from 'src/app/store';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { VERIFIED_YIELD_COMPONENT_ID } from 'src/app/store/verified-yield/verified-yield.state';
-import { NgIf, NgStyle, CurrencyPipe } from '@angular/common';
+import { NgStyle, CurrencyPipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatFormField } from '@angular/material/form-field';
@@ -18,7 +18,7 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
     templateUrl: './verified-yield-grain-basket.component.html',
     styleUrl: './verified-yield-grain-basket.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, NgIf, MatIcon, MatTooltip, NgStyle, MatFormField, MatInput, CdkTextareaAutosize, CurrencyPipe]
+    imports: [FormsModule, ReactiveFormsModule, MatIcon, MatTooltip, NgStyle, MatFormField, MatInput, CdkTextareaAutosize, CurrencyPipe]
 })
 export class VerifiedYieldGrainBasketComponent {
   @Input() grainBasket: VerifiedYieldGrainBasket;

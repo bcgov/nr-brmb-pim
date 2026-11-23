@@ -11,7 +11,7 @@ import { SecurityUtilService } from 'src/app/services/security-util.service';
 import { BERRY_COMMODITY, CROP_COMMODITY_UNSPECIFIED } from 'src/app/utils/constants';
 import { showIsPlantInsuredForBerries, showPlantSpacingForBerries, showRowSpacingForBerries, showTotalPlantsForBerries } from '../field-list/berries-inventory-field-list.component';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
-import { NgIf, NgFor, NgStyle, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { NgStyle, DecimalPipe, TitleCasePipe } from '@angular/common';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
@@ -25,7 +25,7 @@ import { MatSelect } from '@angular/material/select';
     templateUrl: './berries-inventory-inventory-berry.component.html',
     styleUrl: './berries-inventory-inventory-berry.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, NgIf, MatFormField, MatInput, MatIcon, MatTooltip, MatCheckbox, MatAutocompleteTrigger, MatAutocomplete, NgFor, MatOption, NgStyle, MatSelect, DecimalPipe, TitleCasePipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatIcon, MatTooltip, MatCheckbox, MatAutocompleteTrigger, MatAutocomplete, MatOption, NgStyle, MatSelect, DecimalPipe, TitleCasePipe]
 })
 
 export class BerriesInventoryInventoryBerryComponent implements OnChanges{

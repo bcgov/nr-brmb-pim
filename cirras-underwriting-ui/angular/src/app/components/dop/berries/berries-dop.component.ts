@@ -14,7 +14,7 @@ import { displaySuccessSnackbar } from 'src/app/utils/user-feedback-utils';
 import { UnderwritingComment } from '@cirras/cirras-underwriting-api';
 import { UwCommentsButtonComponent } from '../../uw-comments/uw-comments-button/uw-comments-button.component';
 import { BaseWrapperComponent } from '../../common/base-wrapper/base-wrapper.component';
-import { NgIf, NgStyle, NgFor, TitleCasePipe, DatePipe } from '@angular/common';
+import { NgStyle, TitleCasePipe, DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
@@ -28,7 +28,7 @@ import { BerriesDopFieldListComponent } from './field-list/field-list.component'
     styleUrl: './berries-dop.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [BaseWrapperComponent, NgIf, MatIcon, NgStyle, MatTooltip, MatButton, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, UwCommentsButtonComponent, NgFor, BerriesDopFieldListComponent, TitleCasePipe, DatePipe]
+    imports: [BaseWrapperComponent, MatIcon, NgStyle, MatTooltip, MatButton, GrowerContractHeaderComponent, FormsModule, ReactiveFormsModule, UwCommentsButtonComponent, BerriesDopFieldListComponent, TitleCasePipe, DatePipe]
 })
 export class BerriesDopComponent extends BaseComponent {
   @Input() growerContract: UwContract;

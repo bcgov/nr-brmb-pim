@@ -9,7 +9,7 @@ import { setFormStateUnsaved } from 'src/app/store/application/application.actio
 import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { makeNumberOnly } from 'src/app/utils';
 import { BERRY_COMMODITY } from 'src/app/utils/constants';
-import { NgStyle, NgIf, NgFor, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { NgStyle, DecimalPipe, TitleCasePipe } from '@angular/common';
 import { BerriesDopFieldComponent } from '../field/field.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatFormField } from '@angular/material/form-field';
@@ -23,7 +23,7 @@ import { MatIcon } from '@angular/material/icon';
     styleUrl: './field-list.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [NgStyle, NgIf, NgFor, BerriesDopFieldComponent, FormsModule, ReactiveFormsModule, MatTooltip, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, DecimalPipe, TitleCasePipe]
+    imports: [NgStyle, BerriesDopFieldComponent, FormsModule, ReactiveFormsModule, MatTooltip, MatFormField, MatInput, MatInputCommifiedDirective, MatIcon, DecimalPipe, TitleCasePipe]
 })
 export class BerriesDopFieldListComponent {
   @Input() fields: Array<AnnualField>;

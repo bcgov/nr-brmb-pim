@@ -10,7 +10,7 @@ import { makeNumberOnly, makeTitleCase } from 'src/app/utils';
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
 import { roundUpDecimal } from '../../inventory/inventory-common';
 import { INSURANCE_PLAN } from 'src/app/utils/constants';
-import { NgIf, NgFor, TitleCasePipe } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 import { MatFormField } from '@angular/material/form-field';
 import { MatSelect } from '@angular/material/select';
 import { MatOption, MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
@@ -26,7 +26,7 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
     styleUrls: ['./verified-yield-amendment.component.scss', '../../../../styles/_inventory.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [FormsModule, ReactiveFormsModule, NgIf, MatFormField, MatSelect, NgFor, MatOption, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatIcon, MatTooltip, MatInputCommifiedDirective, CdkTextareaAutosize, TitleCasePipe]
+    imports: [FormsModule, ReactiveFormsModule, MatFormField, MatSelect, MatOption, MatInput, MatAutocompleteTrigger, MatAutocomplete, MatIcon, MatTooltip, MatInputCommifiedDirective, CdkTextareaAutosize, TitleCasePipe]
 })
 export class VerifiedYieldAmendmentComponent implements OnChanges {
 

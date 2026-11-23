@@ -31,7 +31,7 @@ jobs:
     name: Build and upload NPM
     permissions:
       contents: read
-      packages: write
+      packages: read
 
     steps:
       - name: Checkout
@@ -46,7 +46,7 @@ jobs:
       - name: Set up nodejs
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
 
       - name: Extract version number
         id: getVersion

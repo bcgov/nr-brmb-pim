@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, SimpleChanges } from '@angul
 import { UntypedFormArray } from '@angular/forms';
 import { AnnualField } from 'src/app/conversion/models';
 import { BERRY_COMMODITY } from 'src/app/utils/constants';
-import { NgStyle, NgIf, NgFor } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { BerriesInventoryFieldComponent } from '../field/berries-inventory-field.component';
 
 
@@ -69,7 +69,7 @@ export function setTableHeaderStyleForBerries(cmdty) {
     templateUrl: './berries-inventory-field-list.component.html',
     styleUrl: './berries-inventory-field-list.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgStyle, NgIf, NgFor, BerriesInventoryFieldComponent]
+    imports: [NgStyle, BerriesInventoryFieldComponent]
 })
 export class BerriesInventoryFieldListComponent {
 

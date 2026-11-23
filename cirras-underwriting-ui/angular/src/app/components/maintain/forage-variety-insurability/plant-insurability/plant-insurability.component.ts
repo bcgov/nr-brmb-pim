@@ -5,7 +5,7 @@ import { DIALOG_TYPE } from 'src/app/components/dialogs/base-dialog/base-dialog.
 import { getCodeOptions } from 'src/app/utils/code-table-utils';
 import { BaseDialogComponent } from '../../../dialogs/base-dialog/base-dialog.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { NgFor } from '@angular/common';
+
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatButton } from '@angular/material/button';
 
@@ -13,7 +13,7 @@ import { MatButton } from '@angular/material/button';
     selector: 'cirras-plant-insurability',
     templateUrl: './plant-insurability.component.html',
     styleUrls: ['./plant-insurability.component.scss'],
-    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, NgFor, MatCheckbox, MatDialogActions, MatButton]
+    imports: [BaseDialogComponent, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatCheckbox, MatDialogActions, MatButton]
 })
 export class PlantInsurabilityComponent implements OnInit {
   dialogType = DIALOG_TYPE.INFO;

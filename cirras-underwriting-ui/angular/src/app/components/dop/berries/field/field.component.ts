@@ -7,7 +7,7 @@ import { RootState } from 'src/app/store';
 import { setFormStateUnsaved } from 'src/app/store/application/application.actions';
 import { DOP_COMPONENT_ID } from 'src/app/store/dop/dop.state';
 import { BERRY_COMMODITY, INSURANCE_PLAN } from 'src/app/utils/constants';
-import { NgIf, NgStyle, NgFor } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { BerriesDopCommodityListComponent } from '../commodity-list/commodity-list.component';
 import { UwCommentsButtonComponent } from '../../../uw-comments/uw-comments-button/uw-comments-button.component';
 
@@ -17,7 +17,7 @@ import { UwCommentsButtonComponent } from '../../../uw-comments/uw-comments-butt
     styleUrl: './field.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, FormsModule, ReactiveFormsModule, NgStyle, NgFor, BerriesDopCommodityListComponent, UwCommentsButtonComponent]
+    imports: [FormsModule, ReactiveFormsModule, NgStyle, BerriesDopCommodityListComponent, UwCommentsButtonComponent]
 })
 export class BerriesDopFieldComponent {
   @Input() field: AnnualField;

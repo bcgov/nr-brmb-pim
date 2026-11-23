@@ -1,22 +1,24 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
     "sourceMap": true,
+    "esModuleInterop": true,
     "declaration": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "paths": {
+      "src/*": [
+        "./src/*"
+      ],
+      "@bcgov/pit-common-core-lib": [
+        "/dist/pit-common-core-lib/types/bcgov-pit-common-core-lib.d.ts"
+      ]
+    },
     "experimentalDecorators": true,
-    "module": "es2020",
+    "module": "nodenext",
     "typeRoots": [
       "node_modules/@types"
     ],
-    "lib": [
-      "es2020",
-      "dom"
-    ],
     "target": "ES2022",
-    "useDefineForClassFields": false,
-    "allowSyntheticDefaultImports": true
+    "useDefineForClassFields": false
   }
 }
