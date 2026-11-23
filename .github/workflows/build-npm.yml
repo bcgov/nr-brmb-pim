@@ -31,7 +31,7 @@ jobs:
     name: Build and upload NPM
     permissions:
       contents: read
-      packages: write
+      packages: read
 
     steps:
       - name: Checkout
