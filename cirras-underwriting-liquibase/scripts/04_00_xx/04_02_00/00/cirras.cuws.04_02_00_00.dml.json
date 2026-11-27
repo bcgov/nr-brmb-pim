@@ -1,0 +1,5 @@
+{
+  "databaseChangeLog": [
+    { "changeSet": {"author":"mhostettler","id":"59","changes": [
+      {"sqlFile": {"relativeToChangelogFile": "true", "path": "dml/cuws.insert.update.commodity_maturity_scale.sql"}}
+  ] } }]}
