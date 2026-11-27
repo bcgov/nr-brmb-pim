@@ -208,6 +208,10 @@
     .inventory-fill {
       justify-content: center;  
       align-items: center; 
+
+      [role="listbox"] {
+        display: block; 
+      }
     }
   
     .planting-container {
@@ -331,17 +335,11 @@
   
     div {
         display: flex;
-        //justify-content: flex-start;
         align-items: center;
-        // .justify-center {
-        //   justify-content: center;
-        // }
-        // .justify-left{
-        //   justify-content: flex-start;
-        // }
-        // .justify-right{
-        //   justify-content: flex-end;
-        // }
+    }
+
+    [role="listbox"] {
+      display: block; 
     }
   
     .header {
